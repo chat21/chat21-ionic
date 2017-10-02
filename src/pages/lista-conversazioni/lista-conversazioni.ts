@@ -206,7 +206,6 @@ export class ListaConversazioniPage extends _MasterPage {
   filterConversationsForSetSelected(oldId, nwId){
     //console.log("this.conversations",this.conversations);
     this.conversations.filter(function(item){
-      //console.log("item.uid - nwId", item.uid, nwId);
       if(item.uid == nwId){
         item.selected = true;
       }

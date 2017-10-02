@@ -7,6 +7,8 @@ import { UserModel } from '../../models/user';
 //import { UserDetailsPage } from '../user-details/user-details';
 import { Config } from 'ionic-angular';
 import { DettaglioConversazionePage } from '../dettaglio-conversazione/dettaglio-conversazione';
+import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
+
 //import firebase from 'firebase';
 import * as firebase from 'firebase/app';
 import { DatabaseProvider } from './../../providers/database/database';
@@ -84,7 +86,9 @@ export class UsersPage {
   goToChat(uidReciver: string) {
     console.log('**************** goToChat uidReciver:: ',uidReciver);
     let parentPage = PARENT_PAGE_USERS;
-    this.navCtrl.pop();
+    //this.navCtrl.pop();
+    let conversationId = 'new';
+    this.navCtrl.setRoot(ListaConversazioniPage, {conversationId});
     this.navProxy.pushDetail(DettaglioConversazionePage,{ uidReciver:uidReciver, parentPage:parentPage});
   }
 
@@ -120,15 +124,5 @@ export class UsersPage {
       return item.fullname.toString().toLowerCase().indexOf(searchTerm.toString().toLowerCase()) > -1;
     });     
   }
-  
-  // function for get index item in array
-  // functiontofindIndexByKeyValue(arraytosearch, key, valuetosearch) {
-  //   for (var i = 0; i < arraytosearch.length; i++) {
-  //     //console.log("functiontofindIndexByKeyValue::: ", arraytosearch[i][key], valuetosearch);
-  //     if (arraytosearch[i][key] == valuetosearch) {
-  //       return i;
-  //     }
-  //   }
-  //   return null;
-  // }
+
 }

@@ -202,6 +202,8 @@ export class DettaglioConversazionePage extends _DetailPage{
           this.messageString = "";
           //console.log("000 firebaseMessage push",this.messageString, this.firebaseMessages);
           this.firebaseMessages.push(message);
+          this.navProxy.setRootMaster(ListaConversazioniPage, {conversationId:this.conversationId});
+          
           //this.content.scrollToBottom();
       }
     }
