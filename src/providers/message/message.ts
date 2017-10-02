@@ -145,6 +145,7 @@ export class MessageProvider {
     const conversation = {
               convers_with: this.userRecipient.uid,
               convers_with_fullname: this.userRecipient.fullname,
+              recipient: this.userRecipient.uid,
               image: this.userRecipient.imageurl,
               is_new: true,
               last_message_text: removeHtmlTags(message.text),
@@ -163,12 +164,13 @@ export class MessageProvider {
     const conversation = {
               convers_with: this.userSender.uid,
               convers_with_fullname: this.userSender.fullname,
+              recipient: this.userSender.uid,
               image: this.userSender.imageurl,
               is_new: true,
               last_message_text: removeHtmlTags(message.text),
               sender: this.userSender.uid,
               sender_fullname: this.userSender.fullname,
-              status: 1,
+              status: 2,
               timestamp: message.timestamp,
           };
     converationsObj.set(conversation);
