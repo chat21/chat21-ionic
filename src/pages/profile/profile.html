@@ -1,0 +1,44 @@
+<!--
+  Generated template for the ProfilePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{currentUserDetail.fullname}}</ion-title>
+    <!-- <ion-buttons left>
+      <button ion-button icon-only (click)="goBack()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons> -->
+  </ion-navbar>
+</ion-header>
+      
+<ion-content padding class="speaker-detail">
+
+  <div text-center>
+    <!-- <img [src]="speaker.profilePic" [alt]="speaker.name"><br> -->
+    <img src="assets/img/no_image.png"/><br>
+    <!-- <button ion-button icon-only clear small color="twitter">
+      <ion-icon name="logo-twitter"></ion-icon>
+    </button>
+    <button ion-button icon-only clear small color="github">
+      <ion-icon name="logo-github"></ion-icon>
+    </button>
+    <button ion-button icon-only clear small color="instagram">
+      <ion-icon name="logo-instagram"></ion-icon>
+    </button> -->
+  </div>
+
+  <ion-item detail-push>
+      {{currentUserDetail.fullname}}
+  </ion-item>
+  <ion-item detail-push>
+      email:
+  </ion-item>
+
+  <!-- <p>{{speaker.about}}</p> -->
+
+</ion-content>

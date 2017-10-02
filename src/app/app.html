@@ -1,0 +1,29 @@
+<!--<ion-split-pane>
+
+ <ion-nav [root]="rootPage" #content main swipeBackEnabled="false"></ion-nav>
+ <!-- <ion-menu [content]="content">
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Pages</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
+          {{p.title}}
+        </button>
+      </ion-list>
+    </ion-content>
+
+  </ion-menu>
+
+  <ion-nav [root]="rootPage" #content main swipeBackEnabled="false"></ion-nav>
+</ion-split-pane>-->
+
+
+<ion-split-pane (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
+    <ion-nav [root]="masterPage" #masterNav></ion-nav>
+    <ion-nav [root]="detailPage" #detailNav main></ion-nav>
+</ion-split-pane>

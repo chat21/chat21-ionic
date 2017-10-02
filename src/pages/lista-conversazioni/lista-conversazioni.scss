@@ -1,0 +1,83 @@
+page-lista-conversazioni {
+    ion-title{
+        img{
+            height: 30px;
+        }
+    }
+   
+    
+    .selected{
+        
+        //color:#ffffff;
+    }
+    .unselected{
+        
+    }
+    
+    .date-right{
+        text-align: right;
+        font-size: x-small;
+        color: #333333;
+        align-self: flex-start;
+        padding: 6px;
+    }
+    .item-block.selected{
+        margin-left:0px!important;
+        .label{
+            color:#ffffff;
+            p{
+                color:#ffffff;
+            }
+        }
+        .note {
+            color:#ffffff;
+        }
+        background-color: #0b5c89;
+        border-bottom: rgba(0, 0, 0, 0.10)!important;
+        border-bottom-width: thin!important;
+        border-bottom-style: solid!important;
+    }
+    .item-block.unselected{
+        margin-left:0px!important;
+        .label{
+            color:#333333;
+            p{
+                color:#666666;
+            }
+        }
+        .note {
+            color:#cccccc;
+        }
+        background-color: #ffffff;
+        border-bottom: rgba(0, 0, 0, 0.10)!important;
+        border-bottom-width: thin!important;
+        border-bottom-style: solid!important;
+    }
+    .list-avatar-page {
+        ion-note {
+            font-size: 12px;
+            align-self: flex-start;
+            margin-top: 14px;
+        }
+    }
+    .not-read {
+        font-weight: bold;
+        color: #000000;
+    }
+
+    // .content_message_welcome{
+    //     display: inline;
+    // }
+
+    #content_message_wellcome{
+        .messaggio{
+            padding: 20px;
+            font-size: x-large;
+            color: #273e53;
+            text-align: center;
+        }
+        .pulsanti{
+            text-align: center;
+        }
+    }
+}
