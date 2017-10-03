@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavParams, Content } from 'ionic-angular';
+import { IonicPage, NavParams, Content, Events, Platform } from 'ionic-angular';
 
 // firebase
 import * as firebase from 'firebase/app';
@@ -66,13 +66,23 @@ export class DettaglioConversazionePage extends _DetailPage{
     public chatPresenceHandler: ChatPresenceHandler,
     public navProxy: NavProxyService,
     public messageProvider: MessageProvider,
-    public userService: UserService
+    public userService: UserService,
+    public events: Events,
+    platform: Platform,
   ) {
     super();
     this.online = false;
     // recupero current user id
     //this.uidSender = navParams.get('uidSender');
+    // platform.ready().then(() => {
+    //   Keyboard.onKeyboardShow().subscribe(() => {
+    //       document.body.classList.add('keyboard-is-open');
+    //   });
 
+    //   Keyboard.onKeyboardHide().subscribe(() => {
+    //       document.body.classList.remove('keyboard-is-open');
+    //   });
+    // });
 
     let heightTest = "300px";
     // recupero id riciver
@@ -128,6 +138,8 @@ export class DettaglioConversazionePage extends _DetailPage{
     // if (this.parentPage && this.parentPage == PARENT_PAGE_USERS) {
     //   this.navProxy.setRootMaster(ListaConversazioniPage, {conversationId:this.conversationId});
     // }
+
+    //Keyboard.disableScroll(true);
   }
   //// END functions of system ////
 
@@ -202,8 +214,11 @@ export class DettaglioConversazionePage extends _DetailPage{
           this.messageString = "";
           //console.log("000 firebaseMessage push",this.messageString, this.firebaseMessages);
           this.firebaseMessages.push(message);
-          this.navProxy.setRootMaster(ListaConversazioniPage, {conversationId:this.conversationId});
           
+          
+          // aggiorno ListaConversazioniPage
+          this.events.publish('setConversationSelected:change',this.conversationId);
+          //this.navProxy.setRootMaster(ListaConversazioniPage, {conversationId:this.conversationId});
           //this.content.scrollToBottom();
       }
     }

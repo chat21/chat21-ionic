@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { PopoverController, IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Subscription } from 'rxjs/Subscription';
-import { Config } from 'ionic-angular';
+import { Config, Events } from 'ionic-angular';
 
 // firebase
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -80,11 +80,16 @@ export class ListaConversazioniPage extends _MasterPage {
     public databaseprovider: DatabaseProvider,
     public db: AngularFireDatabase,
     config: Config,
-    private firebaseProvider: FirebaseProvider
+    private firebaseProvider: FirebaseProvider,
+    public events: Events
   ) {
     super();
     // se vengo da dettaglio conversazione recupero conversationId
     this.conversationId = navParams.get('conversationId');
+
+    events.subscribe('setConversationSelected:change', (nwId) => {
+      this.filterConversationsForSetSelected(nwId);
+    });
 
     this.bck_color_selected = BCK_COLOR_CONVERSATION_SELECTED;
     this.bck_color_unselected = BCK_COLOR_CONVERSATION_UNSELECTED;
@@ -142,7 +147,7 @@ export class ListaConversazioniPage extends _MasterPage {
   setToken(user) {
     //salvo il token nel db
     console.log("setToken::: ", user);
-    this.msgService.updateToken(user);
+    this.msgService.getToken(user);
   }
   removeToken() {
     //rimuovo il token dal db
@@ -203,7 +208,8 @@ export class ListaConversazioniPage extends _MasterPage {
   }
 
   // filtro le conversazioni selezionando quella attiva
-  filterConversationsForSetSelected(oldId, nwId){
+  filterConversationsForSetSelected(nwId){
+    let oldId = this.conversationId;
     //console.log("this.conversations",this.conversations);
     this.conversations.filter(function(item){
       if(item.uid == nwId){
@@ -231,7 +237,7 @@ export class ListaConversazioniPage extends _MasterPage {
   goToConversationDetail(convId: string, uidReciver: string) {
     console.log('goToConversationDetail:: ', convId, this.conversationId);
     // evidenzio conversazione selezionata recuperando id conversazione da event
-    this.filterConversationsForSetSelected(this.conversationId, convId);
+    this.filterConversationsForSetSelected(convId);
     this.navProxy.pushDetail(DettaglioConversazionePage, {
       uidReciver: uidReciver
     });

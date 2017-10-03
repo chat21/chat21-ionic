@@ -55,6 +55,32 @@ export class MessagingService {
             console.log('Unable to get permission to notify.', err);
         });
     }
+
+    getToken(user){
+        // Get Instance ID token. Initially this makes a network call, once retrieved
+        // subsequent calls to getToken will return from cache.
+        let that = this;
+        this.messaging.getToken()
+        .then(function(currentToken) {
+            if (currentToken) {
+                //sendTokenToServer(currentToken);
+                that.token = currentToken;
+                //updateUIForPushEnabled(currentToken);
+                that.updateToken(user);
+            } else {
+                // Show permission request.
+                console.log('No Instance ID token available. Request permission to generate one.');
+                // Show permission UI.
+                //updateUIForPushPermissionRequired();
+                //setTokenSentToServer(false);
+            }
+        })
+        .catch(function(err) {
+            console.log('An error occurred while retrieving token. ', err);
+            //showToken('Error retrieving Instance ID token. ', err);
+            //setTokenSentToServer(false);
+        });
+    }
   
     updateToken(user) {
         //console.log(this.token, user);

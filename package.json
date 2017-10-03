@@ -24,6 +24,7 @@
         "@angular/platform-browser": "4.1.0",
         "@angular/platform-browser-dynamic": "4.1.0",
         "@ionic-native/core": "3.7.0",
+        "@ionic-native/keyboard": "^4.3.0",
         "@ionic-native/push": "^4.2.1",
         "@ionic-native/splash-screen": "3.7.0",
         "@ionic-native/sqlite": "^4.2.1",

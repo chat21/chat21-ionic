@@ -1,11 +1,13 @@
 page-lista-conversazioni {
+    ion-navbar{
+        position: static; 
+        top:0px;
+    }
     ion-title{
         img{
             height: 30px;
         }
     }
-   
-    
     .selected{
         
         //color:#ffffff;

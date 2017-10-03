@@ -77,10 +77,10 @@ export class FirebaseProvider {
         //const items = this.conversationProvider.loadListConversations();
         // creo un model e lo aggiungo all'array
         let user = child.val();
-        let fullname = user.name+" "+user.lastname;
+        let fullname = user.name+" "+user.surname;
         console.log("fullname:",fullname);
         
-        let contact = new UserModel(user.uid, user.name, user.lastname, fullname, user.imageurl);
+        let contact = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
         // if (user.uid == this.currentUser.uid){
         //   //salvo l'user corrente
         //   this.currentUserDetail = contact;
