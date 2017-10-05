@@ -6,13 +6,13 @@
 -->
 
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton>
     <ion-title>{{currentUserDetail.fullname}}</ion-title>
-    <!-- <ion-buttons left>
+    <ion-buttons left>
       <button ion-button icon-only (click)="goBack()">
         <ion-icon name="close"></ion-icon>
       </button>
-    </ion-buttons> -->
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
       
@@ -31,6 +31,7 @@
       <ion-icon name="logo-instagram"></ion-icon>
     </button> -->
   </div>
+  <div>{{currentUserDetail.uid}}</div>
 
   <ion-item detail-push>
       {{currentUserDetail.fullname}}

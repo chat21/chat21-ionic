@@ -7,6 +7,7 @@ import { UserService } from '../../providers/user/user';
 import { UserModel } from '../../models/user';
 import { NavProxyService } from '../../providers/nav-proxy';
 import { DettaglioConversazionePage } from '../dettaglio-conversazione/dettaglio-conversazione';
+//import { PARENT_PAGE_DETAIL_CONVERSATION } from '../../utils/constants';
 
 
 /**
@@ -24,6 +25,7 @@ export class ProfilePage {
   currentUserDetail: UserModel;
   currentUser: any;//UserModel;
   uidUser: string;
+  //parentPage: string;
   
   constructor(
     public navCtrl: NavController, 
@@ -32,6 +34,9 @@ export class ProfilePage {
     public navProxy: NavProxyService
   ) {
     this.uidUser = navParams.get('uidUser');
+    // recupero parent page
+    //this.parentPage = navParams.get('parentPage');
+
     if (!this.uidUser){
       // recupero current currentUserDetail
       this.currentUserDetail = this.userService.getCurrentUserDetails();
@@ -42,8 +47,8 @@ export class ProfilePage {
       const userFirebaseSender = this.userService.setUserDetail(this.uidUser)
       userFirebaseSender.subscribe(snapshot => {
         const user = snapshot.val();
-        const fullname = user.name+" "+user.lastname;
-        const userDetails = new UserModel(user.uid, user.name, user.lastname, fullname, user.imageurl);
+        const fullname = user.name+" "+user.surname;
+        const userDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
         console.log("userDetails userSender:: ",userDetails);
         this.currentUserDetail = userDetails;
       });
@@ -58,11 +63,17 @@ export class ProfilePage {
   }
 
   goBack(){
-    this.navProxy.isOn = true;
-    this.navProxy.pushDetail(DettaglioConversazionePage, {
-      uidReciver: this.currentUserDetail.uid
-    });
-    //this.navCtrl.pop();
+    this.navCtrl.pop();
+    // if (this.parentPage == PARENT_PAGE_DETAIL_CONVERSATION){
+    //   this.navProxy.isOn = true;
+    //   this.navProxy.pushDetail(DettaglioConversazionePage, {
+    //     uidReciver: this.currentUserDetail.uid
+    //   });
+    // }
+    // else{
+    //   this.navCtrl.pop();
+    // }
+    
   }
 
 }

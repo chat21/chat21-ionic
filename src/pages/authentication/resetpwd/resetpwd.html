@@ -7,14 +7,19 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Reset Password</ion-title>
+    <ion-title>Rigenera Password</ion-title>
+    <ion-buttons left>
+        <button ion-button icon-only (click)="goBack()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 
-<ion-content padding>
-  <h2>Reset Password</h2>
+<ion-content padding class="sample-modal-page">
+  <div class="content-page">
+  <!-- <h2>Rigenera Password</h2> -->
   <form [formGroup]="resetpwdForm" (submit)="resetPwd()" novalidate>
     <ion-item>
       <ion-label stacked>Email</ion-label>
@@ -22,11 +27,14 @@
         placeholder="Il tuo indirizzo email"
         [class.invalid]="!resetpwdForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
     </ion-item>
+    <div class="div-error-message">
     <ion-item class="error-message" *ngIf="!resetpwdForm.controls.email.valid  && (emailChanged || submitAttempt)">
-      <p>Inserisci un'email valida</p>
+      <p>Inserisci un indirizzo email valido.</p>
     </ion-item>
-    <button ion-button block type="submit">
-      Reset Password
+    </div>
+    <button ion-button block class="full" type="submit">
+      Rigenera Password
     </button>
   </form>
+  </div>
 </ion-content>

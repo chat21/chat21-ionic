@@ -33,6 +33,25 @@ export class MessagingService {
         // recupero tenant
         this.tenant = config.get("appConfig").tenant;
         this.urlNodeFirebase = '/apps/'+this.tenant+'/';
+
+        // Callback fired if Instance ID token is updated.
+        // this.messaging.onTokenRefresh(function() {
+        //     this.messaging.getToken()
+        //     .then(function(refreshedToken) {
+        //         console.log('Token refreshed.');
+        //         // Indicate that the new Instance ID token has not yet been sent to the
+        //         // app server.
+        //         //this.setTokenSentToServer(false);
+        //         this.token = refreshedToken;
+        //         // Send Instance ID token to app server.
+        //         this.updateToken(refreshedToken);
+        //         // ...
+        //     })
+        //     .catch(function(err) {
+        //         console.log('Unable to retrieve refreshed token ', err);
+        //         this.showToken('Unable to retrieve refreshed token ', err);
+        //     });
+        // });
     }
 
     initMessage() {
@@ -41,21 +60,42 @@ export class MessagingService {
 
     getPermission() {
         this.messaging.requestPermission()
-        .then(() => {
-            console.log('Notification permission granted.');
-            return this.messaging.getToken();
-        })
         .then(token => {
+            console.log('Notification permission granted.');
+            // TODO(developer): Retrieve an Instance ID token for use with FCM.
             this.token = token;
             console.log(token);
-            console.log('Notification permission token.', token);
+            console.log('NOTIFICA PERMESSO token.', token);
             //this.updateToken(token);
         })
-        .catch((err) => {
-            console.log('Unable to get permission to notify.', err);
+        .catch(function(err) {
+          console.log('Unable to get permission to notify.', err);
         });
-    }
 
+        // .then(() => {
+        //     console.log('Notification permission granted.');
+        //     firebase.auth().currentUser.getToken(/* forceRefresh */ true)
+        //     .then(function(idToken) {
+        //         // Send token to your backend via HTTPS
+        //         this.token = idToken;
+        //     })
+        //     .catch(function(error) {
+        //         // Handle error
+        //         console.log('NON POSSO RECUPERARE IL TOKEN.', error);
+        //     });
+        //     //return this.messaging.getToken();
+        // })
+        // .then(token => {
+        //     this.token = token;
+        //     console.log(token);
+        //     console.log('NOTIFICA PERMESSO token.', token);
+        //     //this.updateToken(token);
+        // })
+        // .catch((err) => {
+        //     console.log('NON DISPONIBILE IL PERMESSO DI NOTIFICA.', err);
+        // });
+    }
+  
     getToken(user){
         // Get Instance ID token. Initially this makes a network call, once retrieved
         // subsequent calls to getToken will return from cache.
@@ -81,9 +121,9 @@ export class MessagingService {
             //setTokenSentToServer(false);
         });
     }
-  
+
     updateToken(user) {
-        //console.log(this.token, user);
+        console.log("***********************",this.token);
         //this.afAuth.authState.take(1).subscribe(user => {
         if (!user || !this.token) return;
         console.log("aggiorno token nel db");
@@ -91,8 +131,15 @@ export class MessagingService {
         //let connectionsRef: firebase.database.Reference = this.referenceToUserListToken(user.uid);
         let conection = this.token;
         var updates = {};
-        this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instancesId/";
-        updates[this.connectionsRefinstancesId + conection] = conection;
+        
+        if(this.tenant != "bppintranet" ){
+            this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instancesId/";
+            updates[this.connectionsRefinstancesId + conection] = conection;
+        }
+        else{
+            this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instanceId/";
+            updates[this.connectionsRefinstancesId] = conection;
+        }
         firebase.database().ref().update(updates);
         //this.deviceConnectionRef = connectionsRef.push(conection);
         //this.tokenId = conection;//this.deviceConnectionRef.key;
@@ -103,13 +150,23 @@ export class MessagingService {
     
     removeToken() {
         console.log("rimuovo token nel db", this.token);
-        let connectionsRefURL = this.connectionsRefinstancesId+this.token;
+        let connectionsRefURL = "";
+        if(this.tenant != "bppintranet" ){
+            connectionsRefURL = this.connectionsRefinstancesId+this.token;
+        }else{
+            connectionsRefURL = this.connectionsRefinstancesId;
+        }
         const connectionsRef = firebase.database().ref().child(connectionsRefURL);
         connectionsRef.remove();
     }
 
     referenceToUserListToken(userid){
-        this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instancesId/";
+        if(this.tenant != "bppintranet" ){
+            this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instanceId/";
+        }
+        else{
+            this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instancesId/";
+        }
         const connectionsRef = firebase.database().ref().child(this.connectionsRefinstancesId);
         return connectionsRef;
     }

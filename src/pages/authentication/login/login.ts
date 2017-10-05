@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ViewController, NavController, AlertController, NavParams, LoadingController } from 'ionic-angular';
+import { Config, ViewController, NavController, AlertController, NavParams, LoadingController, ModalController } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { AuthService } from '../../../providers/auth-service';
@@ -27,19 +27,25 @@ export class LoginPage {
   passwordChanged: boolean = false;
   submitAttempt: boolean = false;
   loading: any;
-  
+  private tenant: string;
+
   constructor(
     public viewCtrl: ViewController, 
     public navCtrl: NavController, 
+    public modalCtrl: ModalController,
     public authService: AuthService, 
     public navParams: NavParams, 
     public formBuilder: FormBuilder,
     public alertCtrl: AlertController, 
     public loadingCtrl: LoadingController,
-    private userService: UserService
+    private userService: UserService,
+    public config: Config
   ) {
    
     console.log("LOGIN PAGE");
+    let appConfig = this.config.get("appConfig");
+    this.tenant = appConfig.tenant;
+
     let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.pattern(EMAIL_REGEXP)])],
@@ -73,14 +79,15 @@ export class LoginPage {
   }
 
   register(){
-    this.navCtrl.push(RegisterPage)
-    // .then( res => {
-    //   this.viewCtrl.dismiss({animation:'none'})
-    // });
+    let profileModal = this.modalCtrl.create(RegisterPage, null, { enableBackdropDismiss: false });
+    profileModal.present({animate: false, duration: 0});
+    //this.navCtrl.push(RegisterPage);
   }
 
   resetPwd(){
-    this.navCtrl.push(ResetpwdPage);
+    let profileModal = this.modalCtrl.create(ResetpwdPage, null, { enableBackdropDismiss: false });
+    profileModal.present({animate: false, duration: 0});
+    //this.navCtrl.push(ResetpwdPage);
   }
 
 

@@ -87,9 +87,9 @@ export class FirebaseProvider {
         //   return;
         // }
         //console.log("this.contacts MAP ::: ", contact);
-        //this.databaseprovider.addContact(this.contact['uid'], this.contact['name'], this.contact['lastname'], this.contact['fullname'], this.contact['imageurl'])
+        //this.databaseprovider.addContact(this.contact['uid'], this.contact['name'], this.contact['surname'], this.contact['fullname'], this.contact['imageurl'])
         this.databaseprovider.setTimestamp();
-        this.databaseprovider.addContact(contact.uid, contact.name, contact.lastname, contact.fullname, contact.imageurl);  
+        this.databaseprovider.addContact(contact.uid, contact.name, contact.surname, contact.fullname, contact.imageurl);  
       }
     
       removeContact(child) {

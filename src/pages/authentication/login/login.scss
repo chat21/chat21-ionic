@@ -1,10 +1,17 @@
+
 page-login {
+  ion-title {
+    text-align: center;
+  }
+  
   h2 {
     text-align: center;
     margin: 10px;
   }
   form {
     margin-bottom: 20px;
+    padding: 0px 10px 0px 10px;
+
     button {
       margin-top: 20px !important;
     }
@@ -18,20 +25,100 @@ page-login {
     border-bottom: 1px solid #FF6153;
   }
 
-  .error-message .item-inner {
-    border-bottom: 0 !important;
+  .item-block{
+    min-height: auto;
+  }
+
+  .item-md {
+    font-size: 1.3rem;
+  }
+  .item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus) .item-inner{
+    border-bottom: 0px!important;
+  }
+  .item-md.item-input .item-inner{
+    border-bottom: 0px!important;
+  }
+  
+  .div-error-message {
+    min-height: 30px;
+
+    .error-message {
+      max-height: 24px;
+    }
+    .item-inner {
+      border-bottom: 0 !important;
+    }
+    .item p {
+      font-size: 1.0rem;
+    }
   }
 
   .sample-modal-page {
-    padding: 40px;
     background: rgba(0,0,0,0.5);
     height: 100%;
+    padding: 46px;
+    
+    .scroll-content{
+      margin-top: 36px!important;
+      padding: 56px 26px 26px 26px !important;
+    }
+
   }
   .content-page {
     background: #FFFFFF;
-    padding: 40px;
+    padding: 20px;
     margin: 0px;
     height: 100%;
+    text-align: -webkit-center;
+
+    form {
+      .item{
+        padding-left: 0px;
+        font-size: 1.3rem;
+      }
+      ion-input {
+        padding: 0px 10px 0px 10px;
+      }
+    }
+    
+
+    ion-item {
+      .item-inner .input-wrapper{
+        padding-right: 0px!important;
+        //border-bottom: 1px solid #c8c7cc!important;
+      }
+    } 
+    
+    .item-input ion-input, .item-input ion-textarea {
+      background-color: rgba(204, 204, 204, 0.10);
+      //border-bottom: 1px solid #cccccc;
+    }
+    .item-md.item-block .item-inner {
+      padding-right: 0px;
+    }
+    .text-input{
+      padding: 8px 10px 8px 10px;
+    }
+    button{
+      max-width: 70%;
+      background-color: #FFFFFF !important;
+      height: 34px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: small;
+      color:rgb(39, 62, 83);
+    }
+    button.full{
+      max-width: 70%;
+      background-color: rgb(39, 62, 83) !important;
+      height: 34px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: small;
+      color:#FFFFFF;
+    }
   }
+ 
+
 }
 

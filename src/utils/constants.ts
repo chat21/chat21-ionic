@@ -22,6 +22,7 @@ export const MAX_HEIGHT_TEXTAREA: number = 180;
 
 // pagine
 export const PARENT_PAGE_USERS: string = "users";
+export const PARENT_PAGE_DETAIL_CONVERSATION: string = "dettaglio-conversazione";
 
 // css
 export const BCK_COLOR_CONVERSATION_SELECTED: string = "#EEEEEE";

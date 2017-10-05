@@ -80,7 +80,7 @@ export class AuthService {
 
 
   // Register User with Email
-  register(username: string, email: string, password: string, name: string, lastname: string): any {
+  register(username: string, email: string, password: string, name: string, surname: string): any {
     return this.fireAuth.createUserWithEmailAndPassword(email, password); 
   }
 
@@ -147,7 +147,7 @@ export class AuthService {
   // }
 
   // // Register User
-  // createAccount(username: string, email: string, password: string, name: string, lastname: string){
+  // createAccount(username: string, email: string, password: string, name: string, surname: string){
   //   return new Promise((resolve, reject) => {
   //     let headers = new Headers();
   //     headers.append('Content-Type', 'application/json');
@@ -157,8 +157,8 @@ export class AuthService {
   //       email: email,//"czone555@gmail.com",
   //       password: password, //"123456",
   //       name: name,//"Dario DePa"
-  //       lastname: lastname,//"Dario DePa"
-  //       fullname: name+' '+lastname//"Dario DePa"
+  //       surname: surname,//"Dario DePa"
+  //       fullname: name+' '+surname//"Dario DePa"
   //     }); 
   //     this.http.post(link, data)
   //     .subscribe(res => {

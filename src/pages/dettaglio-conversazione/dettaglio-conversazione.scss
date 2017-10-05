@@ -1,9 +1,6 @@
 page-dettaglio-conversazione {
     
         ion-navbar {
-            position: static; 
-            top:0px;
-
             .headerUserName{
                 font-size: 12px;
                 color: #111111;
@@ -281,9 +278,6 @@ page-dettaglio-conversazione {
     
         ion-footer {
             //--footer-height: 300px;
-            .input-cover {
-                position: static;
-              }
         }
         
     }

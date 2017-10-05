@@ -64,6 +64,7 @@ export class ListaConversazioniPage extends _MasterPage {
   public users: FirebaseListObservable<any>;
   public currentUserDetail: UserModel;
   private contacts: any;
+  //private firstAcces: boolean;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -84,12 +85,15 @@ export class ListaConversazioniPage extends _MasterPage {
     public events: Events
   ) {
     super();
-    // se vengo da dettaglio conversazione recupero conversationId
+    // se vengo da dettaglio conversazione
+    // o da users con conversazione attiva recupero conversationId
     this.conversationId = navParams.get('conversationId');
 
     events.subscribe('setConversationSelected:change', (nwId) => {
       this.filterConversationsForSetSelected(nwId);
     });
+
+    //this.firstAcces = true;
 
     this.bck_color_selected = BCK_COLOR_CONVERSATION_SELECTED;
     this.bck_color_unselected = BCK_COLOR_CONVERSATION_UNSELECTED;
@@ -105,7 +109,6 @@ export class ListaConversazioniPage extends _MasterPage {
       console.log("lastUpdate:", lastUpdate);
       that.firebaseProvider.loadFirebaseContactsData(lastUpdate);
     });
-    
   }
 
   ngOnInit() {
@@ -159,23 +162,16 @@ export class ListaConversazioniPage extends _MasterPage {
 
   //// start gestione conversazioni ////
   loadListConversations() {
-    console.log("loadListConversations::", this.conversationProvider);
+    console.log("loadListConversations::", this.conversationId);
+    
     const items = this.conversationProvider.loadListConversations();
-    this.conversations = [];
-
     items.subscribe(snapshot => {
-      // if(snapshot.length == 0) {
-      //   // se non ci sono conversazioni attive carica elenco utenti
-      //   this.navCtrl.push(UsersPage);
-      //   return;
-      // } 
       this.conversations = [];
       snapshot.forEach(item => {
         let selected: boolean;
-        // se conversationId è settato significa che sto iniziando una nw conversazione
-        // e vengo da dettaglio_conversazione; seleziono la conversazione cliccata se esiste
+        // se conversationId è null significa che sto iniziando una nw conversazione
+        // se vengo da dettaglio_conversazione; seleziono la conversazione cliccata se esiste
         (item.$key == this.conversationId)?selected = true:selected = false;
-
         const conversation = new ConversationModel(
           item.$key,
           item.convers_with,
@@ -197,12 +193,13 @@ export class ListaConversazioniPage extends _MasterPage {
       
       // se ci sono conversazioni e non esiste una conversazione selezionata
       // (primo accesso alla pagina), imposto la prima come conversazione attiva
-      if(this.conversations.length>0 && !this.conversationId){
+      if(this.conversations.length>0 && !this.conversationId){//} && this.firstAcces == true){
         this.conversationId = this.conversations[0].uid;
         let uidReciver = this.conversations[0].convers_with;
         this.goToConversationDetail(this.conversationId, uidReciver);
+        //this.firstAcces = false;
       }
-      console.log("this.content_message_welcome::",this.style_message_welcome);
+      //console.log("this.content_message_welcome::",this.style_message_welcome);
     });
 
   }
@@ -239,7 +236,8 @@ export class ListaConversazioniPage extends _MasterPage {
     // evidenzio conversazione selezionata recuperando id conversazione da event
     this.filterConversationsForSetSelected(convId);
     this.navProxy.pushDetail(DettaglioConversazionePage, {
-      uidReciver: uidReciver
+      uidReciver: uidReciver,
+      conversationId: this.conversationId
     });
   }
 
@@ -265,7 +263,7 @@ export class ListaConversazioniPage extends _MasterPage {
         this.logOut();
       }
       else if (data == 'ProfilePage') {
-        this.navCtrl.push(ProfilePage)
+        this.navCtrl.push(ProfilePage);
       }
     });
   }
@@ -275,6 +273,7 @@ export class ListaConversazioniPage extends _MasterPage {
   logOut() {
     // resetto pagina dettaglio conversazioni
     this.navProxy.pushDetail(PlaceholderPage,{});
+    
     let that = this;
     this.authService.logoutUser()
       .then(function () {
@@ -283,8 +282,9 @@ export class ListaConversazioniPage extends _MasterPage {
         that.conversations = [];
         // mi cancello dal nodo precence
         that.chatPresenceHandler.goOffline();
-        // rimuovo il token
+        // rimuovo il token prima del logout altrimenti non ho più i permessi
         that.removeToken();
+    
       })
       .catch(function (error) {
         console.log("logout failed: " + error.message)

@@ -7,17 +7,24 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>register</ion-title>
+    <ion-title>Registrazione</ion-title>
+    <ion-buttons left>
+        <button ion-button icon-only (click)="goBack()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-  <h2>Register</h2>
+
+<ion-content padding class="sample-modal-page">
+  <div class="content-page">
+  <!-- <h2>Registrazione</h2> -->
   
   <form [formGroup]="registerForm" (submit)="createAccount()" novalidate>
-    <ion-item>
+    <!-- <ion-item>
       <ion-label stacked>Username</ion-label>
       <ion-input #username formControlName="username" type="text" (change)="elementChanged(username)"
         placeholder="Your username"
@@ -25,49 +32,57 @@
     </ion-item>
     <ion-item class="error-message" *ngIf="!registerForm.controls.username.valid  && (usernameChanged || submitAttempt)">
       <p>Please enter a valid username.</p>
-    </ion-item>
+    </ion-item> -->
 
     <ion-item>
       <ion-label stacked>Email</ion-label>
       <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)"
-        placeholder="Your email address"
+        placeholder="Il tuo indirizzo email"
         [class.invalid]="!registerForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
     </ion-item>
+    <div class="div-error-message">
     <ion-item class="error-message" *ngIf="!registerForm.controls.email.valid  && (emailChanged || submitAttempt)">
-      <p>Please enter a valid email.</p>
+      <p>Inserisci un indirizzo email valido.</p>
     </ion-item>
+    </div>
 
     <ion-item>
       <ion-label stacked>Password</ion-label>
       <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)"
-        placeholder="Your password"
+        placeholder="La tua password"
         [class.invalid]="!registerForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
     </ion-item>
+    <div class="div-error-message">
     <ion-item class="error-message" *ngIf="!registerForm.controls.password.valid  && (passwordChanged || submitAttempt)">
-      <p>Your password needs more than 6 characters.</p>
+      <p>La password deve essere di almeno 6 caratteri.</p>
     </ion-item>
+    </div>
 
     <ion-item>
-      <ion-label stacked>Name</ion-label>
+      <ion-label stacked>Nome</ion-label>
       <ion-input #name formControlName="name" type="text" (change)="elementChanged(name)"
-        placeholder="Your Name"
+        placeholder="Il tuo Nome"
         [class.invalid]="!registerForm.controls.name.valid && (nameChanged || submitAttempt)"></ion-input>
     </ion-item>
+    <div class="div-error-message">
     <ion-item class="error-message" *ngIf="!registerForm.controls.name.valid  && (nameChanged || submitAttempt)">
-      <p>Your name can't empty.</p>
+      <p>Il campo nome non può essere vuoto.</p>
     </ion-item>
+    </div>
     <ion-item>
-        <ion-label stacked>Lastname</ion-label>
-        <ion-input #lastname formControlName="lastname" type="text" (change)="elementChanged(lastname)"
-          placeholder="Your lastname"
-          [class.invalid]="!registerForm.controls.lastname.valid && (lastnameChanged || submitAttempt)"></ion-input>
+        <ion-label stacked>Cognome</ion-label>
+        <ion-input #surname formControlName="surname" type="text" (change)="elementChanged(surname)"
+          placeholder="Il tuo cognome"
+          [class.invalid]="!registerForm.controls.surname.valid && (surnameChanged || submitAttempt)"></ion-input>
       </ion-item>
-      <ion-item class="error-message" *ngIf="!registerForm.controls.lastname.valid  && (lastnameChanged || submitAttempt)">
-        <p>Your lastname can't empty.</p>
+      <div class="div-error-message">
+      <ion-item class="error-message" *ngIf="!registerForm.controls.surname.valid  && (surnameChanged || submitAttempt)">
+        <p>Il campo cognome non può essere vuoto.</p>
       </ion-item>
-
-    <button ion-button block type="submit">
-      Register
+      </div>
+    <button ion-button block class="full" type="submit">
+      Registrati
     </button>
   </form>
+  </div>
 </ion-content>
