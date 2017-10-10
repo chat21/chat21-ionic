@@ -62,4 +62,8 @@ export class ResetpwdPage {
       this.loading.present();
     }
   }
+
+  goBack(){
+    this.navCtrl.pop();    
+  }
 }

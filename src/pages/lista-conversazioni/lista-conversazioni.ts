@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { PopoverController, IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Subscription } from 'rxjs/Subscription';
-import { Config } from 'ionic-angular';
+import { Config, Events } from 'ionic-angular';
 
 // firebase
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 // models
@@ -61,9 +61,10 @@ export class ListaConversazioniPage extends _MasterPage {
   private bck_color_unselected:string;
 
   public tenant: string;
-  public users: FirebaseListObservable<any>;
+  public users: AngularFireList<any>;
   public currentUserDetail: UserModel;
   private contacts: any;
+  //private firstAcces: boolean;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -80,11 +81,18 @@ export class ListaConversazioniPage extends _MasterPage {
     public databaseprovider: DatabaseProvider,
     public db: AngularFireDatabase,
     config: Config,
-    private firebaseProvider: FirebaseProvider
+    private firebaseProvider: FirebaseProvider,
+    public events: Events
   ) {
     super();
-    // se vengo da dettaglio conversazione recupero conversationId
+    // se vengo da dettaglio conversazione
+    // o da users con conversazione attiva recupero conversationId
     this.conversationId = navParams.get('conversationId');
+    events.subscribe('setConversationSelected:change', (nwId) => {
+      this.filterConversationsForSetSelected(nwId);
+    });
+
+    //this.firstAcces = true;
 
     this.bck_color_selected = BCK_COLOR_CONVERSATION_SELECTED;
     this.bck_color_unselected = BCK_COLOR_CONVERSATION_UNSELECTED;
@@ -100,7 +108,6 @@ export class ListaConversazioniPage extends _MasterPage {
       console.log("lastUpdate:", lastUpdate);
       that.firebaseProvider.loadFirebaseContactsData(lastUpdate);
     });
-    
   }
 
   ngOnInit() {
@@ -142,7 +149,7 @@ export class ListaConversazioniPage extends _MasterPage {
   setToken(user) {
     //salvo il token nel db
     console.log("setToken::: ", user);
-    this.msgService.updateToken(user);
+    this.msgService.getToken(user);
   }
   removeToken() {
     //rimuovo il token dal db
@@ -154,25 +161,22 @@ export class ListaConversazioniPage extends _MasterPage {
 
   //// start gestione conversazioni ////
   loadListConversations() {
-    console.log("loadListConversations::", this.conversationProvider);
+    console.log("loadListConversations::", this.conversationId);
     const items = this.conversationProvider.loadListConversations();
-    this.conversations = [];
-
-    items.subscribe(snapshot => {
-      // if(snapshot.length == 0) {
-      //   // se non ci sono conversazioni attive carica elenco utenti
-      //   this.navCtrl.push(UsersPage);
-      //   return;
-      // } 
+    //items.valueChanges(['child_added'])
+    items.snapshotChanges(['child_added'])
+    .subscribe(snapshot => {
       this.conversations = [];
-      snapshot.forEach(item => {
-        let selected: boolean;
-        // se conversationId è settato significa che sto iniziando una nw conversazione
-        // e vengo da dettaglio_conversazione; seleziono la conversazione cliccata se esiste
-        (item.$key == this.conversationId)?selected = true:selected = false;
+      snapshot.forEach(action => {
+        let item = action.payload.val();
+        console.log(":::item:::", action.key, item.convers_with);
 
+        let selected: boolean;
+        // se conversationId è null significa che sto iniziando una nw conversazione
+        // se vengo da dettaglio_conversazione; seleziono la conversazione cliccata se esiste
+        (action.key == this.conversationId)?selected = true:selected = false;
         const conversation = new ConversationModel(
-          item.$key,
+          action.key,
           item.convers_with,
           item.convers_with_fullname,
           item.image,
@@ -192,21 +196,22 @@ export class ListaConversazioniPage extends _MasterPage {
       
       // se ci sono conversazioni e non esiste una conversazione selezionata
       // (primo accesso alla pagina), imposto la prima come conversazione attiva
-      if(this.conversations.length>0 && !this.conversationId){
+      if(this.conversations.length>0 && !this.conversationId){//} && this.firstAcces == true){
         this.conversationId = this.conversations[0].uid;
         let uidReciver = this.conversations[0].convers_with;
         this.goToConversationDetail(this.conversationId, uidReciver);
+        //this.firstAcces = false;
       }
-      console.log("this.content_message_welcome::",this.style_message_welcome);
+      //console.log("this.content_message_welcome::",this.style_message_welcome);
     });
 
   }
 
   // filtro le conversazioni selezionando quella attiva
-  filterConversationsForSetSelected(oldId, nwId){
+  filterConversationsForSetSelected(nwId){
+    let oldId = this.conversationId;
     //console.log("this.conversations",this.conversations);
     this.conversations.filter(function(item){
-      //console.log("item.uid - nwId", item.uid, nwId);
       if(item.uid == nwId){
         item.selected = true;
       }
@@ -232,9 +237,10 @@ export class ListaConversazioniPage extends _MasterPage {
   goToConversationDetail(convId: string, uidReciver: string) {
     console.log('goToConversationDetail:: ', convId, this.conversationId);
     // evidenzio conversazione selezionata recuperando id conversazione da event
-    this.filterConversationsForSetSelected(this.conversationId, convId);
+    this.filterConversationsForSetSelected(convId);
     this.navProxy.pushDetail(DettaglioConversazionePage, {
-      uidReciver: uidReciver
+      uidReciver: uidReciver,
+      conversationId: this.conversationId
     });
   }
 
@@ -260,7 +266,7 @@ export class ListaConversazioniPage extends _MasterPage {
         this.logOut();
       }
       else if (data == 'ProfilePage') {
-        this.navCtrl.push(ProfilePage)
+        this.navCtrl.push(ProfilePage);
       }
     });
   }
@@ -270,6 +276,7 @@ export class ListaConversazioniPage extends _MasterPage {
   logOut() {
     // resetto pagina dettaglio conversazioni
     this.navProxy.pushDetail(PlaceholderPage,{});
+    
     let that = this;
     this.authService.logoutUser()
       .then(function () {
@@ -278,8 +285,9 @@ export class ListaConversazioniPage extends _MasterPage {
         that.conversations = [];
         // mi cancello dal nodo precence
         that.chatPresenceHandler.goOffline();
-        // rimuovo il token
+        // rimuovo il token prima del logout altrimenti non ho più i permessi
         that.removeToken();
+    
       })
       .catch(function (error) {
         console.log("logout failed: " + error.message)

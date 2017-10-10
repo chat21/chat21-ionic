@@ -41,7 +41,6 @@ export class UserService {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      console.log("constructor singleton***************");
       let appConfig = this.config.get("appConfig");
       this.tenant = appConfig.tenant;
       this.urlNodeContacts = '/apps/'+this.tenant+'/contacts/';
@@ -54,29 +53,35 @@ export class UserService {
     //// DA FARE ////
     const urlNodeFirebase = this.urlNodeContacts+uid;
     //return firebase.database().ref(urlNodeFirebase).once('value');
-    const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true});
+    //const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true});
+    const userFirebase = this.db.object(urlNodeFirebase);
     return userFirebase;
   }
 
-  saveCurrentUserDetail(uid: string, username: string, name: string, lastname: string){
+  saveCurrentUserDetail(uid: string, username: string, name: string, surname: string){
     // recupero tenant
     let timestamp = getNowTimestamp();
-    console.log("saveCurrentUserDetail --------->",this.urlNodeContacts, uid, name, lastname);
+    console.log("saveCurrentUserDetail --------->",this.urlNodeContacts, uid, name, surname);
     return firebase.database().ref(this.urlNodeContacts)
-    .child(uid).set({uid:uid, name:name, lastname:lastname, imageurl:'', timestamp:timestamp})
+    .child(uid).set({uid:uid, name:name, surname:surname, imageurl:'', timestamp:timestamp})
   }
 
   setCurrentUserDetails(uid, email) {
     const urlNodeFirebase = this.urlNodeContacts+uid;
-    const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true });
-    userFirebase.subscribe(snapshot => {
-      if (snapshot.val()){
-        const user = snapshot.val();
-        const fullname = user.name+" "+user.lastname;
-        this.currentUserDetails = new UserModel(user.uid, user.name, user.lastname, fullname, user.imageurl);
+    //const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true });
+    const userFirebase = this.db.object(urlNodeFirebase);
+    userFirebase.snapshotChanges().subscribe(snapshot => {
+
+    //userFirebase.subscribe(snapshot => {
+      if (snapshot.payload.val()){
+        const user = snapshot.payload.val();
+        const fullname = user.name+" "+user.surname;
+        this.currentUserDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
       }
       else {
         this.currentUserDetails = new UserModel(uid, email, '', '', '');
+        // aggiorno user nel db contacts
+        this.saveCurrentUserDetail(uid, "", email, '');
       }
     });
   }

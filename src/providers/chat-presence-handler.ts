@@ -64,14 +64,10 @@ export class ChatPresenceHandler {
     let myConnectionsRef = this.onlineRefForUser(userid);
     let lastOnlineRef = this.lastOnlineRefForUser(userid);
     let connectedRefURL = "/.info/connected";
-    //let connectedRef = this.db.object(connectedRefURL, { preserveSnapshot: true });
-    //connectedRef.subscribe(snapshot => {
-    const connectedRef = firebase.database().ref().child(connectedRefURL);
-    connectedRef.on("value", (child) => {
-      console.log(child.key)
-      console.log(child.val())
-      if(child.val()){
-        
+    this.db.object(connectedRefURL).snapshotChanges()
+    .subscribe(child => {
+      //console.log("KEY: ",child);
+      if(child.payload.val()){
         if (!this.deviceConnectionRef || this.deviceConnectionRef == "undefined") {
           console.log("self.deviceConnectionRef: ", this.deviceConnectionRef);
           //this.deviceConnectionRef = myConnectionsRef.set(true);

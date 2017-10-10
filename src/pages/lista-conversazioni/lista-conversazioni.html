@@ -42,7 +42,7 @@
           <p class="truncate not-read" [innerHTML]="conversation.last_message_text"></p>
         </ng-template>
         <ng-template #other_content>
-          <p class="truncate" [innerHTML]="conversation.last_message_text"></p>
+          <p class="truncate read" [innerHTML]="conversation.last_message_text"></p>
         </ng-template>
         <ion-note item-end>{{getTimeLastMessage(conversation.timestamp)}}</ion-note>
       </ion-item>

@@ -8,12 +8,6 @@ import { UserService } from '../../../providers/user/user';
 //import { ListPage } from '../list/list';
 //import {ListaConversazioniPage} from '../../lista-conversazioni/lista-conversazioni'
 
-/*
-  Generated class for the Register page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-register',
   templateUrl: 'register.html'
@@ -44,7 +38,7 @@ export class RegisterPage {
       email: ['', Validators.compose([Validators.required, Validators.pattern(EMAIL_REGEXP)])],
       password: ['', Validators.compose([Validators.minLength(6), Validators.required])],
       name: ['', Validators.compose([Validators.minLength(2), Validators.required])],
-      lastname: ['', Validators.compose([Validators.minLength(2), Validators.required])]
+      surname: ['', Validators.compose([Validators.minLength(2), Validators.required])]
     });
   }
 
@@ -60,11 +54,11 @@ export class RegisterPage {
       console.log(this.registerForm.value);
     } else {
       console.log("createAccount", this.authService);
-      this.authService.register(this.registerForm.value.username, this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.name, this.registerForm.value.lastname)
+      this.authService.register(this.registerForm.value.username, this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.name, this.registerForm.value.surname)
       .then((newUser) => {
         // creo current user detail
         console.log("register",newUser.uid, this.userService);
-        this.userService.saveCurrentUserDetail(newUser.uid, this.registerForm.value.username, this.registerForm.value.name, this.registerForm.value.lastname)
+        this.userService.saveCurrentUserDetail(newUser.uid, this.registerForm.value.username, this.registerForm.value.name, this.registerForm.value.surname)
         .then(_ => {
           console.log('success saveCurrentUserDetail');
           this.loading.dismiss().then( () => {
@@ -101,6 +95,10 @@ export class RegisterPage {
       });
       this.loading.present();
     }
+  }
+
+  goBack(){
+    this.navCtrl.pop({animate: false, duration: 0});    
   }
 
 }

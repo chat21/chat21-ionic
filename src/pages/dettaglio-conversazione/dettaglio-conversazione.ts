@@ -1,10 +1,10 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavParams, Content } from 'ionic-angular';
+import { IonicPage, NavParams, Content, Events, NavController } from 'ionic-angular';
 
 // firebase
 import * as firebase from 'firebase/app';
 //import { AngularFireAuth } from 'angularfire2/auth';
-import { FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireList } from 'angularfire2/database';
 
 // models
 import { UserModel } from '../../models/user';
@@ -17,23 +17,17 @@ import { NavProxyService } from '../../providers/nav-proxy';
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // pages
-import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
+//import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
 import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
 
 
 // utils
 import { urlify, setLastDate, setHeaderDate } from '../../utils/utils';
-import { PARENT_PAGE_USERS, MIN_HEIGHT_TEXTAREA, MSG_STATUS_FAILED,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RECEIVED, MSG_STATUS_SEEN } from '../../utils/constants';
+import { PARENT_PAGE_DETAIL_CONVERSATION, MIN_HEIGHT_TEXTAREA, MSG_STATUS_FAILED,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RECEIVED, MSG_STATUS_SEEN } from '../../utils/constants';
 
 // directives
 import { AutosizeDirective } from '../../directives/autosize/autosize';
-/**
- * Generated class for the DettaglioConversazionePage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
 
 
 @IonicPage()
@@ -46,10 +40,10 @@ export class DettaglioConversazionePage extends _DetailPage{
   @ViewChild('messageTextArea') messageTextArea: ElementRef;
   //@ViewChild('messageTextArea') messageTextArea: ElementRef;   
 
-  private parentPage: string;
   private scrollDirection: any = 'bottom';
 
-  private firebaseMessages: FirebaseListObservable<any>;
+  private firebaseMessages: AngularFireList<any>;
+  //private subscriptionFirebaseMessages:any;
   private messages: Array<MessageModel> = [];
   private conversationId: string;
   private uidSender: string;
@@ -60,110 +54,153 @@ export class DettaglioConversazionePage extends _DetailPage{
   private lastConnectionDate: string;
   private messageString: string;
   private style_message_welcome: boolean;
+  private userFirebase: any;
+  private subscriptionUserFirebase:any;
 
   constructor(
     public navParams: NavParams,
+    public navCtrl: NavController,
     public chatPresenceHandler: ChatPresenceHandler,
     public navProxy: NavProxyService,
     public messageProvider: MessageProvider,
-    public userService: UserService
+    public userService: UserService,
+    public events: Events,
   ) {
     super();
+    this.messages = [];
+    //let heightTest = "300px";
+
+    // setto stato online currentuser
     this.online = false;
-    // recupero current user id
-    //this.uidSender = navParams.get('uidSender');
 
-
-    let heightTest = "300px";
-    // recupero id riciver
-    this.uidReciver = navParams.get('uidReciver');
-
-    // recupero parent page
-    this.parentPage = navParams.get('parentPage');
-  }
-
-  ionViewDidEnter(){
-    console.log('ionViewDidEnter **************', this.content);
-    this.content.scrollDownOnLoad = true;
-  }
-
-
-  ngOnInit() {
-    this.content.scrollDownOnLoad = true;
     // recupero current user id
     this.uidSender = firebase.auth().currentUser.uid;
 
-    // recupero riciver user detail
-    var that = this;
-    const userFirebase = this.userService.setUserDetail(this.uidReciver);
-    // userFirebase.then(function(snapshot) {
-    //   const user = snapshot.val();
-    //   const fullname = user.name+" "+user.lastname;
-    //   const userDetails = new UserModel(user.uid, user.name, user.lastname, fullname, user.imageurl);
-    //   that.userRecipient = userDetails;
-    //   console.log("userDetails::::",that.userRecipient);
-    // });
-    userFirebase.subscribe(snapshot => {
-      const user = snapshot.val();
-      const fullname = user.name+" "+user.lastname;
-      const userDetails = new UserModel(user.uid, user.name, user.lastname, fullname, user.imageurl);
-      console.log("userDetails",userDetails);
-      this.userRecipient = userDetails;
-    });
+    // recupero id riciver
+    this.uidReciver = navParams.get('uidReciver');
 
-    console.log('ngOnInit **************',this.uidSender, this.uidReciver);
-    // setto conversationId
-    this.conversationId = this.messageProvider.createConversationId(this.uidSender, this.uidReciver);
-    // recupero current currentUserDetail
-    this.currentUser = this.userService.getCurrentUserDetails();
-    console.log('this.currentUser *************', this.currentUser);
-    // recupero i messaggi della conversazione
-    this.getMessages();
-    console.log('this.getMessages *************');
-    // recupero info status user reciver
-    this.setupOnlineStatus();
-    console.log('this.setupOnlineStatus *************');
-    //controllo se vengo da users e 
-    //imposto pagina elenco conversazioni nella pg di sx
-    // if (this.parentPage && this.parentPage == PARENT_PAGE_USERS) {
-    //   this.navProxy.setRootMaster(ListaConversazioniPage, {conversationId:this.conversationId});
-    // }
+    // recupero conversationId
+    this.conversationId = navParams.get('conversationId');
+    if(!this.conversationId){
+      this.conversationId = this.messageProvider.createConversationId(this.uidSender, this.uidReciver);
+    }
+    
+    this.initialize();
+    
+  }
+
+  ngOnDestroy(){
+    console.log('ngOnDestroy **************');
+  }
+
+  ngOnInit() {
+    console.log('ngOnInit **************');
+  }
+
+  ionViewDidEnter(){
+    this.content.scrollDownOnLoad = true;
+    // se esistono dei messaggi nella conversazione
+    if(this.messages.length > 0){
+      //aggiorno lo stato dei messaggi come letto
+      // baggato da controllare
+      //this.messageProvider.setStatusMessage(this.messages);
+
+      // aggiorno lo stato della conversazione
+      let lastMessage = this.messages.slice(-1)[0];
+      if(lastMessage){
+        this.messageProvider.setStatusConversation(lastMessage);
+      }
+    }
+    else {
+      // // altrimenti se nn ci sono ancora messaggi e quindi sto x creare una conversazione
+      // // visualizzo div content_message_welcome
+      // this.style_message_welcome = true;
+      // console.log("this.content_message_welcome::",this.style_message_welcome);
+    }
+    
   }
   //// END functions of system ////
 
   //// START functions messages ////
+  initialize(){
+    console.log('initialize **************');
+    // se esiste imposto array messaggi
+    this.firebaseMessages = this.messageProvider.loadListMeggages(this.uidReciver, this.uidSender);
+    this.getMessages();
+    // controllo se esiste il nodo conversazione
+    let that = this;
+    this.messageProvider.ifConversationExist()
+    .then(function(snapshot) {
+      console.log("ifConversationExist?: " + snapshot + " --> "+snapshot.hasChild(that.conversationId));
+      if (snapshot.hasChild(that.conversationId)) {
+        console.log('LA CONVERSAZIONE ESISTE *************');
+      }
+      else {
+        // altrimenti se nn ci sono ancora messaggi e quindi sto x creare una conversazione
+        // visualizzo div content_message_welcome
+        this.style_message_welcome = true;
+        console.log("this.content_message_welcome::",this.style_message_welcome);
+      }
+    })
+    .catch(function (error) {
+      console.log("ifConversationExist failed: " + error.message);
+    });
+    
+
+    // setto userFirebase
+    this.userFirebase = this.userService.setUserDetail(this.uidReciver);
+    // recupero riciver user detail
+    this.subscriptionUserFirebase = this.userFirebase.snapshotChanges()
+    .subscribe(snapshot => {
+      const user = snapshot.payload.val();
+      if (user){
+        const fullname = user.name+" "+user.surname;
+        const userDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
+        console.log("userDetails",userDetails);
+        this.userRecipient = userDetails;
+      }
+      else{
+        const userDetails = new UserModel(this.uidReciver, '', '', this.uidReciver, '');
+        console.log("userDetails vuoto",userDetails);
+        this.userRecipient = userDetails;
+      }
+    });
+    // recupero current currentUserDetail
+    this.currentUser = this.userService.getCurrentUserDetails();
+    console.log('this.currentUser *************', this.currentUser);
+    // recupero info status user reciver
+    this.setupOnlineStatus();
+    console.log('this.setupOnlineStatus *************');
+  }
+
   // get list messages
   getMessages(){
     console.log("uidSender:::uidReciver:: ",this.uidSender, this.uidReciver);
-    // imposto array messaggi
-    this.messages = [];
-    this.firebaseMessages = this.messageProvider.loadListMeggages(this.uidReciver, this.uidSender);
-    this.firebaseMessages.subscribe(snapshot => { 
-      this.doScroll();
-      this.messages = [];
+    this.firebaseMessages.valueChanges(['child_added'])
+    .subscribe(actions => {
+      let messagesTEMP = [];
       var lastDate: string = "";
-      snapshot.forEach(item => {
-        // aggiorno lo stato del messaggio come letto
-        this.messageProvider.setStatusMessage(item);
+      actions.forEach(item => {
+          console.log(item['timestamp']);
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        let calcolaData = setHeaderDate(item.timestamp, lastDate);
+        let calcolaData = setHeaderDate(item['timestamp'], lastDate);
         if(calcolaData != null){
           lastDate = calcolaData;
         }
         // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-        const message = new MessageModel(item.conversationId, item.recipient, item.sender, item.sender_fullname, item.status, item.text, item.timestamp, calcolaData, item.type);
-        this.messages.push(message);
+        const message = new MessageModel(item['conversationId'], item['recipient'], item['sender'], item['sender_fullname'], item['status'], item['text'], item['timestamp'], calcolaData, item['type']);
+        messagesTEMP.push(message);
+        //aggiorno stato messaggio
+        // questo stato indica che è stato consegnato al client e NON la lettura
+        if(item['status']!=2){
+          this.messageProvider.setStatusMessage(item);
+        }
       });  
-      let lastMessage = this.messages.slice(-1)[0];
-      console.log("aggiorno stato conversazione::",lastMessage);
-      if(lastMessage){
-        this.messageProvider.setStatusConversation(lastMessage);
-      }
-      
-      //visualizzo div content_message_welcome
-      this.style_message_welcome = true;
-      console.log("this.content_message_welcome::",this.style_message_welcome);
+      this.messages = messagesTEMP;
+      // scrollo elenco messaggi alla fine
+      this.doScroll();
     });
+    
   }
 
   // Check if the user is the sender of the message.
@@ -202,6 +239,11 @@ export class DettaglioConversazionePage extends _DetailPage{
           this.messageString = "";
           //console.log("000 firebaseMessage push",this.messageString, this.firebaseMessages);
           this.firebaseMessages.push(message);
+
+          // aggiorno ListaConversazioniPage
+          this.events.publish('setConversationSelected:change',this.conversationId);
+      
+          //this.navProxy.setRootMaster(ListaConversazioniPage, {conversationId:this.conversationId});
           //this.content.scrollToBottom();
       }
     }
@@ -296,12 +338,14 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   // apro la pg di dettagli conversazione
   goToUserDetail(uidReciver: string) {
-    //console.log('goToUserDetail:: ',uidReciver);
-    this.navProxy.isOn = false;
     console.log('goToUserDetail::: ',this.navProxy.isOn, uidReciver);
-    this.navProxy.pushDetail(ProfilePage, {
+    this.navCtrl.push(ProfilePage, {
       uidUser: uidReciver
     });
+    // this.navProxy.pushDetail(ProfilePage, {
+    //   uidUser: uidReciver,
+    //   parentPage: PARENT_PAGE_DETAIL_CONVERSATION
+    // });
   }  
 }
 
