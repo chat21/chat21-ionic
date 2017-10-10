@@ -7,7 +7,24 @@
 ### Firebase Configuration ###
 
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
-* Configuration
+* Click Add Firebase to your web app.
+* Copy `{
+    apiKey: "AIzaSyCUUfce8cV_KPpEJIgp1zTulzQrdbCYkfI",
+    authDomain: "test-5cd6b.firebaseapp.com",
+    databaseURL: "https://test-5cd6b.firebaseio.com",
+    projectId: "test-5cd6b",
+    storageBucket: "test-5cd6b.appspot.com",
+    messagingSenderId: "766594739520"
+  };` and paste in `<poject-name>/src/app/app.module.ts` replacing to
+  `{
+    apiKey: "AIzaSyDg_mbIV_ejd_l1ZrH1lq22NyA2h94-4aQ",
+    authDomain: "ionic3chat.firebaseapp.com",
+    databaseURL: "https://ionic3chat.firebaseio.com",
+    projectId: "ionic3chat",
+    storageBucket: "ionic3chat.appspot.com",
+    messagingSenderId: "1096415488178"
+  }`
+        
 * Dependencies
 * Database configuration
 * How to run tests
