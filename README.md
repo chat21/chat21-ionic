@@ -23,18 +23,15 @@
     projectId: "ionic3chat",
     storageBucket: "ionic3chat.appspot.com",
     messagingSenderId: "1096415488178"
-  }`
-        
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+  }`   
+* Config Firebase auth
 
 ### Contribution guidelines ###
 
 * Writing tests
 * Code review
 * Other guidelines
+* Change tenant name e name storage: in `<poject-name>/src/app/app.module.ts` replace chat21 with your app name
 
 ### Who do I talk to? ###
 
