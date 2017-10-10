@@ -5,7 +5,7 @@ import { Config, Events } from 'ionic-angular';
 
 // firebase
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 // models
@@ -61,7 +61,7 @@ export class ListaConversazioniPage extends _MasterPage {
   private bck_color_unselected:string;
 
   public tenant: string;
-  public users: FirebaseListObservable<any>;
+  public users: AngularFireList<any>;
   public currentUserDetail: UserModel;
   private contacts: any;
   //private firstAcces: boolean;
@@ -88,7 +88,6 @@ export class ListaConversazioniPage extends _MasterPage {
     // se vengo da dettaglio conversazione
     // o da users con conversazione attiva recupero conversationId
     this.conversationId = navParams.get('conversationId');
-
     events.subscribe('setConversationSelected:change', (nwId) => {
       this.filterConversationsForSetSelected(nwId);
     });
@@ -163,17 +162,21 @@ export class ListaConversazioniPage extends _MasterPage {
   //// start gestione conversazioni ////
   loadListConversations() {
     console.log("loadListConversations::", this.conversationId);
-    
     const items = this.conversationProvider.loadListConversations();
-    items.subscribe(snapshot => {
+    //items.valueChanges(['child_added'])
+    items.snapshotChanges(['child_added'])
+    .subscribe(snapshot => {
       this.conversations = [];
-      snapshot.forEach(item => {
+      snapshot.forEach(action => {
+        let item = action.payload.val();
+        console.log(":::item:::", action.key, item.convers_with);
+
         let selected: boolean;
         // se conversationId è null significa che sto iniziando una nw conversazione
         // se vengo da dettaglio_conversazione; seleziono la conversazione cliccata se esiste
-        (item.$key == this.conversationId)?selected = true:selected = false;
+        (action.key == this.conversationId)?selected = true:selected = false;
         const conversation = new ConversationModel(
-          item.$key,
+          action.key,
           item.convers_with,
           item.convers_with_fullname,
           item.image,

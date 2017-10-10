@@ -101,8 +101,9 @@ export class AuthService {
     return this.fireAuth.sendPasswordResetEmail(email);
   }
   
-  logoutUser(): firebase.Promise<any> {
-    return firebase.auth().signOut()
+  logoutUser() {
+    //return firebase.auth().signOut()
+    return this.fireAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
     // .then((res) => {
     //   console.log("logout1",res);
     //   console.log("logout2", this.getUser());

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { UserModel } from '../../models/user';
 //import { GithubUsers } from '../../providers/github-users';
 //import { UserDetailsPage } from '../user-details/user-details';
@@ -33,7 +33,7 @@ import 'rxjs/add/operator/map';
 })
 export class UsersPage {
   private tenant: string;
-  private users: FirebaseListObservable<any>;
+  private users: AngularFireList<any>;
   private contacts: any; //Array<UserModel> = [];
   private contactsOfSearch: any; //Array<UserModel>;
   private db: AngularFireDatabase;

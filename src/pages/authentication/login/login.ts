@@ -67,6 +67,7 @@ export class LoginPage {
   }
   ionViewWillLeave(){
      //console.log('LoginPage ionViewWillLeave **************');
+     
   }
   ionViewDidLeave() {
      //console.log('LoginPage ionViewDidLeave **************');
