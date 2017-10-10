@@ -71,16 +71,6 @@ export class ProfilePage {
 
   goBack(){
     this.navCtrl.pop();
-    // if (this.parentPage == PARENT_PAGE_DETAIL_CONVERSATION){
-    //   this.navProxy.isOn = true;
-    //   this.navProxy.pushDetail(DettaglioConversazionePage, {
-    //     uidReciver: this.currentUserDetail.uid
-    //   });
-    // }
-    // else{
-    //   this.navCtrl.pop();
-    // }
-    
   }
 
 }
