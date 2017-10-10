@@ -45,17 +45,10 @@ export class ProfilePage {
       console.log('this.uidUser',this.uidUser);
       this.currentUserDetail = new UserModel(this.uidUser, '', '', '', '');
       const userFirebaseSender = this.userService.setUserDetail(this.uidUser)
-      userFirebaseSender.snapshotChanges()
-      .subscribe(action => {
-        console.log(action.type);
-        console.log(action.key);
-        console.log(action.payload.val());
-        let userDetails = new UserModel(action.key, '', '', action.key, '');        
-        if (action.payload.val()){
-          const user = action.payload.val();
-          const fullname = user.name+" "+user.surname;  
-          userDetails = new UserModel(action.key, user.name, user.surname, fullname, user.imageurl);        
-        }
+      userFirebaseSender.subscribe(snapshot => {
+        const user = snapshot.val();
+        const fullname = user.name+" "+user.surname;
+        const userDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
         console.log("userDetails userSender:: ",userDetails);
         this.currentUserDetail = userDetails;
       });

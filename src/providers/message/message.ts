@@ -2,15 +2,10 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/switchMap';
-
 import { Config, Platform } from 'ionic-angular';
 import * as firebase from 'firebase/app';
 import { UserModel } from '../../models/user';
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { UserService } from '../../providers/user/user';
 
 import { removeHtmlTags } from '../../utils/utils';
@@ -25,7 +20,7 @@ import { removeHtmlTags } from '../../utils/utils';
 export class MessageProvider {
 
   private tenant: string;
-  private items: AngularFireList<any>;
+  private items: FirebaseListObservable<any>;
   private userSender: UserModel;
   private userRecipient: UserModel;
   private userRecipientUid: string;
@@ -84,20 +79,11 @@ export class MessageProvider {
     // creo message path
     const urlNodeFirebase = '/apps/'+this.tenant+'/messages/'+this.conversationId;
     console.log("loadListMeggages::", urlNodeFirebase);
-    // this.items = this.db.list(urlNodeFirebase, {
-    //   query: {
-    //     limitToLast: 300
-    //   }
-    // });
-    // const size$ = new BehaviorSubject(null);
-    // this.items = size$.switchMap(size =>
-    //   this.db.list(urlNodeFirebase, ref =>
-    //     size ? ref.limitToLast(100) : ref
-    //   ).valueChanges();
-    // );
-
-    this.items = this.db.list(urlNodeFirebase, 
-    ref => ref.limitToLast(100));
+    this.items = this.db.list(urlNodeFirebase, {
+      query: {
+        limitToLast: 300
+      }
+    });
     console.log("loadListMeggages::", urlNodeFirebase, this.items);
     return this.items;
    // this.userSender = userSender;//this.userService.getCurrentUserDetails();

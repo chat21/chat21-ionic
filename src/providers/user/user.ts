@@ -53,8 +53,7 @@ export class UserService {
     //// DA FARE ////
     const urlNodeFirebase = this.urlNodeContacts+uid;
     //return firebase.database().ref(urlNodeFirebase).once('value');
-    //const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true});
-    const userFirebase = this.db.object(urlNodeFirebase);
+    const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true});
     return userFirebase;
   }
 
@@ -68,13 +67,10 @@ export class UserService {
 
   setCurrentUserDetails(uid, email) {
     const urlNodeFirebase = this.urlNodeContacts+uid;
-    //const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true });
-    const userFirebase = this.db.object(urlNodeFirebase);
-    userFirebase.snapshotChanges().subscribe(snapshot => {
-
-    //userFirebase.subscribe(snapshot => {
-      if (snapshot.payload.val()){
-        const user = snapshot.payload.val();
+    const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true });
+    userFirebase.subscribe(snapshot => {
+      if (snapshot.val()){
+        const user = snapshot.val();
         const fullname = user.name+" "+user.surname;
         this.currentUserDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
       }

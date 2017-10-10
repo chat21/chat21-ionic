@@ -4,7 +4,7 @@ import { IonicPage, NavParams, Content, Events, NavController } from 'ionic-angu
 // firebase
 import * as firebase from 'firebase/app';
 //import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireList } from 'angularfire2/database';
+import { FirebaseListObservable } from 'angularfire2/database';
 
 // models
 import { UserModel } from '../../models/user';
@@ -17,7 +17,7 @@ import { NavProxyService } from '../../providers/nav-proxy';
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // pages
-//import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
+import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
 import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
 
@@ -42,8 +42,8 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   private scrollDirection: any = 'bottom';
 
-  private firebaseMessages: AngularFireList<any>;
-  //private subscriptionFirebaseMessages:any;
+  private firebaseMessages: FirebaseListObservable<any>;
+  private subscriptionFirebaseMessages:any;
   private messages: Array<MessageModel> = [];
   private conversationId: string;
   private uidSender: string;
@@ -91,6 +91,8 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   ngOnDestroy(){
     console.log('ngOnDestroy **************');
+    //this.subscriptionUserFirebase.unsubscribe();
+    //this.subscriptionFirebaseMessages.unsubscribe();
   }
 
   ngOnInit() {
@@ -150,9 +152,8 @@ export class DettaglioConversazionePage extends _DetailPage{
     // setto userFirebase
     this.userFirebase = this.userService.setUserDetail(this.uidReciver);
     // recupero riciver user detail
-    this.subscriptionUserFirebase = this.userFirebase.snapshotChanges()
-    .subscribe(snapshot => {
-      const user = snapshot.payload.val();
+    this.subscriptionUserFirebase = this.userFirebase.subscribe(snapshot => {
+      const user = snapshot.val();
       if (user){
         const fullname = user.name+" "+user.surname;
         const userDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
@@ -176,23 +177,22 @@ export class DettaglioConversazionePage extends _DetailPage{
   // get list messages
   getMessages(){
     console.log("uidSender:::uidReciver:: ",this.uidSender, this.uidReciver);
-    this.firebaseMessages.valueChanges(['child_added'])
-    .subscribe(actions => {
+    this.subscriptionFirebaseMessages = this.firebaseMessages.subscribe(snapshot => { 
+      //this.messages = [];
       let messagesTEMP = [];
       var lastDate: string = "";
-      actions.forEach(item => {
-          console.log(item['timestamp']);
+      snapshot.forEach(item => {
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        let calcolaData = setHeaderDate(item['timestamp'], lastDate);
+        let calcolaData = setHeaderDate(item.timestamp, lastDate);
         if(calcolaData != null){
           lastDate = calcolaData;
         }
         // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-        const message = new MessageModel(item['conversationId'], item['recipient'], item['sender'], item['sender_fullname'], item['status'], item['text'], item['timestamp'], calcolaData, item['type']);
+        const message = new MessageModel(item.conversationId, item.recipient, item.sender, item.sender_fullname, item.status, item.text, item.timestamp, calcolaData, item.type);
         messagesTEMP.push(message);
         //aggiorno stato messaggio
         // questo stato indica che è stato consegnato al client e NON la lettura
-        if(item['status']!=2){
+        if(item.status!=2){
           this.messageProvider.setStatusMessage(item);
         }
       });  
