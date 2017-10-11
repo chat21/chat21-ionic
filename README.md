@@ -64,5 +64,6 @@ https://firebase.google.com/docs/functions/get-started?authuser=0
         * "do yuo want to install dependencies with npm now?"  Y and press return  
         * "configure as a single-page app?"  N and press return
         * "file www/index.html alredy exists. Overwrite?" N and press return
+* Run this command to deploy your functions: firebase deploy
 
 
