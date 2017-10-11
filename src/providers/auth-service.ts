@@ -103,7 +103,7 @@ export class AuthService {
   
   logoutUser() {
     //return firebase.auth().signOut()
-    return this.fireAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    return this.afAuth.auth.signOut();
     // .then((res) => {
     //   console.log("logout1",res);
     //   console.log("logout2", this.getUser());
