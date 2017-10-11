@@ -51,7 +51,9 @@ https://firebase.google.com/docs/hosting/quickstart?authuser=0
         * "what do you want to use as your public directory?"  www and press return  
         * "configure as a single-page app?"  N and press return
         * "file www/index.html alredy exists. Overwrite?" N and press return
-* run firebase deploy
+* run: firebase deploy
+* in your firebase consol click hosting...
 
 ### Firebase Functions Configuration ###
+
 
