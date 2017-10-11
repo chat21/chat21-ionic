@@ -33,16 +33,25 @@
 * Config Firebase auth
 In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
 https://firebase.google.com/docs/auth/
+* Change tenant name (facoltativo)...
 
 ### Firebase Hosting Configuration ###
 ## Create build browser ##
-* run ionic cordova platform add browser
+* run: ionic cordova platform add browser
 * (update browser run: cordova platform update@latest)
-* run ionic cordova build browser
+* run: ionic cordova build browser
 
 ## Upload project on firebase hosting ##
-https://firebase.google.com/docs/hosting/?authuser=0
-* install the Firebase CLI
+https://firebase.google.com/docs/hosting/quickstart?authuser=0
+* install the Firebase CLI. run: npm install -g firebase-tools
+* run: firebase login
+* Change directories in the terminal to your desired project directory(run: cd platforms/browser) and run: firebase init
+    * select hosting (press Spacebar to select) and press return
+    * select your project and press return
+    * answer the following questions:
+        * "what do you want to use as your public directory?"  #www# and press return  
+        * "configure as a single-page app?"  #N# and press return
+        * "file www/index.html alredy exists. Overwrite?" #N# and press return
 
 ### Firebase Functions Configuration ###
 
