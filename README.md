@@ -13,7 +13,7 @@
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
 
 ### Firebase DB Configuration ### 
-Click Add Firebase to your web app.
+* Click Add Firebase to your web app.
 * Copy `{
     apiKey: "<your api key>",
     authDomain: "<your authDomain>",
@@ -35,6 +35,14 @@ In the Firebase Console open the Authentication section > SIGN IN METHOD tab you
 https://firebase.google.com/docs/auth/
 
 ### Firebase Hosting Configuration ###
+## Create build browser ##
+* run ionic cordova platform add browser
+* (update browser run: cordova platform update@latest)
+* run ionic cordova build browser
+
+## Upload project on firebase hosting ##
+https://firebase.google.com/docs/hosting/?authuser=0
+* install the Firebase CLI
 
 ### Firebase Functions Configuration ###
 
