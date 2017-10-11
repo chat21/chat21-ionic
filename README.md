@@ -35,7 +35,6 @@ In the Firebase Console open the Authentication section > SIGN IN METHOD tab you
 https://firebase.google.com/docs/auth/
 * Change tenant name (facoltativo)...
 
-### Firebase Hosting Configuration ###
 ## Create build browser ##
 * run: ionic cordova platform add browser
 * (update browser run: cordova platform update@latest)
