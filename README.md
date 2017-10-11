@@ -1,21 +1,18 @@
-### Before starting ###
+## Before starting ##
 * install nodejs: `https://nodejs.org/en/download/package-manager/`
 * install git: `https://git-scm.com/book/id/v2/Getting-Started-Installing-Git`
 * install Ionic CLI and Cordova : `https://ionicframework.com/docs/intro/installation/`
 
-
-
-### Installation ###
-
+## Installation ##
 * Clone this repository. Run: `git clone https://github.com/frontiere21/chat21-ionic.git` in the folder in which you'd like to contain the project.
 * Next you will need to get all your node_modules back into your application. All these modules are based on your package.json file. In the project folder “chat21-ionic” run `npm install`
 * Now you will need to serve the app. Run `ionic serve` in the terminal. (Update the plugins if required)
 
 
-### Firebase Configuration ###
+## Firebase Configuration ##
 * Create account Firebase
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
-## Firebase DB Configuration ## 
+### Firebase DB Configuration ### 
 Click Add Firebase to your web app.
 * Copy `{
     apiKey: "<your api key>",
@@ -37,14 +34,7 @@ Click Add Firebase to your web app.
 In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
 https://firebase.google.com/docs/auth/
 
-### Contribution guidelines ###
+### Firebase Hosting Configuration ###
 
-* Writing tests
-* Code review
-* Other guidelines
-* Change tenant name e name storage: in `<poject-name>/src/app/app.module.ts` replace chat21 with your app name
+### Firebase Functions Configuration ###
 
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
