@@ -25,6 +25,8 @@
     messagingSenderId: "1096415488178"
   }`   
 * Config Firebase auth
+In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
+https://firebase.google.com/docs/auth/
 
 ### Contribution guidelines ###
 
