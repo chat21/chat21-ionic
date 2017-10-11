@@ -1,3 +1,8 @@
+### Before starting ###
+* install nodejs
+* install git
+
+
 ### Installation ###
 
 * Clone this repository. Run: `git clone https://github.com/frontiere21/chat21-ionic.git` in the folder in which you'd like to contain the project.
@@ -5,7 +10,7 @@
 * Now you will need to serve the app. Run `ionic serve` in the terminal.
 
 ### Firebase Configuration ###
-
+* Create account Firebase
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
 * Click Add Firebase to your web app.
 * Copy `{
