@@ -12,7 +12,7 @@
 * Create account Firebase
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
 
-### Firebase DB Configuration ### 
+#### Firebase DB Configuration #### 
 * Click Add Firebase to your web app.
 * Copy `{
     apiKey: "<your api key>",
