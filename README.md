@@ -8,10 +8,10 @@
 * Next you will need to get all your node_modules back into your application. All these modules are based on your package.json file. In the project folder “chat21-ionic” run `npm install`
 * Now you will need to serve the app. Run `ionic serve` in the terminal. (Update the plugins if required)
 
-
 ## Firebase Configuration ##
 * Create account Firebase
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
+
 ### Firebase DB Configuration ### 
 Click Add Firebase to your web app.
 * Copy `{
