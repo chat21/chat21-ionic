@@ -49,9 +49,9 @@ https://firebase.google.com/docs/hosting/quickstart?authuser=0
     * select hosting (press Spacebar to select) and press return
     * select your project and press return
     * answer the following questions:
-        * "what do you want to use as your public directory?"  #www# and press return  
-        * "configure as a single-page app?"  #N# and press return
-        * "file www/index.html alredy exists. Overwrite?" #N# and press return
+        * "what do you want to use as your public directory?"  ##www## and press return  
+        * "configure as a single-page app?"  ##N## and press return
+        * "file www/index.html alredy exists. Overwrite?" ##N## and press return
 
 ### Firebase Functions Configuration ###
 
