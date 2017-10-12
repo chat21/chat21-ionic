@@ -72,3 +72,6 @@ https://firebase.google.com/docs/hosting/quickstart?authuser=0
 
 
 
+## Run on Android
+run on simulator : ionic cordova run android
+run on device : ionic cordova run android --device
