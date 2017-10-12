@@ -38,8 +38,7 @@ https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-fire
 * Open <your-project>/src/firebase-messaging-sw.js and replace messagingSenderId: "1096415488178" with < your messagingSenderId >
 
 ## Create build browser ##
-* run: ionic cordova platform add browser
-* (update browser run: cordova platform update@latest)... se richiesto
+* run: cordova platform add browser@latest
 * run: ionic cordova build browser
 
 ### Upload Notification functions on Firebase Cloud Functions ###
