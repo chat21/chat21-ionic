@@ -34,7 +34,7 @@ export class RegisterPage {
   ) {
     let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
     this.registerForm = formBuilder.group({
-      username: ['', Validators.compose([Validators.minLength(2), Validators.required])],
+      //username: ['', Validators.compose([Validators.minLength(2), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(EMAIL_REGEXP)])],
       password: ['', Validators.compose([Validators.minLength(6), Validators.required])],
       name: ['', Validators.compose([Validators.minLength(2), Validators.required])],
