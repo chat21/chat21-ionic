@@ -34,6 +34,8 @@
 In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
 https://firebase.google.com/docs/auth/
 * Change tenant name (facoltativo)...
+https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
+* Open <your-project>/src/firebase-messaging-sw.js and replace messagingSenderId: "1096415488178" with < your messagingSenderId >
 
 ## Create build browser ##
 * run: ionic cordova platform add browser
@@ -49,7 +51,7 @@ https://firebase.google.com/docs/functions/get-started?authuser=0
     * answer the following question:
         * "are yuo ready to proceed?" Y and press return
         * "do yuo want to install dependencies with npm now?" Y and press return  
-* Get file notification functions from here ...
+* Get file notification functions from here `https://github.com/frontiere21/chat21-messaging-notifications` 
 * Replace <your-project>/firebase-functions/functions/index.js with the file downloaded to the previous step
 * Run this command to deploy your functions: firebase deploy
 
