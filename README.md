@@ -40,6 +40,19 @@ https://firebase.google.com/docs/auth/
 * (update browser run: cordova platform update@latest)... se richiesto
 * run: ionic cordova build browser
 
+### Upload Notification functions on Firebase Cloud Functions ###
+https://firebase.google.com/docs/functions/get-started?authuser=0
+* (non ripetere se già fatto x hosting) install the Firebase CLI. run: npm install -g firebase-tools
+* (non ripetere se già fatto x hosting) run: firebase login
+* Change directories in the terminal go to your Firebase project directory and run: firebase init functions
+* Select your project and press return
+    * answer the following question:
+        * "are yuo ready to proceed?" Y and press return
+        * "do yuo want to install dependencies with npm now?" Y and press return  
+* Get file notification functions from here ...
+* Replace <your-project>/firebase-functions/functions/index.js with the file downloaded to the previous step
+* Run this command to deploy your functions: firebase deploy
+
 ## Upload project on firebase hosting ##
 https://firebase.google.com/docs/hosting/quickstart?authuser=0
 * install the Firebase CLI. run: npm install -g firebase-tools
@@ -54,16 +67,6 @@ https://firebase.google.com/docs/hosting/quickstart?authuser=0
 * run: firebase deploy
 * in your firebase consol click hosting...
 
-### Upload Notification functions on Firebase Cloud Functions ###
-https://firebase.google.com/docs/functions/get-started?authuser=0
-* (non ripetere se già fatto x hosting) install the Firebase CLI. run: npm install -g firebase-tools
-* (non ripetere se già fatto x hosting) run: firebase login
-* Change directories in the terminal go to your Firebase project directory(run: cd ../../) and run: firebase init functions
-* select your project and press return
-    * answer the following questions:
-        * "do yuo want to install dependencies with npm now?"  Y and press return  
-        * "configure as a single-page app?"  N and press return
-        * "file www/index.html alredy exists. Overwrite?" N and press return
-* Run this command to deploy your functions: firebase deploy
+
 
 
