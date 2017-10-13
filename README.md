@@ -21,7 +21,9 @@
     storageBucket: "<your storageBucket>",
     messagingSenderId: "< your messagingSenderId >"
   };.`
-* Update app.module.ts: open <poject-name>/src/app/app.module.ts and replace `firebaseConfig : {...}` whit `firebaseConfig : {
+* Update app.module.ts: 
+    * go to the root of your project
+    * open /src/app/app.module.ts and replace `firebaseConfig : {...}` whit `firebaseConfig : {
     apiKey: "<your api key>",
     authDomain: "<your authDomain>",
     databaseURL: "<your databaseURL>",
@@ -32,10 +34,13 @@
 * Config Firebase auth
 In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
 https://firebase.google.com/docs/auth/
-* Update app.module.ts: open <poject-name>/src/app/app.module.ts and change tenant name (optional)
-https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
-* Update firebase-messaging-sw.js: open <your-project>/src/firebase-messaging-sw.js and replace messagingSenderId: "..." with < your messagingSenderId >
-* Update manifest.json: open `<your-project>/src/manifest.json` and replace "name": "chat21-ionic" and "short_name": "chat21-ionic" with the name of your project (optional)
+* Update app.module.ts: 
+    * open `/src/app/app.module.ts` and change tenant name (optional)
+    https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
+* Update firebase-messaging-sw.js: 
+    * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: "..." with < your messagingSenderId >
+* Update manifest.json: 
+    * open `/src/manifest.json` and replace "name": "chat21-ionic" and "short_name": "chat21-ionic" with the name of your project (optional)
 
 ## Upload Notification functions on Firebase Cloud Functions ##
 https://firebase.google.com/docs/functions/get-started?authuser=0
@@ -47,7 +52,7 @@ https://firebase.google.com/docs/functions/get-started?authuser=0
         * "are yuo ready to proceed?" Y and press return
         * "do yuo want to install dependencies with npm now?" Y and press return  
 * Get file notification functions from here `https://github.com/frontiere21/chat21-cloud-functions` 
-* Replace `<your-project>/firebase-functions/functions/index.js` with the file downloaded to the previous step
+* Replace `/firebase-functions/functions/index.js` with the file downloaded to the previous step
 * Deploy your functions, run: `firebase deploy`
 
 ## Create build browser ##
