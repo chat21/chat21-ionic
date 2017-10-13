@@ -13,29 +13,29 @@
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
 
 #### Firebase DB Configuration #### 
-* Click Add Firebase to your web app.
-* Copy `{
+* Click Add Firebase to your web app and copy `var config = {
     apiKey: "<your api key>",
     authDomain: "<your authDomain>",
     databaseURL: "<your databaseURL>",
     projectId: "<your projectId>",
     storageBucket: "<your storageBucket>",
     messagingSenderId: "< your messagingSenderId >"
-  };` and paste in `<poject-name>/src/app/app.module.ts` replacing to
-  `{
-    apiKey: "AIzaSyDg_mbIV_ejd_l1ZrH1lq22NyA2h94-4aQ",
-    authDomain: "ionic3chat.firebaseapp.com",
-    databaseURL: "https://ionic3chat.firebaseio.com",
-    projectId: "ionic3chat",
-    storageBucket: "ionic3chat.appspot.com",
-    messagingSenderId: "1096415488178"
-  }`   
+  };.`
+* Update app.module.ts: open <poject-name>/src/app/app.module.ts and replace `firebaseConfig : {...}` whit `firebaseConfig : {
+    apiKey: "<your api key>",
+    authDomain: "<your authDomain>",
+    databaseURL: "<your databaseURL>",
+    projectId: "<your projectId>",
+    storageBucket: "<your storageBucket>",
+    messagingSenderId: "< your messagingSenderId >"
+  };`
 * Config Firebase auth
 In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
 https://firebase.google.com/docs/auth/
-* Change tenant name (facoltativo)...
+* Update app.module.ts: open <poject-name>/src/app/app.module.ts and change tenant name (optional)
 https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
-* Open <your-project>/src/firebase-messaging-sw.js and replace messagingSenderId: "1096415488178" with < your messagingSenderId >
+* Update firebase-messaging-sw.js: open <your-project>/src/firebase-messaging-sw.js and replace messagingSenderId: "..." with < your messagingSenderId >
+* Update manifest.json: open <your-project>/src/manifest.json and replace "name": "chat21-ionic" and "short_name": "chat21-ionic" (optional)
 
 ## Create build browser ##
 * run: cordova platform add browser@latest
