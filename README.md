@@ -1,5 +1,5 @@
 ## Before starting ##
-* Install nodejs: `https://nodejs.org/en/download/package-manager/`
+* Install nodejs: `https://nodejs.org/en/download/`
 * Install git: `https://git-scm.com/book/id/v2/Getting-Started-Installing-Git`
 * Install Ionic CLI and Cordova : `https://ionicframework.com/docs/intro/installation/`
 
