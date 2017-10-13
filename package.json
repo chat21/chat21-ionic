@@ -34,7 +34,7 @@
     "@ionic/storage": "2.0.1",
     "add": "^2.0.6",
     "angularfire2": "^5.0.0-rc.2",
-    "cordova-browser": "^4.1.0",
+    "cordova-browser": "^5.0.0",
     "cordova-ios": "^4.4.0",
     "cordova-plugin-console": "^1.0.7",
     "cordova-plugin-device": "^1.1.6",
