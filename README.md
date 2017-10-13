@@ -35,7 +35,7 @@ https://firebase.google.com/docs/auth/
 * Update app.module.ts: open <poject-name>/src/app/app.module.ts and change tenant name (optional)
 https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
 * Update firebase-messaging-sw.js: open <your-project>/src/firebase-messaging-sw.js and replace messagingSenderId: "..." with < your messagingSenderId >
-* Update manifest.json: open `<your-project>/src/manifest.json` and replace "name": "chat21-ionic" and "short_name": "chat21-ionic" with name your project (optional)
+* Update manifest.json: open `<your-project>/src/manifest.json` and replace "name": "chat21-ionic" and "short_name": "chat21-ionic" with the name of your project (optional)
 
 ## Upload Notification functions on Firebase Cloud Functions ##
 https://firebase.google.com/docs/functions/get-started?authuser=0
