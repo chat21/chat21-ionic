@@ -1,7 +1,7 @@
 ## Before starting ##
-* install nodejs: `https://nodejs.org/en/download/package-manager/`
-* install git: `https://git-scm.com/book/id/v2/Getting-Started-Installing-Git`
-* install Ionic CLI and Cordova : `https://ionicframework.com/docs/intro/installation/`
+* Install nodejs: `https://nodejs.org/en/download/package-manager/`
+* Install git: `https://git-scm.com/book/id/v2/Getting-Started-Installing-Git`
+* Install Ionic CLI and Cordova : `https://ionicframework.com/docs/intro/installation/`
 
 ## Installation ##
 * Clone this repository. Run: `git clone https://github.com/frontiere21/chat21-ionic.git` in the folder in which you'd like to contain the project.
@@ -39,25 +39,25 @@ https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-fire
 
 ## Upload Notification functions on Firebase Cloud Functions ##
 https://firebase.google.com/docs/functions/get-started?authuser=0
-* install the Firebase CLI. run: `npm install -g firebase-tools`
-* run: `firebase login`
+* Install the Firebase CLI. run: `npm install -g firebase-tools`
+* Run: `firebase login`
 * Change directories in the terminal go to your Firebase project directory and run: `firebase init functions`
 * Select your project and press return
     * answer the following question:
         * "are yuo ready to proceed?" Y and press return
         * "do yuo want to install dependencies with npm now?" Y and press return  
-* Get file notification functions from here `https://github.com/frontiere21/chat21-messaging-notifications` 
+* Get file notification functions from here `https://github.com/frontiere21/chat21-cloud-functions` 
 * Replace `<your-project>/firebase-functions/functions/index.js` with the file downloaded to the previous step
 * Deploy your functions, run: `firebase deploy`
 
 ## Create build browser ##
-* run: `cordova platform add browser@latest`
-* run: `ionic cordova build browser`
+* Run: `cordova platform add browser@latest`
+* Run: `ionic cordova build browser`
 
 ## Upload project on firebase hosting ##
 https://firebase.google.com/docs/hosting/quickstart?authuser=0
-* install the Firebase CLI. run: `npm install -g firebase-tools`
-* run: `firebase login`
+* Install the Firebase CLI. run: `npm install -g firebase-tools`
+* Run: `firebase login`
 (these steps can be avoided if you have already done before)
 * Change directories in the terminal to your desired project directory(run: `cd platforms/browser`) and run: `firebase init`
     * select hosting (press Spacebar to select) and press return
@@ -66,8 +66,8 @@ https://firebase.google.com/docs/hosting/quickstart?authuser=0
         * "what do you want to use as your public directory?"  www and press return  
         * "configure as a single-page app?"  N and press return
         * "file www/index.html alredy exists. Overwrite?" N and press return
-* run: `firebase deploy`
-* in your firebase consol click hosting and click on link your project
+* Run: `firebase deploy`
+* In your firebase consol click hosting and click on link your project
 
 
 ## Run on Android
