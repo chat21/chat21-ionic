@@ -15,9 +15,9 @@ import { ListaConversazioniPage } from '../pages/lista-conversazioni/lista-conve
 import { DettaglioConversazionePage } from '../pages/dettaglio-conversazione/dettaglio-conversazione';
 import { ProfilePage } from '../pages/profile/profile';
 
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireAuthModule } from 'angularfire2/auth';
+// import { AngularFireModule } from 'angularfire2';
+// import { AngularFireDatabaseModule } from 'angularfire2/database';
+// import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { AuthService } from '../providers/auth-service';
 import { ChatPresenceHandler } from '../providers/chat-presence-handler';
@@ -92,9 +92,9 @@ import { AutosizeDirective } from '../directives/autosize/autosize';
       driverOrder: ['indexeddb','sqlite', 'websql', 'indexeddb', 'localstorage']
     }),
 
-    AngularFireModule.initializeApp(this.firebaseConfig),
-    AngularFireDatabaseModule,
-    AngularFireAuthModule
+    // AngularFireModule.initializeApp(this.firebaseConfig),
+    // AngularFireDatabaseModule,
+    // AngularFireAuthModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

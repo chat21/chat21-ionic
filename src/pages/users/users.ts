@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { UserModel } from '../../models/user';
 //import { GithubUsers } from '../../providers/github-users';
 //import { UserDetailsPage } from '../user-details/user-details';
@@ -33,10 +31,10 @@ import 'rxjs/add/operator/map';
 })
 export class UsersPage {
   private tenant: string;
-  private users: AngularFireList<any>;
+  private users;//: AngularFireList<any>;
   private contacts: any; //Array<UserModel> = [];
   private contactsOfSearch: any; //Array<UserModel>;
-  private db: AngularFireDatabase;
+  //private db: AngularFireDatabase;
 
   private searchTerm: string = '';
   private searchControl: FormControl;
@@ -48,8 +46,8 @@ export class UsersPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public afAuth: AngularFireAuth,
-    db: AngularFireDatabase,
+    //public afAuth: AngularFireAuth,
+    //db: AngularFireDatabase,
     config: Config,
     private navProxy: NavProxyService,
     private databaseprovider: DatabaseProvider,
@@ -64,7 +62,7 @@ export class UsersPage {
     this.currentUser = firebase.auth().currentUser;
     let appConfig = config.get("appConfig");
     this.tenant = appConfig.tenant;
-    this.db = db;   
+    //this.db = db;   
     
     if (!this.contacts || this.contacts.lenght == 0){
       //console.log('ngOnInit contacts', this.contacts);

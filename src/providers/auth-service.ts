@@ -3,7 +3,6 @@ import { Config } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
 
-import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
 
@@ -26,7 +25,7 @@ export class AuthService {
   public urlNodeFirebase: string;
 
   constructor(
-    private afAuth: AngularFireAuth, 
+    //private afAuth: AngularFireAuth, 
     private config: Config, 
     private storage: Storage,
     private userService:UserService
@@ -102,8 +101,8 @@ export class AuthService {
   }
   
   logoutUser() {
-    //return firebase.auth().signOut()
-    return this.afAuth.auth.signOut();
+    return firebase.auth().signOut()
+    //return this.afAuth.auth.signOut();
     // .then((res) => {
     //   console.log("logout1",res);
     //   console.log("logout2", this.getUser());

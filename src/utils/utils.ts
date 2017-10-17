@@ -23,31 +23,29 @@ export function removeHtmlTags(text) {
 
  
 export function setHeaderDate(timestamp, lastDate): string {
-    //if (this.isHeaderDate(timestamp)){
-      
-      var date = new Date(timestamp);
-      let now: Date = new Date();
-      var labelDays:string = "";
-      //console.log('setHeaderDate **************',timestamp, lastDate, date, this);
-      if (now.getFullYear() != date.getFullYear()){
-        labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
-      } else if (now.getMonth() != date.getMonth()){
-        labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
-      } else if (now.getDay() == date.getDay()){
-        labelDays = "Oggi";
-      } else if (now.getDay() - date.getDay() == 1){
-        labelDays = "Ieri";
-      } else {
-        labelDays = convertDayToString(date.getDay());
-      }
-      // se le date sono diverse o la data di riferimento non è impostata
-      // ritorna la data calcolata
-      // altrimenti torna null 
-      if (lastDate != labelDays || lastDate == null){
-        return labelDays;
-      } else {
-        return null;
-      }
+    var date = new Date(timestamp);
+    let now: Date = new Date();
+    var labelDays:string = "";
+    //console.log('setHeaderDate **************',timestamp, lastDate, date, this);
+    if (now.getFullYear() != date.getFullYear()){
+      labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
+    } else if (now.getMonth() != date.getMonth()){
+      labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
+    } else if (now.getDay() == date.getDay()){
+      labelDays = "Oggi";
+    } else if (now.getDay() - date.getDay() == 1){
+      labelDays = "Ieri";
+    } else {
+      labelDays = convertDayToString(date.getDay());
+    }
+    // se le date sono diverse o la data di riferimento non è impostata
+    // ritorna la data calcolata
+    // altrimenti torna null 
+    if (lastDate != labelDays || lastDate == null){
+      return labelDays;
+    } else {
+      return null;
+    }
   }
 
   export function setLastDate(timestamp): string {

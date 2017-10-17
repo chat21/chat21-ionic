@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 
 import { Platform, Config } from 'ionic-angular';
-import { AngularFireDatabase } from 'angularfire2/database';
 
 import { UserModel } from '../../models/user';
-import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
 // utils
@@ -34,7 +32,7 @@ export class UserService {
     //injector: Injector,
     platform: Platform,
     public config: Config,
-    public db: AngularFireDatabase
+    //public db: AngularFireDatabase
   ) {
     //UserProvider.injector = injector;
     // recupero tenant
@@ -54,7 +52,8 @@ export class UserService {
     const urlNodeFirebase = this.urlNodeContacts+uid;
     //return firebase.database().ref(urlNodeFirebase).once('value');
     //const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true});
-    const userFirebase = this.db.object(urlNodeFirebase);
+    //const userFirebase = this.db.object(urlNodeFirebase);
+    const userFirebase = firebase.database().ref(urlNodeFirebase);
     return userFirebase;
   }
 
@@ -69,26 +68,29 @@ export class UserService {
   setCurrentUserDetails(uid, email) {
     const urlNodeFirebase = this.urlNodeContacts+uid;
     //const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true });
-    const userFirebase = this.db.object(urlNodeFirebase);
-    userFirebase.snapshotChanges().subscribe(snapshot => {
-
-    //userFirebase.subscribe(snapshot => {
-      if (snapshot.payload.val()){
-        const user = snapshot.payload.val();
+    //const userFirebase = this.db.object(urlNodeFirebase);
+    //userFirebase.snapshotChanges().subscribe(snapshot => {
+    let that = this;
+    const userFirebase = firebase.database().ref(urlNodeFirebase);
+    userFirebase.on('value', function(snapshot) {
+      if (snapshot.val()){
+        const user = snapshot.val();
         const fullname = user.name+" "+user.surname;
-        this.currentUserDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
+        that.currentUserDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
       }
       else {
-        this.currentUserDetails = new UserModel(uid, email, '', '', '');
+        that.currentUserDetails = new UserModel(uid, email, '', '', '');
         // aggiorno user nel db contacts
-        this.saveCurrentUserDetail(uid, "", email, '');
+        that.saveCurrentUserDetail(uid, "", email, '');
       }
     });
   }
 
   getCurrentUserDetails(){
     console.log("getCurrentUserDetails --------->",this.currentUserDetails);
-    return this.currentUserDetails;
+    if (this.currentUserDetails){
+      return this.currentUserDetails;
+    }
   }
 
 }
