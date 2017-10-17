@@ -65,19 +65,12 @@ import { AutosizeDirective } from '../directives/autosize/autosize';
       
     IonicModule.forRoot(MyApp,{
         firebaseConfig : {
-        apiKey: "AIzaSyDg_mbIV_ejd_l1ZrH1lq22NyA2h94-4aQ",
-        authDomain: "ionic3chat.firebaseapp.com",
-        databaseURL: "https://ionic3chat.firebaseio.com",
-        projectId: "ionic3chat",
-        storageBucket: "ionic3chat.appspot.com",
-        messagingSenderId: "1096415488178"
-        
-        // apiKey: "AIzaSyDweKW3SVkY8lBo4un_8Ixr8bFVZbOTCi8",
-        // authDomain: "bppmobileintranet-chat.firebaseapp.com",
-        // databaseURL: "https://bppmobileintranet-chat.firebaseio.com",
-        // projectId: "bppmobileintranet-chat",
-        // storageBucket: "bppmobileintranet-chat.appspot.com",
-        // messagingSenderId: "478926705150"
+        apiKey: "...",
+        authDomain: "...",
+        databaseURL: "...",
+        projectId: "...",
+        storageBucket: "...",
+        messagingSenderId: "..."
       },
 
       appConfig: {
