@@ -1,3 +1,6 @@
+## Live Demo ##
+Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
+
 ## Before starting ##
 * Install nodejs: `https://nodejs.org/en/download/`
 * Install git: `https://git-scm.com/book/id/v2/Getting-Started-Installing-Git`
