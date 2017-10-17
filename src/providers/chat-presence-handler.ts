@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Config } from 'ionic-angular';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 /*
@@ -17,18 +15,18 @@ export class ChatPresenceHandler {
   tenant: string;
   public fireAuth: firebase.auth.Auth;
   public urlNodeFirebase: string;
-  public db: AngularFireDatabase;
+  //public db: AngularFireDatabase;
   public deviceConnectionRef;
 
   //public loggeduser: firebase.auth.Auth;
 
   constructor(
-    private afAuth: AngularFireAuth,
+    //private afAuth: AngularFireAuth,
     config: Config,
-    db: AngularFireDatabase
+    //db: AngularFireDatabase
   ) {
     // imposto db
-    this.db = db;
+    //this.db = db;
     // recupero tenant
     let appConfig = config.get("appConfig");
     this.tenant = appConfig.tenant;
@@ -64,18 +62,19 @@ export class ChatPresenceHandler {
     let myConnectionsRef = this.onlineRefForUser(userid);
     let lastOnlineRef = this.lastOnlineRefForUser(userid);
     let connectedRefURL = "/.info/connected";
-    this.db.object(connectedRefURL).snapshotChanges()
-    .subscribe(child => {
-      //console.log("KEY: ",child);
-      if(child.payload.val()){
-        if (!this.deviceConnectionRef || this.deviceConnectionRef == "undefined") {
-          console.log("self.deviceConnectionRef: ", this.deviceConnectionRef);
+    let conn = firebase.database().ref(connectedRefURL);
+    let that = this;
+    conn.on('value', function(dataSnapshot) {
+      //console.log("KEY: ",dataSnapshot,that.deviceConnectionRef);
+      if(dataSnapshot.val()){
+        if (!that.deviceConnectionRef || that.deviceConnectionRef == "undefined") {
+          console.log("self.deviceConnectionRef: ", that.deviceConnectionRef);
           //this.deviceConnectionRef = myConnectionsRef.set(true);
           let conection = true;
-          this.deviceConnectionRef = myConnectionsRef.push(conection);
+          that.deviceConnectionRef = myConnectionsRef.push(conection);
           // when this device disconnects, remove it
           //!!! quando faccio logout devo disconnettermi
-          this.deviceConnectionRef.onDisconnect().remove();
+          that.deviceConnectionRef.onDisconnect().remove();
           // when I disconnect, update the last time I was seen online
           let now: Date = new Date();
           let timestamp = now.valueOf();

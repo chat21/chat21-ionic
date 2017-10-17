@@ -4,8 +4,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { Config, Events } from 'ionic-angular';
 
 // firebase
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 // models
@@ -61,7 +59,7 @@ export class ListaConversazioniPage extends _MasterPage {
   private bck_color_unselected:string;
 
   public tenant: string;
-  public users: AngularFireList<any>;
+  //public users: AngularFireList<any>;
   public currentUserDetail: UserModel;
   private contacts: any;
   //private firstAcces: boolean;
@@ -71,7 +69,7 @@ export class ListaConversazioniPage extends _MasterPage {
     public modalCtrl: ModalController,
     public navCtrl: NavController,
     public navParams: NavParams,
-    public afAuth: AngularFireAuth,
+    //public afAuth: AngularFireAuth,
     public navProxy: NavProxyService,
     public authService: AuthService,
     public chatPresenceHandler: ChatPresenceHandler,
@@ -79,7 +77,7 @@ export class ListaConversazioniPage extends _MasterPage {
     public conversationProvider: ConversationProvider,
     public userService: UserService,
     public databaseprovider: DatabaseProvider,
-    public db: AngularFireDatabase,
+    //public db: AngularFireDatabase,
     config: Config,
     private firebaseProvider: FirebaseProvider,
     public events: Events
@@ -99,7 +97,7 @@ export class ListaConversazioniPage extends _MasterPage {
 
     let appConfig = config.get("appConfig");
     this.tenant = appConfig.tenant;
-    this.db = db;
+    //this.db = db;
 
     // apro il db e recupero timestamp ultimo aggiornamento
     var that = this;
@@ -161,22 +159,26 @@ export class ListaConversazioniPage extends _MasterPage {
 
   //// start gestione conversazioni ////
   loadListConversations() {
-    console.log("loadListConversations::", this.conversationId);
+    console.log("loadListConversations::");
+    let that = this;
     const items = this.conversationProvider.loadListConversations();
-    //items.valueChanges(['child_added'])
-    items.snapshotChanges(['child_added'])
-    .subscribe(snapshot => {
-      this.conversations = [];
-      snapshot.forEach(action => {
-        let item = action.payload.val();
-        console.log(":::item:::", action.key, item.convers_with);
-
+    items.on("value", function(snapshot) {
+      that.conversations = [];
+      snapshot.forEach(function(data) {
+        let item = data.val();
+        console.log(":::item:::", that.conversationId, data.key, item.convers_with);
         let selected: boolean;
         // se conversationId è null significa che sto iniziando una nw conversazione
         // se vengo da dettaglio_conversazione; seleziono la conversazione cliccata se esiste
-        (action.key == this.conversationId)?selected = true:selected = false;
+        //(data.key == that.conversationId)?selected = true:selected = false;
+        if(data.key == that.conversationId){
+          selected = true;
+          item.status = 2;
+        } else {
+          selected = false;
+        }
         const conversation = new ConversationModel(
-          action.key,
+          data.key,
           item.convers_with,
           item.convers_with_fullname,
           item.image,
@@ -188,26 +190,25 @@ export class ListaConversazioniPage extends _MasterPage {
           item.timestamp, 
           selected
         );
-        this.conversations.push(conversation);
+        //this.messageProvider.setStatusConversation(conversation);
+        that.conversations.push(conversation);
       });
-      this.conversations.reverse(); 
+      //ordino array conversazioni ultima in testa
+      that.conversations.reverse(); 
       //visualizzo div content_message_welcome
-      this.style_message_welcome = true;
-      
+      that.style_message_welcome = true;
       // se ci sono conversazioni e non esiste una conversazione selezionata
       // (primo accesso alla pagina), imposto la prima come conversazione attiva
-      if(this.conversations.length>0 && !this.conversationId){//} && this.firstAcces == true){
-        this.conversationId = this.conversations[0].uid;
-        let uidReciver = this.conversations[0].convers_with;
-        this.goToConversationDetail(this.conversationId, uidReciver);
-        //this.firstAcces = false;
-      }
-      //console.log("this.content_message_welcome::",this.style_message_welcome);
+        if(that.conversations.length>0 && !that.conversationId){//} && this.firstAcces == true){
+          that.conversationId = that.conversations[0].uid;
+          let uidReciver = that.conversations[0].convers_with;
+          that.goToConversationDetail(that.conversationId, uidReciver);
+          //this.firstAcces = false;
+        }
     });
-
   }
 
-  // filtro le conversazioni selezionando quella attiva
+  //filtro le conversazioni selezionando quella attiva
   filterConversationsForSetSelected(nwId){
     let oldId = this.conversationId;
     //console.log("this.conversations",this.conversations);
@@ -266,7 +267,9 @@ export class ListaConversazioniPage extends _MasterPage {
         this.logOut();
       }
       else if (data == 'ProfilePage') {
-        this.navCtrl.push(ProfilePage);
+        if(this.userService.getCurrentUserDetails()){
+          this.navCtrl.push(ProfilePage);
+        }
       }
     });
   }
@@ -276,7 +279,6 @@ export class ListaConversazioniPage extends _MasterPage {
   logOut() {
     // resetto pagina dettaglio conversazioni
     this.navProxy.pushDetail(PlaceholderPage,{});
-    
     let that = this;
     this.authService.logoutUser()
       .then(function () {

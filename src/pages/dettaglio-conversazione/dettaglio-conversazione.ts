@@ -3,8 +3,6 @@ import { IonicPage, NavParams, Content, Events, NavController } from 'ionic-angu
 
 // firebase
 import * as firebase from 'firebase/app';
-//import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireList } from 'angularfire2/database';
 
 // models
 import { UserModel } from '../../models/user';
@@ -17,10 +15,8 @@ import { NavProxyService } from '../../providers/nav-proxy';
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // pages
-//import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
 import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
-
 
 // utils
 import { urlify, setLastDate, setHeaderDate } from '../../utils/utils';
@@ -41,9 +37,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   //@ViewChild('messageTextArea') messageTextArea: ElementRef;   
 
   private scrollDirection: any = 'bottom';
-
-  private firebaseMessages: AngularFireList<any>;
-  //private subscriptionFirebaseMessages:any;
+  private firebaseMessages;
   private messages: Array<MessageModel> = [];
   private conversationId: string;
   private uidSender: string;
@@ -84,9 +78,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     if(!this.conversationId){
       this.conversationId = this.messageProvider.createConversationId(this.uidSender, this.uidReciver);
     }
-    
     this.initialize();
-    
   }
 
   ngOnDestroy(){
@@ -96,32 +88,42 @@ export class DettaglioConversazionePage extends _DetailPage{
   ngOnInit() {
     console.log('ngOnInit **************');
   }
-
+  ionicViewWillLeave(){
+    // aggiorno stato conversazione come letto
+    // caso particolare nel quale arrivano messaggi alla conversazione evidenziata
+    this.updateConversationState();
+  }
+  
   ionViewDidEnter(){
     this.content.scrollDownOnLoad = true;
-    // se esistono dei messaggi nella conversazione
-    if(this.messages.length > 0){
-      //aggiorno lo stato dei messaggi come letto
-      // baggato da controllare
-      //this.messageProvider.setStatusMessage(this.messages);
-
-      // aggiorno lo stato della conversazione
-      let lastMessage = this.messages.slice(-1)[0];
-      if(lastMessage){
-        this.messageProvider.setStatusConversation(lastMessage);
-      }
-    }
-    else {
-      // // altrimenti se nn ci sono ancora messaggi e quindi sto x creare una conversazione
-      // // visualizzo div content_message_welcome
-      // this.style_message_welcome = true;
-      // console.log("this.content_message_welcome::",this.style_message_welcome);
-    }
-    
+    // aggiorno stato conversazione come letto
+    this.updateConversationState();
   }
   //// END functions of system ////
 
   //// START functions messages ////
+  updateConversationState(){
+    // se esistono dei messaggi nella conversazione
+    this.messageProvider.setStatusConversation(this.conversationId);
+    // console.log("updateConversationState::",this.messages.length);
+    // if(this.messages.length > 0){
+    //   // aggiorno lo stato dei messaggi come letto
+    //   // baggato da controllare!!!
+    //   // this.messageProvider.setStatusMessage(this.messages);
+    //   // aggiorno lo stato della conversazione
+    //   let lastMessage = this.messages.slice(-1)[0];
+    //   if(lastMessage){
+    //     this.messageProvider.setStatusConversation(lastMessage);
+    //   }
+    // }
+    // else {
+    //   // // altrimenti se nn ci sono ancora messaggi e quindi sto x creare una conversazione
+    //   // // visualizzo div content_message_welcome
+    //   // this.style_message_welcome = true;
+    //   // console.log("this.content_message_welcome::",this.style_message_welcome);
+    // }
+  }
+
   initialize(){
     console.log('initialize **************');
     // se esiste imposto array messaggi
@@ -150,19 +152,22 @@ export class DettaglioConversazionePage extends _DetailPage{
     // setto userFirebase
     this.userFirebase = this.userService.setUserDetail(this.uidReciver);
     // recupero riciver user detail
-    this.subscriptionUserFirebase = this.userFirebase.snapshotChanges()
-    .subscribe(snapshot => {
-      const user = snapshot.payload.val();
+
+    // this.subscriptionUserFirebase = this.userFirebase.snapshotChanges()
+    // .subscribe(snapshot => {
+    
+    this.userFirebase.on('value', function(snapshot) {
+      const user = snapshot.val();
       if (user){
         const fullname = user.name+" "+user.surname;
         const userDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
         console.log("userDetails",userDetails);
-        this.userRecipient = userDetails;
+        that.userRecipient = userDetails;
       }
       else{
-        const userDetails = new UserModel(this.uidReciver, '', '', this.uidReciver, '');
+        const userDetails = new UserModel(that.uidReciver, '', '', that.uidReciver, '');
         console.log("userDetails vuoto",userDetails);
-        this.userRecipient = userDetails;
+        that.userRecipient = userDetails;
       }
     });
     // recupero current currentUserDetail
@@ -173,15 +178,18 @@ export class DettaglioConversazionePage extends _DetailPage{
     console.log('this.setupOnlineStatus *************');
   }
 
+  
   // get list messages
   getMessages(){
-    console.log("uidSender:::uidReciver:: ",this.uidSender, this.uidReciver);
-    this.firebaseMessages.valueChanges(['child_added'])
-    .subscribe(actions => {
-      let messagesTEMP = [];
-      var lastDate: string = "";
-      actions.forEach(item => {
-          console.log(item['timestamp']);
+    console.log("uidSender:::uidReciver:: ",this.uidSender, this.uidReciver, this.messageProvider);
+    //let messagesTEMP = [];
+    let that = this;
+    var lastDate: string = "";
+    this.firebaseMessages.limitToLast(100).on("value", function(snapshot) {
+      that.messages = [];
+      console.log("that.messages::",that.messages);
+      snapshot.forEach(function(data) {
+        let item = data.val();
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
         let calcolaData = setHeaderDate(item['timestamp'], lastDate);
         if(calcolaData != null){
@@ -189,18 +197,16 @@ export class DettaglioConversazionePage extends _DetailPage{
         }
         // creo oggetto messaggio e lo aggiungo all'array dei messaggi
         const message = new MessageModel(item['conversationId'], item['recipient'], item['sender'], item['sender_fullname'], item['status'], item['text'], item['timestamp'], calcolaData, item['type']);
-        messagesTEMP.push(message);
-        //aggiorno stato messaggio
+        // console.log('this.message *************', message, that.messages);
+        that.messages.push(message);
+        // aggiorno stato messaggio
         // questo stato indica che è stato consegnato al client e NON la lettura
         if(item['status']!=2){
-          this.messageProvider.setStatusMessage(item);
+          that.messageProvider.setStatusMessage(data);
         }
-      });  
-      this.messages = messagesTEMP;
-      // scrollo elenco messaggi alla fine
-      this.doScroll();
+      });
+      that.doScroll();
     });
-    
   }
 
   // Check if the user is the sender of the message.
@@ -213,15 +219,18 @@ export class DettaglioConversazionePage extends _DetailPage{
     //console.log("messageTextArea:: ",this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style);
     if (msg && msg.trim() != ''){
       this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
-      //console.log("messageString:::firebaseMessages",msg, msg);
+      // console.log("messageString:::firebaseMessages",msg, msg);
       this.messageString = urlify(msg);
-      console.log("messageString:::firebaseMessages", this.messageString, this.currentUser);
+      // console.log("messageString:::firebaseMessages", this.messageString, this.currentUser);
       let now: Date = new Date();
       let timestamp = now.valueOf();
       
       //creo messaggio e lo aggiungo all'array
       //cambio lo stato da 0 a 1 e lo invio
       //quando lo ricevo cambio lo stato a 2
+
+      //const converationsObj = firebase.database().ref(urlNodeFirebase);
+
       if(this.firebaseMessages) {
           const message = {
               conversationId: this.conversationId,
@@ -238,11 +247,9 @@ export class DettaglioConversazionePage extends _DetailPage{
           this.messageProvider.createReceiverConversation(message, this.currentUser, this.userRecipient);
           this.messageString = "";
           //console.log("000 firebaseMessage push",this.messageString, this.firebaseMessages);
-          this.firebaseMessages.push(message);
-
-          // aggiorno ListaConversazioniPage
+          var newMessageRef = this.firebaseMessages.push();
+          newMessageRef.set(message);
           this.events.publish('setConversationSelected:change',this.conversationId);
-      
           //this.navProxy.setRootMaster(ListaConversazioniPage, {conversationId:this.conversationId});
           //this.content.scrollToBottom();
       }
@@ -257,10 +264,10 @@ export class DettaglioConversazionePage extends _DetailPage{
   //// START Scroll managemant functions ////
   // Scroll to bottom of page after a short delay.
   scrollBottom() {
-    var that = this;
+    let that = this;
     //console.log('scrollBottom1 **************', that.content);
     setTimeout(function() {
-      //console.log('scrollBottom2 **************', that.content._scroll);
+      console.log('scrollBottom2 **************', that.content._scroll);
       if(that.content._scroll){
         that.content.scrollToBottom(0);
       }
@@ -268,7 +275,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   }
   // Scroll to top of the page after a short delay.
   scrollTop() {
-    var that = this;
+    let that = this;
     setTimeout(function() {
       that.content.scrollToTop();
     }, 300);

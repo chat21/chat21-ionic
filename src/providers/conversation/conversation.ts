@@ -4,7 +4,6 @@ import 'rxjs/add/operator/map';
 
 import { Config } from 'ionic-angular';
 import * as firebase from 'firebase/app';
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from 'angularfire2/database';
 import { ConversationModel } from '../../models/conversation';
 
 /*
@@ -16,12 +15,12 @@ import { ConversationModel } from '../../models/conversation';
 @Injectable()
 export class ConversationProvider {
   private tenant: string;
-  private items: AngularFireList<any>;
+  private items;//: AngularFireList<any>;
 
   constructor(
     public http: Http,
     public config: Config,
-    public db: AngularFireDatabase
+    //public db: AngularFireDatabase
   ) {
     console.log('Hello ConversationProvider Provider');
     // recupero tenant
@@ -34,11 +33,10 @@ export class ConversationProvider {
     //recupero uid current user
     const currentUser = firebase.auth().currentUser;
     const urlNodeFirebase = '/apps/'+this.tenant+'/users/'+currentUser.uid+'/conversations';
-    console.log("urlNodeFirebase::", urlNodeFirebase);
-    this.items = this.db.list(urlNodeFirebase, 
-      ref => ref.orderByChild('timestamp').limitToLast(50));
-    console.log("loadListConversations::", this.items);
-    return this.items;
+    //console.log("urlNodeFirebase::", urlNodeFirebase);
+    let ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(50);
+    //console.log("loadListConversations::", ref);
+    return ref;
   }
 
 }

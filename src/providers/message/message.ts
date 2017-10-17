@@ -10,7 +10,6 @@ import 'rxjs/add/operator/switchMap';
 import { Config, Platform } from 'ionic-angular';
 import * as firebase from 'firebase/app';
 import { UserModel } from '../../models/user';
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from 'angularfire2/database';
 import { UserService } from '../../providers/user/user';
 
 import { removeHtmlTags } from '../../utils/utils';
@@ -25,7 +24,7 @@ import { removeHtmlTags } from '../../utils/utils';
 export class MessageProvider {
 
   private tenant: string;
-  private items: AngularFireList<any>;
+  private items;//: AngularFireList<any>;
   private userSender: UserModel;
   private userRecipient: UserModel;
   private userRecipientUid: string;
@@ -37,7 +36,7 @@ export class MessageProvider {
     private platform: Platform,
     public http: Http,
     public config: Config,
-    public db: AngularFireDatabase,
+    //public db: AngularFireDatabase,
     private userService:UserService
   ) {
     let appConfig = this.config.get("appConfig");
@@ -49,25 +48,6 @@ export class MessageProvider {
     //console.log('HngOnInit MessageProvider');
   }
 
-  // setUsersDetail(){
-  //   const userFirebaseSender = this.userService.setUserDetail(userSenderUid)
-  //   userFirebaseSender.subscribe(snapshot => {
-  //     const user = snapshot.val();
-  //     const fullname = user.name+" "+user.surname;
-  //     const userDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
-  //     console.log("userDetails userSender:: ",userDetails);
-  //     this.userSender = userDetails;
-  //   });
-  //   const userFirebaseRecipient = this.userService.setUserDetail(userRecipientUid)
-  //   userFirebaseRecipient.subscribe(snapshot => {
-  //     const user = snapshot.val();
-  //     const fullname = user.name+" "+user.surname;
-  //     const userDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
-  //     console.log("userDetails userRecipient:: ",userDetails);
-  //     this.userRecipient = userDetails;
-  //   });
-  // }
-
   ifConversationExist(){
     const urlNodeFirebase = '/apps/'+this.tenant+'/messages/';
     return firebase.database().ref(urlNodeFirebase).once('value');
@@ -78,67 +58,49 @@ export class MessageProvider {
     this.userSenderUid = userSenderUid;
     // recupero current user detail
     console.log('userSender::::', userSenderUid, userRecipientUid);
-
     // creo id conversazione
     this.conversationId = this.createConversationId(userSenderUid, userRecipientUid);
     // creo message path
     const urlNodeFirebase = '/apps/'+this.tenant+'/messages/'+this.conversationId;
     console.log("loadListMeggages::", urlNodeFirebase);
-    // this.items = this.db.list(urlNodeFirebase, {
-    //   query: {
-    //     limitToLast: 300
-    //   }
-    // });
-    // const size$ = new BehaviorSubject(null);
-    // this.items = size$.switchMap(size =>
-    //   this.db.list(urlNodeFirebase, ref =>
-    //     size ? ref.limitToLast(100) : ref
-    //   ).valueChanges();
-    // );
+    // this.items = this.db.list(urlNodeFirebase, 
+    // ref => ref.limitToLast(100));
 
-    this.items = this.db.list(urlNodeFirebase, 
-    ref => ref.limitToLast(100));
+    this.items = firebase.database().ref(urlNodeFirebase);
     console.log("loadListMeggages::", urlNodeFirebase, this.items);
     return this.items;
    // this.userSender = userSender;//this.userService.getCurrentUserDetails();
   }
 
-  // setStatusMessages(items){
-  //   console.log("setStatusMessage", items);
-  //   items.forEach(item => {
-  //     // aggiorno stato messaggi conversazione 0:nn consegnato; 1:ricevuto; 2:letto
-  //     if (item.sender != firebase.auth().currentUser.uid && item.status!=2){
-  //       // aggiorno stato messaggio in elenco messagi
-  //       const urlNodeFirebase = '/apps/'+this.tenant+'/messages/'+item.conversationId+"/"+item.$key;
-  //       console.log("AGGIORNO STATO MESSAGGIO", urlNodeFirebase);
-  //       firebase.database().ref(urlNodeFirebase).update({ status: 2 });
-  //       //this.items.update(item.sender, { status: 2 });
-  //     }
-  //   });
-  // }
   setStatusMessage(item){
-    console.log("setStatusMessage", item);
-      // aggiorno stato messaggi conversazione 0:nn consegnato; 1:ricevuto; 2:letto
-      if (item.sender != firebase.auth().currentUser.uid && item.status!=2){
-        // aggiorno stato messaggio in elenco messagi
-        const urlNodeFirebase = '/apps/'+this.tenant+'/messages/'+item.conversationId+"/"+item.$key;
-        console.log("AGGIORNO STATO MESSAGGIO", urlNodeFirebase);
-        firebase.database().ref(urlNodeFirebase).update({ status: 2 });
-      }
-  }
-
-  setStatusConversation(item){
-    console.log("setStatusConversation", item);
+    //console.log("setStatusMessageKEY*****", item.key);
     // aggiorno stato messaggi conversazione 0:nn consegnato; 1:ricevuto; 2:letto
-    //console.log("CONFRONTO", item.sender,firebase.auth().currentUser.uid);
-    if (item.sender != firebase.auth().currentUser.uid && item.conversationId){
-      // aggiorno stato messaggio in conversazioni
-      const urlNodeFirebase = '/apps/'+this.tenant+'/users/'+firebase.auth().currentUser.uid+'/conversations/'+item.conversationId;
-      var updates = {};
-      //console.log("setStatusConversation urlNodeFirebase", urlNodeFirebase);
-      //console.log("urlNodeFirebase", urlNodeFirebase);
+    let msg = item.val();
+    if (msg.sender != firebase.auth().currentUser.uid && msg.status!=2){
+      // aggiorno stato messaggio in elenco messaggi
+      const urlNodeFirebase = '/apps/'+this.tenant+'/messages/'+msg.conversationId+"/"+item.key;
+      console.log("AGGIORNO STATO MESSAGGIO", urlNodeFirebase);
       firebase.database().ref(urlNodeFirebase).update({ status: 2 });
     }
+  }
+
+  setStatusConversation(conversationId){
+    console.log("setStatusConversation", conversationId);
+    // aggiorno stato messaggi conversazione 0:nn consegnato; 1:ricevuto; 2:letto
+    //console.log("CONFRONTO", item.sender,firebase.auth().currentUser.uid);
+    //if (item.sender != firebase.auth().currentUser.uid && item.conversationId){
+    
+      // se la conversazione esiste
+      // aggiorno stato messaggio in conversazioni
+      const urlNodeFirebase = '/apps/'+this.tenant+'/users/'+firebase.auth().currentUser.uid+'/conversations/'+conversationId;
+      firebase.database().ref(urlNodeFirebase).once('value', function(snapshot) {
+        if (snapshot.hasChildren()) {
+          var updates = {};
+          //console.log("setStatusConversation urlNodeFirebase", urlNodeFirebase);
+          //console.log("urlNodeFirebase", urlNodeFirebase);
+          firebase.database().ref(urlNodeFirebase).update({ status: 2 });
+        }
+      });
   }
 
   // Check if the user is the sender of the message.
@@ -171,10 +133,9 @@ export class MessageProvider {
   createSenderConversation(message:any, userSender:UserModel, userRecipient:UserModel) {
     this.userSender = userSender;
     this.userRecipient = userRecipient;
-    
     const urlNodeFirebase = '/apps/'+this.tenant+'/users/'+this.userSender.uid+'/conversations/'+this.conversationId;
     console.log("createSenderConversation.conversationsPathDb::", urlNodeFirebase);
-    const  converationsObj = this.db.object(urlNodeFirebase);
+    const converationsObj = firebase.database().ref(urlNodeFirebase);
     const conversation = {
               convers_with: this.userRecipient.uid,
               convers_with_fullname: this.userRecipient.fullname,
@@ -193,7 +154,7 @@ export class MessageProvider {
   createReceiverConversation(message:any, userSender:UserModel, userRecipient:UserModel) {
     const urlNodeFirebase = '/apps/'+this.tenant+'/users/'+this.userRecipient.uid+'/conversations/'+this.conversationId;
     console.log("createReceiverConversation.conversationsPathDb::", urlNodeFirebase);
-    const converationsObj = this.db.object(urlNodeFirebase);
+    const converationsObj = firebase.database().ref(urlNodeFirebase);
     const conversation = {
               convers_with: this.userSender.uid,
               convers_with_fullname: this.userSender.fullname,
