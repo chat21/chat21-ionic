@@ -1,6 +1,6 @@
 ## Live Demo ##
 Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
-<img src="" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
+<img src="http://www.dariodepascalis.com/wp-content/uploads/2017/10/chat21-desktop.png" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
 
 ## Before starting ##
 * Install nodejs: `https://nodejs.org/en/download/`
