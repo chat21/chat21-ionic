@@ -10,7 +10,6 @@ Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
 ## Installation ##
 * Clone this repository. Run: `git clone https://github.com/frontiere21/chat21-ionic.git` in the folder in which you'd like to contain the project.
 * Next you will need to get all your node_modules back into your application. All these modules are based on your package.json file. In the project folder “chat21-ionic” run: `npm install`
-* Now you will need to serve the app. Run: `ionic serve` in the terminal. (Update the plugins if required)
 
 ## Firebase Configuration ##
 * Create account Firebase
@@ -46,6 +45,9 @@ https://firebase.google.com/docs/auth/
 * Update manifest.json: 
     * open `/src/manifest.json` and replace "name": "chat21-ionic" and "short_name": "chat21-ionic" with the name of your project (optional)
 
+## Run App on Browser ##
+* Now you will need to serve the app. Run: `ionic serve` in the terminal. (Update the plugins if required)
+
 ## Upload Notification functions on Firebase Cloud Functions ##
 https://firebase.google.com/docs/functions/get-started?authuser=0
 * Install the Firebase CLI. run: `npm install -g firebase-tools`
@@ -79,6 +81,9 @@ https://firebase.google.com/docs/hosting/quickstart?authuser=0
 * In your firebase consol click hosting and click on link your project
 
 
-## Run on Android
+## Run on Android and iOS
 run on simulator : ionic cordova run android
 run on device : ionic cordova run android --device
+
+run on simulator : ionic cordova run ios
+run on device : ionic cordova run ios --device
