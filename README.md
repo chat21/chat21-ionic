@@ -1,5 +1,6 @@
 ## Live Demo ##
 Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
+<img src="/firebase/firechat/raw/master/screenshot.png" alt="A screenshot of Jenny and Lexi the cat chatting on the Firechat demo" style="max-width:100%;">
 
 ## Before starting ##
 * Install nodejs: `https://nodejs.org/en/download/`
