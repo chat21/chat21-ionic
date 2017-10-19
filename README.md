@@ -16,7 +16,12 @@ Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
 
 #### Firebase DB Configuration #### 
-* Click Add Firebase to your web app and copy var config = ```{ apiKey: "<your api key>",authDomain: "<your authDomain>",databaseURL: "<your databaseURL>",projectId: "<your projectId>",storageBucket: "<your storageBucket>", messagingSenderId: "< your messagingSenderId >" };```
+* Click Add Firebase to your web app and copy var config = ```{ "apiKey": "<your api key>",
+"authDomain": "<your authDomain>",
+"databaseURL": "<your databaseURL>",
+"projectId": "<your projectId>",
+"storageBucket": "<your storageBucket>",
+"messagingSenderId": "< your messagingSenderId >" };```
 * Update app.module.ts: 
     * go to the root of your project
     * open /src/app/app.module.ts and replace `firebaseConfig : {...}` whit ``firebaseConfig : {
