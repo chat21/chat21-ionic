@@ -21,17 +21,17 @@ Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
 "databaseURL": "<your databaseURL>",
 "projectId": "<your projectId>",
 "storageBucket": "<your storageBucket>",
-"messagingSenderId": "< your messagingSenderId >" };```
+"messagingSenderId": "< your messagingSenderId >" }```
 * Update app.module.ts: 
     * go to the root of your project
-    * open /src/app/app.module.ts and replace `firebaseConfig : {...}` whit ``firebaseConfig : {
+    * open /src/app/app.module.ts and replace `firebaseConfig : {...}` whit `firebaseConfig : {
     apiKey: "<your api key>",
     authDomain: "<your authDomain>",
     databaseURL: "<your databaseURL>",
     projectId: "<your projectId>",
     storageBucket: "<your storageBucket>",
     messagingSenderId: "< your messagingSenderId >"
-  };``
+  }`
 * Config Firebase auth
 In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
 https://firebase.google.com/docs/auth/
