@@ -57,12 +57,12 @@ export class UserService {
     return userFirebase;
   }
 
-  saveCurrentUserDetail(uid: string, username: string, name: string, surname: string){
+  saveCurrentUserDetail(uid: string, email: string, username: string, name: string, surname: string){
     // recupero tenant
     let timestamp = getNowTimestamp();
     console.log("saveCurrentUserDetail --------->",this.urlNodeContacts, uid, name, surname);
     return firebase.database().ref(this.urlNodeContacts)
-    .child(uid).set({uid:uid, name:name, surname:surname, imageurl:'', timestamp:timestamp})
+    .child(uid).set({uid:uid, email:email, name:name, surname:surname, timestamp:timestamp, imageurl:''})
   }
 
   setCurrentUserDetails(uid, email) {
@@ -76,12 +76,12 @@ export class UserService {
       if (snapshot.val()){
         const user = snapshot.val();
         const fullname = user.name+" "+user.surname;
-        that.currentUserDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
+        that.currentUserDetails = new UserModel(user.uid, user.email, user.name, user.surname, fullname, '');
       }
       else {
-        that.currentUserDetails = new UserModel(uid, email, '', '', '');
+        that.currentUserDetails = new UserModel(uid, email, '', '', uid, '');
         // aggiorno user nel db contacts
-        that.saveCurrentUserDetail(uid, "", email, '');
+        that.saveCurrentUserDetail(uid, email, '', '', uid);
       }
     });
   }

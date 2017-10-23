@@ -32,7 +32,7 @@
 
     <ng-template #content_conversations>
       <!-- <ion-item [style.background-color]="conversation.selected === true ? bck_color_selected : bck_color_unselected" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid,conversation.convers_with)"> -->
-      <ion-item no-lines [ngClass]="conversation.selected === true ? 'selected' : 'unselected'" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid,conversation.convers_with)">     
+      <ion-item no-lines [ngClass]="conversation.selected === true ? 'selected' : 'unselected'" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid,conversation.recipient)">     
         <ion-avatar item-start>
           <img src="{{conversation.image}}" alt="user" onError="this.src='assets/img/no_image.png';">
         </ion-avatar>

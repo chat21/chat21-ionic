@@ -58,7 +58,7 @@ export class RegisterPage {
       .then((newUser) => {
         // creo current user detail
         console.log("register",newUser.uid, this.userService);
-        this.userService.saveCurrentUserDetail(newUser.uid, this.registerForm.value.username, this.registerForm.value.name, this.registerForm.value.surname)
+        this.userService.saveCurrentUserDetail(newUser.uid, this.registerForm.value.email, this.registerForm.value.username, this.registerForm.value.name, this.registerForm.value.surname)
         .then(_ => {
           console.log('success saveCurrentUserDetail');
           this.loading.dismiss().then( () => {

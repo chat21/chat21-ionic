@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { PopoverController, IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+
 import { Subscription } from 'rxjs/Subscription';
 import { Config, Events } from 'ionic-angular';
 
@@ -36,6 +37,10 @@ import { UserService } from '../../providers/user/user';
 import { DatabaseProvider } from './../../providers/database/database';
 import { FirebaseProvider } from './../../providers/firebase-provider';
 
+import { UploadService } from '../../providers/upload-service/upload-service';
+import { MessageProvider } from '../../providers/message/message';
+
+//import { FileChooser, FilePath, File } from 'ionic-native/file-chooser';
 
 /**
  * Generated class for the ListaConversazioniPage page.
@@ -52,7 +57,7 @@ export class ListaConversazioniPage extends _MasterPage {
 
   private conversations: Array<any> = [];
   private subscription: Subscription;
-  //private currentUser: firebase.User;
+  private currentUser: firebase.User;
   private style_message_welcome: boolean;
   private conversationId: string;
   private bck_color_selected: string;
@@ -63,6 +68,11 @@ export class ListaConversazioniPage extends _MasterPage {
   public currentUserDetail: UserModel;
   private contacts: any;
   //private firstAcces: boolean;
+
+  nativepath: any;
+  firestore = firebase.storage();
+  imgsource: any;
+  private uidReciverFromUrl: string;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -80,16 +90,22 @@ export class ListaConversazioniPage extends _MasterPage {
     //public db: AngularFireDatabase,
     config: Config,
     private firebaseProvider: FirebaseProvider,
-    public events: Events
+    public events: Events,
+    public upSvc: UploadService,
+    public zone: NgZone,
+    public messageProvider: MessageProvider
   ) {
     super();
+
+    // recupero id recipient passato nell'url della pg
+    this.uidReciverFromUrl = location.search.split('recipient=')[1];
+   
     // se vengo da dettaglio conversazione
     // o da users con conversazione attiva recupero conversationId
     this.conversationId = navParams.get('conversationId');
     events.subscribe('setConversationSelected:change', (nwId) => {
       this.filterConversationsForSetSelected(nwId);
     });
-
     //this.firstAcces = true;
 
     this.bck_color_selected = BCK_COLOR_CONVERSATION_SELECTED;
@@ -97,7 +113,7 @@ export class ListaConversazioniPage extends _MasterPage {
 
     let appConfig = config.get("appConfig");
     this.tenant = appConfig.tenant;
-    //this.db = db;
+
 
     // apro il db e recupero timestamp ultimo aggiornamento
     var that = this;
@@ -106,6 +122,9 @@ export class ListaConversazioniPage extends _MasterPage {
       console.log("lastUpdate:", lastUpdate);
       that.firebaseProvider.loadFirebaseContactsData(lastUpdate);
     });
+    
+    
+
   }
 
   ngOnInit() {
@@ -118,6 +137,7 @@ export class ListaConversazioniPage extends _MasterPage {
         profileModal.present();
       } else {
         console.log(" this.user::: OK");
+        this.currentUser = user;
         // setto utente corrente recuperando il dettaglio
         this.userService.setCurrentUserDetails(user.uid, user.email);
         // setto utente connesso
@@ -159,6 +179,15 @@ export class ListaConversazioniPage extends _MasterPage {
 
   //// start gestione conversazioni ////
   loadListConversations() {
+
+    if ( this.uidReciverFromUrl ){ //&&  this.uidReciverFromUrl=="QkTk3zJUGIW7XWmqUv29p6DeHR32"
+      console.log("location.search::::::::::::: ", this.uidReciverFromUrl, location.search);
+      let uidSender = firebase.auth().currentUser.uid;
+      //creo idConversazione
+      this.conversationId = this.messageProvider.createConversationId(uidSender,  this.uidReciverFromUrl);
+      console.log("this.conversationId::::::::::::: ", this.conversationId);
+    }
+
     console.log("loadListConversations::");
     let that = this;
     const items = this.conversationProvider.loadListConversations();
@@ -166,7 +195,7 @@ export class ListaConversazioniPage extends _MasterPage {
       that.conversations = [];
       snapshot.forEach(function(data) {
         let item = data.val();
-        console.log(":::item:::", that.conversationId, data.key, item.convers_with);
+        console.log(":::item:::", that.conversationId, data.key, item.recipient);
         let selected: boolean;
         // se conversationId è null significa che sto iniziando una nw conversazione
         // se vengo da dettaglio_conversazione; seleziono la conversazione cliccata se esiste
@@ -179,9 +208,8 @@ export class ListaConversazioniPage extends _MasterPage {
         }
         const conversation = new ConversationModel(
           data.key,
-          item.convers_with,
+          item.recipient,
           item.convers_with_fullname,
-          item.image,
           item.is_new,
           item.last_message_text,
           item.sender,
@@ -192,6 +220,10 @@ export class ListaConversazioniPage extends _MasterPage {
         );
         //this.messageProvider.setStatusConversation(conversation);
         that.conversations.push(conversation);
+         // carico immagine profilo
+         //let idImage = (item.sender != that.currentUser.uid)?item.sender:item.convers_with;
+         //let urlImage = urlImagesNodeFirebase+idImage+"-imageProfile.jpg";
+         that.displayImage(data.key,item.recipient);
       });
       //ordino array conversazioni ultima in testa
       that.conversations.reverse(); 
@@ -199,12 +231,15 @@ export class ListaConversazioniPage extends _MasterPage {
       that.style_message_welcome = true;
       // se ci sono conversazioni e non esiste una conversazione selezionata
       // (primo accesso alla pagina), imposto la prima come conversazione attiva
-        if(that.conversations.length>0 && !that.conversationId){//} && this.firstAcces == true){
-          that.conversationId = that.conversations[0].uid;
-          let uidReciver = that.conversations[0].convers_with;
-          that.goToConversationDetail(that.conversationId, uidReciver);
-          //this.firstAcces = false;
-        }
+      if(that.conversations.length>0 && !that.conversationId){//} && this.firstAcces == true){
+        that.conversationId = that.conversations[0].uid;
+        let uidReciver = that.conversations[0].recipient;
+        that.goToConversationDetail(that.conversationId, uidReciver);
+        //this.firstAcces = false;
+      }
+      else if (that.conversationId){
+        that.goToConversationDetail(that.conversationId, that.uidReciverFromUrl);
+      }
     });
   }
 
@@ -242,6 +277,43 @@ export class ListaConversazioniPage extends _MasterPage {
     this.navProxy.pushDetail(DettaglioConversazionePage, {
       uidReciver: uidReciver,
       conversationId: this.conversationId
+    });
+  }
+
+  // apro conversazione con utente passato nella url della pg
+  goToConversationDetailFromLocationSearch() {
+
+    let uidReciver = location.search.split('recipient=')[1];
+    console.log("location.search::::::::::::: ",uidReciver, location.search);
+    if ( uidReciver && uidReciver=="QkTk3zJUGIW7XWmqUv29p6DeHR32"){
+
+    }
+
+    console.log('**************** goToChat uidReciver:: ',uidReciver);
+    // recupero current user id
+    let uidSender = firebase.auth().currentUser.uid;
+    //creo idConversazione
+    let conversationId = this.messageProvider.createConversationId(uidSender, uidReciver);
+    
+    // controllo se esiste il nodo conversazione
+    let that = this;
+    //let isNewConversation = 
+    this.messageProvider.ifConversationExist()
+    .then(function(snapshot) {
+      console.log("ifConversationExist?: " + snapshot + " --> "+snapshot.hasChild(conversationId));
+      if (!snapshot.hasChild(conversationId)) {
+        // se esiste imposto array messaggi
+        //conversationId = null;
+      }
+      that.navCtrl.setRoot(ListaConversazioniPage, {conversationId});
+
+      this.navProxy.pushDetail(DettaglioConversazionePage, {
+        uidReciver: uidReciver,
+        conversationId: this.conversationId
+      });
+    })
+    .catch(function (error) {
+      console.log("ifConversationExist failed: " + error.message);
     });
   }
 
@@ -296,5 +368,52 @@ export class ListaConversazioniPage extends _MasterPage {
       });
   }
   ///// end gestione logout ////
+
+  displayImage(key,uidContact){
+    this.upSvc.display(uidContact)
+    .then((url) => {
+      this.zone.run(() => {
+        // aggiorno url image in that.conversations
+        let index = this.conversations.findIndex(i => i.uid === key);
+        console.log("URL333::: ",this.conversations, uidContact, index);
+        this.conversations[index].image = url;
+      });
+    })
+    .catch((error)=>{
+      console.log("error::: ",error);
+    });
+  }
+ 
+
+  // store() {
+  //   FileChooser.open().then((url) => {
+  //     (<any>window).FilePath.resolveNativePath(url, (result) => {
+  //       this.nativepath = result;
+  //       this.uploadimage();
+  //     }
+  //     )
+  //   })
+  // }
+ 
+  // uploadimage() {
+  //   (<any>window).resolveLocalFileSystemURL(this.nativepath, (res) => {
+  //     res.file((resFile) => {
+  //       var reader = new FileReader();
+  //       reader.readAsArrayBuffer(resFile);
+  //       reader.onloadend = (evt: any) => {
+  //         var imgBlob = new Blob([evt.target.result], { type: 'image/jpeg' });
+  //         var imageStore = this.firestore.ref().child('image');
+  //         imageStore.put(imgBlob).then((res) => {
+  //           alert('Upload Success');
+  //         }).catch((err) => {
+  //           alert('Upload Failed' + err);
+  //         })
+  //       }
+  //     })
+  //   })
+  // }
+ 
+  
+
 
 }

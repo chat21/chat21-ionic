@@ -60,7 +60,7 @@ export class FirebaseProvider {
         let user = child;
         let fullname = user['name']+" "+user['surname'];
         console.log("fullname:",fullname);
-        let contact = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
+        let contact = new UserModel(user.uid, user.email, user.name, user.surname, fullname, user.imageurl);
         // if (user.uid == this.currentUser.uid){
         //   //salvo l'user corrente
         //   this.currentUserDetail = contact;
@@ -69,7 +69,7 @@ export class FirebaseProvider {
         //console.log("this.contacts MAP ::: ", contact);
         //this.databaseprovider.addContact(this.contact['uid'], this.contact['name'], this.contact['surname'], this.contact['fullname'], this.contact['imageurl'])
         this.databaseprovider.setTimestamp();
-        this.databaseprovider.addContact(contact.uid, contact.name, contact.surname, contact.fullname, contact.imageurl);  
+        this.databaseprovider.addContact(contact.uid, contact.email, contact.name, contact.surname, contact.fullname, contact.imageurl);  
     }
 
     removeContact(child) {
