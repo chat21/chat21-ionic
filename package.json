@@ -78,6 +78,7 @@
       "version": "",
       "locator": "ios"
     }
+<<<<<<< HEAD
   ],
   "description": "listaUtenti: An Ionic project",
   "cordova": {
@@ -101,3 +102,6 @@
     ]
   }
 }
+=======
+}
+>>>>>>> build_0.0.3

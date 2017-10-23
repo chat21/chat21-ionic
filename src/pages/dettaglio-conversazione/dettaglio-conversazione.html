@@ -41,8 +41,8 @@
           <ng-template #contentMine>
             <div class="statusMessage">
               <ion-icon *ngIf="message.status==0" name="ios-clock-outline"></ion-icon>
-              <ion-icon *ngIf="message.status==1" name="ios-checkmark-circle-outline"></ion-icon>
-              <ion-icon *ngIf="message.status==2" name="ios-checkmark-circle"></ion-icon>
+              <ion-icon *ngIf="message.status==1" name="ios-checkmark"></ion-icon>
+              <ion-icon *ngIf="message.status==2" name="ios-done-all"></ion-icon>
             </div>
             <div class="message message-mine">
               <div class="message-content message-content-text" [innerHTML]="message.text">

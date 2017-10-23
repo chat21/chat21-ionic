@@ -2,9 +2,31 @@ page-profile {
     .speaker-detail img {
         max-width: 140px;
         border-radius: 50%;
+        width: 140px;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
-
     .speaker-detail p {
         color: #60646B;
+    }
+    .icon_modify{
+        position: relative;
+        bottom: 25px;
+        right: -70px;
+        color: #424242;
+        font-size: 1em;
+        padding: 0px;
+        box-shadow: none;
+        background-color: transparent;
+        margin: 0px;
+    }
+    .uid-contact{
+        color: #424242;
+        user-select: text;
+        font-size: smaller;
+        text-align: center;
+        margin-top: 0px;
     }
 }

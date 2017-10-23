@@ -80,12 +80,13 @@ export class DatabaseProvider {
     });
   }
 
-  addContact(uid, name, surname, fullname, imageurl) {
-    let data = [uid, uid, name, surname, fullname, imageurl];
+  addContact(uid, email, name, surname, fullname, imageurl) {
+    let data = [uid, email, name, surname, fullname, imageurl];
     //this.storage.ready().then(() => {
       //INSERT OR REPLACE
       let value = {
         "imageurl" : imageurl,
+        "email" : email,
         "name" : name,
         "surname" : surname,
         "fullname" : fullname,

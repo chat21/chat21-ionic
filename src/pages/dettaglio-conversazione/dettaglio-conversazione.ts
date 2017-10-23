@@ -160,12 +160,12 @@ export class DettaglioConversazionePage extends _DetailPage{
       const user = snapshot.val();
       if (user){
         const fullname = user.name+" "+user.surname;
-        const userDetails = new UserModel(user.uid, user.name, user.surname, fullname, user.imageurl);
+        const userDetails = new UserModel(user.uid, user.email, user.name, user.surname, fullname, user.imageurl);
         console.log("userDetails",userDetails);
         that.userRecipient = userDetails;
       }
       else{
-        const userDetails = new UserModel(that.uidReciver, '', '', that.uidReciver, '');
+        const userDetails = new UserModel(that.uidReciver, '', '', '', that.uidReciver, '');
         console.log("userDetails vuoto",userDetails);
         that.userRecipient = userDetails;
       }

@@ -15,12 +15,13 @@ import { ListaConversazioniPage } from '../pages/lista-conversazioni/lista-conve
 import { DettaglioConversazionePage } from '../pages/dettaglio-conversazione/dettaglio-conversazione';
 import { ProfilePage } from '../pages/profile/profile';
 
-// import { AngularFireModule } from 'angularfire2';
+import { AngularFireModule } from 'angularfire2';
 // import { AngularFireDatabaseModule } from 'angularfire2/database';
 // import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { AuthService } from '../providers/auth-service';
 import { ChatPresenceHandler } from '../providers/chat-presence-handler';
+import { UploadService } from '../providers/upload-service/upload-service';
 
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -28,10 +29,14 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { NavProxyService } from '../providers/nav-proxy';
 import { PlaceholderPage } from '../pages/placeholder/placeholder';
 import { PopoverPage } from '../pages/popover/popover';
+import { PopoverProfilePage } from '../pages/popover-profile/popover-profile';
+import { UpdateImageProfilePage } from '../pages/update-image-profile/update-image-profile';
+
+
 import { FirebaseProvider } from '../providers/firebase-provider';
 
 // SQLite
-import { DatabaseProvider } from '../providers/database/database';
+
 import { SQLitePorter } from '@ionic-native/sqlite-porter';
 import { SQLite } from '@ionic-native/sqlite';
 
@@ -42,6 +47,7 @@ import { UserService } from '../providers/user/user';
 import { ConversationProvider } from '../providers/conversation/conversation';
 import { MessageProvider } from '../providers/message/message';
 import { AutosizeDirective } from '../directives/autosize/autosize';
+import { DatabaseProvider } from '../providers/database/database';
 
 @NgModule({
   declarations: [
@@ -56,6 +62,8 @@ import { AutosizeDirective } from '../directives/autosize/autosize';
     DettaglioConversazionePage,
     PlaceholderPage,
     PopoverPage,
+    PopoverProfilePage,
+    UpdateImageProfilePage,
     AutosizeDirective
   ],
   imports: [
@@ -64,6 +72,7 @@ import { AutosizeDirective } from '../directives/autosize/autosize';
     IonicStorageModule.forRoot(),
       
     IonicModule.forRoot(MyApp,{
+<<<<<<< HEAD
         firebaseConfig : {
         apiKey: "...",
         authDomain: "...",
@@ -71,21 +80,22 @@ import { AutosizeDirective } from '../directives/autosize/autosize';
         projectId: "...",
         storageBucket: "...",
         messagingSenderId: "..."
+=======
+      firebaseConfig : {
+>>>>>>> build_0.0.3
       },
 
       appConfig: {
-        //tenant:"bppintranet"//chat21"
         tenant:"chat21"
       }
     }),
     IonicStorageModule.forRoot({
       name: "chat21",
-      //name: 'bppintranet',
       storeName: 'contacts',
       driverOrder: ['indexeddb','sqlite', 'websql', 'indexeddb', 'localstorage']
     }),
 
-    // AngularFireModule.initializeApp(this.firebaseConfig),
+    AngularFireModule.initializeApp(this.firebaseConfig),
     // AngularFireDatabaseModule,
     // AngularFireAuthModule
   ],
@@ -100,7 +110,9 @@ import { AutosizeDirective } from '../directives/autosize/autosize';
     ListaConversazioniPage,
     DettaglioConversazionePage,
     PlaceholderPage,
-    PopoverPage
+    PopoverPage,
+    PopoverProfilePage,
+    UpdateImageProfilePage
   ],
   providers: [
     StatusBar,
@@ -117,7 +129,8 @@ import { AutosizeDirective } from '../directives/autosize/autosize';
     MessagingService,
     UserService,
     ConversationProvider,
-    MessageProvider
+    MessageProvider,
+    UploadService
     //Data
   ]
 })

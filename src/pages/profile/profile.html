@@ -6,6 +6,8 @@
 -->
 
 <ion-header>
+    
+
   <ion-navbar hideBackButton>
     <ion-title>{{currentUserDetail.fullname}}</ion-title>
     <ion-buttons left>
@@ -19,8 +21,9 @@
 <ion-content padding class="speaker-detail">
 
   <div text-center>
-    <!-- <img [src]="speaker.profilePic" [alt]="speaker.name"><br> -->
-    <img src="assets/img/no_image.png"/><br>
+    <img src="{{this.currentUserDetail.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';">
+    
+    
     <!-- <button ion-button icon-only clear small color="twitter">
       <ion-icon name="logo-twitter"></ion-icon>
     </button>
@@ -30,16 +33,28 @@
     <button ion-button icon-only clear small color="instagram">
       <ion-icon name="logo-instagram"></ion-icon>
     </button> -->
-  </div>
-  <div>{{currentUserDetail.uid}}</div>
+ 
+    <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
+      <ion-icon name="create"></ion-icon>
+    </button>
 
+  </div>
+  <div class="uid-contact">{{currentUserDetail.uid}}</div>
   <ion-item detail-push>
       {{currentUserDetail.fullname}}
   </ion-item>
-  <ion-item detail-push>
-      email:
+  <ion-item detail-push *ngIf="profileYourself">
+      email: {{currentUserDetail.email}}
   </ion-item>
 
+      <!-- <label>
+         <input type="file" (change)="detectFiles($event)" multiple>
+      </label>
+        <button
+                [disabled]="!selectedFiles"
+                (click)="uploadMulti()">
+          Upload Multiple
+        </button> -->
   <!-- <p>{{speaker.about}}</p> -->
 
 </ion-content>

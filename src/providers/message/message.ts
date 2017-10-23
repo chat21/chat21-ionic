@@ -137,10 +137,10 @@ export class MessageProvider {
     console.log("createSenderConversation.conversationsPathDb::", urlNodeFirebase);
     const converationsObj = firebase.database().ref(urlNodeFirebase);
     const conversation = {
-              convers_with: this.userRecipient.uid,
+              //convers_with: this.userRecipient.uid,
               convers_with_fullname: this.userRecipient.fullname,
               recipient: this.userRecipient.uid,
-              image: this.userRecipient.imageurl?this.userRecipient.imageurl:'',
+              //image: this.userRecipient.imageurl?this.userRecipient.imageurl:'',
               is_new: true,
               last_message_text: "tu: "+removeHtmlTags(message.text),
               sender: this.userSender.uid,
@@ -156,10 +156,10 @@ export class MessageProvider {
     console.log("createReceiverConversation.conversationsPathDb::", urlNodeFirebase);
     const converationsObj = firebase.database().ref(urlNodeFirebase);
     const conversation = {
-              convers_with: this.userSender.uid,
+              //convers_with: this.userSender.uid,
               convers_with_fullname: this.userSender.fullname,
               recipient: this.userSender.uid,
-              image: this.userSender.imageurl?this.userSender.imageurl:'',
+              //image: this.userSender.imageurl?this.userSender.imageurl:'',
               is_new: true,
               last_message_text: removeHtmlTags(message.text),
               sender: this.userSender.uid,

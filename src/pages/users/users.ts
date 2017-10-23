@@ -53,7 +53,7 @@ export class UsersPage {
     private databaseprovider: DatabaseProvider,
     private platform: Platform,
     private conversationProvider:ConversationProvider,
-    public messageProvider: MessageProvider,
+    public messageProvider: MessageProvider
   ) 
   {
     

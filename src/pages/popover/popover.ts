@@ -33,7 +33,6 @@ export class PopoverPage {
   }
 
   showConfirm() {
-        
   }
 
   ionViewDidLoad() {
