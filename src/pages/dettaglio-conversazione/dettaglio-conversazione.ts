@@ -71,7 +71,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.uidSender = firebase.auth().currentUser.uid;
 
     // recupero id riciver
-    this.uidReciver = navParams.get('uidReciver');
+    this.uidReciver = navParams.get('convers_with');
 
     // recupero conversationId
     this.conversationId = navParams.get('conversationId');

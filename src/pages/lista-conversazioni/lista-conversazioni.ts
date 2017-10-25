@@ -233,12 +233,12 @@ export class ListaConversazioniPage extends _MasterPage {
       // (primo accesso alla pagina), imposto la prima come conversazione attiva
       if(that.conversations.length>0 && !that.conversationId){//} && this.firstAcces == true){
         that.conversationId = that.conversations[0].uid;
-        let uidReciver = that.conversations[0].recipient;
-        that.goToConversationDetail(that.conversationId, uidReciver);
+        that.goToConversationDetail(that.conversationId, that.conversations[0].recipient, that.conversations[0].sender);
         //this.firstAcces = false;
       }
-      else if (that.conversationId){
-        that.goToConversationDetail(that.conversationId, that.uidReciverFromUrl);
+      else if (that.conversationId && that.uidReciverFromUrl){
+        that.goToConversationDetail(that.conversationId, that.uidReciverFromUrl, firebase.auth().currentUser.uid);
+        that.uidReciverFromUrl = null;
       }
     });
   }
@@ -270,12 +270,17 @@ export class ListaConversazioniPage extends _MasterPage {
   }
 
   // apro la pg di dettaglio conversazione
-  goToConversationDetail(convId: string, uidReciver: string) {
-    console.log('goToConversationDetail:: ', convId, this.conversationId);
+  goToConversationDetail(convId: string, recipient: string, sender: string) {
+    let convers_with = recipient;
+    if (convers_with == firebase.auth().currentUser.uid){
+      convers_with = sender;
+    }
+    console.log('goToConversationDetail:: ', convId, convers_with);
+    
     // evidenzio conversazione selezionata recuperando id conversazione da event
     this.filterConversationsForSetSelected(convId);
     this.navProxy.pushDetail(DettaglioConversazionePage, {
-      uidReciver: uidReciver,
+      convers_with: convers_with,
       conversationId: this.conversationId
     });
   }
