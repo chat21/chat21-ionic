@@ -72,19 +72,15 @@ import { DatabaseProvider } from '../providers/database/database';
     IonicStorageModule.forRoot(),
       
     IonicModule.forRoot(MyApp,{
-<<<<<<< HEAD
-        firebaseConfig : {
+
+      firebaseConfig : {
         apiKey: "...",
         authDomain: "...",
         databaseURL: "...",
         projectId: "...",
         storageBucket: "...",
         messagingSenderId: "..."
-=======
-      firebaseConfig : {
->>>>>>> build_0.0.3
       },
-
       appConfig: {
         tenant:"chat21"
       }
