@@ -1,12 +1,13 @@
 # Features #
 With Chat21-ionic you can:
 * Send a direct message to a user (one to one message)
+* View the messages history
+* The read receipts feature allows your users to see when a message has been sent, delivered and read
 * Conversations list view with the last messages sent (like Whatsapp)
 * View the user profile with fullname and email 
 * Login with email and password (Use firebase email and password authentication method )
 * Signup  with fullname, email, password and profile picture
 * Contacts list view with fulltext search for fullname field
-* 
 
 # Live Demo #
 Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
