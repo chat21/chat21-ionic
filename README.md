@@ -1,21 +1,31 @@
-## Live Demo ##
+# Features #
+With Chat21-ionic you can:
+* Send a direct message to a user (one to one message)
+* Conversations list view with the last messages sent (like Whatsapp)
+* View the user profile with fullname and email 
+* Login with email and password (Use firebase email and password authentication method )
+* Signup  with fullname, email, password and profile picture
+* Contacts list view with fulltext search for fullname field
+* 
+
+# Live Demo #
 Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
 <img src="http://www.dariodepascalis.com/wp-content/uploads/2017/10/chat21-ionic-desk-new.png" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
 
-## Before starting ##
+# Prerequisite #
 * Install nodejs: `https://nodejs.org/en/download/`
 * Install git: `https://git-scm.com/book/id/v2/Getting-Started-Installing-Git`
 * Install Ionic CLI and Cordova : `https://ionicframework.com/docs/intro/installation/`
 
-## Installation ##
+# Installation #
 * Clone this repository. Run: `git clone https://github.com/frontiere21/chat21-ionic.git` in the folder in which you'd like to contain the project.
 * Next you will need to get all your node_modules back into your application. All these modules are based on your package.json file. In the project folder “chat21-ionic” run: `npm install`
 
-## Firebase Configuration ##
+# Firebase Configuration #
 * Create account Firebase
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
 
-#### Firebase DB Configuration #### 
+## Firebase DB Configuration ## 
 * Click Add Firebase to your web app and copy 
 ```
 var config = { 
