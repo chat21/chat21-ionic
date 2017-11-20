@@ -240,6 +240,7 @@ export class ListaConversazioniPage extends _MasterPage {
         that.goToConversationDetail(that.conversationId, that.uidReciverFromUrl, firebase.auth().currentUser.uid);
         that.uidReciverFromUrl = null;
       }
+      
     });
   }
 

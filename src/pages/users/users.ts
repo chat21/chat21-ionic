@@ -97,7 +97,7 @@ export class UsersPage {
         //conversationId = null;
       }
       that.navCtrl.setRoot(ListaConversazioniPage, {conversationId});
-      that.navProxy.pushDetail(DettaglioConversazionePage,{ uidReciver:uidReciver, conversationId:conversationId});
+      that.navProxy.pushDetail(DettaglioConversazionePage,{ convers_with:uidReciver, conversationId:conversationId});
     })
     .catch(function (error) {
       console.log("ifConversationExist failed: " + error.message);
