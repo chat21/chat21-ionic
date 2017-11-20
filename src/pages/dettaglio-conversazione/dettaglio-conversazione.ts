@@ -140,8 +140,8 @@ export class DettaglioConversazionePage extends _DetailPage{
       else {
         // altrimenti se nn ci sono ancora messaggi e quindi sto x creare una conversazione
         // visualizzo div content_message_welcome
-        this.style_message_welcome = true;
-        console.log("this.content_message_welcome::",this.style_message_welcome);
+        that.style_message_welcome = true;
+        console.log("this.content_message_welcome::",that.style_message_welcome);
       }
     })
     .catch(function (error) {
