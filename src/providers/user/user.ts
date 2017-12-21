@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 
-import { Platform, Config } from 'ionic-angular';
+import { Platform } from 'ionic-angular';
 
 import { UserModel } from '../../models/user';
 import * as firebase from 'firebase/app';
 
 // utils
 import { getNowTimestamp } from '../../utils/utils';
+import { ApplicationContext } from '../../providers/application-context/application-context';
 
 
 //// COME CREARE UN SINGLETON 
@@ -18,31 +19,23 @@ import { getNowTimestamp } from '../../utils/utils';
   See https://angular.io/docs/ts/latest/guide/dependency-injection.html
   for more info on providers and Angular 2 DI.
 */
-@Injectable()
-export class UserService {
 
-  //static injector: Injector;
+@Injectable()
+
+export class UserService {
   public currentUserDetails: UserModel;
-  private tenant: string;
   private urlNodeContacts: string;
+
   private currentUser: firebase.User;
 
 
   constructor(
-    //injector: Injector,
-    platform: Platform,
-    public config: Config,
-    //public db: AngularFireDatabase
+    private platform: Platform,
+    public applicationContext: ApplicationContext
   ) {
-    //UserProvider.injector = injector;
-    // recupero tenant
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      let appConfig = this.config.get("appConfig");
-      this.tenant = appConfig.tenant;
-      this.urlNodeContacts = '/apps/'+this.tenant+'/contacts/';
-      //this.setCurrentUserDetails();
+      const tenant = this.applicationContext.getTenant();
+      this.urlNodeContacts = '/apps/'+tenant+'/contacts/';
     });
   }
 
@@ -50,47 +43,45 @@ export class UserService {
     // controllo se il nodo esiste prima di restituire il risultato
     //// DA FARE ////
     const urlNodeFirebase = this.urlNodeContacts+uid;
-    //return firebase.database().ref(urlNodeFirebase).once('value');
-    //const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true});
-    //const userFirebase = this.db.object(urlNodeFirebase);
     const userFirebase = firebase.database().ref(urlNodeFirebase);
     return userFirebase;
   }
 
-  saveCurrentUserDetail(uid: string, email: string, username: string, name: string, surname: string){
-    // recupero tenant
+  saveCurrentUserDetail(uid: string, email: string, firstname: string, lastname: string){
     let timestamp = getNowTimestamp();
-    console.log("saveCurrentUserDetail --------->",this.urlNodeContacts, uid, name, surname);
+    console.log("saveCurrentUserDetail: ",this.urlNodeContacts, uid, firstname, lastname);
     return firebase.database().ref(this.urlNodeContacts)
-    .child(uid).set({uid:uid, email:email, name:name, surname:surname, timestamp:timestamp, imageurl:''})
+    .child(uid).set({uid:uid, email:email, firstname:firstname, lastname:lastname, timestamp:timestamp, imageurl:''})
   }
 
   setCurrentUserDetails(uid, email) {
     const urlNodeFirebase = this.urlNodeContacts+uid;
-    //const userFirebase = this.db.object(urlNodeFirebase, { preserveSnapshot: true });
-    //const userFirebase = this.db.object(urlNodeFirebase);
-    //userFirebase.snapshotChanges().subscribe(snapshot => {
     let that = this;
     const userFirebase = firebase.database().ref(urlNodeFirebase);
     userFirebase.on('value', function(snapshot) {
       if (snapshot.val()){
         const user = snapshot.val();
-        const fullname = user.name+" "+user.surname;
-        that.currentUserDetails = new UserModel(user.uid, user.email, user.name, user.surname, fullname, '');
+        const fullname = user.firstname+" "+user.lastname;
+        that.currentUserDetails = new UserModel(user.uid, user.email, user.firstname, user.lastname, fullname, '');
       }
       else {
         that.currentUserDetails = new UserModel(uid, email, '', '', uid, '');
-        // aggiorno user nel db contacts
-        that.saveCurrentUserDetail(uid, email, '', '', uid);
+        // aggiorno user nel nodo firebase contacts
+        that.saveCurrentUserDetail(uid, email, '', '');
       }
+      // salvo dettaglio currentUser nel singlelton
+      that.applicationContext.setCurrentUserDetail(that.currentUserDetails);
     });
+    // salvo reference e dettaglio currentUser nel singlelton
+    this.applicationContext.setRef(userFirebase, 'contact');
   }
 
   getCurrentUserDetails(){
-    console.log("getCurrentUserDetails --------->",this.currentUserDetails);
+    console.log("getCurrentUserDetails: ", this.currentUserDetails);
     if (this.currentUserDetails){
       return this.currentUserDetails;
     }
+    return;
   }
 
 }

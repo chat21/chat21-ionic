@@ -48,6 +48,7 @@ import { ConversationProvider } from '../providers/conversation/conversation';
 import { MessageProvider } from '../providers/message/message';
 import { AutosizeDirective } from '../directives/autosize/autosize';
 import { DatabaseProvider } from '../providers/database/database';
+import { ApplicationContext } from '../providers/application-context/application-context';
 
 @NgModule({
   declarations: [
@@ -72,15 +73,21 @@ import { DatabaseProvider } from '../providers/database/database';
     IonicStorageModule.forRoot(),
       
     IonicModule.forRoot(MyApp,{
-      firebaseConfig : {
-      },
 
+      firebaseConfig : {
+        apiKey: '...',
+        authDomain: '...',
+        databaseURL: '...',
+        projectId: '...',
+        storageBucket: '...',
+        messagingSenderId: '...'
+      },
       appConfig: {
-        tenant:"chat21"
+        tenant:"tilechat"
       }
     }),
     IonicStorageModule.forRoot({
-      name: "chat21",
+      name: "tilechat",
       storeName: 'contacts',
       driverOrder: ['indexeddb','sqlite', 'websql', 'indexeddb', 'localstorage']
     }),
@@ -105,6 +112,7 @@ import { DatabaseProvider } from '../providers/database/database';
     UpdateImageProfilePage
   ],
   providers: [
+    ApplicationContext,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
@@ -115,13 +123,11 @@ import { DatabaseProvider } from '../providers/database/database';
     ChatPresenceHandler,
     NavProxyService,
     FirebaseProvider,
-    //Push,
     MessagingService,
     UserService,
     ConversationProvider,
     MessageProvider,
     UploadService
-    //Data
   ]
 })
 export class AppModule {}

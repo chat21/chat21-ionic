@@ -60,8 +60,8 @@ export class ProfilePage {
         let userDetails = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
         if (snapshot.val()){
           const user = snapshot.val();
-          const fullname = user.name+" "+user.surname;  
-          userDetails = new UserModel(snapshot.key, user.email, user.name, user.surname, fullname, user.imageurl);        
+          const fullname = user.firstname+" "+user.lastname;  
+          userDetails = new UserModel(snapshot.key, user.email, user.firstname, user.lastname, fullname, user.imageurl);        
         }
         console.log("userDetails userSender:: ",userDetails);
         that.currentUserDetail = userDetails;

@@ -1,49 +1,48 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>Accedi a {{tenant}}</ion-title>
-  </ion-navbar>
-</ion-header>
 
+  <ion-header *ngIf="showPage">
+    <ion-navbar>
+      <ion-title>Accedi a {{tenant}}</ion-title>
+    </ion-navbar>
+  </ion-header>
 
-<ion-content padding class="sample-modal-page">
-  <div class="content-page">
-  <!-- <h2>Accedi</h2> -->
-  <form [formGroup]="loginForm" (submit)="loginUserFirebase()" novalidate>
-    <ion-item>
-      <ion-label stacked>Email</ion-label>
-      <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)"
-        placeholder="Il tuo indirizzo email"
-        [class.invalid]="!loginForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
-    </ion-item>
-    <div class="div-error-message">
-    <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && (emailChanged || submitAttempt)">
-      <p>Inserisci un indirizzo email valido.</p>
-    </ion-item>
+  <ion-content padding class="sample-modal-page" *ngIf="showPage">
+    <div class="content-page">
+    <form [formGroup]="loginForm" (submit)="loginUserFirebase()" novalidate>
+      <ion-item>
+        <ion-label stacked>Email</ion-label>
+        <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)"
+          placeholder="Il tuo indirizzo email"
+          [class.invalid]="!loginForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
+      </ion-item>
+      <div class="div-error-message">
+      <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && (emailChanged || submitAttempt)">
+        <p>Inserisci un indirizzo email valido.</p>
+      </ion-item>
+      </div>
+
+      <ion-item>
+        <ion-label stacked>Password</ion-label>
+        <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)"
+          placeholder="La tua password"
+          [class.invalid]="!loginForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
+      </ion-item>
+      <div class="div-error-message">
+      <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid  && (passwordChanged || submitAttempt)">
+        <p>La password deve essere di almeno 6 caratteri.</p>
+      </ion-item>
+      </div>
+    
+    </form>
+
+    <button ion-button block class="full" type="submit" (click)="loginUserFirebase()">
+      Login
+    </button>
+    <!-- <button ion-button outline (click)="signInWithFacebook()">Facebook Login</button> -->
+    <button ion-button block (click)="register()">
+      Registrati
+    </button>
+    <button ion-button block (click)="resetPwd()">
+      Password dimenticata?
+    </button>
     </div>
-
-    <ion-item>
-      <ion-label stacked>Password</ion-label>
-      <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)"
-        placeholder="La tua password"
-        [class.invalid]="!loginForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
-    </ion-item>
-    <div class="div-error-message">
-    <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid  && (passwordChanged || submitAttempt)">
-      <p>La password deve essere di almeno 6 caratteri.</p>
-    </ion-item>
-    </div>
-  
-  </form>
-
-  <button ion-button block class="full" type="submit" (click)="loginUserFirebase()">
-    Login
-  </button>
-  <!-- <button ion-button outline (click)="signInWithFacebook()">Facebook Login</button> -->
-  <button ion-button block (click)="register()">
-    Registrati
-  </button>
-  <button ion-button block (click)="resetPwd()">
-    Password dimenticata?
-  </button>
-  </div>
-</ion-content>
+  </ion-content>

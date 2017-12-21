@@ -103,14 +103,11 @@ export class MyApp {
       // }
       this.masterNav.setRoot(ListaConversazioniPage, { detailNavCtrl: this.detailNav });
       this.detailNav.setRoot(PlaceholderPage);
-
       console.log("ciao1");
       this.msgService.initMessage();
       console.log("ciao2");
       this.msgService.getPermission();
       //this.msgService.receiveMessage();
-    
     });
-
   }
 }

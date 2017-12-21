@@ -1,20 +1,11 @@
-
-export const TAG__APP_PAGE_CHANGE = 'app:pageChange';
-export const TAG__APP_NEWS_CATEGORY_CHANGE = 'app:newsCategorySelectedChange';
-export const TAG__USER_POSITION_CHANGE = 'app:userPositionChange';
-// export const TAG__APP_EVENTS_CATEGORY_CHANGE = 'app:eventsCategorySelectedChange';
-export const TAG__APP_EVENTS_CATEGORIES_CHANGE = 'app:eventsCategoriesChange';
-export const TAG__APP_MAP_TRAFFIC_ENABLED_CHANGE = 'app:mapTrafficEnabledChange';
-// export const TAG__APP_MAP_ACTIVE_LAYER_CHANGE = 'app:mapActiveLayerChange';
-export const TAG__TPL_LOADING_DATA_STATE_CHANGE = 'app:tplLoadingDataStateChange';
-export const TAG__TPL_STOPS_CHANGE = 'app:tplStopsChange';
-
-// constant status message
-export const MSG_STATUS_FAILED = -1;
+// MESSAGES STATUS
+export const MSG_STATUS_FAILED = -100;
 export const MSG_STATUS_SENDING = 0;
-export const MSG_STATUS_SENT = 1;
-export const MSG_STATUS_RECEIVED = 2;
-export const MSG_STATUS_SEEN = 3;
+export const MSG_STATUS_SENT = 100;
+export const MSG_STATUS_SENT_SERVER = 150;
+export const MSG_STATUS_RECEIVED = 200;
+export const MSG_STATUS_RETURN_RECEIPT = 250; 
+export const MSG_STATUS_SEEN = 300;
 
 // constans messages detail 
 export const MIN_HEIGHT_TEXTAREA: number = 24;
@@ -27,3 +18,10 @@ export const PARENT_PAGE_DETAIL_CONVERSATION: string = "dettaglio-conversazione"
 // css
 export const BCK_COLOR_CONVERSATION_SELECTED: string = "#EEEEEE";
 export const BCK_COLOR_CONVERSATION_UNSELECTED: string = "#FFFFFF";
+
+// LABELS
+export const LABEL_TU: string = 'tu: ';
+export const LABEL_MSG_PUSH_START_CHAT: string = 'Premi qui per chattare con qualcuno';
+export const LABEL_MSG_START_CHAT: string = 'inizia a chattare';
+export const LABEL_ACTIVE_NOW: string = 'attivo/a ora';
+export const LABEL_NO_MSG_HERE: string = 'Ancora nessun messaggio qui...';

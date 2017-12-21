@@ -60,23 +60,23 @@
 
     <ion-item>
       <ion-label stacked>Nome</ion-label>
-      <ion-input #name formControlName="name" type="text" (change)="elementChanged(name)"
+      <ion-input #firstname formControlName="firstname" type="text" (change)="elementChanged(firstname)"
         placeholder="Il tuo Nome"
-        [class.invalid]="!registerForm.controls.name.valid && (nameChanged || submitAttempt)"></ion-input>
+        [class.invalid]="!registerForm.controls.firstname.valid && (nameChanged || submitAttempt)"></ion-input>
     </ion-item>
     <div class="div-error-message">
-    <ion-item class="error-message" *ngIf="!registerForm.controls.name.valid  && (nameChanged || submitAttempt)">
+    <ion-item class="error-message" *ngIf="!registerForm.controls.firstname.valid  && (nameChanged || submitAttempt)">
       <p>Il campo nome non può essere vuoto.</p>
     </ion-item>
     </div>
     <ion-item>
         <ion-label stacked>Cognome</ion-label>
-        <ion-input #surname formControlName="surname" type="text" (change)="elementChanged(surname)"
+        <ion-input #lastname formControlName="lastname" type="text" (change)="elementChanged(lastname)"
           placeholder="Il tuo cognome"
-          [class.invalid]="!registerForm.controls.surname.valid && (surnameChanged || submitAttempt)"></ion-input>
+          [class.invalid]="!registerForm.controls.lastname.valid && (lastnameChanged || submitAttempt)"></ion-input>
       </ion-item>
       <div class="div-error-message">
-      <ion-item class="error-message" *ngIf="!registerForm.controls.surname.valid  && (surnameChanged || submitAttempt)">
+      <ion-item class="error-message" *ngIf="!registerForm.controls.lastname.valid  && (lastnameChanged || submitAttempt)">
         <p>Il campo cognome non può essere vuoto.</p>
       </ion-item>
       </div>

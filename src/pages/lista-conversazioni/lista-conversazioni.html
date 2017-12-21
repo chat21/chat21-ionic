@@ -1,11 +1,4 @@
-<!--
-  Generated template for the ListaConversazioniPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
@@ -26,17 +19,14 @@
 </ion-header>
 <ion-content class="list-avatar-page">
   <ion-list>
-    <!--<ion-list-header>Today</ion-list-header>-->
-    <!-- <ion-item ion-item *ngFor="let conversazione of conversations | async" (click)="goToChat(conversazione.convers_with)"> -->
-    <span *ngIf="conversations.length > 0;then content_conversations else content_message_welcome">here is ignored</span>
-
+    <span *ngIf="conversations.length > 0;then content_conversations else contentMessageWelcome">here is ignored</span>
     <ng-template #content_conversations>
       <!-- <ion-item [style.background-color]="conversation.selected === true ? bck_color_selected : bck_color_unselected" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid,conversation.convers_with)"> -->
-      <ion-item no-lines [ngClass]="conversation.selected === true ? 'selected' : 'unselected'" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid,conversation.recipient,conversation.sender)">     
+      <ion-item no-lines [ngClass]="conversation.selected === true ? 'selected' : 'unselected'" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid)">     
         <ion-avatar item-start>
           <img src="{{conversation.image}}" alt="user" onError="this.src='assets/img/no_image.png';">
         </ion-avatar>
-        <h2 class="truncate">{{conversation.convers_with_fullname}}</h2>
+        <h2 class="truncate">{{conversation.conversation_with_fullname}}</h2>
         <span *ngIf="conversation.status == 1;then content else other_content">here is ignored</span>
         <ng-template #content>
           <p class="truncate not-read" [innerHTML]="conversation.last_message_text"></p>
@@ -44,18 +34,16 @@
         <ng-template #other_content>
           <p class="truncate read" [innerHTML]="conversation.last_message_text"></p>
         </ng-template>
-        <ion-note item-end>{{getTimeLastMessage(conversation.timestamp)}}</ion-note>
+        <ion-note item-end>{{conversation.time_last_message}}</ion-note>
       </ion-item>
     </ng-template>
 
-    <ng-template #content_message_welcome >
-      <!-- <div ng-model=content_message_welcome ng-style="{display: content_message_welcome == true? 'static':'none'}"> -->
-      <div id="content_message_wellcome" [style.display]="style_message_welcome === true ? 'inline' : 'none'">
-        <div class="messaggio">Premi qui per chattare con qualcuno</div>
+    <ng-template #contentMessageWelcome >
+      <div id="content_message_wellcome" [style.display]="styleMessageWelcome === true ? 'inline' : 'none'">
+        <div class="messaggio">{{LABEL_MSG_PUSH_START_CHAT}}</div>
         <div class="pulsanti">
             <button ion-button icon-start color="273e53" (click)="listUsers($event)">
-                <!-- <ion-icon name="chatbubbles"></ion-icon> -->
-                 inizia a chattare
+              {{LABEL_MSG_START_CHAT}}
             </button>
       </div>
       </div>

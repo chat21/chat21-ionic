@@ -31,6 +31,7 @@ import 'rxjs/add/operator/map';
 })
 export class UsersPage {
   private tenant: string;
+  private conversationWith: string;
   private users;//: AngularFireList<any>;
   private contacts: any; //Array<UserModel> = [];
   private contactsOfSearch: any; //Array<UserModel>;
@@ -79,29 +80,30 @@ export class UsersPage {
     
   }
 
-  goToChat(uidReciver: string) {
-    console.log('**************** goToChat uidReciver:: ',uidReciver);
-    // recupero current user id
-    let uidSender = firebase.auth().currentUser.uid;
-    //creo idConversazione
-    let conversationId = this.messageProvider.createConversationId(uidSender, uidReciver);
-    
+  goToChat(conversationWith: string) {
+    console.log('**************** goToChat conversationWith:: ',conversationWith);
+    //recupero current user id
+    //let uidSender = firebase.auth().currentUser.uid;
+       
     // controllo se esiste il nodo conversazione
-    let that = this;
+    //let that = this;
     //let isNewConversation = 
-    this.messageProvider.ifConversationExist()
-    .then(function(snapshot) {
-      console.log("ifConversationExist?: " + snapshot + " --> "+snapshot.hasChild(conversationId));
-      if (!snapshot.hasChild(conversationId)) {
-        // se esiste imposto array messaggi
-        //conversationId = null;
-      }
-      that.navCtrl.setRoot(ListaConversazioniPage, {conversationId});
-      that.navProxy.pushDetail(DettaglioConversazionePage,{ convers_with:uidReciver, conversationId:conversationId});
-    })
-    .catch(function (error) {
-      console.log("ifConversationExist failed: " + error.message);
-    });
+    // this.messageProvider.ifConversationExist(this.conversationWith)
+    // .then(function(snapshot) {
+    //   console.log("ifConversationExist?: " + snapshot + " --> "+snapshot.hasChild(conversationWith));
+    //   if (!snapshot.hasChild(conversationWith)) {
+    //     // se esiste imposto array messaggi
+    //     //conversationId = null;
+    //   }
+    //   that.navCtrl.setRoot(ListaConversazioniPage, {conversationWith});
+    //   that.navProxy.pushDetail(DettaglioConversazionePage,{ convers_with:conversationWith, conversationId:conversationWith});
+    // })
+    // .catch(function (error) {
+    //   console.log("ifConversationExist failed: " + error.message);
+    // });
+    this.navCtrl.setRoot(ListaConversazioniPage, {conversationWith});
+    this.navProxy.pushDetail(DettaglioConversazionePage,{ conversationWith:conversationWith });
+
   }
 
   ngOnInit() {

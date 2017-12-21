@@ -37,13 +37,13 @@ export class RegisterPage {
       //username: ['', Validators.compose([Validators.minLength(2), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(EMAIL_REGEXP)])],
       password: ['', Validators.compose([Validators.minLength(6), Validators.required])],
-      name: ['', Validators.compose([Validators.minLength(2), Validators.required])],
-      surname: ['', Validators.compose([Validators.minLength(2), Validators.required])]
+      firstname: ['', Validators.compose([Validators.minLength(2), Validators.required])],
+      lastname: ['', Validators.compose([Validators.minLength(2), Validators.required])]
     });
   }
 
   elementChanged(input){
-    let field = input.inputControl.name;
+    let field = input.inputControl.firstname;
     this[field + "Changed"] = true;
   }
 
@@ -54,17 +54,17 @@ export class RegisterPage {
       console.log(this.registerForm.value);
     } else {
       console.log("createAccount", this.authService);
-      this.authService.register(this.registerForm.value.username, this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.name, this.registerForm.value.surname)
+      this.authService.register(this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.firstname, this.registerForm.value.lastname)
       .then((newUser) => {
         // creo current user detail
         console.log("register",newUser.uid, this.userService);
-        this.userService.saveCurrentUserDetail(newUser.uid, this.registerForm.value.email, this.registerForm.value.username, this.registerForm.value.name, this.registerForm.value.surname)
+        this.userService.saveCurrentUserDetail(newUser.uid, this.registerForm.value.email, this.registerForm.value.firstname, this.registerForm.value.lastname)
         .then(_ => {
           console.log('success saveCurrentUserDetail');
           this.loading.dismiss().then( () => {
             //dismetto la modale ricarico lista conversazioni passando user
             this.loading.dismiss();
-            this.viewCtrl.dismiss();
+            this.viewCtrl.dismiss({animate: false, duration: 0});
           });
         }) 
         .catch(err => {

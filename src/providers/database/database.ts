@@ -65,7 +65,7 @@ export class DatabaseProvider {
       if (index<limit || !limit){
         //console.log("This is the value", data);
         if(data.uid != idCurrentUser){
-          contacts.push({ uid: data.uid, name: data.name, surname: data.surname, fullname: data.fullname, imageurl: data.imageurl });
+          contacts.push({ uid: data.uid, firstname: data.firstname, lastname: data.lastname, fullname: data.fullname, imageurl: data.imageurl });
         }
       } else {
         // NON FUNZIONA!!! 
@@ -80,15 +80,15 @@ export class DatabaseProvider {
     });
   }
 
-  addContact(uid, email, name, surname, fullname, imageurl) {
-    let data = [uid, email, name, surname, fullname, imageurl];
+  addContact(uid, email, firstname, lastname, fullname, imageurl) {
+    let data = [uid, email, firstname, lastname, fullname, imageurl];
     //this.storage.ready().then(() => {
       //INSERT OR REPLACE
       let value = {
         "imageurl" : imageurl,
         "email" : email,
-        "name" : name,
-        "surname" : surname,
+        "firstname" : firstname,
+        "lastname" : lastname,
         "fullname" : fullname,
         "uid" : uid
       }

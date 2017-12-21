@@ -79,7 +79,7 @@ export class AuthService {
 
 
   // Register User with Email
-  register(username: string, email: string, password: string, name: string, surname: string): any {
+  register(email: string, password: string, firstname: string, lastname: string): any {
     return this.fireAuth.createUserWithEmailAndPassword(email, password); 
   }
 
@@ -112,73 +112,4 @@ export class AuthService {
     // });
   }
   //End Firebase Auth//
-
-  // Start MySql Auth //
-  //http://www.nikola-breznjak.com/blog/javascript/ionic2/posting-data-from-ionic-2-app/
-
-  // Login
-  // doLogin(email: string, password: string): any {
-  //   return new Promise((resolve, reject) => {
-  //     let headers = new Headers();
-  //     headers.append('Content-Type', 'application/json');
-  //     var link = 'http://localhost:8888/ionic%20authentication/login.php';
-  //     var data = JSON.stringify({
-  //       email: email,//"dariodepa",
-  //       password: password //"123456",
-  //     }); 
-  //     this.http.post(link, data)
-  //     .subscribe(res => {
-  //       console.log("XXXXXXXX: ",res);
-  //       let data = res.json();
-  //       let type = data.type;
-  //       if (type != 'success'){
-  //         let err = new Error(data.message);
-  //         reject(err);
-  //       }else{
-  //         this.token = data.token;
-  //         this.storage.set('token', data.token);
-  //         resolve(data);
-  //       }
-  //     }, (err) => {
-  //       console.log("Oooops!");
-  //       reject(err);
-  //     });
-  //   });
-  // }
-
-  // // Register User
-  // createAccount(username: string, email: string, password: string, name: string, surname: string){
-  //   return new Promise((resolve, reject) => {
-  //     let headers = new Headers();
-  //     headers.append('Content-Type', 'application/json');
-  //     var link = 'http://localhost:8888/ionic%20authentication/register.php';
-  //     var data = JSON.stringify({
-  //       username: username,//"dariodepa",
-  //       email: email,//"czone555@gmail.com",
-  //       password: password, //"123456",
-  //       name: name,//"Dario DePa"
-  //       surname: surname,//"Dario DePa"
-  //       fullname: name+' '+surname//"Dario DePa"
-  //     }); 
-  //     this.http.post(link, data)
-  //     .subscribe(res => {
-  //       console.log("XXXXXXXX: ",res);
-  //       let data = res.json();
-  //       let type = data.type;
-  //       if (type != 'success'){
-  //         let err = new Error(data.message);
-  //         reject(err);
-  //       }else{
-  //         this.token = data.token;
-  //         this.storage.set('token', data.token);
-  //         resolve(data);
-  //       }
-  //     }, (err) => {
-  //       console.log("Oooops!");
-  //       reject(err);
-  //     });
-  //   });
-  // }
-  // End MySql Auth //
-
 }

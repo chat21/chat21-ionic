@@ -1,7 +1,8 @@
 export class MessageModel{
     constructor(
-        public conversationId: string, 
+        public language: string,
         public recipient: string,
+        public recipient_fullname: string,
         public sender: string, 
         public sender_fullname: string,
         public status: string, 

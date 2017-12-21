@@ -26,7 +26,7 @@ export function setHeaderDate(timestamp, lastDate): string {
     var date = new Date(timestamp);
     let now: Date = new Date();
     var labelDays:string = "";
-    //console.log('setHeaderDate **************',timestamp, lastDate, date, this);
+    // console.log('setHeaderDate **************',timestamp, lastDate, date, now);
     if (now.getFullYear() != date.getFullYear()){
       labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
     } else if (now.getMonth() != date.getMonth()){

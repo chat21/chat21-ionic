@@ -2,80 +2,77 @@ import { Component } from '@angular/core';
 import { Config, ViewController, NavController, AlertController, NavParams, LoadingController, ModalController } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 
-import { AuthService } from '../../../providers/auth-service';
-//import { ListaConversazioniPage } from '../../lista-conversazioni/lista-conversazioni';
+// pages
 import { RegisterPage } from '../../authentication/register/register';
 import { ResetpwdPage } from '../../authentication/resetpwd/resetpwd';
+
 // services
+import { AuthService } from '../../../providers/auth-service';
 import { UserService } from '../../../providers/user/user';
+import { ApplicationContext } from '../../../providers/application-context/application-context';
 
 
-/*
-  Generated class for the Login page.
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
 })
-export class LoginPage {
 
-  public loginForm;
-  emailChanged: boolean = false;
-  usernameChanged: boolean = false;
-  passwordChanged: boolean = false;
-  submitAttempt: boolean = false;
-  loading: any;
+export class LoginPage {
+  private loginForm;
+  // private emailChanged: boolean = false;
+  // private usernameChanged: boolean = false;
+  // private passwordChanged: boolean = false;
+  private submitAttempt: boolean = false;
+  private loading: any;
   private tenant: string;
+  private showPage: boolean;
 
   constructor(
-    public viewCtrl: ViewController, 
-    public navCtrl: NavController, 
-    public modalCtrl: ModalController,
-    public authService: AuthService, 
-    public navParams: NavParams, 
-    public formBuilder: FormBuilder,
-    public alertCtrl: AlertController, 
-    public loadingCtrl: LoadingController,
+    private viewCtrl: ViewController, 
+    private navCtrl: NavController, 
+    private modalCtrl: ModalController,
+    private authService: AuthService, 
+    private navParams: NavParams, 
+    private formBuilder: FormBuilder,
+    private alertCtrl: AlertController, 
+    private loadingCtrl: LoadingController,
     private userService: UserService,
-    public config: Config
+    private config: Config,
+    private applicationContext: ApplicationContext
   ) {
-   
     console.log("LOGIN PAGE");
-    let appConfig = this.config.get("appConfig");
-    this.tenant = appConfig.tenant;
-
+    this.tenant = this.applicationContext.getTenant();
     let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.pattern(EMAIL_REGEXP)])],
-      //username: ['', Validators.compose([Validators.minLength(6), Validators.required])],
       password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
     });
   }
 
   ionViewDidLoad() {
-    //console.log('LoginPage ionViewDidLoad **************');
   }
+
   ionViewWillEnter() {
-    console.log('LoginPage ionViewWillEnter **************');
+    console.log('************** LoginPage ionViewWillEnter **************');
+    this.showPage = true;
     //controllo se sonno già loggato e dismetto la view
     //utile quando vengo dalla registrazione utente
-    if (this.authService.getUser()){
-      this.viewCtrl.dismiss({animation:'none'})
-    }
+    // show view
+
+    // if (this.authService.getUser()){
+    //   this.viewCtrl.dismiss({animation:'none'})
+    // }
   }
+
   ionViewWillLeave(){
-     //console.log('LoginPage ionViewWillLeave **************');
-     
-  }
-  ionViewDidLeave() {
-     //console.log('LoginPage ionViewDidLeave **************');
+    console.log('************** LoginPage ionViewWillLeave **************');
+    // hide view
+    this.showPage = false;
   }
 
   elementChanged(input){
-    console.log('elementChanged **************');
-    let field = input.inputControl.name;
+    console.log('************** elementChanged **************');
+    let field = input.inputControl.firstname;
     this[field + "Changed"] = true;
   }
 
@@ -91,7 +88,6 @@ export class LoginPage {
     //this.navCtrl.push(ResetpwdPage);
   }
 
-
   loginUserFirebase(){
     this.submitAttempt = true;
     console.log("LOGIN", this.loginForm.value);
@@ -104,7 +100,7 @@ export class LoginPage {
         this.userService.setCurrentUserDetails(user.uid, user.email);
         //dismetto la modale ricarico lista conversazioni passando user
         this.loading.dismiss();
-        this.viewCtrl.dismiss();
+        //this.viewCtrl.dismiss();
       })
       .catch(error => {
           console.log(error,'ERROR LOGIN FIREBASE');
@@ -121,7 +117,6 @@ export class LoginPage {
             alert.present();
           });
       });
-
       this.loading = this.loadingCtrl.create({
         dismissOnPageChange: true,
       });

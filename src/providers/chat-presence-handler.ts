@@ -3,6 +3,8 @@ import 'rxjs/add/operator/map';
 import { Config } from 'ionic-angular';
 import * as firebase from 'firebase/app';
 
+import { ApplicationContext } from './application-context/application-context';
+
 /*
   Generated class for the AuthService provider.
 
@@ -15,15 +17,11 @@ export class ChatPresenceHandler {
   tenant: string;
   public fireAuth: firebase.auth.Auth;
   public urlNodeFirebase: string;
-  //public db: AngularFireDatabase;
   public deviceConnectionRef;
 
-  //public loggeduser: firebase.auth.Auth;
-
   constructor(
-    //private afAuth: AngularFireAuth,
-    config: Config,
-    //db: AngularFireDatabase
+    public config: Config,
+    public applicationContext: ApplicationContext
   ) {
     // imposto db
     //this.db = db;
@@ -35,30 +33,20 @@ export class ChatPresenceHandler {
     //imposto nodo principale
     this.urlNodeFirebase = '/apps/'+this.tenant+'/';
   }
-  
-  // GetUser
-  getUser(): firebase.User {
-    return this.fireAuth.currentUser;
-  }
 
   lastOnlineRefForUser(userid){
     let lastOnlineRefURL = this.urlNodeFirebase+"/presence/"+userid+"/lastOnline";
-    //const lastOnlineRef = this.db.object(lastOnlineRefURL, { preserveSnapshot: true });
     const lastOnlineRef = firebase.database().ref().child(lastOnlineRefURL);
     return lastOnlineRef;
   }
 
   onlineRefForUser(userid){
     let myConnectionsRefURL = this.urlNodeFirebase+"/presence/"+userid+"/connections";
-   // const connectionsRef1 = this.db.object(myConnectionsRefURL);
     const connectionsRef = firebase.database().ref().child(myConnectionsRefURL);
-    //console.log("myConnectionsRefURL::", connectionsRef.child);
-    //let connectionsRef = this.db.object(myConnectionsRefURL);
     return connectionsRef;
   }
 
-  setupMyPresence(){
-    let userid = this.getUser().uid;
+  setupMyPresence(userid){
     let myConnectionsRef = this.onlineRefForUser(userid);
     let lastOnlineRef = this.lastOnlineRefForUser(userid);
     let connectedRefURL = "/.info/connected";
@@ -84,19 +72,24 @@ export class ChatPresenceHandler {
         }
       }
     });
+    // salvo reference connected nel singlelton
+    console.log("salvo reference connected nel singlelton: ", this.applicationContext);
+    this.applicationContext.setRef(conn, 'connected')
   }
     
 
   goOffline() {
     console.log("goOffline.")
-    this.deviceConnectionRef.off();
-    this.deviceConnectionRef.remove();
-    this.deviceConnectionRef.then(function() {
-      console.log("Remove succeeded.")
-    })
-    .catch(function(error) {
-      console.log("Remove failed: " + error.message)
-    });
+    if(this.deviceConnectionRef){
+      this.deviceConnectionRef.off();
+      this.deviceConnectionRef.remove();
+      this.deviceConnectionRef.then(function() {
+        console.log("Remove succeeded.")
+      })
+      .catch(function(error) {
+        console.log("Remove failed: " + error.message)
+      });
+    }
     this.deviceConnectionRef = null;
   }
 }

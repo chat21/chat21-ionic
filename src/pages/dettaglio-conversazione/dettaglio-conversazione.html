@@ -1,34 +1,25 @@
-<!--
-  Generated template for the DettaglioConversazionePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-  <!-- {{this.conversation.convers_with}} -->
   <ion-navbar >
     <ion-title>
-      <div class="headerUserName" *ngIf="userRecipient;" (click)="goToUserDetail(userRecipient.uid)">{{userRecipient.fullname?userRecipient.fullname:''}}
+      <div class="headerUserName" *ngIf="conversationWithDetail" (click)="goToUserDetail(conversationWithDetail.uid)">{{conversationWithDetail.fullname?conversationWithDetail.fullname:''}}
       <span *ngIf="online; then userActive else userInactive"></span>
       <ng-template #userActive>
-        <div class="headerLastActivity">attivo/a ora</div>
+        <div class="headerLastActivity">{{LABEL_ACTIVE_NOW}}</div>
       </ng-template>
       <ng-template #userInactive>
         <div class="headerLastActivity">{{lastConnectionDate}}</div>
       </ng-template>
     </div>
     </ion-title>
-    <!--this.conversationId-->
   </ion-navbar>
 
 </ion-header>
 
 <ion-content class="messagesView">
-  <span *ngIf="messages.length > 0;then content_messages else content_message_welcome">here is ignored</span>
+  <span *ngIf="messages.length > 0;then content_messages else contentMessageWelcome">here is ignored</span>
   <ng-template #content_messages>
     <ion-list no-lines>
-      <div *ngFor="let message of messages"> <!-- ; let last = last -->
-        <!-- aggiungo header data invio messaggio -->
+      <div *ngFor="let message of messages">
         <div *ngIf = "message && message.headerDate && message.headerDate != ''">
           <ion-item text-wrap>
             <div class="rowDay">
@@ -40,9 +31,9 @@
           <span *ngIf="isSender(message); then contentMine else contentOther"></span>
           <ng-template #contentMine>
             <div class="statusMessage">
-              <ion-icon *ngIf="message.status==0" name="ios-clock-outline"></ion-icon>
-              <ion-icon *ngIf="message.status==1" name="ios-checkmark"></ion-icon>
-              <ion-icon *ngIf="message.status==2" name="ios-done-all"></ion-icon>
+              <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>
+              <ion-icon *ngIf="message.status==MSG_STATUS_SENT" name="ios-checkmark"></ion-icon>
+              <ion-icon *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" name="ios-done-all"></ion-icon>
             </div>
             <div class="message message-mine">
               <div class="message-content message-content-text" [innerHTML]="message.text">
@@ -63,9 +54,9 @@
     </ion-list>
   </ng-template>
 
-  <ng-template #content_message_welcome>
+  <ng-template #contentMessageWelcome>
      <div class="messageFirst" [style.display]="style_message_welcome === true ? '' : 'none'">
-      Ancora nessun messaggio qui...
+      {{LABEL_NO_MSG_HERE}}
     </div>
   </ng-template>
   

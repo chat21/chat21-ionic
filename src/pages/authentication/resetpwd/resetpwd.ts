@@ -38,7 +38,7 @@ export class ResetpwdPage {
   }
 
   elementChanged(input){
-    let field = input.inputControl.name;
+    let field = input.inputControl.firstname;
     this[field + "Changed"] = true;
   }
 
@@ -52,7 +52,7 @@ export class ResetpwdPage {
         this.loading.dismiss().then( () => {
           //dismetto la modale ricarico lista conversazioni passando user
           this.loading.dismiss();
-          this.viewCtrl.dismiss();
+          this.viewCtrl.dismiss({animate: false, duration: 0});
         });
       }, error => {
         this.loading.dismiss().then( () => {
@@ -76,6 +76,6 @@ export class ResetpwdPage {
   }
 
   goBack(){
-    this.navCtrl.pop();    
+    this.navCtrl.pop({animate: false, duration: 0});    
   }
 }
