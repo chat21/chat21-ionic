@@ -39,10 +39,12 @@ exports.sendNotification = functions.database.ref('/apps/{tenant}/messages/{conv
         console.log('not send push notification for the same user');
         return;
     }
-    console.log('step4 :::'+`/apps/${tenant}/users/${receiverUid}/instancesId`);
+    //console.log('step4 :::'+`/apps/${tenant}/users/${receiverUid}/instancesId`);
 
     // Get the list of device notification tokens. //`/apps/{tenant}/users/${receiverUid}/instancesId`  //'/apps/chat21/users/voCJVwb7J0WaY9YIcXPDp35NCb73/instancesId'
-    const getDeviceTokensPromise = admin.database().ref(`/apps/${tenant}/users/${receiverUid}/instancesId`).once('value');
+    //const getDeviceTokensPromise = admin.database().ref(`/apps/${tenant}/users/${receiverUid}/instancesId`).once('value');
+    const getDeviceTokensPromise = admin.database().ref(`/apps/${tenant}/users/${receiverUid}/instanceId`).once('value');
+    
     console.log('getDeviceTokensPromise:: '+getDeviceTokensPromise);
     return Promise.all([getDeviceTokensPromise]).then(results => {
         console.log('results:: '+results);

@@ -16,6 +16,9 @@ import { UserService } from '../providers/user/user';
   for more info on providers and Angular 2 DI.
 */
 @Injectable()
+/**
+ * DESC PROVIDER
+ */
 export class AuthService {
 
   tenant: string;

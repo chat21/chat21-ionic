@@ -1,28 +1,18 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { UserModel } from '../../models/user';
-//import { GithubUsers } from '../../providers/github-users';
-//import { UserDetailsPage } from '../user-details/user-details';
-import { Config } from 'ionic-angular';
-import { DettaglioConversazionePage } from '../dettaglio-conversazione/dettaglio-conversazione';
-import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
-
-//import firebase from 'firebase';
-import * as firebase from 'firebase/app';
-import { DatabaseProvider } from './../../providers/database/database';
-
-import { Platform } from 'ionic-angular';
 import { FormControl } from '@angular/forms';
-import { NavProxyService } from '../../providers/nav-proxy';
-import { PARENT_PAGE_USERS } from '../../utils/constants';
-import { MessageProvider } from '../../providers/message/message';
-
-import { ConversationProvider } from '../../providers/conversation/conversation';
-
-// utils
-import { getFromNow, compareValues } from '../../utils/utils';
+import { ViewController, Events, IonicPage, NavController } from 'ionic-angular';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/map';
+// pages
+import { DettaglioConversazionePage } from '../dettaglio-conversazione/dettaglio-conversazione';
+import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
+// services
+import { DatabaseProvider } from './../../providers/database/database';
+import { NavProxyService } from '../../providers/nav-proxy';
+// utils
+import { compareValues } from '../../utils/utils';
+import { PARENT_PAGE_DETAIL_CONVERSATION } from '../../utils/constants';
+
 
 @IonicPage()
 @Component({
@@ -30,9 +20,9 @@ import 'rxjs/add/operator/map';
   templateUrl: 'users.html',
 })
 export class UsersPage {
-  private tenant: string;
-  private conversationWith: string;
-  private users;//: AngularFireList<any>;
+  // private tenant: string;
+  // private conversationWith: string;
+  // private users;//: AngularFireList<any>;
   private contacts: any; //Array<UserModel> = [];
   private contactsOfSearch: any; //Array<UserModel>;
   //private db: AngularFireDatabase;
@@ -40,97 +30,100 @@ export class UsersPage {
   private searchTerm: string = '';
   private searchControl: FormControl;
   private searching: any = false;
-  private currentUser: firebase.User;
-  private myUser: UserModel;
-  private parentPage: string;
+  // private currentUser: firebase.User;
+  // private myUser: UserModel;
+  // private parentPage: string;
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
+    public viewCtrl: ViewController,
+    //public navParams: NavParams,
     //public afAuth: AngularFireAuth,
     //db: AngularFireDatabase,
-    config: Config,
-    private navProxy: NavProxyService,
-    private databaseprovider: DatabaseProvider,
-    private platform: Platform,
-    private conversationProvider:ConversationProvider,
-    public messageProvider: MessageProvider
+    //config: Config,
+    public events: Events,
+    public navProxy: NavProxyService,
+    public databaseprovider: DatabaseProvider
+    //private platform: Platform
   ) 
-  {
-    
-
+  {}
+  /**
+   * 
+   */
+  ngOnInit() {
+    this.initialize();
+  }
+  /**
+   * quando la pagina è visualizzata
+   */
+  // ionViewDidLoad() {
+  //   console.log('ionViewDidLoad Users', this.contacts, this.searchControl);
+  //   //https://www.joshmorony.com/high-performance-list-filtering-in-ionic-2/
+  //   //this.setFilteredItems();
+  // }
+  /**
+   * inizializzo search control
+   * controllo se esiste array contatti
+   * recupero dallo storage locale elenco contatti
+   * ordino elenco per fullname
+   * mi sincronizzo al campo input con un ritardo di 2 sec
+   * se cambia il contenuto del campo input, fitro e ordino array 
+   */
+  initialize(){
+    var that = this;
     this.searchControl = new FormControl();
-    this.currentUser = firebase.auth().currentUser;
-    let appConfig = config.get("appConfig");
-    this.tenant = appConfig.tenant;
-    //this.db = db;   
-    
     if (!this.contacts || this.contacts.lenght == 0){
       //console.log('ngOnInit contacts', this.contacts);
       // apro db locale e recupero tutti gli users ordinati per fullname dalla query firebase
-      var that = this;
       this.databaseprovider.getContactsLimit()
       .then(function(data) { 
-          //console.log("contacts:", data); 
-          that.contacts = data;
-          that.contacts.sort(compareValues('name', 'asc'));
-          that.contactsOfSearch = that.contacts;
-        });
+        //console.log("contacts:", data); 
+        that.contacts = data;
+        that.contacts.sort(compareValues('fullname', 'asc'));
+        that.contactsOfSearch = that.contacts;
+      });
     }
-    
-  }
-
-  goToChat(conversationWith: string) {
-    console.log('**************** goToChat conversationWith:: ',conversationWith);
-    //recupero current user id
-    //let uidSender = firebase.auth().currentUser.uid;
-       
-    // controllo se esiste il nodo conversazione
-    //let that = this;
-    //let isNewConversation = 
-    // this.messageProvider.ifConversationExist(this.conversationWith)
-    // .then(function(snapshot) {
-    //   console.log("ifConversationExist?: " + snapshot + " --> "+snapshot.hasChild(conversationWith));
-    //   if (!snapshot.hasChild(conversationWith)) {
-    //     // se esiste imposto array messaggi
-    //     //conversationId = null;
-    //   }
-    //   that.navCtrl.setRoot(ListaConversazioniPage, {conversationWith});
-    //   that.navProxy.pushDetail(DettaglioConversazionePage,{ convers_with:conversationWith, conversationId:conversationWith});
-    // })
-    // .catch(function (error) {
-    //   console.log("ifConversationExist failed: " + error.message);
-    // });
-    this.navCtrl.setRoot(ListaConversazioniPage, {conversationWith});
-    this.navProxy.pushDetail(DettaglioConversazionePage,{ conversationWith:conversationWith });
-
-  }
-
-  ngOnInit() {
-    console.log('ngOnInit Users', this.contacts, this.contactsOfSearch);
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad Users', this.contacts, this.searchControl);
-    //https://www.joshmorony.com/high-performance-list-filtering-in-ionic-2/
-    //this.setFilteredItems();
-    
     this.searchControl.valueChanges.debounceTime(2).subscribe(search => {
-        if (this.contacts){
-          console.log("this.contacts lenght:: ", this.contacts.length);
-          this.contactsOfSearch = this.filterItems(this.contacts, this.searchTerm);
-          this.contactsOfSearch.sort(compareValues('name', 'asc'));
-          this.searching = false;
-        }
+      if (that.contacts){
+        console.log("this.contacts lenght:: ", that.contacts.length);
+        that.contactsOfSearch = that.filterItems(that.contacts, that.searchTerm);
+        that.contactsOfSearch.sort(compareValues('fullname', 'asc'));
+        that.searching = false;
+      }
     });
   }
-
-  // Search for users 
-   onSearchInput(){
-     console.log("onSearchInput::: ",this.searching);
-     this.searching = true;
-   }
-
+  /**
+   * metodo invocato dalla pagina html alla selezione dell'utente
+   * imposta conversazione attiva nella pagina elenco conversazioni
+   * carica elenco messaggi conversazione nella pagina conversazione
+   * @param conversationWith 
+   */
+  goToChat(conversationWith: string, conversationWithFullname: string) {
+    console.log('**************** goToChat conversationWith:: ',conversationWith);
+    // this.navCtrl.setRoot(ListaConversazioniPage, {
+    //   conversationWith:conversationWith
+    // });
+    //pubblico id conv attiva e chiudo pagina 
+    this.events.publish('uidConvSelected:changed', conversationWith);
+    this.viewCtrl.dismiss();
+    this.navProxy.pushDetail(DettaglioConversazionePage,{ 
+      conversationWith:conversationWith,
+      conversationWithFullname:conversationWithFullname 
+    });
+  }
+  /**
+   * chiamato dall'html quando ho il focus sul campo input
+   */
+  onSearchInput(){
+    console.log("onSearchInput::: ",this.searching);
+    this.searching = true;
+  }
+  /**
+   * filtro array contatti per parola passata 
+   * filtro sul campo fullname
+   * @param items 
+   * @param searchTerm 
+   */
   filterItems(items,searchTerm){
     //console.log("filterItems::: ",searchTerm);
     return items.filter((item) => {

@@ -1,32 +1,19 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavParams, Content, Events, NavController } from 'ionic-angular';
-
-// firebase
-// import * as firebase from 'firebase/app';
-
 // models
 import { UserModel } from '../../models/user';
 import { MessageModel } from '../../models/message';
-
-// providers
-import { MessageProvider } from '../../providers/message/message';
-
 // services 
-import { ApplicationContext } from '../../providers/application-context/application-context';
 import { UserService } from '../../providers/user/user';
 import { NavProxyService } from '../../providers/nav-proxy';
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
-
+import { ChatManager } from '../../providers/chat-manager/chat-manager';
 // pages
 import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
-
 // utils
-import { urlify, setLastDate, setHeaderDate } from '../../utils/utils';
-import { LABEL_NO_MSG_HERE, LABEL_ACTIVE_NOW, PARENT_PAGE_DETAIL_CONVERSATION, MIN_HEIGHT_TEXTAREA, MSG_STATUS_FAILED,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RECEIVED, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
-
-// directives
-// import { AutosizeDirective } from '../../directives/autosize/autosize';
+import { LABEL_NO_MSG_HERE, LABEL_ACTIVE_NOW, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
+import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 
 
 @IonicPage()
@@ -39,22 +26,17 @@ export class DettaglioConversazionePage extends _DetailPage{
   @ViewChild('messageTextArea') messageTextArea: ElementRef;
   //@ViewChild('messageTextArea') messageTextArea: ElementRef;   
 
+  private conversationHandler: ChatConversationHandler;
   private scrollDirection: any = 'bottom';
-  private firebaseMessages: any;
   private messages: Array<MessageModel> = [];
   private conversationWith: string;
-  //private uidSender: string;
-  //private uidReciver: string;
   private currentUserDetail: UserModel;
-  private conversationWithDetail: UserModel;
-
+  private conversationWithFullname: string;
   private online: boolean;
   private lastConnectionDate: string;
   private messageString: string;
-  //private styleMessageWelcome: boolean;
-  private userFirebase: any;
-  //private subscriptionUserFirebase:any;
-
+  private style_message_welcome: boolean;
+  // private updatingMessageList: boolean;
   
   LABEL_ACTIVE_NOW = LABEL_ACTIVE_NOW;
   LABEL_NO_MSG_HERE = LABEL_NO_MSG_HERE;
@@ -62,159 +44,186 @@ export class DettaglioConversazionePage extends _DetailPage{
   MSG_STATUS_SENT = MSG_STATUS_SENT;
   MSG_STATUS_RETURN_RECEIPT = MSG_STATUS_RETURN_RECEIPT;
   
-
   constructor(
     public navParams: NavParams,
     public navCtrl: NavController,
     public chatPresenceHandler: ChatPresenceHandler,
+    public chatConversationHandler: ChatConversationHandler,
     public navProxy: NavProxyService,
-    public messageProvider: MessageProvider,
     public userService: UserService,
     public events: Events,
-    public applicationContext: ApplicationContext
+    public chatManager: ChatManager
   ) {
     super();
-    // recupero id utente con cui si conversare
+    // recupero id utente e fullname con cui si conversa
     this.conversationWith = navParams.get('conversationWith');
+    this.conversationWithFullname = navParams.get('conversationWithFullname');
   }
 
   ngOnInit() {
-    console.log('CONVERSO CON: ',this.conversationWith);
-    // inizializzo la conversazione 
+    console.log('ngOnInit',this.conversationWithFullname);
+    // elenco sottoscrizioni 
+    // subscribe stato utente con cui si conversa ONLINE
+    this.events.subscribe('statusUser:online', (uid) => {
+      if(uid !== this.conversationWith){return;}
+      this.online = true;
+      //console.log('ONLINE **************');
+    });
+    // subscribe stato utente con cui si conversa ONLINE
+    this.events.subscribe('statusUser:offline', (uid) => {
+      if(uid !== this.conversationWith){return;}
+      this.online = false;
+      //console.log('OFFLINE **************');
+    });
+    // subscribe data ultima connessione utente con cui si conversa
+    this.events.subscribe('lastConnectionDate', (uid,lastConnectionDate) => {
+      this.lastConnectionDate = lastConnectionDate;
+    });
+    // subscribe elenco messaggi
+    /**
+     * mi sottoscrivo a listMessages:added chiamato ogni volta che viene letto un nuovo msg
+     * attendo 500 millisecondi e aggiorno elenco messaggi
+     * (il ritardo è per evitare lo scroll ad ogni visualizzazione di un nuovo msg può essere eliminato)
+     */
+    this.events.subscribe('listMessages:added', (uid, messages) => {
+      //console.log('listMessages:added **************', uid);
+      if (messages !== this.messages && uid == this.conversationWith){
+        //const that = this;
+        //setTimeout(function(){
+        this.updateMessageList(messages);
+        //}, 1);
+      }
+    });
+    this.events.subscribe('listMessages:changed', (uid,messages) => {
+      // console.log('listMessages:changed **************',messages, uid);
+      if(uid == this.conversationWith){
+        this.messages = messages;
+      }
+      //this.doScroll();
+    });
+  }
+  /**
+   * quando ho renderizzato la pagina richiamo il metodo di inizialize
+   */
+  ionViewDidEnter(){
+    console.log('ionViewDidEnter');
+    //this.content.scrollDownOnLoad = true;
     this.initialize();
   }
-
-  ionicViewWillLeave(){
-    // aggiorno stato conversazione come letto
+  /**
+   * quando esco dalla pagina distruggo i subscribe
+   * NO!!! non ne ho bisogno mi servono attivi!!!
+   */
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave **************');
+    // this.events.unsubscribe('statusUser:online');
+    // this.events.unsubscribe('statusUser:offline');
+    // this.events.unsubscribe('lastConnectionDate');
+    // this.events.unsubscribe('listMessages:added');
+    // this.events.unsubscribe('listMessages:changed');
   }
 
-  ionViewDidEnter(){
-    this.content.scrollDownOnLoad = true;
-  }
-  //// END functions of system ////
-
-  //// START functions messages ////
+  /**
+   * resetto array messaggi
+   * resetto stato online user with
+   * resetto data ultima connessione
+   * recupero currentUserDetail
+   * load stato utente con cui si conversa online/offline
+   * load data ultimo aggesso utente con cui si conversa
+   * recupero info status user conversation with
+   * carico messaggi
+   */
   initialize(){
-    console.log('initialize **************');
-    // setto array messaggi
+    console.log('initialize DettaglioConversazionePage **************');
+    // this.updatingMessageList = false;
     this.messages = [];
-    // setto stato online currentuser
     this.online = false;
     this.lastConnectionDate = '';
-    console.log(' 1 - Resetto elenco messaggi, stato e lastconnection online del conversationWith');
-
-    // recupero current currentUserDetail
-    this.currentUserDetail = this.userService.getCurrentUserDetails();
-    console.log(' 2 - Recupero dettagli di current user', this.currentUserDetail);
-    // recupero dettagli user conversation with
-    this.getConversationWithUserDetail();
-    console.log(' 3 - Recupero dettagli di user with', this.conversationWithDetail);
-    // recupero info status user conversation with
-    this.setupOnlineStatus();
-    console.log(' 4 - Imposto status online del conversationWith ', this.conversationWithDetail);
-    // imposto array messaggi
-    this.getMessages();
+    this.currentUserDetail = this.chatManager.getLoggedUser();
+    this.chatPresenceHandler.userIsOnline(this.conversationWith);
+    this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
+    this.initConversationHandler();
   }
-
-  getConversationWithUserDetail(){
-    // creo Dettaglio user con cui converso 
-    const userDetails = new UserModel(this.conversationWith, '', '', '', this.conversationWith, '');
-    console.log("userDetails vuoto: ",userDetails);
-    this.conversationWithDetail = userDetails;
-    // setto userFirebase
-    let that = this;
-    this.userFirebase = this.userService.setUserDetail(this.conversationWith);
-    // recupero dettaglio user con cui converso
-    this.userFirebase.on('value', function(snapshot) {
-      const user = snapshot.val();
-      if (user){
-        const fullname = user.firstname+" "+user.lastname;
-        const userDetails = new UserModel(user.uid, user.email, user.firstname, user.lastname, fullname, user.imageurl);
-        console.log("userDetails: ",userDetails);
-        that.conversationWithDetail = userDetails;
-      }
-    });
-  }
-  
-  // get list messages
-  getMessages(){
-    this.firebaseMessages = this.messageProvider.loadListMeggages(this.conversationWith);
-    let that = this;
-    // recupero gli ultimi 100 messaggi !!!!
-    this.firebaseMessages.limitToLast(100).on("value", function(snapshot) {
-      console.log(" ++++++ GET MESSAGGI: ");
-      var lastDate: string = "";
-      that.messages = [];
-      snapshot.forEach( function(data) {
-        let item = data.val();
-        // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        let calcolaData = setHeaderDate(item['timestamp'], lastDate);
-        if(calcolaData != null){
-          lastDate = calcolaData;
-        }
-        const contentText = urlify(item['text']);
-        // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-        const message = new MessageModel(item['language'], item['recipient'], item['recipient_fullname'], item['sender'], item['sender_fullname'], item['status'], contentText, item['timestamp'], calcolaData, item['type']);
-        that.messages.push(message);
-        // aggiorno stato messaggio
-        // questo stato indica che è stato consegnato al client e NON la lettura
-        if(item['status'] < MSG_STATUS_RECEIVED){
-          that.messageProvider.setStatusMessage(data,that.conversationWith);
-        }
-      });
-      that.doScroll();
-    });
-  }
-
-  //// START functions user active ////
-  setupOnlineStatus(){
+  /**
+   * recupero da chatManager l'handler
+   * se NON ESISTE creo un handler e mi connetto 
+   * se ESISTE mi connetto
+   * carico messaggi
+   * attendo un sec se nn arrivano messaggi visualizzo msg wellcome
+   */
+  initConversationHandler() {
     const that = this;
-    const onlineRef =  this.chatPresenceHandler.onlineRefForUser(this.conversationWith);
-    onlineRef.on("value", (child) => {
-      if(child.val()){
-        that.online = true;
+    this.style_message_welcome = false;
+    let handler:ChatConversationHandler = this.chatManager.getConversationHandlerByConversationId(this.conversationWith);
+    console.log('initConversationHandler **************',handler, this.conversationWith);
+    if (!handler) {
+      console.log('ENTRO ***');
+      handler = this.chatConversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname);
+      this.chatManager.addConversationHandler(handler);
+      this.conversationHandler = handler;
+      //[self subscribe:handler];
+      //[self.conversationHandler restoreMessagesFromDB];
+      if (this.conversationWith) {
+        handler.connect();
       }
-      else {
-        that.online = false;
+    }
+    else {
+      console.log('NON ENTRO ***');
+      handler.connect();
+      //[self subscribe:handler];
+      this.conversationHandler = handler;
+    }
+    // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
+    setTimeout(function() {
+      //console.log('setTimeout *** 111',that.messages);
+      if(!that.messages || that.messages.length == 0){
+        that.style_message_welcome = true;
+        console.log('setTimeout *** 111',that.style_message_welcome);
       }
-    })
-    // LAST ONLINE
-    let lastOnlineRef = this.chatPresenceHandler.lastOnlineRefForUser(this.conversationWith);
-    lastOnlineRef.on("value", (child) => {
-      if(child.val()){
-        that.lastConnectionDate = this.getTimeLastConnection(child.val());
-      }
-    });
+    }, 1000);
   }
-  getTimeLastConnection(timestamp:string){
-    //let timestampNumber = parseInt(timestamp)/1000;
-    let time = setLastDate(timestamp);
-    return time;
+  /**
+   * chiamato dal subscribe('listMessages:added')
+   * ogni volta che viene aggiunto un messaggio
+   * aggiorno la lista dei messaggi e mi posiziono sull'ultimo
+   * @param messages 
+   */
+  updateMessageList(messages){
+    // if(!this.updatingMessageList){
+      this.messages = messages;
+      console.log('updateMessageList **************', this.messages.length);
+      this.doScroll();
+    // }
+    // this.updatingMessageList = true;
   }
-  //// END functions user active ////
 
   //// START Scroll managemant functions ////
-  // Scroll to bottom of page after a short delay.
+  /**
+   * Scroll to bottom of page after a short delay.
+   */
   scrollBottom() {
     let that = this;
-    //console.log('scrollBottom1 **************', that.content);
     setTimeout(function() {
-      console.log('scrollBottom **************', that.content._scroll);
+      //console.log('scrollBottom **************', that.content._scroll);
       if(that.content._scroll){
         that.content.scrollToBottom(0);
       }
-    }, 300);
+    }, 1);
   }
-  // Scroll to top of the page after a short delay.
+  /**
+   * Scroll to top of the page after a short delay.
+   */
   scrollTop() {
     let that = this;
     setTimeout(function() {
       that.content.scrollToTop();
-    }, 300);
+    }, 1);
   }
-  // Scroll depending on the direction.
+  /**
+   * Scroll depending on the direction.
+   */
   doScroll() {
-    //console.log('doScroll **************', this.scrollDirection);
+    // console.log('doScroll **************', this.scrollDirection);
     if (this.scrollDirection == 'bottom') {
       this.scrollBottom();
     } else if (this.scrollDirection == 'top') {
@@ -227,54 +236,38 @@ export class DettaglioConversazionePage extends _DetailPage{
 
 
   //// START FUNZIONI RICHIAMATE DA HTML ////
-
-  // Check if the user is the sender of the message.
+  /**
+   * Check if the user is the sender of the message.
+   * @param message 
+   */
   isSender(message) {
-    return this.messageProvider.isSender(message);
+    return this.chatConversationHandler.isSender(message);
   }
-
-  // Send message
+  /**
+   * se il messaggio non è vuoto
+   * 1 - ripristino l'altezza del box input a quella di default
+   * 2 - invio il messaggio
+   * 3 - se l'invio è andato a buon fine mi posiziono sull'ultimo messaggio
+   * @param msg 
+   */
   sendMessage(msg) {
     console.log("SEND MESSAGE: ", msg);
-    //console.log("messageTextArea:: ",this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style);
     if (msg && msg.trim() != ''){
       this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
-      //this.messageString = urlify(msg);
-      let now: Date = new Date();
-      let timestamp = now.valueOf();
-
-      const language = document.documentElement.lang;
-      const sender_fullname =  this.currentUserDetail.fullname;
-      const recipient_fullname = this.conversationWithDetail.fullname;
-      
-      if(this.firebaseMessages) {
-          const message = {
-              language: language,
-              recipient: this.conversationWith,
-              recipient_fullname: recipient_fullname,
-              sender: this.currentUserDetail.uid,
-              sender_fullname: sender_fullname,
-              //status: MSG_STATUS_SENDING,
-              text: this.messageString,
-              timestamp: timestamp,
-              type: 'text'
-          };
-          console.log('messaggio **************',message, this.messageProvider);
-          this.messageString = "";
-          var newMessageRef = this.firebaseMessages.push();
-          console.log('111');
-          newMessageRef.set(message);
-          console.log('222');
-          //this.events.publish('setConversationSelected:change',this.conversationWith); 
-          // nn mi ricordo a cosa serve!!! sembra a niente ??????
+      const resultSendMsg = this.chatConversationHandler.sendMessage(msg, this.conversationWith, this.conversationWithFullname);
+      if (resultSendMsg){
+        this.doScroll();
       }
     }
-    else {
-      this.messageString = "";
-    }
   }
-
-  // invocata dal focus sul campo di input
+  /**
+   * invocata dalla pressione del tasto invio sul campo di input messaggio
+   * purifico il messaggio
+   * se il messaggio è vuoto non faccio nessuna azione
+   * altrimenti invio il messaggio
+   * @param event 
+   * @param messageString 
+   */
   pressedOnKeyboard(event,messageString){
     messageString = messageString.replace(/(\r\n|\n|\r)/gm,"");
     console.log('pressedOnKeyboard ************** event:: ', event.code);
@@ -283,12 +276,14 @@ export class DettaglioConversazionePage extends _DetailPage{
     }
     if (messageString.trim() != ''){
       this.sendMessage(messageString);
-    } else {
       this.messageString = "";
-    }
+    } 
   }
-
-  // apro la pg di dettagli conversazione
+  /**
+   * metodo chiamato dall'html quando premo sul nome utente nell'header della pagina
+   * apro la pg di dettaglio user
+   * @param uidReciver 
+   */
   goToUserDetail(uidReciver: string) {
     console.log('goToUserDetail::: ',this.navProxy.isOn, uidReciver);
     this.navCtrl.push(ProfilePage, {

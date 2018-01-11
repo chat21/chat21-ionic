@@ -1,22 +1,17 @@
 import { Component, NgZone } from '@angular/core';
 import { PopoverController, IonicPage, NavController, NavParams } from 'ionic-angular';
-import * as firebase from 'firebase/app';
-
-import { UserService } from '../../providers/user/user';
-
+import { Events } from 'ionic-angular';
+// models
 import { UserModel } from '../../models/user';
-import { UploadModel } from '../../models/upload';
-import { NavProxyService } from '../../providers/nav-proxy';
+// services
 import { UploadService } from '../../providers/upload-service/upload-service';
-import { DettaglioConversazionePage } from '../dettaglio-conversazione/dettaglio-conversazione';
-//import { PARENT_PAGE_DETAIL_CONVERSATION } from '../../utils/constants';
+import { UserService } from '../../providers/user/user';
+import { ChatManager } from '../../providers/chat-manager/chat-manager';
+// pages
 import { PopoverProfilePage } from '../popover-profile/popover-profile';
 
 /**
  * Generated class for the ProfilePage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
  */
 @IonicPage()
 @Component({
@@ -24,61 +19,61 @@ import { PopoverProfilePage } from '../popover-profile/popover-profile';
   templateUrl: 'profile.html',
 })
 export class ProfilePage {
-  currentUserDetail: UserModel;
-  currentUser: any;//UserModel;
-  uidUser: string;
-  //parentPage: string;
-  profileYourself: boolean;
-  selectedFiles: FileList;
-  currentUpload: UploadModel;
+  public userDetail: UserModel;
+  public currentUserDetail: UserModel;
+  public uidUser: string;
+
+  public profileYourself: boolean;
+  //public selectedFiles: FileList;
+  //public currentUpload: UploadModel;
   
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     public userService: UserService,
-    public navProxy: NavProxyService,
-    private upSvc: UploadService,
+    //public navProxy: NavProxyService,
+    public upSvc: UploadService,
     public popoverCtrl: PopoverController,
-    public zone: NgZone
+    public zone: NgZone,
+    public chatManager: ChatManager,
+    public events: Events
   ) {
     this.uidUser = navParams.get('uidUser');
-    let uidCurrentUser = firebase.auth().currentUser.uid;
-
-    if (!this.uidUser || uidCurrentUser == this.uidUser){
-      this.currentUserDetail = this.userService.getCurrentUserDetails();
+  }
+  /**
+   * 
+   */
+  ngOnInit() {
+    this.initialize();
+  }
+  /**
+   * imposto subsribe dettaglio utente
+   * controllo se sono nel profilo currentuser oppure usercon cui converso
+   * carico dettaglio user
+   */
+  initialize(){
+    this.events.subscribe('loadUserDetail:complete', userDetail => {
+      this.userDetail = userDetail;
+    });
+    if (!this.uidUser){ // || this.userDetail.uid == this.uidUser
       this.profileYourself = true;
-      // load image
-      this.displayImage(uidCurrentUser);
+      this.currentUserDetail = this.chatManager.getLoggedUser();
+      this.displayImage(this.currentUserDetail.uid);
     }
-    else{
+    else {
       this.profileYourself = false;
       console.log('this.uidUser',this.uidUser);
-      this.currentUserDetail = new UserModel(this.uidUser, '', '', '', '', '');
-      const userFirebaseSender = this.userService.setUserDetail(this.uidUser);
-      let that = this;
-      userFirebaseSender.on("value", function(snapshot) {
-        let userDetails = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
-        if (snapshot.val()){
-          const user = snapshot.val();
-          const fullname = user.firstname+" "+user.lastname;  
-          userDetails = new UserModel(snapshot.key, user.email, user.firstname, user.lastname, fullname, user.imageurl);        
-        }
-        console.log("userDetails userSender:: ",userDetails);
-        that.currentUserDetail = userDetails;
-      });
-      // load image
+      this.userDetail = new UserModel(this.uidUser, '', '', this.uidUser, '', '');
+      this.userService.loadUserDetail(this.uidUser);
       this.displayImage(this.uidUser);
-      
     }
-       
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ProfilePage');
-  }
-
-  //// start gestione menu opzioni ////
-  // apro menu opzioni //
+  /**
+   * metodo richiamato dalla pg html del current user 
+   * alla pressione sul pulsante modifica della foto profillo
+   * apro PopoverProfilePage passando id current user
+   * @param myEvent 
+   */
   presentPopover(myEvent) {
     let popover = this.popoverCtrl.create(PopoverProfilePage,{uidContact:this.currentUserDetail.uid});
     popover.present({
@@ -89,22 +84,29 @@ export class ProfilePage {
       console.log(" ********* data::: ", data);
     });
   }
-  //// end gestione menu opzioni ////
-
+  /**
+   * carico url immagine profilo passando id utente
+   */
   displayImage(uidContact){
+    const that = this;
     this.upSvc.display(uidContact)
     .then((url) => {
-      this.zone.run(() => {
-        this.currentUserDetail.imageurl = url;
+      that.zone.run(() => {
+        if(that.profileYourself){
+          that.currentUserDetail.imageurl = url;
+        }else{
+          that.userDetail.imageurl = url;
+        }
       });
     })
     .catch((error)=>{
       console.log("error::: ",error);
     });
   }
-
+  /**
+   * chiudo il popup profilo utente
+   */
   goBack(){
     this.navCtrl.pop();
   }
-
 }

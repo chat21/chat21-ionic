@@ -8,6 +8,9 @@ import { UploadModel } from '../../models/upload';
 
 
 @Injectable()
+/**
+ * DESC PROVIDER
+ */
 export class UploadService {
   private tenant: string;
   private uidCurrentUser: string;
@@ -53,7 +56,6 @@ export class UploadService {
   }
 
   display(uidContact) {
-    console.log("URL1111:::");
     if(uidContact && uidContact!=''){
       const urlImagesNodeFirebase = '/apps/'+this.tenant+'/contacts/'+uidContact+"-imageProfile";
       return firebase.storage().ref().child(urlImagesNodeFirebase).getDownloadURL()

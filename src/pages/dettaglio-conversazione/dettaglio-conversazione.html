@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar >
     <ion-title>
-      <div class="headerUserName" *ngIf="conversationWithDetail" (click)="goToUserDetail(conversationWithDetail.uid)">{{conversationWithDetail.fullname?conversationWithDetail.fullname:''}}
+      <div class="headerUserName" *ngIf="conversationWith" (click)="goToUserDetail(conversationWith)">{{conversationWithFullname?conversationWithFullname:''}}
       <span *ngIf="online; then userActive else userInactive"></span>
       <ng-template #userActive>
         <div class="headerLastActivity">{{LABEL_ACTIVE_NOW}}</div>

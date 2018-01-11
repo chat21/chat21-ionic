@@ -52,7 +52,16 @@ export class NavProxyService {
         this.masterNav.setRoot(page, params);
     }
 
+    /**
+     * ATTENZIONE NN SO A COSA SERVE!!!
+     * DA VERIFICARE
+     * su firefox nn scompare il placeholder screen
+     * lo forzo a true!!!!
+     * @param isOn 
+     */
     onSplitPaneChanged(isOn) {
+        //isOn = true;
+        console.log("-----------> onSplitPaneChanged <----------",this.isOn);
         // set local 'isOn' flag...
         this.isOn = isOn;
         // if the nav controllers have been instantiated...

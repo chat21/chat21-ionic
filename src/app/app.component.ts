@@ -18,6 +18,8 @@ import {PlaceholderPage} from '../pages/placeholder/placeholder';
 //import { ModalController, NavParams } from 'ionic-angular';
 //import { Push, PushObject, PushOptions } from "@ionic-native/push";
 import { MessagingService } from '../providers/messaging-service';
+import { ChatManager } from '../providers/chat-manager/chat-manager';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -50,11 +52,12 @@ export class MyApp {
     private navProxy: NavProxyService,
     //public push: Push,
     public alertCtrl: AlertController,
-    public msgService: MessagingService
+    public msgService: MessagingService,
+    public chatManager: ChatManager
   ) {
-
     this.zone = new NgZone({});
     firebase.initializeApp(config.get("firebaseConfig"));
+    
     //firebase.initializeApp(config);
     
     
@@ -103,11 +106,16 @@ export class MyApp {
       // }
       this.masterNav.setRoot(ListaConversazioniPage, { detailNavCtrl: this.detailNav });
       this.detailNav.setRoot(PlaceholderPage);
-      console.log("ciao1");
+
       this.msgService.initMessage();
-      console.log("ciao2");
       this.msgService.getPermission();
       //this.msgService.receiveMessage();
+
+      // set tenant
+      let appConfig = config.get("appConfig");
+      const tenant = appConfig.tenant;
+      // init chat manager
+      this.chatManager.configureWithAppId(tenant);
     });
   }
 }

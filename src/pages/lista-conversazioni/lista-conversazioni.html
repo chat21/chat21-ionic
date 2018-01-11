@@ -7,7 +7,7 @@
         <img src="../assets/chat21-logo.svg" alt="{{this.tenant}}">        
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="listUsers($event)">
+      <button ion-button icon-only (click)="openUsersList($event)">
         <ion-icon name="create"></ion-icon>
       </button>
       <button ion-button icon-only (click)="presentPopover($event)">
@@ -22,7 +22,7 @@
     <span *ngIf="conversations.length > 0;then content_conversations else contentMessageWelcome">here is ignored</span>
     <ng-template #content_conversations>
       <!-- <ion-item [style.background-color]="conversation.selected === true ? bck_color_selected : bck_color_unselected" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid,conversation.convers_with)"> -->
-      <ion-item no-lines [ngClass]="conversation.selected === true ? 'selected' : 'unselected'" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid)">     
+      <ion-item no-lines [ngClass]="conversation.selected === true ? 'selected' : 'unselected'" ion-item *ngFor="let conversation of conversations" (click)="openMessageList(conversation.uid)">     
         <ion-avatar item-start>
           <img src="{{conversation.image}}" alt="user" onError="this.src='assets/img/no_image.png';">
         </ion-avatar>
@@ -42,7 +42,7 @@
       <div id="content_message_wellcome" [style.display]="styleMessageWelcome === true ? 'inline' : 'none'">
         <div class="messaggio">{{LABEL_MSG_PUSH_START_CHAT}}</div>
         <div class="pulsanti">
-            <button ion-button icon-start color="273e53" (click)="listUsers($event)">
+            <button ion-button icon-start color="273e53" (click)="openUsersList($event)">
               {{LABEL_MSG_START_CHAT}}
             </button>
       </div>

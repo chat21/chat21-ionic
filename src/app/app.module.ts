@@ -16,6 +16,7 @@ import { DettaglioConversazionePage } from '../pages/dettaglio-conversazione/det
 import { ProfilePage } from '../pages/profile/profile';
 
 import { AngularFireModule } from 'angularfire2';
+//import * as firebase from "firebase";
 // import { AngularFireDatabaseModule } from 'angularfire2/database';
 // import { AngularFireAuthModule } from 'angularfire2/auth';
 
@@ -33,22 +34,23 @@ import { PopoverProfilePage } from '../pages/popover-profile/popover-profile';
 import { UpdateImageProfilePage } from '../pages/update-image-profile/update-image-profile';
 
 
-import { FirebaseProvider } from '../providers/firebase-provider';
+//import { FirebaseProvider } from '../providers/firebase-provider';
 
 // SQLite
 
 import { SQLitePorter } from '@ionic-native/sqlite-porter';
 import { SQLite } from '@ionic-native/sqlite';
-
-//import { Data } from '../providers/data';
-//import { Push } from '@ionic-native/push';
 import { MessagingService } from '../providers/messaging-service';
 import { UserService } from '../providers/user/user';
-import { ConversationProvider } from '../providers/conversation/conversation';
-import { MessageProvider } from '../providers/message/message';
 import { AutosizeDirective } from '../directives/autosize/autosize';
 import { DatabaseProvider } from '../providers/database/database';
-import { ApplicationContext } from '../providers/application-context/application-context';
+import { ChatConversationsHandler } from '../providers/chat-conversations-handler';
+import { ChatConversationHandler } from '../providers/chat-conversation-handler';
+import { ChatManager } from '../providers/chat-manager/chat-manager';
+import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronizer';
+
+
+
 
 @NgModule({
   declarations: [
@@ -75,12 +77,18 @@ import { ApplicationContext } from '../providers/application-context/application
     IonicModule.forRoot(MyApp,{
 
       firebaseConfig : {
-        apiKey: '...',
-        authDomain: '...',
-        databaseURL: '...',
-        projectId: '...',
-        storageBucket: '...',
-        messagingSenderId: '...'
+        // apiKey: "AIzaSyCXckPF4UCyewDbOt_zMl4D893Kv2NUQ7Q",
+        // authDomain: "chat21demo.firebaseapp.com",
+        // databaseURL: "https://chat21demo.firebaseio.com",
+        // projectId: "chat21demo",
+        // storageBucket: "chat21demo.appspot.com",
+        // messagingSenderId: "769986182759"
+        apiKey: 'AIzaSyDWMsqHBKmWVT7mWiSqBfRpS5U8YwTl7H0',
+        authDomain: 'chat-v2-dev.firebaseapp.com',
+        databaseURL: 'https://chat-v2-dev.firebaseio.com',
+        projectId: 'chat-v2-dev',
+        storageBucket: 'chat-v2-dev.appspot.com',
+        messagingSenderId: '77360455507'
       },
       appConfig: {
         tenant:"tilechat"
@@ -92,7 +100,7 @@ import { ApplicationContext } from '../providers/application-context/application
       driverOrder: ['indexeddb','sqlite', 'websql', 'indexeddb', 'localstorage']
     }),
 
-    AngularFireModule.initializeApp(this.firebaseConfig),
+    AngularFireModule.initializeApp(this.firebaseConfig)
     // AngularFireDatabaseModule,
     // AngularFireAuthModule
   ],
@@ -112,7 +120,7 @@ import { ApplicationContext } from '../providers/application-context/application
     UpdateImageProfilePage
   ],
   providers: [
-    ApplicationContext,
+    //ApplicationContext,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
@@ -122,12 +130,13 @@ import { ApplicationContext } from '../providers/application-context/application
     AuthService,
     ChatPresenceHandler,
     NavProxyService,
-    FirebaseProvider,
     MessagingService,
     UserService,
-    ConversationProvider,
-    MessageProvider,
-    UploadService
+    UploadService,
+    ChatManager,
+    ChatConversationsHandler,
+    ChatConversationHandler,
+    ChatContactsSynchronizer
   ]
 })
 export class AppModule {}

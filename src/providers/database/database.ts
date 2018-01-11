@@ -3,29 +3,37 @@
 //https://stackoverflow.com/questions/42840951/uncaught-in-promise-cordova-not-available-in-ionic-2
 
 import { Injectable } from '@angular/core';
-import { Platform } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { SQLitePorter } from '@ionic-native/sqlite-porter';
-import 'rxjs/add/operator/map';
-import { BehaviorSubject } from 'rxjs/Rx';
 import { Storage } from '@ionic/storage';
-import { compareValues, getNowTimestamp } from '../../utils/utils';
-import { Config } from 'ionic-angular';
+import 'rxjs/add/operator/map';
+// firebase
 import * as firebase from 'firebase/app';
-//import { UserModel } from '../../models/user';
+//utils
+import { getNowTimestamp } from '../../utils/utils';
+// services
+//import { ChatManager } from '../chat-manager/chat-manager';
 
- 
+/**
+ * DESC PROVIDER
+ */
 @Injectable()
 export class DatabaseProvider {
   private storageSettings: Storage;
 
   constructor(
-    private config: Config,
-    private storage: Storage, 
-    private platform: Platform
-  ) {
-    let appConfig = config.get("appConfig");
-    let tenant = appConfig.tenant;
+    private storage: Storage
+    //private chatManager: ChatManager
+  ) {}
+
+  /**
+   * inizializzo databaseprovider 
+   * creo un nuovo storage
+   * chiamato nell'init di chat-manager
+   * @param tenant 
+   */
+  initialize(tenant){
+    //const tenant = this.chatManager.getTenant();
     let configStorage = {
       name: tenant,
       storeName: 'settings',
@@ -33,29 +41,52 @@ export class DatabaseProvider {
     };
     this.storageSettings = new Storage(configStorage);
   }
-  
-
+  /**
+   * ritorno data ultimo aggiornamento salvata nel DB locale
+   */
   getTimestamp(){
     return this.storageSettings.get('lastUpdate')
     .then(function(lastUpdate) { 
       return lastUpdate;
     });
   }
-
+  /**
+   * salvo data ultimo aggiornamento nel DB locale
+   */
   setTimestamp(){
     let lastUpdate = getNowTimestamp();
     console.log("SALVO NEL DB DATA UPDATE:", lastUpdate);
     this.storageSettings.set('lastUpdate',lastUpdate);
   }
-
-  getKeys(){
-    return this.storage.keys()
-    .then(function(data) { 
-      //console.log("keys:", data); 
-      //contacts.sort(compareValues('name', 'asc'));
-      return data;
-    });
+  /**
+   * ritorno uid ultima conversazione aperta salvata nel DB locale
+   */
+  getUidLastOpenConversation() {
+    console.log("getUidLastOpenConversation");
+    return this.storageSettings.get('uidLastOpenConversation')
   }
+  /**
+   * salvo uid ultima conversazione aperta nel DB
+   * @param uid 
+   */
+  setUidLastOpenConversation(uid){
+    console.log("SALVO NEL DB UID ULTIMA CHAT APERTA:", uid);
+    this.storageSettings.set('uidLastOpenConversation',uid);
+  }
+  // getKeys(){
+  //   return this.storage.keys()
+  //   .then(function(data) { 
+  //     //console.log("keys:", data); 
+  //     //contacts.sort(compareValues('name', 'asc'));
+  //     return data;
+  //   });
+  // }
+
+  /**
+   * ritorno contatti salvati nel DB locale
+   * da verificare!!!
+   * @param limit 
+   */
   getContactsLimit(limit?) {
     let idCurrentUser = firebase.auth().currentUser.uid;
     let contacts = [];
@@ -63,7 +94,7 @@ export class DatabaseProvider {
       limit>0?limit:null;
       //console.log("INDEX::", index, limit);
       if (index<limit || !limit){
-        //console.log("This is the value", data);
+        console.log("This is the value ------> ", data);
         if(data.uid != idCurrentUser){
           contacts.push({ uid: data.uid, firstname: data.firstname, lastname: data.lastname, fullname: data.fullname, imageurl: data.imageurl });
         }
@@ -79,17 +110,25 @@ export class DatabaseProvider {
       return contacts;
     });
   }
-
+  /**
+   * aggiungo un nuovo contatto o sovrascrivo uno già esistente al DB locale
+   * @param uid 
+   * @param email 
+   * @param firstname 
+   * @param lastname 
+   * @param fullname 
+   * @param imageurl 
+   */
   addContact(uid, email, firstname, lastname, fullname, imageurl) {
-    let data = [uid, email, firstname, lastname, fullname, imageurl];
+    //let data = [uid, email, firstname, lastname, fullname, imageurl];
     //this.storage.ready().then(() => {
       //INSERT OR REPLACE
       let value = {
-        "imageurl" : imageurl,
-        "email" : email,
-        "firstname" : firstname,
-        "lastname" : lastname,
-        "fullname" : fullname,
+        "imageurl" : (imageurl && imageurl!='undefined')?imageurl:'',
+        "email" : (email && email!='undefined')?email:'',
+        "firstname" : (firstname && firstname!='undefined')?firstname:'',
+        "lastname" : (lastname && lastname!='undefined')?lastname:'',
+        "fullname" : (fullname && fullname!='undefined')?fullname:'',
         "uid" : uid
       }
       //this.storage.set(`contacts:${ uid }`,value);
@@ -100,7 +139,10 @@ export class DatabaseProvider {
     //   //return contacts;
     // });
   }
-
+  /**
+   * rimuovo un contatto dal DB locale
+   * @param uid 
+   */
   removeContact(uid){
     //this.storage.ready().then(() => {
       this.storage.remove(uid);
@@ -110,6 +152,4 @@ export class DatabaseProvider {
     //   //return contacts;
     // });
   }
-
- 
 }

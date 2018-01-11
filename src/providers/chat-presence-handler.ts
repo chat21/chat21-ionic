@@ -1,9 +1,18 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { Config } from 'ionic-angular';
+import { Events } from 'ionic-angular';
+
+// firebase
 import * as firebase from 'firebase/app';
 
-import { ApplicationContext } from './application-context/application-context';
+// services
+import { ChatManager } from './chat-manager/chat-manager';
+
+// utils
+import { setLastDate } from '../utils/utils';
+
+
+//import { ApplicationContext } from './application-context/application-context';
 
 /*
   Generated class for the AuthService provider.
@@ -13,83 +22,157 @@ import { ApplicationContext } from './application-context/application-context';
 */
 @Injectable()
 export class ChatPresenceHandler {
-
-  tenant: string;
-  public fireAuth: firebase.auth.Auth;
+  public tenant: string;
   public urlNodeFirebase: string;
-  public deviceConnectionRef;
+  //public deviceConnectionRef;
+  public myConnectionsRef; //: firebase.database.Reference;
+  public lastOnlineRef; //: firebase.database.Reference;
 
   constructor(
-    public config: Config,
-    public applicationContext: ApplicationContext
+    public events: Events,
+    public chatManager: ChatManager
   ) {
-    // imposto db
-    //this.db = db;
-    // recupero tenant
-    let appConfig = config.get("appConfig");
-    this.tenant = appConfig.tenant;
-    // imposto auth
-    this.fireAuth = firebase.auth();
-    //imposto nodo principale
+    this.tenant = chatManager.getTenant();
     this.urlNodeFirebase = '/apps/'+this.tenant+'/';
   }
 
+  /**
+   * controlla se esiste una connessione per l'utente analizzato,
+   * verificando se esiste un nodo in presence/uid/connections
+   * mi sottosrivo al nodo
+   * se non esiste pubblico utente offline 
+   * se esiste pubblico utente online 
+   * @param userid 
+   */
+  userIsOnline(userid){
+    //this.lastOnlineForUser(userid);
+    const that = this;
+    let myConnectionsRefURL = this.urlNodeFirebase+"/presence/"+userid+"/connections";
+    const connectionsRef = firebase.database().ref().child(myConnectionsRefURL);
+    connectionsRef.on("value", (child) => {
+      if(child.val()){
+        that.events.publish('statusUser:online', userid,'online');
+      }
+      else {
+        that.events.publish('statusUser:offline', userid,'offline');
+      }
+    })
+  }
+  /**
+   * mi sottoscrivo al nodo presence/uid/lastOnline
+   * e recupero la data dell'ultimo stato online
+   * pubblico lastConnectionDate 
+   * @param userid 
+   */
+  lastOnlineForUser(userid){
+    const that = this;
+    let lastOnlineRefURL = this.urlNodeFirebase+"/presence/"+userid+"/lastOnline";
+    const lastOnlineRef = firebase.database().ref().child(lastOnlineRefURL);
+    lastOnlineRef.on("value", (child) => {
+      if(child.val()){
+        const lastConnectionDate = that.getTimeLastConnection(child.val());
+        that.events.publish('lastConnectionDate', userid,lastConnectionDate);
+      }
+    });
+  }
+
+  /**
+   * calcolo tempo trascorso tra ora e timestamp passato
+   * @param timestamp 
+   */
+  getTimeLastConnection(timestamp:string){
+    //let timestampNumber = parseInt(timestamp)/1000;
+    let time = setLastDate(timestamp);
+    return time;
+  }
+
+  /**
+   * recupero la reference di lastOnline del currentUser
+   * usata in setupMyPresence
+   * @param userid 
+   */
   lastOnlineRefForUser(userid){
     let lastOnlineRefURL = this.urlNodeFirebase+"/presence/"+userid+"/lastOnline";
     const lastOnlineRef = firebase.database().ref().child(lastOnlineRefURL);
     return lastOnlineRef;
   }
 
+  /**
+   * recupero la reference di connections (online/offline) del currentUser
+   * usata in setupMyPresence
+   * @param userid 
+   */
   onlineRefForUser(userid){
     let myConnectionsRefURL = this.urlNodeFirebase+"/presence/"+userid+"/connections";
     const connectionsRef = firebase.database().ref().child(myConnectionsRefURL);
     return connectionsRef;
   }
 
+  /**
+   * 1 - imposto reference online/offline
+   * 2 - imposto reference lastConnection
+   * 3 - mi sincronizzo con /.info/connected
+   * 4 - se il valore esiste l'utente è online
+   * 5 - aggiungo nodo a connection (true)
+   * 6 - aggiungo job su onDisconnect di deviceConnectionRef che rimuove nodo connection 
+   * 7 - aggiungo job su onDisconnect di lastOnlineRef che imposta timestamp
+   * 8 - salvo reference connected nel singlelton !!!!! DA FARE
+   * @param userid 
+   */
   setupMyPresence(userid){
-    let myConnectionsRef = this.onlineRefForUser(userid);
-    let lastOnlineRef = this.lastOnlineRefForUser(userid);
+    let that = this;
+    this.myConnectionsRef = this.onlineRefForUser(userid);
+    this.lastOnlineRef = this.lastOnlineRefForUser(userid);
     let connectedRefURL = "/.info/connected";
     let conn = firebase.database().ref(connectedRefURL);
-    let that = this;
     conn.on('value', function(dataSnapshot) {
       //console.log("KEY: ",dataSnapshot,that.deviceConnectionRef);
       if(dataSnapshot.val()){
-        if (!that.deviceConnectionRef || that.deviceConnectionRef == "undefined") {
-          console.log("self.deviceConnectionRef: ", that.deviceConnectionRef);
+        console.log("self.deviceConnectionRef: ", that.myConnectionsRef);
+        //if (!that.myConnectionsRef || that.myConnectionsRef==='undefined') {
+        if (that.myConnectionsRef) {
           //this.deviceConnectionRef = myConnectionsRef.set(true);
           let conection = true;
-          that.deviceConnectionRef = myConnectionsRef.push(conection);
-          // when this device disconnects, remove it
+          //that.deviceConnectionRef = 
+          that.myConnectionsRef.push(conection);
           //!!! quando faccio logout devo disconnettermi
-          that.deviceConnectionRef.onDisconnect().remove();
+          that.myConnectionsRef.onDisconnect().remove();
           // when I disconnect, update the last time I was seen online
           let now: Date = new Date();
           let timestamp = now.valueOf();
-          lastOnlineRef.onDisconnect().set(timestamp);
+          that.lastOnlineRef.onDisconnect().set(timestamp);
         } else {
           console.log("This is an error. self.deviceConnectionRef already set. Cannot be set again.");
         }
       }
     });
-    // salvo reference connected nel singlelton
-    console.log("salvo reference connected nel singlelton: ", this.applicationContext);
-    this.applicationContext.setRef(conn, 'connected')
   }
     
-
+  /**
+   * rimuovo la references su lastOnline
+   * rimuovo la references su connection
+   */
   goOffline() {
-    console.log("goOffline.")
-    if(this.deviceConnectionRef){
-      this.deviceConnectionRef.off();
-      this.deviceConnectionRef.remove();
-      this.deviceConnectionRef.then(function() {
-        console.log("Remove succeeded.")
-      })
-      .catch(function(error) {
-        console.log("Remove failed: " + error.message)
-      });
+    console.log("goOffline.", this.myConnectionsRef)
+    this.removeConnectionReference();
+    this.removeLastOnlineReference();
+  }
+
+  removeConnectionReference(){
+    if(this.myConnectionsRef){
+      this.myConnectionsRef.off();
+      console.log("goOffline 1", this.myConnectionsRef)
+      this.myConnectionsRef.remove();
+      console.log("goOffline 2", this.myConnectionsRef)
     }
-    this.deviceConnectionRef = null;
+    this.myConnectionsRef = null;
+  }
+
+  removeLastOnlineReference(){
+    if(this.lastOnlineRef){
+      this.lastOnlineRef.off();
+      this.lastOnlineRef.remove();
+    }
+    this.lastOnlineRef = null;
   }
 }

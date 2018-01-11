@@ -1,7 +1,38 @@
 
 import * as moment from 'moment/moment';
 import 'moment/locale/it.js';
+// firebase
+import * as firebase from 'firebase/app';
 
+
+/**
+ * 
+ * @param tenant 
+ */
+export function conversationsPathForUserId(tenant, userId){
+  const urlNodeConversations = '/apps/'+tenant+'/users/'+userId+'/conversations';
+  return urlNodeConversations;
+}
+
+export function conversationMessagesRef(tenant, userId){
+  const urlNodeMessages = '/apps/'+tenant+'/users/'+userId+'/messages/';
+  return urlNodeMessages;
+}
+
+export function contactsRef(tenant){
+  const urlNodeContacts = '/apps/'+tenant+'/contacts/';
+  return urlNodeContacts;
+}
+
+
+/**
+ * restituiso indice item nell'array con uid == key 
+ * @param items 
+ * @param key 
+ */
+export function searchIndexInArrayForUid(items, key){
+  return items.findIndex(i => i.uid === key);   
+}
 
 export function funcTest2(str:string): string {
     return "date_as_string";

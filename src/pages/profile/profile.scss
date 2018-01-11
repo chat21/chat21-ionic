@@ -1,9 +1,10 @@
 page-profile {
     .speaker-detail img {
-        max-width: 140px;
+        //max-width: 20vw;
+        width: 12vw; /* 20% of the viewport width */
+        height: 12vw;
         border-radius: 50%;
-        width: 140px;
-        border-radius: 50%;
+        // width: 140px;
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -29,4 +30,16 @@ page-profile {
         text-align: center;
         margin-top: 0px;
     }
+    .fullname{
+        font-size: 1em;
+    }
+    .email{
+        font-size: 0.8em;
+    }
+
+    .clip-circle {
+        clip-path: circle(60px at center);
+        /* OLD VALUE example: circle(245px, 140px, 50px); */
+        /* Yep, even the new clip-path has deprecated stuff. */
+      }
 }
