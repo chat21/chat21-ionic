@@ -1,3 +1,10 @@
+//TIMES
+export const LABEL_TODAY = 'Oggi';
+export const LABEL_TOMORROW = 'Ieri';
+export const LABEL_LAST_ACCESS = 'ultimo accesso';
+export const LABEL_TO = 'alle';
+export const ARRAY_DAYS = ['Lunedì', 'Martedì', 'Mercoledì','Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+
 // MESSAGES STATUS
 export const MSG_STATUS_FAILED = -100;
 export const MSG_STATUS_SENDING = 0;

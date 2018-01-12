@@ -12,7 +12,6 @@
     </div>
     </ion-title>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content class="messagesView">
@@ -55,7 +54,8 @@
   </ng-template>
 
   <ng-template #contentMessageWelcome>
-     <div class="messageFirst" [style.display]="style_message_welcome === true ? '' : 'none'">
+     <div class="messageFirst">
+      <!-- [style.display]="style_message_welcome === true ? '' : 'none'" -->
       {{LABEL_NO_MSG_HERE}}
     </div>
   </ng-template>
@@ -65,16 +65,13 @@
 
 <ion-footer>
   <ion-toolbar>
-
     <ion-grid>
       <ion-row #messagesPageFooter id="messages-page-footer">
-
         <ion-col col-2 col-bottom>
           <button ion-button clear class="message-editor-button active">
             <ion-icon name="add-circle" isActive="true" ></ion-icon>
           </button>
         </ion-col>
-
         <ion-col col-auto>
           <div class="text_message">
           <ion-textarea autosize #messageTextArea id="messageTextArea" [(ngModel)]="messageString" placeholder="Enter a message" rows="1"
@@ -82,7 +79,7 @@
           <!-- <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->
           </div>
           <div class="button_send">
-          <button ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active" (focus)="doScroll()" (click)="sendMessage(messageString)">
+          <button ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active" (focus)="doScroll()" (click)="controlOfMessage(messageString)">
               <ion-icon name="send" isActive="true" ></ion-icon>
             </button>
             <button ion-button clear *ngIf="!messageString || messageString.trim()==''" class="message-editor-button right inactive">

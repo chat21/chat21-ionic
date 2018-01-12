@@ -1,13 +1,14 @@
 page-placeholder {
      
     .wellcome_page{
-        width: 100vw;
-        height: 100vh; 
+        // width: 100vw;
+        // height: 100vh; 
         top: 0; 
         left: 0;
         background: url('../assets/splash.png');
          //no-repeat center center; 
-        position: fixed; 
+        // position: fixed; 
+        position: relative;
         background-repeat: no-repeat;
         background-position-x: center;
         background-position-y: center;

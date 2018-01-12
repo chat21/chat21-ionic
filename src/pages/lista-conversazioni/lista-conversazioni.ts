@@ -11,6 +11,7 @@ import { _MasterPage } from '../_MasterPage';
 import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
+import { windowsMatchMedia, searchIndexInArrayForUid } from '../../utils/utils';
 import { LABEL_MSG_PUSH_START_CHAT, LABEL_MSG_START_CHAT } from '../../utils/constants';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
@@ -26,7 +27,6 @@ import { DatabaseProvider } from '../../providers/database/database';
 })
 export class ListaConversazioniPage extends _MasterPage {
   private conversations: Array<ConversationModel> = [];
-  private styleMessageWelcome: boolean;
   private conversationWith: string;
   private uidReciverFromUrl: string;
   //private uidLastOpenConversation: string;
@@ -74,11 +74,19 @@ export class ListaConversazioniPage extends _MasterPage {
      * 4 - resetto conversationWith
     */
     const profileModal = this.modalCtrl.create(LoginPage, null, { enableBackdropDismiss: false });
-
     this.events.subscribe('loggedUser:login', user => {
       console.log('************** LOGGED currentUser:', user);
       profileModal.dismiss({animate: false, duration: 0})
+      const that = this;
       this.loadListConversations();
+      // se dopo 1 sec nn ci sono conversazioni carico placeholder
+      setTimeout(function(){
+        console.log('************** that.conversations.length:', that.conversations.length);
+        if(that.conversations.length <= 0){
+          that.navProxy.pushDetail(PlaceholderPage,{});
+        }
+      }, 1000);
+      
     });
     this.events.subscribe('loggedUser:logout', user => {
       console.log('************** NN LOGGED currentUser:', user);
@@ -95,24 +103,29 @@ export class ListaConversazioniPage extends _MasterPage {
      * la nuova conversazione viene aggiunta come primo elemento dell'array in posizione 0
      * apro la pagina della conversazione
      */
-    this.events.subscribe('conversations:added', (conversations, uid) => {
-      console.log('************** conversations added:', conversations);
-      this.conversations = conversations;
-      this.goToconversationMessageList(uid);
-    });
-    this.events.subscribe('conversations:changed', (conversations, uid) => {
-      this.conversations = conversations;
-      // se la conversazione cambiata è la conversazione aperta imposto status a 0 (visto)
-      console.log('************** conversations changed:', conversations, this.uidConvSelected);
-      if(this.uidConvSelected == uid){
-        var conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
-        conversationSelected.status = '0';
-      }
-
-      // aggiorno il primo messaggio che è l'ultimo ad essere stato inserito vedi loadListMeggages
-      //this.conversations = this.conversationsHandler.setConversationSelected(this.uidConvSelected);
+    this.events.subscribe('conversations:added', (conversation) => {
+      console.log('************** conversations added:', conversation);
+      this.conversations.splice(0, 0, conversation);
       //this.conversations = conversations;
-      //this.goToconversationMessageList();
+      this.goToconversationMessageList(conversation.uid);
+    });
+    this.events.subscribe('conversations:changed', conversation => {
+      const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
+      console.log("child_changed", index);
+      if(this.uidConvSelected == conversation.uid){
+        conversation.status = '0';
+        conversation.selected = true;
+      }
+      this.conversations.splice(index, 1, conversation);
+      
+      // se la conversazione cambiata è la conversazione aperta imposto status a 0 (visto)
+      // console.log('************** conversations changed:', conversations, this.uidConvSelected);
+      // if(this.uidConvSelected == uid){
+      //   var conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+      //   conversationSelected.status = '0';
+      //   conversationSelected.selected = true;
+      // }
+      // this.conversations = conversations;
     });
 
     this.events.subscribe('uidConvSelected:changed', uidConvSelected => {
@@ -146,7 +159,7 @@ export class ListaConversazioniPage extends _MasterPage {
 
 
   openMessageList(uidConvSelected){
-    if(uidConvSelected == this.uidConvSelected){
+    if(uidConvSelected == this.uidConvSelected && windowsMatchMedia()){
       return
     }
     var oldConversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
@@ -208,7 +221,6 @@ export class ListaConversazioniPage extends _MasterPage {
     .then(function(uid) { 
       console.log('getUidLastOpenConversation ::' + uid);
       if(uid){
-        //that.uidLastOpenConversation = uid;
         that.uidConvSelected = uid;
       }
       that.initConversationsHandler();
@@ -258,9 +270,7 @@ export class ListaConversazioniPage extends _MasterPage {
           conversationWith: uid,
           conversationWithFullname: conversationSelected.conversation_with_fullname
         });
-      } else {
-        this.styleMessageWelcome = true;
-      }
+      } 
     }
     
 

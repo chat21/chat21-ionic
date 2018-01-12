@@ -56,7 +56,6 @@ export class NavProxyService {
      * ATTENZIONE NN SO A COSA SERVE!!!
      * DA VERIFICARE
      * su firefox nn scompare il placeholder screen
-     * lo forzo a true!!!!
      * @param isOn 
      */
     onSplitPaneChanged(isOn) {

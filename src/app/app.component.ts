@@ -105,7 +105,7 @@ export class MyApp {
       //  this.masterNav.setRoot(ListaConversazioniPage, { detailNavCtrl: this.detailNav });
       // }
       this.masterNav.setRoot(ListaConversazioniPage, { detailNavCtrl: this.detailNav });
-      this.detailNav.setRoot(PlaceholderPage);
+      // this.detailNav.setRoot(PlaceholderPage);
 
       this.msgService.initMessage();
       this.msgService.getPermission();

@@ -76,8 +76,11 @@ export class ChatConversationsHandler {
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
         const conversation = this.completeConversation(childData);
-        this.conversations.splice(0, 0, conversation);
-        this.events.publish('conversations:added', this.conversations, childSnapshot.key );
+        
+        this.events.publish('conversations:added', conversation );
+        
+        //this.conversations.splice(0, 0, conversation);
+        //this.events.publish('conversations:added', this.conversations, childSnapshot.key );
     }
     /**
      * 1 - cerco indice conversazione nell'array conversation
@@ -88,15 +91,20 @@ export class ChatConversationsHandler {
     changed(childSnapshot){
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
-        const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
-        // controllo superfluo sarà sempre maggiore
-        console.log("child_changed", index);
-        if(index>-1){
-            const conversation = this.completeConversation(childData);
-            conversation.status = '1'; 
-            this.conversations.splice(index, 1, conversation);
-            this.events.publish('conversations:changed', this.conversations, childSnapshot.key);
-        }
+
+        const conversation = this.completeConversation(childData);
+        conversation.status = '1'; 
+        this.events.publish('conversations:changed', childData);
+
+        // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
+        // // controllo superfluo sarà sempre maggiore
+        // console.log("child_changed", index);
+        // if(index>-1){
+        //     const conversation = this.completeConversation(childData);
+        //     conversation.status = '1'; 
+        //     this.conversations.splice(index, 1, conversation);
+        //     this.events.publish('conversations:changed', this.conversations, childSnapshot.key);
+        // }
     }
     /**
      * 1 - cerco indice conversazione da eliminare

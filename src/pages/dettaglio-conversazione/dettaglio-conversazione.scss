@@ -1,11 +1,13 @@
 page-dettaglio-conversazione {
     
         ion-navbar {
+            
             .headerUserName{
                 font-size: 12px;
                 color: #111111;
                 text-align: center;
                 cursor: pointer;
+                margin-left: -40px;
             }
             .headerLastActivity{
                 font-size: 10px;
@@ -73,8 +75,9 @@ page-dettaglio-conversazione {
             background-image: url('../assets/chat21-ionic-pattern-2.svg');
             .messageFirst{
                 text-align: center;
-                font-size: x-large;
-                margin-top: 50%;
+                font-size: 1.4em;
+                line-height: 1.6em;
+                margin-top: calc(50% - 1.6em);
             }
           }
         //status mine message

@@ -19,8 +19,9 @@
 </ion-header>
 <ion-content class="list-avatar-page">
   <ion-list>
-    <span *ngIf="conversations.length > 0;then content_conversations else contentMessageWelcome">here is ignored</span>
-    <ng-template #content_conversations>
+    
+    <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
+    <ng-template #contentConversations>
       <!-- <ion-item [style.background-color]="conversation.selected === true ? bck_color_selected : bck_color_unselected" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid,conversation.convers_with)"> -->
       <ion-item no-lines [ngClass]="conversation.selected === true ? 'selected' : 'unselected'" ion-item *ngFor="let conversation of conversations" (click)="openMessageList(conversation.uid)">     
         <ion-avatar item-start>
@@ -39,13 +40,14 @@
     </ng-template>
 
     <ng-template #contentMessageWelcome >
-      <div id="content_message_wellcome" [style.display]="styleMessageWelcome === true ? 'inline' : 'none'">
+      <div id="content_message_wellcome" >
+          <!-- [style.display]="styleMessageWelcome === true ? 'inline' : 'none'" -->
         <div class="messaggio">{{LABEL_MSG_PUSH_START_CHAT}}</div>
         <div class="pulsanti">
             <button ion-button icon-start color="273e53" (click)="openUsersList($event)">
               {{LABEL_MSG_START_CHAT}}
             </button>
-      </div>
+        </div>
       </div>
     </ng-template>
 

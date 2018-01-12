@@ -260,24 +260,35 @@ export class DettaglioConversazionePage extends _DetailPage{
       }
     }
   }
+
+  /**
+   * purifico il messaggio
+   * e lo passo al metodo di invio
+   * @param messageString 
+   */
+  controlOfMessage(messageString){
+    console.log('controlOfMessage **************');
+    messageString = messageString.replace(/(\r\n|\n|\r)/gm,"");
+    if (messageString.trim() != ''){
+      this.sendMessage(messageString);
+    } 
+    this.messageString = "";
+  }
   /**
    * invocata dalla pressione del tasto invio sul campo di input messaggio
-   * purifico il messaggio
-   * se il messaggio è vuoto non faccio nessuna azione
-   * altrimenti invio il messaggio
+   * se il messaggio non è vuoto lo passo al metodo di controllo
    * @param event 
    * @param messageString 
    */
   pressedOnKeyboard(event,messageString){
-    messageString = messageString.replace(/(\r\n|\n|\r)/gm,"");
     console.log('pressedOnKeyboard ************** event:: ', event.code);
     if (event.inputType == "insertLineBreak" && event.data == null){
+      this.messageString = "";
       return
     }
-    if (messageString.trim() != ''){
-      this.sendMessage(messageString);
-      this.messageString = "";
-    } 
+    else{
+      this.controlOfMessage(messageString);
+    }
   }
   /**
    * metodo chiamato dall'html quando premo sul nome utente nell'header della pagina
