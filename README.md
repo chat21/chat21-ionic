@@ -15,6 +15,9 @@ With Chat21-ionic you can:
 Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
 <img src="http://www.dariodepascalis.com/wp-content/uploads/2017/10/chat21-ionic-desk-new.png" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
 
+# Documentation #
+https://chat-v2-dev.firebaseapp.com/web/docs/
+
 # Prerequisite #
 * Install nodejs: `https://nodejs.org/en/download/`
 * Install git: `https://git-scm.com/book/id/v2/Getting-Started-Installing-Git`
