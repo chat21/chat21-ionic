@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Config } from 'ionic-angular';
 //import * as firebase from 'firebase/app';

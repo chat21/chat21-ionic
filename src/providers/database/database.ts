@@ -3,8 +3,8 @@
 //https://stackoverflow.com/questions/42840951/uncaught-in-promise-cordova-not-available-in-ionic-2
 
 import { Injectable } from '@angular/core';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
-import { SQLitePorter } from '@ionic-native/sqlite-porter';
+//import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+//import { SQLitePorter } from '@ionic-native/sqlite-porter';
 import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
 // firebase

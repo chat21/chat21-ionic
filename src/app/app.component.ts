@@ -13,7 +13,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Config } from 'ionic-angular';
 import {NavProxyService} from '../providers/nav-proxy';
-import {PlaceholderPage} from '../pages/placeholder/placeholder';
+//import {PlaceholderPage} from '../pages/placeholder/placeholder';
 
 //import { ModalController, NavParams } from 'ionic-angular';
 //import { Push, PushObject, PushOptions } from "@ionic-native/push";

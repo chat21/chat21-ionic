@@ -5,13 +5,13 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/map';
 // pages
 import { DettaglioConversazionePage } from '../dettaglio-conversazione/dettaglio-conversazione';
-import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
+//import { ListaConversazioniPage } from '../lista-conversazioni/lista-conversazioni';
 // services
 import { DatabaseProvider } from './../../providers/database/database';
 import { NavProxyService } from '../../providers/nav-proxy';
 // utils
 import { compareValues } from '../../utils/utils';
-import { PARENT_PAGE_DETAIL_CONVERSATION } from '../../utils/constants';
+//import { PARENT_PAGE_DETAIL_CONVERSATION } from '../../utils/constants';
 
 
 @IonicPage()

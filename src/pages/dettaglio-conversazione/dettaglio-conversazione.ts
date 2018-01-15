@@ -66,7 +66,7 @@ export class DettaglioConversazionePage extends _DetailPage{
 
     console.log('constructor PAGE ::: ');
 
-    const that = this;
+    //const that = this;
     // elenco sottoscrizioni 
     // subscribe stato utente con cui si conversa ONLINE
     this.events.subscribe('statusUser:online-'+this.conversationWith, this.statusUserOnline);
@@ -77,31 +77,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   
     // subscribe elenco messaggi
     this.events.subscribe('listMessages:added-'+this.conversationWith, this.addHandler);
-    //console.log('listMessages:added **************', this.conversationWith);
-    //   //const index = searchIndexInArrayForUid(that.messages, message.uid);
-    //   //if(index<0){
-    //     console.log('ADD::: *********',that.messages.length);
-    //     //that.messages.push(message);
-    //     //that.doScroll();
-    //   //}
-    //});
-    // this.events.subscribe('listMessages:changed', (uid, messages) => {
-    //   console.log('listMessages:changed **************', uid, this.conversationWith,messages.length);
-    //   if(uid == this.conversationWith){
-    //     this.messages = messages;
-    //   }
-    //   //this.doScroll();
-    // });
-
     this.events.subscribe('listMessages:changed-'+this.conversationWith, this.changedHandler);
-    // (uid, message) => {
-    //   console.log('listMessages:changed **************', uid, that.conversationWith, message);
-    //   const index = searchIndexInArrayForUid(that.messages, message.uid);
-    //   that.messages.splice(index, 1, message);
-    //   if(message.uid == that.conversationWith){
-    //   }
-    // });
-    //}
     
   }
   /**
@@ -170,11 +146,11 @@ export class DettaglioConversazionePage extends _DetailPage{
    * unsubscribe all subscribe events
    */
   unsubescribeAll(){
-    this.events.unsubscribe('statusUser:online-'+this.conversationWith, this.statusUserOnline);
-    this.events.unsubscribe('statusUser:offline-'+this.conversationWith, this.statusUserOffline);
-    this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, this.updateLastConnectionDate);
-    this.events.unsubscribe('listMessages:added-'+this.conversationWith, this.addHandler);
-    this.events.unsubscribe('listMessages:changed-'+this.conversationWith, this.changedHandler);
+    // this.events.unsubscribe('statusUser:online-'+this.conversationWith, this.statusUserOnline);
+    // this.events.unsubscribe('statusUser:offline-'+this.conversationWith, this.statusUserOffline);
+    // this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, this.updateLastConnectionDate);
+    // this.events.unsubscribe('listMessages:added-'+this.conversationWith, this.addHandler);
+    // this.events.unsubscribe('listMessages:changed-'+this.conversationWith, this.changedHandler);
   }
 
   /**
