@@ -7,44 +7,45 @@ import * as firebase from 'firebase/app';
 import { MessageModel } from '../models/message';
 import { UserModel } from '../models/user';
 // services
-import { ChatManager } from './chat-manager/chat-manager';
+//import { ChatManager } from './chat-manager/chat-manager';
 // utils
 import { MSG_STATUS_RECEIVED } from '../utils/constants';
 import { urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 
 @Injectable()
 export class ChatConversationHandler {
-  public urlNodeFirebase: string;
-  public recipientId: string;
-  public recipientFullname: string;
-  public tenant: string;
-  public loggedUser: UserModel;
-  public senderId: string;
+  private urlNodeFirebase: string;
+  private recipientId: string;
+  private recipientFullname: string;
+  private tenant: string;
+  private loggedUser: UserModel;
+  private senderId: string;
   public conversationWith: string;
   public messages: any[];
   public messagesRef: firebase.database.Query;
+  //public events: Events;
 
   constructor(
-    public events: Events,
-    public chatManager: ChatManager
+    public events: Events
   ) {
-    this.tenant = this.chatManager.getTenant();
-    this.loggedUser = this.chatManager.getLoggedUser();
+    console.log("CONSTRUCTOR ChatConversationHandlerProvider");
+    //this.tenant = this.chatManager.getTenant();
+    //this.loggedUser = this.chatManager.getLoggedUser();
+    //this.events = new Events();
   }
-
   /**
    * inizializzo conversation handler
    * @param recipientId 
    * @param recipientFullName 
    */
-  initWithRecipient(recipientId,recipientFullName):ChatConversationHandler {
-      this.recipientId = recipientId;
-      this.recipientFullname = recipientFullName;
-      this.senderId = this.loggedUser.uid;
-      this.conversationWith = recipientId;
-      this.messages = [];
-      console.log("initWithRecipient*****", this.tenant);
-      return this;
+  initWithRecipient(recipientId,recipientFullName, loggedUser, tenant) {
+    this.loggedUser = loggedUser;
+    this.tenant = tenant;
+    this.recipientId = recipientId;
+    this.recipientFullname = recipientFullName;
+    this.senderId = this.loggedUser.uid;
+    this.conversationWith = recipientId;
+    this.messages = [];
   }
   /**
    * mi connetto al nodo messages
@@ -53,7 +54,7 @@ export class ChatConversationHandler {
    * mi sottoscrivo a change, removed, added
    */
   connect() {
-    let messages = [];
+    //this.messages = [];
     var lastDate: string = "";
     const that = this;
 
@@ -73,22 +74,27 @@ export class ChatConversationHandler {
       }
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
       const msg = new MessageModel(itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['text'], itemMsg['timestamp'], calcolaData, itemMsg['type']);
-      const index = searchIndexInArrayForUid(messages, childSnapshot.key);
-      messages.splice(index, 1, msg);
+      const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
+      that.messages.splice(index, 1, msg);
       // aggiorno stato messaggio
       // questo stato indica che è stato consegnato al client e NON che è stato letto
       that.setStatusMessage(childSnapshot, that.conversationWith);
       // pubblico messaggio - sottoscritto in dettaglio conversazione
-      that.events.publish('listMessages:changed', that.conversationWith, messages);
+      that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, that.messages);
     });
-    
+
     this.messagesRef.on("child_removed", function(childSnapshot) {
       // al momento non previsto!!!
-      // that.events.publish('listMessages:changed', messages);
+      const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
+        // controllo superfluo sarà sempre maggiore
+        if(index>-1){
+          that.messages.splice(index, 1);
+          this.events.publish('conversations:update-'+that.conversationWith, that.messages);
+        }
     });
 
     this.messagesRef.on("child_added", function(childSnapshot) {
-      // console.log("child_added *****", childSnapshot.key);
+      //console.log("child_added *****", childSnapshot.key);
       const itemMsg = childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l'header data
       let calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
@@ -97,12 +103,15 @@ export class ChatConversationHandler {
       }
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
       const msg = new MessageModel(itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['text'], itemMsg['timestamp'], calcolaData, itemMsg['type']);
-      messages.push(msg);
+      console.log("child_added *****", that.messages, msg);
+      that.messages.push(msg);
+     
       // aggiorno stato messaggio
       // questo stato indica che è stato consegnato al client e NON che è stato letto
       that.setStatusMessage(childSnapshot, that.conversationWith);
       // pubblico messaggio - sottoscritto in dettaglio conversazione
-      that.events.publish('listMessages:added', that.conversationWith, messages);
+      console.log("publish:: ", 'listMessages:added-'+that.conversationWith, that.events);
+      that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, that.messages);
     })
   } 
   /**

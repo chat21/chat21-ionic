@@ -26,7 +26,7 @@ import { DatabaseProvider } from '../database/database';
  */
 export class ChatManager {
   private tenant: string;
-  private handlers: ChatConversationHandler[];
+  public handlers: ChatConversationHandler[];
   private loggedUser: UserModel;
 
   public conversationsHandler: ChatConversationsHandler;
@@ -45,6 +45,7 @@ export class ChatManager {
    */
   init(){
     this.handlers = [];
+    console.log('************* init  ***', this.handlers);
   }
   /**
    * ritorna istanza di chatmanager
@@ -62,6 +63,7 @@ export class ChatManager {
     this.tenant = app_id;
     this.loggedUser = null;
     this.databaseProvider.initialize(app_id);
+    this.handlers = [];
   }
   /**
    * return tenant
@@ -136,6 +138,7 @@ export class ChatManager {
    * @param handler 
    */
   addConversationHandler(handler) {
+    console.log(" -----> addConversationHandler",handler);
     this.handlers.push(handler);
   }
   /**
@@ -154,7 +157,17 @@ export class ChatManager {
    * @param conversationId 
    */
   getConversationHandlerByConversationId(conversationId):any {
-    return this.handlers.find(item => item.conversationWith === conversationId);
+    
+    const resultArray =  this.handlers.filter(function(handler) {
+      console.log('FILTRO::: ***', conversationId, handler.conversationWith);
+      return handler.conversationWith == conversationId;
+    });
+    console.log('getConversationHandlerByConversationId ***', conversationId, resultArray, this.handlers);
+    if (resultArray.length == 0){
+      return null;
+    }
+    return resultArray[0];
+    //return this.handlers.find(item => item.conversationWith == conversationId);
   }
   /**
    * elimino tutti gli hendler presenti nell'array handlers

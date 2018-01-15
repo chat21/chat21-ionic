@@ -54,8 +54,7 @@
   </ng-template>
 
   <ng-template #contentMessageWelcome>
-     <div class="messageFirst">
-      <!-- [style.display]="style_message_welcome === true ? '' : 'none'" -->
+     <div class="messageFirst" [style.display]="style_message_welcome === true ? '' : 'none'">
       {{LABEL_NO_MSG_HERE}}
     </div>
   </ng-template>

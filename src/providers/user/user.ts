@@ -10,7 +10,7 @@ import * as firebase from 'firebase/app';
 import { getNowTimestamp } from '../../utils/utils';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
-import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
+import { ChatPresenceHandler} from '../../providers/chat-presence-handler';
 import { MessagingService } from '../../providers/messaging-service';
 
 /**

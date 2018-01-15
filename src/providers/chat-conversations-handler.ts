@@ -38,7 +38,7 @@ export class ChatConversationsHandler {
      * @param tenant 
      * @param user 
      */
-    initWithTenant(tenant, loggedUser):ChatConversationsHandler {
+    initWithTenant(tenant, loggedUser):ChatConversationsHandler{
         this.tenant = tenant;
         this.loggedUser = loggedUser;
         this.userId = loggedUser.uid;
@@ -72,13 +72,12 @@ export class ChatConversationsHandler {
      * @param childSnapshot 
      */
     added(childSnapshot){
-        console.log("child_added");
+        console.log("child_added conversationS");
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
         const conversation = this.completeConversation(childData);
         
         this.events.publish('conversations:added', conversation );
-        
         //this.conversations.splice(0, 0, conversation);
         //this.events.publish('conversations:added', this.conversations, childSnapshot.key );
     }

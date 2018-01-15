@@ -17,7 +17,7 @@ import { LABEL_MSG_PUSH_START_CHAT, LABEL_MSG_START_CHAT } from '../../utils/con
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { NavProxyService } from '../../providers/nav-proxy';
 import { UserService } from '../../providers/user/user';
-import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
+import { ChatConversationsHandler} from '../../providers/chat-conversations-handler';
 import { DatabaseProvider } from '../../providers/database/database';
 
 @IonicPage()
@@ -117,7 +117,6 @@ export class ListaConversazioniPage extends _MasterPage {
         conversation.selected = true;
       }
       this.conversations.splice(index, 1, conversation);
-      
       // se la conversazione cambiata è la conversazione aperta imposto status a 0 (visto)
       // console.log('************** conversations changed:', conversations, this.uidConvSelected);
       // if(this.uidConvSelected == uid){
