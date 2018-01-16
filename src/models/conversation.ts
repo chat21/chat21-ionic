@@ -1,6 +1,7 @@
 export class ConversationModel {
   constructor(
     public uid: string,
+    public channel_type: string,
     public conversation_with_fullname: string,
     public recipient: string,
     public recipient_fullname: string,

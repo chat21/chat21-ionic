@@ -16,8 +16,6 @@ export function windowsMatchMedia(){
     return true;
   }
 }
-
-
 /**
  * chiamata da ChatConversationsHandler
  * restituisce url '/conversations'
@@ -84,7 +82,7 @@ export function setHeaderDate(timestamp, lastDate): string {
     var date = new Date(timestamp);
     let now: Date = new Date();
     var labelDays:string = "";
-    // console.log('setHeaderDate **************',timestamp, lastDate, date, now);
+    console.log('setHeaderDate **************',timestamp, lastDate, date);
     if (now.getFullYear() != date.getFullYear()){
       labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
     } else if (now.getMonth() != date.getMonth()){
@@ -99,7 +97,7 @@ export function setHeaderDate(timestamp, lastDate): string {
     // se le date sono diverse o la data di riferimento non è impostata
     // ritorna la data calcolata
     // altrimenti torna null 
-    if (lastDate != labelDays || lastDate == null){
+    if (lastDate != labelDays || lastDate == null || lastDate == ''){
       return labelDays;
     } else {
       return null;

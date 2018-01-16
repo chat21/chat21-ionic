@@ -960,7 +960,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/pages/update-image-profile/update-image-profile.ts:83</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/pages/update-image-profile/update-image-profile.ts:79</a></div>
                                 </td>
                             </tr>
     
@@ -1343,7 +1343,7 @@
 
     <div class="tab-pane fade tab-source-code" id="c-source">
         <pre class="line-numbers"><code class="language-typescript">import { Component, NgZone } from &#x27;@angular/core&#x27;;
-import { Config, IonicPage, NavController, NavParams } from &#x27;ionic-angular&#x27;;
+import { IonicPage, NavController, NavParams } from &#x27;ionic-angular&#x27;;
 import { UploadModel } from &#x27;../../models/upload&#x27;;
 import { UploadService } from &#x27;../../providers/upload-service/upload-service&#x27;;
 
@@ -1415,10 +1415,6 @@ export class UpdateImageProfilePage {
   uploadSingle() {
     var send_order_btn &#x3D; &lt;HTMLInputElement&gt;document.getElementById(&quot;start-upload&quot;);
     send_order_btn.disabled &#x3D; true;
-
-    function func(obj:Object): void {
-      // do something
-    }
     let file &#x3D; this.selectedFiles.item(0)
     this.currentUpload &#x3D; new UploadModel(file);
     this.upSvc.pushUpload(this.currentUpload)

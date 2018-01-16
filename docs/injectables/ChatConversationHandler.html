@@ -623,10 +623,6 @@
                                 <ul class="index-list">
                                     <li>
                                             <span class="modifier">Public</span>
-                                        <a href="#chatManager">chatManager</a>
-                                    </li>
-                                    <li>
-                                            <span class="modifier">Public</span>
                                         <a href="#conversationWith">conversationWith</a>
                                     </li>
                                     <li>
@@ -634,7 +630,7 @@
                                         <a href="#events">events</a>
                                     </li>
                                     <li>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         <a href="#loggedUser">loggedUser</a>
                                     </li>
                                     <li>
@@ -646,23 +642,23 @@
                                         <a href="#messagesRef">messagesRef</a>
                                     </li>
                                     <li>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         <a href="#recipientFullname">recipientFullname</a>
                                     </li>
                                     <li>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         <a href="#recipientId">recipientId</a>
                                     </li>
                                     <li>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         <a href="#senderId">senderId</a>
                                     </li>
                                     <li>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         <a href="#tenant">tenant</a>
                                     </li>
                                     <li>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         <a href="#urlNodeFirebase">urlNodeFirebase</a>
                                     </li>
                                 </ul>
@@ -707,7 +703,7 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <code>constructor(events: Events, chatManager: <a href="../injectables/ChatManager.html">ChatManager</a>)</code>
+                                    <code>constructor(events: Events)</code>
                                 </td>
                             </tr>
                                     <tr>
@@ -734,15 +730,6 @@
                                                               <td>events</td>
                                                               <td>
                                                                         <code>Events</code>
-                                                              </td>
-                                                              <td>
-                                                              </td>
-                                                              <td></td>
-                                                            </tr>
-                                                            <tr>
-                                                              <td>chatManager</td>
-                                                              <td>
-                                                                        <code><a href="../injectables/ChatManager.html" target="_self" >ChatManager</a></code>
                                                               </td>
                                                               <td>
                                                               </td>
@@ -784,7 +771,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/providers/chat-conversation-handler.ts:55</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/providers/chat-conversation-handler.ts:56</a></div>
                                         </td>
                                     </tr>
             
@@ -826,7 +813,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="190" class="link-to-prism">src/providers/chat-conversation-handler.ts:190</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="207" class="link-to-prism">src/providers/chat-conversation-handler.ts:207</a></div>
                                         </td>
                                     </tr>
             
@@ -858,14 +845,14 @@
                             </tr>
                             <tr>
                                 <td class="col-md-4">
-            <code>initWithRecipient(recipientId: , recipientFullName: )</code>
+            <code>initWithRecipient(recipientId: , recipientFullName: , loggedUser: , tenant: )</code>
                                 </td>
                             </tr>
             
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/providers/chat-conversation-handler.ts:40</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/providers/chat-conversation-handler.ts:41</a></div>
                                         </td>
                                     </tr>
             
@@ -902,13 +889,29 @@
                                                               </td>
                                                               <td></td>
                                                             </tr>
+                                                            <tr>
+                                                              <td>loggedUser</td>
+                                                              <td>
+                                                              </td>
+                                                              <td>
+                                                              </td>
+                                                              <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                              <td>tenant</td>
+                                                              <td>
+                                                              </td>
+                                                              <td>
+                                                              </td>
+                                                              <td></td>
+                                                            </tr>
                                                     </tbody>
                                                 </table>
                                         </div>
                                         <div>
                                         </div>
                                         <div class="io-description">
-                                            <b>Returns : </b>    <code><a href="../injectables/ChatConversationHandler.html" target="_self" >ChatConversationHandler</a></code>
+                                            <b>Returns : </b>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
             
                                         </div>
                                             <div class="io-description">
@@ -940,7 +943,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">src/providers/chat-conversation-handler.ts:132</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="146" class="link-to-prism">src/providers/chat-conversation-handler.ts:146</a></div>
                                         </td>
                                     </tr>
             
@@ -1001,14 +1004,14 @@
                             </tr>
                             <tr>
                                 <td class="col-md-4">
-            <code>sendMessage(msg: , conversationWith: , conversationWithDetailFullname: )</code>
+            <code>sendMessage(msg: , conversationWith: , conversationWithDetailFullname: , channel_type: )</code>
                                 </td>
                             </tr>
             
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="155" class="link-to-prism">src/providers/chat-conversation-handler.ts:155</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="169" class="link-to-prism">src/providers/chat-conversation-handler.ts:169</a></div>
                                         </td>
                                     </tr>
             
@@ -1057,6 +1060,14 @@
                                                               </td>
                                                               <td></td>
                                                             </tr>
+                                                            <tr>
+                                                              <td>channel_type</td>
+                                                              <td>
+                                                              </td>
+                                                              <td>
+                                                              </td>
+                                                              <td></td>
+                                                            </tr>
                                                     </tbody>
                                                 </table>
                                         </div>
@@ -1095,7 +1106,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="115" class="link-to-prism">src/providers/chat-conversation-handler.ts:115</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="129" class="link-to-prism">src/providers/chat-conversation-handler.ts:129</a></div>
                                         </td>
                                     </tr>
             
@@ -1161,41 +1172,6 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <a name="chatManager"></a>
-                                    <span class="name">
-                                        <b>
-                                            <span class="modifier">Public</span>
-                                        chatManager
-                                        </b>
-                                        <a href="#chatManager"><span class="fa fa-link"></span></a>
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <span class="modifier-icon fa fa-reset"></span><code>chatManager:     <code><a href="../injectables/ChatManager.html" target="_self" >ChatManager</a></code>
-            </code>
-                                </td>
-                            </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <i>Type : </i>    <code><a href="../injectables/ChatManager.html" target="_self" >ChatManager</a></code>
-            
-                                    </td>
-                                </tr>
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/providers/chat-conversation-handler.ts:29</a></div>
-                                        </td>
-                                    </tr>
-            
-            
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
                                     <a name="conversationWith"></a>
                                     <span class="name">
                                         <b>
@@ -1255,7 +1231,7 @@
                                 </tr>
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/providers/chat-conversation-handler.ts:28</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/providers/chat-conversation-handler.ts:29</a></div>
                                         </td>
                                     </tr>
             
@@ -1269,7 +1245,7 @@
                                     <a name="loggedUser"></a>
                                     <span class="name">
                                         <b>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         loggedUser
                                         </b>
                                         <a href="#loggedUser"><span class="fa fa-link"></span></a>
@@ -1374,7 +1350,7 @@
                                     <a name="recipientFullname"></a>
                                     <span class="name">
                                         <b>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         recipientFullname
                                         </b>
                                         <a href="#recipientFullname"><span class="fa fa-link"></span></a>
@@ -1409,7 +1385,7 @@
                                     <a name="recipientId"></a>
                                     <span class="name">
                                         <b>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         recipientId
                                         </b>
                                         <a href="#recipientId"><span class="fa fa-link"></span></a>
@@ -1444,7 +1420,7 @@
                                     <a name="senderId"></a>
                                     <span class="name">
                                         <b>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         senderId
                                         </b>
                                         <a href="#senderId"><span class="fa fa-link"></span></a>
@@ -1479,7 +1455,7 @@
                                     <a name="tenant"></a>
                                     <span class="name">
                                         <b>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         tenant
                                         </b>
                                         <a href="#tenant"><span class="fa fa-link"></span></a>
@@ -1514,7 +1490,7 @@
                                     <a name="urlNodeFirebase"></a>
                                     <span class="name">
                                         <b>
-                                            <span class="modifier">Public</span>
+                                            <span class="modifier">Private</span>
                                         urlNodeFirebase
                                         </b>
                                         <a href="#urlNodeFirebase"><span class="fa fa-link"></span></a>
@@ -1557,44 +1533,45 @@ import * as firebase from &#x27;firebase/app&#x27;;
 import { MessageModel } from &#x27;../models/message&#x27;;
 import { UserModel } from &#x27;../models/user&#x27;;
 // services
-import { ChatManager } from &#x27;./chat-manager/chat-manager&#x27;;
+//import { ChatManager } from &#x27;./chat-manager/chat-manager&#x27;;
 // utils
 import { MSG_STATUS_RECEIVED } from &#x27;../utils/constants&#x27;;
 import { urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from &#x27;../utils/utils&#x27;;
 
 @Injectable()
 export class ChatConversationHandler {
-  public urlNodeFirebase: string;
-  public recipientId: string;
-  public recipientFullname: string;
-  public tenant: string;
-  public loggedUser: UserModel;
-  public senderId: string;
+  private urlNodeFirebase: string;
+  private recipientId: string;
+  private recipientFullname: string;
+  private tenant: string;
+  private loggedUser: UserModel;
+  private senderId: string;
   public conversationWith: string;
   public messages: any[];
   public messagesRef: firebase.database.Query;
+  //public events: Events;
 
   constructor(
-    public events: Events,
-    public chatManager: ChatManager
+    public events: Events
   ) {
-    this.tenant &#x3D; this.chatManager.getTenant();
-    this.loggedUser &#x3D; this.chatManager.getLoggedUser();
+    console.log(&quot;CONSTRUCTOR ChatConversationHandlerProvider&quot;);
+    //this.tenant &#x3D; this.chatManager.getTenant();
+    //this.loggedUser &#x3D; this.chatManager.getLoggedUser();
+    //this.events &#x3D; new Events();
   }
-
   /**
    * inizializzo conversation handler
    * @param recipientId 
    * @param recipientFullName 
    */
-  initWithRecipient(recipientId,recipientFullName):ChatConversationHandler {
-      this.recipientId &#x3D; recipientId;
-      this.recipientFullname &#x3D; recipientFullName;
-      this.senderId &#x3D; this.loggedUser.uid;
-      this.conversationWith &#x3D; recipientId;
-      this.messages &#x3D; [];
-      console.log(&quot;initWithRecipient*****&quot;, this.tenant);
-      return this;
+  initWithRecipient(recipientId,recipientFullName, loggedUser, tenant) {
+    this.loggedUser &#x3D; loggedUser;
+    this.tenant &#x3D; tenant;
+    this.recipientId &#x3D; recipientId;
+    this.recipientFullname &#x3D; recipientFullName;
+    this.senderId &#x3D; this.loggedUser.uid;
+    this.conversationWith &#x3D; recipientId;
+    this.messages &#x3D; [];
   }
   /**
    * mi connetto al nodo messages
@@ -1603,7 +1580,7 @@ export class ChatConversationHandler {
    * mi sottoscrivo a change, removed, added
    */
   connect() {
-    let messages &#x3D; [];
+    //this.messages &#x3D; [];
     var lastDate: string &#x3D; &quot;&quot;;
     const that &#x3D; this;
 
@@ -1611,7 +1588,7 @@ export class ChatConversationHandler {
     this.urlNodeFirebase &#x3D; this.urlNodeFirebase+this.conversationWith;
     console.log(&quot;urlNodeFirebase *****&quot;, this.urlNodeFirebase);
     const firebaseMessages &#x3D; firebase.database().ref(this.urlNodeFirebase);
-    this.messagesRef &#x3D; firebaseMessages.limitToLast(100);
+    this.messagesRef &#x3D; firebaseMessages.orderByChild(&#x27;timestamp&#x27;).limitToLast(100);
 
     this.messagesRef.on(&quot;child_changed&quot;, function(childSnapshot) {
       console.log(&quot;child_changed *****&quot;, childSnapshot.key);
@@ -1623,36 +1600,49 @@ export class ChatConversationHandler {
       }
       // creo oggetto messaggio e lo aggiungo all&#x27;array dei messaggi
       const msg &#x3D; new MessageModel(itemMsg[&#x27;language&#x27;], itemMsg[&#x27;recipient&#x27;], itemMsg[&#x27;recipient_fullname&#x27;], itemMsg[&#x27;sender&#x27;], itemMsg[&#x27;sender_fullname&#x27;], itemMsg[&#x27;status&#x27;], itemMsg[&#x27;text&#x27;], itemMsg[&#x27;timestamp&#x27;], calcolaData, itemMsg[&#x27;type&#x27;]);
-      const index &#x3D; searchIndexInArrayForUid(messages, childSnapshot.key);
-      messages.splice(index, 1, msg);
+      const index &#x3D; searchIndexInArrayForUid(that.messages, childSnapshot.key);
+      console.log(&quot;child_changed222 *****&quot;, index, that.messages, childSnapshot.key);
+      that.messages.splice(index, 1, msg);
       // aggiorno stato messaggio
       // questo stato indica che è stato consegnato al client e NON che è stato letto
       that.setStatusMessage(childSnapshot, that.conversationWith);
       // pubblico messaggio - sottoscritto in dettaglio conversazione
-      that.events.publish(&#x27;listMessages:changed&#x27;, that.conversationWith, messages);
+      that.events.publish(&#x27;listMessages:changed-&#x27;+that.conversationWith, that.conversationWith, that.messages);
     });
-    
+
     this.messagesRef.on(&quot;child_removed&quot;, function(childSnapshot) {
       // al momento non previsto!!!
-      // that.events.publish(&#x27;listMessages:changed&#x27;, messages);
+      const index &#x3D; searchIndexInArrayForUid(that.messages, childSnapshot.key);
+        // controllo superfluo sarà sempre maggiore
+        if(index&gt;-1){
+          that.messages.splice(index, 1);
+          this.events.publish(&#x27;conversations:update-&#x27;+that.conversationWith, that.messages);
+        }
     });
 
     this.messagesRef.on(&quot;child_added&quot;, function(childSnapshot) {
-      // console.log(&quot;child_added *****&quot;, childSnapshot.key);
+      //console.log(&quot;child_added *****&quot;, childSnapshot.key);
       const itemMsg &#x3D; childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l&#x27;header data
       let calcolaData &#x3D; setHeaderDate(itemMsg[&#x27;timestamp&#x27;], lastDate);
       if(calcolaData !&#x3D; null){
         lastDate &#x3D; calcolaData;
       }
+      // controllo fatto per i gruppi da rifattorizzare
+      (!itemMsg.sender_fullname || itemMsg.sender_fullname &#x3D;&#x3D; &#x27;undefined&#x27;)?itemMsg.sender_fullname &#x3D; itemMsg.sender:itemMsg.sender_fullname;
       // creo oggetto messaggio e lo aggiungo all&#x27;array dei messaggi
-      const msg &#x3D; new MessageModel(itemMsg[&#x27;language&#x27;], itemMsg[&#x27;recipient&#x27;], itemMsg[&#x27;recipient_fullname&#x27;], itemMsg[&#x27;sender&#x27;], itemMsg[&#x27;sender_fullname&#x27;], itemMsg[&#x27;status&#x27;], itemMsg[&#x27;text&#x27;], itemMsg[&#x27;timestamp&#x27;], calcolaData, itemMsg[&#x27;type&#x27;]);
-      messages.push(msg);
+      const messageText &#x3D; urlify(itemMsg[&#x27;text&#x27;]);
+      const msg &#x3D; new MessageModel(itemMsg[&#x27;language&#x27;], itemMsg[&#x27;recipient&#x27;], itemMsg[&#x27;recipient_fullname&#x27;], itemMsg[&#x27;sender&#x27;], itemMsg[&#x27;sender_fullname&#x27;], itemMsg[&#x27;status&#x27;], messageText, itemMsg[&#x27;timestamp&#x27;], calcolaData, itemMsg[&#x27;type&#x27;]);
+      
+      console.log(&quot;child_added *****&quot;, calcolaData, that.messages, msg);
+      that.messages.push(msg);
+     
       // aggiorno stato messaggio
       // questo stato indica che è stato consegnato al client e NON che è stato letto
       that.setStatusMessage(childSnapshot, that.conversationWith);
       // pubblico messaggio - sottoscritto in dettaglio conversazione
-      that.events.publish(&#x27;listMessages:added&#x27;, that.conversationWith, messages);
+      console.log(&quot;publish:: &quot;, &#x27;listMessages:added-&#x27;+that.conversationWith, that.events);
+      that.events.publish(&#x27;listMessages:added-&#x27;+that.conversationWith, that.conversationWith, that.messages);
     })
   } 
   /**
@@ -1702,10 +1692,12 @@ export class ChatConversationHandler {
    * @param conversationWith 
    * @param conversationWithDetailFullname 
    */
-  sendMessage(msg, conversationWith, conversationWithDetailFullname): boolean {
-    console.log(&quot;SEND MESSAGE: &quot;, msg);
-    //console.log(&quot;messageTextArea:: &quot;,this.messageTextArea[&#x27;_elementRef&#x27;].nativeElement.getElementsByTagName(&#x27;textarea&#x27;)[0].style);
-    const messageString &#x3D; urlify(msg);
+  sendMessage(msg, conversationWith, conversationWithDetailFullname, channel_type): boolean {
+    
+    (!channel_type || channel_type &#x3D;&#x3D; &#x27;undefined&#x27;)?&#x27;direct&#x27;:channel_type;
+    console.log(&quot;SEND MESSAGE: &quot;, msg, channel_type);
+    // console.log(&quot;messageTextArea:: &quot;,this.messageTextArea[&#x27;_elementRef&#x27;].nativeElement.getElementsByTagName(&#x27;textarea&#x27;)[0].style);
+    // const messageString &#x3D; urlify(msg);
     const now: Date &#x3D; new Date();
     const timestamp &#x3D; now.valueOf();
     const language &#x3D; document.documentElement.lang;
@@ -1719,9 +1711,10 @@ export class ChatConversationHandler {
         recipient_fullname: recipient_fullname,
         sender: this.loggedUser.uid,
         sender_fullname: sender_fullname,
-        text: messageString,
+        text: msg,
         timestamp: timestamp,
-        type: &#x27;text&#x27;
+        type: &#x27;text&#x27;,
+        channel_type: channel_type
       };
       console.log(&#x27;messaggio **************&#x27;,message);
       const newMessageRef &#x3D; firebaseMessages.push();

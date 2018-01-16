@@ -667,8 +667,14 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#chatConversationHandler">chatConversationHandler</a>
+                                <a href="#addHandler">addHandler</a>
+                            </li>
+                            <li>
+                                <a href="#changedHandler">changedHandler</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#channel_type">channel_type</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -752,8 +758,21 @@
                                 <a href="#scrollDirection">scrollDirection</a>
                             </li>
                             <li>
+                                <a href="#statusUserOffline">statusUserOffline</a>
+                            </li>
+                            <li>
+                                <a href="#statusUserOnline">statusUserOnline</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Private</span>
                                 <a href="#style_message_welcome">style_message_welcome</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#tenant">tenant</a>
+                            </li>
+                            <li>
+                                <a href="#updateLastConnectionDate">updateLastConnectionDate</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -810,6 +829,9 @@
                                 <a href="#sendMessage">sendMessage</a>
                             </li>
                             <li>
+                                <a href="#unsubescribeAll">unsubescribeAll</a>
+                            </li>
+                            <li>
                                 <a href="#updateMessageList">updateMessageList</a>
                             </li>
                         </ul>
@@ -825,12 +847,12 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <code>constructor(navParams: NavParams, navCtrl: NavController, chatPresenceHandler: <a href="../injectables/ChatPresenceHandler.html">ChatPresenceHandler</a>, chatConversationHandler: <a href="../injectables/ChatConversationHandler.html">ChatConversationHandler</a>, navProxy: <a href="../injectables/NavProxyService.html">NavProxyService</a>, userService: <a href="../injectables/UserService.html">UserService</a>, events: Events, chatManager: <a href="../injectables/ChatManager.html">ChatManager</a>)</code>
+                            <code>constructor(navParams: NavParams, navCtrl: NavController, chatPresenceHandler: <a href="../injectables/ChatPresenceHandler.html">ChatPresenceHandler</a>, navProxy: <a href="../injectables/NavProxyService.html">NavProxyService</a>, userService: <a href="../injectables/UserService.html">UserService</a>, events: Events, chatManager: <a href="../injectables/ChatManager.html">ChatManager</a>)</code>
                         </td>
                     </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:45</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:50</a></div>
                                 </td>
                             </tr>
     
@@ -870,15 +892,6 @@
                                                       <td>chatPresenceHandler</td>
                                                       <td>
                                                                 <code><a href="../injectables/ChatPresenceHandler.html" target="_self" >ChatPresenceHandler</a></code>
-                                                      </td>
-                                                      <td>
-                                                      </td>
-                                                      <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                      <td>chatConversationHandler</td>
-                                                      <td>
-                                                                <code><a href="../injectables/ChatConversationHandler.html" target="_self" >ChatConversationHandler</a></code>
                                                       </td>
                                                       <td>
                                                       </td>
@@ -960,7 +973,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="269" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:269</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="314" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:314</a></div>
                                 </td>
                             </tr>
     
@@ -1028,7 +1041,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="225" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:225</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="270" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:270</a></div>
                                 </td>
                             </tr>
     
@@ -1067,7 +1080,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="298" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:298</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="343" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:343</a></div>
                                 </td>
                             </tr>
     
@@ -1136,7 +1149,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="154" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:154</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="187" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:187</a></div>
                                 </td>
                             </tr>
     
@@ -1179,7 +1192,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="136" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:136</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="168" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:168</a></div>
                                 </td>
                             </tr>
     
@@ -1225,7 +1238,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="108" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:108</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="135" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:135</a></div>
                                 </td>
                             </tr>
     
@@ -1264,14 +1277,13 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="117" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:117</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="143" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:143</a></div>
                                 </td>
                             </tr>
     
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-description"><p>quando esco dalla pagina distruggo i subscribe
-    NO!!! non ne ho bisogno mi servono attivi!!!</p>
+                                <div class="io-description"><p>quando esco dalla pagina distruggo i subscribe</p>
     </div>
     
                                 <div class="io-description">
@@ -1304,7 +1316,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="243" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:243</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="288" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:288</a></div>
                                 </td>
                             </tr>
     
@@ -1371,7 +1383,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:63</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="128" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:128</a></div>
                                 </td>
                             </tr>
     
@@ -1408,7 +1420,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="283" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:283</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="328" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:328</a></div>
                                 </td>
                             </tr>
     
@@ -1484,7 +1496,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="204" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:204</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="249" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:249</a></div>
                                 </td>
                             </tr>
     
@@ -1523,7 +1535,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="216" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:216</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="261" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:261</a></div>
                                 </td>
                             </tr>
     
@@ -1562,7 +1574,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="253" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:253</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="298" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:298</a></div>
                                 </td>
                             </tr>
     
@@ -1614,6 +1626,45 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
+                            <a name="unsubescribeAll"></a>
+                            <span class="name">
+                                <b>
+                                unsubescribeAll
+                                </b>
+                                <a href="#unsubescribeAll"><span class="fa fa-link"></span></a>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+    <code>unsubescribeAll()</code>
+                        </td>
+                    </tr>
+    
+    
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="150" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:150</a></div>
+                                </td>
+                            </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>unsubscribe all subscribe events</p>
+    </div>
+    
+                                <div class="io-description">
+                                    <b>Returns : </b>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+    
+                                </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
                             <a name="updateMessageList"></a>
                             <span class="name">
                                 <b>
@@ -1632,7 +1683,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="191" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:191</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="236" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:236</a></div>
                                 </td>
                             </tr>
     
@@ -1690,31 +1741,129 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <a name="chatConversationHandler"></a>
+                            <a name="addHandler"></a>
                             <span class="name">
                                 <b>
-                                    <span class="modifier">Public</span>
-                                chatConversationHandler
+                                addHandler
                                 </b>
-                                <a href="#chatConversationHandler"><span class="fa fa-link"></span></a>
+                                <a href="#addHandler"><span class="fa fa-link"></span></a>
                             </span>
                         </td>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                            <span class="modifier-icon fa fa-reset"></span><code>chatConversationHandler:     <code><a href="../injectables/ChatConversationHandler.html" target="_self" >ChatConversationHandler</a></code>
+                            <code>addHandler:     <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
     </code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                <i>Type : </i>    <code><a href="../injectables/ChatConversationHandler.html" target="_self" >ChatConversationHandler</a></code>
+                                <i>Type : </i>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Default value : </i><code>(uid, messages) &#x3D;&gt; {
+        console.log(&#x27;addHandler&#x27;, uid, messages);
+        this.messages &#x3D; messages;
+        this.doScroll();
+      }</code>
+                            </td>
+                        </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:111</a></div>
+                                </td>
+                            </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-description"><p>on subcribe add message</p>
+    </div>
+                        </td>
+                    </tr>
+    
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <a name="changedHandler"></a>
+                            <span class="name">
+                                <b>
+                                changedHandler
+                                </b>
+                                <a href="#changedHandler"><span class="fa fa-link"></span></a>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>changedHandler:     <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+    </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Type : </i>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Default value : </i><code>(uid, messages) &#x3D;&gt; {
+        console.log(&#x27;changedHandler&#x27;, uid, messages);
+        this.messages &#x3D; messages;
+        this.doScroll();
+      }</code>
+                            </td>
+                        </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="119" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:119</a></div>
+                                </td>
+                            </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-description"><p>on subcribe change message</p>
+    </div>
+                        </td>
+                    </tr>
+    
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <a name="channel_type"></a>
+                            <span class="name">
+                                <b>
+                                    <span class="modifier">Private</span>
+                                channel_type
+                                </b>
+                                <a href="#channel_type"><span class="fa fa-link"></span></a>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <span class="modifier-icon fa fa-reset"></span><code>channel_type:     <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+    </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Type : </i>    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
     
                             </td>
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:51</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:39</a></div>
                                 </td>
                             </tr>
     
@@ -1749,7 +1898,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:55</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:59</a></div>
                                 </td>
                             </tr>
     
@@ -1784,7 +1933,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:50</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:55</a></div>
                                 </td>
                             </tr>
     
@@ -1823,7 +1972,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:25</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:28</a></div>
                                 </td>
                             </tr>
     
@@ -1858,7 +2007,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:29</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:33</a></div>
                                 </td>
                             </tr>
     
@@ -1893,7 +2042,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:32</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:36</a></div>
                                 </td>
                             </tr>
     
@@ -1928,7 +2077,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:34</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:38</a></div>
                                 </td>
                             </tr>
     
@@ -1963,7 +2112,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:33</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:37</a></div>
                                 </td>
                             </tr>
     
@@ -1998,7 +2147,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:54</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:58</a></div>
                                 </td>
                             </tr>
     
@@ -2031,7 +2180,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:41</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:46</a></div>
                                 </td>
                             </tr>
     
@@ -2064,7 +2213,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:42</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:47</a></div>
                                 </td>
                             </tr>
     
@@ -2099,7 +2248,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:36</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:41</a></div>
                                 </td>
                             </tr>
     
@@ -2139,7 +2288,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:31</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:35</a></div>
                                 </td>
                             </tr>
     
@@ -2174,7 +2323,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:37</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:42</a></div>
                                 </td>
                             </tr>
     
@@ -2213,7 +2362,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:26</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:29</a></div>
                                 </td>
                             </tr>
     
@@ -2246,7 +2395,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:45</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:50</a></div>
                                 </td>
                             </tr>
     
@@ -2279,7 +2428,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:43</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:48</a></div>
                                 </td>
                             </tr>
     
@@ -2312,7 +2461,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:44</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:49</a></div>
                                 </td>
                             </tr>
     
@@ -2347,7 +2496,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:49</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:54</a></div>
                                 </td>
                             </tr>
     
@@ -2382,7 +2531,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:48</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:53</a></div>
                                 </td>
                             </tr>
     
@@ -2417,7 +2566,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:52</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:56</a></div>
                                 </td>
                             </tr>
     
@@ -2452,7 +2601,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:35</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:40</a></div>
                                 </td>
                             </tr>
     
@@ -2492,10 +2641,108 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:30</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:34</a></div>
                                 </td>
                             </tr>
     
+    
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <a name="statusUserOffline"></a>
+                            <span class="name">
+                                <b>
+                                statusUserOffline
+                                </b>
+                                <a href="#statusUserOffline"><span class="fa fa-link"></span></a>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>statusUserOffline:     <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+    </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Type : </i>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Default value : </i><code>(uid) &#x3D;&gt; {
+        if(uid !&#x3D;&#x3D; this.conversationWith){return;}
+        this.online &#x3D; false;
+        console.log(&#x27;OFFLINE **************&#x27;);
+      }</code>
+                            </td>
+                        </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="96" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:96</a></div>
+                                </td>
+                            </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-description"><p>on subscribe stato utente con cui si conversa OFFLINE</p>
+    </div>
+                        </td>
+                    </tr>
+    
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <a name="statusUserOnline"></a>
+                            <span class="name">
+                                <b>
+                                statusUserOnline
+                                </b>
+                                <a href="#statusUserOnline"><span class="fa fa-link"></span></a>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>statusUserOnline:     <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+    </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Type : </i>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Default value : </i><code>(uid) &#x3D;&gt; {
+        if(uid !&#x3D;&#x3D; this.conversationWith){return;}
+        this.online &#x3D; true;
+        console.log(&#x27;ONLINE **************&#x27;);
+      }</code>
+                            </td>
+                        </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:88</a></div>
+                                </td>
+                            </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-description"><p>on subscribe stato utente con cui si conversa ONLINE</p>
+    </div>
+                        </td>
+                    </tr>
     
                 </tbody>
             </table>
@@ -2527,10 +2774,93 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:38</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:43</a></div>
                                 </td>
                             </tr>
     
+    
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <a name="tenant"></a>
+                            <span class="name">
+                                <b>
+                                    <span class="modifier">Private</span>
+                                tenant
+                                </b>
+                                <a href="#tenant"><span class="fa fa-link"></span></a>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <span class="modifier-icon fa fa-reset"></span><code>tenant:     <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+    </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Type : </i>    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+    
+                            </td>
+                        </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:32</a></div>
+                                </td>
+                            </tr>
+    
+    
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <a name="updateLastConnectionDate"></a>
+                            <span class="name">
+                                <b>
+                                updateLastConnectionDate
+                                </b>
+                                <a href="#updateLastConnectionDate"><span class="fa fa-link"></span></a>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>updateLastConnectionDate:     <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+    </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Type : </i>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Default value : </i><code>(uid,lastConnectionDate) &#x3D;&gt; {
+        this.lastConnectionDate &#x3D; lastConnectionDate;
+        console.log(&#x27;updateLastConnectionDate **************&#x27;,this.lastConnectionDate);
+      }</code>
+                            </td>
+                        </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="104" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:104</a></div>
+                                </td>
+                            </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-description"><p>on subscribe data ultima connessione utente con cui si conversa</p>
+    </div>
+                        </td>
+                    </tr>
     
                 </tbody>
             </table>
@@ -2562,7 +2892,7 @@
                         </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:53</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/pages/dettaglio-conversazione/dettaglio-conversazione.ts:57</a></div>
                                 </td>
                             </tr>
     
@@ -2577,6 +2907,7 @@
     <div class="tab-pane fade tab-source-code" id="c-source">
         <pre class="line-numbers"><code class="language-typescript">import { Component, ViewChild, ElementRef } from &#x27;@angular/core&#x27;;
 import { IonicPage, NavParams, Content, Events, NavController } from &#x27;ionic-angular&#x27;;
+//import { Subscription } from &#x27;rxjs/Subscription&#x27;;
 // models
 import { UserModel } from &#x27;../../models/user&#x27;;
 import { MessageModel } from &#x27;../../models/message&#x27;;
@@ -2590,6 +2921,8 @@ import { _DetailPage } from &#x27;../_DetailPage&#x27;;
 import { ProfilePage } from &#x27;../profile/profile&#x27;;
 // utils
 import { LABEL_NO_MSG_HERE, LABEL_ACTIVE_NOW, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from &#x27;../../utils/constants&#x27;;
+import { urlify } from &#x27;../../utils/utils&#x27;;
+
 import { ChatConversationHandler } from &#x27;../../providers/chat-conversation-handler&#x27;;
 
 
@@ -2603,17 +2936,19 @@ export class DettaglioConversazionePage extends _DetailPage{
   @ViewChild(&#x27;messageTextArea&#x27;) messageTextArea: ElementRef;
   //@ViewChild(&#x27;messageTextArea&#x27;) messageTextArea: ElementRef;   
 
+  private tenant: string;
   private conversationHandler: ChatConversationHandler;
   private scrollDirection: any &#x3D; &#x27;bottom&#x27;;
   private messages: Array&lt;MessageModel&gt; &#x3D; [];
   private conversationWith: string;
   private currentUserDetail: UserModel;
   private conversationWithFullname: string;
+  private channel_type: string;
   private online: boolean;
   private lastConnectionDate: string;
   private messageString: string;
   private style_message_welcome: boolean;
-  // private updatingMessageList: boolean;
+
   
   LABEL_ACTIVE_NOW &#x3D; LABEL_ACTIVE_NOW;
   LABEL_NO_MSG_HERE &#x3D; LABEL_NO_MSG_HERE;
@@ -2625,7 +2960,6 @@ export class DettaglioConversazionePage extends _DetailPage{
     public navParams: NavParams,
     public navCtrl: NavController,
     public chatPresenceHandler: ChatPresenceHandler,
-    public chatConversationHandler: ChatConversationHandler,
     public navProxy: NavProxyService,
     public userService: UserService,
     public events: Events,
@@ -2633,51 +2967,74 @@ export class DettaglioConversazionePage extends _DetailPage{
   ) {
     super();
     // recupero id utente e fullname con cui si conversa
+    
     this.conversationWith &#x3D; navParams.get(&#x27;conversationWith&#x27;);
     this.conversationWithFullname &#x3D; navParams.get(&#x27;conversationWithFullname&#x27;);
-  }
+    this.channel_type &#x3D; navParams.get(&#x27;channel_type&#x27;);
+    this.messages &#x3D; [];
 
-  ngOnInit() {
-    console.log(&#x27;ngOnInit&#x27;,this.conversationWithFullname);
+    console.log(&#x27;constructor PAGE ::: &#x27;,this.channel_type);
+
+    //const that &#x3D; this;
     // elenco sottoscrizioni 
     // subscribe stato utente con cui si conversa ONLINE
-    this.events.subscribe(&#x27;statusUser:online&#x27;, (uid) &#x3D;&gt; {
-      if(uid !&#x3D;&#x3D; this.conversationWith){return;}
-      this.online &#x3D; true;
-      //console.log(&#x27;ONLINE **************&#x27;);
-    });
+    this.events.subscribe(&#x27;statusUser:online-&#x27;+this.conversationWith, this.statusUserOnline);
     // subscribe stato utente con cui si conversa ONLINE
-    this.events.subscribe(&#x27;statusUser:offline&#x27;, (uid) &#x3D;&gt; {
-      if(uid !&#x3D;&#x3D; this.conversationWith){return;}
-      this.online &#x3D; false;
-      //console.log(&#x27;OFFLINE **************&#x27;);
-    });
+    this.events.subscribe(&#x27;statusUser:offline-&#x27;+this.conversationWith, this.statusUserOffline);
     // subscribe data ultima connessione utente con cui si conversa
-    this.events.subscribe(&#x27;lastConnectionDate&#x27;, (uid,lastConnectionDate) &#x3D;&gt; {
-      this.lastConnectionDate &#x3D; lastConnectionDate;
-    });
+    this.events.subscribe(&#x27;lastConnectionDate-&#x27;+this.conversationWith, this.updateLastConnectionDate);
+  
     // subscribe elenco messaggi
-    /**
-     * mi sottoscrivo a listMessages:added chiamato ogni volta che viene letto un nuovo msg
-     * attendo 500 millisecondi e aggiorno elenco messaggi
-     * (il ritardo è per evitare lo scroll ad ogni visualizzazione di un nuovo msg può essere eliminato)
-     */
-    this.events.subscribe(&#x27;listMessages:added&#x27;, (uid, messages) &#x3D;&gt; {
-      //console.log(&#x27;listMessages:added **************&#x27;, uid);
-      if (messages !&#x3D;&#x3D; this.messages &amp;&amp; uid &#x3D;&#x3D; this.conversationWith){
-        //const that &#x3D; this;
-        //setTimeout(function(){
-        this.updateMessageList(messages);
-        //}, 1);
-      }
-    });
-    this.events.subscribe(&#x27;listMessages:changed&#x27;, (uid,messages) &#x3D;&gt; {
-      // console.log(&#x27;listMessages:changed **************&#x27;,messages, uid);
-      if(uid &#x3D;&#x3D; this.conversationWith){
-        this.messages &#x3D; messages;
-      }
-      //this.doScroll();
-    });
+    this.events.subscribe(&#x27;listMessages:added-&#x27;+this.conversationWith, this.addHandler);
+    this.events.subscribe(&#x27;listMessages:changed-&#x27;+this.conversationWith, this.changedHandler);
+    
+  }
+  /**
+   * on subscribe stato utente con cui si conversa ONLINE
+   */
+  statusUserOnline: any &#x3D; (uid) &#x3D;&gt; {
+    if(uid !&#x3D;&#x3D; this.conversationWith){return;}
+    this.online &#x3D; true;
+    console.log(&#x27;ONLINE **************&#x27;);
+  }
+  /**
+   * on subscribe stato utente con cui si conversa OFFLINE
+   */
+  statusUserOffline: any &#x3D; (uid) &#x3D;&gt; {
+    if(uid !&#x3D;&#x3D; this.conversationWith){return;}
+    this.online &#x3D; false;
+    console.log(&#x27;OFFLINE **************&#x27;);
+  }
+  /**
+   * on subscribe data ultima connessione utente con cui si conversa
+   */
+  updateLastConnectionDate: any &#x3D; (uid,lastConnectionDate) &#x3D;&gt; {
+    this.lastConnectionDate &#x3D; lastConnectionDate;
+    console.log(&#x27;updateLastConnectionDate **************&#x27;,this.lastConnectionDate);
+  }
+  /**
+   * on subcribe add message
+   */
+  addHandler:any &#x3D; (uid, messages) &#x3D;&gt; {
+    console.log(&#x27;addHandler&#x27;, uid, messages);
+    this.messages &#x3D; messages;
+    this.doScroll();
+  }
+  /**
+   * on subcribe change message
+   */
+  changedHandler:any &#x3D; (uid, messages) &#x3D;&gt; {
+    console.log(&#x27;changedHandler&#x27;, uid, messages);
+    this.messages &#x3D; messages;
+    this.doScroll();
+  }
+
+  /**
+   * 
+   */
+  ngOnInit() {
+    this.messages &#x3D; [];
+    console.log(&#x27;ngOnInit&#x27;,this.events,this.conversationWithFullname);
   }
   /**
    * quando ho renderizzato la pagina richiamo il metodo di inizialize
@@ -2689,15 +3046,20 @@ export class DettaglioConversazionePage extends _DetailPage{
   }
   /**
    * quando esco dalla pagina distruggo i subscribe
-   * NO!!! non ne ho bisogno mi servono attivi!!!
    */
   ionViewWillLeave() {
     console.log(&#x27;ionViewWillLeave **************&#x27;);
-    // this.events.unsubscribe(&#x27;statusUser:online&#x27;);
-    // this.events.unsubscribe(&#x27;statusUser:offline&#x27;);
-    // this.events.unsubscribe(&#x27;lastConnectionDate&#x27;);
-    // this.events.unsubscribe(&#x27;listMessages:added&#x27;);
-    // this.events.unsubscribe(&#x27;listMessages:changed&#x27;);
+    this.unsubescribeAll();
+  }
+  /**
+   * unsubscribe all subscribe events
+   */
+  unsubescribeAll(){
+    // this.events.unsubscribe(&#x27;statusUser:online-&#x27;+this.conversationWith, this.statusUserOnline);
+    // this.events.unsubscribe(&#x27;statusUser:offline-&#x27;+this.conversationWith, this.statusUserOffline);
+    // this.events.unsubscribe(&#x27;lastConnectionDate-&#x27;+this.conversationWith, this.updateLastConnectionDate);
+    // this.events.unsubscribe(&#x27;listMessages:added-&#x27;+this.conversationWith, this.addHandler);
+    // this.events.unsubscribe(&#x27;listMessages:changed-&#x27;+this.conversationWith, this.changedHandler);
   }
 
   /**
@@ -2711,11 +3073,12 @@ export class DettaglioConversazionePage extends _DetailPage{
    * carico messaggi
    */
   initialize(){
-    console.log(&#x27;initialize DettaglioConversazionePage **************&#x27;);
+    console.log(&#x27;initialize DettaglioConversazionePage **************&#x27;,this.chatManager.handlers);
     // this.updatingMessageList &#x3D; false;
-    this.messages &#x3D; [];
+    //this.messages &#x3D; [];
     this.online &#x3D; false;
     this.lastConnectionDate &#x3D; &#x27;&#x27;;
+    this.tenant &#x3D; this.chatManager.getTenant();
     this.currentUserDetail &#x3D; this.chatManager.getLoggedUser();
     this.chatPresenceHandler.userIsOnline(this.conversationWith);
     this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
@@ -2729,26 +3092,38 @@ export class DettaglioConversazionePage extends _DetailPage{
    * attendo un sec se nn arrivano messaggi visualizzo msg wellcome
    */
   initConversationHandler() {
+    //const loggedUser &#x3D; this.chatManager.getLoggedUser();
     const that &#x3D; this;
     this.style_message_welcome &#x3D; false;
     let handler:ChatConversationHandler &#x3D; this.chatManager.getConversationHandlerByConversationId(this.conversationWith);
-    console.log(&#x27;initConversationHandler **************&#x27;,handler, this.conversationWith);
+    console.log(&#x27;initConversationHandler **************&#x27;,this.chatManager, handler, this.conversationWith);
     if (!handler) {
-      console.log(&#x27;ENTRO ***&#x27;);
-      handler &#x3D; this.chatConversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname);
-      this.chatManager.addConversationHandler(handler);
-      this.conversationHandler &#x3D; handler;
+      console.log(&#x27;ENTRO ***&#x27;,this.conversationHandler);
+      //const handler &#x3D; 
+      this.conversationHandler &#x3D; new ChatConversationHandler(this.events);
+      this.conversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname,this.currentUserDetail,this.tenant);
+      //this.chatConversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname,this.currentUserDetail,this.tenant);
+      
+      //handler &#x3D; this.chatConversationHandler;
+      //this.conversationHandler &#x3D; handler;
       //[self subscribe:handler];
       //[self.conversationHandler restoreMessagesFromDB];
       if (this.conversationWith) {
-        handler.connect();
+        //handler.connect();
+        this.conversationHandler.connect();
+        console.log(&#x27;PRIMA ***&#x27;, this.chatManager.handlers);
+        this.chatManager.addConversationHandler(this.conversationHandler);
+        console.log(&#x27;DOPO ***&#x27;, this.chatManager.handlers);
       }
     }
     else {
-      console.log(&#x27;NON ENTRO ***&#x27;);
-      handler.connect();
+      console.log(&#x27;NON ENTRO ***&#x27;,this.conversationHandler,handler);
+      //handler.connect();
       //[self subscribe:handler];
       this.conversationHandler &#x3D; handler;
+      this.messages &#x3D; this.conversationHandler.messages;
+      console.log(&#x27;NON ENTRO2  ***&#x27;,this.conversationHandler, this.messages );
+      this.doScroll();
     }
     // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
     setTimeout(function() {
@@ -2818,7 +3193,7 @@ export class DettaglioConversazionePage extends _DetailPage{
    * @param message 
    */
   isSender(message) {
-    return this.chatConversationHandler.isSender(message);
+    return this.conversationHandler.isSender(message);
   }
   /**
    * se il messaggio non è vuoto
@@ -2831,7 +3206,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     console.log(&quot;SEND MESSAGE: &quot;, msg);
     if (msg &amp;&amp; msg.trim() !&#x3D; &#x27;&#x27;){
       this.messageTextArea[&#x27;_elementRef&#x27;].nativeElement.getElementsByTagName(&#x27;textarea&#x27;)[0].style.height &#x3D; MIN_HEIGHT_TEXTAREA+&quot;px&quot;;
-      const resultSendMsg &#x3D; this.chatConversationHandler.sendMessage(msg, this.conversationWith, this.conversationWithFullname);
+      const resultSendMsg &#x3D; this.conversationHandler.sendMessage(msg, this.conversationWith, this.conversationWithFullname, this.channel_type);
       if (resultSendMsg){
         this.doScroll();
       }
@@ -2930,9 +3305,10 @@ export class DettaglioConversazionePage extends _DetailPage{
             &lt;/div&gt;
           &lt;/ng-template&gt;
           &lt;ng-template #contentOther&gt;
+            &lt;div *ngIf&#x3D;&quot;channel_type&#x3D;&#x3D;&#x27;group&#x27;&quot; class&#x3D;&quot;message_sender_fullname&quot;&gt;{{message.sender_fullname}}&lt;/div&gt;
             &lt;div class&#x3D;&quot;message message-other&quot;&gt;
               &lt;div class&#x3D;&quot;message-content message-content-text&quot; [innerHTML]&#x3D;&quot;message.text&quot;&gt;
-                {{message.text}}
+                &lt;!-- {{message.text}} --&gt;
               &lt;/div&gt;
               &lt;span class&#x3D;&quot;message-timestamp&quot;&gt;{{message.timestamp | date: &#x27;H:mm&#x27;}}&lt;/span&gt;
             &lt;/div&gt;
@@ -2943,8 +3319,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   &lt;/ng-template&gt;
 
   &lt;ng-template #contentMessageWelcome&gt;
-     &lt;div class&#x3D;&quot;messageFirst&quot;&gt;
-      &lt;!-- [style.display]&#x3D;&quot;style_message_welcome &#x3D;&#x3D;&#x3D; true ? &#x27;&#x27; : &#x27;none&#x27;&quot; --&gt;
+     &lt;div class&#x3D;&quot;messageFirst&quot; [style.display]&#x3D;&quot;style_message_welcome &#x3D;&#x3D;&#x3D; true ? &#x27;&#x27; : &#x27;none&#x27;&quot;&gt;
       {{LABEL_NO_MSG_HERE}}
     &lt;/div&gt;
   &lt;/ng-template&gt;
@@ -3005,7 +3380,7 @@ export class DettaglioConversazionePage extends _DetailPage{
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><ion-header>  <ion-navbar >    <ion-title>      <div class="headerUserName" *ngIf="conversationWith" (click)="goToUserDetail(conversationWith)">{{conversationWithFullname?conversationWithFullname:\'\'}}      <span *ngIf="online; then userActive else userInactive"></span>      <ng-template #userActive>        <div class="headerLastActivity">{{LABEL_ACTIVE_NOW}}</div>      </ng-template>      <ng-template #userInactive>        <div class="headerLastActivity">{{lastConnectionDate}}</div>      </ng-template>    </div>    </ion-title>  </ion-navbar></ion-header><ion-content class="messagesView">  <span *ngIf="messages.length > 0;then content_messages else contentMessageWelcome">here is ignored</span>  <ng-template #content_messages>    <ion-list no-lines>      <div *ngFor="let message of messages">        <div *ngIf = "message && message.headerDate && message.headerDate != \'\'">          <ion-item text-wrap>            <div class="rowDay">              <span class="headerDay">{{message.headerDate}}</span>            </div>          </ion-item>        </div>        <ion-item class="itemMessage" text-wrap>          <span *ngIf="isSender(message); then contentMine else contentOther"></span>          <ng-template #contentMine>            <div class="statusMessage">              <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>              <ion-icon *ngIf="message.status==MSG_STATUS_SENT" name="ios-checkmark"></ion-icon>              <ion-icon *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" name="ios-done-all"></ion-icon>            </div>            <div class="message message-mine">              <div class="message-content message-content-text" [innerHTML]="message.text">              </div>              <div class="message-timestamp">{{message.timestamp | date: \'H:mm\'}}</div>            </div>          </ng-template>          <ng-template #contentOther>            <div class="message message-other">              <div class="message-content message-content-text" [innerHTML]="message.text">                {{message.text}}              </div>              <span class="message-timestamp">{{message.timestamp | date: \'H:mm\'}}</span>            </div>          </ng-template>        </ion-item>      </div>    </ion-list>  </ng-template>  <ng-template #contentMessageWelcome>     <div class="messageFirst">      <!-- [style.display]="style_message_welcome === true ? \'\' : \'none\'" -->      {{LABEL_NO_MSG_HERE}}    </div>  </ng-template>  </ion-content><ion-footer>  <ion-toolbar>    <ion-grid>      <ion-row #messagesPageFooter id="messages-page-footer">        <ion-col col-2 col-bottom>          <button ion-button clear class="message-editor-button active">            <ion-icon name="add-circle" isActive="true" ></ion-icon>          </button>        </ion-col>        <ion-col col-auto>          <div class="text_message">          <ion-textarea autosize #messageTextArea id="messageTextArea" [(ngModel)]="messageString" placeholder="Enter a message" rows="1"            ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString);" autofocus></ion-textarea>          <!-- <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->          </div>          <div class="button_send">          <button ion-button clear *ngIf="messageString && messageString.trim()!=\'\'" class="message-editor-button right active" (focus)="doScroll()" (click)="controlOfMessage(messageString)">              <ion-icon name="send" isActive="true" ></ion-icon>            </button>            <button ion-button clear *ngIf="!messageString || messageString.trim()==\'\'" class="message-editor-button right inactive">              <ion-icon name="send" isActive="false" ></ion-icon>          </button>        </div>        </ion-col>      </ion-row>    </ion-grid>  </ion-toolbar></ion-footer></div>'
+        var COMPONENT_TEMPLATE = '<div><ion-header>  <ion-navbar >    <ion-title>      <div class="headerUserName" *ngIf="conversationWith" (click)="goToUserDetail(conversationWith)">{{conversationWithFullname?conversationWithFullname:\'\'}}      <span *ngIf="online; then userActive else userInactive"></span>      <ng-template #userActive>        <div class="headerLastActivity">{{LABEL_ACTIVE_NOW}}</div>      </ng-template>      <ng-template #userInactive>        <div class="headerLastActivity">{{lastConnectionDate}}</div>      </ng-template>    </div>    </ion-title>  </ion-navbar></ion-header><ion-content class="messagesView">  <span *ngIf="messages.length > 0;then content_messages else contentMessageWelcome">here is ignored</span>  <ng-template #content_messages>    <ion-list no-lines>      <div *ngFor="let message of messages">        <div *ngIf = "message && message.headerDate && message.headerDate != \'\'">          <ion-item text-wrap>            <div class="rowDay">              <span class="headerDay">{{message.headerDate}}</span>            </div>          </ion-item>        </div>        <ion-item class="itemMessage" text-wrap>          <span *ngIf="isSender(message); then contentMine else contentOther"></span>          <ng-template #contentMine>            <div class="statusMessage">              <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>              <ion-icon *ngIf="message.status==MSG_STATUS_SENT" name="ios-checkmark"></ion-icon>              <ion-icon *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" name="ios-done-all"></ion-icon>            </div>            <div class="message message-mine">              <div class="message-content message-content-text" [innerHTML]="message.text">              </div>              <div class="message-timestamp">{{message.timestamp | date: \'H:mm\'}}</div>            </div>          </ng-template>          <ng-template #contentOther>            <div *ngIf="channel_type==\'group\'" class="message_sender_fullname">{{message.sender_fullname}}</div>            <div class="message message-other">              <div class="message-content message-content-text" [innerHTML]="message.text">                <!-- {{message.text}} -->              </div>              <span class="message-timestamp">{{message.timestamp | date: \'H:mm\'}}</span>            </div>          </ng-template>        </ion-item>      </div>    </ion-list>  </ng-template>  <ng-template #contentMessageWelcome>     <div class="messageFirst" [style.display]="style_message_welcome === true ? \'\' : \'none\'">      {{LABEL_NO_MSG_HERE}}    </div>  </ng-template>  </ion-content><ion-footer>  <ion-toolbar>    <ion-grid>      <ion-row #messagesPageFooter id="messages-page-footer">        <ion-col col-2 col-bottom>          <button ion-button clear class="message-editor-button active">            <ion-icon name="add-circle" isActive="true" ></ion-icon>          </button>        </ion-col>        <ion-col col-auto>          <div class="text_message">          <ion-textarea autosize #messageTextArea id="messageTextArea" [(ngModel)]="messageString" placeholder="Enter a message" rows="1"            ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString);" autofocus></ion-textarea>          <!-- <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->          </div>          <div class="button_send">          <button ion-button clear *ngIf="messageString && messageString.trim()!=\'\'" class="message-editor-button right active" (focus)="doScroll()" (click)="controlOfMessage(messageString)">              <ion-icon name="send" isActive="true" ></ion-icon>            </button>            <button ion-button clear *ngIf="!messageString || messageString.trim()==\'\'" class="message-editor-button right inactive">              <ion-icon name="send" isActive="false" ></ion-icon>          </button>        </div>        </ion-col>      </ion-row>    </ion-grid>  </ion-toolbar></ion-footer></div>'
     var COMPONENTS = [{'name': 'ChatBubble', 'selector': 'chat-bubble'},{'name': 'DettaglioConversazionePage', 'selector': 'page-dettaglio-conversazione'},{'name': 'ElasticTextarea', 'selector': 'elastic-textarea'},{'name': 'ListaConversazioniPage', 'selector': 'page-lista-conversazioni'},{'name': 'LoginPage', 'selector': 'page-login'},{'name': 'MyApp', 'selector': ''},{'name': 'PlaceholderPage', 'selector': 'page-placeholder'},{'name': 'PopoverPage', 'selector': 'page-popover'},{'name': 'PopoverProfilePage', 'selector': 'page-popover-profile'},{'name': 'ProfilePage', 'selector': 'page-profile'},{'name': 'RegisterPage', 'selector': 'page-register'},{'name': 'ResetpwdPage', 'selector': 'page-resetpwd'},{'name': 'UpdateImageProfilePage', 'selector': 'page-update-image-profile'},{'name': 'UsersPage', 'selector': 'page-users'}];
     var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'ion-textarea[autosize]'}];
     var ACTUAL_COMPONENT = {'name': 'DettaglioConversazionePage'};

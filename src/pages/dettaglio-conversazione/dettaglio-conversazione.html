@@ -41,9 +41,10 @@
             </div>
           </ng-template>
           <ng-template #contentOther>
+            <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
             <div class="message message-other">
               <div class="message-content message-content-text" [innerHTML]="message.text">
-                {{message.text}}
+                <!-- {{message.text}} -->
               </div>
               <span class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
             </div>

@@ -14,7 +14,6 @@ import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
 // utils
 import { LABEL_NO_MSG_HERE, LABEL_ACTIVE_NOW, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
-//import { urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../../utils/utils';
 
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 
@@ -36,6 +35,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   private conversationWith: string;
   private currentUserDetail: UserModel;
   private conversationWithFullname: string;
+  private channel_type: string;
   private online: boolean;
   private lastConnectionDate: string;
   private messageString: string;
@@ -62,9 +62,10 @@ export class DettaglioConversazionePage extends _DetailPage{
     
     this.conversationWith = navParams.get('conversationWith');
     this.conversationWithFullname = navParams.get('conversationWithFullname');
+    this.channel_type = navParams.get('channel_type');
     this.messages = [];
-
-    console.log('constructor PAGE ::: ');
+    (!this.channel_type || this.channel_type == 'undefined')?'direct':this.channel_type;
+    console.log('constructor PAGE ::: ',this.channel_type);
 
     //const that = this;
     // elenco sottoscrizioni 
@@ -297,7 +298,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     console.log("SEND MESSAGE: ", msg);
     if (msg && msg.trim() != ''){
       this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
-      const resultSendMsg = this.conversationHandler.sendMessage(msg, this.conversationWith, this.conversationWithFullname);
+      const resultSendMsg = this.conversationHandler.sendMessage(msg, this.conversationWith, this.conversationWithFullname, this.channel_type);
       if (resultSendMsg){
         this.doScroll();
       }

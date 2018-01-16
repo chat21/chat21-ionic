@@ -1,21 +1,16 @@
 //https://devdactic.com/ionic-sqlite-queries-database/
 //http://ionicframework.com/docs/native/sqlite/
 //https://stackoverflow.com/questions/42840951/uncaught-in-promise-cordova-not-available-in-ionic-2
-
 import { Injectable } from '@angular/core';
-//import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
-//import { SQLitePorter } from '@ionic-native/sqlite-porter';
 import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
 // firebase
 import * as firebase from 'firebase/app';
 //utils
 import { getNowTimestamp } from '../../utils/utils';
-// services
-//import { ChatManager } from '../chat-manager/chat-manager';
 
 /**
- * DESC PROVIDER
+ * GESTIONE SALVATAGGIO IMMAGINI IN FIREBASE
  */
 @Injectable()
 export class DatabaseProvider {
@@ -23,7 +18,6 @@ export class DatabaseProvider {
 
   constructor(
     private storage: Storage
-    //private chatManager: ChatManager
   ) {}
 
   /**
@@ -33,7 +27,6 @@ export class DatabaseProvider {
    * @param tenant 
    */
   initialize(tenant){
-    //const tenant = this.chatManager.getTenant();
     let configStorage = {
       name: tenant,
       storeName: 'settings',
@@ -73,15 +66,6 @@ export class DatabaseProvider {
     console.log("SALVO NEL DB UID ULTIMA CHAT APERTA:", uid);
     this.storageSettings.set('uidLastOpenConversation',uid);
   }
-  // getKeys(){
-  //   return this.storage.keys()
-  //   .then(function(data) { 
-  //     //console.log("keys:", data); 
-  //     //contacts.sort(compareValues('name', 'asc'));
-  //     return data;
-  //   });
-  // }
-
   /**
    * ritorno contatti salvati nel DB locale
    * da verificare!!!

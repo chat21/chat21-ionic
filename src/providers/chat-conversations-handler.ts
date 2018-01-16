@@ -72,11 +72,10 @@ export class ChatConversationsHandler {
      * @param childSnapshot 
      */
     added(childSnapshot){
-        console.log("child_added conversationS");
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
         const conversation = this.completeConversation(childData);
-        
+        console.log("child_added conversationS",conversation);
         this.events.publish('conversations:added', conversation );
         //this.conversations.splice(0, 0, conversation);
         //this.events.publish('conversations:added', this.conversations, childSnapshot.key );
@@ -93,6 +92,7 @@ export class ChatConversationsHandler {
 
         const conversation = this.completeConversation(childData);
         conversation.status = '1'; 
+        console.log("child_changed conversationS",conversation);
         this.events.publish('conversations:changed', childData);
 
         // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
@@ -132,6 +132,12 @@ export class ChatConversationsHandler {
         conv.selected = false;
         if(this.idConversationSelected && conv.key == this.idConversationSelected){
             conv.selected = true;
+        }
+        if(!conv.sender_fullname || conv.sender_fullname == 'undefined' || conv.sender_fullname.trim() == ''){
+            conv.sender_fullname = conv.sender;
+        }
+        if(!conv.recipient_fullname || conv.recipient_fullname == 'undefined' || conv.recipient_fullname.trim() == ''){
+            conv.recipient_fullname = conv.recipient;
         }
         let conversation_with_fullname = conv.sender_fullname;
         if(conv.sender == this.loggedUser.uid){

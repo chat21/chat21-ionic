@@ -611,7 +611,7 @@
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>DESC PROVIDER</p>
+                <p>GESTIONE SALVATAGGIO IMMAGINI IN FIREBASE</p>
 
             </p>
 
@@ -685,7 +685,7 @@
                             </tr>
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/providers/database/database.ts:22</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/providers/database/database.ts:17</a></div>
                                         </td>
                                     </tr>
             
@@ -748,7 +748,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="122" class="link-to-prism">src/providers/database/database.ts:122</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">src/providers/database/database.ts:106</a></div>
                                         </td>
                                     </tr>
             
@@ -855,7 +855,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/providers/database/database.ts:90</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/providers/database/database.ts:74</a></div>
                                         </td>
                                     </tr>
             
@@ -924,7 +924,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/providers/database/database.ts:47</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/providers/database/database.ts:40</a></div>
                                         </td>
                                     </tr>
             
@@ -963,7 +963,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/providers/database/database.ts:64</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/providers/database/database.ts:57</a></div>
                                         </td>
                                     </tr>
             
@@ -1002,7 +1002,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/providers/database/database.ts:35</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/providers/database/database.ts:29</a></div>
                                         </td>
                                     </tr>
             
@@ -1071,7 +1071,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="146" class="link-to-prism">src/providers/database/database.ts:146</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/providers/database/database.ts:130</a></div>
                                         </td>
                                     </tr>
             
@@ -1138,7 +1138,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/providers/database/database.ts:56</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/providers/database/database.ts:49</a></div>
                                         </td>
                                     </tr>
             
@@ -1177,7 +1177,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/providers/database/database.ts:72</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/providers/database/database.ts:65</a></div>
                                         </td>
                                     </tr>
             
@@ -1257,7 +1257,7 @@
                                 </tr>
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/providers/database/database.ts:22</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/providers/database/database.ts:17</a></div>
                                         </td>
                                     </tr>
             
@@ -1271,19 +1271,15 @@
 
     <div class="tab-pane fade tab-source-code" id="c-source">
         <pre class="line-numbers"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-import { SQLite, SQLiteObject } from &#x27;@ionic-native/sqlite&#x27;;
-import { SQLitePorter } from &#x27;@ionic-native/sqlite-porter&#x27;;
 import { Storage } from &#x27;@ionic/storage&#x27;;
 import &#x27;rxjs/add/operator/map&#x27;;
 // firebase
 import * as firebase from &#x27;firebase/app&#x27;;
 //utils
 import { getNowTimestamp } from &#x27;../../utils/utils&#x27;;
-// services
-//import { ChatManager } from &#x27;../chat-manager/chat-manager&#x27;;
 
 /**
- * DESC PROVIDER
+ * GESTIONE SALVATAGGIO IMMAGINI IN FIREBASE
  */
 @Injectable()
 export class DatabaseProvider {
@@ -1291,7 +1287,6 @@ export class DatabaseProvider {
 
   constructor(
     private storage: Storage
-    //private chatManager: ChatManager
   ) {}
 
   /**
@@ -1301,7 +1296,6 @@ export class DatabaseProvider {
    * @param tenant 
    */
   initialize(tenant){
-    //const tenant &#x3D; this.chatManager.getTenant();
     let configStorage &#x3D; {
       name: tenant,
       storeName: &#x27;settings&#x27;,
@@ -1341,15 +1335,6 @@ export class DatabaseProvider {
     console.log(&quot;SALVO NEL DB UID ULTIMA CHAT APERTA:&quot;, uid);
     this.storageSettings.set(&#x27;uidLastOpenConversation&#x27;,uid);
   }
-  // getKeys(){
-  //   return this.storage.keys()
-  //   .then(function(data) { 
-  //     //console.log(&quot;keys:&quot;, data); 
-  //     //contacts.sort(compareValues(&#x27;name&#x27;, &#x27;asc&#x27;));
-  //     return data;
-  //   });
-  // }
-
   /**
    * ritorno contatti salvati nel DB locale
    * da verificare!!!

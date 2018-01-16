@@ -124,7 +124,7 @@ page-dettaglio-conversazione {
                 float: left;
                 background-color: #d2d2d2;
                 color: black;
-                margin-left: 11px;
+                // margin-left: 11px;
                 &::before {
                     left: -11px;
                     //background-image: url(/assets/message-other.png);
@@ -281,6 +281,12 @@ page-dettaglio-conversazione {
     
         ion-footer {
             //--footer-height: 300px;
+        }
+
+        .message_sender_fullname{
+            margin-top: 10px;
+            font-size: 0.8em;
+            color: #666;
         }
         
     }

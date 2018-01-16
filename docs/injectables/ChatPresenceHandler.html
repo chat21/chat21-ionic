@@ -1547,10 +1547,10 @@ export class ChatPresenceHandler {
     const connectionsRef &#x3D; firebase.database().ref().child(myConnectionsRefURL);
     connectionsRef.on(&quot;value&quot;, (child) &#x3D;&gt; {
       if(child.val()){
-        that.events.publish(&#x27;statusUser:online&#x27;, userid,&#x27;online&#x27;);
+        that.events.publish(&#x27;statusUser:online-&#x27;+userid, userid,&#x27;online&#x27;);
       }
       else {
-        that.events.publish(&#x27;statusUser:offline&#x27;, userid,&#x27;offline&#x27;);
+        that.events.publish(&#x27;statusUser:offline-&#x27;+userid, userid,&#x27;offline&#x27;);
       }
     })
   }
@@ -1567,7 +1567,7 @@ export class ChatPresenceHandler {
     lastOnlineRef.on(&quot;value&quot;, (child) &#x3D;&gt; {
       if(child.val()){
         const lastConnectionDate &#x3D; that.getTimeLastConnection(child.val());
-        that.events.publish(&#x27;lastConnectionDate&#x27;, userid,lastConnectionDate);
+        that.events.publish(&#x27;lastConnectionDate-&#x27;+userid, userid,lastConnectionDate);
       }
     });
   }

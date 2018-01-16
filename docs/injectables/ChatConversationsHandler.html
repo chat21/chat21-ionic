@@ -852,7 +852,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/providers/chat-conversations-handler.ts:91</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/providers/chat-conversations-handler.ts:89</a></div>
                                         </td>
                                     </tr>
             
@@ -921,7 +921,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">src/providers/chat-conversations-handler.ts:132</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="131" class="link-to-prism">src/providers/chat-conversations-handler.ts:131</a></div>
                                         </td>
                                     </tr>
             
@@ -1035,7 +1035,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="176" class="link-to-prism">src/providers/chat-conversations-handler.ts:176</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="181" class="link-to-prism">src/providers/chat-conversations-handler.ts:181</a></div>
                                         </td>
                                     </tr>
             
@@ -1113,7 +1113,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="151" class="link-to-prism">src/providers/chat-conversations-handler.ts:151</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="156" class="link-to-prism">src/providers/chat-conversations-handler.ts:156</a></div>
                                         </td>
                                     </tr>
             
@@ -1256,7 +1256,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="115" class="link-to-prism">src/providers/chat-conversations-handler.ts:115</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="114" class="link-to-prism">src/providers/chat-conversations-handler.ts:114</a></div>
                                         </td>
                                     </tr>
             
@@ -1325,7 +1325,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="161" class="link-to-prism">src/providers/chat-conversations-handler.ts:161</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="166" class="link-to-prism">src/providers/chat-conversations-handler.ts:166</a></div>
                                         </td>
                                     </tr>
             
@@ -1704,7 +1704,7 @@ export class ChatConversationsHandler {
      * @param tenant 
      * @param user 
      */
-    initWithTenant(tenant, loggedUser):ChatConversationsHandler {
+    initWithTenant(tenant, loggedUser):ChatConversationsHandler{
         this.tenant &#x3D; tenant;
         this.loggedUser &#x3D; loggedUser;
         this.userId &#x3D; loggedUser.uid;
@@ -1738,13 +1738,11 @@ export class ChatConversationsHandler {
      * @param childSnapshot 
      */
     added(childSnapshot){
-        console.log(&quot;child_added&quot;);
         const childData:ConversationModel &#x3D; childSnapshot.val();
         childData.uid &#x3D; childSnapshot.key;
         const conversation &#x3D; this.completeConversation(childData);
-        
+        console.log(&quot;child_added conversationS&quot;,conversation);
         this.events.publish(&#x27;conversations:added&#x27;, conversation );
-        
         //this.conversations.splice(0, 0, conversation);
         //this.events.publish(&#x27;conversations:added&#x27;, this.conversations, childSnapshot.key );
     }
@@ -1760,6 +1758,7 @@ export class ChatConversationsHandler {
 
         const conversation &#x3D; this.completeConversation(childData);
         conversation.status &#x3D; &#x27;1&#x27;; 
+        console.log(&quot;child_changed conversationS&quot;,conversation);
         this.events.publish(&#x27;conversations:changed&#x27;, childData);
 
         // const index &#x3D; searchIndexInArrayForUid(this.conversations, childSnapshot.key);
@@ -1799,6 +1798,12 @@ export class ChatConversationsHandler {
         conv.selected &#x3D; false;
         if(this.idConversationSelected &amp;&amp; conv.key &#x3D;&#x3D; this.idConversationSelected){
             conv.selected &#x3D; true;
+        }
+        if(!conv.sender_fullname || conv.sender_fullname &#x3D;&#x3D; &#x27;undefined&#x27; || conv.sender_fullname.trim() &#x3D;&#x3D; &#x27;&#x27;){
+            conv.sender_fullname &#x3D; conv.sender;
+        }
+        if(!conv.recipient_fullname || conv.recipient_fullname &#x3D;&#x3D; &#x27;undefined&#x27; || conv.recipient_fullname.trim() &#x3D;&#x3D; &#x27;&#x27;){
+            conv.recipient_fullname &#x3D; conv.recipient;
         }
         let conversation_with_fullname &#x3D; conv.sender_fullname;
         if(conv.sender &#x3D;&#x3D; this.loggedUser.uid){

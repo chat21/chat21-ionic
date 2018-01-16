@@ -171,7 +171,8 @@ export class ListaConversazioniPage extends _MasterPage {
       conversationSelected.selected = true;
       this.navProxy.pushDetail(DettaglioConversazionePage, {
         conversationWith: uidConvSelected,
-        conversationWithFullname: conversationSelected.conversation_with_fullname
+        conversationWithFullname: conversationSelected.conversation_with_fullname,
+        channel_type: conversationSelected.channel_type
       });
       this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
     }
@@ -267,7 +268,8 @@ export class ListaConversazioniPage extends _MasterPage {
         conversationSelected.selected = true;
         this.navProxy.pushDetail(DettaglioConversazionePage, {
           conversationWith: uid,
-          conversationWithFullname: conversationSelected.conversation_with_fullname
+          conversationWithFullname: conversationSelected.conversation_with_fullname,
+          channel_type: conversationSelected.channel_type
         });
       } 
     }

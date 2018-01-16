@@ -938,7 +938,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="262" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:262</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="261" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:261</a></div>
                                 </td>
                             </tr>
     
@@ -1009,7 +1009,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="236" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:236</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="235" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:235</a></div>
                                 </td>
                             </tr>
     
@@ -1051,7 +1051,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="156" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:156</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="155" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:155</a></div>
                                 </td>
                             </tr>
     
@@ -1090,7 +1090,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="218" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:218</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="217" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:217</a></div>
                                 </td>
                             </tr>
     
@@ -1182,7 +1182,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="148" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:148</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="147" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:147</a></div>
                                 </td>
                             </tr>
     
@@ -1219,7 +1219,7 @@
     
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="161" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:161</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="160" class="link-to-prism">src/pages/lista-conversazioni/lista-conversazioni.ts:160</a></div>
                                 </td>
                             </tr>
     
@@ -2029,7 +2029,7 @@ import { LABEL_MSG_PUSH_START_CHAT, LABEL_MSG_START_CHAT } from &#x27;../../util
 import { ChatManager } from &#x27;../../providers/chat-manager/chat-manager&#x27;;
 import { NavProxyService } from &#x27;../../providers/nav-proxy&#x27;;
 import { UserService } from &#x27;../../providers/user/user&#x27;;
-import { ChatConversationsHandler } from &#x27;../../providers/chat-conversations-handler&#x27;;
+import { ChatConversationsHandler} from &#x27;../../providers/chat-conversations-handler&#x27;;
 import { DatabaseProvider } from &#x27;../../providers/database/database&#x27;;
 
 @IonicPage()
@@ -2129,7 +2129,6 @@ export class ListaConversazioniPage extends _MasterPage {
         conversation.selected &#x3D; true;
       }
       this.conversations.splice(index, 1, conversation);
-      
       // se la conversazione cambiata è la conversazione aperta imposto status a 0 (visto)
       // console.log(&#x27;************** conversations changed:&#x27;, conversations, this.uidConvSelected);
       // if(this.uidConvSelected &#x3D;&#x3D; uid){
@@ -2280,7 +2279,8 @@ export class ListaConversazioniPage extends _MasterPage {
         conversationSelected.selected &#x3D; true;
         this.navProxy.pushDetail(DettaglioConversazionePage, {
           conversationWith: uid,
-          conversationWithFullname: conversationSelected.conversation_with_fullname
+          conversationWithFullname: conversationSelected.conversation_with_fullname,
+          channel_type: conversationSelected.channel_type
         });
       } 
     }

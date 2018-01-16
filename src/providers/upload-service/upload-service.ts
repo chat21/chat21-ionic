@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Config } from 'ionic-angular';
-//import * as firebase from 'firebase/app';
+
 import * as firebase from 'firebase';
 import { UploadModel } from '../../models/upload';
 

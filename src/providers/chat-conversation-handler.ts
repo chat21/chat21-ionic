@@ -62,7 +62,7 @@ export class ChatConversationHandler {
     this.urlNodeFirebase = this.urlNodeFirebase+this.conversationWith;
     console.log("urlNodeFirebase *****", this.urlNodeFirebase);
     const firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
-    this.messagesRef = firebaseMessages.limitToLast(100);
+    this.messagesRef = firebaseMessages.orderByChild('timestamp').limitToLast(100);
 
     this.messagesRef.on("child_changed", function(childSnapshot) {
       console.log("child_changed *****", childSnapshot.key);
@@ -72,9 +72,13 @@ export class ChatConversationHandler {
       if(calcolaData != null){
         lastDate = calcolaData;
       }
+      // controllo fatto per i gruppi da rifattorizzare
+      (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined')?itemMsg.sender_fullname = itemMsg.sender:itemMsg.sender_fullname;
+     
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
       const msg = new MessageModel(itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['text'], itemMsg['timestamp'], calcolaData, itemMsg['type']);
       const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
+      console.log("child_changed222 *****", index, that.messages, childSnapshot.key);
       that.messages.splice(index, 1, msg);
       // aggiorno stato messaggio
       // questo stato indica che è stato consegnato al client e NON che è stato letto
@@ -101,9 +105,13 @@ export class ChatConversationHandler {
       if(calcolaData != null){
         lastDate = calcolaData;
       }
+      // controllo fatto per i gruppi da rifattorizzare
+      (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined')?itemMsg.sender_fullname = itemMsg.sender:itemMsg.sender_fullname;
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['text'], itemMsg['timestamp'], calcolaData, itemMsg['type']);
-      console.log("child_added *****", that.messages, msg);
+      const messageText = urlify(itemMsg['text']);
+      const msg = new MessageModel(itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type']);
+      
+      console.log("child_added *****", calcolaData, that.messages, msg);
       that.messages.push(msg);
      
       // aggiorno stato messaggio
@@ -161,10 +169,12 @@ export class ChatConversationHandler {
    * @param conversationWith 
    * @param conversationWithDetailFullname 
    */
-  sendMessage(msg, conversationWith, conversationWithDetailFullname): boolean {
-    console.log("SEND MESSAGE: ", msg);
-    //console.log("messageTextArea:: ",this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style);
-    const messageString = urlify(msg);
+  sendMessage(msg, conversationWith, conversationWithDetailFullname, channel_type): boolean {
+    
+    (!channel_type || channel_type == 'undefined')?'direct':channel_type;
+    console.log("SEND MESSAGE: ", msg, channel_type);
+    // console.log("messageTextArea:: ",this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style);
+    // const messageString = urlify(msg);
     const now: Date = new Date();
     const timestamp = now.valueOf();
     const language = document.documentElement.lang;
@@ -178,9 +188,10 @@ export class ChatConversationHandler {
         recipient_fullname: recipient_fullname,
         sender: this.loggedUser.uid,
         sender_fullname: sender_fullname,
-        text: messageString,
+        text: msg,
         timestamp: timestamp,
-        type: 'text'
+        type: 'text',
+        channel_type: channel_type
       };
       console.log('messaggio **************',message);
       const newMessageRef = firebaseMessages.push();
