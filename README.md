@@ -12,7 +12,7 @@ With Chat21-ionic you can:
 * Contacts list view with fulltext search for fullname field
 
 # Live Demo #
-Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
+Visit https://web.chat21.org/ to see a live demo of chat21-ionic.
 <img src="http://www.dariodepascalis.com/wp-content/uploads/2017/10/chat21-ionic-desk-new.png" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
 
 # Documentation #
