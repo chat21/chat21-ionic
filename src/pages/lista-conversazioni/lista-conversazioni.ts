@@ -11,7 +11,7 @@ import { _MasterPage } from '../_MasterPage';
 import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
-import { windowsMatchMedia, searchIndexInArrayForUid } from '../../utils/utils';
+import { compareValues, windowsMatchMedia, searchIndexInArrayForUid } from '../../utils/utils';
 import { LABEL_MSG_PUSH_START_CHAT, LABEL_MSG_START_CHAT } from '../../utils/constants';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
@@ -19,6 +19,7 @@ import { NavProxyService } from '../../providers/nav-proxy';
 import { UserService } from '../../providers/user/user';
 import { ChatConversationsHandler} from '../../providers/chat-conversations-handler';
 import { DatabaseProvider } from '../../providers/database/database';
+import { queryDef } from '@angular/core/src/view/query';
 
 @IonicPage()
 @Component({
@@ -56,11 +57,12 @@ export class ListaConversazioniPage extends _MasterPage {
     // o da users con conversazione attiva recupero conversationWith
     this.conversationWith = navParams.get('conversationWith');
     this.uidReciverFromUrl = location.search.split('recipient=')[1];
+    console.log('location.search: ',  this.uidReciverFromUrl);
     // this.updatingMessageList = false;
     if(this.uidReciverFromUrl){
       //that.uidLastOpenConversation = that.uidReciverFromUrl;
-      this.uidConvSelected = this.uidReciverFromUrl;
-      this.uidReciverFromUrl = null;
+      //this.uidConvSelected = this.uidReciverFromUrl;
+      //this.uidReciverFromUrl = null;
     }
 
     /** SUBSCRIBE USER LOGGED
@@ -117,6 +119,7 @@ export class ListaConversazioniPage extends _MasterPage {
         conversation.selected = true;
       }
       this.conversations.splice(index, 1, conversation);
+      this.conversations.sort(compareValues('timestamp', 'desc'));
       // se la conversazione cambiata è la conversazione aperta imposto status a 0 (visto)
       // console.log('************** conversations changed:', conversations, this.uidConvSelected);
       // if(this.uidConvSelected == uid){
@@ -158,13 +161,13 @@ export class ListaConversazioniPage extends _MasterPage {
 
 
   openMessageList(uidConvSelected){
+    console.log('************** openMessageList ********************', uidConvSelected);
     if(uidConvSelected == this.uidConvSelected && windowsMatchMedia()){
       return
     }
-    var oldConversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
-    if(oldConversationSelected){
-      oldConversationSelected.selected = false;
-    }
+    this.uidConvSelected = uidConvSelected;
+
+
     var conversationSelected = this.conversations.find(item => item.uid === uidConvSelected);
     if(conversationSelected){
       conversationSelected.status = '0';
@@ -176,8 +179,14 @@ export class ListaConversazioniPage extends _MasterPage {
       });
       this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
     }
+
+    // var oldConversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+    // if(oldConversationSelected){
+    //   oldConversationSelected.selected = false;
+    // }
+    
     this.conversationWith = uidConvSelected;
-    this.uidConvSelected = uidConvSelected;
+    // this.uidConvSelected = uidConvSelected;
   }
   /**
   * 1 - salvo in memoria uid ultima conversazione aperta
@@ -220,7 +229,11 @@ export class ListaConversazioniPage extends _MasterPage {
     this.databaseProvider.getUidLastOpenConversation()
     .then(function(uid) { 
       console.log('getUidLastOpenConversation ::' + uid);
-      if(uid){
+      if(that.uidReciverFromUrl){
+        that.uidConvSelected = that.uidReciverFromUrl;
+        that.uidReciverFromUrl = null;
+      }
+      else if(uid){
         that.uidConvSelected = uid;
       }
       that.initConversationsHandler();
@@ -261,6 +274,7 @@ export class ListaConversazioniPage extends _MasterPage {
   */
   goToconversationMessageList(uid){
     // se uid == this.uidConvSelected
+    console.log('goToconversationMessageList ::', uid);
     if(uid ==  this.uidConvSelected){
       var conversationSelected = this.conversations.find(item => item.uid === uid);
       if(conversationSelected){

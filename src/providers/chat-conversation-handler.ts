@@ -9,7 +9,7 @@ import { UserModel } from '../models/user';
 // services
 //import { ChatManager } from './chat-manager/chat-manager';
 // utils
-import { MSG_STATUS_RECEIVED } from '../utils/constants';
+import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED } from '../utils/constants';
 import { urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 
 @Injectable()
@@ -76,7 +76,7 @@ export class ChatConversationHandler {
       (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined')?itemMsg.sender_fullname = itemMsg.sender:itemMsg.sender_fullname;
      
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['text'], itemMsg['timestamp'], calcolaData, itemMsg['type']);
+      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], itemMsg['text'], itemMsg['timestamp'], calcolaData, itemMsg['type']);
       const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
       console.log("child_changed222 *****", index, that.messages, childSnapshot.key);
       that.messages.splice(index, 1, msg);
@@ -108,8 +108,12 @@ export class ChatConversationHandler {
       // controllo fatto per i gruppi da rifattorizzare
       (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined')?itemMsg.sender_fullname = itemMsg.sender:itemMsg.sender_fullname;
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const messageText = urlify(itemMsg['text']);
-      const msg = new MessageModel(itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type']);
+      let messageText = itemMsg['text'];
+      if (itemMsg['type'] == 'text'){
+        messageText = urlify(itemMsg['text']);
+      }
+      
+      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type']);
       
       console.log("child_added *****", calcolaData, that.messages, msg);
       that.messages.push(msg);
@@ -169,9 +173,8 @@ export class ChatConversationHandler {
    * @param conversationWith 
    * @param conversationWithDetailFullname 
    */
-  sendMessage(msg, conversationWith, conversationWithDetailFullname, channel_type): boolean {
-    
-    (!channel_type || channel_type == 'undefined')?'direct':channel_type;
+  sendMessage(msg, type, metadata, conversationWith, conversationWithDetailFullname, channel_type): string {
+    (!channel_type || channel_type == 'undefined')?channel_type='direct':channel_type;
     console.log("SEND MESSAGE: ", msg, channel_type);
     // console.log("messageTextArea:: ",this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style);
     // const messageString = urlify(msg);
@@ -188,9 +191,10 @@ export class ChatConversationHandler {
         recipient_fullname: recipient_fullname,
         sender: this.loggedUser.uid,
         sender_fullname: sender_fullname,
+        metadata: metadata,
         text: msg,
         timestamp: timestamp,
-        type: 'text',
+        type: type,
         channel_type: channel_type
       };
       console.log('messaggio **************',message);
@@ -198,12 +202,34 @@ export class ChatConversationHandler {
       newMessageRef.set(message);
       // se non c'è rete viene aggiunto al nodo in locale e visualizzato
       // appena torno on line viene inviato!!!
-      return true;
+      return newMessageRef.key;
     }
     else {
-      return false;
+      return null;
     }
   }
+
+
+
+  updateMetadataMessage(uid, metadata){
+    metadata.status = true;
+    const message = {
+      metadata: metadata
+    };
+    let firebaseMessages = firebase.database().ref(this.urlNodeFirebase+uid);
+    firebaseMessages.set(message);
+    
+  }
+
+  // // se è una immagine e la ha inviata l'utente corrente
+  // if (type == TYPE_MSG_IMAGE) {
+  //   const index = this.messages.findIndex(i => i.uid === metadata.uid);
+  //   console.log("trovato mesg", this.messages[index].uid, metadata.uid);
+  //   if(index>-1){
+  //     this.messages.splice(index, 1);
+  //   }
+  // } 
+
   /**
    * dispose reference della conversazione
    */

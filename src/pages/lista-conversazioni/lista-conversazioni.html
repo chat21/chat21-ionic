@@ -15,15 +15,18 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
+
 <ion-content class="list-avatar-page">
   <ion-list>
     
     <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
     <ng-template #contentConversations>
+        
+      <ion-item no-lines [class.selected]="conversation.uid === uidConvSelected" ion-item *ngFor="let conversation of conversations" (click)="openMessageList(conversation.uid)">     
+    
       <!-- <ion-item [style.background-color]="conversation.selected === true ? bck_color_selected : bck_color_unselected" ion-item *ngFor="let conversation of conversations" (click)="goToConversationDetail(conversation.uid,conversation.convers_with)"> -->
-      <ion-item no-lines [ngClass]="conversation.selected === true ? 'selected' : 'unselected'" ion-item *ngFor="let conversation of conversations" (click)="openMessageList(conversation.uid)">     
+      <!-- <ion-item no-lines [ngClass]="conversation.selected === true ? 'selected' : 'unselected'" ion-item *ngFor="let conversation of conversations" (click)="openMessageList(conversation.uid)">      -->
         <ion-avatar item-start>
           <img src="{{conversation.image}}" alt="user" onError="this.src='assets/img/no_image.png';">
         </ion-avatar>

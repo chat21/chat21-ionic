@@ -35,18 +35,19 @@
               <ion-icon *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" name="ios-done-all"></ion-icon>
             </div>
             <div class="message message-mine">
-              <div class="message-content message-content-text" [innerHTML]="message.text">
-              </div>
-              <div class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
+              <img *ngIf="message.type == 'image';"  class="message-content message-content-image" [src]="message.metadata.src"  [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+              <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
+              <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
             </div>
           </ng-template>
           <ng-template #contentOther>
             <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
             <div class="message message-other">
-              <div class="message-content message-content-text" [innerHTML]="message.text">
+              <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+              <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text">
                 <!-- {{message.text}} -->
               </div>
-              <span class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
+              <span  [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
             </div>
           </ng-template>
         </ion-item>
@@ -67,10 +68,20 @@
   <ion-toolbar>
     <ion-grid>
       <ion-row #messagesPageFooter id="messages-page-footer">
+                   
+
         <ion-col col-2 col-bottom>
-          <button ion-button clear class="message-editor-button active">
-            <ion-icon name="add-circle" isActive="true" ></ion-icon>
-          </button>
+          <!-- <button ion-button clear class="message-editor-button active">
+            <ion-icon name="add-circle" isActive="true" (click)="presentActionSheet()"></ion-icon>
+          </button> -->
+  
+          <label for="chat21-file" [class.active]="!isSelected" class="chat21-textarea-button" ><ion-icon ios="ios-camera" md="md-camera" class="chat21-icon left active"></ion-icon></label>
+          <!-- <label for="chat21-file" [class.active]="!isSelected" class="chat21-textarea-button" id="chat21-start-upload-doc" ></label> -->
+
+          <div [class.active]="isSelected" class="chat21-textarea-button" id="chat21-button-reset" (click)="resetLoadImage()" ></div>
+          <div [class.active]="isSelected" class="chat21-textarea-button" id="chat21-button-send" (click)="loadImage()"></div>
+          <input style='display:none' type="file" accept="image/x-png,image/gif,image/jpeg" name="chat21-file" id="chat21-file" class="inputfile" (change)="detectFiles($event)"/>
+           
         </ion-col>
         <ion-col col-auto>
           <div class="text_message">
@@ -78,13 +89,16 @@
             ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString);" autofocus></ion-textarea>
           <!-- <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->
           </div>
+
+
+          
           <div class="button_send">
-          <button ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active" (focus)="doScroll()" (click)="controlOfMessage(messageString)">
+            <button ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active" (focus)="doScroll()" (click)="controlOfMessage(messageString)">
               <ion-icon name="send" isActive="true" ></ion-icon>
             </button>
             <button ion-button clear *ngIf="!messageString || messageString.trim()==''" class="message-editor-button right inactive">
               <ion-icon name="send" isActive="false" ></ion-icon>
-          </button>
+            </button>
         </div>
         </ion-col>
       </ion-row>

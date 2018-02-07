@@ -24,7 +24,32 @@ export class UploadService {
     this.tenant = appConfig.tenant;
   }
 
-  
+  private createGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+       // tslint:disable-next-line:no-bitwise
+       const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+       return v.toString(16);
+    });
+   }
+   
+  pushUploadMessage(upload: UploadModel): any {
+    const uid = this.createGuid();
+    const urlImagesNodeFirebase = '/public/images/' + uid + '/';
+    console.log('pushUpload::::::::::::: ', urlImagesNodeFirebase);
+
+    // Create a root reference
+    const storageRef = firebase.storage().ref();
+
+    // Create a reference to 'mountains.jpg'
+    const mountainsRef = storageRef.child(urlImagesNodeFirebase);
+
+    return mountainsRef.put(upload.file);
+    // .then(function(snapshot) {
+    //   console.log('Uploaded a blob or file! ', snapshot.downloadURL);
+    //   this.observable.next(snapshot.downloadURL);
+    // });
+  }
+
   pushUpload(upload: UploadModel) {
     // recupero current user id
     this.uidCurrentUser = firebase.auth().currentUser.uid;

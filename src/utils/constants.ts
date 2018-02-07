@@ -32,3 +32,9 @@ export const LABEL_MSG_PUSH_START_CHAT: string = 'Premi qui per chattare con qua
 export const LABEL_MSG_START_CHAT: string = 'inizia a chattare';
 export const LABEL_ACTIVE_NOW: string = 'attivo/a ora';
 export const LABEL_NO_MSG_HERE: string = 'Ancora nessun messaggio qui...';
+
+// TYPES MESSAGES
+export const TYPE_MSG_TEXT: string = 'text';
+export const TYPE_MSG_IMAGE: string = 'image';
+
+export const MAX_WIDTH_IMAGES: number = 300;

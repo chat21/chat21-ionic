@@ -24,6 +24,7 @@ export class MyApp {
   public zone:NgZone;
   public user:any;
   pages: Array<{title: string, component: any}>;
+  isNavBar: string;
   /**
    * 1 - init firebase
    * 2 - quando
@@ -49,6 +50,11 @@ export class MyApp {
     public chatManager: ChatManager
   ) {
     this.zone = new NgZone({});
+    this.isNavBar = location.search.split('navBar=')[1];
+    console.log('isNavBar: ', this.isNavBar);
+    //this.isNavBar = 'http://support.chat21.org/dashboard/';
+    
+
     firebase.initializeApp(config.get("firebaseConfig"));
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -72,4 +78,5 @@ export class MyApp {
       this.chatManager.configureWithAppId(tenant);
     });
   }
+
 }

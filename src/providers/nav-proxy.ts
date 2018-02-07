@@ -84,6 +84,9 @@ export class NavProxyService {
      }
     deactivateSplitView() {
         let detailView = this.detailNav.getActive();
+        if(!detailView){
+            return;
+        }
         this.detailNav.setRoot(PlaceholderPage);
         if (detailView.component.prototype instanceof _DetailPage) {
             // if the current detail view is a 'Detail' page...

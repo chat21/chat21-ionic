@@ -130,6 +130,7 @@ export class UserService {
    * 4 - passo lo stato online al chatmanager
    */
   onAuthStateChanged(){
+    
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
         console.log(" 3 - PASSO OFFLINE AL CHAT MANAGER");
