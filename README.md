@@ -12,8 +12,11 @@ With Chat21-ionic you can:
 * Contacts list view with fulltext search for fullname field
 
 # Live Demo #
-Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
+Visit https://web.chat21.org/ to see a live demo of chat21-ionic.
 <img src="http://www.dariodepascalis.com/wp-content/uploads/2017/10/chat21-ionic-desk-new.png" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
+
+# Documentation #
+https://chat-v2-dev.firebaseapp.com/web/docs/
 
 # Prerequisite #
 * Install nodejs: `https://nodejs.org/en/download/`
@@ -29,7 +32,7 @@ Visit https://ionic3chat.firebaseapp.com/ to see a live demo of chat21-ionic.
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
 
 ## Firebase DB Configuration ## 
-* Click Add Firebase to your web app and copy 
+* in the Firebase console click 'Add Firebase to your web app' and copy 
 ```
 var config = { 
    apiKey: "<your api key>",
@@ -67,17 +70,7 @@ https://firebase.google.com/docs/auth/
 * Now you will need to serve the app. Run: `ionic serve` in the terminal. (Update the plugins if required)
 
 ## Upload Notification functions on Firebase Cloud Functions ##
-https://firebase.google.com/docs/functions/get-started?authuser=0
-* Install the Firebase CLI. run: `npm install -g firebase-tools`
-* Run: `firebase login`
-* Change directories in the terminal go to your Firebase project directory and run: `firebase init functions`
-* Select your project and press return
-    * answer the following question:
-        * "are yuo ready to proceed?" Y and press return
-        * "do yuo want to install dependencies with npm now?" Y and press return  
-* Get file notification functions from here `https://github.com/frontiere21/chat21-cloud-functions` 
-* Replace `/firebase-functions/functions/index.js` with the file downloaded to the previous step
-* Deploy your functions, run: `firebase deploy`
+* Readme: https://github.com/chat21/chat21-cloud-functions
 
 ## Create build browser ##
 * Run: `cordova platform add browser@latest`
@@ -98,10 +91,9 @@ https://firebase.google.com/docs/hosting/quickstart?authuser=0
 * Run: `firebase deploy`
 * In your firebase consol click hosting and click on link your project
 
-
 ## Run on Android and iOS
-run on simulator : ionic cordova run android
-run on device : ionic cordova run android --device
+* Run on simulator : `ionic cordova run android`
+* Run on device : `ionic cordova run android --device`
 
-run on simulator : ionic cordova run ios
-run on device : ionic cordova run ios --device
+* Run on simulator : `ionic cordova run ios`
+* Run on device : `ionic cordova run ios --device`
