@@ -13,7 +13,7 @@ import { Config } from 'ionic-angular';
 */
 @Injectable()
 export class MessagingService {
-    messaging:any;
+    messaging: firebase.messaging.Messaging;
     //private afAuth: AngularFireAuth;
     private urlNodeFirebase: string;
     private connectionsRefinstancesId: string;
@@ -53,7 +53,7 @@ export class MessagingService {
     }
 
     initMessage() {
-        this.messaging= firebase.messaging();        
+        this.messaging = firebase.messaging();        
     }
 
     getPermission() {
@@ -130,14 +130,14 @@ export class MessagingService {
         let conection = this.token;
         var updates = {};
         
-        if(this.tenant != "bppintranet" ){
-            this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instancesId/";
-            updates[this.connectionsRefinstancesId + conection] = conection;
-        }
-        else{
+        // if(this.tenant != "bppintranet" ){
+        //     this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instancesId/";
+        //     updates[this.connectionsRefinstancesId + conection] = conection;
+        // }
+        // else{
             this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instanceId/";
             updates[this.connectionsRefinstancesId] = conection;
-        }
+        //}
         firebase.database().ref().update(updates);
         //this.deviceConnectionRef = connectionsRef.push(conection);
         //this.tokenId = conection;//this.deviceConnectionRef.key;
@@ -149,22 +149,20 @@ export class MessagingService {
     removeToken() {
         console.log("rimuovo token nel db", this.token);
         let connectionsRefURL = "";
-        if(this.tenant != "bppintranet" ){
-            connectionsRefURL = this.connectionsRefinstancesId+this.token;
-        }else{
+        if(this.connectionsRefinstancesId){
             connectionsRefURL = this.connectionsRefinstancesId;
+            const connectionsRef = firebase.database().ref().child(connectionsRefURL);
+            connectionsRef.remove();
         }
-        const connectionsRef = firebase.database().ref().child(connectionsRefURL);
-        connectionsRef.remove();
     }
 
     referenceToUserListToken(userid){
-        if(this.tenant != "bppintranet" ){
+        // if(this.tenant != "bppintranet" ){
+        //     this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instancesId/";
+        // }
+        // else{
             this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instanceId/";
-        }
-        else{
-            this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instancesId/";
-        }
+        //}
         const connectionsRef = firebase.database().ref().child(this.connectionsRefinstancesId);
         return connectionsRef;
     }

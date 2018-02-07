@@ -1,14 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, NavParams, LoadingController, ViewController } from 'ionic-angular';
+import { NavController, AlertController, LoadingController, ViewController } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '../../../providers/auth-service';
-import { ListaConversazioniPage } from '../../lista-conversazioni/lista-conversazioni'
 
-/*
-  Generated class for the Resetpwd page.
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
+//provider
+import { AuthService } from '../../../providers/auth-service';
 
 @Component({
   selector: 'page-resetpwd',
@@ -16,32 +11,44 @@ import { ListaConversazioniPage } from '../../lista-conversazioni/lista-conversa
 })
 export class ResetpwdPage {
   public resetpwdForm;
-  emailChanged: boolean = false;
-  submitAttempt: boolean = false;
-  loading: any;
+  public emailChanged: boolean = false;
+  public submitAttempt: boolean = false;
+  public loading: any;
 
   constructor(public navCtrl: NavController, 
     public authService: AuthService, 
-    public navParams: NavParams, 
     public formBuilder: FormBuilder, 
     public alertCtrl: AlertController, 
     public loadingCtrl: LoadingController,
-    public viewCtrl: ViewController) {
+    public viewCtrl: ViewController
+  ) {
+  }
+  /**
+   * imposto espressione regolare per verifica email
+   * imposto il form della pagina con i campi da validare (email)
+   */
+  ngOnInit() {
     console.log("ResetpwdPage PAGE");
     let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-    this.resetpwdForm = formBuilder.group({
+    this.resetpwdForm = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.pattern(EMAIL_REGEXP)])]
     });
   }
-  ionViewDidLoad() {
-    console.log('ResetpwdPage ionViewDidLoad **************');
-  }
 
+  /**
+   * chiamato ogni volta che cambio il valore di un campo input
+   * NON ricordo a cosa serve!!!!
+   * @param input 
+   */
   elementChanged(input){
-    let field = input.inputControl.name;
+    let field = input.inputControl.firstname;
     this[field + "Changed"] = true;
   }
-
+  /**
+   * metodo chiamato dalla pagina html alla pressione del tasto 'recupera password'
+   * verifico se i campi inseriti sono corretti e procedo al recupero psw
+   * al termine dismetto loading e dismetto view
+   */
   resetPwd() {
     if (!this.resetpwdForm.valid){
       console.log(this.resetpwdForm.value);
@@ -51,8 +58,8 @@ export class ResetpwdPage {
         //this.navCtrl.setRoot(ListaConversazioniPage);
         this.loading.dismiss().then( () => {
           //dismetto la modale ricarico lista conversazioni passando user
-          this.loading.dismiss();
-          this.viewCtrl.dismiss();
+          //this.loading.dismiss();
+          this.viewCtrl.dismiss({animate: false, duration: 0});
         });
       }, error => {
         this.loading.dismiss().then( () => {
@@ -74,8 +81,10 @@ export class ResetpwdPage {
       this.loading.present();
     }
   }
-
+  /**
+   * chiudo il popup di recupero password
+   */
   goBack(){
-    this.navCtrl.pop();    
+    this.navCtrl.pop({animate: false, duration: 0});    
   }
 }

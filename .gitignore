@@ -3,3 +3,5 @@ platforms
 www
 plugins
 old
+package-lock.json
+coverage.html

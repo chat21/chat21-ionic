@@ -1,11 +1,58 @@
 
 import * as moment from 'moment/moment';
 import 'moment/locale/it.js';
+import { ARRAY_DAYS, LABEL_TODAY, LABEL_TOMORROW, LABEL_LAST_ACCESS, LABEL_TO } from './constants';
 
-
-export function funcTest2(str:string): string {
-    return "date_as_string";
+/**
+ * Shortest description  for phone and tablet
+ * Nota: eseguendo un test su desktop in realtà lo switch avviene a 921px*/
+export function windowsMatchMedia(){
+  var mq = window.matchMedia("(max-width: 1024px)");
+  if (mq.matches) {
+    console.log('window width is less than 1024px ')
+    return false;
+  } else {
+    console.log('window width is at least 1024px')
+    return true;
+  }
 }
+/**
+ * chiamata da ChatConversationsHandler
+ * restituisce url '/conversations'
+ * @param tenant 
+ */
+export function conversationsPathForUserId(tenant, userId){
+  const urlNodeConversations = '/apps/'+tenant+'/users/'+userId+'/conversations';
+  return urlNodeConversations;
+}
+/**
+ * chiamata da ChatConversationHandler
+ * restituisce url '/messages'
+ */
+export function conversationMessagesRef(tenant, userId){
+  const urlNodeMessages = '/apps/'+tenant+'/users/'+userId+'/messages/';
+  return urlNodeMessages;
+}
+/**
+ * chiamata da ChatContactsSynchronizer
+ * restituisce url '/contacts'
+ */
+export function contactsRef(tenant){
+  const urlNodeContacts = '/apps/'+tenant+'/contacts/';
+  return urlNodeContacts;
+}
+
+/**
+ * restituiso indice item nell'array con uid == key 
+ * @param items 
+ * @param key 
+ */
+export function searchIndexInArrayForUid(items, key){
+  return items.findIndex(i => i.uid === key);   
+}
+/**
+ * trasforma url contenuti nel testo passato in tag <a>
+ */
 export function urlify(text) {
   var urlRegex = /((?:(http|https|Http|Https|rtsp|Rtsp):\/\/(?:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,64}(?:\:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,25})?\@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|(?:jobs|j[emop])|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\:\d{1,5})?)(\/(?:(?:[a-zA-Z0-9\;\/\?\:\@\&\=\#\~\-\.\+\!\*\'\(\)\,\_])|(?:\%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
   return text.replace(urlRegex, function (url) {
@@ -16,63 +63,76 @@ export function urlify(text) {
     return '<a href="' + url + '" target="_blank">' + url + '</a>';
   })
 }
-
+/**
+ * rimuove il tag html dal testo
+ * ATTUALMENTE NON USATA
+ */
 export function removeHtmlTags(text) {
   return text.replace(/(<([^>]+)>)/ig,"");
 }
-
- 
+/**
+ * calcolo il tempo trascorso tra due date 
+ * e lo formatto come segue:
+ * gg/mm/aaaa; 
+ * oggi; 
+ * ieri; 
+ * giorno della settimana (lunedì, martedì, ecc)
+ */
 export function setHeaderDate(timestamp, lastDate): string {
     var date = new Date(timestamp);
     let now: Date = new Date();
     var labelDays:string = "";
-    //console.log('setHeaderDate **************',timestamp, lastDate, date, this);
+    console.log('setHeaderDate **************',timestamp, lastDate, date);
     if (now.getFullYear() != date.getFullYear()){
       labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
     } else if (now.getMonth() != date.getMonth()){
       labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
     } else if (now.getDay() == date.getDay()){
-      labelDays = "Oggi";
+      labelDays = LABEL_TODAY;
     } else if (now.getDay() - date.getDay() == 1){
-      labelDays = "Ieri";
+      labelDays = LABEL_TOMORROW;
     } else {
       labelDays = convertDayToString(date.getDay());
     }
     // se le date sono diverse o la data di riferimento non è impostata
     // ritorna la data calcolata
     // altrimenti torna null 
-    if (lastDate != labelDays || lastDate == null){
+    if (lastDate != labelDays || lastDate == null || lastDate == ''){
       return labelDays;
     } else {
       return null;
     }
   }
-
+  /**
+   * calcolo il tempo trascorso tra la data passata e adesso
+   * utilizzata per calcolare data ultimo accesso utente
+   * @param timestamp 
+   */
   export function setLastDate(timestamp): string {
     //if (this.isHeaderDate(timestamp)){
       var date = new Date(timestamp);
       let now: Date = new Date();
       var labelDays:string = "";
-      //console.log('setHeaderDate **************',timestamp, lastDate, date, this);
       if (now.getFullYear() != date.getFullYear()){
         labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
       } else if (now.getMonth() != date.getMonth()){
         labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
       } else if (now.getDay() == date.getDay()){
-        labelDays = "oggi";
+        labelDays = LABEL_TODAY;
       } else if (now.getDay() - date.getDay() == 1){
-        labelDays = "ieri";
+        labelDays = LABEL_TOMORROW;
       } else {
         labelDays = convertDayToString(date.getDay());
       }
       // aggiungo orario
       const orario = date.getHours() +":"+ date.getMinutes();
-      return "ultimo accesso " + labelDays + " alle "+orario;
+      return LABEL_LAST_ACCESS + ' ' + labelDays + ' ' + LABEL_TO + ' ' + orario;
   }
 
 
 export function convertDayToString(day){
-  let arrayDays = ['Lunedì', 'Martedì', 'Mercoledì','Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+  let arrayDays = ARRAY_DAYS;
+  //['Lunedì', 'Martedì', 'Mercoledì','Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
    return arrayDays[day];
 }
 

@@ -1,11 +1,13 @@
 page-dettaglio-conversazione {
     
         ion-navbar {
+            
             .headerUserName{
                 font-size: 12px;
                 color: #111111;
                 text-align: center;
                 cursor: pointer;
+                margin-left: -40px;
             }
             .headerLastActivity{
                 font-size: 10px;
@@ -73,8 +75,9 @@ page-dettaglio-conversazione {
             background-image: url('../assets/chat21-ionic-pattern-2.svg');
             .messageFirst{
                 text-align: center;
-                font-size: x-large;
-                margin-top: 50%;
+                font-size: 1.4em;
+                line-height: 1.6em;
+                margin-top: calc(50% - 1.6em);
             }
           }
         //status mine message
@@ -82,10 +85,12 @@ page-dettaglio-conversazione {
             float: right;
             margin-top: 5px;
             height: 100%;
-    
+            width: 15px;
             ion-icon{
                 font-size: 1.8em;
                 color: #0b5c89;
+                position: absolute;
+                bottom: 0px;
             }
             // margin-top: calc(h parent);
         }
@@ -95,7 +100,7 @@ page-dettaglio-conversazione {
             display: inline-block;
             position: relative;
             // max-width: 45vh;
-            max-width: 80%;
+            // max-width: 100%;
             border-radius: 10px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
             font-size: 14px;
@@ -112,27 +117,37 @@ page-dettaglio-conversazione {
                 .message-timestamp {
                     color: #FFFFFF;
                     font-size: 10px;
+                    padding: 0px 0px 0px 0px;
+                    margin-bottom: -3px;
                 }
                 a{
                     color: aliceblue;
                 }
             }
             &.message-other {
-                float: left;
+                float: none;
                 background-color: #d2d2d2;
                 color: black;
-                margin-left: 11px;
+                // margin-left: 11px;
                 &::before {
                     left: -11px;
                     //background-image: url(/assets/message-other.png);
                 }
                 .message-timestamp {
                     color: #666666;
+                    padding: 0px 0px 0px 0px;
+                    // display: inline-block;
+                    margin-bottom: -3px;
                 }
                 a{
                     color: #0b5c89;
                 }
             }
+
+            .message-timestamp.image{
+                // background-color: #ffffff;
+            }
+
             &.message-other::before, &.message-mine::before {
                 content: "";
                 position: absolute;
@@ -148,7 +163,7 @@ page-dettaglio-conversazione {
                 -moz-user-select: text;
                 -ms-user-select: text;
                 user-select: text;
-    
+                max-width: 450px;
                 padding: 5px 7px;
                 word-wrap: break-word;
                 &::after {
@@ -162,6 +177,14 @@ page-dettaglio-conversazione {
                 right: 7px;
                 font-size: 12px;
             }
+
+            .message-content-image{
+                border-radius: 8px 8px 4px 4px;
+                padding: 0px;
+                margin: 2px 2px 10px 2px;
+            }
+
+            
         }
         
         // single message <ng-template #contentMine>
@@ -207,6 +230,17 @@ page-dettaglio-conversazione {
                 &.right{
                     font-size: 2em;
                 }
+                &.inactive{
+                    color:rgba(11, 92, 137, 0.30)
+                }
+                &.active{
+                    color: #0b5c89;
+                }
+            }
+
+            .chat21-icon {
+                font-size: 1.4em;
+                
                 &.inactive{
                     color:rgba(11, 92, 137, 0.30)
                 }
@@ -279,5 +313,46 @@ page-dettaglio-conversazione {
         ion-footer {
             //--footer-height: 300px;
         }
+
+        .message_sender_fullname{
+            margin-top: 10px;
+            font-size: 0.8em;
+            color: #666;
+        }
         
+
+
+        // css button load
+        .chat21-textarea-button {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            /* right: 10px; */
+            bottom: 10px;
+            display: none;
+        }
+        
+        .chat21-textarea-button.active {
+            display: block;
+        }
+        #chat21-start-upload-img {
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            background-image : url("../assets/img/f21ico-photo.svg");
+            /* background-color: #999999; */
+            right: 4px;
+        }
+        
+        #chat21-start-upload-doc {
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            background-image : url("../assets/img/f21ico-attached.svg");
+            /* background-color: #999999; */
+            right: 24px;
+        }
+
+
+
     }

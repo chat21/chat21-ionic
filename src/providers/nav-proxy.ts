@@ -52,7 +52,15 @@ export class NavProxyService {
         this.masterNav.setRoot(page, params);
     }
 
+    /**
+     * ATTENZIONE NN SO A COSA SERVE!!!
+     * DA VERIFICARE
+     * su firefox nn scompare il placeholder screen
+     * @param isOn 
+     */
     onSplitPaneChanged(isOn) {
+        //isOn = true;
+        console.log("-----------> onSplitPaneChanged <----------",this.isOn);
         // set local 'isOn' flag...
         this.isOn = isOn;
         // if the nav controllers have been instantiated...
@@ -76,6 +84,9 @@ export class NavProxyService {
      }
     deactivateSplitView() {
         let detailView = this.detailNav.getActive();
+        if(!detailView){
+            return;
+        }
         this.detailNav.setRoot(PlaceholderPage);
         if (detailView.component.prototype instanceof _DetailPage) {
             // if the current detail view is a 'Detail' page...

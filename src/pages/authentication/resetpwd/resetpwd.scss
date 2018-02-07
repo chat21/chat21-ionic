@@ -4,6 +4,8 @@ page-resetpwd {
     }
     .scroll-content{
         margin-top: 16px!important;
+        // padding-bottom: 16px!important;
+        padding: 0px!important;
     }
     h2 {
         text-align: center;
@@ -12,11 +14,11 @@ page-resetpwd {
     form {
         margin-bottom: 20px;
         button {
-        margin-top: 20px !important;
+            margin-top: 20px !important;
         }
         p {
-        font-style: italic;
-        color: red;
+            font-style: italic;
+            color: red;
         }
     }
 
@@ -41,21 +43,20 @@ page-resetpwd {
     .div-error-message {
         min-height: 30px;
         .error-message {
-        max-height: 24px;
+            max-height: 24px;
         }
         .item-inner {
-        border-bottom: 0 !important;
+            border-bottom: 0 !important;
         }
         .item-md p {
-        font-size: 1.1rem;
+            font-size: 1.1rem;
         }
     }
 
     .sample-modal-page {
-        background: rgba(0,0,0,0.0);
+        background: rgba(0,0,0,0.5);
         height: 100%;
         padding: 46px;
-
         .scroll-content{
             margin-top: 36px!important;
             // padding: 56px 26px 26px 26px !important;
@@ -79,23 +80,22 @@ page-resetpwd {
             padding: 0px 10px 0px 10px;
         }
         button{
-            max-width: 50%;
+            width: 100%;
             background-color: #FFFFFF !important;
             height: 34px;
-            margin-bottom: 15px;
+            margin: 0px 20px 15px 20px;
+            width: calc(100% - 40px);
             border-radius: 8px;
             font-size: small;
             color:rgb(39, 62, 83);
-        }
-        button.full{
-            max-width: 50%;
+          }
+          button.full{
             background-color: rgb(39, 62, 83) !important;
             height: 34px;
-            margin-bottom: 15px;
             border-radius: 8px;
             font-size: small;
             color:#FFFFFF;
-        }
+          }
     }
 }
 

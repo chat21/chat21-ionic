@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { Config, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UploadModel } from '../../models/upload';
 import { UploadService } from '../../providers/upload-service/upload-service';
 
@@ -71,10 +71,6 @@ export class UpdateImageProfilePage {
   uploadSingle() {
     var send_order_btn = <HTMLInputElement>document.getElementById("start-upload");
     send_order_btn.disabled = true;
-
-    function func(obj:Object): void {
-      // do something
-    }
     let file = this.selectedFiles.item(0)
     this.currentUpload = new UploadModel(file);
     this.upSvc.pushUpload(this.currentUpload)

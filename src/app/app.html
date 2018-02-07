@@ -1,7 +1,7 @@
 <!--<ion-split-pane>
 
  <ion-nav [root]="rootPage" #content main swipeBackEnabled="false"></ion-nav>
- <!-- <ion-menu [content]="content">
+  <ion-menu [content]="content">
 
     <ion-header>
       <ion-toolbar>
@@ -23,7 +23,23 @@
 </ion-split-pane>-->
 
 
-<ion-split-pane (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
-    <ion-nav [root]="masterPage" #masterNav></ion-nav>
-    <ion-nav [root]="detailPage" #detailNav main></ion-nav>
-</ion-split-pane>
+
+<ion-header *ngIf="isNavBar">
+  <ion-navbar text-right>
+      <a style = "padding: 8px" href="#" onclick="window.open('http://support.chat21.org/dashboard/', '_system');">pannello</a>
+     
+      <!-- <button float-right ion-button icon-end (click)="window.open('http://support.chat21.org/dashboard/', '_blank');">
+        <ion-icon name="star"></ion-icon>
+      </button> -->
+    <!-- <ion-title>Page1</ion-title> -->
+    <!-- <iframe src="http://support.chat21.org/dashboard/" width="100%" height="40px" ></iframe> -->
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-split-pane (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
+        <ion-nav [root]="masterPage" #masterNav></ion-nav>
+        <ion-nav [root]="detailPage" #detailNav main></ion-nav>
+    </ion-split-pane>
+</ion-content>
+

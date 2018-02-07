@@ -1,4 +1,3 @@
-
 page-login {
   ion-title {
     text-align: center;
@@ -11,7 +10,6 @@ page-login {
   form {
     margin-bottom: 20px;
     padding: 0px 10px 0px 10px;
-
     button {
       margin-top: 20px !important;
     }
@@ -20,15 +18,12 @@ page-login {
       color: red;
     }
   }
-
   .invalid {
     border-bottom: 1px solid #FF6153;
   }
-
   .item-block{
     min-height: auto;
   }
-
   .item-md {
     font-size: 1.3rem;
   }
@@ -38,10 +33,8 @@ page-login {
   .item-md.item-input .item-inner{
     border-bottom: 0px!important;
   }
-  
   .div-error-message {
     min-height: 30px;
-
     .error-message {
       max-height: 24px;
     }
@@ -54,13 +47,13 @@ page-login {
   }
 
   .sample-modal-page {
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.0);
     height: 100%;
     padding: 46px;
     
     .scroll-content{
       margin-top: 36px!important;
-      // padding: 56px 26px 26px 26px !important;
+      padding: 0px!important;
     }
 
   }
@@ -90,29 +83,28 @@ page-login {
     } 
     
     .item-input ion-input, .item-input ion-textarea {
-      background-color: rgba(204, 204, 204, 0.10);
+      background-color: rgba(204, 204, 204, 0.40);
       //border-bottom: 1px solid #cccccc;
     }
     .item-md.item-block .item-inner {
       padding-right: 0px;
     }
     .text-input{
-      padding: 8px 10px 8px 10px;
+      padding: 4px 0px 4px 0px;
     }
     button{
-      max-width: 70%;
+      width: 100%;
       background-color: #FFFFFF !important;
       height: 34px;
-      margin-bottom: 15px;
+      margin: 0px 20px 15px 20px;
+      width: calc(100% - 40px);
       border-radius: 8px;
       font-size: small;
       color:rgb(39, 62, 83);
     }
     button.full{
-      max-width: 70%;
       background-color: rgb(39, 62, 83) !important;
       height: 34px;
-      margin-bottom: 15px;
       border-radius: 8px;
       font-size: small;
       color:#FFFFFF;

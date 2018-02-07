@@ -1,23 +1,7 @@
-import { Component, NgZone } from '@angular/core';
-import { PopoverController, IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-
-import { Subscription } from 'rxjs/Subscription';
-import { Config, Events } from 'ionic-angular';
-
-// firebase
-import * as firebase from 'firebase/app';
-
+import { Component } from '@angular/core';
+import { Events, PopoverController, IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 // models
 import { ConversationModel } from '../../models/conversation';
-import { UserModel } from '../../models/user';
-
-// providers
-import { NavProxyService } from '../../providers/nav-proxy';
-import { AuthService } from '../../providers/auth-service';
-import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
-import { MessagingService } from '../../providers/messaging-service';
-import { ConversationProvider } from '../../providers/conversation/conversation';
-
 // pages
 import { LoginPage } from '../authentication/login/login';
 import { PlaceholderPage } from '../placeholder/placeholder';
@@ -26,400 +10,346 @@ import { UsersPage } from '../users/users';
 import { _MasterPage } from '../_MasterPage';
 import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
-
 // utils
-import { getFromNow, compareValues } from '../../utils/utils';
-import { BCK_COLOR_CONVERSATION_SELECTED, BCK_COLOR_CONVERSATION_UNSELECTED } from '../../utils/constants';
-
-
-// 
+import { compareValues, windowsMatchMedia, searchIndexInArrayForUid } from '../../utils/utils';
+import { LABEL_MSG_PUSH_START_CHAT, LABEL_MSG_START_CHAT } from '../../utils/constants';
+// services
+import { ChatManager } from '../../providers/chat-manager/chat-manager';
+import { NavProxyService } from '../../providers/nav-proxy';
 import { UserService } from '../../providers/user/user';
-import { DatabaseProvider } from './../../providers/database/database';
-import { FirebaseProvider } from './../../providers/firebase-provider';
+import { ChatConversationsHandler} from '../../providers/chat-conversations-handler';
+import { DatabaseProvider } from '../../providers/database/database';
+import { queryDef } from '@angular/core/src/view/query';
 
-import { UploadService } from '../../providers/upload-service/upload-service';
-import { MessageProvider } from '../../providers/message/message';
-
-//import { FileChooser, FilePath, File } from 'ionic-native/file-chooser';
-
-/**
- * Generated class for the ListaConversazioniPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
 @IonicPage()
 @Component({
   selector: 'page-lista-conversazioni',
   templateUrl: 'lista-conversazioni.html',
 })
 export class ListaConversazioniPage extends _MasterPage {
-
-  private conversations: Array<any> = [];
-  private subscription: Subscription;
-  private currentUser: firebase.User;
-  private style_message_welcome: boolean;
-  private conversationId: string;
-  private bck_color_selected: string;
-  private bck_color_unselected:string;
-
-  public tenant: string;
-  //public users: AngularFireList<any>;
-  public currentUserDetail: UserModel;
-  private contacts: any;
-  //private firstAcces: boolean;
-
-  nativepath: any;
-  firestore = firebase.storage();
-  imgsource: any;
+  private conversations: Array<ConversationModel> = [];
+  private conversationWith: string;
   private uidReciverFromUrl: string;
+  //private uidLastOpenConversation: string;
+  private conversationsHandler: ChatConversationsHandler;
+  private uidConvSelected: string;
+
+  // private updatingMessageList: boolean;
+  // in html
+  public LABEL_MSG_START_CHAT = LABEL_MSG_START_CHAT;
+  public LABEL_MSG_PUSH_START_CHAT = LABEL_MSG_PUSH_START_CHAT;
 
   constructor(
     public popoverCtrl: PopoverController,
     public modalCtrl: ModalController,
     public navCtrl: NavController,
     public navParams: NavParams,
-    //public afAuth: AngularFireAuth,
     public navProxy: NavProxyService,
-    public authService: AuthService,
-    public chatPresenceHandler: ChatPresenceHandler,
-    public msgService: MessagingService,
-    public conversationProvider: ConversationProvider,
     public userService: UserService,
-    public databaseprovider: DatabaseProvider,
-    //public db: AngularFireDatabase,
-    config: Config,
-    private firebaseProvider: FirebaseProvider,
+    public chatConversationsHandler: ChatConversationsHandler,
     public events: Events,
-    public upSvc: UploadService,
-    public zone: NgZone,
-    public messageProvider: MessageProvider
+    public chatManager: ChatManager,
+    public databaseProvider: DatabaseProvider
   ) {
     super();
-
-    // recupero id recipient passato nell'url della pg
-    this.uidReciverFromUrl = location.search.split('recipient=')[1];
-   
+    // RECUPERO ID CONVERSAZIONE
     // se vengo da dettaglio conversazione
-    // o da users con conversazione attiva recupero conversationId
-    this.conversationId = navParams.get('conversationId');
-    events.subscribe('setConversationSelected:change', (nwId) => {
-      this.filterConversationsForSetSelected(nwId);
-    });
-    //this.firstAcces = true;
-
-    this.bck_color_selected = BCK_COLOR_CONVERSATION_SELECTED;
-    this.bck_color_unselected = BCK_COLOR_CONVERSATION_UNSELECTED;
-
-    let appConfig = config.get("appConfig");
-    this.tenant = appConfig.tenant;
-
-
-    // apro il db e recupero timestamp ultimo aggiornamento
-    var that = this;
-    this.databaseprovider.getTimestamp()
-    .then(function(lastUpdate) { 
-      console.log("lastUpdate:", lastUpdate);
-      that.firebaseProvider.loadFirebaseContactsData(lastUpdate);
-    });
-    
-    
-
-  }
-
-  ngOnInit() {
-    //verifico se esiste un user e rimango in attesa se cambia lo stato
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) {
-        console.log(" this.user::: KOoooooooooooooo");
-        // apro la pagina login
-        let profileModal = this.modalCtrl.create(LoginPage, null, { enableBackdropDismiss: false });
-        profileModal.present();
-      } else {
-        console.log(" this.user::: OK");
-        this.currentUser = user;
-        // setto utente corrente recuperando il dettaglio
-        this.userService.setCurrentUserDetails(user.uid, user.email);
-        // setto utente connesso
-        this.setupMyPresence();
-        // imposto token
-        this.setToken(user);
-        // carico conversazioni
-        this.loadListConversations();
-      }
-    });
-  }
-
-  ///// start eventi pagina ////
-  onPageWillLeave() {
-    this.subscription.unsubscribe();
-    //this.events.unsubscribe('user:loggedin', this.loginHandler);
-  }
-  ///// end eventi pagina ////
-
-  ///// start gestione presence ////
-  setupMyPresence() {
-    this.chatPresenceHandler.setupMyPresence()
-  }
-  ///// end gestione presence ////
-
-  ///// start gestione token ////
-  setToken(user) {
-    //salvo il token nel db
-    console.log("setToken::: ", user);
-    this.msgService.getToken(user);
-  }
-  removeToken() {
-    //rimuovo il token dal db
-    console.log("removeToken::: ");
-    this.msgService.removeToken();
-  }
-  //// end gestione token ////
-
-
-  //// start gestione conversazioni ////
-  loadListConversations() {
-
-    if ( this.uidReciverFromUrl ){ //&&  this.uidReciverFromUrl=="QkTk3zJUGIW7XWmqUv29p6DeHR32"
-      console.log("location.search::::::::::::: ", this.uidReciverFromUrl, location.search);
-      let uidSender = firebase.auth().currentUser.uid;
-      //creo idConversazione
-      this.conversationId = this.messageProvider.createConversationId(uidSender,  this.uidReciverFromUrl);
-      console.log("this.conversationId::::::::::::: ", this.conversationId);
+    // o da users con conversazione attiva recupero conversationWith
+    this.conversationWith = navParams.get('conversationWith');
+    this.uidReciverFromUrl = location.search.split('recipient=')[1];
+    console.log('location.search: ',  this.uidReciverFromUrl);
+    // this.updatingMessageList = false;
+    if(this.uidReciverFromUrl){
+      //that.uidLastOpenConversation = that.uidReciverFromUrl;
+      //this.uidConvSelected = this.uidReciverFromUrl;
+      //this.uidReciverFromUrl = null;
     }
 
-    console.log("loadListConversations::");
-    let that = this;
-    const items = this.conversationProvider.loadListConversations();
-    items.on("value", function(snapshot) {
-      that.conversations = [];
-      snapshot.forEach(function(data) {
-        let item = data.val();
-        console.log(":::item:::", that.conversationId, data.key, item.recipient);
-        let selected: boolean;
-        // se conversationId è null significa che sto iniziando una nw conversazione
-        // se vengo da dettaglio_conversazione; seleziono la conversazione cliccata se esiste
-        //(data.key == that.conversationId)?selected = true:selected = false;
-        if(data.key == that.conversationId){
-          selected = true;
-          item.status = 2;
-        } else {
-          selected = false;
+    /** SUBSCRIBE USER LOGGED
+     * sul LOGIN:
+     * 1 - dismetto modale login se è visibile
+     * 2 - carico elenco conversazioni
+     * sul LOGOUT
+     * 1 - aggiungo placeholder alla pg delle conversazioni
+     * 2 - resetto array conversazioni 
+     * 3 - visualizzo la pg di login
+     * 4 - resetto conversationWith
+    */
+    const profileModal = this.modalCtrl.create(LoginPage, null, { enableBackdropDismiss: false });
+    this.events.subscribe('loggedUser:login', user => {
+      console.log('************** LOGGED currentUser:', user);
+      profileModal.dismiss({animate: false, duration: 0})
+      const that = this;
+      this.loadListConversations();
+      // se dopo 1 sec nn ci sono conversazioni carico placeholder
+      setTimeout(function(){
+        console.log('************** that.conversations.length:', that.conversations.length);
+        if(that.conversations.length <= 0){
+          that.navProxy.pushDetail(PlaceholderPage,{});
         }
-        const conversation = new ConversationModel(
-          data.key,
-          item.recipient,
-          item.convers_with_fullname,
-          item.is_new,
-          item.last_message_text,
-          item.sender,
-          item.sender_fullname,
-          item.status,
-          item.timestamp, 
-          selected
-        );
-        //this.messageProvider.setStatusConversation(conversation);
-        that.conversations.push(conversation);
-         // carico immagine profilo
-         //let idImage = (item.sender != that.currentUser.uid)?item.sender:item.convers_with;
-         //let urlImage = urlImagesNodeFirebase+idImage+"-imageProfile.jpg";
-         that.displayImage(data.key,item.recipient);
-      });
-      //ordino array conversazioni ultima in testa
-      that.conversations.reverse(); 
-      //visualizzo div content_message_welcome
-      that.style_message_welcome = true;
-      // se ci sono conversazioni e non esiste una conversazione selezionata
-      // (primo accesso alla pagina), imposto la prima come conversazione attiva
-      if(that.conversations.length>0 && !that.conversationId){//} && this.firstAcces == true){
-        that.conversationId = that.conversations[0].uid;
-        that.goToConversationDetail(that.conversationId, that.conversations[0].recipient, that.conversations[0].sender);
-        //this.firstAcces = false;
-      }
-      else if (that.conversationId && that.uidReciverFromUrl){
-        that.goToConversationDetail(that.conversationId, that.uidReciverFromUrl, firebase.auth().currentUser.uid);
-        that.uidReciverFromUrl = null;
-      }
+      }, 1000);
       
     });
-  }
-
-  //filtro le conversazioni selezionando quella attiva
-  filterConversationsForSetSelected(nwId){
-    let oldId = this.conversationId;
-    //console.log("this.conversations",this.conversations);
-    this.conversations.filter(function(item){
-      if(item.uid == nwId){
-        item.selected = true;
-      }
-      else if(item.uid == oldId){
-        item.selected = false;
-      }
+    this.events.subscribe('loggedUser:logout', user => {
+      console.log('************** NN LOGGED currentUser:', user);
+      this.navProxy.pushDetail(PlaceholderPage,{});
+      this.conversations = [];
+      //const profileModal = this.modalCtrl.create(LoginPage, null, { enableBackdropDismiss: false });
+      profileModal.present();
+      this.conversationWith = null;
     });
-    this.conversationId = nwId;
+
+    /** SUBSCRIBE CONVERSATIONS LIST
+     * sottosrcizione all'elenco delle conversazioni 
+     * l'eleco viene aggiornato ogni volta che viene aggiunta una nuova connversazione
+     * la nuova conversazione viene aggiunta come primo elemento dell'array in posizione 0
+     * apro la pagina della conversazione
+     */
+    this.events.subscribe('conversations:added', (conversation) => {
+      console.log('************** conversations added:', conversation);
+      this.conversations.splice(0, 0, conversation);
+      //this.conversations = conversations;
+      this.goToconversationMessageList(conversation.uid);
+    });
+    this.events.subscribe('conversations:changed', conversation => {
+      const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
+      console.log("child_changed", index);
+      if(this.uidConvSelected == conversation.uid){
+        conversation.status = '0';
+        conversation.selected = true;
+      }
+      this.conversations.splice(index, 1, conversation);
+      this.conversations.sort(compareValues('timestamp', 'desc'));
+      // se la conversazione cambiata è la conversazione aperta imposto status a 0 (visto)
+      // console.log('************** conversations changed:', conversations, this.uidConvSelected);
+      // if(this.uidConvSelected == uid){
+      //   var conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+      //   conversationSelected.status = '0';
+      //   conversationSelected.selected = true;
+      // }
+      // this.conversations = conversations;
+    });
+
+    this.events.subscribe('uidConvSelected:changed', uidConvSelected => {
+      console.log('************** uidConvSelected:changed:', uidConvSelected);
+      // SE E' DIVERSO DA this.uidConvSelected
+      // 1 - cerco conv con id == this.uidConvSelected e imposto select a FALSE
+      // 2 - cerco conv con id == nw uidConvSelected se esiste:  
+      // 2.1 - imposto status a 0 come letto
+      // 2.2 - seleziono conv selected == TRUE
+      // 2.3 - imposto nw uidConvSelected come this.uidConvSelected
+      // 2.4 - apro conv
+      // 3 salvo id conv nello storage
+      this.openMessageList(uidConvSelected);
+    });
+
   }
-  //// end gestione conversazioni ////
+  /**
+   * 
+   */
+  ngOnInit() {
+    //console.log('ngOnInit');
+    //this.initialize();
+  }
+
+  /**
+   * imposto i subscribe sul logini/logout e su conversations
+   */
+  initialize(){
+    //console.log('**************initialize: LOG',this.events);
+  }
 
 
-  //// start funzioni invocate dalla pg html ////
-  // richiamo la pg di ricerca users
-  listUsers(event) {
+  openMessageList(uidConvSelected){
+    console.log('************** openMessageList ********************', uidConvSelected);
+    if(uidConvSelected == this.uidConvSelected && windowsMatchMedia()){
+      return
+    }
+    this.uidConvSelected = uidConvSelected;
+
+
+    var conversationSelected = this.conversations.find(item => item.uid === uidConvSelected);
+    if(conversationSelected){
+      conversationSelected.status = '0';
+      conversationSelected.selected = true;
+      this.navProxy.pushDetail(DettaglioConversazionePage, {
+        conversationWith: uidConvSelected,
+        conversationWithFullname: conversationSelected.conversation_with_fullname,
+        channel_type: conversationSelected.channel_type
+      });
+      this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
+    }
+
+    // var oldConversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+    // if(oldConversationSelected){
+    //   oldConversationSelected.selected = false;
+    // }
+    
+    this.conversationWith = uidConvSelected;
+    // this.uidConvSelected = uidConvSelected;
+  }
+  /**
+  * 1 - salvo in memoria uid ultima conversazione aperta
+  * 2 - cerco conv selezionata
+  * 3 - cerco precedente conv attiva
+  * 4 - cambio stato conversazione a letto
+  * 5 - se non c'è una conv attiva oppure esiste ma è diversa da quella selezionata
+  *   - imposto la nuova conv attiva
+  *   - arico l'elenco dei messaggi della conversazione nella navProxy
+  *   - imposto conversationWith con uid conversazione selezionata
+  */
+  // openMessageListOld(uidConvSelected){
+  //   // imposto id conv selezionata
+  //   this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
+  //   this.uidLastOpenConversation = uidConvSelected;
+
+  //   var conversationSelected = this.conversations.find(item => item.uid === uidConvSelected);
+  //   var conversationOldSelected = this.conversations.find(item => item.selected === true);
+  //   conversationSelected.status = '0';
+
+  //   this.conversationsHandler.setConversationSelected(uidConvSelected);
+  //   console.log('openMessageList -> uidConvSelected: ' + conversationOldSelected, uidConvSelected, conversationSelected);
+  //   if(!conversationOldSelected || (conversationOldSelected && conversationOldSelected.uid !== uidConvSelected)){
+  //     this.navProxy.pushDetail(DettaglioConversazionePage, {
+  //       conversationWith: uidConvSelected,
+  //       conversationWithFullname: conversationSelected.conversation_with_fullname
+  //     });
+  //     this.conversationWith = uidConvSelected;
+  //   }
+  // }
+
+  /**
+  * START GESTIONE CONVERSAZIONI
+  * carico elenco conversazioni  
+  * (al caricamento delle conversazioni -> PUBLIC conversations:update)
+  * inizializzo l'handler delle conversazioni
+  */
+  loadListConversations() {
+    const that = this;
+    this.databaseProvider.getUidLastOpenConversation()
+    .then(function(uid) { 
+      console.log('getUidLastOpenConversation ::' + uid);
+      if(that.uidReciverFromUrl){
+        that.uidConvSelected = that.uidReciverFromUrl;
+        that.uidReciverFromUrl = null;
+      }
+      else if(uid){
+        that.uidConvSelected = uid;
+      }
+      that.initConversationsHandler();
+    });
+  }
+
+  /**
+   * se non esiste un handler delle conversazioni ne creo uno nuovo
+   * lo salvo in chatmanager
+   * e mi sottoscrivo al nodo (connect)
+   * inizializzo la pagina
+   */
+  initConversationsHandler() {
+    console.log('initConversationsHandler ::');
+    const tenant = this.chatManager.getTenant();
+    const loggedUser = this.chatManager.getLoggedUser();
+    let handler = this.chatManager.conversationsHandler;
+    
+    if (!handler) {
+      console.log('handler NON ESISTE ::');
+      handler = this.chatConversationsHandler.initWithTenant(tenant,loggedUser);
+      this.chatManager.setConversationsHandler(handler);
+      handler.connect();
+      this.conversationsHandler = handler;
+    } else {
+      console.log('handler ESISTE ::', handler);
+      //this.chatManager.setConversationsHandler(handler);
+      //handler.delegateView = self;
+      this.conversationsHandler = handler;
+    }
+  }
+  /**
+  * metodo richiamato ogni volta che viene aggiunta una nuova conversazione
+  * 1 - recupero uid conversazione da aprire passato nell'url ( se esiste )
+  * 2 - cerco nell'array conversazioni se esiste una con uid uguale a uid conversazione selezionata
+  * 2.1 - ESISTE: apro pagina elenco messaggi
+  * 2.2 - NON ESISTE: apro pagina wellcome    
+  */
+  goToconversationMessageList(uid){
+    // se uid == this.uidConvSelected
+    console.log('goToconversationMessageList ::', uid);
+    if(uid ==  this.uidConvSelected){
+      var conversationSelected = this.conversations.find(item => item.uid === uid);
+      if(conversationSelected){
+        conversationSelected.status = '0';
+        conversationSelected.selected = true;
+        this.navProxy.pushDetail(DettaglioConversazionePage, {
+          conversationWith: uid,
+          conversationWithFullname: conversationSelected.conversation_with_fullname,
+          channel_type: conversationSelected.channel_type
+        });
+      } 
+    }
+    
+
+    //const that = this;
+    
+    ///const conversationSelected = this.conversations.find(item => item.uid === that.uidLastOpenConversation);
+    //const isExists = this.conversations.find(i => i.uid === that.uidConvSelected); 
+    // var conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+    // if(conversationSelected){
+    //   conversationSelected.selected = true;
+      //this.openMessageList(uid);
+    // } else{
+    //   this.styleMessageWelcome = true;
+    // }
+    //console.log('responseSearch -> ', conversationSelected, this.uidConvSelected); 
+    // if (isExists){
+    //   that.openMessageList(that.uidConvSelected);
+    // }
+    // else {
+    //   that.styleMessageWelcome = true;
+    // }
+  }
+  
+
+  /**
+  * apro pagina elenco users 
+  * metodo richiamato da html 
+  */
+  openUsersList(event) {
     //this.navCtrl.setRoot(UsersPage);
     this.navCtrl.push(UsersPage, {
       contacts: ""
     });
   }
-
-  // apro la pg di dettaglio conversazione
-  goToConversationDetail(convId: string, recipient: string, sender: string) {
-    let convers_with = recipient;
-    if (convers_with == firebase.auth().currentUser.uid){
-      convers_with = sender;
-    }
-    console.log('goToConversationDetail:: ', convId, convers_with);
-    
-    // evidenzio conversazione selezionata recuperando id conversazione da event
-    this.filterConversationsForSetSelected(convId);
-    this.navProxy.pushDetail(DettaglioConversazionePage, {
-      convers_with: convers_with,
-      conversationId: this.conversationId
-    });
-  }
-
-  // apro conversazione con utente passato nella url della pg
-  goToConversationDetailFromLocationSearch() {
-
-    let uidReciver = location.search.split('recipient=')[1];
-    console.log("location.search::::::::::::: ",uidReciver, location.search);
-    if ( uidReciver && uidReciver=="QkTk3zJUGIW7XWmqUv29p6DeHR32"){
-
-    }
-
-    console.log('**************** goToChat uidReciver:: ',uidReciver);
-    // recupero current user id
-    let uidSender = firebase.auth().currentUser.uid;
-    //creo idConversazione
-    let conversationId = this.messageProvider.createConversationId(uidSender, uidReciver);
-    
-    // controllo se esiste il nodo conversazione
-    let that = this;
-    //let isNewConversation = 
-    this.messageProvider.ifConversationExist()
-    .then(function(snapshot) {
-      console.log("ifConversationExist?: " + snapshot + " --> "+snapshot.hasChild(conversationId));
-      if (!snapshot.hasChild(conversationId)) {
-        // se esiste imposto array messaggi
-        //conversationId = null;
-      }
-      that.navCtrl.setRoot(ListaConversazioniPage, {conversationId});
-
-      this.navProxy.pushDetail(DettaglioConversazionePage, {
-        uidReciver: uidReciver,
-        conversationId: this.conversationId
-      });
-    })
-    .catch(function (error) {
-      console.log("ifConversationExist failed: " + error.message);
-    });
-  }
-
-  // formatto data ultimo messaggio
-  getTimeLastMessage(timestamp: string) {
-    let timestampNumber = parseInt(timestamp) / 1000;
-    let time = getFromNow(timestampNumber);
-    return time;
-  }
-  //// end funzioni invocate dalla pg html ////
-
-  //// start gestione menu opzioni ////
-  // apro menu opzioni //
+  /**
+  * apro il menu delle opzioni 
+  * (metodo richiamato da html) 
+  * alla chiusura controllo su quale opzione ho premuto e attivo l'azione corrispondete
+  */
   presentPopover(event) {
     let popover = this.popoverCtrl.create(PopoverPage);
     popover.present({
       ev: event
     });
     popover.onDidDismiss((data: string) => {
-      //alert("popover.onDidDismiss: "+data);
       console.log(" ********* data::: ", data);
       if (data == 'logOut') {
         this.logOut();
       }
       else if (data == 'ProfilePage') {
-        if(this.userService.getCurrentUserDetails()){
+        if(this.chatManager.getLoggedUser()){
           this.navCtrl.push(ProfilePage);
         }
       }
     });
   }
-  //// end gestione menu opzioni ////
-
-  ///// start gestione logout ////
+  /**
+   * modulo richiamato se premo su logout
+   * 1 - aggiungo placeholderPage 
+   * 2 - richiamo il logout di firebase
+   */
   logOut() {
-    // resetto pagina dettaglio conversazioni
-    this.navProxy.pushDetail(PlaceholderPage,{});
-    let that = this;
-    this.authService.logoutUser()
-      .then(function () {
-        console.log("logout succeess.")
-        // resetto le conversazioni
-        that.conversations = [];
-        // mi cancello dal nodo precence
-        that.chatPresenceHandler.goOffline();
-        // rimuovo il token prima del logout altrimenti non ho più i permessi
-        that.removeToken();
-    
-      })
-      .catch(function (error) {
-        console.log("logout failed: " + error.message)
-      });
+    //this.navProxy.pushDetail(PlaceholderPage,{});
+    this.userService.logoutUser();
   }
-  ///// end gestione logout ////
-
-  displayImage(key,uidContact){
-    this.upSvc.display(uidContact)
-    .then((url) => {
-      this.zone.run(() => {
-        // aggiorno url image in that.conversations
-        let index = this.conversations.findIndex(i => i.uid === key);
-        console.log("URL333::: ",this.conversations, uidContact, index);
-        this.conversations[index].image = url;
-      });
-    })
-    .catch((error)=>{
-      console.log("error::: ",error);
-    });
-  }
- 
-
-  // store() {
-  //   FileChooser.open().then((url) => {
-  //     (<any>window).FilePath.resolveNativePath(url, (result) => {
-  //       this.nativepath = result;
-  //       this.uploadimage();
-  //     }
-  //     )
-  //   })
-  // }
- 
-  // uploadimage() {
-  //   (<any>window).resolveLocalFileSystemURL(this.nativepath, (res) => {
-  //     res.file((resFile) => {
-  //       var reader = new FileReader();
-  //       reader.readAsArrayBuffer(resFile);
-  //       reader.onloadend = (evt: any) => {
-  //         var imgBlob = new Blob([evt.target.result], { type: 'image/jpeg' });
-  //         var imageStore = this.firestore.ref().child('image');
-  //         imageStore.put(imgBlob).then((res) => {
-  //           alert('Upload Success');
-  //         }).catch((err) => {
-  //           alert('Upload Failed' + err);
-  //         })
-  //       }
-  //     })
-  //   })
-  // }
- 
   
-
-
 }

@@ -4,12 +4,12 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-
 <ion-header>
-    
-
   <ion-navbar hideBackButton>
-    <ion-title>{{currentUserDetail.fullname}}</ion-title>
+    <ion-title>
+      <div *ngIf="profileYourself">{{currentUserDetail.fullname}}</div>
+      <div *ngIf="!profileYourself">{{userDetail.fullname}}</div>
+    </ion-title>
     <ion-buttons left>
       <button ion-button icon-only (click)="goBack()">
         <ion-icon name="close"></ion-icon>
@@ -19,11 +19,9 @@
 </ion-header>
       
 <ion-content padding class="speaker-detail">
-
   <div text-center>
-    <img src="{{this.currentUserDetail.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';">
-    
-    
+    <img class="clip-circle" *ngIf="profileYourself" src="{{this.currentUserDetail.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';">
+    <img class="clip-circle" *ngIf="!profileYourself" src="{{this.userDetail.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';">
     <!-- <button ion-button icon-only clear small color="twitter">
       <ion-icon name="logo-twitter"></ion-icon>
     </button>
@@ -33,18 +31,22 @@
     <button ion-button icon-only clear small color="instagram">
       <ion-icon name="logo-instagram"></ion-icon>
     </button> -->
- 
     <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
       <ion-icon name="create"></ion-icon>
     </button>
-
   </div>
-  <div class="uid-contact">{{currentUserDetail.uid}}</div>
-  <ion-item detail-push>
-      {{currentUserDetail.fullname}}
+
+
+  <div class="uid-contact">
+    <div *ngIf="profileYourself">{{currentUserDetail.uid}}</div>
+    <div *ngIf="!profileYourself">{{userDetail.uid}}</div>
+  </div>
+  <ion-item detail-push class="fullname">
+      <div *ngIf="profileYourself" >{{currentUserDetail.fullname}}</div>
+      <div *ngIf="!profileYourself">{{userDetail.fullname}}</div>
   </ion-item>
   <ion-item detail-push *ngIf="profileYourself">
-      email: {{currentUserDetail.email}}
+    <div class="email">email: {{currentUserDetail.email}}</div>
   </ion-item>
 
       <!-- <label>

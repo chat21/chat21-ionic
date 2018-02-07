@@ -1,29 +1,23 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavParams, Content, Events, NavController } from 'ionic-angular';
-
-// firebase
-import * as firebase from 'firebase/app';
-
+import { Platform, ActionSheetController, IonicPage, NavParams, Content, Events, NavController } from 'ionic-angular';
+//import { Subscription } from 'rxjs/Subscription';
 // models
 import { UserModel } from '../../models/user';
 import { MessageModel } from '../../models/message';
-
-// providers
+import { UploadModel } from '../../models/upload';
+// services 
 import { UserService } from '../../providers/user/user';
-import { MessageProvider } from '../../providers/message/message';
 import { NavProxyService } from '../../providers/nav-proxy';
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
-
+import { ChatManager } from '../../providers/chat-manager/chat-manager';
+import { UploadService } from '../../providers/upload-service/upload-service';
 // pages
 import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
-
 // utils
-import { urlify, setLastDate, setHeaderDate } from '../../utils/utils';
-import { PARENT_PAGE_DETAIL_CONVERSATION, MIN_HEIGHT_TEXTAREA, MSG_STATUS_FAILED,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RECEIVED, MSG_STATUS_SEEN } from '../../utils/constants';
+import { MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, LABEL_NO_MSG_HERE, LABEL_ACTIVE_NOW, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
 
-// directives
-import { AutosizeDirective } from '../../directives/autosize/autosize';
+import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 
 
 @IonicPage()
@@ -36,253 +30,256 @@ export class DettaglioConversazionePage extends _DetailPage{
   @ViewChild('messageTextArea') messageTextArea: ElementRef;
   //@ViewChild('messageTextArea') messageTextArea: ElementRef;   
 
+  private tenant: string;
+  private conversationHandler: ChatConversationHandler;
   private scrollDirection: any = 'bottom';
-  private firebaseMessages;
   private messages: Array<MessageModel> = [];
-  private conversationId: string;
-  private uidSender: string;
-  private uidReciver: string;
-  private currentUser: UserModel;
-  private userRecipient: UserModel;
+  private arrayLocalImmages:  Array<any> = [];
+
+  private conversationWith: string;
+  private currentUserDetail: UserModel;
+  private conversationWithFullname: string;
+  private channel_type: string;
   private online: boolean;
   private lastConnectionDate: string;
   private messageString: string;
   private style_message_welcome: boolean;
-  private userFirebase: any;
-  private subscriptionUserFirebase:any;
 
+  private selectedFiles: FileList;
+  private isSelected: boolean;
+  
+
+  
+  LABEL_ACTIVE_NOW = LABEL_ACTIVE_NOW;
+  LABEL_NO_MSG_HERE = LABEL_NO_MSG_HERE;
+  MSG_STATUS_SENDING = MSG_STATUS_SENDING;
+  MSG_STATUS_SENT = MSG_STATUS_SENT;
+  MSG_STATUS_RETURN_RECEIPT = MSG_STATUS_RETURN_RECEIPT;
+  
   constructor(
     public navParams: NavParams,
     public navCtrl: NavController,
     public chatPresenceHandler: ChatPresenceHandler,
     public navProxy: NavProxyService,
-    public messageProvider: MessageProvider,
     public userService: UserService,
     public events: Events,
+    public chatManager: ChatManager,
+    public actionSheetCtrl: ActionSheetController,
+    public platform: Platform,
+    private upSvc: UploadService
   ) {
     super();
+    // recupero id utente e fullname con cui si conversa
+    
+    this.conversationWith = navParams.get('conversationWith');
+    this.conversationWithFullname = navParams.get('conversationWithFullname');
+    this.channel_type = navParams.get('channel_type');
     this.messages = [];
-    //let heightTest = "300px";
+    (!this.channel_type || this.channel_type == 'undefined')?this.channel_type='direct':this.channel_type;
+    console.log('constructor PAGE ::: ',this.channel_type);
 
-    // setto stato online currentuser
+    //const that = this;
+    // elenco sottoscrizioni 
+    // subscribe stato utente con cui si conversa ONLINE
+    this.events.subscribe('statusUser:online-'+this.conversationWith, this.statusUserOnline);
+    // subscribe stato utente con cui si conversa ONLINE
+    this.events.subscribe('statusUser:offline-'+this.conversationWith, this.statusUserOffline);
+    // subscribe data ultima connessione utente con cui si conversa
+    this.events.subscribe('lastConnectionDate-'+this.conversationWith, this.updateLastConnectionDate);
+  
+    // subscribe elenco messaggi
+    this.events.subscribe('listMessages:added-'+this.conversationWith, this.addHandler);
+    this.events.subscribe('listMessages:changed-'+this.conversationWith, this.changedHandler);
+    
+    this.isSelected = false;
+  }
+  /**
+   * on subscribe stato utente con cui si conversa ONLINE
+   */
+  statusUserOnline: any = (uid) => {
+    if(uid !== this.conversationWith){return;}
+    this.online = true;
+    console.log('ONLINE **************');
+  }
+  /**
+   * on subscribe stato utente con cui si conversa OFFLINE
+   */
+  statusUserOffline: any = (uid) => {
+    if(uid !== this.conversationWith){return;}
     this.online = false;
+    console.log('OFFLINE **************');
+  }
+  /**
+   * on subscribe data ultima connessione utente con cui si conversa
+   */
+  updateLastConnectionDate: any = (uid,lastConnectionDate) => {
+    this.lastConnectionDate = lastConnectionDate;
+    console.log('updateLastConnectionDate **************',this.lastConnectionDate);
+  }
+  /**
+   * on subcribe add message
+   */
+  addHandler:any = (uid, messages) => {
+    console.log('addHandler', uid, messages);
+    this.messages = messages;
+    this.doScroll();
+  }
+  /**
+   * on subcribe change message
+   */
+  changedHandler:any = (uid, messages) => {
+    console.log('changedHandler', uid, messages);
+    this.messages = messages;
+    // this.doScroll();
+  }
 
-    // recupero current user id
-    this.uidSender = firebase.auth().currentUser.uid;
-
-    // recupero id riciver
-    this.uidReciver = navParams.get('convers_with');
-
-    // recupero conversationId
-    this.conversationId = navParams.get('conversationId');
-    if(!this.conversationId){
-      this.conversationId = this.messageProvider.createConversationId(this.uidSender, this.uidReciver);
-    }
+  /**
+   * 
+   */
+  ngOnInit() {
+    this.messages = [];
+    console.log('ngOnInit',this.events,this.conversationWithFullname);
+  }
+  /**
+   * quando ho renderizzato la pagina richiamo il metodo di inizialize
+   */
+  ionViewDidEnter(){
+    console.log('ionViewDidEnter');
+    //this.content.scrollDownOnLoad = true;
     this.initialize();
   }
-
-  ngOnDestroy(){
-    console.log('ngOnDestroy **************');
+  /**
+   * quando esco dalla pagina distruggo i subscribe
+   */
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave **************');
+    this.unsubescribeAll();
+  }
+  /**
+   * unsubscribe all subscribe events
+   */
+  unsubescribeAll(){
+    // this.events.unsubscribe('statusUser:online-'+this.conversationWith, this.statusUserOnline);
+    // this.events.unsubscribe('statusUser:offline-'+this.conversationWith, this.statusUserOffline);
+    // this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, this.updateLastConnectionDate);
+    // this.events.unsubscribe('listMessages:added-'+this.conversationWith, this.addHandler);
+    // this.events.unsubscribe('listMessages:changed-'+this.conversationWith, this.changedHandler);
   }
 
-  ngOnInit() {
-    console.log('ngOnInit **************');
-  }
-  ionicViewWillLeave(){
-    // aggiorno stato conversazione come letto
-    // caso particolare nel quale arrivano messaggi alla conversazione evidenziata
-    this.updateConversationState();
-  }
-  
-  ionViewDidEnter(){
-    this.content.scrollDownOnLoad = true;
-    // aggiorno stato conversazione come letto
-    this.updateConversationState();
-  }
-  //// END functions of system ////
-
-  //// START functions messages ////
-  updateConversationState(){
-    // se esistono dei messaggi nella conversazione
-    this.messageProvider.setStatusConversation(this.conversationId);
-    // console.log("updateConversationState::",this.messages.length);
-    // if(this.messages.length > 0){
-    //   // aggiorno lo stato dei messaggi come letto
-    //   // baggato da controllare!!!
-    //   // this.messageProvider.setStatusMessage(this.messages);
-    //   // aggiorno lo stato della conversazione
-    //   let lastMessage = this.messages.slice(-1)[0];
-    //   if(lastMessage){
-    //     this.messageProvider.setStatusConversation(lastMessage);
-    //   }
-    // }
-    // else {
-    //   // // altrimenti se nn ci sono ancora messaggi e quindi sto x creare una conversazione
-    //   // // visualizzo div content_message_welcome
-    //   // this.style_message_welcome = true;
-    //   // console.log("this.content_message_welcome::",this.style_message_welcome);
-    // }
-  }
-
+  /**
+   * resetto array messaggi
+   * resetto stato online user with
+   * resetto data ultima connessione
+   * recupero currentUserDetail
+   * load stato utente con cui si conversa online/offline
+   * load data ultimo aggesso utente con cui si conversa
+   * recupero info status user conversation with
+   * carico messaggi
+   */
   initialize(){
-    console.log('initialize **************');
-    // se esiste imposto array messaggi
-    this.firebaseMessages = this.messageProvider.loadListMeggages(this.uidReciver, this.uidSender);
-    this.getMessages();
-    // controllo se esiste il nodo conversazione
-    let that = this;
-    this.messageProvider.ifConversationExist()
-    .then(function(snapshot) {
-      console.log("ifConversationExist?: " + snapshot + " --> "+snapshot.hasChild(that.conversationId));
-      if (snapshot.hasChild(that.conversationId)) {
-        console.log('LA CONVERSAZIONE ESISTE *************');
-      }
-      else {
-        // altrimenti se nn ci sono ancora messaggi e quindi sto x creare una conversazione
-        // visualizzo div content_message_welcome
-        that.style_message_welcome = true;
-        console.log("this.content_message_welcome::",that.style_message_welcome);
-      }
-    })
-    .catch(function (error) {
-      console.log("ifConversationExist failed: " + error.message);
-    });
-    
-
-    // setto userFirebase
-    this.userFirebase = this.userService.setUserDetail(this.uidReciver);
-    // recupero riciver user detail
-
-    // this.subscriptionUserFirebase = this.userFirebase.snapshotChanges()
-    // .subscribe(snapshot => {
-    
-    this.userFirebase.on('value', function(snapshot) {
-      const user = snapshot.val();
-      if (user){
-        const fullname = user.name+" "+user.surname;
-        const userDetails = new UserModel(user.uid, user.email, user.name, user.surname, fullname, user.imageurl);
-        console.log("userDetails",userDetails);
-        that.userRecipient = userDetails;
-      }
-      else{
-        const userDetails = new UserModel(that.uidReciver, '', '', '', that.uidReciver, '');
-        console.log("userDetails vuoto",userDetails);
-        that.userRecipient = userDetails;
-      }
-    });
-    // recupero current currentUserDetail
-    this.currentUser = this.userService.getCurrentUserDetails();
-    console.log('this.currentUser *************', this.currentUser);
-    // recupero info status user reciver
-    this.setupOnlineStatus();
-    console.log('this.setupOnlineStatus *************');
+    console.log('initialize DettaglioConversazionePage **************',this.chatManager.handlers);
+    // this.updatingMessageList = false;
+    //this.messages = [];
+    this.online = false;
+    this.lastConnectionDate = '';
+    this.tenant = this.chatManager.getTenant();
+    this.currentUserDetail = this.chatManager.getLoggedUser();
+    this.chatPresenceHandler.userIsOnline(this.conversationWith);
+    this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
+    this.initConversationHandler();
   }
-
-  
-  // get list messages
-  getMessages(){
-    console.log("uidSender:::uidReciver:: ",this.uidSender, this.uidReciver, this.messageProvider);
-    //let messagesTEMP = [];
-    let that = this;
-    var lastDate: string = "";
-    this.firebaseMessages.limitToLast(100).on("value", function(snapshot) {
-      that.messages = [];
-      console.log("that.messages::",that.messages);
-      snapshot.forEach(function(data) {
-        let item = data.val();
-        // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        let calcolaData = setHeaderDate(item['timestamp'], lastDate);
-        if(calcolaData != null){
-          lastDate = calcolaData;
-        }
-        // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-        const message = new MessageModel(item['conversationId'], item['recipient'], item['sender'], item['sender_fullname'], item['status'], item['text'], item['timestamp'], calcolaData, item['type']);
-        // console.log('this.message *************', message, that.messages);
-        that.messages.push(message);
-        // aggiorno stato messaggio
-        // questo stato indica che è stato consegnato al client e NON la lettura
-        if(item['status']!=2){
-          that.messageProvider.setStatusMessage(data);
-        }
-      });
-      that.doScroll();
-    });
-  }
-
-  // Check if the user is the sender of the message.
-  isSender(message) {
-    return this.messageProvider.isSender(message);
-  }
-
-  // Send message
-  sendMessage(msg) {
-    //console.log("messageTextArea:: ",this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style);
-    if (msg && msg.trim() != ''){
-      this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
-      // console.log("messageString:::firebaseMessages",msg, msg);
-      this.messageString = urlify(msg);
-      // console.log("messageString:::firebaseMessages", this.messageString, this.currentUser);
-      let now: Date = new Date();
-      let timestamp = now.valueOf();
+  /**
+   * recupero da chatManager l'handler
+   * se NON ESISTE creo un handler e mi connetto 
+   * se ESISTE mi connetto
+   * carico messaggi
+   * attendo un sec se nn arrivano messaggi visualizzo msg wellcome
+   */
+  initConversationHandler() {
+    //const loggedUser = this.chatManager.getLoggedUser();
+    const that = this;
+    this.style_message_welcome = false;
+    let handler:ChatConversationHandler = this.chatManager.getConversationHandlerByConversationId(this.conversationWith);
+    console.log('initConversationHandler **************',this.chatManager, handler, this.conversationWith);
+    if (!handler) {
+      console.log('ENTRO ***',this.conversationHandler);
+      //const handler = 
+      this.conversationHandler = new ChatConversationHandler(this.events);
+      this.conversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname,this.currentUserDetail,this.tenant);
+      //this.chatConversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname,this.currentUserDetail,this.tenant);
       
-      //creo messaggio e lo aggiungo all'array
-      //cambio lo stato da 0 a 1 e lo invio
-      //quando lo ricevo cambio lo stato a 2
-
-      //const converationsObj = firebase.database().ref(urlNodeFirebase);
-
-      if(this.firebaseMessages) {
-          const message = {
-              conversationId: this.conversationId,
-              recipient: this.uidReciver,
-              sender: this.uidSender,
-              sender_fullname: this.currentUser.fullname,
-              status: MSG_STATUS_SENT,
-              text: this.messageString,
-              timestamp: timestamp,
-              type: 'text'
-          };
-          console.log('messaggio **************',message, this.messageProvider);
-          this.messageProvider.createSenderConversation(message,this.currentUser,this.userRecipient);
-          this.messageProvider.createReceiverConversation(message, this.currentUser, this.userRecipient);
-          this.messageString = "";
-          //console.log("000 firebaseMessage push",this.messageString, this.firebaseMessages);
-          var newMessageRef = this.firebaseMessages.push();
-          newMessageRef.set(message);
-          this.events.publish('setConversationSelected:change',this.conversationId);
-          //this.navProxy.setRootMaster(ListaConversazioniPage, {conversationId:this.conversationId});
-          //this.content.scrollToBottom();
+      //handler = this.chatConversationHandler;
+      //this.conversationHandler = handler;
+      //[self subscribe:handler];
+      //[self.conversationHandler restoreMessagesFromDB];
+      if (this.conversationWith) {
+        //handler.connect();
+        this.conversationHandler.connect();
+        console.log('PRIMA ***', this.chatManager.handlers);
+        this.chatManager.addConversationHandler(this.conversationHandler);
+        console.log('DOPO ***', this.chatManager.handlers);
       }
     }
     else {
-      this.messageString = "";
+      console.log('NON ENTRO ***',this.conversationHandler,handler);
+      //handler.connect();
+      //[self subscribe:handler];
+      this.conversationHandler = handler;
+      this.messages = this.conversationHandler.messages;
+      console.log('NON ENTRO2  ***',this.conversationHandler, this.messages );
+      this.doScroll();
     }
+    // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
+    setTimeout(function() {
+      //console.log('setTimeout *** 111',that.messages);
+      if(!that.messages || that.messages.length == 0){
+        that.style_message_welcome = true;
+        console.log('setTimeout *** 111',that.style_message_welcome);
+      }
+    }, 1000);
   }
-  //// END functions messages ////
-
+  /**
+   * chiamato dal subscribe('listMessages:added')
+   * ogni volta che viene aggiunto un messaggio
+   * aggiorno la lista dei messaggi e mi posiziono sull'ultimo
+   * @param messages 
+   */
+  updateMessageList(messages){
+    // if(!this.updatingMessageList){
+      this.messages = messages;
+      console.log('updateMessageList **************', this.messages.length);
+      this.doScroll();
+    // }
+    // this.updatingMessageList = true;
+  }
 
   //// START Scroll managemant functions ////
-  // Scroll to bottom of page after a short delay.
+  /**
+   * Scroll to bottom of page after a short delay.
+   */
   scrollBottom() {
     let that = this;
-    //console.log('scrollBottom1 **************', that.content);
     setTimeout(function() {
-      console.log('scrollBottom2 **************', that.content._scroll);
+      //console.log('scrollBottom **************', that.content._scroll);
       if(that.content._scroll){
         that.content.scrollToBottom(0);
       }
-    }, 300);
+    }, 1);
   }
-  // Scroll to top of the page after a short delay.
+  /**
+   * Scroll to top of the page after a short delay.
+   */
   scrollTop() {
     let that = this;
     setTimeout(function() {
       that.content.scrollToTop();
-    }, 300);
+    }, 1);
   }
-  // Scroll depending on the direction.
+  /**
+   * Scroll depending on the direction.
+   */
   doScroll() {
-    //console.log('doScroll **************', this.scrollDirection);
+    // console.log('doScroll **************', this.scrollDirection);
     if (this.scrollDirection == 'bottom') {
       this.scrollBottom();
     } else if (this.scrollDirection == 'top') {
@@ -292,67 +289,256 @@ export class DettaglioConversazionePage extends _DetailPage{
   //// END Scroll managemant functions ////
 
 
-  //// START functions input message ////
-  pressedOnKeyboard(event,messageString){
+
+
+  //// START FUNZIONI RICHIAMATE DA HTML ////
+  /**
+   * Check if the user is the sender of the message.
+   * @param message 
+   */
+  isSender(message) {
+    return this.conversationHandler.isSender(message);
+  }
+  /**
+   * se il messaggio non è vuoto
+   * 1 - ripristino l'altezza del box input a quella di default
+   * 2 - invio il messaggio
+   * 3 - se l'invio è andato a buon fine mi posiziono sull'ultimo messaggio
+   * @param msg 
+   */
+  sendMessage(msg, type, metadata?) {
+    (metadata) ? metadata = metadata : metadata = '';
+    console.log("SEND MESSAGE: ", msg);
+    if (msg && msg.trim() != '' || type !== TYPE_MSG_TEXT ){
+      this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
+      const resultSendMsgKey = this.conversationHandler.sendMessage(msg, type, metadata, this.conversationWith, this.conversationWithFullname, this.channel_type);
+  
+      if (resultSendMsgKey){
+        if(metadata){
+          const key = metadata.src.substring(metadata.src.length - 16);
+          this.arrayLocalImmages[key] = resultSendMsgKey;
+        }
+        this.doScroll();
+      }
+    }
+  }
+
+
+  updateMetadataMessage(metadata) {
+    // recupero id nodo messaggio
+    const key = metadata.src.substring(metadata.src.length - 16);
+    const uid =  this.arrayLocalImmages[key];
+    console.log("UPDATE MESSAGE: ",key, uid);
+    this.conversationHandler.updateMetadataMessage(uid, metadata);
+    delete this.arrayLocalImmages[key];
+  }
+
+  /**
+   * purifico il messaggio
+   * e lo passo al metodo di invio
+   * @param messageString 
+   */
+  controlOfMessage(messageString){
+    console.log('controlOfMessage **************');
     messageString = messageString.replace(/(\r\n|\n|\r)/gm,"");
+    if (messageString.trim() != ''){
+      this.sendMessage(messageString, TYPE_MSG_TEXT);
+    } 
+    this.messageString = "";
+  }
+  /**
+   * invocata dalla pressione del tasto invio sul campo di input messaggio
+   * se il messaggio non è vuoto lo passo al metodo di controllo
+   * @param event 
+   * @param messageString 
+   */
+  pressedOnKeyboard(event,messageString){
     console.log('pressedOnKeyboard ************** event:: ', event.code);
     if (event.inputType == "insertLineBreak" && event.data == null){
+      this.messageString = "";
       return
     }
-    if (messageString.trim() != ''){
-      this.sendMessage(messageString);
-    } else {
-      this.messageString = "";
+    else{
+      this.controlOfMessage(messageString);
     }
   }
-  //// END functions input message ////
-
-  
-  
-  //// START functions user active ////
-  // detect user active and get last on line date
-  setupOnlineStatus(){
-    const that = this;
-    const onlineRef =  this.chatPresenceHandler.onlineRefForUser(this.uidReciver);
-    //console.log("onlineRef1:",onlineRef, this.online);
-    onlineRef.on("value", (child) => {
-      //console.log("value: ======> ",child.val());
-      if(child.val()){
-        that.online = true;
-      }
-      else {
-        that.online = false;
-      }
-    })
-    // LAST ONLINE
-    let lastOnlineRef = this.chatPresenceHandler.lastOnlineRefForUser(this.uidReciver);
-    //this.last_online_ref_handle = this.onlineRef.subcribe(snapshot => {
-    lastOnlineRef.on("value", (child) => {
-      //console.log("value: ",child.val());
-      if(child.val()){
-        this.lastConnectionDate = this.getTimeLastConnection(child.val());
-      }
-    });
-  }
-
-  getTimeLastConnection(timestamp:string){
-    //let timestampNumber = parseInt(timestamp)/1000;
-    let time = setLastDate(timestamp);
-    return time;
-  }
-  //// END functions user active ////
-
-
-  // apro la pg di dettagli conversazione
+  /**
+   * metodo chiamato dall'html quando premo sul nome utente nell'header della pagina
+   * apro la pg di dettaglio user
+   * @param uidReciver 
+   */
   goToUserDetail(uidReciver: string) {
     console.log('goToUserDetail::: ',this.navProxy.isOn, uidReciver);
     this.navCtrl.push(ProfilePage, {
       uidUser: uidReciver
     });
-    // this.navProxy.pushDetail(ProfilePage, {
-    //   uidUser: uidReciver,
-    //   parentPage: PARENT_PAGE_DETAIL_CONVERSATION
-    // });
-  }  
+  }
+
+  getSizeImg(message): any {
+    const metadata = message.metadata;
+    // const MAX_WIDTH_IMAGES = 300;
+    const sizeImage = {
+      width: metadata.width,
+      height: metadata.height
+    }
+    //console.log('message::: ', metadata);
+    if(metadata.width && metadata.width>MAX_WIDTH_IMAGES){
+      const rapporto = (metadata['width'] / metadata['height']);
+      sizeImage.width = MAX_WIDTH_IMAGES;
+      sizeImage.height = MAX_WIDTH_IMAGES / rapporto;
+    }
+    return sizeImage; //h.toString();
+  }
+  //// END FUNZIONI RICHIAMATE DA HTML ////
+
+
+
+
+
+
+  // START LOAD IMAGE 
+  presentActionSheet() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: '',
+      buttons: [
+        // {
+        //   text: 'Delete',
+        //   role: 'destructive',
+        //   icon: !this.platform.is('ios') ? 'trash' : null,
+        //   handler: () => {
+        //     console.log('Delete clicked');
+        //   }
+        // },
+        {
+          text: 'Fotocamera',
+          cssClass: 'chat21',
+          icon: !this.platform.is('ios') ? 'ios-camera' : 'md-camera',
+          handler: () => {
+            console.log('Fotocamera clicked');
+          }
+        },
+        {
+          text: 'Libreria foto e video',
+          cssClass: 'chat21',
+          icon: !this.platform.is('ios') ? 'ios-images' : 'md-images',
+          handler: () => {
+            console.log('Libreria foto e video clicked');
+          }
+        },
+        {
+          text: 'Documenti',
+          cssClass: 'chat21',
+          icon: !this.platform.is('ios') ? 'ios-attach' : 'md-attach',
+          handler: () => {
+            console.log('Documenti clicked');
+          }
+        },
+        {
+          text: 'Posizione',
+          cssClass: 'chat21',
+          icon: !this.platform.is('ios') ? 'ios-pin' : 'md-pin',
+          handler: () => {
+            console.log('Posizione clicked');
+          }
+        },
+        {
+          text: 'Contatto',
+          cssClass: 'chat21',
+          icon: !this.platform.is('ios') ? 'ios-contact' : 'md-contact',
+          handler: () => {
+            console.log('Contatto clicked');
+          }
+        },
+        {
+          text: 'Cancel',
+          cssClass: 'chat21',
+          role: 'cancel', // will always sort to be on the bottom
+          icon: !this.platform.is('ios') ? 'close' : null,
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+ 
+    actionSheet.present();
+  }
+
+
+  
+  detectFiles(event) {
+    console.log('event: ', event.target.files[0].name, event.target.files);
+    if (event) {
+        this.selectedFiles = event.target.files;
+        this.fileChange(event);
+      }
+  }
+
+  fileChange(event) {
+    const that = this;
+    if (event.target.files && event.target.files[0]) {
+        const nameImg = event.target.files[0].name;
+        // const preview = document.querySelector('img');
+        // const file    = document.querySelector('input[type=file]').files[0];
+        const reader  = new FileReader();
+        reader.addEventListener('load', function () {
+            that.isSelected = true;
+            // aggiungo nome img in un div 'event.target.files[0].name'
+            // aggiungo div pulsante invio
+            // preview.src = reader.result;
+            const imageXLoad = new Image;
+            imageXLoad.src = reader.result;
+            imageXLoad.title = nameImg;
+            imageXLoad.onload = function() {
+              console.log('that.imageXLoad: ', imageXLoad);
+                that.arrayLocalImmages.push(imageXLoad);
+                const metadata = {
+                  'src': imageXLoad.src,
+                  'width': imageXLoad.width,
+                  'height': imageXLoad.height,
+                  'status': false
+                };
+                // 1 - invio messaggio
+                that.onSendImage(metadata);
+                // 2 - carico immagine
+                that.uploadSingle(metadata);
+            };
+        }, false);
+        if (event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+            console.log('reader-result: ', event.target.result);
+        }
+    }
+  }
+
+  uploadSingle(metadata) {
+    this.isSelected = false;
+    const that = this;
+    const file = this.selectedFiles.item(0);
+    const currentUpload = new UploadModel(file);
+    this.upSvc.pushUploadMessage(currentUpload)
+    .then(function(snapshot) {
+      console.log('Uploaded a blob or file! ', snapshot.downloadURL);
+      // AGGIORNO MESSAGGIO SUL SERVER!!! recuperandolo dall'array chiave valore
+      //that.onSendImage(snapshot.downloadURL, w, h);
+      that.updateMetadataMessage(metadata);
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log('error: ', errorCode, errorMessage);
+    });
+    console.log('reader-result: ', file);
+  }
+
+
+  onSendImage(metadata) {
+    console.log('onSendImage::::: ', metadata);
+    this.sendMessage('', TYPE_MSG_IMAGE, metadata);
+    this.doScroll();
+  }
+
+
 }
 

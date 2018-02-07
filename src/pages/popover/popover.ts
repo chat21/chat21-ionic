@@ -1,13 +1,6 @@
 import { Component } from '@angular/core';
-import { ViewController, IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AuthService } from '../../providers/auth-service';
-import {ProfilePage} from '../profile/profile';
-/**
- * Generated class for the PopoverPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+import { ViewController, IonicPage } from 'ionic-angular';
+
 @IonicPage()
 @Component({
   selector: 'page-popover',
@@ -21,34 +14,27 @@ import {ProfilePage} from '../profile/profile';
     </ion-list>
   `
 })
+
 export class PopoverPage {
-
   constructor(
-    public viewCtrl: ViewController, 
-    public navParams: NavParams,
-    public navCtrl: NavController,
-    public authService: AuthService
-    ) {
-      
-  }
-
-  showConfirm() {
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad PopoverPage');
-  }
-
+    public viewCtrl: ViewController
+  ) {}
+  /**
+   * chiudo il popover menu
+   */
   close() {
     this.viewCtrl.dismiss();
   }
-
+  /**
+   * chiudo il popover passando 'ProfilePage' al chiamante (lista conversazioni)
+   */
   goToProfilePage(){
     this.viewCtrl.dismiss("ProfilePage");
   }
-
+  /**
+   * chiudo il popover passando 'logOut' al chiamante (lista conversazioni)
+   */
   logOut() {
     this.viewCtrl.dismiss("logOut");
   }
-
 }

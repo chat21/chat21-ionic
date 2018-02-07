@@ -12,29 +12,7 @@ page-lista-conversazioni {
         align-self: flex-start;
         padding: 6px;
     }
-    .item-block.selected{
-        margin-left:0px!important;
-        color:#ffffff;
-        .label{
-            h2{
-                font-size: 12px;
-                color:#ffffff;
-            }
-            p{
-                font-size: 12px;
-                color:#ffffff;
-            }
-        }
-        .note {
-            font-size: 11px;
-            color:#cccccc;
-        }
-        background-color: #0b5c89;
-        border-bottom: rgba(0, 0, 0, 0.10)!important;
-        border-bottom-width: thin!important;
-        border-bottom-style: solid!important;
-    }
-    .item-block.unselected{
+    .item-block {
         margin-left:0px!important;
         .label{
             font-size: 9px!important;
@@ -57,6 +35,30 @@ page-lista-conversazioni {
         border-bottom-width: thin!important;
         border-bottom-style: solid!important;
     }
+    
+    .item-block.selected{
+        margin-left:0px!important;
+        .label{
+            h2{
+                font-size: 12px;
+                color:#ffffff;
+            }
+            p{
+                font-size: 12px;
+                color:#ffffff;
+            }
+        }
+        .note {
+            font-size: 11px;
+            color:#cccccc;
+        }
+        background-color: #0b5c89;
+        border-bottom: rgba(0, 0, 0, 0.10)!important;
+        border-bottom-width: thin!important;
+        border-bottom-style: solid!important;
+        // color:#ffffff;
+    }
+    
     .list-avatar-page {
         ion-note {
             font-size: 12px;
@@ -73,9 +75,9 @@ page-lista-conversazioni {
         font-size: 12px!important;
     }
 
-    // .content_message_welcome{
-    //     display: inline;
-    // }
+    .styleMessageWelcome{
+        display: inline;
+    }
 
     #content_message_wellcome{
         .messaggio{
