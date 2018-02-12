@@ -54,7 +54,6 @@ export class MyApp {
     console.log('isNavBar: ', this.isNavBar);
     //this.isNavBar = 'http://support.chat21.org/dashboard/';
     
-
     firebase.initializeApp(config.get("firebaseConfig"));
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.

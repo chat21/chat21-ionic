@@ -49,9 +49,6 @@ import { ChatConversationHandler } from '../providers/chat-conversation-handler'
 import { ChatManager } from '../providers/chat-manager/chat-manager';
 import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronizer';
 
-
-
-
 @NgModule({
   declarations: [
     MyApp,
