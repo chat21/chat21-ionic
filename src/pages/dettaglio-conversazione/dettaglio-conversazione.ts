@@ -16,6 +16,7 @@ import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
 // utils
 import { MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, LABEL_NO_MSG_HERE, LABEL_ACTIVE_NOW, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
+import { searchIndexInArrayForUid } from '../../utils/utils';
 
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 
@@ -116,21 +117,84 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.lastConnectionDate = lastConnectionDate;
     console.log('updateLastConnectionDate **************',this.lastConnectionDate);
   }
+  // /**
+  //  * on subcribe add message
+  //  */
+  // addHandler:any = (uid, messages) => {
+  //   console.log('addHandler', uid, messages);
+  //   this.messages = messages;
+  //   this.doScroll();
+  // }
+  // /**
+  //  * on subcribe change message
+  //  */
+  // changedHandler:any = (uid, messages) => {
+  //   console.log('changedHandler', uid, messages);
+  //   this.messages = messages;
+  //   // this.doScroll();
+  // }
   /**
    * on subcribe add message
    */
-  addHandler:any = (uid, messages) => {
-    console.log('addHandler', uid, messages);
-    this.messages = messages;
-    this.doScroll();
+  addHandler:any = (uid, message) => {
+    console.log('ADD NW MSG ->', message.type, message);
+    if (message && message.sender === this.currentUserDetail.uid && message.type !== TYPE_MSG_TEXT) {
+        // se è un'immagine che ho inviato io nn fare nulla
+        // aggiorno la stato del messaggio e la data
+        this.updateMessage(message);
+    } else if (message) {
+      if(message.type !== TYPE_MSG_TEXT){
+        if(!message.metadata || message.metadata === '' || message.metadata === 'undefined'){
+          message.metadata = '{src:'+message.text+'}';
+        }
+        console.log('ADD NW MSG 2:', message);
+      }
+      this.messages.push(message);
+      this.doScroll();
+    }
+
+    // console.log('addHandler', uid, messages);
+    // this.messages = messages;
+    // this.doScroll();
   }
   /**
    * on subcribe change message
    */
-  changedHandler:any = (uid, messages) => {
-    console.log('changedHandler', uid, messages);
-    this.messages = messages;
-    // this.doScroll();
+  changedHandler:any = (uid, message) => {
+    console.log('CHANGED NW MSG:----> ', message.uid, uid);
+    if (message) {
+        const index = searchIndexInArrayForUid(this.messages, message.uid);
+        if(index > -1){
+          console.log('index:----> ', index, this.messages);
+          this.messages.splice(index, 1, message);
+        }
+        
+    }
+    // console.log('changedHandler', uid, messages);
+    // this.messages = messages;
+  }
+
+  /**
+   * aggiorno messaggio: uid, status, timestamp, headerDate
+   * richiamata alla sottoscrizione dell'aggiunta di un nw messaggio
+   * in caso in cui il messaggio è un'immagine ed è stata inviata dall'utente
+  */
+  updateMessage(message) {
+    console.log('UPDATE MSG:', message.metadata);
+    if(!message.metadata || message.metadata === ''){
+      this.messages.push(message);
+      return;
+    }
+    const index = searchIndexInArrayForUid(this.messages, message.metadata.uid);
+    if (index > -1) {
+        this.messages[index].uid = message.uid;
+        this.messages[index].status = message.status;
+        this.messages[index].timestamp = message.timestamp;
+        this.messages[index].headerDate = message.headerDate;
+        console.log('UPDATE ok:', this.messages[index]);
+    } else {
+        this.messages.push(message);
+    }
   }
 
   /**
@@ -138,6 +202,7 @@ export class DettaglioConversazionePage extends _DetailPage{
    */
   ngOnInit() {
     this.messages = [];
+
     console.log('ngOnInit',this.events,this.conversationWithFullname);
   }
   /**
@@ -313,13 +378,13 @@ export class DettaglioConversazionePage extends _DetailPage{
       this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
       const resultSendMsgKey = this.conversationHandler.sendMessage(msg, type, metadata, this.conversationWith, this.conversationWithFullname, this.channel_type);
   
-      if (resultSendMsgKey){
-        if(metadata){
-          const key = metadata.src.substring(metadata.src.length - 16);
-          this.arrayLocalImmages[key] = resultSendMsgKey;
-        }
-        this.doScroll();
-      }
+      // if (resultSendMsgKey){
+      //   if(metadata){
+      //     const key = metadata.src.substring(metadata.src.length - 16);
+      //     this.arrayLocalImmages[key] = resultSendMsgKey;
+      //   }
+      //   this.doScroll();
+      // }
     }
   }
 
@@ -492,14 +557,16 @@ export class DettaglioConversazionePage extends _DetailPage{
             imageXLoad.onload = function() {
               console.log('that.imageXLoad: ', imageXLoad);
                 that.arrayLocalImmages.push(imageXLoad);
+                const uid = imageXLoad.src.substring(imageXLoad.src.length - 16);
                 const metadata = {
                   'src': imageXLoad.src,
                   'width': imageXLoad.width,
                   'height': imageXLoad.height,
-                  'status': false
+                  'uid': uid
                 };
                 // 1 - invio messaggio
-                that.onSendImage(metadata);
+                //that.onSendImage(metadata);
+                that.addLocalMessageImage(metadata);
                 // 2 - carico immagine
                 that.uploadSingle(metadata);
             };
@@ -511,6 +578,36 @@ export class DettaglioConversazionePage extends _DetailPage{
     }
   }
 
+  /**
+     * salvo un messaggio localmente nell'array dei msg
+     * @param metadata
+     */
+    addLocalMessageImage(metadata) {
+      const now: Date = new Date();
+      const timestamp = now.valueOf();
+      const language = document.documentElement.lang; 
+
+      const message = new MessageModel(
+          metadata.uid, // uid
+          language, // language
+          this.conversationWith, // recipient
+          this.conversationWithFullname, //'Support Group', // recipient_fullname
+          this.currentUserDetail.uid, // sender
+          this.currentUserDetail.fullname, //'Ospite', // sender_fullname
+          '', // status
+          metadata, // metadata
+          '', // text
+          timestamp.toString(), // timestamp
+          '', // headerDate
+          TYPE_MSG_IMAGE // type
+      );
+      this.messages.push(message);
+      // message.metadata.uid = message.uid;
+      console.log('addLocalMessageImage: ', this.messages);
+      this.isSelected = true;
+      this.doScroll();
+  }
+
   uploadSingle(metadata) {
     this.isSelected = false;
     const that = this;
@@ -519,9 +616,12 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.upSvc.pushUploadMessage(currentUpload)
     .then(function(snapshot) {
       console.log('Uploaded a blob or file! ', snapshot.downloadURL);
-      // AGGIORNO MESSAGGIO SUL SERVER!!! recuperandolo dall'array chiave valore
-      //that.onSendImage(snapshot.downloadURL, w, h);
-      that.updateMetadataMessage(metadata);
+      //// AGGIORNO MESSAGGIO SUL SERVER!!! recuperandolo dall'array chiave valore
+      ////that.onSendImage(snapshot.downloadURL, w, h);
+      //that.updateMetadataMessage(metadata);
+
+      metadata.src = snapshot.downloadURL;
+      that.sendMessage('', TYPE_MSG_IMAGE, metadata);
     })
     .catch(function(error) {
       // Handle Errors here.

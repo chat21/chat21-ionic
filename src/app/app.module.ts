@@ -48,6 +48,13 @@ import { ConversationProvider } from '../providers/conversation/conversation';
 import { MessageProvider } from '../providers/message/message';
 import { AutosizeDirective } from '../directives/autosize/autosize';
 import { DatabaseProvider } from '../providers/database/database';
+<<<<<<< HEAD
+=======
+import { ChatConversationsHandler } from '../providers/chat-conversations-handler';
+import { ChatConversationHandler } from '../providers/chat-conversation-handler';
+import { ChatManager } from '../providers/chat-manager/chat-manager';
+import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronizer';
+>>>>>>> build_0.2.0
 
 @NgModule({
   declarations: [

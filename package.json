@@ -4,7 +4,6 @@
     "engines": {
         "node": "6.9.2"
     },
-    
     "author": "Ionic Framework ",
     "homepage": "http://ionicframework.com/",
     "private": true,

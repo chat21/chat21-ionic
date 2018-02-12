@@ -84,7 +84,8 @@ export class ChatConversationHandler {
       // questo stato indica che è stato consegnato al client e NON che è stato letto
       that.setStatusMessage(childSnapshot, that.conversationWith);
       // pubblico messaggio - sottoscritto in dettaglio conversazione
-      that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, that.messages);
+      //that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, that.messages);
+      that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, msg);
     });
 
     this.messagesRef.on("child_removed", function(childSnapshot) {
@@ -123,7 +124,9 @@ export class ChatConversationHandler {
       that.setStatusMessage(childSnapshot, that.conversationWith);
       // pubblico messaggio - sottoscritto in dettaglio conversazione
       console.log("publish:: ", 'listMessages:added-'+that.conversationWith, that.events);
-      that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, that.messages);
+      //that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, that.messages);
+      that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, msg);
+
     })
   } 
   /**
