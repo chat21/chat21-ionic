@@ -4,10 +4,11 @@ import { Events, Platform } from 'ionic-angular';
 
 // models
 import { UserModel } from '../../models/user';
+//import { GroupModel } from '../../models/group';
 // firebase
 import * as firebase from 'firebase/app';
 // utils
-import { getNowTimestamp } from '../../utils/utils';
+import { getNowTimestamp, contactsRef } from '../../utils/utils';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { ChatPresenceHandler} from '../../providers/chat-presence-handler';
@@ -21,6 +22,7 @@ export class UserService {
   public currentUserDetails: UserModel;
   public urlNodeContacts: string;
   public uidLastOpenConversation: string;
+  public token: string;
 
 
   constructor(
@@ -96,14 +98,15 @@ export class UserService {
    * 4 - pubblico dettaglio utente (subscribe in profile.ts)
    */
   loadUserDetail(uid){
+    console.log("loadUserDetail: ", uid);
     const userFirebase = this.initUserDetails(uid);
     let that = this;
     userFirebase.on("value", function(snapshot) {
-        let userDetails = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
+        let userDetail = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
         if (snapshot.val()){
           const user = snapshot.val();
           const fullname = user.firstname+" "+user.lastname;  
-          userDetails = new UserModel(
+          userDetail = new UserModel(
             snapshot.key, 
             user.email, 
             user.firstname, 
@@ -112,9 +115,38 @@ export class UserService {
             user.imageurl
           );        
         }
-        that.events.publish('loadUserDetail:complete', userDetails);
+        console.log("loadUserDetail: ", userDetail);
+        that.events.publish('loadUserDetail:complete', userDetail);
       });
-  }
+    }
+
+    getUserDetail(uid): any {
+      const tenant = this.chatManager.getTenant();
+      const urlNodeConcacts = contactsRef(tenant) + uid;
+      return firebase.database().ref(urlNodeConcacts).once('value');
+    }
+
+    // loadGroupDetail(uidUser, uidGroup){
+    //   console.log("loadGroudDetail: ", uidGroup);
+    //   const userFirebase = this.initGroupDetails(uidUser, uidGroup);
+    //   let that = this;
+    //   userFirebase.on("value", function(snapshot) {
+    //       let groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
+    //       if (snapshot.val()){
+    //         const group = snapshot.val();
+    //         groupDetail = new GroupModel(
+    //           snapshot.key, 
+    //           group.createdOn, 
+    //           group.iconURL,
+    //           group.members, 
+    //           group.name, 
+    //           group.owner
+    //         );    
+    //       }
+    //       console.log("loadGroupDetail: ", groupDetail);
+    //       that.events.publish('loadGroupDetail:complete', groupDetail);
+    //     });
+    // }
 
   /**
    * CONTROLLO SE L'UTENTE E' AUTENTICATO
@@ -141,6 +173,7 @@ export class UserService {
         this.chatPresenceHandler.setupMyPresence(user.uid);
         console.log(" 2 - AGGIORNO IL TOKEN ::: ", user);
         this.msgService.getToken(user);
+        this.getToken();
         console.log(" 3 - CARICO IL DETTAGLIO UTENTE ::: ");
         let that = this;
         const userFirebase = this.initUserDetails(user.uid);
@@ -148,18 +181,35 @@ export class UserService {
           if (snapshot.val()){
             const user = snapshot.val();
             const fullname = user.firstname+" "+user.lastname;
-            that.currentUserDetails = new UserModel(user.uid, user.email, user.firstname, user.lastname, fullname, '');
+            that.currentUserDetails = new UserModel(user.uid, user.email, user.firstname, user.lastname, fullname, user.imageurl);
           }
           else {
             that.currentUserDetails = new UserModel(user.uid, user.email, '', '', user.uid, '');
             that.saveCurrentUserDetail(user.uid, user.email, '', '');
           }
           console.log(" 4 - PASSO ONLINE AL CHAT MANAGER");
-          
           that.chatManager.goOnLine(that.currentUserDetails);
         });
       }
     });
+  }
+
+
+  getToken(){
+    const that = this;
+    console.log('Notification permission granted.');
+    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+    .then(function(idToken) {
+        that.token = idToken;
+        console.log('idToken.', idToken);
+    }).catch(function(error) {
+      // Handle error
+      console.log('idToken.', error);
+    });
+  }
+
+  returnToken():string{
+    return this.token;
   }
 
   /**
@@ -170,6 +220,12 @@ export class UserService {
   initUserDetails(uid) {
     const urlNodeFirebase = this.urlNodeContacts+uid;
     return firebase.database().ref(urlNodeFirebase);
+  } 
+
+  initGroupDetails(uidUser, uidGroup) {
+    const tenant = this.chatManager.getTenant();
+    const urlNodeContacts = '/apps/'+tenant+'/users/'+uidUser+'/groups/'+uidGroup;
+    return firebase.database().ref(urlNodeContacts);
   } 
 
   getUidLastOpenConversation(): string {

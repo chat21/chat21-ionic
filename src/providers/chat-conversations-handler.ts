@@ -9,8 +9,9 @@ import { ConversationModel } from '../models/conversation';
 // services
 import { ChatManager } from './chat-manager/chat-manager';
 // utils
-import { getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
-import { LABEL_TU } from '../utils/constants';
+import { TYPE_DIRECT } from '../utils/constants';
+import { getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
+// import { LABEL_TU } from '../utils/constants';
 
 @Injectable()
 export class ChatConversationsHandler {
@@ -21,11 +22,12 @@ export class ChatConversationsHandler {
     private conversations: ConversationModel[];
     private idConversationSelected: String;
     private ref: firebase.database.Query;
-
+    public LABEL_TU: string;
     constructor(
         public events: Events,
         public chatManager: ChatManager
     ) {
+    
     }
     /**
      * ritorno istanza di conversations handler
@@ -140,13 +142,24 @@ export class ChatConversationsHandler {
             conv.recipient_fullname = conv.recipient;
         }
         let conversation_with_fullname = conv.sender_fullname;
+        let conversation_with = conv.sender;
         if(conv.sender == this.loggedUser.uid){
+            conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
-            conv.last_message_text = LABEL_TU + conv.last_message_text;
-        }
+            conv.last_message_text = this.LABEL_TU + conv.last_message_text;
+        } 
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.conversation_with_fullname = conversation_with_fullname
         conv.time_last_message = time_last_message;
+        
+        if(conv.channel_type === TYPE_DIRECT) {
+            const urlNodeConcacts = contactsRef(this.tenant) + conversation_with + '/imageurl/';
+            firebase.database().ref(urlNodeConcacts)
+            .once('value').then(function(snapshot) {
+                console.log("urlNodeConcacts::: ", snapshot.val(), urlNodeConcacts);
+                conv.image = snapshot.val();
+            });
+        }
         return conv;
     }
     /**

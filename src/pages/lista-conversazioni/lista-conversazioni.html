@@ -45,10 +45,10 @@
     <ng-template #contentMessageWelcome >
       <div id="content_message_wellcome" >
           <!-- [style.display]="styleMessageWelcome === true ? 'inline' : 'none'" -->
-        <div class="messaggio">{{LABEL_MSG_PUSH_START_CHAT}}</div>
+        <div class="messaggio">{{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}</div>
         <div class="pulsanti">
             <button ion-button icon-start color="273e53" (click)="openUsersList($event)">
-              {{LABEL_MSG_START_CHAT}}
+              {{ 'LABEL_MSG_START_CHAT' | translate }}
             </button>
         </div>
       </div>

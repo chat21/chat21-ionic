@@ -5,7 +5,7 @@ export class ConversationModel {
     public conversation_with_fullname: string,
     public recipient: string,
     public recipient_fullname: string,
-    // public image: any,//string,
+    public image: any,//string,
     public is_new: boolean,
     public last_message_text: string,
     public sender: string,

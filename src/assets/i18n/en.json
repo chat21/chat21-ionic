@@ -1,0 +1,22 @@
+{
+  "LABEL_TU": "tu: ",
+  "LABEL_MSG_PUSH_START_CHAT": "Premi qui per chattare con qualcuno",
+  "LABEL_MSG_START_CHAT": "inizia a chattare",
+  "LABEL_ACTIVE_NOW": "attivo/a ora",
+  "LABEL_NO_MSG_HERE": "Ancora nessun messaggio qui...",
+  "LABEL_TODAY": "Oggi",
+  "LABEL_TOMORROW": "Ieri",
+  "LABEL_LAST_ACCESS": "ultimo accesso",
+  "LABEL_TO": "alle",
+  "ARRAY_DAYS": ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"],
+
+  "LABEL_CREATED_THE": "gruppo creato il ",
+  "LABEL_INFO_ATTRIBUTE": "Info Attributi",
+  "LABEL_CLIENT": "Client: ",
+  "LABEL_SOURCEPAGE": "Source: ",
+  "LABEL_DEPARTMENT": "Department: ",
+  "LABEL_MEMBERS": "Partecipanti",
+  "LABEL_LEAVE_GROUP": "abbandona il gruppo",
+
+  "GREETING": "Hi, {{ value }}"
+}

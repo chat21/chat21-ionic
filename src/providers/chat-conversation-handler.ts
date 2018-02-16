@@ -12,6 +12,10 @@ import { UserModel } from '../models/user';
 import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED } from '../utils/constants';
 import { urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 
+//import { TranslateModule } from '@ngx-translate/core';
+//import { TranslateService } from '@ngx-translate/core';
+//import { CustomTranslateService } from './translate-service';
+
 @Injectable()
 export class ChatConversationHandler {
   private urlNodeFirebase: string;
@@ -32,6 +36,7 @@ export class ChatConversationHandler {
     //this.tenant = this.chatManager.getTenant();
     //this.loggedUser = this.chatManager.getLoggedUser();
     //this.events = new Events();
+
   }
   /**
    * inizializzo conversation handler
@@ -68,17 +73,17 @@ export class ChatConversationHandler {
       console.log("child_changed *****", childSnapshot.key);
       const itemMsg = childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l'header data
+      
       const calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
+  
       if(calcolaData != null){
         lastDate = calcolaData;
       }
       // controllo fatto per i gruppi da rifattorizzare
       (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined')?itemMsg.sender_fullname = itemMsg.sender:itemMsg.sender_fullname;
-     
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], itemMsg['text'], itemMsg['timestamp'], calcolaData, itemMsg['type']);
+      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], itemMsg['text'], itemMsg['timestamp'], calcolaData, itemMsg['type'],itemMsg['attributes']);
       const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
-      console.log("child_changed222 *****", index, that.messages, childSnapshot.key);
       that.messages.splice(index, 1, msg);
       // aggiorno stato messaggio
       // questo stato indica che è stato consegnato al client e NON che è stato letto
@@ -103,6 +108,7 @@ export class ChatConversationHandler {
       const itemMsg = childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l'header data
       let calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
+  
       if(calcolaData != null){
         lastDate = calcolaData;
       }
@@ -114,9 +120,9 @@ export class ChatConversationHandler {
         messageText = urlify(itemMsg['text']);
       }
       
-      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type']);
+      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes']);
       
-      console.log("child_added *****", calcolaData, that.messages, msg);
+      console.log("child_added *****", itemMsg['timestamp'], that.messages, msg);
       that.messages.push(msg);
      
       // aggiorno stato messaggio
@@ -211,7 +217,6 @@ export class ChatConversationHandler {
       return null;
     }
   }
-
 
 
   updateMetadataMessage(uid, metadata){

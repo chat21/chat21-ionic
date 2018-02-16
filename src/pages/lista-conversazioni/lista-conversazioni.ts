@@ -12,7 +12,7 @@ import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
 import { compareValues, windowsMatchMedia, searchIndexInArrayForUid } from '../../utils/utils';
-import { LABEL_MSG_PUSH_START_CHAT, LABEL_MSG_START_CHAT } from '../../utils/constants';
+// import { LABEL_MSG_PUSH_START_CHAT, LABEL_MSG_START_CHAT } from '../../utils/constants';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { NavProxyService } from '../../providers/nav-proxy';
@@ -36,8 +36,8 @@ export class ListaConversazioniPage extends _MasterPage {
 
   // private updatingMessageList: boolean;
   // in html
-  public LABEL_MSG_START_CHAT = LABEL_MSG_START_CHAT;
-  public LABEL_MSG_PUSH_START_CHAT = LABEL_MSG_PUSH_START_CHAT;
+  // public LABEL_MSG_START_CHAT = LABEL_MSG_START_CHAT;
+  // public LABEL_MSG_PUSH_START_CHAT = LABEL_MSG_PUSH_START_CHAT;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -351,5 +351,6 @@ export class ListaConversazioniPage extends _MasterPage {
     //this.navProxy.pushDetail(PlaceholderPage,{});
     this.userService.logoutUser();
   }
+  
   
 }

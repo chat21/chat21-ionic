@@ -9,7 +9,7 @@ import {NavProxyService} from '../providers/nav-proxy';
 //import {PlaceholderPage} from '../pages/placeholder/placeholder';
 import { MessagingService } from '../providers/messaging-service';
 import { ChatManager } from '../providers/chat-manager/chat-manager';
-
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   templateUrl: 'app.html'
@@ -21,7 +21,7 @@ export class MyApp {
   // Empty placeholders for the 'master/detail' pages...
   masterPage: any = null;
   detailPage: any = null;
-  public zone:NgZone;
+  public zone: NgZone;
   public user:any;
   pages: Array<{title: string, component: any}>;
   isNavBar: string;
@@ -47,15 +47,20 @@ export class MyApp {
     private navProxy: NavProxyService,
     public alertCtrl: AlertController,
     public msgService: MessagingService,
-    public chatManager: ChatManager
+    public chatManager: ChatManager,
+    public translate: TranslateService
   ) {
     this.zone = new NgZone({});
     this.isNavBar = location.search.split('navBar=')[1];
-    console.log('isNavBar: ', this.isNavBar);
+    //console.log('isNavBar: ', this.isNavBar);
     //this.isNavBar = 'http://support.chat21.org/dashboard/';
-    
+
+    // this language will be used as a fallback when a translation isn't found in the current language
+    //translate.setDefaultLang('it');
+
     firebase.initializeApp(config.get("firebaseConfig"));
     platform.ready().then(() => {
+      
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
@@ -75,6 +80,10 @@ export class MyApp {
       const tenant = appConfig.tenant;
       // init chat manager
       this.chatManager.configureWithAppId(tenant);
+
+      const language = document.documentElement.lang;
+      console.log('language: ', language);
+      this.translate.use(language);
     });
   }
 

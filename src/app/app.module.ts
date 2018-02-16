@@ -1,10 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
-import { HttpModule } from '@angular/http';
+
+import { HttpModule, Http } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
+
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
+
 
 //import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
 import { UsersPage } from '../pages/users/users';
@@ -14,6 +17,7 @@ import { ResetpwdPage } from '../pages/authentication/resetpwd/resetpwd';
 import { ListaConversazioniPage } from '../pages/lista-conversazioni/lista-conversazioni';
 import { DettaglioConversazionePage } from '../pages/dettaglio-conversazione/dettaglio-conversazione';
 import { ProfilePage } from '../pages/profile/profile';
+import { InfoConversationPage } from '../pages/info-conversation/info-conversation';
 
 import { AngularFireModule } from 'angularfire2';
 //import * as firebase from "firebase";
@@ -42,12 +46,22 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter';
 import { SQLite } from '@ionic-native/sqlite';
 import { MessagingService } from '../providers/messaging-service';
 import { UserService } from '../providers/user/user';
+import { GroupService } from '../providers/group/group';
 import { AutosizeDirective } from '../directives/autosize/autosize';
 import { DatabaseProvider } from '../providers/database/database';
 import { ChatConversationsHandler } from '../providers/chat-conversations-handler';
 import { ChatConversationHandler } from '../providers/chat-conversation-handler';
 import { ChatManager } from '../providers/chat-manager/chat-manager';
 import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronizer';
+
+
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -64,22 +78,23 @@ import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronize
     PopoverPage,
     PopoverProfilePage,
     UpdateImageProfilePage,
-    AutosizeDirective
+    AutosizeDirective,
+    InfoConversationPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
     IonicStorageModule.forRoot(),
-      
     IonicModule.forRoot(MyApp,{
-
       firebaseConfig : {
-        // apiKey: "AIzaSyCXckPF4UCyewDbOt_zMl4D893Kv2NUQ7Q",
-        // authDomain: "chat21demo.firebaseapp.com",
-        // databaseURL: "https://chat21demo.firebaseio.com",
-        // projectId: "chat21demo",
-        // storageBucket: "chat21demo.appspot.com",
-        // messagingSenderId: "769986182759"
         apiKey: 'AIzaSyDWMsqHBKmWVT7mWiSqBfRpS5U8YwTl7H0',
         authDomain: 'chat-v2-dev.firebaseapp.com',
         databaseURL: 'https://chat-v2-dev.firebaseio.com',
@@ -95,9 +110,8 @@ import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronize
       name: "tilechat",
       storeName: 'contacts',
       driverOrder: ['indexeddb','sqlite', 'websql', 'indexeddb', 'localstorage']
-    }),
-
-    AngularFireModule.initializeApp(this.firebaseConfig)
+    })
+    // AngularFireModule.initializeApp(this.firebaseConfig)
     // AngularFireDatabaseModule,
     // AngularFireAuthModule
   ],
@@ -114,7 +128,8 @@ import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronize
     PlaceholderPage,
     PopoverPage,
     PopoverProfilePage,
-    UpdateImageProfilePage
+    UpdateImageProfilePage,
+    InfoConversationPage
   ],
   providers: [
     //ApplicationContext,
@@ -133,7 +148,8 @@ import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronize
     ChatManager,
     ChatConversationsHandler,
     ChatConversationHandler,
-    ChatContactsSynchronizer
+    ChatContactsSynchronizer,
+    GroupService
   ]
 })
 export class AppModule {}

@@ -1,7 +1,11 @@
 
 import * as moment from 'moment/moment';
 import 'moment/locale/it.js';
+
 import { ARRAY_DAYS, LABEL_TODAY, LABEL_TOMORROW, LABEL_LAST_ACCESS, LABEL_TO } from './constants';
+
+
+
 
 /**
  * Shortest description  for phone and tablet
@@ -42,6 +46,7 @@ export function contactsRef(tenant){
   return urlNodeContacts;
 }
 
+
 /**
  * restituiso indice item nell'array con uid == key 
  * @param items 
@@ -79,6 +84,7 @@ export function removeHtmlTags(text) {
  * giorno della settimana (lunedì, martedì, ecc)
  */
 export function setHeaderDate(timestamp, lastDate): string {
+  
     var date = new Date(timestamp);
     let now: Date = new Date();
     var labelDays:string = "";
@@ -109,7 +115,6 @@ export function setHeaderDate(timestamp, lastDate): string {
    * @param timestamp 
    */
   export function setLastDate(timestamp): string {
-    //if (this.isHeaderDate(timestamp)){
       var date = new Date(timestamp);
       let now: Date = new Date();
       var labelDays:string = "";
@@ -131,9 +136,8 @@ export function setHeaderDate(timestamp, lastDate): string {
 
 
 export function convertDayToString(day){
-  let arrayDays = ARRAY_DAYS;
   //['Lunedì', 'Martedì', 'Mercoledì','Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
-   return arrayDays[day];
+   return ARRAY_DAYS[day];
 }
 
 // function for dynamic sorting
@@ -164,6 +168,13 @@ export function getNowTimestamp(){
   //console.log("timestamp:", moment().valueOf());
   return moment().valueOf();
 }
+
+export function getFormatData(timestamp): string {
+  const date = new Date(timestamp);
+  const labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
+  return labelDays;
+}
+
 
 export function getFromNow(timestamp): string {
     // var fullDate = new Date(this.news.date.$date)

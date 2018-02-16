@@ -14,12 +14,15 @@ import { UploadService } from '../../providers/upload-service/upload-service';
 // pages
 import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
+import { InfoConversationPage } from '../info-conversation/info-conversation';
+
 // utils
-import { MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, LABEL_NO_MSG_HERE, LABEL_ACTIVE_NOW, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
+import { TYPE_DIRECT, TYPE_GROUP, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
 import { searchIndexInArrayForUid } from '../../utils/utils';
 
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
-
+//import { CustomTranslateService } from '../../providers/translate-service';
+//import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -48,11 +51,9 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   private selectedFiles: FileList;
   private isSelected: boolean;
+  private openInfoConversation: boolean;
   
 
-  
-  LABEL_ACTIVE_NOW = LABEL_ACTIVE_NOW;
-  LABEL_NO_MSG_HERE = LABEL_NO_MSG_HERE;
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
   MSG_STATUS_RETURN_RECEIPT = MSG_STATUS_RETURN_RECEIPT;
@@ -68,6 +69,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     public actionSheetCtrl: ActionSheetController,
     public platform: Platform,
     private upSvc: UploadService
+    //public translate: TranslateService
   ) {
     super();
     // recupero id utente e fullname con cui si conversa
@@ -76,7 +78,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.conversationWithFullname = navParams.get('conversationWithFullname');
     this.channel_type = navParams.get('channel_type');
     this.messages = [];
-    (!this.channel_type || this.channel_type == 'undefined')?this.channel_type='direct':this.channel_type;
+    (!this.channel_type || this.channel_type == 'undefined')?this.channel_type=TYPE_DIRECT:this.channel_type;
     console.log('constructor PAGE ::: ',this.channel_type);
 
     //const that = this;
@@ -93,6 +95,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.events.subscribe('listMessages:changed-'+this.conversationWith, this.changedHandler);
     
     this.isSelected = false;
+    this.openInfoConversation = false;
   }
   /**
    * on subscribe stato utente con cui si conversa ONLINE
@@ -100,6 +103,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   statusUserOnline: any = (uid) => {
     if(uid !== this.conversationWith){return;}
     this.online = true;
+    this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
     console.log('ONLINE **************');
   }
   /**
@@ -108,6 +112,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   statusUserOffline: any = (uid) => {
     if(uid !== this.conversationWith){return;}
     this.online = false;
+    this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
     console.log('OFFLINE **************');
   }
   /**
@@ -115,6 +120,7 @@ export class DettaglioConversazionePage extends _DetailPage{
    */
   updateLastConnectionDate: any = (uid,lastConnectionDate) => {
     this.lastConnectionDate = lastConnectionDate;
+    this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
     console.log('updateLastConnectionDate **************',this.lastConnectionDate);
   }
   // /**
@@ -599,7 +605,8 @@ export class DettaglioConversazionePage extends _DetailPage{
           '', // text
           timestamp.toString(), // timestamp
           '', // headerDate
-          TYPE_MSG_IMAGE // type
+          TYPE_MSG_IMAGE,
+          '' // type
       );
       this.messages.push(message);
       // message.metadata.uid = message.uid;
@@ -637,6 +644,15 @@ export class DettaglioConversazionePage extends _DetailPage{
     console.log('onSendImage::::: ', metadata);
     this.sendMessage('', TYPE_MSG_IMAGE, metadata);
     this.doScroll();
+  }
+
+  onOpenInfoConversation(){
+    // Slowest but very readable and doesn't require a variable
+    const attributes = this.messages.slice(-1)[0].attributes;
+    this.openInfoConversation = !this.openInfoConversation;
+    console.log('onUidSelected::::: ', this.conversationWith);
+    this.events.publish('onUidSelected', this.conversationWith, this.channel_type, attributes);
+    this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
   }
 
 

@@ -1,20 +1,32 @@
 <ion-header>
   <ion-navbar >
     <ion-title>
-      <div class="headerUserName" *ngIf="conversationWith" (click)="goToUserDetail(conversationWith)">{{conversationWithFullname?conversationWithFullname:''}}
+      <div class="headerUserName" *ngIf="conversationWith">{{conversationWithFullname?conversationWithFullname:''}}
       <span *ngIf="online; then userActive else userInactive"></span>
       <ng-template #userActive>
-        <div class="headerLastActivity">{{LABEL_ACTIVE_NOW}}</div>
+        <div class="headerLastActivity">{{ 'LABEL_ACTIVE_NOW' | translate }}</div>
       </ng-template>
       <ng-template #userInactive>
         <div class="headerLastActivity">{{lastConnectionDate}}</div>
       </ng-template>
     </div>
     </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="onOpenInfoConversation()">
+        <ion-icon name="information-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+
   </ion-navbar>
 </ion-header>
 
-<ion-content class="messagesView">
+<div id="chat21-info-conversation" [class.open]="openInfoConversation">
+  <page-info-conversation></page-info-conversation>
+</div>
+<ion-content class="messagesView " [class.halfscreen]="openInfoConversation">
+  
+
   <span *ngIf="messages.length > 0;then content_messages else contentMessageWelcome">here is ignored</span>
   <ng-template #content_messages>
     <ion-list no-lines>
@@ -57,19 +69,18 @@
 
   <ng-template #contentMessageWelcome>
      <div class="messageFirst" [style.display]="style_message_welcome === true ? '' : 'none'">
-      {{LABEL_NO_MSG_HERE}}
+      {{ 'LABEL_NO_MSG_HERE' | translate }}
     </div>
   </ng-template>
   
 </ion-content>
 
 
-<ion-footer>
+<ion-footer [class.halfscreen]="openInfoConversation">
   <ion-toolbar>
     <ion-grid>
       <ion-row #messagesPageFooter id="messages-page-footer">
                    
-
         <ion-col col-2 col-bottom>
           <!-- <button ion-button clear class="message-editor-button active">
             <ion-icon name="add-circle" isActive="true" (click)="presentActionSheet()"></ion-icon>
@@ -90,8 +101,6 @@
           <!-- <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->
           </div>
 
-
-          
           <div class="button_send">
             <button ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active" (focus)="doScroll()" (click)="controlOfMessage(messageString)">
               <ion-icon name="send" isActive="true" ></ion-icon>

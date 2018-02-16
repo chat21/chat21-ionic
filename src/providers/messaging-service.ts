@@ -101,6 +101,7 @@ export class MessagingService {
         this.messaging.getToken()
         .then(function(currentToken) {
             if (currentToken) {
+                console.log('currentToken: ', currentToken);
                 //sendTokenToServer(currentToken);
                 that.token = currentToken;
                 //updateUIForPushEnabled(currentToken);
@@ -119,6 +120,11 @@ export class MessagingService {
             //setTokenSentToServer(false);
         });
     }
+
+    // returnToken(): string {
+    //     return this.token;
+    // }
+
 
     updateToken(user) {
         console.log("***********************",this.token);

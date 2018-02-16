@@ -36,18 +36,26 @@ export class UploadService {
     const uid = this.createGuid();
     const urlImagesNodeFirebase = '/public/images/' + uid + '/';
     console.log('pushUpload::::::::::::: ', urlImagesNodeFirebase);
-
     // Create a root reference
     const storageRef = firebase.storage().ref();
-
     // Create a reference to 'mountains.jpg'
     const mountainsRef = storageRef.child(urlImagesNodeFirebase);
-
     return mountainsRef.put(upload.file);
     // .then(function(snapshot) {
     //   console.log('Uploaded a blob or file! ', snapshot.downloadURL);
     //   this.observable.next(snapshot.downloadURL);
     // });
+  }
+
+  pushUploadImage(upload: UploadModel): any {
+    const uid = this.createGuid();
+    const urlImagesNodeFirebase = '/public/images/' + uid + '/';
+    console.log('pushUpload::::::::::::: ', urlImagesNodeFirebase);
+    // Create a root reference
+    const storageRef = firebase.storage().ref();
+    // Create a reference to 'mountains.jpg'
+    const mountainsRef = storageRef.child(urlImagesNodeFirebase);
+    return mountainsRef.put(upload.file);
   }
 
   pushUpload(upload: UploadModel) {
