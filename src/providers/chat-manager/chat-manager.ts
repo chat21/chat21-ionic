@@ -147,8 +147,9 @@ export class ChatManager {
    * @param conversationId 
    */
   removeConversationHandler(conversationId) {
-    // const index = this.handlers.findIndex(i => i.conversationId === conversationId); 
-    // this.handlers.splice(index, 1);
+    console.log(" -----> removeConversationHandler: ",conversationId);
+    const index = this.handlers.findIndex(i => i.conversationWith === conversationId); 
+    this.handlers.splice(index, 1);
   }
   /**
    * cerco e ritorno una conversazione dall'array delle conversazioni

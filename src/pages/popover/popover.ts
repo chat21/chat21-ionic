@@ -1,24 +1,34 @@
 import { Component } from '@angular/core';
-import { ViewController, IonicPage } from 'ionic-angular';
+import { Events, ViewController, IonicPage, NavParams } from 'ionic-angular';
+// models
+import { MessageModel } from '../../models/message';
+// utils
+import { TYPE_POPUP_LIST_CONVERSATIONS, TYPE_POPUP_DETAIL_MESSAGE } from '../../utils/constants';
+
 
 @IonicPage()
 @Component({
   selector: 'page-popover',
-  templateUrl: 'popover.html',
-  template: `
-    <ion-list>
-      <!--<ion-list-header>Ionic</ion-list-header>-->
-      <button ion-item (click)="goToProfilePage()">Profilo</button>
-      <button ion-item (click)="close()">Impostazioni</button>
-      <button ion-item (click)="logOut()">Disconnetti</button>
-    </ion-list>
-  `
+  templateUrl: 'popover.html'
 })
 
 export class PopoverPage {
+
+  public type: string;
+  public message: MessageModel;
+
+  TYPE_POPUP_LIST_CONVERSATIONS = TYPE_POPUP_LIST_CONVERSATIONS;
+  TYPE_POPUP_DETAIL_MESSAGE = TYPE_POPUP_DETAIL_MESSAGE;
+
   constructor(
-    public viewCtrl: ViewController
-  ) {}
+    public viewCtrl: ViewController,
+    public navParams: NavParams,
+    public events: Events
+  ) {
+    this.type = navParams.get('typePopup');
+    this.message = navParams.get('message');
+    console.log(" PopoverPage ********* data::: ", this.message);
+  }
   /**
    * chiudo il popover menu
    */
@@ -30,6 +40,13 @@ export class PopoverPage {
    */
   goToProfilePage(){
     this.viewCtrl.dismiss("ProfilePage");
+  }
+
+  goToInfoMessage(){
+   // pubblico open info message passando il messaggio
+   this.viewCtrl.dismiss();
+   this.events.publish('openInfoMessage', (this.message));
+   console.log('goToInfoMessage **************');
   }
   /**
    * chiudo il popover passando 'logOut' al chiamante (lista conversazioni)

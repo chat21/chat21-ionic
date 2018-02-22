@@ -49,6 +49,12 @@ export const SYSTEM: string = 'system';
 export const URL_NO_IMAGE: string = 'assets/img/no_image.png';
 export const LABEL_NOICON: string = 'NOICON';
 
+export const CLIENT_BROWSER: string = 'browser';
+
+export const TYPE_POPUP_LIST_CONVERSATIONS: string = 'LIST_CONVERSATIONS';
+export const TYPE_POPUP_DETAIL_MESSAGE: string = 'DETAIL_MESSAGE';
+
+
 
 
 

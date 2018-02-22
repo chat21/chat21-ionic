@@ -13,9 +13,13 @@
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="onOpenInfoConversation()">
+      <button *ngIf="!openInfoMessage" ion-button icon-only (click)="onOpenCloseInfoConversation()">
         <ion-icon name="information-circle"></ion-icon>
       </button>
+      <button *ngIf="openInfoMessage" ion-button icon-only (click)="onCloseInfoMessage()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+
     </ion-buttons>
 
   </ion-navbar>
@@ -24,7 +28,10 @@
 <div id="chat21-info-conversation" [class.open]="openInfoConversation">
   <page-info-conversation></page-info-conversation>
 </div>
-<ion-content class="messagesView " [class.halfscreen]="openInfoConversation">
+<div id="chat21-info-message" [class.open]="openInfoMessage">
+    <page-info-message></page-info-message>
+</div>
+<ion-content class="messagesView " [class.halfscreen]="openInfoConversation || openInfoMessage">
   
 
   <span *ngIf="messages.length > 0;then content_messages else contentMessageWelcome">here is ignored</span>
@@ -39,27 +46,32 @@
           </ion-item>
         </div>
         <ion-item class="itemMessage" text-wrap>
-          <span *ngIf="isSender(message); then contentMine else contentOther"></span>
+          <span *ngIf="ifIsSender(message); then contentMine else contentOther"></span>
           <ng-template #contentMine>
             <div class="statusMessage">
               <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>
               <ion-icon *ngIf="message.status==MSG_STATUS_SENT" name="ios-checkmark"></ion-icon>
               <ion-icon *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" name="ios-done-all"></ion-icon>
             </div>
-            <div class="message message-mine">
+            <div class="message message-mine" (mouseover)="showButtonInfo()">
+              <span class="buttonInfo" (click)="presentPopover($event, message)" >
+              </span>
               <img *ngIf="message.type == 'image';"  class="message-content message-content-image" [src]="message.metadata.src"  [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
               <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
               <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
             </div>
           </ng-template>
+
           <ng-template #contentOther>
             <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
-            <div class="message message-other">
+            <div class="message message-other" (mouseover)="showButtonInfo()" >
+              <span class="buttonInfo" [ngClass]="message.uid" (click)="presentPopover($event, message)" >
+              </span>
               <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
               <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text">
                 <!-- {{message.text}} -->
               </div>
-              <span  [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
+              <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
             </div>
           </ng-template>
         </ion-item>

@@ -1,0 +1,72 @@
+<ion-content>
+    <div class="chat21-box-profile chat21-box">
+      
+      <div class="chat21-content info-message-content">
+        
+        <ion-item *ngIf="message" class="itemMessage" text-wrap>
+          <span *ngIf="ifIsSender(message); then contentMine else contentOther"></span>
+          
+          <ng-template #contentMine>
+            <div class="statusMessage">
+              <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>
+              <ion-icon *ngIf="message.status==MSG_STATUS_SENT" name="ios-checkmark"></ion-icon>
+              <ion-icon *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" name="ios-done-all"></ion-icon>
+            </div>
+            <div class="message message-mine" >
+              <img *ngIf="message.type == 'image';"  class="message-content message-content-image" [src]="message.metadata.src"  [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+              <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
+              <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
+            </div>
+          </ng-template>
+
+          <ng-template #contentOther>
+            <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
+            <div class="message message-other" >
+              <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+              <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
+              <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
+            </div>
+          </ng-template>
+
+        </ion-item>
+        
+      </div>
+      
+    </div>
+  
+    <div class="chat21-box-info chat21-box">
+        <div class="break-line"></div>
+        <div class="chat21-header break-line">{{ 'LABEL_INFO_MESSAGE' | translate }}</div>
+        <div class="chat21-content">
+
+            <div class="chat21-row">
+                <span class="" >{{ 'LABEL_SENT_THE' | translate }}: </span>
+                <span *ngIf="message" class="lighter" >{{message.timestamp | date: 'dd/MM/yyyy H:mm'}}</span>
+            </div>
+            <div class="chat21-row">
+                <span class="" >{{ 'LABEL_SENT_BY' | translate }}: </span>
+                <span *ngIf="message" class="lighter" >{{message.sender_fullname}}</span>
+            </div>
+            <div class="chat21-row">
+                <span class="" >{{ 'LABEL_STATUS_MESSAGE' | translate }}: </span>
+                <span *ngIf="message" class="lighter" >{{message.status}}</span>
+            </div>
+          
+        </div>
+        <div class="break-line"></div>
+    </div>
+
+    <div *ngIf="attributesClient != true" class="chat21-box-attributes chat21-box">
+        <div class="chat21-header break-line">{{ 'LABEL_READ_BY' | translate }}</div>
+        <div class="chat21-content">
+        </div>
+        <div class="break-line"></div>
+    </div>
+  
+    
+  
+
+    
+  </ion-content>
+  
+  

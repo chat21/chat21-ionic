@@ -68,6 +68,15 @@ export class InfoConversationPage {
     console.log('ionViewDidLoad InfoConversationPage');
   }
 
+  /**
+   * quando esco dalla pagina distruggo i subscribe
+   */
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave **************');
+    this.unsubescribeAll();
+  }
+  
+
   initialize(){
     this.profileYourself = false;
     this.currentUserDetail = this.chatManager.getLoggedUser();
@@ -81,7 +90,7 @@ export class InfoConversationPage {
     if(this.uidSelected && this.uidSelected === this.currentUserDetail.uid){
       this.profileYourself = true;
       this.userDetail = this.currentUserDetail;
-      this.displayImage(this.uidSelected);
+      //this.displayImage(this.uidSelected);
     }
     else if(this.channel_type == TYPE_GROUP && this.uidSelected) {
       this.profileYourself = false;
@@ -100,61 +109,65 @@ export class InfoConversationPage {
 
   setSubscriptions(){
     this.events.subscribe('onUidSelected', this.subcribeUidUserSelected);
-    this.events.subscribe('changeStatusUserSelected', (lastConnectionDate, online) => {
-      this.online = online;
-      this.lastConnectionDate = lastConnectionDate;
-      console.log('changeStatusUserSelected', this.online, this.lastConnectionDate);
-    });
-    this.events.subscribe('loadUserDetail:complete', userDetail => {
-      this.userDetail = userDetail;
-      if(!userDetail.imageurl){
-        this.userDetail.imageurl = URL_NO_IMAGE;
-      }
-      this.displayImage(this.userDetail.uid);
-      console.log('loadUserDetail:complete', this.userDetail);
-    });
-    this.events.subscribe('loadGroupDetail:complete', groupDetail => {
-      this.groupDetail = groupDetail;
-      if(!groupDetail.iconURL || groupDetail.iconURL === LABEL_NOICON){
-        this.groupDetail.iconURL = URL_NO_IMAGE;
-      }
-      this.members = this.getListMembers(groupDetail.members);
-      this.displayImage(this.groupDetail.uid);
-      console.log('loadGroupDetail:complete', this.members);
-    });
+    this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
+    this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
+    this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
   }
 
-  subcribeUidUserSelected: any = (uidUserSelected, channel_type, attributes)  => {
+  subcribeUidUserSelected: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
     console.log('onUidSelected', uidUserSelected, channel_type);
+    // se sto chiudendo nn carico i dettagli utenti
+    if(!openInfoConversation){
+      return;
+    }
     this.uidSelected = uidUserSelected;
     this.channel_type = channel_type;
     if(attributes){
-      this.attributes = attributes;
-      this.attributesClient = attributes.client;
-      this.attributesSourcePage = urlify(attributes.sourcePage);
-      this.attributesDepartments = this.arrayDepartments(attributes.departments).join(", ");
+      // this.attributes = attributes;
+      this.attributesClient = (attributes.client)?attributes.client:'';
+      this.attributesSourcePage = (attributes.sourcePage)?urlify(attributes.sourcePage):'';
+      this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
     }
     this.selectUserDetail();
   };
+
+  subcribeChangeStatusUserSelected: any = (lastConnectionDate, online) => {
+    this.online = online;
+    this.lastConnectionDate = lastConnectionDate;
+    console.log('changeStatusUserSelected', this.online, this.lastConnectionDate);
+  };
+
+  subcribeLoadUserDetail: any = userDetail => {
+    this.userDetail = userDetail;
+    if(!userDetail.imageurl){
+      this.userDetail.imageurl = URL_NO_IMAGE;
+    }
+    //this.displayImage(this.userDetail.uid);
+    console.log('loadUserDetail:complete', this.userDetail);
+  };
+
+  subcribeLoadGroupDetail: any = groupDetail => {
+    this.groupDetail = groupDetail;
+    if(!groupDetail.iconURL || groupDetail.iconURL === LABEL_NOICON){
+      this.groupDetail.iconURL = URL_NO_IMAGE;
+    }
+    console.log('getListMembers', groupDetail.members);
+    this.members = this.getListMembers(groupDetail.members);
+    //this.displayImage(this.groupDetail.uid);
+    console.log('loadGroupDetail:complete', groupDetail.members);
+  };
+
+
   /**
-   * carico url immagine profilo passando id utente
+   * unsubscribe all subscribe events
    */
-  displayImage(uidContact){
-    const that = this;
-    this.upSvc.display(uidContact)
-    .then((url) => {
-      that.zone.run(() => {
-        if(that.profileYourself){
-          that.currentUserDetail.imageurl = url;
-        }else{
-          that.userDetail.imageurl = url;
-        }
-      });
-    })
-    .catch((error)=>{
-      // console.log("error::: ",error);
-    });
+  unsubescribeAll(){
+    this.events.unsubscribe('onUidSelected', this.subcribeUidUserSelected);
+    this.events.unsubscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
+    this.events.unsubscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
+    this.events.unsubscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
   }
+
 
 
   getListMembers(members): UserModel[]{ 

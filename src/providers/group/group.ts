@@ -28,7 +28,7 @@ export class GroupService {
     public chatManager: ChatManager,
     public userService: UserService
   ) {
-    this.BASE_URL_LEAVE_GROUP = 'https://us-central1-chat-v2-dev.cloudfunctions.net/api/groups/';
+    this.BASE_URL_LEAVE_GROUP = 'https://us-central1-chat-v2-dev.cloudfunctions.net/api/';
     this.observable = new BehaviorSubject<boolean>(null);
     console.log('Hello GroupProvider Provider');
   }
@@ -47,6 +47,7 @@ export class GroupService {
         let groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
         if (snapshot.val()){
           const group = snapshot.val();
+          console.log("group:: ", group);
           groupDetail = new GroupModel(
             snapshot.key, 
             getFormatData(group.createdOn), 
@@ -68,10 +69,10 @@ export class GroupService {
     const headers = new Headers();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/json');
-    headers.append( 'Authorization', 'Bearer '+token);
+    headers.append('Authorization', 'Bearer '+token);
 
     const options = new RequestOptions({ headers: headers });
-    const url = this.BASE_URL_LEAVE_GROUP + uidGroup + '/members/' + uidUser;
+    const url = this.BASE_URL_LEAVE_GROUP + appId + '/groups/' + uidGroup + '/members/' + uidUser;
     console.log('url: ', url);
     const body = {
       'app_id': appId

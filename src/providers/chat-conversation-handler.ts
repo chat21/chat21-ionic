@@ -9,7 +9,7 @@ import { UserModel } from '../models/user';
 // services
 //import { ChatManager } from './chat-manager/chat-manager';
 // utils
-import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED } from '../utils/constants';
+import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER } from '../utils/constants';
 import { urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 
 //import { TranslateModule } from '@ngx-translate/core';
@@ -59,23 +59,18 @@ export class ChatConversationHandler {
    * mi sottoscrivo a change, removed, added
    */
   connect() {
-    //this.messages = [];
     var lastDate: string = "";
     const that = this;
-
     this.urlNodeFirebase = conversationMessagesRef(this.tenant, this.loggedUser.uid);
     this.urlNodeFirebase = this.urlNodeFirebase+this.conversationWith;
-    console.log("urlNodeFirebase *****", this.urlNodeFirebase);
     const firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
     this.messagesRef = firebaseMessages.orderByChild('timestamp').limitToLast(100);
 
+    //// SUBSRIBE CHANGE ////
     this.messagesRef.on("child_changed", function(childSnapshot) {
-      console.log("child_changed *****", childSnapshot.key);
       const itemMsg = childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-      
       const calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
-  
       if(calcolaData != null){
         lastDate = calcolaData;
       }
@@ -88,51 +83,69 @@ export class ChatConversationHandler {
       // aggiorno stato messaggio
       // questo stato indica che è stato consegnato al client e NON che è stato letto
       that.setStatusMessage(childSnapshot, that.conversationWith);
+
+      if(that.ifIsSender(msg, that.loggedUser)){
+        that.events.publish('doScroll');
+      }
       // pubblico messaggio - sottoscritto in dettaglio conversazione
       //that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, that.messages);
-      that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, msg);
+      //that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, msg);
     });
 
     this.messagesRef.on("child_removed", function(childSnapshot) {
       // al momento non previsto!!!
       const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
-        // controllo superfluo sarà sempre maggiore
-        if(index>-1){
-          that.messages.splice(index, 1);
-          this.events.publish('conversations:update-'+that.conversationWith, that.messages);
-        }
+      // controllo superfluo sarà sempre maggiore
+      if(index>-1){
+        that.messages.splice(index, 1);
+        //this.events.publish('conversations:update-'+that.conversationWith, that.messages);
+      }
+
+      // if(!this.isSender(msg)){
+      //   that.events.publish('doScroll');
+      // }
     });
 
+    //// AGGIUNTA MESSAGGIO ////
     this.messagesRef.on("child_added", function(childSnapshot) {
       //console.log("child_added *****", childSnapshot.key);
       const itemMsg = childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l'header data
       let calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
-  
       if(calcolaData != null){
         lastDate = calcolaData;
       }
       // controllo fatto per i gruppi da rifattorizzare
       (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined')?itemMsg.sender_fullname = itemMsg.sender:itemMsg.sender_fullname;
-      // creo oggetto messaggio e lo aggiungo all'array dei messaggi
+      // bonifico messaggio da url
       let messageText = itemMsg['text'];
       if (itemMsg['type'] == 'text'){
         messageText = urlify(itemMsg['text']);
       }
-      
+
+      if(itemMsg['metadata']){
+        const index = searchIndexInArrayForUid(that.messages, itemMsg['metadata'].uid);
+        if(index>-1){
+          that.messages.splice(index, 1);
+        }
+      }
+
+      // creo oggetto messaggio e lo aggiungo all'array dei messaggi
       const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes']);
-      
       console.log("child_added *****", itemMsg['timestamp'], that.messages, msg);
       that.messages.push(msg);
-     
+    
       // aggiorno stato messaggio
       // questo stato indica che è stato consegnato al client e NON che è stato letto
       that.setStatusMessage(childSnapshot, that.conversationWith);
+      
+      console.log("msg.sender ***** "+msg.sender+" that.loggedUser.uid:::"+that.loggedUser.uid);
+      if (msg.sender === that.loggedUser.uid){
+        that.events.publish('doScroll');
+      }
       // pubblico messaggio - sottoscritto in dettaglio conversazione
-      console.log("publish:: ", 'listMessages:added-'+that.conversationWith, that.events);
-      //that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, that.messages);
-      that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, msg);
-
+      //console.log("publish:: ", 'listMessages:added-'+that.conversationWith, that.events);
+      //that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, msg);
     })
   } 
   /**
@@ -159,8 +172,9 @@ export class ChatConversationHandler {
    * richiamato dalla pagina elenco messaggi della conversazione
    * @param message 
    */
-  isSender(message) {
-    const currentUser = this.loggedUser;//this.chatManager.getLoggedUser();
+  ifIsSender(message, currentUser) {
+    //const currentUser = this.loggedUser;//this.chatManager.getLoggedUser();
+    console.log("ifIsSender::::: ", message.sender, currentUser.uid);
     if (currentUser){
       if (message.sender == currentUser.uid) {
         return true;
@@ -182,8 +196,9 @@ export class ChatConversationHandler {
    * @param conversationWith 
    * @param conversationWithDetailFullname 
    */
-  sendMessage(msg, type, metadata, conversationWith, conversationWithDetailFullname, channel_type): string {
+  sendMessage(msg, type, metadata, conversationWith, conversationWithDetailFullname, channel_type) {
     (!channel_type || channel_type == 'undefined')?channel_type='direct':channel_type;
+    console.log('messages: ',  this.messages);
     console.log("SEND MESSAGE: ", msg, channel_type);
     // console.log("messageTextArea:: ",this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style);
     // const messageString = urlify(msg);
@@ -192,8 +207,12 @@ export class ChatConversationHandler {
     const language = document.documentElement.lang;
     const sender_fullname = this.loggedUser.fullname;
     const recipient_fullname = conversationWithDetailFullname;
+    const attributes = {
+      client: CLIENT_BROWSER,
+      sourcePage: location.href
+    }
     let firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
-    if(firebaseMessages) {
+    //if(firebaseMessages) {
       const message = {
         language: language,
         recipient: conversationWith,
@@ -204,18 +223,19 @@ export class ChatConversationHandler {
         text: msg,
         timestamp: timestamp,
         type: type,
-        channel_type: channel_type
+        channel_type: channel_type,
+        attributes: attributes
       };
       console.log('messaggio **************',message);
-      const newMessageRef = firebaseMessages.push();
-      newMessageRef.set(message);
+      firebaseMessages.push(message);
+      //firebaseMessages.set(message);
       // se non c'è rete viene aggiunto al nodo in locale e visualizzato
       // appena torno on line viene inviato!!!
-      return newMessageRef.key;
-    }
-    else {
-      return null;
-    }
+      // return newMessageRef.key;
+    // }
+    // else {
+    //   return null;
+    // }
   }
 
 

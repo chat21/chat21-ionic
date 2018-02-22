@@ -18,6 +18,7 @@ import { ListaConversazioniPage } from '../pages/lista-conversazioni/lista-conve
 import { DettaglioConversazionePage } from '../pages/dettaglio-conversazione/dettaglio-conversazione';
 import { ProfilePage } from '../pages/profile/profile';
 import { InfoConversationPage } from '../pages/info-conversation/info-conversation';
+import { InfoMessagePage } from '../pages/info-message/info-message';
 
 import { AngularFireModule } from 'angularfire2';
 //import * as firebase from "firebase";
@@ -55,6 +56,7 @@ import { ChatManager } from '../providers/chat-manager/chat-manager';
 import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronizer';
 
 
+
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -79,7 +81,8 @@ export function createTranslateLoader(http: HttpClient) {
     PopoverProfilePage,
     UpdateImageProfilePage,
     AutosizeDirective,
-    InfoConversationPage
+    InfoConversationPage,
+    InfoMessagePage
   ],
   imports: [
     BrowserModule,
@@ -129,7 +132,8 @@ export function createTranslateLoader(http: HttpClient) {
     PopoverPage,
     PopoverProfilePage,
     UpdateImageProfilePage,
-    InfoConversationPage
+    InfoConversationPage,
+    InfoMessagePage
   ],
   providers: [
     //ApplicationContext,

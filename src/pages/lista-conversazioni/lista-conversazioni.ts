@@ -12,7 +12,7 @@ import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
 import { compareValues, windowsMatchMedia, searchIndexInArrayForUid } from '../../utils/utils';
-// import { LABEL_MSG_PUSH_START_CHAT, LABEL_MSG_START_CHAT } from '../../utils/constants';
+import { TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { NavProxyService } from '../../providers/nav-proxy';
@@ -59,11 +59,11 @@ export class ListaConversazioniPage extends _MasterPage {
     this.uidReciverFromUrl = location.search.split('recipient=')[1];
     console.log('location.search: ',  this.uidReciverFromUrl);
     // this.updatingMessageList = false;
-    if(this.uidReciverFromUrl){
-      //that.uidLastOpenConversation = that.uidReciverFromUrl;
-      //this.uidConvSelected = this.uidReciverFromUrl;
-      //this.uidReciverFromUrl = null;
-    }
+    // if(this.uidReciverFromUrl){
+    //   //that.uidLastOpenConversation = that.uidReciverFromUrl;
+    //   //this.uidConvSelected = this.uidReciverFromUrl;
+    //   //this.uidReciverFromUrl = null;
+    // }
 
     /** SUBSCRIBE USER LOGGED
      * sul LOGIN:
@@ -228,7 +228,7 @@ export class ListaConversazioniPage extends _MasterPage {
     const that = this;
     this.databaseProvider.getUidLastOpenConversation()
     .then(function(uid) { 
-      console.log('getUidLastOpenConversation ::' + uid);
+      console.log('getUidLastOpenConversation:: ' + uid + 'that.uidReciverFromUrl:: ' + that.uidReciverFromUrl);
       if(that.uidReciverFromUrl){
         that.uidConvSelected = that.uidReciverFromUrl;
         that.uidReciverFromUrl = null;
@@ -326,7 +326,7 @@ export class ListaConversazioniPage extends _MasterPage {
   * alla chiusura controllo su quale opzione ho premuto e attivo l'azione corrispondete
   */
   presentPopover(event) {
-    let popover = this.popoverCtrl.create(PopoverPage);
+    let popover = this.popoverCtrl.create(PopoverPage, {typePopup:TYPE_POPUP_LIST_CONVERSATIONS});
     popover.present({
       ev: event
     });

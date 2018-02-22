@@ -17,6 +17,11 @@
     "LABEL_DEPARTMENT": "Department: ",
     "LABEL_MEMBERS": "Partecipanti",
     "LABEL_LEAVE_GROUP": "abbandona il gruppo",
+    "LABEL_INFO_MESSAGE": "Info Messaggio",
+    "LABEL_READ_BY": "Letto da",
+    "LABEL_STATUS_MESSAGE": "stato",
+    "LABEL_SENT_THE": "inviato il",
+    "LABEL_SENT_BY": "inviato da",
 
     "GREETING": "Hi, {{ value }}"
 }

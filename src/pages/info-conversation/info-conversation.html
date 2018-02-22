@@ -48,7 +48,7 @@
   </div>
 
 
-  <div *ngIf="attributes" class="chat21-box-attributes chat21-box">
+  <div *ngIf="attributesClient" class="chat21-box-attributes chat21-box">
       <div class="chat21-header break-line">{{ 'LABEL_INFO_ATTRIBUTE' | translate }}</div>
       <div class="chat21-content">
           <div class="chat21-row">
@@ -59,7 +59,7 @@
               <span class="" >{{ 'LABEL_SOURCEPAGE' | translate }}</span>
               <span class="lighter" [innerHTML]="attributesSourcePage" ></span>
           </div>
-          <div class="chat21-row">
+          <div *ngIf="attributesDepartments" class="chat21-row">
               <span class="" >{{ 'LABEL_DEPARTMENT' | translate }}</span>
               <span light class="lighter" >{{attributesDepartments}}</span>
           </div>

@@ -1,6 +1,14 @@
-page-info-conversation {
-    padding: 0px;
-    margin: 0px;
+page-info-message {
+
+    .item-inner{
+        border-bottom: 0px solid #dedede!important;
+    }
+
+    .info-message-content{
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
 
     .chat21-box {
         min-height: 40px;
@@ -21,7 +29,6 @@ page-info-conversation {
 
     .chat21-image > img {
         clip-path: circle(100px at center);
-        // max-width: 100%;
         width: 200px;
         height: 200px;
         margin-top: 10px;
@@ -30,10 +37,6 @@ page-info-conversation {
     }
 
     .chat21-info {
-        // width: calc(100% - 100px);
-        // position: absolute;
-        // left: 70px;
-        // top: 20px;
         margin: 0px 10px 4px 10px;
     }
     .chat21-content .chat21-name {
@@ -113,23 +116,15 @@ page-info-conversation {
 
 
     .break-line {
-        // width: 100%;
-        // background-color: #60646B;
-        // margin-top: 10px;
         border-bottom-style: inset;
         border-color: rgba(0, 0, 0, .15);
         border-bottom-width: thin;
-        // margin-left: -20px;
-        // margin-right: -20px;
     }
     
     .speaker-detail img {
-        //max-width: 20vw;
-        width: 50px; /* 20% of the viewport width */
+        width: 50px;
         height: 50px;
         border-radius: 50%;
-        // width: 140px;
-        // display: block;
         margin-left: auto;
         margin-right: auto;
     }
@@ -157,4 +152,3 @@ page-info-conversation {
         /* Yep, even the new clip-path has deprecated stuff. */
     }
 }
-    

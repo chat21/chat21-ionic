@@ -84,22 +84,26 @@ export function removeHtmlTags(text) {
  * giorno della settimana (lunedì, martedì, ecc)
  */
 export function setHeaderDate(timestamp, lastDate): string {
-  
     var date = new Date(timestamp);
     let now: Date = new Date();
-    var labelDays:string = "";
-    console.log('setHeaderDate **************',timestamp, lastDate, date);
-    if (now.getFullYear() != date.getFullYear()){
-      labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
-    } else if (now.getMonth() != date.getMonth()){
-      labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
-    } else if (now.getDay() == date.getDay()){
+    var labelDays:string = LABEL_TODAY;
+    var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+    // Esclude l'ora ed il fuso orario
+    var utc1 = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+    var utc2 = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    const days =  Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    // console.log('setHeaderDate days: ********************',days);
+    if(days > 6){
+      labelDays = date.toLocaleDateString();//date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
+    }
+    else if( days == 0 ){
       labelDays = LABEL_TODAY;
-    } else if (now.getDay() - date.getDay() == 1){
+    } else if( days == 1 ){
       labelDays = LABEL_TOMORROW;
     } else {
       labelDays = convertDayToString(date.getDay());
     }
+    // console.log('setHeaderDate labelDays: ********************',labelDays);
     // se le date sono diverse o la data di riferimento non è impostata
     // ritorna la data calcolata
     // altrimenti torna null 
@@ -109,6 +113,9 @@ export function setHeaderDate(timestamp, lastDate): string {
       return null;
     }
   }
+
+
+  
   /**
    * calcolo il tempo trascorso tra la data passata e adesso
    * utilizzata per calcolare data ultimo accesso utente
@@ -215,4 +222,18 @@ export function getFromNow(timestamp): string {
     moment.locale('it');
     let date_as_string = moment.unix(timestamp).fromNow();
     return date_as_string;
+  }
+
+  export function getSizeImg(message, MAX_WIDTH_IMAGES): any {
+    const metadata = message.metadata;
+    const sizeImage = {
+      width: metadata.width,
+      height: metadata.height
+    }
+    if(metadata.width && metadata.width>MAX_WIDTH_IMAGES){
+      const rapporto = (metadata['width'] / metadata['height']);
+      sizeImage.width = MAX_WIDTH_IMAGES;
+      sizeImage.height = MAX_WIDTH_IMAGES / rapporto;
+    }
+    return sizeImage;
   }

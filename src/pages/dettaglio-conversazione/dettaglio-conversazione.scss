@@ -375,5 +375,49 @@ page-dettaglio-conversazione {
             display: inline;
         }
 
+        #chat21-info-message {
+            position: absolute;
+            height: 0px;
+            width: 0px;
+            display: none;
+        }
+        #chat21-info-message.open {
+            position: absolute;
+            height: 100%;
+            width: 320px;
+            z-index: 9;
+            right: 0px;
+            top: 59px;
+            border-left-style: inset;
+            border-color: rgba(0, 0, 0, .15);
+            border-left-width: thin;
+            display: inline;
+        }
+
+
+
+
+        .buttonInfo {
+            position: absolute;
+            top: 0px;
+            right: 4px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 18px;
+            background-image : url("../assets/img/ic_keyboard_arrow_down_white_24px.svg");
+            width: 16px;
+            height: 16px;
+            display: none;
+            cursor: pointer;
+        }
+
+        .message-other .buttonInfo {
+            background-image : url("../assets/img/ic_keyboard_arrow_down_black_24px.svg");
+        }
+
+        .message:hover .buttonInfo { 
+            display: block;
+        }
+        
 
     }
