@@ -46,7 +46,7 @@
           </ion-item>
         </div>
         <ion-item class="itemMessage" text-wrap>
-          <span *ngIf="ifIsSender(message); then contentMine else contentOther"></span>
+          <span *ngIf="isSender(message); then contentMine else contentOther"></span>
           <ng-template #contentMine>
             <div class="statusMessage">
               <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>
@@ -88,7 +88,7 @@
 </ion-content>
 
 
-<ion-footer [class.halfscreen]="openInfoConversation">
+<ion-footer [class.halfscreen]="openInfoConversation || openInfoMessage">
   <ion-toolbar>
     <ion-grid>
       <ion-row #messagesPageFooter id="messages-page-footer">

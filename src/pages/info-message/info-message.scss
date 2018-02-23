@@ -4,11 +4,27 @@ page-info-message {
         border-bottom: 0px solid #dedede!important;
     }
 
+    .itemMessage{
+        padding: 0px;
+    }
+
     .info-message-content{
         padding-top: 10px;
         padding-bottom: 10px;
     }
 
+    .chat21-box-message {
+        background-image: url('../assets/chat21-ionic-pattern-2.svg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        // background-color: blanchedalmond;
+    }
+
+    .chat21-right-box {
+        background-color: #ffffff;
+        height: calc(100% - 60px);
+    }
 
     .chat21-box {
         min-height: 40px;
@@ -34,6 +50,13 @@ page-info-message {
         margin-top: 10px;
         margin-left: calc((100% - 200px)/2);
         border: 0;
+    }
+
+    .message-mine.message-content-image {
+        float: right;
+    }
+    .message-other.message-content-image {
+        float: left;
     }
 
     .chat21-info {

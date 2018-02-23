@@ -84,7 +84,7 @@ export class ChatConversationHandler {
       // questo stato indica che è stato consegnato al client e NON che è stato letto
       that.setStatusMessage(childSnapshot, that.conversationWith);
 
-      if(that.ifIsSender(msg, that.loggedUser)){
+      if(that.isSender(msg, that.loggedUser)){
         that.events.publish('doScroll');
       }
       // pubblico messaggio - sottoscritto in dettaglio conversazione
@@ -172,9 +172,9 @@ export class ChatConversationHandler {
    * richiamato dalla pagina elenco messaggi della conversazione
    * @param message 
    */
-  ifIsSender(message, currentUser) {
+  isSender(message, currentUser) {
     //const currentUser = this.loggedUser;//this.chatManager.getLoggedUser();
-    console.log("ifIsSender::::: ", message.sender, currentUser.uid);
+    //console.log("isSender::::: ", message.sender, currentUser.uid);
     if (currentUser){
       if (message.sender == currentUser.uid) {
         return true;

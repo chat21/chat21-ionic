@@ -50,9 +50,9 @@ export class InfoMessagePage {
    * Check if the user is the sender of the message.
    * @param message 
    */
-  ifIsSender(message) {
+  isSender(message) {
     const currentUser = this.chatManager.getLoggedUser();
-    return this.conversationHandler.ifIsSender(message, currentUser);
+    return this.conversationHandler.isSender(message, currentUser);
   }
 
   getSizeImg(message): any {

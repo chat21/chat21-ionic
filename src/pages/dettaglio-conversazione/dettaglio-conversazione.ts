@@ -407,9 +407,9 @@ export class DettaglioConversazionePage extends _DetailPage{
    * Check if the user is the sender of the message.
    * @param message 
    */
-  ifIsSender(message) {
+  isSender(message) {
     const currentUser = this.chatManager.getLoggedUser();
-    return this.conversationHandler.ifIsSender(message, currentUser);
+    return this.conversationHandler.isSender(message, currentUser);
   }
   /**
    * se il messaggio non è vuoto

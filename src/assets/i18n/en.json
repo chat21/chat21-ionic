@@ -21,7 +21,7 @@
   "LABEL_READ_BY": "Letto da",
   "LABEL_STATUS_MESSAGE": "stato",
   "LABEL_SENT_THE": "inviato il",
-  "LABEL_SENT_BY": "inviato da",
+  "LABEL_SENT_BY": "da",
 
   "GREETING": "Hi, {{ value }}"
 
