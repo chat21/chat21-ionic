@@ -53,7 +53,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   private style_message_welcome: boolean;
 
   private selectedFiles: FileList;
-  private isSelected: boolean;
+  private isFileSelected: boolean;
   private openInfoConversation: boolean;
   private openInfoMessage: boolean;
   
@@ -78,47 +78,46 @@ export class DettaglioConversazionePage extends _DetailPage{
   ) {
     super();
     // recupero id utente e fullname con cui si conversa
-    
     this.conversationWith = navParams.get('conversationWith');
     this.conversationWithFullname = navParams.get('conversationWithFullname');
     this.channel_type = navParams.get('channel_type');
-    this.messages = [];
-    (!this.channel_type || this.channel_type == 'undefined')?this.channel_type=TYPE_DIRECT:this.channel_type;
     console.log('constructor PAGE ::: ',this.channel_type);
-
-    //const that = this;
-    // elenco sottoscrizioni 
-    // subscribe stato utente con cui si conversa ONLINE
-    this.events.subscribe('statusUser:online-'+this.conversationWith, this.statusUserOnline);
-    // subscribe stato utente con cui si conversa ONLINE
-    this.events.subscribe('statusUser:offline-'+this.conversationWith, this.statusUserOffline);
-    // subscribe data ultima connessione utente con cui si conversa
-    this.events.subscribe('lastConnectionDate-'+this.conversationWith, this.updateLastConnectionDate);
-  
-    // subscribe elenco messaggi
-    this.events.subscribe('doScroll', this.goToBottom);
-
-    // subscribe dettaglio messaggio
-    this.events.subscribe('openInfoMessage', this.onOpenInfoMessage);
-    
-    // this.events.subscribe('listMessages:added-'+this.conversationWith, this.addHandler);
-    // this.events.subscribe('listMessages:changed-'+this.conversationWith, this.changedHandler);
-    
-    this.isSelected = false;
-    this.openInfoConversation = true;
-    this.openInfoMessage = false;
+    //// subscriptions list 
+    this.initSubscriptions();
+    //// init variables
+    (!this.channel_type || this.channel_type == 'undefined')?this.channel_type=TYPE_DIRECT:this.channel_type;
+    this.messages = []; // list messages of conversation
+    this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
+    this.openInfoConversation = true; // indica se è aperto il box info conversation
+    this.openInfoMessage = false; // indica se è aperto il box info message
   }
 
+  //// SUBSCRIBTIONS ////
+  /** 
+   * subscriptions list 
+  */
+  initSubscriptions(){
+     // subscribe stato utente con cui si conversa ONLINE
+     this.events.subscribe('statusUser:online-'+this.conversationWith, this.statusUserOnline);
+     // subscribe stato utente con cui si conversa ONLINE
+     this.events.subscribe('statusUser:offline-'+this.conversationWith, this.statusUserOffline);
+     // subscribe data ultima connessione utente con cui si conversa
+     this.events.subscribe('lastConnectionDate-'+this.conversationWith, this.updateLastConnectionDate);
+     // subscribe elenco messaggi
+     this.events.subscribe('doScroll', this.goToBottom);
+     // subscribe dettaglio messaggio
+     this.events.subscribe('openInfoMessage', this.onOpenInfoMessage);
+  }
+
+  //// CALLBACK SUBSCRIBTIONS ////
+  /**
+   * callback sottoscrizione openInfoMessage
+   * apre il box di dx del info messaggio
+   */
   onOpenInfoMessage: any = (message) => {
     this.openInfoMessage = true;
-    console.log('OPEN MESSAGE **************', message);
+    //console.log('OPEN MESSAGE **************', message);
   }
-
-  onCloseInfoMessage(){
-    this.openInfoMessage = false;
-    console.log('OPEN MESSAGE **************');
-  }
-
   /**
    * on subscribe stato utente con cui si conversa ONLINE
    */
@@ -152,113 +151,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     console.log('goToBottom');
     this.doScroll();
   }
-
-  // /**
-  //  * on subcribe add message
-  //  */
-  // addHandler:any = (uid, messages) => {
-  //   console.log('addHandler', uid, messages);
-  //   this.messages = messages;
-  //   this.doScroll();
-  // }
-  // /**
-  //  * on subcribe change message
-  //  */
-  // changedHandler:any = (uid, messages) => {
-  //   console.log('changedHandler', uid, messages);
-  //   this.messages = messages;
-  //   // this.doScroll();
-  // }
-  /**
-   * on subcribe add message
-   */
-  // addHandler:any = (uid, message) => {
-  //   console.log('ADD NW MSG ->', message.type, message);
-  //   if (message && message.sender === this.currentUserDetail.uid ) {
-  //       // && message.type !== TYPE_MSG_TEXT
-  //       // se è un'immagine che ho inviato io nn fare nulla
-  //       // aggiorno la stato del messaggio e la data
-  //       console.log('UPDATE NW MSG ->');
-  //       this.updateMessage(message);
-  //       this.doScroll();
-  //   } else if (message) {
-  //     if(message.type !== TYPE_MSG_TEXT){
-  //       if(!message.metadata || message.metadata === '' || message.metadata === 'undefined'){
-  //         message.metadata = '{src:'+message.text+'}';
-  //       }
-  //     }
-  //     console.log('ADD NW MSG 2:', message);
-  //     this.messages.push(message);
-  //     this.doScroll();
-  //   }
-
-  //   // console.log('addHandler', uid, messages);
-  //   // this.messages = messages;
-  //   // this.doScroll();
-  // }
-  // /**
-  //  * on subcribe change message
-  //  */
-  // changedHandler:any = (uid, message) => {
-  //   console.log('CHANGED NW MSG:----> ', message.uid, uid);
-  //   if (message) {
-  //       const index = searchIndexInArrayForUid(this.messages, message.uid);
-  //       if(index > -1){
-  //         console.log('index:----> ', index, this.messages);
-  //         this.messages.splice(index, 1, message);
-  //       }
-        
-  //   }
-  //   // console.log('changedHandler', uid, messages);
-  //   // this.messages = messages;
-  // }
-
-  /**
-   * aggiorno messaggio: uid, status, timestamp, headerDate
-   * richiamata alla sottoscrizione dell'aggiunta di un nw messaggio
-   * in caso in cui il messaggio è un'immagine ed è stata inviata dall'utente
-  */
-  updateMessage(message) {
-    console.log('UPDATE MSG:', message);
-    const index = searchIndexInArrayForUid(this.messages, message.metadata.uid);
-    if (index > -1) {
-        this.messages[index].uid = message.uid;
-        this.messages[index].status = message.status;
-        this.messages[index].timestamp = message.timestamp;
-        this.messages[index].headerDate = message.headerDate;
-        console.log('UPDATE ok:', this.messages[index]);
-    } 
-    // else {
-    //     this.messages.push(message);
-    // }
-    // if(message.type ===TYPE_MSG_IMAGE && !message.metadata || message.metadata === ''){
-    //   this.messages.push(message);
-    //   return;
-    // }
-  }
-
-  /**
-   * 
-   */
-  ngOnInit() {
-    this.messages = [];
-    console.log('ngOnInit',this.events,this.conversationWithFullname);
-  }
-  /**
-   * quando ho renderizzato la pagina richiamo il metodo di inizialize
-   */
-  ionViewDidEnter(){
-    console.log('ionViewDidEnter');
-    //this.content.scrollDownOnLoad = true;
-    this.initialize();
-  }
-  /**
-   * quando esco dalla pagina distruggo i subscribe
-   */
-  ionViewWillLeave() {
-    console.log('ionViewWillLeave **************');
-    this.unsubescribeAll();
-  }
+  //// UNSUBSCRIPTIONS ////
   /**
    * unsubscribe all subscribe events
    */
@@ -266,11 +159,31 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.events.unsubscribe('statusUser:online-'+this.conversationWith, this.statusUserOnline);
     this.events.unsubscribe('statusUser:offline-'+this.conversationWith, this.statusUserOffline);
     this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, this.updateLastConnectionDate);
-    // this.events.unsubscribe('listMessages:added-'+this.conversationWith, this.addHandler);
-    // this.events.unsubscribe('listMessages:changed-'+this.conversationWith, this.changedHandler);
-    // this.chatManager.removeConversationHandler(this.conversationWith);
   }
 
+
+  //// SYSTEM FUNCTIONS ////
+  /** init */
+  ngOnInit() {
+    //console.log('ngOnInit',this.events,this.conversationWithFullname);
+  }
+  /**
+   * quando ho renderizzato la pagina richiamo il metodo di inizialize
+   */
+  ionViewDidEnter(){
+    //console.log('ionViewDidEnter');
+    this.initialize();
+  }
+  /**
+   * quando esco dalla pagina distruggo i subscribe
+   */
+  ionViewWillLeave() {
+    //console.log('ionViewWillLeave **************');
+    this.unsubescribeAll();
+  }
+  
+
+  //// MY FUNCTIONS ////
   /**
    * resetto array messaggi
    * resetto stato online user with
@@ -283,8 +196,7 @@ export class DettaglioConversazionePage extends _DetailPage{
    */
   initialize(){
     console.log('initialize DettaglioConversazionePage **************',this.chatManager.handlers);
-    // this.updatingMessageList = false;
-    //this.messages = [];
+    this.messages = [];
     this.online = false;
     this.lastConnectionDate = '';
     this.tenant = this.chatManager.getTenant();
@@ -363,6 +275,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     // this.updatingMessageList = true;
   }
 
+
   //// START Scroll managemant functions ////
   /**
    * Scroll to bottom of page after a short delay.
@@ -376,7 +289,6 @@ export class DettaglioConversazionePage extends _DetailPage{
       }
     }, 1);
   }
-
   /**
    * Scroll to top of the page after a short delay.
    */
@@ -403,6 +315,13 @@ export class DettaglioConversazionePage extends _DetailPage{
 
 
   //// START FUNZIONI RICHIAMATE DA HTML ////
+  /** 
+   * chiude il box di dx del info messaggio
+  */
+  onCloseInfoMessage(){
+    this.openInfoMessage = false;
+    //console.log('OPEN MESSAGE **************');
+  }
   /**
    * Check if the user is the sender of the message.
    * @param message 
@@ -425,17 +344,12 @@ export class DettaglioConversazionePage extends _DetailPage{
       this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
       this.conversationHandler.sendMessage(msg, type, metadata, this.conversationWith, this.conversationWithFullname, this.channel_type);
       this.doScroll();
-      // if (resultSendMsgKey){
-      //   if(metadata){
-      //     const key = metadata.src.substring(metadata.src.length - 16);
-      //     this.arrayLocalImmages[key] = resultSendMsgKey;
-      //   }
-      //   this.doScroll();
-      // }
     }
   }
-
-
+  /**
+   * 
+   * @param metadata 
+   */
   updateMetadataMessage(metadata) {
     // recupero id nodo messaggio
     const key = metadata.src.substring(metadata.src.length - 16);
@@ -444,7 +358,6 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.conversationHandler.updateMetadataMessage(uid, metadata);
     delete this.arrayLocalImmages[key];
   }
-
   /**
    * purifico il messaggio
    * e lo passo al metodo di invio
@@ -485,19 +398,25 @@ export class DettaglioConversazionePage extends _DetailPage{
       uidUser: uidReciver
     });
   }
-
+  /**
+   * 
+   * @param message 
+   */
   getSizeImg(message): any {
     return getSizeImg(message, MAX_WIDTH_IMAGES);
   }
-
+  /** */
   showButtonInfo(){
     console.log('showButtonInfo');
   }
+  /**
+   * 
+   * @param msg 
+   */
   showDetailMessage(msg){
     console.log('showDetailMessage', msg);
     //this.presentPopover(msg);
   }
-
   /**
   * apro il menu delle opzioni 
   * (metodo richiamato da html) 
@@ -508,7 +427,9 @@ export class DettaglioConversazionePage extends _DetailPage{
   popover.present({
     ev: event
   });
-
+  /**
+   * 
+   */
   popover.onDidDismiss((data: string) => {
     console.log(" ********* data::: ", data);
     if (data == 'logOut') {
@@ -521,95 +442,98 @@ export class DettaglioConversazionePage extends _DetailPage{
     }
   });
 }
-  //// END FUNZIONI RICHIAMATE DA HTML ////
+//// END FUNZIONI RICHIAMATE DA HTML ////
 
 
 
 
 
 
-  // START LOAD IMAGE 
-  
+  //// START LOAD IMAGE ////
+  /**
+   * 
+   * @param event 
+   */
   detectFiles(event) {
     console.log('event: ', event.target.files[0].name, event.target.files);
     if (event) {
-        this.selectedFiles = event.target.files;
-        this.fileChange(event);
-      }
+      this.selectedFiles = event.target.files;
+      this.fileChange(event);
+    }
   }
 
   fileChange(event) {
     const that = this;
     if (event.target.files && event.target.files[0]) {
-        const nameImg = event.target.files[0].name;
-        // const preview = document.querySelector('img');
-        // const file    = document.querySelector('input[type=file]').files[0];
-        const reader  = new FileReader();
-        reader.addEventListener('load', function () {
-            that.isSelected = true;
-            // aggiungo nome img in un div 'event.target.files[0].name'
-            // aggiungo div pulsante invio
-            // preview.src = reader.result;
-            const imageXLoad = new Image;
-            imageXLoad.src = reader.result;
-            imageXLoad.title = nameImg;
-            imageXLoad.onload = function() {
-              console.log('that.imageXLoad: ', imageXLoad);
-                that.arrayLocalImmages.push(imageXLoad);
-                const uid = imageXLoad.src.substring(imageXLoad.src.length - 16);
-                const metadata = {
-                  'src': imageXLoad.src,
-                  'width': imageXLoad.width,
-                  'height': imageXLoad.height,
-                  'uid': uid
-                };
-                // 1 - invio messaggio
-                //that.onSendImage(metadata);
-                that.addLocalMessageImage(metadata);
-                // 2 - carico immagine
-                that.uploadSingle(metadata);
-            };
-        }, false);
-        if (event.target.files[0]) {
-            reader.readAsDataURL(event.target.files[0]);
-            console.log('reader-result: ', event.target.result);
-        }
+      const nameImg = event.target.files[0].name;
+      // const preview = document.querySelector('img');
+      // const file    = document.querySelector('input[type=file]').files[0];
+      const reader  = new FileReader();
+      reader.addEventListener('load', function () {
+          that.isFileSelected = true;
+          const imageXLoad = new Image;
+          imageXLoad.src = reader.result;
+          imageXLoad.title = nameImg;
+          imageXLoad.onload = function() {
+            console.log('that.imageXLoad: ', imageXLoad);
+              that.arrayLocalImmages.push(imageXLoad);
+              const uid = imageXLoad.src.substring(imageXLoad.src.length - 16);
+              const metadata = {
+                'src': imageXLoad.src,
+                'width': imageXLoad.width,
+                'height': imageXLoad.height,
+                'uid': uid
+              };
+              // 1 - invio messaggio
+              //that.onSendImage(metadata);
+              that.addLocalMessageImage(metadata);
+              // 2 - carico immagine
+              that.uploadSingle(metadata);
+          };
+      }, false);
+      if (event.target.files[0]) {
+          reader.readAsDataURL(event.target.files[0]);
+          console.log('reader-result: ', event.target.result);
+      }
     }
   }
 
   /**
-     * salvo un messaggio localmente nell'array dei msg
-     * @param metadata
-     */
-    addLocalMessageImage(metadata) {
-      const now: Date = new Date();
-      const timestamp = now.valueOf();
-      const language = document.documentElement.lang; 
-
-      const message = new MessageModel(
-          metadata.uid, // uid
-          language, // language
-          this.conversationWith, // recipient
-          this.conversationWithFullname, //'Support Group', // recipient_fullname
-          this.currentUserDetail.uid, // sender
-          this.currentUserDetail.fullname, //'Ospite', // sender_fullname
-          '', // status
-          metadata, // metadata
-          '', // text
-          timestamp.toString(), // timestamp
-          '', // headerDate
-          TYPE_MSG_IMAGE,
-          '' // type
-      );
-      this.messages.push(message);
-      // message.metadata.uid = message.uid;
-      console.log('addLocalMessageImage: ', this.messages);
-      this.isSelected = true;
-      this.doScroll();
+   * salvo un messaggio localmente nell'array dei msg
+   * @param metadata
+   */
+  addLocalMessageImage(metadata) {
+    const now: Date = new Date();
+    const timestamp = now.valueOf();
+    const language = document.documentElement.lang; 
+    const message = new MessageModel(
+        metadata.uid, // uid
+        language, // language
+        this.conversationWith, // recipient
+        this.conversationWithFullname, //'Support Group', // recipient_fullname
+        this.currentUserDetail.uid, // sender
+        this.currentUserDetail.fullname, //'Ospite', // sender_fullname
+        '', // status
+        metadata, // metadata
+        '', // text
+        timestamp.toString(), // timestamp
+        '', // headerDate
+        TYPE_MSG_IMAGE,
+        '' // type
+    );
+    this.messages.push(message);
+    // message.metadata.uid = message.uid;
+    console.log('addLocalMessageImage: ', this.messages);
+    //this.isFileSelected = true;
+    this.doScroll();
   }
 
+  /**
+   * 
+   * @param metadata 
+   */
   uploadSingle(metadata) {
-    this.isSelected = false;
+    this.isFileSelected = false;
     const that = this;
     const file = this.selectedFiles.item(0);
     const currentUpload = new UploadModel(file);
@@ -619,7 +543,6 @@ export class DettaglioConversazionePage extends _DetailPage{
       //// AGGIORNO MESSAGGIO SUL SERVER!!! recuperandolo dall'array chiave valore
       ////that.onSendImage(snapshot.downloadURL, w, h);
       //that.updateMetadataMessage(metadata);
-
       metadata.src = snapshot.downloadURL;
       that.sendMessage('', TYPE_MSG_IMAGE, metadata);
     })
@@ -631,19 +554,25 @@ export class DettaglioConversazionePage extends _DetailPage{
     });
     console.log('reader-result: ', file);
   }
-
-
+  /**
+   * 
+   * @param metadata 
+   */
   onSendImage(metadata) {
     console.log('onSendImage::::: ', metadata);
-    this.sendMessage('', TYPE_MSG_IMAGE, metadata);
+    this.sendMessage('immagine', TYPE_MSG_IMAGE, metadata);
     this.doScroll();
   }
 
+
+  /** 
+   * 
+  */
   onOpenCloseInfoConversation(){
     this.openInfoConversation = !this.openInfoConversation;
     this.onInfoConversation();
   }
-
+  /** */
   onInfoConversation(){
     // ordino array x tempo decrescente
     // cerco messaggi non miei

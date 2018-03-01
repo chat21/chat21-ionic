@@ -9,7 +9,7 @@ import { ConversationModel } from '../models/conversation';
 // services
 import { ChatManager } from './chat-manager/chat-manager';
 // utils
-import { TYPE_DIRECT } from '../utils/constants';
+import { LABEL_TU, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
 import { getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
 // import { LABEL_TU } from '../utils/constants';
 
@@ -22,7 +22,7 @@ export class ChatConversationsHandler {
     private conversations: ConversationModel[];
     private idConversationSelected: String;
     private ref: firebase.database.Query;
-    public LABEL_TU: string;
+    //public LABEL_TU: string;
     constructor(
         public events: Events,
         public chatManager: ChatManager
@@ -76,6 +76,9 @@ export class ChatConversationsHandler {
     added(childSnapshot){
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
+        if(!childData.image){
+            childData.image = URL_NO_IMAGE;
+        }
         const conversation = this.completeConversation(childData);
         console.log("child_added conversationS",conversation);
         this.events.publish('conversations:added', conversation );
@@ -91,7 +94,9 @@ export class ChatConversationsHandler {
     changed(childSnapshot){
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
-
+        if(!childData.image){
+            childData.image = URL_NO_IMAGE;
+        }
         const conversation = this.completeConversation(childData);
         conversation.status = '1'; 
         console.log("child_changed conversationS",conversation);
@@ -146,7 +151,7 @@ export class ChatConversationsHandler {
         if(conv.sender == this.loggedUser.uid){
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
-            conv.last_message_text = this.LABEL_TU + conv.last_message_text;
+            conv.last_message_text = LABEL_TU + conv.last_message_text;
         } 
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.conversation_with_fullname = conversation_with_fullname

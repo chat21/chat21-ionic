@@ -41,6 +41,7 @@
         "cordova-android": "~6.3.0",
         "cordova-browser": "^5.0.3",
         "cordova-ios": "^4.5.4",
+        "cordova-osx": "^4.0.1",
         "cordova-plugin-console": "^1.1.0",
         "cordova-plugin-device": "^1.1.7",
         "cordova-plugin-splashscreen": "^4.1.0",
@@ -104,7 +105,8 @@
         "platforms": [
             "android",
             "browser",
-            "ios"
+            "ios",
+            "osx"
         ]
     }
 }

@@ -22,6 +22,7 @@ export const BCK_COLOR_CONVERSATION_SELECTED: string = "#EEEEEE";
 export const BCK_COLOR_CONVERSATION_UNSELECTED: string = "#FFFFFF";
 
 // LABELS
+export const LABEL_IMAGE = "immagine";
 export const LABEL_TU = "tu: ";
 export const LABEL_MSG_PUSH_START_CHAT = "Premi qui per chattare con qualcuno";
 export const LABEL_MSG_START_CHAT = "inizia a chattare";

@@ -174,10 +174,10 @@ export class InfoConversationPage {
     let arrayMembers = [];
     members.forEach(member => {
       console.log("loadUserDetail: ", member);
+      let userDetail = new UserModel(member, '', '', member, '', URL_NO_IMAGE);
       if (member.trim() !== '' && member.trim() !== SYSTEM) {
         this.userService.getUserDetail(member)
-        .then(function(snapshot) {
-          let userDetail = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
+        .then(function(snapshot) { 
           if (snapshot.val()){
             const user = snapshot.val();
             const fullname = user.firstname+" "+user.lastname;  
@@ -193,9 +193,16 @@ export class InfoConversationPage {
               fullname.trim(), 
               imageUrl
             );  
-            arrayMembers.push(userDetail);
+            console.log("userDetail: ", userDetail)
           }
+
+          console.log("---------------> : ", member);
+          arrayMembers.push(userDetail);
         })
+        .catch(function(err) {
+          console.log('Unable to get permission to notify.', err);
+        });
+        
       }
       
     });

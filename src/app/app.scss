@@ -52,3 +52,20 @@ ion-backdrop{
 ion-app, ion-nav, ion-tab, ion-tabs, .app-root, .ion-page {
     contain: none!important;
 }
+
+.chat21-avatar {
+    background-color: #eeeeee;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    /* fill the container, preserving aspect ratio, and cropping to fit */
+    background-size: cover;
+    /* center the image vertically and horizontally */
+    background-position: top center;
+    /* round the edges to a circle with border radius 1/2 container size */
+    border-radius: 50%;
+}
+.chat21-avatar.big{
+    width: 200px;
+    height: 200px;
+}

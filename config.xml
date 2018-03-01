@@ -95,4 +95,5 @@
     </plugin>
     <plugin name="uk.co.workingedge.cordova.plugin.sqliteporter" spec="^1.0.2" />
     <engine name="ios" spec="~4.5.4" />
+    <engine name="osx" spec="~4.0.1" />
 </widget>

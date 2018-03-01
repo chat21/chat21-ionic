@@ -21,6 +21,7 @@
       <div class="chat21-info">
         <div class="chat21-name">
             <span *ngIf="channel_type == TYPE_GROUP" class="truncate read">{{groupDetail.name}}</span>
+            <span *ngIf="channel_type == TYPE_GROUP" class="truncate read">{{groupDetail.uid}}</span>
             <span *ngIf="channel_type != TYPE_GROUP" class="truncate read">{{userDetail.fullname}}</span>
         </div>
 

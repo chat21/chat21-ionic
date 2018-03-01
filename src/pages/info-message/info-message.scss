@@ -120,22 +120,6 @@ page-info-message {
         font-weight: normal;
         padding: 0px 10px 10px 10px;
     }
-    
-    .chat21-avatar {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        /* fill the container, preserving aspect ratio, and cropping to fit */
-        background-size: cover;
-        /* center the image vertically and horizontally */
-        background-position: top center;
-        /* round the edges to a circle with border radius 1/2 container size */
-        border-radius: 50%;
-    }
-    .chat21-avatar.big{
-        width: 200px;
-        height: 200px;
-    }
 
 
     .break-line {

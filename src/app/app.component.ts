@@ -51,7 +51,9 @@ export class MyApp {
     public translate: TranslateService
   ) {
     this.zone = new NgZone({});
-    this.isNavBar = location.search.split('navBar=')[1];
+    //this.isNavBar = (location.search.split('navBar=')[1]).split('&')[0];
+    let TEMP = location.search.split('navBar=')[1];
+    if (TEMP) { this.isNavBar = TEMP.split('&')[0]; }
     //console.log('isNavBar: ', this.isNavBar);
     //this.isNavBar = 'http://support.chat21.org/dashboard/';
 

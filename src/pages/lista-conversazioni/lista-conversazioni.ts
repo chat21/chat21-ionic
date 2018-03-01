@@ -12,14 +12,14 @@ import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
 import { compareValues, windowsMatchMedia, searchIndexInArrayForUid } from '../../utils/utils';
-import { TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
+import { LABEL_IMAGE, TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { NavProxyService } from '../../providers/nav-proxy';
 import { UserService } from '../../providers/user/user';
 import { ChatConversationsHandler} from '../../providers/chat-conversations-handler';
 import { DatabaseProvider } from '../../providers/database/database';
-import { queryDef } from '@angular/core/src/view/query';
+// import { queryDef } from '@angular/core/src/view/query';
 
 @IonicPage()
 @Component({
@@ -33,6 +33,7 @@ export class ListaConversazioniPage extends _MasterPage {
   //private uidLastOpenConversation: string;
   private conversationsHandler: ChatConversationsHandler;
   private uidConvSelected: string;
+  private LABEL_IMAGE = LABEL_IMAGE;
 
   // private updatingMessageList: boolean;
   // in html
@@ -56,15 +57,11 @@ export class ListaConversazioniPage extends _MasterPage {
     // se vengo da dettaglio conversazione
     // o da users con conversazione attiva recupero conversationWith
     this.conversationWith = navParams.get('conversationWith');
-    this.uidReciverFromUrl = location.search.split('recipient=')[1];
-    console.log('location.search: ',  this.uidReciverFromUrl);
-    // this.updatingMessageList = false;
-    // if(this.uidReciverFromUrl){
-    //   //that.uidLastOpenConversation = that.uidReciverFromUrl;
-    //   //this.uidConvSelected = this.uidReciverFromUrl;
-    //   //this.uidReciverFromUrl = null;
-    // }
-
+    //this.uidReciverFromUrl = (location.search.split('recipient=')[1]).split('&')[0];
+    let TEMP = location.search.split('recipient=')[1];
+    if (TEMP) { this.uidReciverFromUrl = TEMP.split('&')[0]; }
+    //console.log('location.search: ',  this.uidReciverFromUrl);
+  
     /** SUBSCRIBE USER LOGGED
      * sul LOGIN:
      * 1 - dismetto modale login se è visibile
@@ -76,6 +73,7 @@ export class ListaConversazioniPage extends _MasterPage {
      * 4 - resetto conversationWith
     */
     const profileModal = this.modalCtrl.create(LoginPage, null, { enableBackdropDismiss: false });
+    
     this.events.subscribe('loggedUser:login', user => {
       console.log('************** LOGGED currentUser:', user);
       profileModal.dismiss({animate: false, duration: 0})
@@ -88,8 +86,8 @@ export class ListaConversazioniPage extends _MasterPage {
           that.navProxy.pushDetail(PlaceholderPage,{});
         }
       }, 1000);
-      
     });
+
     this.events.subscribe('loggedUser:logout', user => {
       console.log('************** NN LOGGED currentUser:', user);
       this.navProxy.pushDetail(PlaceholderPage,{});
@@ -111,6 +109,7 @@ export class ListaConversazioniPage extends _MasterPage {
       //this.conversations = conversations;
       this.goToconversationMessageList(conversation.uid);
     });
+    
     this.events.subscribe('conversations:changed', conversation => {
       const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
       console.log("child_changed", index);
@@ -161,32 +160,29 @@ export class ListaConversazioniPage extends _MasterPage {
 
 
   openMessageList(uidConvSelected){
+    const that = this;
     console.log('************** openMessageList ********************', uidConvSelected);
     if(uidConvSelected == this.uidConvSelected && windowsMatchMedia()){
       return
     }
     this.uidConvSelected = uidConvSelected;
-
-
-    var conversationSelected = this.conversations.find(item => item.uid === uidConvSelected);
-    if(conversationSelected){
-      conversationSelected.status = '0';
-      conversationSelected.selected = true;
-      this.navProxy.pushDetail(DettaglioConversazionePage, {
-        conversationWith: uidConvSelected,
-        conversationWithFullname: conversationSelected.conversation_with_fullname,
-        channel_type: conversationSelected.channel_type
-      });
-      this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
-    }
-
-    // var oldConversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
-    // if(oldConversationSelected){
-    //   oldConversationSelected.selected = false;
-    // }
+    setTimeout(function(){
+      var conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
+      if(conversationSelected){
+        conversationSelected.status = '0';
+        conversationSelected.selected = true;
+        that.navProxy.pushDetail(DettaglioConversazionePage, {
+          conversationWith: uidConvSelected,
+          conversationWithFullname: conversationSelected.conversation_with_fullname,
+          channel_type: conversationSelected.channel_type
+        });
+        that.databaseProvider.setUidLastOpenConversation(uidConvSelected);
+      }
+      that.conversationWith = uidConvSelected;
+    }, 500);
     
-    this.conversationWith = uidConvSelected;
-    // this.uidConvSelected = uidConvSelected;
+
+    
   }
   /**
   * 1 - salvo in memoria uid ultima conversazione aperta

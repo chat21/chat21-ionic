@@ -98,11 +98,11 @@
             <ion-icon name="add-circle" isActive="true" (click)="presentActionSheet()"></ion-icon>
           </button> -->
   
-          <label for="chat21-file" [class.active]="!isSelected" class="chat21-textarea-button" ><ion-icon ios="ios-camera" md="md-camera" class="chat21-icon left active"></ion-icon></label>
-          <!-- <label for="chat21-file" [class.active]="!isSelected" class="chat21-textarea-button" id="chat21-start-upload-doc" ></label> -->
+          <label for="chat21-file" [class.active]="!isFileSelected" class="chat21-textarea-button" ><ion-icon ios="ios-camera" md="md-camera" class="chat21-icon left active"></ion-icon></label>
+          <!-- <label for="chat21-file" [class.active]="!isFileSelected" class="chat21-textarea-button" id="chat21-start-upload-doc" ></label> -->
 
-          <div [class.active]="isSelected" class="chat21-textarea-button" id="chat21-button-reset" (click)="resetLoadImage()" ></div>
-          <div [class.active]="isSelected" class="chat21-textarea-button" id="chat21-button-send" (click)="loadImage()"></div>
+          <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-reset" (click)="resetLoadImage()" ></div>
+          <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-send" (click)="loadImage()"></div>
           <input style='display:none' type="file" accept="image/x-png,image/gif,image/jpeg" name="chat21-file" id="chat21-file" class="inputfile" (change)="detectFiles($event)"/>
            
         </ion-col>
