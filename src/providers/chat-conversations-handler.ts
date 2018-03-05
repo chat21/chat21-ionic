@@ -19,7 +19,7 @@ export class ChatConversationsHandler {
     private tenant: string;
     private loggedUser: UserModel;
     private userId: string;
-    private conversations: ConversationModel[];
+    //public conversations: ConversationModel[];
     private idConversationSelected: String;
     private ref: firebase.database.Query;
     //public LABEL_TU: string;
@@ -44,7 +44,7 @@ export class ChatConversationsHandler {
         this.tenant = tenant;
         this.loggedUser = loggedUser;
         this.userId = loggedUser.uid;
-        this.conversations = [];
+        //this.conversations = [];
         return this;
     }
     /**
@@ -81,7 +81,7 @@ export class ChatConversationsHandler {
         }
         const conversation = this.completeConversation(childData);
         console.log("child_added conversationS",conversation);
-        this.events.publish('conversations:added', conversation );
+        this.events.publish('conversations:added', conversation);
         //this.conversations.splice(0, 0, conversation);
         //this.events.publish('conversations:added', this.conversations, childSnapshot.key );
     }
@@ -100,7 +100,7 @@ export class ChatConversationsHandler {
         const conversation = this.completeConversation(childData);
         conversation.status = '1'; 
         console.log("child_changed conversationS",conversation);
-        this.events.publish('conversations:changed', childData);
+        this.events.publish('conversations:changed', conversation);
 
         // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
         // // controllo superfluo sarà sempre maggiore
@@ -109,7 +109,7 @@ export class ChatConversationsHandler {
         //     const conversation = this.completeConversation(childData);
         //     conversation.status = '1'; 
         //     this.conversations.splice(index, 1, conversation);
-        //     this.events.publish('conversations:changed', this.conversations, childSnapshot.key);
+        //     //this.events.publish('conversations:changed', this.conversations, childSnapshot.key);
         // }
     }
     /**
@@ -120,12 +120,12 @@ export class ChatConversationsHandler {
      */
     removed(childSnapshot){
         console.log("child_removed");
-        const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
-        // controllo superfluo sarà sempre maggiore
-        if(index>-1){
-            this.conversations.splice(index, 1);
-            this.events.publish('conversations:update', this.conversations);
-        }
+        // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
+        // // controllo superfluo sarà sempre maggiore
+        // if(index>-1){
+        //     this.conversations.splice(index, 1);
+        //     this.events.publish('conversations:update', this.conversations);
+        // }
     }
     /**
      * Completo conversazione aggiungendo:
@@ -181,18 +181,18 @@ export class ChatConversationsHandler {
      * 2 - evidezio la conversazione selezionata (setto selected TRUE)
      * @param uid 
      */
-    setConversationSelected(uid): ConversationModel[]{
-        this.conversations.forEach(function(element) {
-            element.selected = false;
-        });   
-        this.conversations.filter(function(item){
-            if(item.uid == uid){
-            item.selected = true;
-            return;
-            }
-        });
-        return this.conversations;
-    }
+    // setConversationSelected(uid): ConversationModel[]{
+    //     this.conversations.forEach(function(element) {
+    //         element.selected = false;
+    //     });   
+    //     this.conversations.filter(function(item){
+    //         if(item.uid == uid){
+    //         item.selected = true;
+    //         return;
+    //         }
+    //     });
+    //     return this.conversations;
+    // }
     /**
      * dispose reference di conversations
      */

@@ -18,8 +18,8 @@ import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { NavProxyService } from '../../providers/nav-proxy';
 import { UserService } from '../../providers/user/user';
 import { ChatConversationsHandler} from '../../providers/chat-conversations-handler';
+import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 import { DatabaseProvider } from '../../providers/database/database';
-// import { queryDef } from '@angular/core/src/view/query';
 
 @IonicPage()
 @Component({
@@ -30,15 +30,9 @@ export class ListaConversazioniPage extends _MasterPage {
   private conversations: Array<ConversationModel> = [];
   private conversationWith: string;
   private uidReciverFromUrl: string;
-  //private uidLastOpenConversation: string;
   private conversationsHandler: ChatConversationsHandler;
   private uidConvSelected: string;
   private LABEL_IMAGE = LABEL_IMAGE;
-
-  // private updatingMessageList: boolean;
-  // in html
-  // public LABEL_MSG_START_CHAT = LABEL_MSG_START_CHAT;
-  // public LABEL_MSG_PUSH_START_CHAT = LABEL_MSG_PUSH_START_CHAT;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -48,6 +42,7 @@ export class ListaConversazioniPage extends _MasterPage {
     public navProxy: NavProxyService,
     public userService: UserService,
     public chatConversationsHandler: ChatConversationsHandler,
+    public conversationHandler: ChatConversationHandler,
     public events: Events,
     public chatManager: ChatManager,
     public databaseProvider: DatabaseProvider
@@ -119,14 +114,6 @@ export class ListaConversazioniPage extends _MasterPage {
       }
       this.conversations.splice(index, 1, conversation);
       this.conversations.sort(compareValues('timestamp', 'desc'));
-      // se la conversazione cambiata è la conversazione aperta imposto status a 0 (visto)
-      // console.log('************** conversations changed:', conversations, this.uidConvSelected);
-      // if(this.uidConvSelected == uid){
-      //   var conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
-      //   conversationSelected.status = '0';
-      //   conversationSelected.selected = true;
-      // }
-      // this.conversations = conversations;
     });
 
     this.events.subscribe('uidConvSelected:changed', uidConvSelected => {
@@ -141,23 +128,7 @@ export class ListaConversazioniPage extends _MasterPage {
       // 3 salvo id conv nello storage
       this.openMessageList(uidConvSelected);
     });
-
   }
-  /**
-   * 
-   */
-  ngOnInit() {
-    //console.log('ngOnInit');
-    //this.initialize();
-  }
-
-  /**
-   * imposto i subscribe sul logini/logout e su conversations
-   */
-  initialize(){
-    //console.log('**************initialize: LOG',this.events);
-  }
-
 
   openMessageList(uidConvSelected){
     const that = this;
@@ -180,39 +151,8 @@ export class ListaConversazioniPage extends _MasterPage {
       }
       that.conversationWith = uidConvSelected;
     }, 500);
-    
-
-    
   }
-  /**
-  * 1 - salvo in memoria uid ultima conversazione aperta
-  * 2 - cerco conv selezionata
-  * 3 - cerco precedente conv attiva
-  * 4 - cambio stato conversazione a letto
-  * 5 - se non c'è una conv attiva oppure esiste ma è diversa da quella selezionata
-  *   - imposto la nuova conv attiva
-  *   - arico l'elenco dei messaggi della conversazione nella navProxy
-  *   - imposto conversationWith con uid conversazione selezionata
-  */
-  // openMessageListOld(uidConvSelected){
-  //   // imposto id conv selezionata
-  //   this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
-  //   this.uidLastOpenConversation = uidConvSelected;
-
-  //   var conversationSelected = this.conversations.find(item => item.uid === uidConvSelected);
-  //   var conversationOldSelected = this.conversations.find(item => item.selected === true);
-  //   conversationSelected.status = '0';
-
-  //   this.conversationsHandler.setConversationSelected(uidConvSelected);
-  //   console.log('openMessageList -> uidConvSelected: ' + conversationOldSelected, uidConvSelected, conversationSelected);
-  //   if(!conversationOldSelected || (conversationOldSelected && conversationOldSelected.uid !== uidConvSelected)){
-  //     this.navProxy.pushDetail(DettaglioConversazionePage, {
-  //       conversationWith: uidConvSelected,
-  //       conversationWithFullname: conversationSelected.conversation_with_fullname
-  //     });
-  //     this.conversationWith = uidConvSelected;
-  //   }
-  // }
+  
 
   /**
   * START GESTIONE CONVERSAZIONI
@@ -261,6 +201,7 @@ export class ListaConversazioniPage extends _MasterPage {
       this.conversationsHandler = handler;
     }
   }
+
   /**
   * metodo richiamato ogni volta che viene aggiunta una nuova conversazione
   * 1 - recupero uid conversazione da aprire passato nell'url ( se esiste )
@@ -283,29 +224,8 @@ export class ListaConversazioniPage extends _MasterPage {
         });
       } 
     }
-    
-
-    //const that = this;
-    
-    ///const conversationSelected = this.conversations.find(item => item.uid === that.uidLastOpenConversation);
-    //const isExists = this.conversations.find(i => i.uid === that.uidConvSelected); 
-    // var conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
-    // if(conversationSelected){
-    //   conversationSelected.selected = true;
-      //this.openMessageList(uid);
-    // } else{
-    //   this.styleMessageWelcome = true;
-    // }
-    //console.log('responseSearch -> ', conversationSelected, this.uidConvSelected); 
-    // if (isExists){
-    //   that.openMessageList(that.uidConvSelected);
-    // }
-    // else {
-    //   that.styleMessageWelcome = true;
-    // }
   }
   
-
   /**
   * apro pagina elenco users 
   * metodo richiamato da html 
@@ -316,6 +236,7 @@ export class ListaConversazioniPage extends _MasterPage {
       contacts: ""
     });
   }
+
   /**
   * apro il menu delle opzioni 
   * (metodo richiamato da html) 
@@ -338,6 +259,7 @@ export class ListaConversazioniPage extends _MasterPage {
       }
     });
   }
+  
   /**
    * modulo richiamato se premo su logout
    * 1 - aggiungo placeholderPage 

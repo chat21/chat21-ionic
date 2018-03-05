@@ -37,6 +37,7 @@ export class InfoMessagePage {
   initialize() {
     console.log('initialize InfoMessagePage');
     this.events.subscribe('openInfoMessage', this.openInfoMessage);
+    this.events.subscribe('closeInfoMessage', this.openInfoMessage);
   }
 
   openInfoMessage: any = (message) => {

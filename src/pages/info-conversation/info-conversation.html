@@ -27,6 +27,7 @@
 
         <div class="chat21-status">
           <span *ngIf="channel_type != TYPE_GROUP">
+          
             <span *ngIf="online" class="truncate read" >{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
             <span *ngIf="!online" class="truncate read">{{lastConnectionDate}}</span>
           </span>

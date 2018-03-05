@@ -27,6 +27,8 @@ export class ChatConversationHandler {
   public conversationWith: string;
   public messages: any[];
   public messagesRef: firebase.database.Query;
+
+  public listSubsriptions: any[];
   //public events: Events;
 
   constructor(
@@ -36,7 +38,7 @@ export class ChatConversationHandler {
     //this.tenant = this.chatManager.getTenant();
     //this.loggedUser = this.chatManager.getLoggedUser();
     //this.events = new Events();
-
+    this.listSubsriptions = [];
   }
   /**
    * inizializzo conversation handler
@@ -51,6 +53,7 @@ export class ChatConversationHandler {
     this.senderId = this.loggedUser.uid;
     this.conversationWith = recipientId;
     this.messages = [];
+    
   }
   /**
    * mi connetto al nodo messages
@@ -249,6 +252,7 @@ export class ChatConversationHandler {
     
   }
 
+
   // // se è una immagine e la ha inviata l'utente corrente
   // if (type == TYPE_MSG_IMAGE) {
   //   const index = this.messages.findIndex(i => i.uid === metadata.uid);
@@ -264,4 +268,20 @@ export class ChatConversationHandler {
   dispose() {
     this.messagesRef.off();
   }
+
+
+  unsubscribe(key){
+    console.log("unsubscribe: ", key);
+    this.listSubsriptions.forEach(sub => {
+      console.log("unsubscribe: ", sub.uid, key);
+      if(sub.uid === key){
+        console.log("unsubscribe: ", sub.uid, key);
+        sub.unsubscribe(key, null);
+        return;
+      }
+      
+    });
+    
+  }
+
 }

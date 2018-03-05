@@ -103,7 +103,7 @@
 
           <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-reset" (click)="resetLoadImage()" ></div>
           <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-send" (click)="loadImage()"></div>
-          <input style='display:none' type="file" accept="image/x-png,image/gif,image/jpeg" name="chat21-file" id="chat21-file" class="inputfile" (change)="detectFiles($event)"/>
+          <input style='display:none' type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" name="chat21-file" id="chat21-file" class="inputfile" (change)="detectFiles($event)"/>
            
         </ion-col>
         <ion-col col-auto>

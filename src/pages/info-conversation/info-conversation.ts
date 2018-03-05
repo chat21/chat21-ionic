@@ -11,17 +11,11 @@ import { UserService } from '../../providers/user/user';
 import { GroupService } from '../../providers/group/group';
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 
+import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
+
 // utils
-import { TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
 import { urlify } from '../../utils/utils';
-
-/**
- * Generated class for the InfoConversationPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 
 @Component({
   selector: 'page-info-conversation',
@@ -46,6 +40,9 @@ export class InfoConversationPage {
 
   public online: boolean;
   public lastConnectionDate: string;
+  public LABEL_ACTIVE_NOW = LABEL_ACTIVE_NOW;
+
+  //public conversationHandler: ChatConversationHandler;
 
   constructor(
     public events: Events,
@@ -53,38 +50,103 @@ export class InfoConversationPage {
     public userService: UserService,
     public groupService: GroupService,
     public upSvc: UploadService,
-    public zone: NgZone
+    public zone: NgZone,
+    public conversationHandler: ChatConversationHandler
   ) {
     console.log('InfoConversationPage');
     this.profileYourself = false;
     this.online = false; 
+    // indica quando eliminare la sottoscrizione, invocato dalla pg dettaglio conversazione appena entro!!!
+    this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
   }
 
   ngOnInit() {
     this.initialize();
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad InfoConversationPage');
+    console.log('InfoConversationPage ngOnInit');
   }
 
   /**
    * quando esco dalla pagina distruggo i subscribe
    */
   ionViewWillLeave() {
-    console.log('ionViewWillLeave **************');
-    this.unsubescribeAll();
+    // nn passa mai di qui!!!!
+    console.log('InfoConversationPage ionViewWillLeave');
+    //this.unsubscribeInfoConversation();
   }
   
-
   initialize(){
     this.profileYourself = false;
     this.currentUserDetail = this.chatManager.getLoggedUser();
     this.userDetail = new UserModel('', '', '', '', '', '');
     this.groupDetail = new GroupModel('', 0, '', [], '', '');
     this.setSubscriptions();
-    console.log('this.currentUserDetail',this.currentUserDetail)
   }
+
+  /** SUBSCRIPTIONS */
+  setSubscriptions(){
+    this.events.subscribe('onUidSelected', this.subcribeUidUserSelected);
+    this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
+    this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
+    this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
+    console.log('this.conversationHandler.listSubsriptions',this.conversationHandler.listSubsriptions);
+  }
+
+  subcribeUidUserSelected: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
+    console.log('SUBSCRIBE -> onUidSelected', uidUserSelected, channel_type);
+    // se sto chiudendo nn carico i dettagli utenti
+    if(!openInfoConversation){
+     // this.unsubscribeInfoConversation();
+      return;
+    } 
+    this.uidSelected = uidUserSelected;
+    this.channel_type = channel_type;
+    if(attributes){
+      // this.attributes = attributes;
+      this.attributesClient = (attributes.client)?attributes.client:'';
+      this.attributesSourcePage = (attributes.sourcePage)?urlify(attributes.sourcePage):'';
+      this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
+    }
+    this.selectUserDetail();
+  };
+
+  subcribeChangeStatusUserSelected: any = (lastConnectionDate, online) => {
+    this.online = online;
+    this.lastConnectionDate = lastConnectionDate;
+    console.log('SUBSCRIBE -> changeStatusUserSelected', this.online, this.lastConnectionDate);
+  };
+
+  subcribeLoadUserDetail: any = userDetail => {
+    this.userDetail = userDetail;
+    if(!userDetail.imageurl){
+      this.userDetail.imageurl = URL_NO_IMAGE;
+    }
+    //this.displayImage(this.userDetail.uid);
+    console.log('SUBSCRIBE -> loadUserDetail:complete', this.userDetail);
+  };
+
+  subcribeLoadGroupDetail: any = groupDetail => {
+    this.groupDetail = groupDetail;
+    if(!groupDetail.iconURL || groupDetail.iconURL === LABEL_NOICON){
+      this.groupDetail.iconURL = URL_NO_IMAGE;
+    }
+    //console.log('SUBSCRIBE -> getListMembers', groupDetail.members);
+    this.members = this.getListMembers(groupDetail.members);
+    //this.displayImage(this.groupDetail.uid);
+    console.log('SUBSCRIBE -> loadGroupDetail:complete', groupDetail.members);
+  };
+
+  /**
+   * unsubscribe all subscribe events
+   */
+  closeDetailConversation: any = e => {
+    console.log('UNSUBSCRIBE -> unsubescribeAll', this.events);
+    this.events.unsubscribe('onUidSelected', null);
+    this.events.unsubscribe('changeStatusUserSelected', null);
+    this.events.unsubscribe('loadUserDetail:complete', null);
+    this.events.unsubscribe('loadGroupDetail:complete', null);
+  }
+  // ----------------------------------------- //
+
 
   selectUserDetail(){
     if(this.uidSelected && this.uidSelected === this.currentUserDetail.uid){
@@ -106,69 +168,6 @@ export class InfoConversationPage {
     }
     console.log('this.uidUser',this.userDetail);
   }
-
-  setSubscriptions(){
-    this.events.subscribe('onUidSelected', this.subcribeUidUserSelected);
-    this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
-    this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
-    this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
-  }
-
-  subcribeUidUserSelected: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
-    console.log('onUidSelected', uidUserSelected, channel_type);
-    // se sto chiudendo nn carico i dettagli utenti
-    if(!openInfoConversation){
-      return;
-    }
-    this.uidSelected = uidUserSelected;
-    this.channel_type = channel_type;
-    if(attributes){
-      // this.attributes = attributes;
-      this.attributesClient = (attributes.client)?attributes.client:'';
-      this.attributesSourcePage = (attributes.sourcePage)?urlify(attributes.sourcePage):'';
-      this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
-    }
-    this.selectUserDetail();
-  };
-
-  subcribeChangeStatusUserSelected: any = (lastConnectionDate, online) => {
-    this.online = online;
-    this.lastConnectionDate = lastConnectionDate;
-    console.log('changeStatusUserSelected', this.online, this.lastConnectionDate);
-  };
-
-  subcribeLoadUserDetail: any = userDetail => {
-    this.userDetail = userDetail;
-    if(!userDetail.imageurl){
-      this.userDetail.imageurl = URL_NO_IMAGE;
-    }
-    //this.displayImage(this.userDetail.uid);
-    console.log('loadUserDetail:complete', this.userDetail);
-  };
-
-  subcribeLoadGroupDetail: any = groupDetail => {
-    this.groupDetail = groupDetail;
-    if(!groupDetail.iconURL || groupDetail.iconURL === LABEL_NOICON){
-      this.groupDetail.iconURL = URL_NO_IMAGE;
-    }
-    console.log('getListMembers', groupDetail.members);
-    this.members = this.getListMembers(groupDetail.members);
-    //this.displayImage(this.groupDetail.uid);
-    console.log('loadGroupDetail:complete', groupDetail.members);
-  };
-
-
-  /**
-   * unsubscribe all subscribe events
-   */
-  unsubescribeAll(){
-    this.events.unsubscribe('onUidSelected', this.subcribeUidUserSelected);
-    this.events.unsubscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
-    this.events.unsubscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
-    this.events.unsubscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
-  }
-
-
 
   getListMembers(members): UserModel[]{ 
     let arrayMembers = [];
@@ -195,7 +194,6 @@ export class InfoConversationPage {
             );  
             console.log("userDetail: ", userDetail)
           }
-
           console.log("---------------> : ", member);
           arrayMembers.push(userDetail);
         })
