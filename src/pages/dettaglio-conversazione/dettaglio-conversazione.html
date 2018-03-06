@@ -57,6 +57,7 @@
               <span class="buttonInfo" (click)="presentPopover($event, message)" >
               </span>
               <img *ngIf="message.type == 'image';"  class="message-content message-content-image" [src]="message.metadata.src"  [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+              <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="setUrlString(message.metadata.src, message.metadata.name)"></div>
               <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
               <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
             </div>
@@ -68,6 +69,7 @@
               <span class="buttonInfo" [ngClass]="message.uid" (click)="presentPopover($event, message)" >
               </span>
               <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+              <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="setUrlString(message.metadata.src, message.metadata.name)"></div>
               <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text">
                 <!-- {{message.text}} -->
               </div>
@@ -98,7 +100,7 @@
             <ion-icon name="add-circle" isActive="true" (click)="presentActionSheet()"></ion-icon>
           </button> -->
   
-          <label for="chat21-file" [class.active]="!isFileSelected" class="chat21-textarea-button" ><ion-icon ios="ios-camera" md="md-camera" class="chat21-icon left active"></ion-icon></label>
+          <label for="chat21-file" [class.active]="!isFileSelected" class="chat21-textarea-button" ><ion-icon ios="ios-attach" md="md-attach" class="chat21-icon left active"></ion-icon></label>
           <!-- <label for="chat21-file" [class.active]="!isFileSelected" class="chat21-textarea-button" id="chat21-start-upload-doc" ></label> -->
 
           <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-reset" (click)="resetLoadImage()" ></div>

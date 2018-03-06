@@ -52,7 +52,8 @@ page-dettaglio-conversazione {
         }
         
         .item-block{
-            min-height: auto!important;
+            // min-height: auto!important;
+            min-height: 30px!important;
             margin-bottom: 4px;
         }
         .itemMessage {
@@ -63,7 +64,7 @@ page-dettaglio-conversazione {
     
                 .input-wrapper{
                     height: 100%;
-    
+                    margin-right: 20px;
                     .label{
                         height: 100%;
                     }
@@ -87,6 +88,7 @@ page-dettaglio-conversazione {
         .statusMessage{
             float: right;
             margin-top: 5px;
+            margin-right: -20px;
             height: 100%;
             width: 15px;
             ion-icon{
@@ -419,5 +421,6 @@ page-dettaglio-conversazione {
             display: block;
         }
         
+
 
     }

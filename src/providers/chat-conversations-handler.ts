@@ -152,7 +152,9 @@ export class ChatConversationsHandler {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.last_message_text = LABEL_TU + conv.last_message_text;
-        } 
+        } else {
+            conv.last_message_text = conv.sender_fullname + ': ' + conv.last_message_text;
+        }
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.conversation_with_fullname = conversation_with_fullname
         conv.time_last_message = time_last_message;

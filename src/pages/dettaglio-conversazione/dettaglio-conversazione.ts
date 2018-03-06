@@ -19,7 +19,7 @@ import { ProfilePage } from '../profile/profile';
 import { PopoverPage } from '../popover/popover';
 // utils
 import { TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
-import { getSizeImg } from '../../utils/utils';
+import { getSizeImg, urlify, setUrlString } from '../../utils/utils';
 
 
 
@@ -56,6 +56,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
   MSG_STATUS_RETURN_RECEIPT = MSG_STATUS_RETURN_RECEIPT;
+
   
   constructor(
     public popoverCtrl: PopoverController,
@@ -271,7 +272,6 @@ export class DettaglioConversazionePage extends _DetailPage{
     // this.updatingMessageList = true;
   }
 
-
   //// START Scroll managemant functions ////
   /**
    * Scroll to bottom of page after a short delay.
@@ -334,8 +334,12 @@ export class DettaglioConversazionePage extends _DetailPage{
   sendMessage(msg, type, metadata?) {
     (metadata) ? metadata = metadata : metadata = '';
     console.log("SEND MESSAGE: ", msg, this.messages);
-    (!msg)? msg = metadata.type: msg;
-    
+    if (type == 'image'){
+      msg = 'image';
+    } else if(type == 'file'){
+      msg = 'file';
+    }
+    //(!msg)? msg = metadata.type: msg;
     if (msg && msg.trim() != '' || type !== TYPE_MSG_TEXT ){
       this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
       this.conversationHandler.sendMessage(msg, type, metadata, this.conversationWith, this.conversationWithFullname, this.channel_type);
@@ -401,6 +405,15 @@ export class DettaglioConversazionePage extends _DetailPage{
   getSizeImg(message): any {
     return getSizeImg(message, MAX_WIDTH_IMAGES);
   }
+
+  setUrlString(text, name): any {
+    if(text) {
+      return setUrlString(text, name);
+    } else {
+      return name;
+    }
+  }
+
   /** */
   showButtonInfo(){
     console.log('showButtonInfo');
@@ -469,7 +482,6 @@ export class DettaglioConversazionePage extends _DetailPage{
       reader.addEventListener('load', function () {
           that.isFileSelected = true;
     
-        
           if(typeFile.indexOf('image') !== -1 ){
             const file4Load = new Image;
             file4Load.src = reader.result;
@@ -477,8 +489,10 @@ export class DettaglioConversazionePage extends _DetailPage{
             file4Load.onload = function() {
               console.log('that.file4Load: ', file4Load);
                 that.arrayLocalImmages.push(file4Load);
+                const file = that.selectedFiles.item(0);
                 const uid = file4Load.src.substring(file4Load.src.length - 16);
                 const metadata = {
+                  'name': file.name,
                   'src': file4Load.src,
                   'width': file4Load.width,
                   'height': file4Load.height,
@@ -492,11 +506,14 @@ export class DettaglioConversazionePage extends _DetailPage{
                 that.uploadSingle(metadata, type_msg);
             };
           } else if(typeFile.indexOf('application') !== -1 ){
-            const metadata = {
-              'src': event.target.files[0].src,
-              'type': typeFile
-            };
             const type_msg = 'file';
+            const file = that.selectedFiles.item(0);
+            const metadata = {
+              'name': file.name,
+              'src': event.target.files[0].src,
+              'type': type_msg
+            };
+      
             // 1 - invio messaggio
             that.addLocalMessage(metadata, type_msg);
             // 2 - carico immagine
@@ -519,6 +536,10 @@ export class DettaglioConversazionePage extends _DetailPage{
     const now: Date = new Date();
     const timestamp = now.valueOf();
     const language = document.documentElement.lang; 
+    let textMessage = type_msg;
+    if(type_msg === 'image'){
+      textMessage = '';
+    } 
     const message = new MessageModel(
         metadata.uid, // uid
         language, // language
@@ -528,16 +549,16 @@ export class DettaglioConversazionePage extends _DetailPage{
         this.currentUserDetail.fullname, //'Ospite', // sender_fullname
         '', // status
         metadata, // metadata
-        '', // text
+        textMessage, // text
         timestamp.toString(), // timestamp
         '', // headerDate
         type_msg, //TYPE_MSG_IMAGE,
         '' // type
     );
 
-    if(type_msg == 'file'){
-      message.text = metadata.src;
-    }
+    // if(type_msg == 'file'){
+    //   message.text = metadata.src;
+    // }
     this.messages.push(message);
     // message.metadata.uid = message.uid;
     console.log('addLocalMessage: ', this.messages);
@@ -553,6 +574,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.isFileSelected = false;
     const that = this;
     const file = this.selectedFiles.item(0);
+    console.log('Uploaded a file! ', file);
     const currentUpload = new UploadModel(file);
     this.upSvc.pushUploadMessage(currentUpload)
     .then(function(snapshot) {

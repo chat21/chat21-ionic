@@ -259,7 +259,7 @@ export class ListaConversazioniPage extends _MasterPage {
       }
     });
   }
-  
+
   /**
    * modulo richiamato se premo su logout
    * 1 - aggiungo placeholderPage 

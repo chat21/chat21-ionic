@@ -7,6 +7,7 @@
           <ng-template #contentMine>
             <div class="message message-mine" >
               <img *ngIf="message.type == 'image';"  class="message-content message-content-image" [src]="message.metadata.src"  [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+              <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="setUrlString(message.metadata.src, message.metadata.name)"></div>
               <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
               <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
             </div>
@@ -15,7 +16,8 @@
             <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
             <div class="message message-other" >
               <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
-               <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
+              <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="setUrlString(message.metadata.src, message.metadata.name)"></div>
+              <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
               <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
             </div>
           </ng-template>
