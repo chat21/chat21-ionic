@@ -16,12 +16,17 @@
   "LABEL_SOURCEPAGE": "Source: ",
   "LABEL_DEPARTMENT": "Department: ",
   "LABEL_MEMBERS": "Partecipanti",
-  "LABEL_LEAVE_GROUP": "abbandona il gruppo",
   "LABEL_INFO_MESSAGE": "Info Messaggio",
   "LABEL_READ_BY": "Letto da",
   "LABEL_STATUS_MESSAGE": "stato",
   "LABEL_SENT_THE": "inviato il",
   "LABEL_SENT_BY": "da",
+
+  "LABEL_CREATE_TICKET": "Crea un ticket",
+  "LABEL_SEND_BY_EMAIL": "Invia per email",
+  "LABEL_VIDEO_CHAT": "Video chiamata",
+  "LABEL_LEAVE_GROUP": "Abbandona il gruppo",
+  "LABEL_CLOSE_GROUP": "Chiudo il gruppo",
 
   "GREETING": "Hi, {{ value }}"
 

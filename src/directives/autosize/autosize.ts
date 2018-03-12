@@ -26,7 +26,7 @@ export class AutosizeDirective implements OnInit {
   onInput(event, rangeParent, textArea:HTMLTextAreaElement, data:string, inputType:string):void { //textArea:HTMLTextAreaElement
     //let messageString = textArea.attributes.getNamedItem('ng-reflect-model').value.trim();
     let messageString = this.element.nativeElement.getElementsByTagName('textarea')[0].value;
-    //console.log('************ $messageString2', messageString.trim());
+    console.log('************ $messageString2', messageString.trim());
     if(messageString == ''){
       this.element.nativeElement.getElementsByTagName('textarea')[0].value = '';
       //textArea.attributes.getNamedItem('ng-reflect-model').value = '';

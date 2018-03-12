@@ -41,6 +41,8 @@ export class InfoConversationPage {
   public online: boolean;
   public lastConnectionDate: string;
   public LABEL_ACTIVE_NOW = LABEL_ACTIVE_NOW;
+  public URL_SEND_BY_EMAIL = "mailto:info@frontiere21.it?subject=Transcript Chat Conversation&body= Ciao, di seguito il transcript http://www.webfract.it";
+  public URL_VIDEO_CHAT = 'https://www.dariodepascalis.com/TEST/videochat.php';
 
   //public conversationHandler: ChatConversationHandler;
 
@@ -223,15 +225,38 @@ export class InfoConversationPage {
     this.groupService.leaveAGroup(uidGroup, uidUser)
     .subscribe(
       response => {
-        console.log('OK sender ::::', response);
+        console.log('leaveGroup OK sender ::::', response);
       },
       errMsg => {
-        console.log('httpSendRate ERROR MESSAGE', errMsg);
+        console.log('leaveGroup ERROR MESSAGE', errMsg);
       },
       () => {
-        console.log('API ERROR NESSUNO');
+        console.log('leaveGroup API ERROR NESSUNO');
       }
     );
+  }
+
+  closeGroup(){
+    //const uidUser = this.chatManager.getLoggedUser().uid; //'U4HL3GWjBsd8zLX4Vva0s7W2FN92';
+    const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
+    this.groupService.closeGroup(uidGroup)
+    .subscribe(
+      response => {
+        console.log('OK closeGroup ::::', response);
+      },
+      errMsg => {
+        console.log('closeGroup ERROR MESSAGE', errMsg);
+      },
+      () => {
+        console.log('closeGroup API ERROR NESSUNO');
+      }
+    );
+  }
+
+   setVideoChat(){
+    // setto url 
+    const url = this.URL_VIDEO_CHAT+'?roomid='+this.groupDetail.uid+'&popup=true';
+    this.events.publish('openVideoChat', url);
   }
 
 

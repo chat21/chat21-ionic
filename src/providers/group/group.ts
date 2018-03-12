@@ -28,7 +28,7 @@ export class GroupService {
     public chatManager: ChatManager,
     public userService: UserService
   ) {
-    this.BASE_URL_LEAVE_GROUP = 'https://us-central1-chat-v2-dev.cloudfunctions.net/api/';
+    this.BASE_URL_LEAVE_GROUP = 'https://us-central1-chat-v2-dev.cloudfunctions.net/';
     this.observable = new BehaviorSubject<boolean>(null);
     console.log('Hello GroupProvider Provider');
   }
@@ -72,7 +72,7 @@ export class GroupService {
     headers.append('Authorization', 'Bearer '+token);
 
     const options = new RequestOptions({ headers: headers });
-    const url = this.BASE_URL_LEAVE_GROUP + appId + '/groups/' + uidGroup + '/members/' + uidUser;
+    const url = this.BASE_URL_LEAVE_GROUP + 'api/' + appId + '/groups/' + uidGroup + '/members/' + uidUser;
     console.log('url: ', url);
     const body = {
       'app_id': appId
@@ -84,6 +84,27 @@ export class GroupService {
     .map(res => (res.json()));
    }
 
+   closeGroup(uidGroup): Observable<string> {
+
+    const appId = this.chatManager.getTenant();
+    const token = this.userService.returnToken();
+    const headers = new Headers();
+    //headers.append('Accept', 'application/json');
+    headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', 'Bearer '+token);
+
+    const options = new RequestOptions({ headers: headers });
+    const url = this.BASE_URL_LEAVE_GROUP +'supportapi/' + appId + '/groups/' + uidGroup;
+    console.log('url: ', url);
+    // const body = {
+    //   'app_id': appId
+    // };
+    console.log('------------------> options: ', options);
+    // console.log('------------------> body: ', JSON.stringify(body));
+    return this.http
+    .put(url, options)
+    .map(res => (res.json()));
+   }
 
   
   getUidMembers(members): string[]{

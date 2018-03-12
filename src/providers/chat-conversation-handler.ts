@@ -79,8 +79,13 @@ export class ChatConversationHandler {
       }
       // controllo fatto per i gruppi da rifattorizzare
       (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined')?itemMsg.sender_fullname = itemMsg.sender:itemMsg.sender_fullname;
+      // bonifico messaggio da url
+      let messageText = itemMsg['text'];
+      if (itemMsg['type'] == 'text'){
+        messageText = urlify(itemMsg['text']);
+      }
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], itemMsg['text'], itemMsg['timestamp'], calcolaData, itemMsg['type'],itemMsg['attributes']);
+      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'],itemMsg['attributes']);
       const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
       that.messages.splice(index, 1, msg);
       // aggiorno stato messaggio

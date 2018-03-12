@@ -58,7 +58,11 @@
               </span>
               <img *ngIf="message.type == 'image';"  class="message-content message-content-image" [src]="message.metadata.src"  [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
               <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="setUrlString(message.metadata.src, message.metadata.name)"></div>
-              <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
+              <div *ngIf="message.type == 'text';" >
+                  <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
+                  <ng-template #contentPopup><div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div></ng-template>
+                  <ng-template #contentNewTab><div class="message-content message-content-text" [innerHTML]="message.text"></div></ng-template>
+              </div>
               <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
             </div>
           </ng-template>
@@ -70,8 +74,10 @@
               </span>
               <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
               <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="setUrlString(message.metadata.src, message.metadata.name)"></div>
-              <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text">
-                <!-- {{message.text}} -->
+              <div *ngIf="message.type == 'text';" >
+                  <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
+                  <ng-template #contentPopup><div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div></ng-template>
+                  <ng-template #contentNewTab><div class="message-content message-content-text" [innerHTML]="message.text"></div></ng-template>
               </div>
               <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
             </div>

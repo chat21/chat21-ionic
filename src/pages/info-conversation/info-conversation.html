@@ -85,13 +85,53 @@
 
           </div>
         </div>
-        <div class="chat21-content">  
-            <button ion-button clear icon-start block color="danger" (click)="leaveGroup()">
+
+        <div class="chat21-content" style="float:left; width: 100%">  
+            <button ion-button clear icon-start block color="default" (click)="leaveGroup()">
+                <ion-icon name='help-buoy' is-active="false"></ion-icon>
+                {{ 'LABEL_CREATE_TICKET' | translate }}
+            </button>
+            <div class="break-line"></div>
+        </div>
+        
+
+        <div class="chat21-content" style="float:left; width: 100%">  
+            <button ion-button clear icon-start block color="default">
+                <ion-icon name='mail' is-active="false"></ion-icon>
+                <a href="{{URL_SEND_BY_EMAIL}}">
+                  {{ 'LABEL_SEND_BY_EMAIL' | translate }}
+                </a>
+            </button>
+            <div class="break-line"></div>
+        </div>
+        
+
+        <div class="chat21-content" style="float:left; width: 100%">  
+            <button ion-button clear icon-start block color="default" (click)="setVideoChat()">
+                <ion-icon name='videocam' is-active="false"></ion-icon>
+                {{ 'LABEL_VIDEO_CHAT' | translate }}
+            </button>
+            <div class="break-line"></div>
+        </div>
+        
+
+        <div class="chat21-content" style="width: 100%">  
+            <button item-left ion-button clear icon-start color="danger" (click)="leaveGroup()">
                 <ion-icon name='exit' is-active="false"></ion-icon>
                 {{ 'LABEL_LEAVE_GROUP' | translate }}
             </button>
+            <div class="break-line"></div>
         </div>
-      <div class="break-line"></div>
+        
+
+        <div class="chat21-content" style="width: 100%">  
+            <button item-right ion-button clear icon-start color="danger" (click)="closeGroup()">
+                <ion-icon name='close' is-active="false"></ion-icon>
+                {{ 'LABEL_CLOSE_GROUP' | translate }}
+            </button>
+            <div class="break-line"></div>
+        </div>
+        
   </div>
 
   <div class="chat21-box-images chat21-box">

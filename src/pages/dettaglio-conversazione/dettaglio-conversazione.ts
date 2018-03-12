@@ -19,7 +19,7 @@ import { ProfilePage } from '../profile/profile';
 import { PopoverPage } from '../popover/popover';
 // utils
 import { TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
-import { getSizeImg, urlify, setUrlString } from '../../utils/utils';
+import { isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, setUrlString } from '../../utils/utils';
 
 
 
@@ -56,7 +56,10 @@ export class DettaglioConversazionePage extends _DetailPage{
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
   MSG_STATUS_RETURN_RECEIPT = MSG_STATUS_RETURN_RECEIPT;
-
+  urlify = urlify;
+  isPopupUrl = isPopupUrl;
+  popupUrl = popupUrl;
+  strip_tags = strip_tags;
   
   constructor(
     public popoverCtrl: PopoverController,
@@ -106,9 +109,17 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.events.subscribe('doScroll', this.goToBottom);
     // subscribe dettaglio messaggio
     this.events.subscribe('openInfoMessage', this.onOpenInfoMessage);
+    // subscribe message videochat
+    this.events.subscribe('openVideoChat', this.onOpenVideoChat);
   }
 
   //// CALLBACK SUBSCRIBTIONS ////
+  onOpenVideoChat: any = (message) => {
+    this.messageString = message;
+    const text_area = this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0];
+    text_area.value = message; //<HTMLInputElement>document.getElementById('chat21-main-message-context');
+    text_area.focus();
+  }
   /**
    * callback sottoscrizione openInfoMessage
    * apre il box di dx del info messaggio
@@ -160,6 +171,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.events.unsubscribe('statusUser:online-'+this.conversationWith, null);
     this.events.unsubscribe('statusUser:offline-'+this.conversationWith, null);
     this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, null);
+    //this.events.unsubscribe('openVideoChat', null);
   }
 
 
@@ -608,6 +620,8 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.openInfoConversation = !this.openInfoConversation;
     this.onInfoConversation();
   }
+ 
+
   /** */
   onInfoConversation(){
     // ordino array x tempo decrescente

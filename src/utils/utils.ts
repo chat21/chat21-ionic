@@ -248,3 +248,38 @@ export function getFromNow(timestamp): string {
     }
     return sizeImage;
   }
+
+  export function popupUrl(html,title) {
+    const url = this.strip_tags(html);
+    const w = 600;
+    const h = 600;
+    const left = (screen.width/2)-(w/2);
+    const top = (screen.height/2)-(h/2);
+
+    const newWindow = window.open(url,'_blank', 'fullscreen=1, titlebar=0, toolbar=no, location=0, status=0, menubar=0, scrollbars=0, resizable=0, width='+w+', height='+h+', top='+top+', left='+left);
+    if (window.focus) {
+      newWindow.focus()
+    }
+  }
+
+  export function isPopupUrl(url){
+    let TEMP = url.split('popup=')[1];
+    // può essere seguito da & oppure "
+    if (TEMP) { 
+      if(TEMP.startsWith('true')) {
+        //console.log('isPopupUrl::::: ', TEMP.startsWith('true'));
+        return true;
+      }
+      else {
+        return false;
+      } 
+    }
+    else {
+      return false;
+    }
+  }
+
+  export function strip_tags(html){
+    return (html.replace( /<.*?>/g, '' )).trim();
+  }
+ 
