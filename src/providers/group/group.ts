@@ -85,24 +85,21 @@ export class GroupService {
    }
 
    closeGroup(uidGroup): Observable<string> {
-
     const appId = this.chatManager.getTenant();
     const token = this.userService.returnToken();
     const headers = new Headers();
-    //headers.append('Accept', 'application/json');
+    headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/json');
     headers.append('Authorization', 'Bearer '+token);
 
     const options = new RequestOptions({ headers: headers });
     const url = this.BASE_URL_LEAVE_GROUP +'supportapi/' + appId + '/groups/' + uidGroup;
-    console.log('url: ', url);
-    // const body = {
-    //   'app_id': appId
-    // };
-    console.log('------------------> options: ', options);
+    const body = {};
+    console.log('---------------> 1 - url: ', url);
+    console.log('---------------> 2 - options: ', options);
     // console.log('------------------> body: ', JSON.stringify(body));
     return this.http
-    .put(url, options)
+    .put(url, body, options)
     .map(res => (res.json()));
    }
 

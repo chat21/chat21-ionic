@@ -100,7 +100,7 @@
   <ion-toolbar>
     <ion-grid>
       <ion-row #messagesPageFooter id="messages-page-footer">
-                   
+          <!-- *ngIf="conversationEnabled || channel_type!='group'"         -->
         <ion-col col-2 col-bottom>
           <!-- <button ion-button clear class="message-editor-button active">
             <ion-icon name="add-circle" isActive="true" (click)="presentActionSheet()"></ion-icon>
@@ -111,21 +111,21 @@
 
           <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-reset" (click)="resetLoadImage()" ></div>
           <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-send" (click)="loadImage()"></div>
-          <input style='display:none' type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" name="chat21-file" id="chat21-file" class="inputfile" (change)="detectFiles($event)"/>
+          <input [disabled]="!conversationEnabled" style='display:none' type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" name="chat21-file" id="chat21-file" class="inputfile" (change)="detectFiles($event)"/>
            
         </ion-col>
         <ion-col col-auto>
           <div class="text_message">
-          <ion-textarea autosize #messageTextArea id="messageTextArea" [(ngModel)]="messageString" placeholder="Enter a message" rows="1"
+          <ion-textarea [disabled]="!conversationEnabled" autosize #messageTextArea id="messageTextArea" [(ngModel)]="messageString" placeholder="Enter a message" rows="1"
             ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString);" autofocus></ion-textarea>
           <!-- <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->
           </div>
 
           <div class="button_send">
-            <button ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active" (focus)="doScroll()" (click)="controlOfMessage(messageString)">
+            <button [disabled]="!conversationEnabled" ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active" (focus)="doScroll()" (click)="controlOfMessage(messageString)">
               <ion-icon name="send" isActive="true" ></ion-icon>
             </button>
-            <button ion-button clear *ngIf="!messageString || messageString.trim()==''" class="message-editor-button right inactive">
+            <button disabled ion-button clear *ngIf="!messageString || messageString.trim()==''" class="message-editor-button right inactive">
               <ion-icon name="send" isActive="false" ></ion-icon>
             </button>
         </div>

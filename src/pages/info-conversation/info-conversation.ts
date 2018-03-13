@@ -1,5 +1,6 @@
 import { Component, NgZone } from '@angular/core';
-import { Events } from 'ionic-angular';
+import { AlertController, Events } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 // models
 import { UserModel } from '../../models/user';
@@ -14,8 +15,9 @@ import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 
 // utils
-import { LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
-import { urlify } from '../../utils/utils';
+import { LABEL_ANNULLA, LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { showConfirm, urlify, isExistInArray } from '../../utils/utils';
+
 
 @Component({
   selector: 'page-info-conversation',
@@ -44,6 +46,7 @@ export class InfoConversationPage {
   public URL_SEND_BY_EMAIL = "mailto:info@frontiere21.it?subject=Transcript Chat Conversation&body= Ciao, di seguito il transcript http://www.webfract.it";
   public URL_VIDEO_CHAT = 'https://www.dariodepascalis.com/TEST/videochat.php';
 
+  public conversationEnabled: boolean;
   //public conversationHandler: ChatConversationHandler;
 
   constructor(
@@ -53,13 +56,18 @@ export class InfoConversationPage {
     public groupService: GroupService,
     public upSvc: UploadService,
     public zone: NgZone,
-    public conversationHandler: ChatConversationHandler
+    public conversationHandler: ChatConversationHandler,
+    public alertCtrl: AlertController,
+    public translate: TranslateService
+
   ) {
     console.log('InfoConversationPage');
     this.profileYourself = false;
     this.online = false; 
+    //this.translate.use('');
     // indica quando eliminare la sottoscrizione, invocato dalla pg dettaglio conversazione appena entro!!!
     this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
+
   }
 
   ngOnInit() {
@@ -90,7 +98,20 @@ export class InfoConversationPage {
     this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
     this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
     this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
+    this.events.subscribe('PopupConfirmation', this.subcribePopupConfirmation);
     console.log('this.conversationHandler.listSubsriptions',this.conversationHandler.listSubsriptions);
+  }
+
+  subcribePopupConfirmation: any = (resp, action) => {
+    console.log('PopupConfirmation', resp, action);
+    if(resp === LABEL_ANNULLA) {
+      return;
+    }
+    if(action === 'leave'){
+      this.leaveGroup();
+    } else if(action === 'close'){
+      this.closeGroup();
+    }
   }
 
   subcribeUidUserSelected: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
@@ -133,6 +154,16 @@ export class InfoConversationPage {
     }
     //console.log('SUBSCRIBE -> getListMembers', groupDetail.members);
     this.members = this.getListMembers(groupDetail.members);
+    if(isExistInArray(groupDetail.members, this.currentUserDetail.uid)){
+      //console.log('isExistInArray -> TRUE', this.members, this.currentUserDetail.uid);
+      this.conversationEnabled = true;
+      this.events.publish('conversationEnabled', true);
+    } else {
+      this.conversationEnabled = false;
+      //console.log('isExistInArray -> FALSE', this.members, this.currentUserDetail.uid);
+      this.events.publish('conversationEnabled', false);
+    }
+    //se id nn è presente in members -> disabilito insert message, button abbandona, button chiudi
     //this.displayImage(this.groupDetail.uid);
     console.log('SUBSCRIBE -> loadGroupDetail:complete', groupDetail.members);
   };
@@ -146,6 +177,7 @@ export class InfoConversationPage {
     this.events.unsubscribe('changeStatusUserSelected', null);
     this.events.unsubscribe('loadUserDetail:complete', null);
     this.events.unsubscribe('loadGroupDetail:complete', null);
+    this.events.unsubscribe('PopupConfirmation', null);
   }
   // ----------------------------------------- //
 
@@ -220,6 +252,8 @@ export class InfoConversationPage {
   }
 
   leaveGroup(){
+    this.conversationEnabled = false;
+    this.events.publish('conversationEnabled', false);
     const uidUser = this.chatManager.getLoggedUser().uid; //'U4HL3GWjBsd8zLX4Vva0s7W2FN92';
     const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
     this.groupService.leaveAGroup(uidGroup, uidUser)
@@ -228,6 +262,8 @@ export class InfoConversationPage {
         console.log('leaveGroup OK sender ::::', response);
       },
       errMsg => {
+        this.conversationEnabled = true;
+        this.events.publish('conversationEnabled', true);
         console.log('leaveGroup ERROR MESSAGE', errMsg);
       },
       () => {
@@ -236,8 +272,11 @@ export class InfoConversationPage {
     );
   }
 
+  /** */
   closeGroup(){
     //const uidUser = this.chatManager.getLoggedUser().uid; //'U4HL3GWjBsd8zLX4Vva0s7W2FN92';
+    this.conversationEnabled = false;
+    this.events.publish('conversationEnabled', false);
     const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
     this.groupService.closeGroup(uidGroup)
     .subscribe(
@@ -245,6 +284,8 @@ export class InfoConversationPage {
         console.log('OK closeGroup ::::', response);
       },
       errMsg => {
+        this.conversationEnabled = true;
+        this.events.publish('conversationEnabled', true);
         console.log('closeGroup ERROR MESSAGE', errMsg);
       },
       () => {
@@ -253,12 +294,51 @@ export class InfoConversationPage {
     );
   }
 
-   setVideoChat(){
+  /** */
+  setVideoChat(){
     // setto url 
     const url = this.URL_VIDEO_CHAT+'?roomid='+this.groupDetail.uid+'&popup=true';
     this.events.publish('openVideoChat', url);
   }
 
+  
+  /**
+   * 
+   * @param action 
+   */
+  openPopupConfirmation(action){
+    debugger
+    let alertTitle = '';
+    let alertMessage = '';
+    this.translate.get('ALERT_TITLE').subscribe(
+      value => {
+        alertTitle = value;
+      }
+    )
+    if(action === 'leave'){
+      this.translate.get('LEAVE_ALERT_MSG').subscribe(
+        value => {
+          alertMessage = value;
+        }
+      )
+    } else if(action === 'close'){
+      this.translate.get('CLOSE_ALERT_MSG').subscribe(
+        value => {
+          alertMessage = value;
+        }
+      )
+    }
+    showConfirm(this.alertCtrl, this.events, alertTitle, alertMessage, action);
+  }
 
+
+  isSupportGroup(){
+    let uid = this.groupDetail.uid;
+    if(uid.indexOf('support-group') == 0 ){
+      return true;
+    }
+    return false;
+  }
+  
 
 }

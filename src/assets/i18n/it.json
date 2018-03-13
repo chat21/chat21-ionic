@@ -26,7 +26,11 @@
     "LABEL_SEND_BY_EMAIL": "Invia per email",
     "LABEL_VIDEO_CHAT": "Video chiamata",
     "LABEL_LEAVE_GROUP": "Abbandona il gruppo",
-    "LABEL_CLOSE_GROUP": "Chiudo il gruppo",
+    "LABEL_CLOSE_GROUP": "Chiudo conversazione",
+
+    "ALERT_TITLE": "ATTENZIONE",
+    "LEAVE_ALERT_MSG": "abbandonare il gruppo?",
+    "CLOSE_ALERT_MSG": "chiudere la conversazione?",
 
     "GREETING": "Hi, {{ value }}"
 }

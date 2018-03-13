@@ -2,7 +2,7 @@
 import * as moment from 'moment/moment';
 import 'moment/locale/it.js';
 
-import { ARRAY_DAYS, LABEL_TODAY, LABEL_TOMORROW, LABEL_LAST_ACCESS, LABEL_TO } from './constants';
+import { LABEL_ANNULLA, LABEL_OK, ARRAY_DAYS, LABEL_TODAY, LABEL_TOMORROW, LABEL_LAST_ACCESS, LABEL_TO } from './constants';
 
 
 
@@ -281,5 +281,43 @@ export function getFromNow(timestamp): string {
 
   export function strip_tags(html){
     return (html.replace( /<.*?>/g, '' )).trim();
+  }
+
+  export function isExistInArray(members, currentUid){
+    console.log("isExistInArray -- ::: ", members, currentUid);
+    // let resp = false;
+    // members.forEach(function(element) {
+    //   console.log("element::: ", element['uid'], element);
+    //   if (element['uid'] === currentUid) {
+    //     resp = true;
+    //     return;
+    //   }
+    // });   
+    // return resp;
+    return members.includes(currentUid);
+  }
+
+  export function showConfirm(alertCtrl, events, title, message, action) {
+    let confirm = alertCtrl.create({
+      title: title,
+      message: message,
+      buttons: [
+        {
+          text: LABEL_ANNULLA,
+          handler: () => {
+            events.publish('PopupConfirmation', LABEL_ANNULLA, action);
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: LABEL_OK,
+          handler: () => {
+            events.publish('PopupConfirmation', LABEL_OK, action);
+            console.log('Agree clicked');
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
  

@@ -34,6 +34,9 @@ export const LABEL_LAST_ACCESS = "ultimo accesso";
 export const LABEL_TO = "alle";
 export const ARRAY_DAYS = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
 
+export const LABEL_ANNULLA = "ANNULLA";
+export const LABEL_OK = "OK";
+
 
 
 // TYPES MESSAGES

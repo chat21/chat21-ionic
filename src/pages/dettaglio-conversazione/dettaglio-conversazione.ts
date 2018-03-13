@@ -52,6 +52,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   private isFileSelected: boolean;
   private openInfoConversation: boolean;
   private openInfoMessage: boolean;
+  private conversationEnabled: boolean;
   
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
@@ -111,9 +112,17 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.events.subscribe('openInfoMessage', this.onOpenInfoMessage);
     // subscribe message videochat
     this.events.subscribe('openVideoChat', this.onOpenVideoChat);
+
+    //dfgdfgdf
+    this.events.subscribe('conversationEnabled', this.onConversationEnabled);
+    
   }
 
   //// CALLBACK SUBSCRIBTIONS ////
+  onConversationEnabled: any = (status) => {
+    this.conversationEnabled = status;
+  }
+
   onOpenVideoChat: any = (message) => {
     this.messageString = message;
     const text_area = this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0];
@@ -171,6 +180,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.events.unsubscribe('statusUser:online-'+this.conversationWith, null);
     this.events.unsubscribe('statusUser:offline-'+this.conversationWith, null);
     this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, null);
+    //this.events.unsubscribe('conversationEnabled', null);
     //this.events.unsubscribe('openVideoChat', null);
   }
 
