@@ -16,7 +16,7 @@ Visit https://web.chat21.org/ to see a live demo of chat21-ionic.
 <img src="http://www.dariodepascalis.com/wp-content/uploads/2017/10/chat21-ionic-desk-new.png" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
 
 # Documentation #
-https://chat-v2-dev.firebaseapp.com/web/docs/
+In progress
 
 # Prerequisites #
 * Install nodejs: `https://nodejs.org/en/download/`
