@@ -9,26 +9,28 @@ import { ConversationModel } from '../models/conversation';
 // services
 import { ChatManager } from './chat-manager/chat-manager';
 // utils
-import { LABEL_TU, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
-import { getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
+import { TYPE_GROUP, LABEL_TU, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
+import { compareValues, getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
 // import { LABEL_TU } from '../utils/constants';
 
 @Injectable()
 export class ChatConversationsHandler {
 
+    public conversations: ConversationModel[] = [];
+    public uidConvSelected: String = '';
+
     private tenant: string;
     private loggedUser: UserModel;
     private userId: string;
-    //public conversations: ConversationModel[];
-    private idConversationSelected: String;
     private ref: firebase.database.Query;
     //public LABEL_TU: string;
     constructor(
         public events: Events,
         public chatManager: ChatManager
     ) {
-    
     }
+
+
     /**
      * ritorno istanza di conversations handler
      */
@@ -76,14 +78,10 @@ export class ChatConversationsHandler {
     added(childSnapshot){
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
-        if(!childData.image){
-            childData.image = URL_NO_IMAGE;
-        }
         const conversation = this.completeConversation(childData);
+        this.conversations.splice(0, 0, conversation);
         console.log("child_added conversationS",conversation);
-        this.events.publish('conversations:added', conversation);
-        //this.conversations.splice(0, 0, conversation);
-        //this.events.publish('conversations:added', this.conversations, childSnapshot.key );
+        //this.events.publish('conversations:added', conversation);
     }
     /**
      * 1 - cerco indice conversazione nell'array conversation
@@ -94,14 +92,14 @@ export class ChatConversationsHandler {
     changed(childSnapshot){
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
-        if(!childData.image){
-            childData.image = URL_NO_IMAGE;
-        }
-        const conversation = this.completeConversation(childData);
-        conversation.status = '1'; 
+        let conversation = this.completeConversation(childData); 
+        //conversation = this.isConversationSelected(conversation, '1');
+        const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
+        this.conversations.splice(index, 1, conversation);
+        this.conversations.sort(compareValues('timestamp', 'desc'));
         console.log("child_changed conversationS",conversation);
-        this.events.publish('conversations:changed', conversation);
-
+        //this.events.publish('conversations:changed', conversation);
+          
         // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
         // // controllo superfluo sarà sempre maggiore
         // console.log("child_changed", index);
@@ -120,13 +118,26 @@ export class ChatConversationsHandler {
      */
     removed(childSnapshot){
         console.log("child_removed");
-        // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
-        // // controllo superfluo sarà sempre maggiore
-        // if(index>-1){
-        //     this.conversations.splice(index, 1);
-        //     this.events.publish('conversations:update', this.conversations);
-        // }
+        const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
+        // controllo superfluo sarà sempre maggiore
+        if(index>-1){
+            this.conversations.splice(index, 1);
+            //this.events.publish('conversations:update', this.conversations);
+        }
     }
+
+    /**
+     * 
+     * @param conv 
+     */
+    // isConversationSelected(conv, status){
+    //     conv.status = status;
+    //     if(conv.uid == this.uidConvSelected){
+    //         conv.selected = true;
+    //         conv.status = '0';
+    //     }
+    //     return conv;
+    // }
     /**
      * Completo conversazione aggiungendo:
      * 1 - imposto selected == true se è la conversazione selezionata
@@ -136,38 +147,72 @@ export class ChatConversationsHandler {
      * @param conv 
      */
     completeConversation(conv):ConversationModel{
+        //debugger;
         conv.selected = false;
-        if(this.idConversationSelected && conv.key == this.idConversationSelected){
-            conv.selected = true;
-        }
-        if(!conv.sender_fullname || conv.sender_fullname == 'undefined' || conv.sender_fullname.trim() == ''){
+        if(!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === ''){
             conv.sender_fullname = conv.sender;
         }
-        if(!conv.recipient_fullname || conv.recipient_fullname == 'undefined' || conv.recipient_fullname.trim() == ''){
+        if(!conv.recipient_fullname || conv.recipient_fullname === 'undefined' || conv.recipient_fullname.trim() === ''){
             conv.recipient_fullname = conv.recipient;
         }
+
         let conversation_with_fullname = conv.sender_fullname;
         let conversation_with = conv.sender;
-        if(conv.sender == this.loggedUser.uid){
+        if(conv.sender === this.loggedUser.uid){
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.last_message_text = LABEL_TU + conv.last_message_text;
-        } else {
-            conv.last_message_text = conv.sender_fullname + ': ' + conv.last_message_text;
+        } 
+        else if (conv.channel_type === TYPE_GROUP) {
+            conversation_with = conv.recipient;
+            conversation_with_fullname = conv.recipient_fullname;
+            conv.last_message_text = conv.last_message_text;
         }
+        conv.conversation_with_fullname = conversation_with_fullname;
+
+        conv.status = this.setStatusConversation(conv.sender, conv.uid);
+        this.setImageConversation(conv, conversation_with);
+
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
-        conv.conversation_with_fullname = conversation_with_fullname
         conv.time_last_message = time_last_message;
         
+        return conv;
+    }
+
+
+    setStatusConversation(sender, uid): string {
+        let status = '0'; //letto
+        if(sender === this.loggedUser.uid || uid === this.uidConvSelected){
+            status = '0'; 
+        } else {
+            status = '1'; // non letto
+        }
+        return status;
+    }
+
+    setImageConversation(conv, conversation_with) {
+
+        let image = URL_NO_IMAGE;
         if(conv.channel_type === TYPE_DIRECT) {
             const urlNodeConcacts = contactsRef(this.tenant) + conversation_with + '/imageurl/';
-            firebase.database().ref(urlNodeConcacts)
-            .once('value').then(function(snapshot) {
-                console.log("urlNodeConcacts::: ", snapshot.val(), urlNodeConcacts);
-                conv.image = snapshot.val();
-            });
+            firebase.database().ref(urlNodeConcacts).once('value')
+            .then(function(snapshot) {
+                //console.log("urlNodeConcacts::: ", snapshot.val(), urlNodeConcacts);
+                //conv.image = snapshot.val();
+                if(snapshot.val().trim()){
+                    //return snapshot.val();
+                    conv.image = snapshot.val();
+                } else {
+                    conv.image = image;
+                }
+            })
+            .catch(function(err) {
+                conv.image = image;
+            })
+        } else {
+            conv.image = image;
         }
-        return conv;
+        
     }
     /**
      * calcolo il tempo trascorso da ora al timestamp passato

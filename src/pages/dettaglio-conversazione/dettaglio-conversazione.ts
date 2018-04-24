@@ -19,9 +19,7 @@ import { ProfilePage } from '../profile/profile';
 import { PopoverPage } from '../popover/popover';
 // utils
 import { TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
-import { isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, setUrlString } from '../../utils/utils';
-
-
+import { isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
 
 
 @IonicPage()
@@ -52,7 +50,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   private isFileSelected: boolean;
   private openInfoConversation: boolean;
   private openInfoMessage: boolean;
-  private conversationEnabled: boolean;
+  private conversationEnabled: boolean = true;
   
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
@@ -61,6 +59,8 @@ export class DettaglioConversazionePage extends _DetailPage{
   isPopupUrl = isPopupUrl;
   popupUrl = popupUrl;
   strip_tags = strip_tags;
+  
+  convertMessageAndUrlify = convertMessageAndUrlify;
   
   constructor(
     public popoverCtrl: PopoverController,
@@ -76,20 +76,20 @@ export class DettaglioConversazionePage extends _DetailPage{
     private upSvc: UploadService
   ) {
     super();
-    // recupero id utente e fullname con cui si conversa
+    //// recupero id utente e fullname con cui si conversa
+    //// uid utente con cui si conversa
     this.conversationWith = navParams.get('conversationWith');
+    //// nome utente con cui si conversa
     this.conversationWithFullname = navParams.get('conversationWithFullname');
+    //// tipo di canale della chat: direct/group
     this.channel_type = navParams.get('channel_type');
-    console.log('constructor PAGE ::: ',this.channel_type);
-    //// subscriptions list 
-    this.initSubscriptions();
-    //// init variables
     (!this.channel_type || this.channel_type == 'undefined')?this.channel_type=TYPE_DIRECT:this.channel_type;
     this.messages = []; // list messages of conversation
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
-    this.openInfoConversation = true; // indica se è aperto il box info conversation
+    this.openInfoConversation = this.chatManager.openInfoConversation; // indica se è aperto il box info conversation
     this.openInfoMessage = false; // indica se è aperto il box info message
-
+    //// init variables
+    this.initSubscriptions();
     // DESTROY INFO CONVERSATION 
     console.log('1 - DESTROY INFO CONVERSATION',this.events);
     this.events.publish('closeDetailConversation', true);
@@ -113,13 +113,11 @@ export class DettaglioConversazionePage extends _DetailPage{
     // subscribe message videochat
     this.events.subscribe('openVideoChat', this.onOpenVideoChat);
 
-    //dfgdfgdf
-    this.events.subscribe('conversationEnabled', this.onConversationEnabled);
-    
   }
 
   //// CALLBACK SUBSCRIBTIONS ////
   onConversationEnabled: any = (status) => {
+    console.log('onConversationEnabled');
     this.conversationEnabled = status;
   }
 
@@ -144,7 +142,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     if(uid !== this.conversationWith){return;}
     this.online = true;
     this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
-    console.log('ONLINE **************');
+    console.log('************** ONLINE');
   }
   /**
    * on subscribe stato utente con cui si conversa OFFLINE
@@ -153,7 +151,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     if(uid !== this.conversationWith){return;}
     this.online = false;
     this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
-    console.log('OFFLINE **************');
+    console.log('************** OFFLINE');
   }
   /**
    * on subscribe data ultima connessione utente con cui si conversa
@@ -161,15 +159,17 @@ export class DettaglioConversazionePage extends _DetailPage{
   updateLastConnectionDate: any = (uid,lastConnectionDate) => {
     this.lastConnectionDate = lastConnectionDate;
     this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
-    console.log('updateLastConnectionDate **************',this.lastConnectionDate);
+    console.log('************** updateLastConnectionDate',this.lastConnectionDate);
   }
   /**
    * on subcribe doScroll add message
    */
   goToBottom:any = (data) => {
-    console.log('goToBottom');
     this.doScroll();
+    console.log('*********** goToBottom');
   }
+
+
   //// UNSUBSCRIPTIONS ////
   /**
    * unsubscribe all subscribe events
@@ -180,10 +180,9 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.events.unsubscribe('statusUser:online-'+this.conversationWith, null);
     this.events.unsubscribe('statusUser:offline-'+this.conversationWith, null);
     this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, null);
-    //this.events.unsubscribe('conversationEnabled', null);
+    this.events.unsubscribe('conversationEnabled', null);
     //this.events.unsubscribe('openVideoChat', null);
   }
-
 
   //// SYSTEM FUNCTIONS ////
   /**
@@ -197,10 +196,14 @@ export class DettaglioConversazionePage extends _DetailPage{
    * quando esco dalla pagina distruggo i subscribe
    */
   ionViewWillLeave() {
-    console.log('ionViewWillLeave **************');
+    console.log('------------> ionViewWillLeave');
     this.unsubescribeAll();
   }
-  
+
+  ngAfterViewInit() {
+    console.log('------------> ngAfterViewInit ');
+    //this.events.subscribe('conversationEnabled', this.onConversationEnabled);
+  }
 
   //// MY FUNCTIONS ////
   /**
@@ -214,12 +217,19 @@ export class DettaglioConversazionePage extends _DetailPage{
    * carico messaggi
    */
   initialize(){
-    console.log('initialize DettaglioConversazionePage **************',this.chatManager.handlers);
-    this.messages = [];
+    console.log('----------> initialize DettaglioConversazionePage',this.chatManager.handlers);
+    (!this.channel_type || this.channel_type == 'undefined')?this.channel_type=TYPE_DIRECT:this.channel_type;
+    this.messages = []; // list messages of conversation
+    this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
+    this.openInfoMessage = false; // indica se è aperto il box info message
     this.online = false;
     this.lastConnectionDate = '';
+
     this.tenant = this.chatManager.getTenant();
     this.currentUserDetail = this.chatManager.getLoggedUser();
+    this.openInfoConversation = this.chatManager.getOpenInfoConversation();
+
+    
     this.chatPresenceHandler.userIsOnline(this.conversationWith);
     this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
     this.initConversationHandler();
@@ -334,10 +344,43 @@ export class DettaglioConversazionePage extends _DetailPage{
   /** 
    * chiude il box di dx del info messaggio
   */
-  onCloseInfoMessage(){
-    this.openInfoMessage = false;
-    //console.log('OPEN MESSAGE **************');
+  onCloseInfoPage(){
+    if(this.openInfoMessage){
+      this.openInfoMessage = false;
+    } else {
+      this.onOpenCloseInfoConversation();
+    }
   }
+
+  /** 
+   * 
+  */
+  onOpenCloseInfoConversation(){
+    this.chatManager.onOpenCloseInfoConversation();
+    this.openInfoConversation =  this.chatManager.openInfoConversation;
+    this.onInfoConversation();
+  }
+
+  /** */
+  onInfoConversation(){
+    // ordino array x tempo decrescente
+    // cerco messaggi non miei
+    // prendo il primo
+    let msgRicevuti;
+    let attributes = [];
+    try {
+      msgRicevuti = this.messages.find(item => item.sender !== this.currentUserDetail.uid);
+      attributes = msgRicevuti.attributes;
+    }
+    catch(err) {
+    }
+    //const msgRicevuti = this.messages.find(item => item.sender !== this.currentUserDetail.uid);
+    console.log('msgRicevuti::::: ', msgRicevuti);
+    console.log('onUidSelected::::: ', this.conversationWith,  this.openInfoConversation);
+    this.events.publish('onOpenInfoConversation', this.openInfoConversation, this.conversationWith, this.channel_type, attributes);
+    //this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
+  }
+
   /**
    * Check if the user is the sender of the message.
    * @param message 
@@ -357,7 +400,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     (metadata) ? metadata = metadata : metadata = '';
     console.log("SEND MESSAGE: ", msg, this.messages);
     if (type == 'image'){
-      msg = 'image';
+      msg = 'Image: ' + metadata['src'];
     } else if(type == 'file'){
       msg = 'file';
     }
@@ -428,13 +471,14 @@ export class DettaglioConversazionePage extends _DetailPage{
     return getSizeImg(message, MAX_WIDTH_IMAGES);
   }
 
-  setUrlString(text, name): any {
-    if(text) {
-      return setUrlString(text, name);
-    } else {
-      return name;
-    }
-  }
+  // setUrlString(text, name): any {
+  //   return name;
+  //   // if(text) {
+  //   //   return setUrlString(text, name);
+  //   // } else {
+  //   //   return name;
+  //   // }
+  // }
 
   /** */
   showButtonInfo(){
@@ -620,36 +664,6 @@ export class DettaglioConversazionePage extends _DetailPage{
     console.log('onSendImage::::: ', metadata);
     this.sendMessage('', TYPE_MSG_IMAGE, metadata);
     this.doScroll();
-  }
-
-
-  /** 
-   * 
-  */
-  onOpenCloseInfoConversation(){
-    this.openInfoConversation = !this.openInfoConversation;
-    this.onInfoConversation();
-  }
- 
-
-  /** */
-  onInfoConversation(){
-    // ordino array x tempo decrescente
-    // cerco messaggi non miei
-    // prendo il primo
-    let msgRicevuti;
-    let attributes = [];
-    try {
-      msgRicevuti = this.messages.find(item => item.sender !== this.currentUserDetail.uid);
-      attributes = msgRicevuti.attributes;
-    }
-    catch(err) {
-    }
-    //const msgRicevuti = this.messages.find(item => item.sender !== this.currentUserDetail.uid);
-    console.log('msgRicevuti::::: ', msgRicevuti);
-    console.log('onUidSelected::::: ', this.conversationWith,  this.openInfoConversation);
-    this.events.publish('onUidSelected', this.openInfoConversation, this.conversationWith, this.channel_type, attributes);
-    //this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
   }
 
 

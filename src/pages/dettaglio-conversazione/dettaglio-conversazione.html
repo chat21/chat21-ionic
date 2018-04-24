@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar >
+  <ion-navbar>
     <ion-title>
       <div class="headerUserName" *ngIf="conversationWith">{{conversationWithFullname?conversationWithFullname:''}}
       <span *ngIf="online; then userActive else userInactive"></span>
@@ -13,13 +13,12 @@
     </ion-title>
 
     <ion-buttons end>
-      <button *ngIf="!openInfoMessage" ion-button icon-only (click)="onOpenCloseInfoConversation()">
+      <button *ngIf="!openInfoConversation && !openInfoMessage" ion-button icon-only (click)="onOpenCloseInfoConversation()">
         <ion-icon name="information-circle"></ion-icon>
       </button>
-      <button *ngIf="openInfoMessage" ion-button icon-only (click)="onCloseInfoMessage()">
+      <button *ngIf="openInfoConversation || openInfoMessage" ion-button icon-only (click)="onCloseInfoPage()">
         <ion-icon name="close"></ion-icon>
       </button>
-
     </ion-buttons>
 
   </ion-navbar>
@@ -57,11 +56,11 @@
               <span class="buttonInfo" (click)="presentPopover($event, message)" >
               </span>
               <img *ngIf="message.type == 'image';"  class="message-content message-content-image" [src]="message.metadata.src"  [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
-              <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="setUrlString(message.metadata.src, message.metadata.name)"></div>
+              <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
               <div *ngIf="message.type == 'text';" >
                   <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
                   <ng-template #contentPopup><div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div></ng-template>
-                  <ng-template #contentNewTab><div class="message-content message-content-text" [innerHTML]="message.text"></div></ng-template>
+                  <ng-template #contentNewTab><div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div></ng-template>
               </div>
               <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
             </div>
@@ -73,11 +72,11 @@
               <span class="buttonInfo" [ngClass]="message.uid" (click)="presentPopover($event, message)" >
               </span>
               <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
-              <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="setUrlString(message.metadata.src, message.metadata.name)"></div>
+              <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
               <div *ngIf="message.type == 'text';" >
                   <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
                   <ng-template #contentPopup><div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div></ng-template>
-                  <ng-template #contentNewTab><div class="message-content message-content-text" [innerHTML]="message.text"></div></ng-template>
+                  <ng-template #contentNewTab><div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div></ng-template>
               </div>
               <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
             </div>

@@ -82,7 +82,7 @@ export class ChatConversationHandler {
       // bonifico messaggio da url
       let messageText = itemMsg['text'];
       if (itemMsg['type'] == 'text'){
-        messageText = urlify(itemMsg['text']);
+        //messageText = urlify(itemMsg['text']);
       }
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
       const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'],itemMsg['attributes']);
@@ -128,7 +128,7 @@ export class ChatConversationHandler {
       // bonifico messaggio da url
       let messageText = itemMsg['text'];
       if (itemMsg['type'] == 'text'){
-        messageText = urlify(itemMsg['text']);
+        //messageText = urlify(itemMsg['text']);
       }
 
       if(itemMsg['metadata']){

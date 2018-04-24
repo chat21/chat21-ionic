@@ -15,6 +15,9 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
+body {
+    user-select: text;
+}
 
 
 // Ionic 'Split Pane' styles need to be tweaked to
@@ -64,6 +67,9 @@ ion-app, ion-nav, ion-tab, ion-tabs, .app-root, .ion-page {
     background-position: top center;
     /* round the edges to a circle with border radius 1/2 container size */
     border-radius: 50%;
+    border-color: #c3c3c3;
+    border-style: solid;
+    border-width: 1px;
 }
 .chat21-avatar.big{
     width: 200px;

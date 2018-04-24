@@ -31,6 +31,7 @@ export class ChatManager {
 
   public conversationsHandler: ChatConversationsHandler;
   public contactsSynchronizer: ChatContactsSynchronizer;
+  public openInfoConversation: boolean;
 
   constructor(
     public events: Events,
@@ -45,6 +46,7 @@ export class ChatManager {
    */
   init(){
     this.handlers = [];
+    this.openInfoConversation = true;
     console.log('************* init  ***', this.handlers);
   }
   /**
@@ -65,6 +67,10 @@ export class ChatManager {
     this.databaseProvider.initialize(app_id);
     this.handlers = [];
   }
+
+  onOpenCloseInfoConversation(){
+    this.openInfoConversation = !this.openInfoConversation;
+  }
   /**
    * return tenant
    */
@@ -76,6 +82,13 @@ export class ChatManager {
    */
   getLoggedUser(): UserModel {
     return this.loggedUser;
+  }
+
+  /**
+   * 
+   */
+  getOpenInfoConversation(): boolean {
+    return this.openInfoConversation;
   }
   /**
    * dispose all references

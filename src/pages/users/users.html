@@ -24,7 +24,11 @@
       <ion-avatar item-left>
           <img src= {{user.image}} alt="user" onError="this.src='assets/img/no_image.png';">
       </ion-avatar>
-       <h2 class="label">{{ user.fullname }}</h2>
+       <h2 class="label">
+          <span *ngIf="user.fullname">{{ user.fullname }}</span>
+          <span *ngIf="!user.fullname">{{ 'LABEL_GUEST' | translate }}</span>
+          <div class="chat21-status truncate read">{{ user.uid }}</div>
+        </h2>
       <ion-icon name="arrow-forward_" item-right></ion-icon>
     </button>
   </ion-list>

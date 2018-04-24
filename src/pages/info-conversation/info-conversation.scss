@@ -2,18 +2,22 @@ page-info-conversation {
     padding: 0px;
     margin: 0px;
 
+    ion-content {
+        background: #f7f7f7!important;
+    }
+   
+
     .chat21-box {
         min-height: 40px;
     }
     .chat21-content {
         // height: auto;
         padding-top: 10px;
+        padding-bottom: 10px;
     }
-
     .chat21-content a {
         text-decoration: none;
     }
-
     .chat21-content .lighter{
         font-weight: lighter;
     }

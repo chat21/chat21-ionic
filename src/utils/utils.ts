@@ -58,27 +58,33 @@ export function searchIndexInArrayForUid(items, key){
 /**
  * trasforma url contenuti nel testo passato in tag <a>
  */
-export function urlify(text) {
-  var urlRegex = /((?:(http|https|Http|Https|rtsp|Rtsp):\/\/(?:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,64}(?:\:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,25})?\@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|(?:jobs|j[emop])|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\:\d{1,5})?)(\/(?:(?:[a-zA-Z0-9\;\/\?\:\@\&\=\#\~\-\.\+\!\*\'\(\)\,\_])|(?:\%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
-  return text.replace(urlRegex, function (url) {
-    if (!url.match(/^[a-zA-Z]+:\/\//))
+export function urlify(text, name?) {
+  var regex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
+  return text.replace(regex, function (url) {
+    if (url.match(/^[/]/))
     {
+      return;
+    } else if (!url.match(/^[a-zA-Z]+:\/\//)){
       url = 'http://' + url;
     }
-    return '<a href="' + url + '" target="_blank">' + url + '</a>';
+    var label = url;
+    if(name){
+      label = name;
+    }
+    return '<a href=\"' + url + '\" target=\"_blank\">' + label + '</a>';
   })
 }
 
-export function setUrlString(text, name) {
-  var urlRegex = /((?:(http|https|Http|Https|rtsp|Rtsp):\/\/(?:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,64}(?:\:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,25})?\@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|(?:jobs|j[emop])|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\:\d{1,5})?)(\/(?:(?:[a-zA-Z0-9\;\/\?\:\@\&\=\#\~\-\.\+\!\*\'\(\)\,\_])|(?:\%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
-  return text.replace(urlRegex, function (url) {
-    if (!url.match(/^[a-zA-Z]+:\/\//))
-    {
-      url = 'http://' + url;
-    }
-    return '<a href="' + url + '" target="_blank">' + name + '</a>';
-  })
-}
+// export function setUrlString(text, name) {
+//   var urlRegex = /((?:(http|https|Http|Https|rtsp|Rtsp):\/\/(?:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,64}(?:\:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,25})?\@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|(?:jobs|j[emop])|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\:\d{1,5})?)(\/(?:(?:[a-zA-Z0-9\;\/\?\:\@\&\=\#\~\-\.\+\!\*\'\(\)\,\_])|(?:\%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
+//   return text.replace(urlRegex, function (url) {
+//     if (!url.match(/^[a-zA-Z]+:\/\//))
+//     {
+//       url = 'http://' + url;
+//     }
+//     return '<a href=\"' + url + '\" target=\"_blank\">' + name + '</a>';
+//   })
+// }
 /**
  * rimuove il tag html dal testo
  * ATTUALMENTE NON USATA
@@ -233,9 +239,9 @@ export function getFromNow(timestamp): string {
     moment.locale('it');
     let date_as_string = moment.unix(timestamp).fromNow();
     return date_as_string;
-  }
+}
 
-  export function getSizeImg(message, MAX_WIDTH_IMAGES): any {
+export function getSizeImg(message, MAX_WIDTH_IMAGES): any {
     const metadata = message.metadata;
     const sizeImage = {
       width: metadata.width,
@@ -247,12 +253,12 @@ export function getFromNow(timestamp): string {
       sizeImage.height = MAX_WIDTH_IMAGES / rapporto;
     }
     return sizeImage;
-  }
+}
 
-  export function popupUrl(html,title) {
+export function popupUrl(html,title) {
     const url = this.strip_tags(html);
     const w = 600;
-    const h = 600;
+    const h = screen.height - 40;
     const left = (screen.width/2)-(w/2);
     const top = (screen.height/2)-(h/2);
 
@@ -260,9 +266,9 @@ export function getFromNow(timestamp): string {
     if (window.focus) {
       newWindow.focus()
     }
-  }
+}
 
-  export function isPopupUrl(url){
+export function isPopupUrl(url){
     let TEMP = url.split('popup=')[1];
     // può essere seguito da & oppure "
     if (TEMP) { 
@@ -277,47 +283,67 @@ export function getFromNow(timestamp): string {
     else {
       return false;
     }
-  }
+}
 
-  export function strip_tags(html){
+export function strip_tags(html){
     return (html.replace( /<.*?>/g, '' )).trim();
-  }
+}
 
-  export function isExistInArray(members, currentUid){
-    console.log("isExistInArray -- ::: ", members, currentUid);
-    // let resp = false;
-    // members.forEach(function(element) {
-    //   console.log("element::: ", element['uid'], element);
-    //   if (element['uid'] === currentUid) {
-    //     resp = true;
-    //     return;
-    //   }
-    // });   
-    // return resp;
-    return members.includes(currentUid);
-  }
+export function isExistInArray(members, currentUid){
+  console.log("isExistInArray -- ::: ", members, currentUid);
+  // let resp = false;
+  // members.forEach(function(element) {
+  //   console.log("element::: ", element['uid'], element);
+  //   if (element['uid'] === currentUid) {
+  //     resp = true;
+  //     return;
+  //   }
+  // });   
+  // return resp;
+  return members.includes(currentUid);
+}
 
-  export function showConfirm(alertCtrl, events, title, message, action) {
-    let confirm = alertCtrl.create({
-      title: title,
-      message: message,
-      buttons: [
-        {
-          text: LABEL_ANNULLA,
-          handler: () => {
-            events.publish('PopupConfirmation', LABEL_ANNULLA, action);
-            console.log('Disagree clicked');
-          }
-        },
-        {
-          text: LABEL_OK,
-          handler: () => {
-            events.publish('PopupConfirmation', LABEL_OK, action);
-            console.log('Agree clicked');
-          }
+export function showConfirm(alertCtrl, events, title, message, action) {
+  let confirm = alertCtrl.create({
+    title: title,
+    message: message,
+    buttons: [
+      {
+        text: LABEL_ANNULLA,
+        handler: () => {
+          events.publish('PopupConfirmation', LABEL_ANNULLA, action);
+          console.log('Disagree clicked');
         }
-      ]
-    });
-    confirm.present();
-  }
- 
+      },
+      {
+        text: LABEL_OK,
+        handler: () => {
+          events.publish('PopupConfirmation', LABEL_OK, action);
+          console.log('Agree clicked');
+        }
+      }
+    ]
+  });
+  confirm.present();
+}
+
+
+export function convertMessageAndUrlify(messageText){
+  messageText = convert(messageText);
+  messageText = urlify(messageText);
+  return messageText;
+}
+
+export function convertMessage(messageText) {
+  messageText = convert(messageText);
+  return messageText;
+}
+
+function convert(str) {
+  str = str.replace(/&/g, '&amp;');
+  str = str.replace(/>/g, '&gt;');
+  str = str.replace(/</g, '&lt;');
+  str = str.replace(/"/g, '&quot;');
+  str = str.replace(/'/g, '&#039;');
+  return str;
+}

@@ -48,14 +48,14 @@ export class DatabaseProvider {
    */
   setTimestamp(){
     let lastUpdate = getNowTimestamp();
-    console.log("SALVO NEL DB DATA UPDATE:", lastUpdate);
+    //console.log("SALVO NEL DB DATA UPDATE:", lastUpdate);
     this.storageSettings.set('lastUpdate',lastUpdate);
   }
   /**
    * ritorno uid ultima conversazione aperta salvata nel DB locale
    */
   getUidLastOpenConversation() {
-    console.log("getUidLastOpenConversation");
+    //console.log("getUidLastOpenConversation");
     return this.storageSettings.get('uidLastOpenConversation')
   }
   /**
@@ -63,7 +63,7 @@ export class DatabaseProvider {
    * @param uid 
    */
   setUidLastOpenConversation(uid){
-    console.log("SALVO NEL DB UID ULTIMA CHAT APERTA:", uid);
+    //console.log("SALVO NEL DB UID ULTIMA CHAT APERTA:", uid);
     this.storageSettings.set('uidLastOpenConversation',uid);
   }
   /**

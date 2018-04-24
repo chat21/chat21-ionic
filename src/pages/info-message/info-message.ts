@@ -5,7 +5,7 @@ import { MessageModel } from '../../models/message';
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 
-import { searchIndexInArrayForUid, getSizeImg, setUrlString } from '../../utils/utils';
+import { searchIndexInArrayForUid, getSizeImg } from '../../utils/utils';
 
 /**
  * Generated class for the InfoMessagePage page.
@@ -60,12 +60,13 @@ export class InfoMessagePage {
     return getSizeImg(message, 280);
   }
 
-  setUrlString(text, name): any {
-    if(text) {
-      return setUrlString(text, name);
-    } else {
-      return name;
-    }
-  }
+  // setUrlString(text, name): any {
+  //   return name;
+  //   // if(text) {
+  //   //   return setUrlString(text, name);
+  //   // } else {
+  //   //   return name;
+  //   // }
+  // }
 
 }

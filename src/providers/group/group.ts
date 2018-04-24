@@ -10,7 +10,8 @@ import { GroupModel } from '../../models/group';
 // firebase
 import * as firebase from 'firebase/app';
 // utils
-import { getFormatData } from '../../utils/utils';
+import {isExistInArray, getFormatData } from '../../utils/utils';
+import { TYPE_SUPPORT_GROUP } from '../../utils/constants';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { UserService } from '../../providers/user/user';
@@ -20,6 +21,7 @@ import { UserService } from '../../providers/user/user';
 export class GroupService {
 
   private BASE_URL_LEAVE_GROUP: string;
+  public groupDetail: GroupModel;
   observable: any;
 
   constructor(
@@ -43,25 +45,24 @@ export class GroupService {
     console.log("loadGroudDetail: ", uidGroup);
     const userFirebase = this.initGroupDetails(uidUser, uidGroup);
     let that = this;
-    userFirebase.on("value", function(snapshot) {
-        let groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
-        if (snapshot.val()){
-          const group = snapshot.val();
-          console.log("group:: ", group);
-          groupDetail = new GroupModel(
-            snapshot.key, 
-            getFormatData(group.createdOn), 
-            group.iconURL,
-            that.getUidMembers(group.members), 
-            group.name, 
-            group.owner
-          );    
-        }
-        console.log("loadGroupDetail: ", groupDetail);
-        that.events.publish('loadGroupDetail:complete', groupDetail);
-      });
+    return userFirebase.once('value');
+    // userFirebase.on("value", function(snapshot) {
+    //     this.groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
+    //     if (snapshot.val()){
+    //       const group = snapshot.val();
+    //       console.log("group:: ", group);
+    //       this.groupDetail = new GroupModel(
+    //         snapshot.key, 
+    //         getFormatData(group.createdOn), 
+    //         group.iconURL,
+    //         that.getUidMembers(group.members), 
+    //         group.name, 
+    //         group.owner
+    //       );    
+    //     }
+    //     that.events.publish('loadGroupDetail:complete', groupDetail);
+    //   });
   }
-
 
   leaveAGroup(uidGroup, uidUser): Observable<string> {
     const appId = this.chatManager.getTenant();
@@ -111,6 +112,14 @@ export class GroupService {
       arrayMembers.push(key);
     });
     return arrayMembers;
+  }
+
+
+  isSupportGroup(uid){
+    if(uid.indexOf(TYPE_SUPPORT_GROUP) === 0 ){
+      return true;
+    }
+    return false;
   }
 
 }

@@ -3,6 +3,8 @@ import 'rxjs/add/operator/map';
 import * as firebase from 'firebase';
 
 import { Config } from 'ionic-angular';
+import { BUILD } from '../utils/constants';
+
 //import { AuthService } from './auth-service';
 
 /*
@@ -30,7 +32,7 @@ export class MessagingService {
     ) { 
         // recupero tenant
         this.tenant = config.get("appConfig").tenant;
-        this.urlNodeFirebase = '/apps/'+this.tenant+'/';
+        this.urlNodeFirebase = '/apps/'+this.tenant;
 
         // Callback fired if Instance ID token is updated.
         // this.messaging.onTokenRefresh(function() {
@@ -136,13 +138,19 @@ export class MessagingService {
         let conection = this.token;
         var updates = {};
         
-        // if(this.tenant != "bppintranet" ){
-        //     this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instancesId/";
-        //     updates[this.connectionsRefinstancesId + conection] = conection;
-        // }
+        this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instances/";
+        
+        let device_model = {
+            device_model: navigator.userAgent,
+            language: navigator.language,
+            platform: 'ionic',
+            platform_version: BUILD
+        }
+        updates[this.connectionsRefinstancesId + conection] = device_model;
+        console.log("Aggiorno token ------------>", updates);
         // else{
-            this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instanceId/";
-            updates[this.connectionsRefinstancesId] = conection;
+            // this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instanceId/";
+            // updates[this.connectionsRefinstancesId] = conection;
         //}
         firebase.database().ref().update(updates);
         //this.deviceConnectionRef = connectionsRef.push(conection);
@@ -163,13 +171,13 @@ export class MessagingService {
     }
 
     referenceToUserListToken(userid){
-        // if(this.tenant != "bppintranet" ){
-        //     this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instancesId/";
-        // }
+
+        this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instances/";
         // else{
-            this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instanceId/";
+            //this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instanceId/";
         //}
         const connectionsRef = firebase.database().ref().child(this.connectionsRefinstancesId);
+        console.log("referenceToUserListToken ------------>", connectionsRef);
         return connectionsRef;
     }
 

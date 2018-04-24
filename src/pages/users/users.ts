@@ -73,7 +73,7 @@ export class UsersPage {
     var that = this;
     this.searchControl = new FormControl();
     if (!this.contacts || this.contacts.lenght == 0){
-      //console.log('ngOnInit contacts', this.contacts);
+      // console.log('ngOnInit contacts', this.contacts);
       // apro db locale e recupero tutti gli users ordinati per fullname dalla query firebase
       this.databaseprovider.getContactsLimit()
       .then(function(data) { 

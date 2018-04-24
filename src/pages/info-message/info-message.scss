@@ -1,5 +1,9 @@
 page-info-message {
 
+    ion-content {
+        background: #f7f7f7!important;
+    }
+
     .item-inner{
         border-bottom: 0px solid #dedede!important;
     }
@@ -18,11 +22,11 @@ page-info-message {
         background-position: center center;
         background-repeat: no-repeat;
         background-size: cover;
-        // background-color: blanchedalmond;
+        background-color: #ffffff;
     }
 
     .chat21-right-box {
-        background-color: #ffffff;
+        // background-color: #ffffff;
         height: calc(100% - 60px);
     }
 

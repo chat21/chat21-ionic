@@ -9,6 +9,8 @@ import { UserModel } from '../../models/user';
 import * as firebase from 'firebase/app';
 // utils
 import { getNowTimestamp, contactsRef } from '../../utils/utils';
+import { SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { ChatPresenceHandler} from '../../providers/chat-presence-handler';
@@ -100,24 +102,25 @@ export class UserService {
   loadUserDetail(uid){
     console.log("loadUserDetail: ", uid);
     const userFirebase = this.initUserDetails(uid);
-    let that = this;
-    userFirebase.on("value", function(snapshot) {
-        let userDetail = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
-        if (snapshot.val()){
-          const user = snapshot.val();
-          const fullname = user.firstname+" "+user.lastname;  
-          userDetail = new UserModel(
-            snapshot.key, 
-            user.email, 
-            user.firstname, 
-            user.lastname, 
-            fullname.trim(), 
-            user.imageurl
-          );        
-        }
-        console.log("loadUserDetail: ", userDetail);
-        that.events.publish('loadUserDetail:complete', userDetail);
-      });
+    return userFirebase.once('value');
+    // let that = this;
+    // userFirebase.on("value", function(snapshot) {
+    //     let userDetail = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
+    //     if (snapshot.val()){
+    //       const user = snapshot.val();
+    //       const fullname = user.firstname+" "+user.lastname;  
+    //       userDetail = new UserModel(
+    //         snapshot.key, 
+    //         user.email, 
+    //         user.firstname, 
+    //         user.lastname, 
+    //         fullname.trim(), 
+    //         user.imageurl
+    //       );        
+    //     }
+    //     console.log("loadUserDetail: ", userDetail);
+    //     that.events.publish('loadUserDetail:complete', userDetail);
+    //   });
     }
 
     getUserDetail(uid): any {
@@ -125,6 +128,45 @@ export class UserService {
       const urlNodeConcacts = contactsRef(tenant) + uid;
       return firebase.database().ref(urlNodeConcacts).once('value');
     }
+
+    getListMembers(members): UserModel[]{ 
+      let arrayMembers = [];
+      members.forEach(member => {
+        console.log("loadUserDetail: ", member);
+        let userDetail = new UserModel(member, '', '', member, '', URL_NO_IMAGE);
+        if (member.trim() !== '' && member.trim() !== SYSTEM) {
+          this.getUserDetail(member)
+          .then(function(snapshot) { 
+            if (snapshot.val()){
+              const user = snapshot.val();
+              const fullname = user.firstname+" "+user.lastname;  
+              let imageUrl =  URL_NO_IMAGE;
+              if(user.imageurl && user.imageurl !== LABEL_NOICON){
+                imageUrl = user.imageurl;
+              }
+              userDetail = new UserModel(
+                snapshot.key, 
+                user.email, 
+                user.firstname, 
+                user.lastname, 
+                fullname.trim(), 
+                imageUrl
+              );  
+              console.log("userDetail: ", userDetail)
+            }
+            console.log("---------------> : ", member);
+            arrayMembers.push(userDetail);
+          })
+          .catch(function(err) {
+            console.log('Unable to get permission to notify.', err);
+          });
+        }
+      });
+      return arrayMembers;
+    }
+
+
+    
 
     // loadGroupDetail(uidUser, uidGroup){
     //   console.log("loadGroudDetail: ", uidGroup);
@@ -162,7 +204,6 @@ export class UserService {
    * 4 - passo lo stato online al chatmanager
    */
   onAuthStateChanged(){
-    
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
         console.log(" 3 - PASSO OFFLINE AL CHAT MANAGER");

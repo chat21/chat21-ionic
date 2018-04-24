@@ -15,8 +15,8 @@ import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 
 // utils
-import { LABEL_ANNULLA, LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
-import { showConfirm, urlify, isExistInArray } from '../../utils/utils';
+import { URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, LABEL_ANNULLA, LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { getFormatData, showConfirm, urlify, isExistInArray } from '../../utils/utils';
 
 
 @Component({
@@ -27,27 +27,24 @@ export class InfoConversationPage {
 
   public uidSelected: string;
   public channel_type: string;
-  public TYPE_GROUP: string = TYPE_GROUP;
-
   public userDetail: UserModel;
   public groupDetail: GroupModel;
   public members: UserModel[];
   public currentUserDetail: UserModel;
   public profileYourself: boolean;
-
-  public attributes: any;
+  public attributes: any = {};
   public attributesClient: string = '';
   public attributesSourcePage: string = '';
   public attributesDepartments: string = '';
-
   public online: boolean;
   public lastConnectionDate: string;
-  public LABEL_ACTIVE_NOW = LABEL_ACTIVE_NOW;
-  public URL_SEND_BY_EMAIL = "mailto:info@frontiere21.it?subject=Transcript Chat Conversation&body= Ciao, di seguito il transcript http://www.webfract.it";
-  public URL_VIDEO_CHAT = 'https://www.dariodepascalis.com/TEST/videochat.php';
-
   public conversationEnabled: boolean;
-  //public conversationHandler: ChatConversationHandler;
+
+  public TYPE_GROUP = TYPE_GROUP;
+  public LABEL_ACTIVE_NOW = LABEL_ACTIVE_NOW;
+  public URL_SEND_BY_EMAIL = URL_SEND_BY_EMAIL;
+  public URL_VIDEO_CHAT = URL_VIDEO_CHAT;
+  
 
   constructor(
     public events: Events,
@@ -61,13 +58,9 @@ export class InfoConversationPage {
     public translate: TranslateService
 
   ) {
-    console.log('InfoConversationPage');
     this.profileYourself = false;
     this.online = false; 
-    //this.translate.use('');
-    // indica quando eliminare la sottoscrizione, invocato dalla pg dettaglio conversazione appena entro!!!
     this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
-
   }
 
   ngOnInit() {
@@ -94,19 +87,17 @@ export class InfoConversationPage {
 
   /** SUBSCRIPTIONS */
   setSubscriptions(){
-    this.events.subscribe('onUidSelected', this.subcribeUidUserSelected);
+    this.events.subscribe('onOpenInfoConversation', this.subcribeOnOpenInfoConversation);
     this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
-    this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
-    this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
+    // this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
+    // this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
     this.events.subscribe('PopupConfirmation', this.subcribePopupConfirmation);
     console.log('this.conversationHandler.listSubsriptions',this.conversationHandler.listSubsriptions);
   }
 
+  /**  */
   subcribePopupConfirmation: any = (resp, action) => {
-    console.log('PopupConfirmation', resp, action);
-    if(resp === LABEL_ANNULLA) {
-      return;
-    }
+    if(resp === LABEL_ANNULLA) { return; }
     if(action === 'leave'){
       this.leaveGroup();
     } else if(action === 'close'){
@@ -114,95 +105,151 @@ export class InfoConversationPage {
     }
   }
 
-  subcribeUidUserSelected: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
-    console.log('SUBSCRIBE -> onUidSelected', uidUserSelected, channel_type);
-    // se sto chiudendo nn carico i dettagli utenti
-    if(!openInfoConversation){
-     // this.unsubscribeInfoConversation();
-      return;
-    } 
+  /** */
+  subcribeOnOpenInfoConversation: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
+    // se openInfoConversation === false il pannello è chiuso!
+    if(!openInfoConversation){ return; } 
     this.uidSelected = uidUserSelected;
     this.channel_type = channel_type;
+    this.attributes = attributes;
     if(attributes){
-      // this.attributes = attributes;
       this.attributesClient = (attributes.client)?attributes.client:'';
       this.attributesSourcePage = (attributes.sourcePage)?urlify(attributes.sourcePage):'';
-      this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
+      //this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
     }
-    this.selectUserDetail();
+    this.populateDetail();
   };
 
+  /** */
   subcribeChangeStatusUserSelected: any = (lastConnectionDate, online) => {
     this.online = online;
     this.lastConnectionDate = lastConnectionDate;
-    console.log('SUBSCRIBE -> changeStatusUserSelected', this.online, this.lastConnectionDate);
   };
 
-  subcribeLoadUserDetail: any = userDetail => {
-    this.userDetail = userDetail;
-    if(!userDetail.imageurl){
-      this.userDetail.imageurl = URL_NO_IMAGE;
-    }
-    //this.displayImage(this.userDetail.uid);
-    console.log('SUBSCRIBE -> loadUserDetail:complete', this.userDetail);
-  };
+  /** */
+  // subcribeLoadUserDetail: any = userDetail => {
+  //   this.userDetail = userDetail;
+  //   if(!userDetail.imageurl){
+  //     this.userDetail.imageurl = URL_NO_IMAGE;
+  //   }
+  //   //console.log('SUBSCRIBE -> loadUserDetail:complete', this.userDetail);
+  // };
 
-  subcribeLoadGroupDetail: any = groupDetail => {
-    this.groupDetail = groupDetail;
-    if(!groupDetail.iconURL || groupDetail.iconURL === LABEL_NOICON){
-      this.groupDetail.iconURL = URL_NO_IMAGE;
-    }
-    //console.log('SUBSCRIBE -> getListMembers', groupDetail.members);
-    this.members = this.getListMembers(groupDetail.members);
-    if(isExistInArray(groupDetail.members, this.currentUserDetail.uid)){
-      //console.log('isExistInArray -> TRUE', this.members, this.currentUserDetail.uid);
-      this.conversationEnabled = true;
-      this.events.publish('conversationEnabled', true);
-    } else {
-      this.conversationEnabled = false;
-      //console.log('isExistInArray -> FALSE', this.members, this.currentUserDetail.uid);
-      this.events.publish('conversationEnabled', false);
-    }
-    //se id nn è presente in members -> disabilito insert message, button abbandona, button chiudi
-    //this.displayImage(this.groupDetail.uid);
-    console.log('SUBSCRIBE -> loadGroupDetail:complete', groupDetail.members);
-  };
+  // /** */
+  // subcribeLoadGroupDetail: any = groupDetail => {
+  //   this.groupDetail = groupDetail;
+  //   if(!groupDetail.iconURL || groupDetail.iconURL === LABEL_NOICON){
+  //     this.groupDetail.iconURL = URL_NO_IMAGE;
+  //   }
+  //   this.members = this.getListMembers(groupDetail.members);
+  //   if(isExistInArray(groupDetail.members, this.currentUserDetail.uid)){
+  //     this.conversationEnabled = true;
+  //     this.events.publish('conversationEnabled', true);
+  //   } else {
+  //     this.conversationEnabled = false;
+  //     this.events.publish('conversationEnabled', false);
+  //   }
+  //   //console.log('SUBSCRIBE -> loadGroupDetail:complete', groupDetail.members);
+  // };
 
   /**
    * unsubscribe all subscribe events
    */
   closeDetailConversation: any = e => {
     console.log('UNSUBSCRIBE -> unsubescribeAll', this.events);
-    this.events.unsubscribe('onUidSelected', null);
+    this.events.unsubscribe('onOpenInfoConversation', null);
     this.events.unsubscribe('changeStatusUserSelected', null);
-    this.events.unsubscribe('loadUserDetail:complete', null);
-    this.events.unsubscribe('loadGroupDetail:complete', null);
+    // this.events.unsubscribe('loadUserDetail:complete', null);
+    // this.events.unsubscribe('loadGroupDetail:complete', null);
     this.events.unsubscribe('PopupConfirmation', null);
   }
   // ----------------------------------------- //
 
 
-  selectUserDetail(){
-    if(this.uidSelected && this.uidSelected === this.currentUserDetail.uid){
+  /** selectUserDetail
+   * se uid conversazione esiste popolo:
+   * 1 - dettaglio current user
+   * 2 - dettaglio gruppo
+   * 3 - dettaglio user
+  */
+  populateDetail(){
+    //debugger;
+    const that = this;
+    if(!this.uidSelected){
+      return;
+    } else if(this.uidSelected === this.currentUserDetail.uid){
       this.profileYourself = true;
       this.userDetail = this.currentUserDetail;
-      //this.displayImage(this.uidSelected);
-    }
-    else if(this.channel_type == TYPE_GROUP && this.uidSelected) {
+    } else if(this.channel_type === TYPE_GROUP) {
       this.profileYourself = false;
       this.members = [];
-      this.groupDetail = new GroupModel(this.uidSelected, 0, '', [], '', '');
-      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected);
-    } else if(this.uidSelected) {
-      this.profileYourself = false;
-      this.userDetail = new UserModel(this.uidSelected, '', '', '', '', '');
-      this.userService.loadUserDetail(this.uidSelected);
+      //this.groupDetail = new GroupModel(this.uidSelected, 0, '', [], '', '');
+      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected)
+      .then(function(snapshot) { 
+        //this.groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
+        if (snapshot.val()){
+          that.setDetailGroup(snapshot);
+        }
+      })
+      .catch(function(err) {
+        console.log('Unable to get permission to notify.', err);
+      });
     } else {
-      return;
-    }
-    console.log('this.uidUser',this.userDetail);
+      this.profileYourself = false;
+      //this.userDetail = new UserModel(this.uidSelected, '', '', '', '', '');
+      this.userService.loadUserDetail(this.uidSelected)
+      .then(function(snapshot) { 
+        if (snapshot.val()){
+          that.setDetailUser(snapshot);
+        }
+      })
+      .catch(function(err) {
+        console.log('Unable to get permission to notify.', err);
+      });
+    } 
   }
 
+  setDetailUser(snapshot){
+    //let userDetail = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
+    const user = snapshot.val();
+    const fullname = user.firstname+" "+user.lastname;  
+    this.userDetail = new UserModel(
+      snapshot.key, 
+      user.email, 
+      user.firstname, 
+      user.lastname, 
+      fullname.trim(), 
+      user.imageurl
+    );        
+  }
+
+
+  setDetailGroup(snapshot){
+    const group = snapshot.val();
+    this.groupDetail = new GroupModel(
+      snapshot.key, 
+      getFormatData(group.createdOn), 
+      group.iconURL,
+      this.groupService.getUidMembers(group.members), 
+      group.name, 
+      group.owner
+    );    
+    if(!this.groupDetail.iconURL || this.groupDetail.iconURL === LABEL_NOICON){
+      this.groupDetail.iconURL = URL_NO_IMAGE;
+    }
+    this.members = this.getListMembers(this.groupDetail.members);
+    if(isExistInArray(this.groupDetail.members, this.currentUserDetail.uid)){
+      this.conversationEnabled = true;
+      //this.events.publish('conversationEnabled', true);
+    } else {
+      this.conversationEnabled = false;
+      //this.events.publish('conversationEnabled', false);
+    }
+  }
+  
+
+
+  /** */
   getListMembers(members): UserModel[]{ 
     let arrayMembers = [];
     members.forEach(member => {
@@ -234,13 +281,12 @@ export class InfoConversationPage {
         .catch(function(err) {
           console.log('Unable to get permission to notify.', err);
         });
-        
       }
-      
     });
     return arrayMembers;
   }
 
+  /** */
   arrayDepartments(departments): any[] {
     console.log('departments:::: ', departments);
     let arrayDepartments = [];
@@ -251,6 +297,11 @@ export class InfoConversationPage {
     return arrayDepartments.slice(0, -1);
   }
 
+
+
+
+  //// ACTIONS ////
+  /** */
   leaveGroup(){
     this.conversationEnabled = false;
     this.events.publish('conversationEnabled', false);
@@ -274,7 +325,6 @@ export class InfoConversationPage {
 
   /** */
   closeGroup(){
-    //const uidUser = this.chatManager.getLoggedUser().uid; //'U4HL3GWjBsd8zLX4Vva0s7W2FN92';
     this.conversationEnabled = false;
     this.events.publish('conversationEnabled', false);
     const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
@@ -301,13 +351,12 @@ export class InfoConversationPage {
     this.events.publish('openVideoChat', url);
   }
 
-  
   /**
    * 
    * @param action 
    */
   openPopupConfirmation(action){
-    debugger
+    //debugger;
     let alertTitle = '';
     let alertMessage = '';
     this.translate.get('ALERT_TITLE').subscribe(
@@ -331,13 +380,15 @@ export class InfoConversationPage {
     showConfirm(this.alertCtrl, this.events, alertTitle, alertMessage, action);
   }
 
-
+  /** */
   isSupportGroup(){
-    let uid = this.groupDetail.uid;
-    if(uid.indexOf('support-group') == 0 ){
-      return true;
-    }
-    return false;
+    //debugger;
+    return this.groupService.isSupportGroup(this.groupDetail.uid);
+    // let uid = this.groupDetail.uid;
+    // if(uid.indexOf(TYPE_SUPPORT_GROUP) === 0 ){
+    //   return true;
+    // }
+    // return false;
   }
   
 

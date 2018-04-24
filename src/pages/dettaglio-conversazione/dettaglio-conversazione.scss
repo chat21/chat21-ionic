@@ -26,7 +26,8 @@ page-dettaglio-conversazione {
             margin: 0px 4px 0px 4px;
         }
         .card-md {
-            width: 100%;
+            margin: 10px 0px 0px 10px;
+            width: calc(100% - 20px);
         }
         .left{
             text-align: left;
