@@ -15,7 +15,7 @@ import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 
 // utils
-import { URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, LABEL_ANNULLA, LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, LABEL_ANNULLA, LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
 import { getFormatData, showConfirm, urlify, isExistInArray } from '../../utils/utils';
 
 
@@ -347,9 +347,16 @@ export class InfoConversationPage {
   /** */
   setVideoChat(){
     // setto url 
-    const url = this.URL_VIDEO_CHAT+'?roomid='+this.groupDetail.uid+'&popup=true';
+    const url = this.URL_VIDEO_CHAT+'?groupId='+this.groupDetail.uid+'&popup=true';
     this.events.publish('openVideoChat', url);
   }
+
+  setCreaTicket(){
+    // setto url 
+    const url = URL_TICKET_CHAT + '&popup=true';
+    this.events.publish('openVideoChat', url);
+  }
+
 
   /**
    * 

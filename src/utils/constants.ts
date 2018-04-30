@@ -1,6 +1,6 @@
 //TIMES
 // BUILD
-export const BUILD = '22';
+export const BUILD = '23';
 
 // MESSAGES STATUS
 export const MSG_STATUS_FAILED = -100;
@@ -57,6 +57,8 @@ export const TYPE_POPUP_DETAIL_MESSAGE: string = 'DETAIL_MESSAGE';
 
 // URLS
 export const URL_SEND_BY_EMAIL: string = "mailto:info@frontiere21.it?subject=Transcript Chat Conversation&body= Ciao, di seguito il transcript http://api.chat21.org/public/messages/";
-export const URL_VIDEO_CHAT: string = 'https://videochat.tiledesk.com/videochat/videochat.html';
+export const URL_VIDEO_CHAT: string = 'https://videochat.tiledesk.com/add-user-group.html';
+export const URL_TICKET_CHAT: string = 'https://chat21sdk.atlassian.net/secure/CreateIssue!default.jspa';
+//'https://videochat.tiledesk.com/videochat/videochat.html';
 //'https://www.chat21.org/videochat/'; 
 //'https://support.chat21.org/videochat/videochat.php';

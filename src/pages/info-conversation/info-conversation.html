@@ -100,7 +100,7 @@
 
         <ion-card *ngIf="isSupportGroup()">
         <div class="chat21-content" style="float:left; width: 100%">  
-            <button ion-button clear icon-start block color="default">
+            <button ion-button clear icon-start block color="default" (click)="setCreaTicket()">
                 <ion-icon name='help-buoy' is-active="false"></ion-icon>
                 {{ 'LABEL_CREATE_TICKET' | translate }}
             </button>
