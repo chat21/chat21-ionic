@@ -1,5 +1,5 @@
 environment=$(< src/utils/constants.ts)
-start="CURR_VER_PROD = '"
+start="CURR_VER_PROD = '0."
 end="'"
 one=${environment#*$start}
 build=${one%%$end*} #two=${one%,*} -> %% prendo la prima istanza; % prendo la seconda
