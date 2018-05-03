@@ -1,6 +1,7 @@
 //TIMES
 // BUILD
-export const BUILD = '23';
+export const CURR_VER_DEV = '23';
+export const CURR_VER_PROD = '2';
 
 // MESSAGES STATUS
 export const MSG_STATUS_FAILED = -100;

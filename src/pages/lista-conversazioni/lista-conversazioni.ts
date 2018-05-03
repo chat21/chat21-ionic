@@ -12,7 +12,7 @@ import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
 import { convertMessage, windowsMatchMedia } from '../../utils/utils';
-import { LABEL_IMAGE, TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
+import { CURR_VER_PROD, CURR_VER_DEV, LABEL_IMAGE, TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { NavProxyService } from '../../providers/nav-proxy';
@@ -33,7 +33,8 @@ export class ListaConversazioniPage extends _MasterPage {
   private conversationsHandler: ChatConversationsHandler;
   private uidConvSelected: string;
   private profileModal: Modal;
-  
+  private BUILD_VERSION: string;
+
   convertMessage = convertMessage;
 
   constructor(
@@ -50,6 +51,8 @@ export class ListaConversazioniPage extends _MasterPage {
     public databaseProvider: DatabaseProvider
   ) {
     super();
+    this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
+    
     // RECUPERO ID CONVERSAZIONE
     // se vengo da dettaglio conversazione
     // o da users con conversazione attiva recupero conversationWith
@@ -164,6 +167,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * @param uidConvSelected  
    */
   openMessageList(uidConvSelected){
+    //debugger;
     console.log('-------------> openMessageList ', uidConvSelected);
     this.uidConvSelected = uidConvSelected;
     const that = this;

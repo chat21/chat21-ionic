@@ -117,6 +117,7 @@ export class InfoConversationPage {
       this.attributesSourcePage = (attributes.sourcePage)?urlify(attributes.sourcePage):'';
       //this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
     }
+
     this.populateDetail();
   };
 
@@ -126,31 +127,7 @@ export class InfoConversationPage {
     this.lastConnectionDate = lastConnectionDate;
   };
 
-  /** */
-  // subcribeLoadUserDetail: any = userDetail => {
-  //   this.userDetail = userDetail;
-  //   if(!userDetail.imageurl){
-  //     this.userDetail.imageurl = URL_NO_IMAGE;
-  //   }
-  //   //console.log('SUBSCRIBE -> loadUserDetail:complete', this.userDetail);
-  // };
 
-  // /** */
-  // subcribeLoadGroupDetail: any = groupDetail => {
-  //   this.groupDetail = groupDetail;
-  //   if(!groupDetail.iconURL || groupDetail.iconURL === LABEL_NOICON){
-  //     this.groupDetail.iconURL = URL_NO_IMAGE;
-  //   }
-  //   this.members = this.getListMembers(groupDetail.members);
-  //   if(isExistInArray(groupDetail.members, this.currentUserDetail.uid)){
-  //     this.conversationEnabled = true;
-  //     this.events.publish('conversationEnabled', true);
-  //   } else {
-  //     this.conversationEnabled = false;
-  //     this.events.publish('conversationEnabled', false);
-  //   }
-  //   //console.log('SUBSCRIBE -> loadGroupDetail:complete', groupDetail.members);
-  // };
 
   /**
    * unsubscribe all subscribe events
@@ -351,10 +328,11 @@ export class InfoConversationPage {
     this.events.publish('openVideoChat', url);
   }
 
-  setCreaTicket(){
+  getUrlCreaTicket(){
     // setto url 
-    const url = URL_TICKET_CHAT + '&popup=true';
-    this.events.publish('openVideoChat', url);
+    return URL_TICKET_CHAT;
+    //const url = URL_TICKET_CHAT + '&popup=true';
+    //this.events.publish('openVideoChat', url);
   }
 
 

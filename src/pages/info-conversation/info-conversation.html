@@ -56,15 +56,14 @@
                 <span class="" >{{ 'LABEL_SOURCEPAGE' | translate }}</span>
                 <span class="lighter" [innerHTML]="attributesSourcePage" ></span>
             </div>
-            <div *ngIf="attributes.departmentId" class="chat21-row">
-                    
+            <div *ngIf="attributes && attributes.departmentId" class="chat21-row">
                 <span class="" >{{ 'LABEL_DEPARTMENT_ID' | translate }}</span>
                 <span light class="lighter" >{{attributes.departmentId}}</span>
                 <br/>
                 <span class="" >{{ 'LABEL_DEPARTMENT_NAME' | translate }}</span>
                 <span light class="lighter" >{{attributes.departmentName}}</span>
             </div>
-            <div *ngIf="attributes.userEmail" class="chat21-row">
+            <div *ngIf="attributes && attributes.userName && attributes.userEmail" class="chat21-row">
                     <span class="" >{{ 'LABEL_NAME' | translate }}</span>
                     <span light class="lighter" >{{attributes.userName}}</span>
                     <br/>
@@ -99,12 +98,14 @@
         </ion-card>
 
         <ion-card *ngIf="isSupportGroup()">
+        <a href="{{getUrlCreaTicket()}}" target="_blank">
         <div class="chat21-content" style="float:left; width: 100%">  
-            <button ion-button clear icon-start block color="default" (click)="setCreaTicket()">
+            <button ion-button clear icon-start block color="default">
                 <ion-icon name='help-buoy' is-active="false"></ion-icon>
                 {{ 'LABEL_CREATE_TICKET' | translate }}
             </button>
         </div>
+        </a>
         </ion-card>
         <ion-card *ngIf="isSupportGroup()">
         <div class="chat21-content" style="float:left; width: 100%">  

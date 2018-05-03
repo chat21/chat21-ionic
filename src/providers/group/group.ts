@@ -23,6 +23,7 @@ export class GroupService {
   private BASE_URL_LEAVE_GROUP: string;
   public groupDetail: GroupModel;
   observable: any;
+  public arrayMembers;
 
   constructor(
     public http: Http,
@@ -44,7 +45,6 @@ export class GroupService {
   loadGroupDetail(uidUser, uidGroup){
     console.log("loadGroudDetail: ", uidGroup);
     const userFirebase = this.initGroupDetails(uidUser, uidGroup);
-    let that = this;
     return userFirebase.once('value');
     // userFirebase.on("value", function(snapshot) {
     //     this.groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
@@ -106,12 +106,12 @@ export class GroupService {
 
   
   getUidMembers(members): string[]{
-    let arrayMembers = [];
+    this.arrayMembers = [];
     const memberStr = JSON.stringify(members);
     JSON.parse(memberStr, (key, value) => {
-      arrayMembers.push(key);
+      this.arrayMembers.push(key);
     });
-    return arrayMembers;
+    return this.arrayMembers;
   }
 
 

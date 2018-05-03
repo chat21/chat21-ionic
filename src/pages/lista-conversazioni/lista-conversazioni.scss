@@ -90,4 +90,13 @@ page-lista-conversazioni {
             text-align: center;
         }
     }
+
+    .build_version{
+        position: absolute;
+        font-size: xx-small;
+        line-height: 0;
+        vertical-align: baseline;
+        left: 20px;
+        bottom: 6px;
+    }
 }

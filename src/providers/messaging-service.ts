@@ -3,7 +3,7 @@ import 'rxjs/add/operator/map';
 import * as firebase from 'firebase';
 
 import { Config } from 'ionic-angular';
-import { BUILD } from '../utils/constants';
+import { CURR_VER_DEV, CURR_VER_PROD } from '../utils/constants';
 
 //import { AuthService } from './auth-service';
 
@@ -22,7 +22,7 @@ export class MessagingService {
     private tenant: string;
     //private deviceConnectionRef;
     public token: string;
-    //public tokenId: string;
+    public BUILD_VERSION: string;
  
     //public authService: AuthService;
 
@@ -33,7 +33,8 @@ export class MessagingService {
         // recupero tenant
         this.tenant = config.get("appConfig").tenant;
         this.urlNodeFirebase = '/apps/'+this.tenant;
-
+        this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
+    
         // Callback fired if Instance ID token is updated.
         // this.messaging.onTokenRefresh(function() {
         //     this.messaging.getToken()
@@ -144,7 +145,7 @@ export class MessagingService {
             device_model: navigator.userAgent,
             language: navigator.language,
             platform: 'ionic',
-            platform_version: BUILD
+            platform_version: this.BUILD_VERSION
         }
         updates[this.connectionsRefinstancesId + conection] = device_model;
         console.log("Aggiorno token ------------>", updates);

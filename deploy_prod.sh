@@ -1,5 +1,5 @@
 environment=$(< src/utils/constants.ts)
-start="CURR_VER_DEV = '"
+start="CURR_VER_PROD = '"
 end="'"
 one=${environment#*$start}
 build=${one%%$end*} #two=${one%,*} -> %% prendo la prima istanza; % prendo la seconda
@@ -10,9 +10,9 @@ ionic cordova platform add browser --save
 #ionic cordova build browser --prod
 ionic cordova build browser
 cd platforms/browser/www
-aws s3 sync . s3://tiledesk-dashboard/chat/dev/0/$NEW_BUILD/
+aws s3 sync . s3://tiledesk-dashboard/chat/
 cd ../../../
 
 
-echo new version deployed on s3://tiledesk-dashboard/chat/dev/0/$NEW_BUILD/
-echo available on https://s3.eu-west-1.amazonaws.com/tiledesk-dashboard/chat/dev/0/$NEW_BUILD/index.html
+echo new version deployed on s3://tiledesk-dashboard/chat/
+echo available on https://s3.eu-west-1.amazonaws.com/tiledesk-dashboard/chat/index.html
