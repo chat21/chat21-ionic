@@ -9,9 +9,11 @@ export class MessageModel{
         public status: string, 
         public metadata: any,
         public text: string,
-        public timestamp: string,
+        public timestamp: number,
         public headerDate: string,
         public type: string,
-        public attributes: any
+        public attributes: any,
+        public channel_type: string
+        //public projectid: string
     ){ }
 }

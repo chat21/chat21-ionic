@@ -102,7 +102,7 @@ export function removeHtmlTags(text) {
  * ieri; 
  * giorno della settimana (lunedì, martedì, ecc)
  */
-export function setHeaderDate(timestamp, lastDate): string {
+export function setHeaderDate(timestamp, lastDate?): string {
     var date = new Date(timestamp);
     let now: Date = new Date();
     var labelDays:string = LABEL_TODAY;
@@ -349,3 +349,4 @@ function convert(str) {
   str = str.replace(/'/g, '&#039;');
   return str;
 }
+

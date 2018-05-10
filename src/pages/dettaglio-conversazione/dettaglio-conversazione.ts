@@ -616,10 +616,11 @@ export class DettaglioConversazionePage extends _DetailPage{
         '', // status
         metadata, // metadata
         textMessage, // text
-        timestamp.toString(), // timestamp
+        timestamp, // timestamp
         '', // headerDate
         type_msg, //TYPE_MSG_IMAGE,
-        '' // type
+        '', //attributes
+        '' // channel_type
     );
 
     // if(type_msg == 'file'){

@@ -75,6 +75,7 @@ export class InfoConversationPage {
     // nn passa mai di qui!!!!
     console.log('InfoConversationPage ionViewWillLeave');
     //this.unsubscribeInfoConversation();
+    
   }
   
   initialize(){
@@ -117,7 +118,6 @@ export class InfoConversationPage {
       this.attributesSourcePage = (attributes.sourcePage)?urlify(attributes.sourcePage):'';
       //this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
     }
-
     this.populateDetail();
   };
 
@@ -150,7 +150,7 @@ export class InfoConversationPage {
    * 3 - dettaglio user
   */
   populateDetail(){
-    //debugger;
+    // debugger;
     const that = this;
     if(!this.uidSelected){
       return;
@@ -176,6 +176,7 @@ export class InfoConversationPage {
       //this.userDetail = new UserModel(this.uidSelected, '', '', '', '', '');
       this.userService.loadUserDetail(this.uidSelected)
       .then(function(snapshot) { 
+        console.log('snapshot:: ', snapshot.val());
         if (snapshot.val()){
           that.setDetailUser(snapshot);
         }

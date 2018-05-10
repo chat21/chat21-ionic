@@ -44,7 +44,7 @@
     </ion-card>
 
     <ion-card>
-    <div class="chat21-box-attributes chat21-box">
+    <div *ngIf="attributesClient" class="chat21-box-attributes chat21-box">
             <!-- *ngIf="attributesClient"  -->
         <div class="chat21-header break-line">{{ 'LABEL_INFO_ATTRIBUTE' | translate }}</div>
         <div class="chat21-content">

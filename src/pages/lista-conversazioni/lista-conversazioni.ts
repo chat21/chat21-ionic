@@ -301,6 +301,14 @@ export class ListaConversazioniPage extends _MasterPage {
     //this.navProxy.pushDetail(PlaceholderPage,{});
     this.userService.logoutUser();
   }
+
+  loadingIsActive(){
+    if(this.conversations && this.conversations.length>0){
+      return true;
+    } else {
+      return false;
+    }
+  }
   
   
 }

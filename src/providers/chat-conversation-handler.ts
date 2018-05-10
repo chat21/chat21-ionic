@@ -27,8 +27,9 @@ export class ChatConversationHandler {
   public conversationWith: string;
   public messages: any[];
   public messagesRef: firebase.database.Query;
-
   public listSubsriptions: any[];
+  public attributes: any;
+  public CLIENT_BROWSER: string;
   //public events: Events;
 
   constructor(
@@ -39,6 +40,7 @@ export class ChatConversationHandler {
     //this.loggedUser = this.chatManager.getLoggedUser();
     //this.events = new Events();
     this.listSubsriptions = [];
+    this.CLIENT_BROWSER = navigator.userAgent;
   }
   /**
    * inizializzo conversation handler
@@ -53,8 +55,24 @@ export class ChatConversationHandler {
     this.senderId = this.loggedUser.uid;
     this.conversationWith = recipientId;
     this.messages = [];
+    this.attributes = this.setAttributes();
     
   }
+
+  setAttributes(): any {
+    let attributes: any = JSON.parse(sessionStorage.getItem('attributes'));
+    if (!attributes || attributes === 'undefined') {
+        attributes = {
+            client: this.CLIENT_BROWSER,
+            sourcePage: location.href,
+            userEmail: this.loggedUser.email,
+            userName: this.loggedUser.fullname
+        };
+        console.log('>>>>>>>>>>>>>> setAttributes: ', JSON.stringify(attributes));
+        sessionStorage.setItem('attributes', JSON.stringify(attributes));
+    }
+    return attributes;
+}
   /**
    * mi connetto al nodo messages
    * recupero gli ultimi 100 messaggi
@@ -85,7 +103,7 @@ export class ChatConversationHandler {
         //messageText = urlify(itemMsg['text']);
       }
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'],itemMsg['attributes']);
+      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'],itemMsg['attributes'], itemMsg['channel_type']);
       const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
       that.messages.splice(index, 1, msg);
       // aggiorno stato messaggio
@@ -139,7 +157,7 @@ export class ChatConversationHandler {
       }
 
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes']);
+      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type']);
       console.log("child_added *****", itemMsg['timestamp'], that.messages, msg);
       that.messages.push(msg);
     
@@ -205,6 +223,7 @@ export class ChatConversationHandler {
    * @param conversationWithDetailFullname 
    */
   sendMessage(msg, type, metadata, conversationWith, conversationWithDetailFullname, channel_type) {
+    const that = this;
     (!channel_type || channel_type == 'undefined')?channel_type='direct':channel_type;
     console.log('messages: ',  this.messages);
     console.log("SEND MESSAGE: ", msg, channel_type);
@@ -215,35 +234,45 @@ export class ChatConversationHandler {
     const language = document.documentElement.lang;
     const sender_fullname = this.loggedUser.fullname;
     const recipient_fullname = conversationWithDetailFullname;
-    const attributes = {
-      client: CLIENT_BROWSER,
-      sourcePage: location.href
-    }
-    let firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
-    //if(firebaseMessages) {
-      const message = {
-        language: language,
-        recipient: conversationWith,
-        recipient_fullname: recipient_fullname,
-        sender: this.loggedUser.uid,
-        sender_fullname: sender_fullname,
-        metadata: metadata,
-        text: msg,
-        timestamp: timestamp,
-        type: type,
-        channel_type: channel_type,
-        attributes: attributes
-      };
-      console.log('messaggio **************',message);
-      firebaseMessages.push(message);
-      //firebaseMessages.set(message);
-      // se non c'è rete viene aggiunto al nodo in locale e visualizzato
-      // appena torno on line viene inviato!!!
-      // return newMessageRef.key;
-    // }
-    // else {
-    //   return null;
-    // }
+    const dateSendingMessage = setHeaderDate(timestamp);
+    let firebaseMessagesCustomUid = firebase.database().ref(this.urlNodeFirebase);
+    const message = new MessageModel(
+      '',
+      language,
+      conversationWith,
+      recipient_fullname,
+      this.loggedUser.uid,
+      sender_fullname,
+      '',
+      metadata,
+      msg,
+      timestamp,
+      dateSendingMessage,
+      type,
+      this.attributes,
+      channel_type
+    ); 
+
+    console.log('messaggio **************',message);
+    //firebaseMessages.push(message);
+    const messageRef = firebaseMessagesCustomUid.push();
+    const key = messageRef.key;
+    message.uid = key;
+    console.log('messageRef: ', messageRef, key);
+    messageRef.set(message, function( error ){
+      // Callback comes here
+      if (error) {
+        // cambio lo stato in rosso: invio nn riuscito!!!
+        message.status = '-100';
+        console.log('ERRORE', error);
+      } else {
+        //that.checkWritingMessages();
+        message.status = '150';
+        console.log('OK MSG INVIATO CON SUCCESSO AL SERVER', message);
+      }
+      console.log('****** changed *****', that.messages);
+    });
+
   }
 
 
@@ -254,7 +283,6 @@ export class ChatConversationHandler {
     };
     let firebaseMessages = firebase.database().ref(this.urlNodeFirebase+uid);
     firebaseMessages.set(message);
-    
   }
 
 
