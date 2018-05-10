@@ -399,11 +399,11 @@ export class DettaglioConversazionePage extends _DetailPage{
   sendMessage(msg, type, metadata?) {
     (metadata) ? metadata = metadata : metadata = '';
     console.log("SEND MESSAGE: ", msg, this.messages);
-    if (type == 'image'){
-      msg = 'Image: ' + metadata['src'];
-    } else if(type == 'file'){
-      msg = 'file';
-    }
+    // if (type == 'image'){
+    //   msg = 'Image: ' + metadata['src'];
+    // } else if(type == 'file'){
+    //   msg = 'file';
+    // }
     //(!msg)? msg = metadata.type: msg;
     if (msg && msg.trim() != '' || type !== TYPE_MSG_TEXT ){
       this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
@@ -645,8 +645,20 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.upSvc.pushUploadMessage(currentUpload)
     .then(function(snapshot) {
       console.log('Uploaded a blob or file! ', snapshot.downloadURL);
+      // metadata.src = snapshot.downloadURL;
+      // that.sendMessage('', type_msg, metadata);
+
+
       metadata.src = snapshot.downloadURL;
-      that.sendMessage('', type_msg, metadata);
+      let type_message = TYPE_MSG_TEXT;
+      let message = 'File: ' + metadata.src;
+      if (metadata.type.startsWith('image')) {
+          type_message = TYPE_MSG_IMAGE;
+          message = 'Image: ' + metadata.src;
+      }
+      that.sendMessage(message, type_message, metadata);
+
+
     })
     .catch(function(error) {
       // Handle Errors here.

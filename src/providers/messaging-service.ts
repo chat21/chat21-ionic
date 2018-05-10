@@ -34,7 +34,7 @@ export class MessagingService {
         this.tenant = config.get("appConfig").tenant;
         this.urlNodeFirebase = '/apps/'+this.tenant;
         this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
-    
+
         // Callback fired if Instance ID token is updated.
         // this.messaging.onTokenRefresh(function() {
         //     this.messaging.getToken()
@@ -56,22 +56,55 @@ export class MessagingService {
     }
 
     initMessage() {
-        this.messaging = firebase.messaging();        
+        this.messaging = firebase.messaging();
+        console.log('initMessage:::: ', this.messaging);
+        // //navigator.serviceworker.register('/XXXXX/sw.js', {scope: '/XXXX/non-existant-path/')
+        // navigator.serviceWorker.register(SERVICE_WORKER_DEV, {scope: "firebase-cloud-messaging-push-scope"})
+        // .then(function (registration) {
+        //     this.messaging = firebase.messaging();
+        //     this.messaging.useServiceWorker(registration);
+        //     console.log('initMessage:::: ', registration); 
+        // }).catch(function (err) {
+        //     // registration failed :(
+        //     console.log('ServiceWorker registration failed: ', err);
+        // });
+
     }
 
     getPermission() {
+        console.log('Notification getPermission.');
+
+        // Request permission and get token.....
         this.messaging.requestPermission()
         .then(token => {
             console.log('Notification permission granted.');
             // TODO(developer): Retrieve an Instance ID token for use with FCM.
             this.token = token;
-            console.log(token);
             console.log('NOTIFICA PERMESSO token.', token);
             //this.updateToken(token);
         })
         .catch(function(err) {
-          console.log('Unable to get permission to notify.', err);
+            console.log('Unable to get permission to notify.', err);
         });
+
+        // navigator.serviceWorker.register('./firebase-messaging-sw.js')
+        // .then((registration) => {
+        //     this.messaging.useServiceWorker(registration);
+        //     console.log('useServiceWorker.', registration);
+        //     // Request permission and get token.....
+        //     this.messaging.requestPermission()
+        //     .then(token => {
+        //         console.log('Notification permission granted.');
+        //         // TODO(developer): Retrieve an Instance ID token for use with FCM.
+        //         this.token = token;
+        //         console.log('NOTIFICA PERMESSO token.', token);
+        //         //this.updateToken(token);
+        //     })
+        //     .catch(function(err) {
+        //         console.log('Unable to get permission to notify.', err);
+        //     });
+        // });
+        
 
         // .then(() => {
         //     console.log('Notification permission granted.');

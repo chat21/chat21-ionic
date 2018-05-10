@@ -9,14 +9,14 @@ import { LABEL_ANNULLA, LABEL_OK, ARRAY_DAYS, LABEL_TODAY, LABEL_TOMORROW, LABEL
 
 /**
  * Shortest description  for phone and tablet
- * Nota: eseguendo un test su desktop in realtà lo switch avviene a 921px*/
+ * Nota: eseguendo un test su desktop in realtà lo switch avviene a 921px 767px*/
 export function windowsMatchMedia(){
-  var mq = window.matchMedia("(max-width: 1024px)");
+  var mq = window.matchMedia("(max-width: 767px)");
   if (mq.matches) {
-    console.log('window width is less than 1024px ')
+    console.log('window width is less than 767px ')
     return false;
   } else {
-    console.log('window width is at least 1024px')
+    console.log('window width is at least 767px')
     return true;
   }
 }
@@ -58,15 +58,17 @@ export function searchIndexInArrayForUid(items, key){
 /**
  * trasforma url contenuti nel testo passato in tag <a>
  */
-export function urlify(text, name?) {
+export function urlify(text?, name?) {
+  if(!text) return name;
   var regex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
   return text.replace(regex, function (url) {
     if (url.match(/^[/]/))
     {
       return;
-    } else if (!url.match(/^[a-zA-Z]+:\/\//)){
-      url = 'http://' + url;
-    }
+    } 
+    // else if (!url.match(/^[a-zA-Z]+:\/\//)){
+    //   url = 'http://' + url;
+    // }
     var label = url;
     if(name){
       label = name;
@@ -340,7 +342,7 @@ export function convertMessage(messageText) {
 }
 
 function convert(str) {
-  str = str.replace(/&/g, '&amp;');
+  //str = str.replace(/&/g, '&amp;');
   str = str.replace(/>/g, '&gt;');
   str = str.replace(/</g, '&lt;');
   str = str.replace(/"/g, '&quot;');

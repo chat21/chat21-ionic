@@ -53,13 +53,17 @@ export class ListaConversazioniPage extends _MasterPage {
     super();
     this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
     
-    // RECUPERO ID CONVERSAZIONE
-    // se vengo da dettaglio conversazione
-    // o da users con conversazione attiva recupero conversationWith
-    //this.conversationWith = navParams.get('conversationWith');
+    /** RECUPERO ID CONVERSAZIONE
+    * se vengo da dettaglio conversazione
+    * o da users con conversazione attiva recupero conversationWith
+    * //this.conversationWith = navParams.get('conversationWith');
+    */
     this.uidConvSelected = navParams.get('conversationWith');
     
-    //this.uidReciverFromUrl = (location.search.split('recipient=')[1]).split('&')[0];
+    /** RECUPERO IL RECIPIENTID 
+    * nel caso in cui viene pasato nell'url della pagina
+    * per aprire una conversazione
+    */
     let TEMP = location.search.split('recipient=')[1];
     if (TEMP) { this.uidReciverFromUrl = TEMP.split('&')[0]; }
 
@@ -103,8 +107,8 @@ export class ListaConversazioniPage extends _MasterPage {
   */
   subscribeLoggedUserLogin:any = (user) => {
     console.log('************** subscribeLoggedUserLogin', user);
-      this.profileModal.dismiss({animate: false, duration: 0})
-      this.loadListConversations();
+    this.profileModal.dismiss({animate: false, duration: 0});
+    this.loadListConversations();
   }
 
   /** subscribeLoggedUserLogout
@@ -116,7 +120,6 @@ export class ListaConversazioniPage extends _MasterPage {
   */
   subscribeLoggedUserLogout:any = (user) => {
     console.log('************** subscribeLoggedUserLogout', user);
-    this.navProxy.pushDetail(PlaceholderPage,{});
     this.conversations = [];
     this.profileModal.present();
     //this.conversationWith = null;
@@ -134,6 +137,7 @@ export class ListaConversazioniPage extends _MasterPage {
   * init ConversationsHandler e carico elenco conversazioni
   */
   loadListConversations() {
+  //debugger;
     if(this.uidReciverFromUrl){
       this.uidConvSelected = this.uidReciverFromUrl;
       this.uidReciverFromUrl = null;
@@ -148,9 +152,6 @@ export class ListaConversazioniPage extends _MasterPage {
       })
       .catch((error)=>{
         console.log("error::: ",error);
-        if(that.conversations.length <= 0){
-          that.navProxy.pushDetail(PlaceholderPage,{});
-        }
       });
     }
   }
@@ -209,7 +210,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * inizializzo la pagina
    */
   initConversationsHandler() {
-    //debugger;
+    
     console.log('-------------> initConversationsHandler');
     const tenant = this.chatManager.getTenant();
     const loggedUser = this.chatManager.getLoggedUser();
@@ -226,7 +227,35 @@ export class ListaConversazioniPage extends _MasterPage {
       console.log('handler ESISTE ::', handler);
       this.conversationsHandler = handler;
     }
-    this.openMessageList(this.uidConvSelected);
+    
+    
+    //console.log('plt::', windowsMatchMedia());
+    if(this.uidConvSelected){
+      // se visualizzazione è desktop
+      if(windowsMatchMedia()) {
+        this.openMessageList(this.uidConvSelected);
+      }
+    } else if(this.conversations.length>0){
+      this.uidConvSelected = this.conversations[0].uid;
+      // se visualizzazione è desktop
+      if(windowsMatchMedia()) {
+        this.openMessageList(this.uidConvSelected);
+      }
+    }
+    else {
+      // se visualizzazione è desktop
+      if(windowsMatchMedia()) {
+        this.navProxy.pushDetail(PlaceholderPage,{});
+      }
+    }
+      //this.navProxy.isOn = true;
+      //
+    
+
+    // if(this.conversations.length <= 0){
+    //   this.navProxy.pushDetail(PlaceholderPage,{});
+    // }
+    
   }
   
   /**

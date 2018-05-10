@@ -1,7 +1,11 @@
 //TIMES
 // BUILD
-export const CURR_VER_DEV = '23';
-export const CURR_VER_PROD = '0.3';
+export const CURR_VER_DEV = '25';
+export const CURR_VER_PROD = '0.6';
+
+//export const SERVICE_WORKER_DEV = '/chat/';
+//export const SERVICE_WORKER_PROD = './chat/';
+
 
 // MESSAGES STATUS
 export const MSG_STATUS_FAILED = -100;
