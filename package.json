@@ -37,7 +37,6 @@
         "@ngx-translate/core": "^9.1.1",
         "@ngx-translate/http-loader": "^2.0.1",
         "add": "^2.0.6",
-        "angularfire2": "^5.0.0-rc.7.0-next",
         "build": "^0.1.4",
         "cordova-android": "~6.3.0",
         "cordova-browser": "^5.0.3",

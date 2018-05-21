@@ -20,8 +20,8 @@ import { ProfilePage } from '../pages/profile/profile';
 import { InfoConversationPage } from '../pages/info-conversation/info-conversation';
 import { InfoMessagePage } from '../pages/info-message/info-message';
 
-import { AngularFireModule } from 'angularfire2';
-//import * as firebase from "firebase";
+// import { AngularFireModule } from 'angularfire2';
+import * as firebase from "firebase";
 // import { AngularFireDatabaseModule } from 'angularfire2/database';
 // import { AngularFireAuthModule } from 'angularfire2/auth';
 
