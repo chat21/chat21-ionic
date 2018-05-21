@@ -71,7 +71,7 @@ https://firebase.google.com/docs/auth/
 ## Run App on Browser ##
 * Now you will need to serve the app. Run: `ionic serve` in the terminal. (Update the plugins if required)
 
-## Upload Notification functions on Firebase Cloud Functions ##
+## Deploy Chat21 Firebase Cloud Functions  ##
 * Readme: https://github.com/chat21/chat21-cloud-functions
 
 ## Create build browser ##
