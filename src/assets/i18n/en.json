@@ -33,11 +33,11 @@
   "LABEL_CLOSE_GROUP": "Chiudo conversazione",
 
   "ALERT_TITLE": "ATTENZIONE",
-  "LEAVE_ALERT_MSG": "abbandonare il gruppo?",
-  "CLOSE_ALERT_MSG": "chiudere la conversazione?",
-  "CLOSING_CONVERSATION_SPINNER_MSG": "attendere prego <br> stiamo chiudendo la conversazione",
-  "CONVERSATION_CLOSED_ALERT_MSG" : "la conversazione è stata chiusa con successo.",
-  "CANNOT_CLOSE_CONVERSATION_ALERT_MSG": "impossibile chiudere la conversazione",
+  "LEAVE_ALERT_MSG": "Abbandonare il gruppo? <br> <b> L'azione non è reversibile </b>",
+  "CLOSE_ALERT_MSG": "Chiudere la conversazione? <br> <b> L'azione non è reversibile </b>",
+  "CLOSING_CONVERSATION_SPINNER_MSG": "Attendere prego <br> Stiamo chiudendo la conversazione",
+  "CONVERSATION_CLOSED_ALERT_MSG" : "La conversazione è stata chiusa con successo.",
+  "CANNOT_CLOSE_CONVERSATION_ALERT_MSG": "Impossibile chiudere la conversazione",
 
   "GREETING": "Hi, {{ value }}"
 
