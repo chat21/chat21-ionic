@@ -97,7 +97,7 @@
         </div>
         </ion-card>
 
-        <ion-card *ngIf="isSupportGroup()">
+        <!-- <ion-card *ngIf="isSupportGroup()">
         <a href="{{getUrlCreaTicket()}}" target="_blank">
         <div class="chat21-content" style="float:left; width: 100%">  
             <button ion-button clear icon-start block color="default">
@@ -106,8 +106,8 @@
             </button>
         </div>
         </a>
-        </ion-card>
-        <ion-card *ngIf="isSupportGroup()">
+        </ion-card> -->
+        <!-- <ion-card *ngIf="isSupportGroup()">
         <div class="chat21-content" style="float:left; width: 100%">  
             <button ion-button clear icon-start block color="default">
                 <ion-icon name='mail' is-active="false"></ion-icon>
@@ -116,15 +116,15 @@
                 </a>
             </button>
         </div>
-        </ion-card>
-        <ion-card *ngIf="isSupportGroup()">
+        </ion-card> -->
+        <!-- <ion-card *ngIf="isSupportGroup()">
         <div class="chat21-content" style="float:left; width: 100%">  
             <button [disabled]="!conversationEnabled" ion-button clear icon-start block color="default" (click)="setVideoChat()">
                 <ion-icon name='videocam' is-active="false"></ion-icon>
                 {{ 'LABEL_VIDEO_CHAT' | translate }}
             </button>
         </div>
-        </ion-card>
+        </ion-card> -->
         <ion-card *ngIf="isSupportGroup()">
         <div class="chat21-content" style="width: 100%">  
             <button [disabled]="!conversationEnabled" item-right ion-button clear icon-start color="danger" (click)="openPopupConfirmation('close')">
