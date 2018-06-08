@@ -305,11 +305,21 @@ export function isExistInArray(members, currentUid){
   return members.includes(currentUid);
 }
 
-export function showConfirm(alertCtrl, events, title, message, action) {
-  let confirm = alertCtrl.create({
-    title: title,
-    message: message,
-    buttons: [
+export function showConfirm(alertCtrl, events, title, message, action, onlyOkButton) {
+
+  var buttons;
+  if (onlyOkButton) {
+    buttons = [
+      {
+        text: LABEL_OK,
+        handler: () => {
+          events.publish('PopupConfirmation', LABEL_OK, action);
+          console.log('Agree clicked');
+        }
+      }
+    ]
+  } else {
+    buttons = [
       {
         text: LABEL_ANNULLA,
         handler: () => {
@@ -325,6 +335,12 @@ export function showConfirm(alertCtrl, events, title, message, action) {
         }
       }
     ]
+  }
+
+  let confirm = alertCtrl.create({
+    title: title,
+    message: message,
+    buttons,
   });
   confirm.present();
 }

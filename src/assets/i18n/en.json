@@ -35,6 +35,9 @@
   "ALERT_TITLE": "ATTENZIONE",
   "LEAVE_ALERT_MSG": "abbandonare il gruppo?",
   "CLOSE_ALERT_MSG": "chiudere la conversazione?",
+  "CLOSING_CONVERSATION_SPINNER_MSG": "attendere prego <br> stiamo chiudendo la conversazione",
+  "CONVERSATION_CLOSED_ALERT_MSG" : "la conversazione è stata chiusa con successo.",
+  "CANNOT_CLOSE_CONVERSATION_ALERT_MSG": "impossibile chiudere la conversazione",
 
   "GREETING": "Hi, {{ value }}"
 

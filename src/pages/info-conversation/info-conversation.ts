@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { AlertController, Events } from 'ionic-angular';
+import { AlertController, Events, LoadingController} from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // models
@@ -44,6 +44,8 @@ export class InfoConversationPage {
   public LABEL_ACTIVE_NOW = LABEL_ACTIVE_NOW;
   public URL_SEND_BY_EMAIL = URL_SEND_BY_EMAIL;
   public URL_VIDEO_CHAT = URL_VIDEO_CHAT;
+
+  private loading;
   
 
   constructor(
@@ -55,7 +57,8 @@ export class InfoConversationPage {
     public zone: NgZone,
     public conversationHandler: ChatConversationHandler,
     public alertCtrl: AlertController,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private loadingCtrl: LoadingController, 
 
   ) {
     this.profileYourself = false;
@@ -99,10 +102,18 @@ export class InfoConversationPage {
   /**  */
   subcribePopupConfirmation: any = (resp, action) => {
     if(resp === LABEL_ANNULLA) { return; }
+
     if(action === 'leave'){
       this.leaveGroup();
-    } else if(action === 'close'){
-      this.closeGroup();
+    } else if(action === 'close') {
+      var that = this;
+      this.closeGroup(function callback(result) {
+        if(result == 'success') {
+          that.openPopupConfirmation('conversation-closed');
+        } else if(result == 'error') {
+          that.openPopupConfirmation('cannot-close-conversation');
+        }
+      });
     }
   }
 
@@ -302,7 +313,20 @@ export class InfoConversationPage {
   }
 
   /** */
-  closeGroup(){
+  closeGroup(callback) {
+    var spinnerContent;
+    this.translate.get('CLOSING_CONVERSATION_SPINNER_MSG').subscribe(
+      value => {
+        spinnerContent = value;
+      }
+    )
+    this.loading = this.loadingCtrl.create({
+      spinner: 'circles',
+      content: spinnerContent,
+    });
+    this.loading.present();
+
+
     this.conversationEnabled = false;
     this.events.publish('conversationEnabled', false);
     const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
@@ -310,11 +334,15 @@ export class InfoConversationPage {
     .subscribe(
       response => {
         console.log('OK closeGroup ::::', response);
+        this.loading.dismiss();
+        callback('success');
       },
       errMsg => {
         this.conversationEnabled = true;
         this.events.publish('conversationEnabled', true);
         console.log('closeGroup ERROR MESSAGE', errMsg);
+        this.loading.dismiss();
+        callback('error');
       },
       () => {
         console.log('closeGroup API ERROR NESSUNO');
@@ -342,6 +370,8 @@ export class InfoConversationPage {
    * @param action 
    */
   openPopupConfirmation(action){
+    console.log("openPopupConfirmation");
+    
     //debugger;
     let alertTitle = '';
     let alertMessage = '';
@@ -350,20 +380,42 @@ export class InfoConversationPage {
         alertTitle = value;
       }
     )
+
+    var onlyOkButton = false;
+
     if(action === 'leave'){
       this.translate.get('LEAVE_ALERT_MSG').subscribe(
         value => {
           alertMessage = value;
         }
       )
+      onlyOkButton = false;
     } else if(action === 'close'){
       this.translate.get('CLOSE_ALERT_MSG').subscribe(
         value => {
           alertMessage = value;
         }
       )
-    }
-    showConfirm(this.alertCtrl, this.events, alertTitle, alertMessage, action);
+      onlyOkButton = false;
+    } else if (action === 'conversation-closed') {
+      this.translate.get('CONVERSATION_CLOSED_ALERT_MSG').subscribe(
+        value => {
+          alertMessage = value;
+        }
+      )
+      onlyOkButton = true;
+    } else if (action === 'cannot-close-conversation') {
+      this.translate.get('CANNOT_CLOSE_CONVERSATION_ALERT_MSG').subscribe(
+        value => {
+          alertMessage = value;
+        }
+      )
+      onlyOkButton = false;
+    } 
+
+    console.log("onlyOkButton", onlyOkButton);
+
+    showConfirm(this.alertCtrl, this.events, alertTitle, alertMessage, action, onlyOkButton);
   }
 
   /** */
@@ -377,5 +429,6 @@ export class InfoConversationPage {
     // return false;
   }
   
+
 
 }
