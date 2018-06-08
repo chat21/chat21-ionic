@@ -227,7 +227,7 @@ export class InfoConversationPage {
       this.groupDetail.iconURL = URL_NO_IMAGE;
     }
     this.members = this.getListMembers(this.groupDetail.members);
-    if(isExistInArray(this.groupDetail.members, this.currentUserDetail.uid)){
+    if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.members.length <= 1 ){
       this.conversationEnabled = true;
       //this.events.publish('conversationEnabled', true);
     } else {
@@ -370,7 +370,7 @@ export class InfoConversationPage {
    * @param action 
    */
   openPopupConfirmation(action){
-    console.log("openPopupConfirmation");
+    // console.log("openPopupConfirmation");
     
     //debugger;
     let alertTitle = '';
@@ -413,7 +413,7 @@ export class InfoConversationPage {
       onlyOkButton = false;
     } 
 
-    console.log("onlyOkButton", onlyOkButton);
+    // console.log("onlyOkButton", onlyOkButton);
 
     showConfirm(this.alertCtrl, this.events, alertTitle, alertMessage, action, onlyOkButton);
   }
