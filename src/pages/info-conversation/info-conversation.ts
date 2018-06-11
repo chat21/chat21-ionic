@@ -16,7 +16,7 @@ import { ChatConversationHandler } from '../../providers/chat-conversation-handl
 
 // utils
 import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, LABEL_ANNULLA, LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
-import { getFormatData, showConfirm, urlify, isExistInArray } from '../../utils/utils';
+import { getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
 
 
 @Component({
@@ -45,7 +45,8 @@ export class InfoConversationPage {
   public URL_SEND_BY_EMAIL = URL_SEND_BY_EMAIL;
   public URL_VIDEO_CHAT = URL_VIDEO_CHAT;
 
-  private loading;
+  private loadingDialog : any;
+  private confirmDialog : any;
   
 
   constructor(
@@ -103,14 +104,53 @@ export class InfoConversationPage {
   subcribePopupConfirmation: any = (resp, action) => {
     if(resp === LABEL_ANNULLA) { return; }
 
-    if(action === 'leave'){
-      this.leaveGroup();
+    var that = this;
+
+    if(action === 'leave') {
+      // // dismiss the confirm dialog
+      // this.dismissConfirmDialog();
+
+      // create and show loading dialog
+      var spinnerMessage;
+      this.translate.get('LEAVING_GROUP_SPINNER_MSG').subscribe(
+        value => {
+          spinnerMessage = value;
+        }
+      )
+      this.createLoadingDialog(spinnerMessage);
+
+      this.leaveGroup(function callback(result) {
+        if (result == 'success') {
+          // dismiss the loading dialog
+          that.dismissLoadingDialog();
+          that.openPopupConfirmation('group-left');
+        } else if (result == 'error') {
+          // dismiss the loading dialog
+          that.dismissLoadingDialog();
+          that.openPopupConfirmation('cannot-leave-group');
+        }
+      });
     } else if(action === 'close') {
-      var that = this;
+      // // dismiss the confirm dialog
+      // this.dismissConfirmDialog();
+
+      // create and show loading dialog
+      var spinnerMessage;
+      this.translate.get('CLOSING_CONVERSATION_SPINNER_MSG').subscribe(
+        value => {
+          spinnerMessage = value;
+        }
+      )
+      this.createLoadingDialog(spinnerMessage);
+
       this.closeGroup(function callback(result) {
         if(result == 'success') {
+          // dismiss the loading dialog
+          that.dismissLoadingDialog();
           that.openPopupConfirmation('conversation-closed');
         } else if(result == 'error') {
+          // dismiss the loading dialog
+          that.dismissLoadingDialog();
           that.openPopupConfirmation('cannot-close-conversation');
         }
       });
@@ -227,13 +267,21 @@ export class InfoConversationPage {
       this.groupDetail.iconURL = URL_NO_IMAGE;
     }
     this.members = this.getListMembers(this.groupDetail.members);
-    if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.members.length <= 1 ){
-      this.conversationEnabled = true;
-      //this.events.publish('conversationEnabled', true);
-    } else {
+    // console.log(this.groupDetail.members.length);
+
+
+    // console.log("setDetailGroup.groupDetail.members", this.groupDetail.members);
+    // console.log("setDetailGroup.groupDetail.members.length", this.members.length);
+
+    if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.groupDetail.members.length <= 1 ){
       this.conversationEnabled = false;
       //this.events.publish('conversationEnabled', false);
+    } else {
+      this.conversationEnabled = true;
+      //this.events.publish('conversationEnabled', true);
     }
+
+    console.log("setDetailGroup.conversationEnabled", this.conversationEnabled);
   }
   
 
@@ -241,6 +289,7 @@ export class InfoConversationPage {
   /** */
   getListMembers(members): UserModel[]{ 
     let arrayMembers = [];
+    // var membersSize = 0;
     members.forEach(member => {
       console.log("loadUserDetail: ", member);
       let userDetail = new UserModel(member, '', '', member, '', URL_NO_IMAGE);
@@ -266,12 +315,16 @@ export class InfoConversationPage {
           }
           console.log("---------------> : ", member);
           arrayMembers.push(userDetail);
+          // membersSize++;
         })
         .catch(function(err) {
           console.log('Unable to get permission to notify.', err);
         });
       }
     });
+
+    // arrayMembers.length = membersSize; // fix the array size
+    console.log("arrayMembers", arrayMembers);
     return arrayMembers;
   }
 
@@ -291,7 +344,17 @@ export class InfoConversationPage {
 
   //// ACTIONS ////
   /** */
-  leaveGroup(){
+  leaveGroup(callback){
+    // var spinnerMessage;
+    // this.translate.get('LEAVING_GROUP_SPINNER_MSG').subscribe(
+    //   value => {
+    //     spinnerMessage = value;
+    //   }
+    // );
+    
+    // this.loadingDialog = createLoading(this.loadingCtrl, spinnerMessage);
+    // this.loadingDialog.present();
+
     this.conversationEnabled = false;
     this.events.publish('conversationEnabled', false);
     const uidUser = this.chatManager.getLoggedUser().uid; //'U4HL3GWjBsd8zLX4Vva0s7W2FN92';
@@ -300,11 +363,15 @@ export class InfoConversationPage {
     .subscribe(
       response => {
         console.log('leaveGroup OK sender ::::', response);
+        this.dismissLoadingDialog();
+        callback('success');
       },
       errMsg => {
+        this.dismissLoadingDialog();
         this.conversationEnabled = true;
         this.events.publish('conversationEnabled', true);
         console.log('leaveGroup ERROR MESSAGE', errMsg);
+        callback('error');
       },
       () => {
         console.log('leaveGroup API ERROR NESSUNO');
@@ -314,18 +381,20 @@ export class InfoConversationPage {
 
   /** */
   closeGroup(callback) {
-    var spinnerContent;
-    this.translate.get('CLOSING_CONVERSATION_SPINNER_MSG').subscribe(
-      value => {
-        spinnerContent = value;
-      }
-    )
-    this.loading = this.loadingCtrl.create({
-      spinner: 'circles',
-      content: spinnerContent,
-    });
-    this.loading.present();
 
+    // var spinnerMessage;
+    // this.translate.get('CLOSING_CONVERSATION_SPINNER_MSG').subscribe(
+    //   value => {
+    //     spinnerMessage = value;
+    //   }
+    // )
+    // // this.loading = this.loadingCtrl.create({
+    // //   spinner: 'circles',
+    // //   content: spinnerMessage,
+    // // });
+
+    // this.loadingDialog = createLoading(this.loadingCtrl, spinnerMessage);
+    // this.loadingDialog.present();
 
     this.conversationEnabled = false;
     this.events.publish('conversationEnabled', false);
@@ -334,14 +403,16 @@ export class InfoConversationPage {
     .subscribe(
       response => {
         console.log('OK closeGroup ::::', response);
-        this.loading.dismiss();
+        // this.loading.dismiss();
+        // this.dismissLoading();
         callback('success');
       },
       errMsg => {
+        // this.dismissLoading();
         this.conversationEnabled = true;
         this.events.publish('conversationEnabled', true);
         console.log('closeGroup ERROR MESSAGE', errMsg);
-        this.loading.dismiss();
+        // this.loading.dismiss();
         callback('error');
       },
       () => {
@@ -390,7 +461,21 @@ export class InfoConversationPage {
         }
       )
       onlyOkButton = false;
-    } else if(action === 'close'){
+    } else if (action === 'group-left') {
+      this.translate.get('CONVERSATION_LEFT_ALERT_MSG').subscribe(
+        value => {
+          alertMessage = value;
+        }
+      )
+      onlyOkButton = true;
+    } else if (action === 'cannot-leave-group') {
+      this.translate.get('CANNOT_LEAVE_GROUP_ALERT_MSG').subscribe(
+        value => {
+          alertMessage = value;
+        }
+      )
+      onlyOkButton = false;
+    }  else if(action === 'close'){
       this.translate.get('CLOSE_ALERT_MSG').subscribe(
         value => {
           alertMessage = value;
@@ -415,7 +500,8 @@ export class InfoConversationPage {
 
     // console.log("onlyOkButton", onlyOkButton);
 
-    showConfirm(this.alertCtrl, this.events, alertTitle, alertMessage, action, onlyOkButton);
+    this.confirmDialog = createConfirm(this.alertCtrl, this.events, alertTitle, alertMessage, action, onlyOkButton);
+    this.confirmDialog.present();
   }
 
   /** */
@@ -428,7 +514,23 @@ export class InfoConversationPage {
     // }
     // return false;
   }
-  
 
+  private createLoadingDialog(message) {
+    this.loadingDialog = createLoading(this.loadingCtrl, message);
+    this.loadingDialog.present();
+  }
 
+  private dismissLoadingDialog() {
+    if (this.loadingDialog) {
+      this.loadingDialog.dismiss();
+      this.loadingDialog = null;
+    }
+  }
+
+  private dismissConfirmDialog() {
+    if (this.confirmDialog) {
+      this.confirmDialog.dismiss();
+      this.confirmDialog = null;
+    }
+  }
 }

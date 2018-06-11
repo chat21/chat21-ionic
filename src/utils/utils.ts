@@ -305,7 +305,7 @@ export function isExistInArray(members, currentUid){
   return members.includes(currentUid);
 }
 
-export function showConfirm(alertCtrl, events, title, message, action, onlyOkButton) {
+export function createConfirm(alertCtrl, events, title, message, action, onlyOkButton) {
 
   var buttons;
   if (onlyOkButton) {
@@ -342,7 +342,17 @@ export function showConfirm(alertCtrl, events, title, message, action, onlyOkBut
     message: message,
     buttons,
   });
-  confirm.present();
+  // confirm.present();
+  return confirm;
+}
+
+export function createLoading(loadinController, message) {
+  let loading = loadinController.create({
+    spinner: 'circles',
+    content: message,
+  });
+  // this.loading.present();
+  return loading;
 }
 
 

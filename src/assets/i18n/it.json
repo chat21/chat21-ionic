@@ -39,5 +39,9 @@
     "CONVERSATION_CLOSED_ALERT_MSG": "La conversazione è stata chiusa con successo.",
     "CANNOT_CLOSE_CONVERSATION_ALERT_MSG": "Impossibile chiudere la conversazione",
 
+    "LEAVING_GROUP_SPINNER_MSG": "Attendere prego <br> Stai abbandonando il gruppo",
+    "CONVERSATION_LEFT_ALERT_MSG": "Il gruppo è stato abbandonato con successo.",
+    "CANNOT_LEAVE_GROUP_ALERT_MSG": "Impossibile abbandonare il gruppo",
+
     "GREETING": "Hi, {{ value }}"
 }
