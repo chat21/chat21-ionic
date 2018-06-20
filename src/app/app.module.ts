@@ -9,6 +9,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 
+
 //import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
 import { UsersPage } from '../pages/users/users';
 import { LoginPage } from '../pages/authentication/login/login';
@@ -38,7 +39,6 @@ import { PopoverPage } from '../pages/popover/popover';
 import { PopoverProfilePage } from '../pages/popover-profile/popover-profile';
 import { UpdateImageProfilePage } from '../pages/update-image-profile/update-image-profile';
 
-
 //import { FirebaseProvider } from '../providers/firebase-provider';
 
 // SQLite
@@ -60,6 +60,7 @@ import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronize
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { TiledeskConversationProvider } from '../providers/tiledesk-conversation/tiledesk-conversation';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -82,7 +83,7 @@ export function createTranslateLoader(http: HttpClient) {
     UpdateImageProfilePage,
     AutosizeDirective,
     InfoConversationPage,
-    InfoMessagePage
+    InfoMessagePage,
   ],
   imports: [
     BrowserModule,
@@ -153,7 +154,8 @@ export function createTranslateLoader(http: HttpClient) {
     ChatConversationsHandler,
     ChatConversationHandler,
     ChatContactsSynchronizer,
-    GroupService
+    GroupService,
+    TiledeskConversationProvider,
   ]
 })
 export class AppModule {}

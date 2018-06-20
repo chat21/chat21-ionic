@@ -4,8 +4,8 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      <img src="assets/chat21-logo.svg" alt="{{this.tenant}}"> 
-      <sub class="build_version" stacked ion-text color="default">{{BUILD_VERSION}}</sub>         
+      <img src="assets/chat21-logo.svg" alt="{{this.tenant}}">
+      <sub class="build_version" stacked ion-text color="default">{{BUILD_VERSION}}</sub>
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="openUsersList($event)">
@@ -21,17 +21,18 @@
 <ion-content class="list-avatar-page">
   <ion-list>
     <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
-    
+
     <ng-template #contentConversations>
-      <ion-item no-lines  ion-item [class.selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of conversations" (tap)="openMessageList(conversation.uid)">     
+      <ion-item no-lines ion-item [class.selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of conversations; let position = index;"
+        (click)="openMessageList(conversation.uid)">
         <ion-avatar item-start>
           <div class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
           <!-- <img src="{{conversation.image}}" alt="user" onError="this.src='assets/img/no_image.png';"> -->
         </ion-avatar>
         <h2 class="truncate">{{conversation.conversation_with_fullname}}</h2>
         <p [class.not-read]="conversation.status == 1" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
-        
-        
+
+
         <!-- <span *ngIf="conversation.status == 1;then content else other_content">here is ignored</span>
         <ng-template #content>
           <p *ngIf="!conversation.last_message_text" class="truncate read">{{ LABEL_IMAGE | translate }}</p>
@@ -43,23 +44,28 @@
         </ng-template> -->
 
         <ion-note item-end>{{conversation.time_last_message}}</ion-note>
+        <button id="{{ 'close_conversation_button' + position }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation, position);$event.stopPropagation();" padding>
+          <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + position }}" color="close-conversation" name="close" item-end></ion-icon>
+          <!-- source: https://ionicframework.com/docs/v1/api/directive/ionSpinner/ -->
+          <ion-spinner class="close-conversation-button-icon" style="display:none"  id="{{ 'close_button_loading' + position }}" icon="spiral"></ion-spinner>
+        </button>
       </ion-item>
     </ng-template>
 
-    <ng-template #contentMessageWelcome >
+    <ng-template #contentMessageWelcome>
       <div [class.active]="!loadingIsActive()" class="chat21-spinner" id="chat21-spinner">
-          <div class="chat21-bounce1"></div>
-          <div class="chat21-bounce2"></div>
-          <div class="chat21-bounce3"></div>
-          <span>loading</span>
+        <div class="chat21-bounce1"></div>
+        <div class="chat21-bounce2"></div>
+        <div class="chat21-bounce3"></div>
+        <span>loading</span>
       </div>
-      <div *ngIf="loadingIsActive()" id="content_message_wellcome" >
-          <!-- [style.display]="styleMessageWelcome === true ? 'inline' : 'none'" -->
+      <div *ngIf="loadingIsActive()" id="content_message_wellcome">
+        <!-- [style.display]="styleMessageWelcome === true ? 'inline' : 'none'" -->
         <div class="messaggio">{{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}</div>
         <div class="pulsanti">
-            <button ion-button icon-start color="273e53" (click)="openUsersList($event)">
-              {{ 'LABEL_MSG_START_CHAT' | translate }}
-            </button>
+          <button ion-button icon-start color="273e53" (click)="openUsersList($event)">
+            {{ 'LABEL_MSG_START_CHAT' | translate }}
+          </button>
         </div>
       </div>
     </ng-template>

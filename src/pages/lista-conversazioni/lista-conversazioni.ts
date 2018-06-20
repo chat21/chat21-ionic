@@ -20,6 +20,9 @@ import { UserService } from '../../providers/user/user';
 import { ChatConversationsHandler} from '../../providers/chat-conversations-handler';
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 import { DatabaseProvider } from '../../providers/database/database';
+import { GroupService } from '../../providers/group/group';
+
+import { TiledeskConversationProvider } from '../../providers/tiledesk-conversation/tiledesk-conversation';
 
 @IonicPage()
 @Component({
@@ -37,6 +40,8 @@ export class ListaConversazioniPage extends _MasterPage {
 
   convertMessage = convertMessage;
 
+  private isConversationClosing : boolean = false;
+
   constructor(
     public popoverCtrl: PopoverController,
     public modalCtrl: ModalController,
@@ -48,7 +53,9 @@ export class ListaConversazioniPage extends _MasterPage {
     public conversationHandler: ChatConversationHandler,
     public events: Events,
     public chatManager: ChatManager,
-    public databaseProvider: DatabaseProvider
+    public databaseProvider: DatabaseProvider,
+    private groupService: GroupService,
+    private tiledeskConversationProvider : TiledeskConversationProvider,
   ) {
     super();
     this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
@@ -309,6 +316,125 @@ export class ListaConversazioniPage extends _MasterPage {
       return false;
     }
   }
-  
-  
+
+  private closeConversation(conversation, position) {
+    console.log("ListaConversazioniPage::closeConversation::conversation", conversation, "position:: ", position);
+
+    var that = this;
+
+    // show the loading while closing conversation
+    this.isConversationClosing = true; 
+    that.toggleCloseConversationLoadingByListItemPosition(position);
+
+    var conversationId = conversation.uid;
+    // console.log("ListaConversazioniPage::closeConversation::conversationId", conversationId);
+
+    var isSupportConversation = conversationId.startsWith("support-group");
+    // console.log("ListaConversazioniPage::closeConversation::isSupportConversation", isSupportConversation);
+
+    if (!isSupportConversation) {
+      console.log("ListaConversazioniPage::closeConversation:: is not a support group");
+
+      this.deleteConversation(conversationId, function (result, data) {
+        if (result === 'success') {
+          console.log("ListaConversazioniPage::closeConversation::deleteConversation::response", data);
+        } else if (result === 'error') {
+          console.error("ListaConversazioniPage::closeConversation::deleteConversation::error", data);
+
+          that.isConversationClosing = false;
+          that.toggleCloseConversationLoadingByListItemPosition(position);
+        }
+
+        // // hide the loading in both case (success or error)
+        // that.isConversationClosing = false;
+        // that.toggleCloseConversationLoadingByListItemPosition(position);
+      });
+
+      // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
+    } else {
+      console.log("ListaConversazioniPage::closeConversation::closeConversation:: is a support group");
+
+      // the conversationId is:
+      // - the recipientId if it is a direct conversation;
+      // - the groupId if it is a group conversation;
+      // the groupId can reference:
+      // - a normal group;
+      // - a support  group if it starts with "support-group"
+      this.closeSupportGroup(conversationId, function (result, data) {
+        if (result === 'success') {
+          console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response", data);
+        } else if (result === 'error') {
+          console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error", data);
+
+          that.isConversationClosing = false;
+          that.toggleCloseConversationLoadingByListItemPosition(position);
+        }
+
+        // // hide the loading in both case (success or error)
+        // that.isConversationClosing = false; 
+        // that.toggleCloseConversationLoadingByListItemPosition(position);
+      });
+    }
+  }  
+
+  // hide or show the progress icon (and the close button) for a specific row identified by the
+  // list item position
+  private toggleCloseConversationLoadingByListItemPosition(position) {
+
+    // retrieve the close conversation button reference
+    var closeButton = document.getElementById("close_conversation_button" + position); 
+    // console.log("ListaConversazioniPage::closeConversation::closeButton", closeButton);
+
+    // retrieve the close conversation button icon reference
+    var closeButtonIcon =  document.getElementById("close_button_icon" + position);
+    // console.log("ListaConversazioniPage::closeConversation::closeButtonIcon", closeButtonIcon);
+
+    // retrieve close conversation button loading the loading reference
+    var closeButtonLoading =  document.getElementById("close_button_loading" + position);
+    // console.log("ListaConversazioniPage::closeConversation::closeButtonLoading", closeButtonLoading);
+
+    // toggle the loading/button visibility
+    if(this.isConversationClosing) {
+      closeButtonIcon.style.display = "none" ; // hide close
+      closeButtonLoading.style.display = "block" ; // show loading
+
+      closeButton.setAttribute("disabled", "disabled"); // disable the click on the close button
+      
+    } else {
+      closeButtonIcon.style.display = "block" ;  // show close
+      closeButtonLoading.style.display = "none" ; // hide loading
+
+      closeButton.removeAttribute("disabled"); // enable the click on the close button
+    }
+  }
+
+  // close the support group
+  // more details availables at 
+  // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#close-support-group
+  private closeSupportGroup(groupId, callback) {
+    this.groupService.closeGroup(groupId)
+    .subscribe(response => {
+      callback('success', response);
+    }, errMsg => {
+      callback('error', errMsg);
+    }, () => {
+      console.log('closeGroup API ERROR NESSUNO');
+    });
+  }
+
+  // delete a conversation form the personal timeline
+  // more details availables at 
+  // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
+  private deleteConversation(conversationId, callback) {
+    console.log("ListaConversazioniPage::deleteConversation::conversationId", conversationId);
+
+    this.tiledeskConversationProvider.deleteConversation(conversationId) 
+    .subscribe(response => {
+      callback('success', response);
+    }, errMsg => {
+      callback('error', errMsg);
+    }, () => {
+      console.log('closeGroup API ERROR NESSUNO');
+    });
+  }
 }

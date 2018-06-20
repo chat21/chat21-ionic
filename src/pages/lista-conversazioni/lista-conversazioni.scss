@@ -99,4 +99,36 @@ page-lista-conversazioni {
         left: 20px;
         bottom: 0px;
     }
+
+    // center the icon within the buttonn
+    .close-conversation-button-icon  {
+        padding : 0px !important;
+        margin : 0px !important;
+        font-size: 25px !important;
+    }
+
+    // // hover on close button
+    // .close-conversation-button:hover {
+    //     background-color: red !important;
+    // }
+
+    // // hover on close button icon
+    // .close-conversation-button:hover ion-icon,
+    // .close-conversation-button:hover ion-icon::before,
+    // .close-conversation-button:hover ion-icon::after {
+    //     color: white;
+    // }
+
+    //  // default color for close button spinner
+    // .close-conversation-button ion-spinner svg circle,
+    // .close-conversation-button:hover ion-icon,
+    // { 
+    //     color:  #424242; // change the ion-icon "close" (the "X")
+    //     stroke: #424242 !important; // chage the circle
+    // }
+
+    // // hover on close button spinner
+    // .close-conversation-button ion-spinner svg circle:hover{ 
+    //     stroke: white !important;
+    // }
 }
