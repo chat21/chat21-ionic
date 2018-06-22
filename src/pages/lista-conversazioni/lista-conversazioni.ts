@@ -337,9 +337,9 @@ export class ListaConversazioniPage extends _MasterPage {
 
       this.deleteConversation(conversationId, function (result, data) {
         if (result === 'success') {
-          console.log("ListaConversazioniPage::closeConversation::deleteConversation::response", data);
+          console.log("ListaConversazioniPage::closeConversation::deleteConversation::response", data, "conversation::", conversation);
         } else if (result === 'error') {
-          console.error("ListaConversazioniPage::closeConversation::deleteConversation::error", data);
+          console.error("ListaConversazioniPage::closeConversation::deleteConversation::error", data, "conversation::", conversation);
 
           that.isConversationClosing = false;
           that.toggleCloseConversationLoading(conversationId);
@@ -362,9 +362,9 @@ export class ListaConversazioniPage extends _MasterPage {
       // - a support  group if it starts with "support-group"
       this.closeSupportGroup(conversationId, function (result, data) {
         if (result === 'success') {
-          console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response", data);
+          console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response", data, "conversation::", conversation);
         } else if (result === 'error') {
-          console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error", data);
+          console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error", data, "conversation::", conversation);
 
           that.isConversationClosing = false;
           that.toggleCloseConversationLoading(conversationId);
