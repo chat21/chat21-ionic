@@ -30,7 +30,6 @@ export class ChatConversationsHandler {
     ) {
     }
 
-
     /**
      * ritorno istanza di conversations handler
      */
@@ -58,7 +57,7 @@ export class ChatConversationsHandler {
         const that = this;
         const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.userId);
         //const urlNodeFirebase = '/apps/'+tenant+'/users/'+this.loggedUser.uid+'/conversations';
-        this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(50);
+        this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp'); // .limitToLast(50);
         this.ref.on("child_changed", function(childSnapshot) {
             that.changed(childSnapshot);
         });
@@ -82,6 +81,21 @@ export class ChatConversationsHandler {
         this.conversations.splice(0, 0, conversation);
         console.log("child_added conversationS",conversation);
         //this.events.publish('conversations:added', conversation);
+
+
+        // var clone: ConversationModel[] = this.sort(this.conversations);
+        // console.log("ChatConversationsHandler::added::clone::clone.size", clone.length);
+        // console.log("ChatConversationsHandler::added::clone::conversations.size", this.conversations.length);
+        // clone.splice(0, 0, conversation);       
+        // for (var i = 0; i < clone.length; i++) {
+        //     var item: ConversationModel = clone[i];
+        //     console.log(i + ") ChatConversationsHandler::added::clone::item", item, item.timestamp);
+        // }
+        // this.conversations = clone;
+        // for (var i = 0; i < this.conversations.length; i++) {
+        //     var item: ConversationModel = this.conversations[i];
+        //     console.log(i + ") ChatConversationsHandler::added::clone::conversation", item, item.timestamp);
+        // } 
     }
     /**
      * 1 - cerco indice conversazione nell'array conversation
@@ -121,9 +135,22 @@ export class ChatConversationsHandler {
         const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
         // controllo superfluo sarà sempre maggiore
         if(index>-1){
+            // splice (<indice dell'elemento da eliminare>, <numero di elementi da eliminare>)
             this.conversations.splice(index, 1);
             //this.events.publish('conversations:update', this.conversations);
         }
+       
+        // // sort the array without the removed item and update the conversations list
+        // this.conversations = this.sort(this.conversations); 
+
+        // var sortedCopy = this.sort(this.conversations); 
+        // for (var i = 0; i < sortedCopy.length; i++) {
+        //     var item: ConversationModel = sortedCopy[i];
+        //     console.log(i + ") ChatConversationsHandler::removed::item", item, item.timestamp);
+        // }
+        // this.conversations = sortedCopy; 
+
+        // this.events.publish('conversations:removed');
     }
 
     /**
@@ -246,5 +273,25 @@ export class ChatConversationsHandler {
     dispose() {
         this.ref.off();
     }
+
+    // private clone(convs: ConversationModel[]): ConversationModel[] {
+    //     var copy = [];
+    //     for (var i = 0; i < convs.length; i++) {
+    //         var item: ConversationModel = convs[i];
+    //         copy.push(item);
+    //     }
+    //     return copy;
+    // }
+    // private sort(convs: ConversationModel[]): ConversationModel[] {
+    //     return this.clone(convs).sort(this.compare);
+    // }
+    // private compare(a: ConversationModel, b: ConversationModel) : number {
+    //     return (a.timestamp < b.timestamp) ? 1 : ((b.timestamp < a.timestamp) ? -1 : 0); 
+    // }
+    // private existsInArray(convs: ConversationModel[], item: ConversationModel) : boolean{
+    //     return convs.some(function (el) { 
+    //         return el.uid === item.uid 
+    //     }); //true
+    // }
 
 }

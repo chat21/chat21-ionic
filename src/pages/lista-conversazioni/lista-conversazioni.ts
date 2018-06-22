@@ -317,17 +317,17 @@ export class ListaConversazioniPage extends _MasterPage {
     }
   }
 
-  private closeConversation(conversation, position) {
-    console.log("ListaConversazioniPage::closeConversation::conversation", conversation, "position:: ", position);
+  private closeConversation(conversation) {
+    console.log("ListaConversazioniPage::closeConversation::conversation", conversation);
 
     var that = this;
 
-    // show the loading while closing conversation
-    this.isConversationClosing = true; 
-    that.toggleCloseConversationLoadingByListItemPosition(position);
-
     var conversationId = conversation.uid;
     // console.log("ListaConversazioniPage::closeConversation::conversationId", conversationId);
+
+    // show the loading while closing conversation
+    this.isConversationClosing = true; 
+    that.toggleCloseConversationLoading(conversationId);
 
     var isSupportConversation = conversationId.startsWith("support-group");
     // console.log("ListaConversazioniPage::closeConversation::isSupportConversation", isSupportConversation);
@@ -342,7 +342,7 @@ export class ListaConversazioniPage extends _MasterPage {
           console.error("ListaConversazioniPage::closeConversation::deleteConversation::error", data);
 
           that.isConversationClosing = false;
-          that.toggleCloseConversationLoadingByListItemPosition(position);
+          that.toggleCloseConversationLoading(conversationId);
         }
 
         // // hide the loading in both case (success or error)
@@ -367,7 +367,7 @@ export class ListaConversazioniPage extends _MasterPage {
           console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error", data);
 
           that.isConversationClosing = false;
-          that.toggleCloseConversationLoadingByListItemPosition(position);
+          that.toggleCloseConversationLoading(conversationId);
         }
 
         // // hide the loading in both case (success or error)
@@ -379,18 +379,18 @@ export class ListaConversazioniPage extends _MasterPage {
 
   // hide or show the progress icon (and the close button) for a specific row identified by the
   // list item position
-  private toggleCloseConversationLoadingByListItemPosition(position) {
+  private toggleCloseConversationLoading(conversationId) {
 
     // retrieve the close conversation button reference
-    var closeButton = document.getElementById("close_conversation_button" + position); 
+    var closeButton = document.getElementById("close_conversation_button" + conversationId); 
     // console.log("ListaConversazioniPage::closeConversation::closeButton", closeButton);
 
     // retrieve the close conversation button icon reference
-    var closeButtonIcon =  document.getElementById("close_button_icon" + position);
+    var closeButtonIcon = document.getElementById("close_button_icon" + conversationId);
     // console.log("ListaConversazioniPage::closeConversation::closeButtonIcon", closeButtonIcon);
 
     // retrieve close conversation button loading the loading reference
-    var closeButtonLoading =  document.getElementById("close_button_loading" + position);
+    var closeButtonLoading = document.getElementById("close_button_loading" + conversationId);
     // console.log("ListaConversazioniPage::closeConversation::closeButtonLoading", closeButtonLoading);
 
     // toggle the loading/button visibility

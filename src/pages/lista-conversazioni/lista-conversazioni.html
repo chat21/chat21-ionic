@@ -23,7 +23,7 @@
     <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
 
     <ng-template #contentConversations>
-      <ion-item no-lines ion-item [class.selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of conversations; let position = index;"
+      <ion-item no-lines ion-item [class.selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of conversations"
         (click)="openMessageList(conversation.uid)">
         <ion-avatar item-start>
           <div class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
@@ -44,10 +44,10 @@
         </ng-template> -->
 
         <ion-note item-end>{{conversation.time_last_message}}</ion-note>
-        <button id="{{ 'close_conversation_button' + position }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation, position);$event.stopPropagation();" padding>
-          <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + position }}" color="close-conversation" name="close" item-end></ion-icon>
+        <button id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
+          <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="close" item-end></ion-icon>
           <!-- source: https://ionicframework.com/docs/v1/api/directive/ionSpinner/ -->
-          <ion-spinner class="close-conversation-button-icon" style="display:none"  id="{{ 'close_button_loading' + position }}" icon="spiral"></ion-spinner>
+          <ion-spinner class="close-conversation-button-icon" style="display:none"  id="{{ 'close_button_loading' + conversation.uid }}" icon="spiral"></ion-spinner>
         </button>
       </ion-item>
     </ng-template>
