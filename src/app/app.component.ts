@@ -88,16 +88,16 @@ export class MyApp {
       this.translate.use(language);
     });
 
-    // solve the issue : "Cannot read property 'myID' of undefined"
-    // source :
-    // https://github.com/firebase/angularfire/issues/970
-    if (getLocalStorage()) {
-      getLocalStorage().removeItem('firebase:previous_websocket_failure');
-    }
+    // // solve the issue : "Cannot read property 'myID' of undefined"
+    // // source :
+    // // https://github.com/firebase/angularfire/issues/970
+    // if (getLocalStorage()) {
+    //   getLocalStorage().removeItem('firebase:previous_websocket_failure');
+    // }
   }
 
 }
 
-export function getLocalStorage() {
-  return (typeof window !== "undefined") ? window.localStorage : null;
-}
+// export function getLocalStorage() {
+//   return (typeof window !== "undefined") ? window.localStorage : null;
+// }

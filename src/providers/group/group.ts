@@ -103,7 +103,6 @@ export class GroupService {
     .put(url, body, options)
     // .map(res => (res.json()));
       .map((res) => {
-        // console.log("LOL", res);
         // return res.json();
         return JSON.stringify(res);
       });
