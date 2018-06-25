@@ -38,6 +38,14 @@ page-lista-conversazioni {
     
     .item-block.selected{
         margin-left:0px!important;
+
+        .close-conversation-button ion-icon {
+            color: white;
+        }
+        .close-conversation-button ion-spinner svg circle{ 
+            stroke: white !important;
+        }
+
         .label{
             h2{
                 font-size: 12px;
