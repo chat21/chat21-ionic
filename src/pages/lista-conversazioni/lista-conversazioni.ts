@@ -351,9 +351,12 @@ export class ListaConversazioniPage extends _MasterPage {
           console.log("ListaConversazioniPage::closeConversation::deleteConversation::response", data);
           // console.log("ListaConversazioniPage::closeConversation::deleteConversation::response::conversation::", conversation);
 
-          // when a conversations is closed shows a placeholder background
-          that.navProxy.pushDetail(PlaceholderPage, {});
-
+          console.log("ListaConversazioniPage::closeConversation::closeConversation::uidConvSelected", that.uidConvSelected);
+          if (conversationId === that.uidConvSelected) {
+            // when a conversations is closed shows a placeholder background
+            that.navProxy.pushDetail(PlaceholderPage, {});
+          }
+         
         } else if (result === 'error') {
           console.error("ListaConversazioniPage::closeConversation::deleteConversation::error", data);
           // console.error("ListaConversazioniPage::closeConversation::deleteConversation::error::conversation::", conversation);
@@ -382,8 +385,11 @@ export class ListaConversazioniPage extends _MasterPage {
           console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response", data);
           // console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response::conversation::", conversation);
 
-          // when a conversations is closed shows a placeholder background
-          that.navProxy.pushDetail(PlaceholderPage, {});
+          console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::uidConvSelected", that.uidConvSelected);
+          if (conversationId === that.uidConvSelected) {
+            // when a conversations is closed shows a placeholder background
+            that.navProxy.pushDetail(PlaceholderPage, {});
+          }
 
         } else if (result === 'error') {
           console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error", data);
