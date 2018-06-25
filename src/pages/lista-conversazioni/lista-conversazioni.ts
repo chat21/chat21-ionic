@@ -348,13 +348,15 @@ export class ListaConversazioniPage extends _MasterPage {
 
       this.deleteConversation(conversationId, function (result, data) {
         if (result === 'success') {
-          console.log("ListaConversazioniPage::closeConversation::deleteConversation::response", data, "conversation::", conversation);
+          console.log("ListaConversazioniPage::closeConversation::deleteConversation::response", data);
+          // console.log("ListaConversazioniPage::closeConversation::deleteConversation::response::conversation::", conversation);
 
           // when a conversations is closed shows a placeholder background
           that.navProxy.pushDetail(PlaceholderPage, {});
 
         } else if (result === 'error') {
-          console.error("ListaConversazioniPage::closeConversation::deleteConversation::error", data, "conversation::", conversation);
+          console.error("ListaConversazioniPage::closeConversation::deleteConversation::error", data);
+          // console.error("ListaConversazioniPage::closeConversation::deleteConversation::error::conversation::", conversation);
 
           that.isConversationClosing = false;
           that.toggleCloseConversationLoading(conversationId);
@@ -377,13 +379,15 @@ export class ListaConversazioniPage extends _MasterPage {
       // - a support  group if it starts with "support-group"
       this.closeSupportGroup(conversationId, function (result, data) {
         if (result === 'success') {
-          console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response", data, "conversation::", conversation);
+          console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response", data);
+          // console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response::conversation::", conversation);
 
           // when a conversations is closed shows a placeholder background
           that.navProxy.pushDetail(PlaceholderPage, {});
 
         } else if (result === 'error') {
-          console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error", data, "conversation::", conversation);
+          console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error", data);
+          // console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error::conversation::", conversation);
 
           that.isConversationClosing = false;
           that.toggleCloseConversationLoading(conversationId);
@@ -414,16 +418,14 @@ export class ListaConversazioniPage extends _MasterPage {
 
     // toggle the loading/button visibility
     if (this.isConversationClosing) {
-      closeButtonIcon.style.display = "none"; // hide close
-      closeButtonLoading.style.display = "block"; // show loading
-
-      closeButton.setAttribute("disabled", "disabled"); // disable the click on the close button
+      if (closeButtonIcon) closeButtonIcon.style.display = "none"; // hide close
+      if (closeButtonLoading) closeButtonLoading.style.display = "block"; // show loading
+      if (closeButton) closeButton.setAttribute("disabled", "disabled"); // disable the click on the close button
 
     } else {
-      closeButtonIcon.style.display = "block";  // show close
-      closeButtonLoading.style.display = "none"; // hide loading
-
-      closeButton.removeAttribute("disabled"); // enable the click on the close button
+      if (closeButtonIcon) closeButtonIcon.style.display = "block";  // show close
+      if (closeButtonLoading) closeButtonLoading.style.display = "none"; // hide loading
+      if (closeButton) closeButton.removeAttribute("disabled"); // enable the click on the close button
     }
   }
 
@@ -431,6 +433,8 @@ export class ListaConversazioniPage extends _MasterPage {
   // more details availables at 
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#close-support-group
   private closeSupportGroup(groupId, callback) {
+
+    var that = this;
 
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(groupId, true);
@@ -440,9 +444,9 @@ export class ListaConversazioniPage extends _MasterPage {
         callback('success', response);
       }, errMsg => {
 
-        // the conversation closing failed: restore the conversation with ù
+        // the conversation closing failed: restore the conversation with 
         // conversationId status to false within the isConversationClosingMap
-        this.tiledeskConversationProvider.setClosingConversation(groupId, false);
+        that.tiledeskConversationProvider.setClosingConversation(groupId, false);
 
         callback('error', errMsg);
       }, () => {
@@ -456,6 +460,8 @@ export class ListaConversazioniPage extends _MasterPage {
   private deleteConversation(conversationId, callback) {
     // console.log("ListaConversazioniPage::deleteConversation::conversationId", conversationId);
 
+    var that = this;
+
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(conversationId, true);
 
@@ -466,7 +472,7 @@ export class ListaConversazioniPage extends _MasterPage {
 
         // the conversation closing failed: restore the conversation with ù
         // conversationId status to false within the isConversationClosingMap
-        this.tiledeskConversationProvider.setClosingConversation(conversationId, false);
+        that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
 
         callback('error', errMsg);
       }, () => {
