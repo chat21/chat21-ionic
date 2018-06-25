@@ -91,7 +91,7 @@ export class GroupService {
     const headers = new Headers();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Bearer '+token);
+    // headers.append('Authorization', 'Bearer '+token);
 
     const options = new RequestOptions({ headers: headers });
     const url = this.BASE_URL_LEAVE_GROUP +'supportapi/' + appId + '/groups/' + uidGroup;
@@ -101,7 +101,12 @@ export class GroupService {
     // console.log('------------------> body: ', JSON.stringify(body));
     return this.http
     .put(url, body, options)
-    .map(res => (res.json()));
+    // .map(res => (res.json()));
+      .map((res) => {
+        // console.log("LOL", res);
+        // return res.json();
+        return JSON.stringify(res);
+      });
    }
 
   
