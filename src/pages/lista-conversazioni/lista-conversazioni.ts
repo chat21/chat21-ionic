@@ -66,7 +66,7 @@ export class ListaConversazioniPage extends _MasterPage {
     * //this.conversationWith = navParams.get('conversationWith');
     */
     this.uidConvSelected = navParams.get('conversationWith');
-    
+
     /** RECUPERO IL RECIPIENTID 
     * nel caso in cui viene pasato nell'url della pagina
     * per aprire una conversazione
@@ -74,7 +74,7 @@ export class ListaConversazioniPage extends _MasterPage {
     let TEMP = location.search.split('recipient=')[1];
     if (TEMP) { this.uidReciverFromUrl = TEMP.split('&')[0]; }
 
-  
+
     /** SUBSCRIBE USER LOGGED
      * sul LOGIN:
      * 1 - dismetto modale login se è visibile
@@ -94,7 +94,7 @@ export class ListaConversazioniPage extends _MasterPage {
   initSubscriptions(){
     this.events.subscribe('loggedUser:login', this.subscribeLoggedUserLogin);
     this.events.subscribe('loggedUser:logout', this.subscribeLoggedUserLogout);
-    this.events.subscribe('uidConvSelected:changed', this.subscribeUidConvSelectedChanged); 
+    this.events.subscribe('uidConvSelected:changed', this.subscribeUidConvSelectedChanged);
   }
 
   /** subscribeUidConvSelectedChanged
@@ -152,7 +152,7 @@ export class ListaConversazioniPage extends _MasterPage {
     } else {
       const that = this;
       this.databaseProvider.getUidLastOpenConversation()
-      .then(function(uid) { 
+      .then(function(uid) {
         console.log('getUidLastOpenConversation:: ' + uid + 'that.uidReciverFromUrl:: ' + that.uidReciverFromUrl);
         that.uidConvSelected = uid;
         that.initConversationsHandler();
@@ -175,6 +175,11 @@ export class ListaConversazioniPage extends _MasterPage {
    * @param uidConvSelected  
    */
   openMessageList(uidConvSelected){
+
+    // if the conversation from the isConversationClosingMap is waiting to be closed 
+    // deny the click on the conversation
+    if (this.tiledeskConversationProvider.getClosingConversation(uidConvSelected)) return;
+
     //debugger;
     console.log('-------------> openMessageList ', uidConvSelected);
     this.uidConvSelected = uidConvSelected;
@@ -194,7 +199,7 @@ export class ListaConversazioniPage extends _MasterPage {
       //that.conversationWith = uidConvSelected;
     }, 1000);
   }
-  
+
   /**
    * 
    * @param uidConvSelected 
@@ -208,7 +213,6 @@ export class ListaConversazioniPage extends _MasterPage {
     }
   }
 
-  
 
   /**
    * se non esiste un handler delle conversazioni ne creo uno nuovo
@@ -217,7 +221,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * inizializzo la pagina
    */
   initConversationsHandler() {
-    
+
     console.log('-------------> initConversationsHandler');
     const tenant = this.chatManager.getTenant();
     const loggedUser = this.chatManager.getLoggedUser();
@@ -234,8 +238,8 @@ export class ListaConversazioniPage extends _MasterPage {
       console.log('handler ESISTE ::', handler);
       this.conversationsHandler = handler;
     }
-    
-    
+
+
     //console.log('plt::', windowsMatchMedia());
     if(this.uidConvSelected){
       // se visualizzazione è desktop
@@ -257,14 +261,14 @@ export class ListaConversazioniPage extends _MasterPage {
     }
       //this.navProxy.isOn = true;
       //
-    
+
 
     // if(this.conversations.length <= 0){
     //   this.navProxy.pushDetail(PlaceholderPage,{});
     // }
-    
+
   }
-  
+
   /**
   * apro pagina elenco users 
   * metodo richiamato da html 
@@ -292,7 +296,7 @@ export class ListaConversazioniPage extends _MasterPage {
         this.logOut();
       }
       else if (data == 'ProfilePage') {
-        if(this.chatManager.getLoggedUser()){
+        if(this.chatManager.getLoggedUser()) {
           this.navCtrl.push(ProfilePage);
         }
       }
@@ -332,7 +336,7 @@ export class ListaConversazioniPage extends _MasterPage {
     // console.log("ListaConversazioniPage::closeConversation::conversationId", conversationId);
 
     // show the loading while closing conversation
-    this.isConversationClosing = true; 
+    this.isConversationClosing = true;
     that.toggleCloseConversationLoading(conversationId);
 
     var isSupportConversation = conversationId.startsWith("support-group");
@@ -344,6 +348,10 @@ export class ListaConversazioniPage extends _MasterPage {
       this.deleteConversation(conversationId, function (result, data) {
         if (result === 'success') {
           console.log("ListaConversazioniPage::closeConversation::deleteConversation::response", data, "conversation::", conversation);
+
+          // when a conversations is closed shows a placeholder background
+          that.navProxy.pushDetail(PlaceholderPage, {});
+
         } else if (result === 'error') {
           console.error("ListaConversazioniPage::closeConversation::deleteConversation::error", data, "conversation::", conversation);
 
@@ -369,6 +377,10 @@ export class ListaConversazioniPage extends _MasterPage {
       this.closeSupportGroup(conversationId, function (result, data) {
         if (result === 'success') {
           console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response", data, "conversation::", conversation);
+
+          // when a conversations is closed shows a placeholder background
+          that.navProxy.pushDetail(PlaceholderPage, {});
+
         } else if (result === 'error') {
           console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error", data, "conversation::", conversation);
 
@@ -381,14 +393,14 @@ export class ListaConversazioniPage extends _MasterPage {
         // that.toggleCloseConversationLoadingByListItemPosition(position);
       });
     }
-  }  
+  }
 
   // hide or show the progress icon (and the close button) for a specific row identified by the
   // list item position
   private toggleCloseConversationLoading(conversationId) {
 
     // retrieve the close conversation button reference
-    var closeButton = document.getElementById("close_conversation_button" + conversationId); 
+    var closeButton = document.getElementById("close_conversation_button" + conversationId);
     // console.log("ListaConversazioniPage::closeConversation::closeButton", closeButton);
 
     // retrieve the close conversation button icon reference
@@ -400,15 +412,15 @@ export class ListaConversazioniPage extends _MasterPage {
     // console.log("ListaConversazioniPage::closeConversation::closeButtonLoading", closeButtonLoading);
 
     // toggle the loading/button visibility
-    if(this.isConversationClosing) {
-      closeButtonIcon.style.display = "none" ; // hide close
-      closeButtonLoading.style.display = "block" ; // show loading
+    if (this.isConversationClosing) {
+      closeButtonIcon.style.display = "none"; // hide close
+      closeButtonLoading.style.display = "block"; // show loading
 
       closeButton.setAttribute("disabled", "disabled"); // disable the click on the close button
-      
+
     } else {
-      closeButtonIcon.style.display = "block" ;  // show close
-      closeButtonLoading.style.display = "none" ; // hide loading
+      closeButtonIcon.style.display = "block";  // show close
+      closeButtonLoading.style.display = "none"; // hide loading
 
       closeButton.removeAttribute("disabled"); // enable the click on the close button
     }
@@ -418,29 +430,46 @@ export class ListaConversazioniPage extends _MasterPage {
   // more details availables at 
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#close-support-group
   private closeSupportGroup(groupId, callback) {
+
+    //set the conversation from the isConversationClosingMap that is waiting to be closed
+    this.tiledeskConversationProvider.setClosingConversation(groupId, true);
+
     this.groupService.closeGroup(groupId)
-    .subscribe(response => {
-      callback('success', response);
-    }, errMsg => {
-      callback('error', errMsg);
-    }, () => {
-      console.log('closeGroup API ERROR NESSUNO');
-    });
+      .subscribe(response => {
+        callback('success', response);
+      }, errMsg => {
+
+        // the conversation closing failed: restore the conversation with ù
+        // conversationId status to false within the isConversationClosingMap
+        this.tiledeskConversationProvider.setClosingConversation(groupId, false);
+
+        callback('error', errMsg);
+      }, () => {
+        console.log("ListaConversazioniPage::closeSupportGroup::completition");
+      });
   }
 
   // delete a conversation form the personal timeline
   // more details availables at 
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
   private deleteConversation(conversationId, callback) {
-    console.log("ListaConversazioniPage::deleteConversation::conversationId", conversationId);
+    // console.log("ListaConversazioniPage::deleteConversation::conversationId", conversationId);
 
-    this.tiledeskConversationProvider.deleteConversation(conversationId) 
-    .subscribe(response => {
-      callback('success', response);
-    }, errMsg => {
-      callback('error', errMsg);
-    }, () => {
-      console.log('closeGroup API ERROR NESSUNO');
-    });
+    //set the conversation from the isConversationClosingMap that is waiting to be closed
+    this.tiledeskConversationProvider.setClosingConversation(conversationId, true);
+
+    this.tiledeskConversationProvider.deleteConversation(conversationId)
+      .subscribe(response => {
+        callback('success', response);
+      }, errMsg => {
+
+        // the conversation closing failed: restore the conversation with ù
+        // conversationId status to false within the isConversationClosingMap
+        this.tiledeskConversationProvider.setClosingConversation(conversationId, false);
+
+        callback('error', errMsg);
+      }, () => {
+        console.log("ListaConversazioniPage::deleteConversation::completition");
+      });
   }
 }

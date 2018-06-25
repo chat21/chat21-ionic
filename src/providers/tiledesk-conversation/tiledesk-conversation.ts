@@ -16,12 +16,28 @@ export class TiledeskConversationProvider {
 
   private appId : string;
 
+  /**
+   * Contains the status of the conversation closing.
+   * 
+   * When a new conversation is added from firebase, it will be added to the isConversationClosingMap with a false value.
+   * 
+   * When an existing conversation is removed from firebase, it will be removed from the isConversationClosingMap.
+   * 
+   * When an user clicks on a conversation to close it,
+   * the conversation with conversationID will be set to true within the isConversationClosingMap.
+   * 
+   * If an error occurs the conversation with conversationID will be set to false.
+   * 
+   */
+  private isConversationClosingMap: Map<string, boolean>; 
+
   constructor(
     public http: Http,
     private chatManager: ChatManager,
     private userService: UserService
   ) {
     this.init();
+    this.isConversationClosingMap = new Map(); 
   }
 
   private init() {
@@ -67,6 +83,35 @@ export class TiledeskConversationProvider {
     return this.http
       .delete(url, options)
      .map((response: Response) => response.json())
+  }
+
+  /**
+   * Returns the status of the conversations with conversationId from isConversationClosingMap
+   * 
+   * @param conversationId the conversation id
+   * @returns true if the conversation is waiting to be closed, false otherwise
+   */
+  public getClosingConversation(conversationId) {
+    return this.isConversationClosingMap[conversationId];
+  }
+
+  /**
+   * Add the conversation with conversationId to the isConversationClosingMap
+   * 
+   * @param conversationId the id of the conversation of which it wants to save the state
+   * @param status true if the conversation is waiting to be closed, false otherwise
+   */
+  public setClosingConversation(conversationId, status) {
+    this.isConversationClosingMap[conversationId] = status;
+  }
+
+  /**
+   * Delete the conversation with conversationId from the isConversationClosingMap
+   * 
+   * @param conversationId the id of the conversation of which is wants to delete
+   */
+  public deleteClosingConversation(conversationId) {
+    this.isConversationClosingMap.delete(conversationId);
   }
 
 }

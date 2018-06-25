@@ -11,6 +11,7 @@ import { ChatManager } from './chat-manager/chat-manager';
 // utils
 import { TYPE_GROUP, LABEL_TU, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
 import { compareValues, getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
+import { TiledeskConversationProvider } from './tiledesk-conversation/tiledesk-conversation';
 // import { LABEL_TU } from '../utils/constants';
 
 @Injectable()
@@ -26,7 +27,8 @@ export class ChatConversationsHandler {
     //public LABEL_TU: string;
     constructor(
         public events: Events,
-        public chatManager: ChatManager
+        public chatManager: ChatManager,
+        private tiledeskConversationsProvider : TiledeskConversationProvider
     ) {
     }
 
@@ -82,6 +84,8 @@ export class ChatConversationsHandler {
         console.log("child_added conversationS",conversation);
         //this.events.publish('conversations:added', conversation);
 
+        // add the conversation from the isConversationClosingMap
+        this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
 
         // var clone: ConversationModel[] = this.sort(this.conversations);
         // console.log("ChatConversationsHandler::added::clone::clone.size", clone.length);
@@ -139,6 +143,9 @@ export class ChatConversationsHandler {
             this.conversations.splice(index, 1);
             //this.events.publish('conversations:update', this.conversations);
         }
+
+        // remove the conversation from the isConversationClosingMap
+        this.tiledeskConversationsProvider.deleteClosingConversation(childSnapshot.key);
        
         // // sort the array without the removed item and update the conversations list
         // this.conversations = this.sort(this.conversations); 
