@@ -17,7 +17,7 @@ import { CURR_VER_PROD, CURR_VER_DEV, LABEL_IMAGE, TYPE_POPUP_LIST_CONVERSATIONS
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { NavProxyService } from '../../providers/nav-proxy';
 import { UserService } from '../../providers/user/user';
-import { ChatConversationsHandler} from '../../providers/chat-conversations-handler';
+import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 import { DatabaseProvider } from '../../providers/database/database';
 import { GroupService } from '../../providers/group/group';
@@ -40,7 +40,7 @@ export class ListaConversazioniPage extends _MasterPage {
 
   convertMessage = convertMessage;
 
-  private isConversationClosing : boolean = false;
+  private isConversationClosing: boolean = false;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -55,11 +55,11 @@ export class ListaConversazioniPage extends _MasterPage {
     public chatManager: ChatManager,
     public databaseProvider: DatabaseProvider,
     private groupService: GroupService,
-    private tiledeskConversationProvider : TiledeskConversationProvider,
+    private tiledeskConversationProvider: TiledeskConversationProvider,
   ) {
     super();
     this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
-    
+
     /** RECUPERO ID CONVERSAZIONE
     * se vengo da dettaglio conversazione
     * o da users con conversazione attiva recupero conversationWith
@@ -91,7 +91,7 @@ export class ListaConversazioniPage extends _MasterPage {
 
   //// SUBSCRIBTIONS ////
   /** */
-  initSubscriptions(){
+  initSubscriptions() {
     this.events.subscribe('loggedUser:login', this.subscribeLoggedUserLogin);
     this.events.subscribe('loggedUser:logout', this.subscribeLoggedUserLogout);
     this.events.subscribe('uidConvSelected:changed', this.subscribeUidConvSelectedChanged);
@@ -101,7 +101,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * quando si clicca su una conversazione (si seleziona) 
    * apro elenco conversazione maessaggi 
   */
-  subscribeUidConvSelectedChanged:any = uidConvSelected => {
+  subscribeUidConvSelectedChanged: any = uidConvSelected => {
     console.log('************** subscribeUidConvSelectedChanged', uidConvSelected);
     this.checkMessageListIsOpen(uidConvSelected);
   }
@@ -112,9 +112,9 @@ export class ListaConversazioniPage extends _MasterPage {
    * 2 - carico lista conversazioni
    * 3 - se non ci sono conversazioni carico placeholder
   */
-  subscribeLoggedUserLogin:any = (user) => {
+  subscribeLoggedUserLogin: any = (user) => {
     console.log('************** subscribeLoggedUserLogin', user);
-    this.profileModal.dismiss({animate: false, duration: 0});
+    this.profileModal.dismiss({ animate: false, duration: 0 });
     this.loadListConversations();
   }
 
@@ -125,7 +125,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * 3 - mostro modale login
    * 4 - resetto conversationWith
   */
-  subscribeLoggedUserLogout:any = (user) => {
+  subscribeLoggedUserLogout: any = (user) => {
     console.log('************** subscribeLoggedUserLogout', user);
     this.conversations = [];
     this.profileModal.present();
@@ -144,22 +144,22 @@ export class ListaConversazioniPage extends _MasterPage {
   * init ConversationsHandler e carico elenco conversazioni
   */
   loadListConversations() {
-  //debugger;
-    if(this.uidReciverFromUrl){
+    //debugger;
+    if (this.uidReciverFromUrl) {
       this.uidConvSelected = this.uidReciverFromUrl;
       this.uidReciverFromUrl = null;
       this.initConversationsHandler();
     } else {
       const that = this;
       this.databaseProvider.getUidLastOpenConversation()
-      .then(function(uid) {
-        console.log('getUidLastOpenConversation:: ' + uid + 'that.uidReciverFromUrl:: ' + that.uidReciverFromUrl);
-        that.uidConvSelected = uid;
-        that.initConversationsHandler();
-      })
-      .catch((error)=>{
-        console.log("error::: ",error);
-      });
+        .then(function (uid) {
+          console.log('getUidLastOpenConversation:: ' + uid + 'that.uidReciverFromUrl:: ' + that.uidReciverFromUrl);
+          that.uidConvSelected = uid;
+          that.initConversationsHandler();
+        })
+        .catch((error) => {
+          console.log("error::: ", error);
+        });
     }
   }
 
@@ -174,7 +174,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * 3 salvo id conv nello storage
    * @param uidConvSelected  
    */
-  openMessageList(uidConvSelected){
+  openMessageList(uidConvSelected) {
 
     // if the conversation from the isConversationClosingMap is waiting to be closed 
     // deny the click on the conversation
@@ -184,9 +184,9 @@ export class ListaConversazioniPage extends _MasterPage {
     console.log('-------------> openMessageList ', uidConvSelected);
     this.uidConvSelected = uidConvSelected;
     const that = this;
-    setTimeout(function(){
+    setTimeout(function () {
       var conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
-      if(conversationSelected){
+      if (conversationSelected) {
         conversationSelected.status = '0';
         conversationSelected.selected = true;
         that.navProxy.pushDetail(DettaglioConversazionePage, {
@@ -204,14 +204,15 @@ export class ListaConversazioniPage extends _MasterPage {
    * 
    * @param uidConvSelected 
    */
-  checkMessageListIsOpen(uidConvSelected){
+  checkMessageListIsOpen(uidConvSelected) {
     console.log('-------------> checkMessageListIsOpen ', uidConvSelected);
-    if(uidConvSelected === this.uidConvSelected && windowsMatchMedia()){
+    if (uidConvSelected === this.uidConvSelected && windowsMatchMedia()) {
       return;
     } else {
       this.openMessageList(uidConvSelected)
     }
   }
+
 
 
   /**
@@ -228,7 +229,7 @@ export class ListaConversazioniPage extends _MasterPage {
     let handler = this.chatManager.conversationsHandler;
     if (!handler) {
       console.log('handler NON ESISTE ::');
-      handler = this.chatConversationsHandler.initWithTenant(tenant,loggedUser);
+      handler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
       this.chatManager.setConversationsHandler(handler);
       handler.connect();
       handler.uidConvSelected = this.uidConvSelected
@@ -241,26 +242,26 @@ export class ListaConversazioniPage extends _MasterPage {
 
 
     //console.log('plt::', windowsMatchMedia());
-    if(this.uidConvSelected){
+    if (this.uidConvSelected) {
       // se visualizzazione è desktop
-      if(windowsMatchMedia()) {
+      if (windowsMatchMedia()) {
         this.openMessageList(this.uidConvSelected);
       }
-    } else if(this.conversations.length>0){
+    } else if (this.conversations.length > 0) {
       this.uidConvSelected = this.conversations[0].uid;
       // se visualizzazione è desktop
-      if(windowsMatchMedia()) {
+      if (windowsMatchMedia()) {
         this.openMessageList(this.uidConvSelected);
       }
     }
     else {
       // se visualizzazione è desktop
-      if(windowsMatchMedia()) {
-        this.navProxy.pushDetail(PlaceholderPage,{});
+      if (windowsMatchMedia()) {
+        this.navProxy.pushDetail(PlaceholderPage, {});
       }
     }
-      //this.navProxy.isOn = true;
-      //
+    //this.navProxy.isOn = true;
+    //
 
 
     // if(this.conversations.length <= 0){
@@ -286,7 +287,7 @@ export class ListaConversazioniPage extends _MasterPage {
   * alla chiusura controllo su quale opzione ho premuto e attivo l'azione corrispondete
   */
   presentPopover(event) {
-    let popover = this.popoverCtrl.create(PopoverPage, {typePopup:TYPE_POPUP_LIST_CONVERSATIONS});
+    let popover = this.popoverCtrl.create(PopoverPage, { typePopup: TYPE_POPUP_LIST_CONVERSATIONS });
     popover.present({
       ev: event
     });
@@ -296,7 +297,7 @@ export class ListaConversazioniPage extends _MasterPage {
         this.logOut();
       }
       else if (data == 'ProfilePage') {
-        if(this.chatManager.getLoggedUser()) {
+        if (this.chatManager.getLoggedUser()) {
           this.navCtrl.push(ProfilePage);
         }
       }
@@ -314,7 +315,7 @@ export class ListaConversazioniPage extends _MasterPage {
   }
 
 
-  loadingIsActive(){
+  loadingIsActive() {
     // if(this.conversations && this.conversations.length>0){
     //   return true;
     // } else {
