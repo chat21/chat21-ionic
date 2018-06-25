@@ -309,12 +309,18 @@ export class ListaConversazioniPage extends _MasterPage {
     this.userService.logoutUser();
   }
 
+
   loadingIsActive(){
-    if(this.conversations && this.conversations.length>0){
-      return true;
-    } else {
-      return false;
-    }
+    // if(this.conversations && this.conversations.length>0){
+    //   return true;
+    // } else {
+    //   return false;
+    // }
+
+    var conv = JSON.stringify(this.conversations);
+    // console.log("ListaConversazioniPage::loadingIsActive::conversations", conv);
+
+    return conv && conv.length > 0;
   }
 
   private closeConversation(conversation) {
