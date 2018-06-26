@@ -33,6 +33,8 @@
   "LABEL_CLOSE_GROUP": "Archivia richiesta",
 
   "ALERT_TITLE": "ATTENZIONE",
+  "CLOSE_ALERT_CONFIRM_LABEL": "OK",
+  "CLOSE_ALERT_CANCEL_LABEL": "ANNULLA",
   "LEAVE_ALERT_MSG": "Abbandonare il gruppo? <br> <b> L'azione non è reversibile </b>",
   "CLOSE_ALERT_MSG": "Chiudere la conversazione? <br> <b> L'azione non è reversibile </b>",
   "CLOSING_CONVERSATION_SPINNER_MSG": "Attendere prego <br> Stiamo chiudendo la conversazione",

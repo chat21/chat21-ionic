@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Events, PopoverController, IonicPage, NavController, NavParams, ModalController, Modal } from 'ionic-angular';
+import { Events, PopoverController, IonicPage, NavController, NavParams, ModalController, Modal, AlertController} from 'ionic-angular';
 // models
 import { ConversationModel } from '../../models/conversation';
 // pages
@@ -24,6 +24,8 @@ import { GroupService } from '../../providers/group/group';
 
 import { TiledeskConversationProvider } from '../../providers/tiledesk-conversation/tiledesk-conversation';
 
+import { TranslateService } from '@ngx-translate/core';
+
 @IonicPage()
 @Component({
   selector: 'page-lista-conversazioni',
@@ -42,6 +44,8 @@ export class ListaConversazioniPage extends _MasterPage {
 
   private isConversationClosing: boolean = false;
 
+  private confirmDialog : any;
+
   constructor(
     public popoverCtrl: PopoverController,
     public modalCtrl: ModalController,
@@ -56,6 +60,8 @@ export class ListaConversazioniPage extends _MasterPage {
     public databaseProvider: DatabaseProvider,
     private groupService: GroupService,
     private tiledeskConversationProvider: TiledeskConversationProvider,
+    private alertCtrl: AlertController,
+    private translate: TranslateService,
   ) {
     super();
     this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
@@ -440,6 +446,38 @@ export class ListaConversazioniPage extends _MasterPage {
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#close-support-group
   private closeSupportGroup(groupId, callback) {
 
+    var title = this.translate.get('ALERT_TITLE')['value'];
+    var message = this.translate.get('CLOSE_ALERT_MSG')['value']; 
+    var confirmBtn = this.translate.get('CLOSE_ALERT_CONFIRM_LABEL')['value']; 
+    var cancelBtn = this.translate.get('CLOSE_ALERT_CANCEL_LABEL')['value']; ;
+
+    this.confirmDialog = this.alertCtrl.create({
+      title: title,
+      message: message,
+      buttons: [
+        {
+          text: cancelBtn,
+          handler: () => {
+            // dismiss the loading on the conversation list row
+            this.tiledeskConversationProvider.setClosingConversation(groupId, false);
+            this.isConversationClosing = false;
+            this.toggleCloseConversationLoading(groupId);
+          }
+        },
+        {
+          text: confirmBtn,
+          handler: () => {
+            this.performClosingConversation(groupId, callback);
+          }
+        }
+      ],
+    });
+
+    this.confirmDialog.present();
+  }
+
+  private performClosingConversation(groupId, callback) {
+
     var that = this;
 
     //set the conversation from the isConversationClosingMap that is waiting to be closed
@@ -449,7 +487,6 @@ export class ListaConversazioniPage extends _MasterPage {
       .subscribe(response => {
         callback('success', response);
       }, errMsg => {
-
         // the conversation closing failed: restore the conversation with 
         // conversationId status to false within the isConversationClosingMap
         that.tiledeskConversationProvider.setClosingConversation(groupId, false);
@@ -475,11 +512,9 @@ export class ListaConversazioniPage extends _MasterPage {
       .subscribe(response => {
         callback('success', response);
       }, errMsg => {
-
         // the conversation closing failed: restore the conversation with ù
         // conversationId status to false within the isConversationClosingMap
         that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
-
         callback('error', errMsg);
       }, () => {
         console.log("ListaConversazioniPage::deleteConversation::completition");
