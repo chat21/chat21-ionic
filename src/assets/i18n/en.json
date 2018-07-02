@@ -30,7 +30,7 @@
   "LABEL_SEND_BY_EMAIL": "Invia per email",
   "LABEL_VIDEO_CHAT": "Video chiamata",
   "LABEL_LEAVE_GROUP": "Abbandona il gruppo",
-  "LABEL_CLOSE_GROUP": "Archivia richiesta",
+  "LABEL_CLOSE_GROUP": "Chiudi",
 
   "ALERT_TITLE": "ATTENZIONE",
   "CLOSE_ALERT_CONFIRM_LABEL": "OK",
