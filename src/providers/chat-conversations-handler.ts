@@ -301,4 +301,10 @@ export class ChatConversationsHandler {
     //     }); //true
     // }
 
+    removeByUid(uid) {
+        const index = searchIndexInArrayForUid(this.conversations, uid);
+        if (index > -1) {
+            this.conversations.splice(index, 1);
+        }
+    }
 }
