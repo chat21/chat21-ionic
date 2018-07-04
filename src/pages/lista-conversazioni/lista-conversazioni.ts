@@ -26,6 +26,7 @@ import { TiledeskConversationProvider } from '../../providers/tiledesk-conversat
 
 import { TranslateService } from '@ngx-translate/core';
 import { ArchivedConversationsPage } from '../archived-conversations/archived-conversations';
+import { ArchivedConversationsProvider } from '../../providers/archived-conversations/archived-conversations';
 
 @IonicPage()
 @Component({
@@ -34,6 +35,7 @@ import { ArchivedConversationsPage } from '../archived-conversations/archived-co
 })
 export class ListaConversazioniPage extends _MasterPage {
   private conversations: Array<ConversationModel> = [];
+  // private archivedConversations: ConversationModel[];
 
   private uidReciverFromUrl: string;
   private conversationsHandler: ChatConversationsHandler;
@@ -59,6 +61,7 @@ export class ListaConversazioniPage extends _MasterPage {
     private tiledeskConversationProvider: TiledeskConversationProvider,
     private alertCtrl: AlertController,
     private translate: TranslateService,
+    // private archivedConversationsProvider: ArchivedConversationsProvider
   ) {
     super();
     this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
@@ -238,6 +241,11 @@ export class ListaConversazioniPage extends _MasterPage {
       handler.uidConvSelected = this.uidConvSelected
       this.conversationsHandler = handler;
       this.conversations = handler.conversations;
+
+      // // attach the archived conversations provider
+      // this.archivedConversationsProvider.getInstance().init(tenant, loggedUser);
+      // this.archivedConversationsProvider.getInstance().connect();
+      // this.archivedConversations = this.archivedConversationsProvider.getArchviedConversations();
     } else {
       console.log('handler ESISTE ::', handler);
       this.conversationsHandler = handler;
@@ -288,7 +296,11 @@ export class ListaConversazioniPage extends _MasterPage {
    * Open the archived conversations page
    */
   private openArchivedConversationsPage() {
-    this.navCtrl.push(ArchivedConversationsPage);
+    this.navCtrl.push(ArchivedConversationsPage,
+      // {
+      //   "archivedConversations" :  this.archivedConversations
+      // }
+    );
   }
 
   /**

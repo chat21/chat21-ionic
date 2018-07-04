@@ -15,4 +15,16 @@
 
 <ion-content padding>
 
+  <table>
+    <!-- <thead>
+      <th>Name</th>
+      <th>Index</th>
+    </thead> -->
+    <tbody margin padding>
+      <tr margin padding *ngFor="let archivedConversation of archivedConversations" (click)="onArchivedConversationClicked(archivedConversation)">
+        <td margin padding >{{ archivedConversation | json }}</td>
+      </tr>
+    </tbody>
+  </table>
+
 </ion-content>
