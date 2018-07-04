@@ -62,6 +62,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TiledeskConversationProvider } from '../providers/tiledesk-conversation/tiledesk-conversation';
 
+import { ArchivedConversationsPage } from '../pages/archived-conversations/archived-conversations';
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -84,6 +86,7 @@ export function createTranslateLoader(http: HttpClient) {
     AutosizeDirective,
     InfoConversationPage,
     InfoMessagePage,
+    ArchivedConversationsPage,
   ],
   imports: [
     BrowserModule,
@@ -134,7 +137,8 @@ export function createTranslateLoader(http: HttpClient) {
     PopoverProfilePage,
     UpdateImageProfilePage,
     InfoConversationPage,
-    InfoMessagePage
+    InfoMessagePage,
+    ArchivedConversationsPage
   ],
   providers: [
     //ApplicationContext,

@@ -4,6 +4,7 @@ import { Events, ViewController, IonicPage, NavParams } from 'ionic-angular';
 import { MessageModel } from '../../models/message';
 // utils
 import { TYPE_POPUP_LIST_CONVERSATIONS, TYPE_POPUP_DETAIL_MESSAGE } from '../../utils/constants';
+import { ArchivedConversationsPage } from '../archived-conversations/archived-conversations';
 
 
 @IonicPage()
@@ -53,5 +54,13 @@ export class PopoverPage {
    */
   logOut() {
     this.viewCtrl.dismiss("logOut");
+  }
+
+  /**
+   * returns the result of the dismiss
+   * @returns a string that identify the closed page
+   */
+  openArchivedConversationsPage() {
+    this.viewCtrl.dismiss(ArchivedConversationsPage.toString());
   }
 }

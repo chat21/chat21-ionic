@@ -25,6 +25,7 @@ import { GroupService } from '../../providers/group/group';
 import { TiledeskConversationProvider } from '../../providers/tiledesk-conversation/tiledesk-conversation';
 
 import { TranslateService } from '@ngx-translate/core';
+import { ArchivedConversationsPage } from '../archived-conversations/archived-conversations';
 
 @IonicPage()
 @Component({
@@ -284,6 +285,13 @@ export class ListaConversazioniPage extends _MasterPage {
   }
 
   /**
+   * Open the archived conversations page
+   */
+  private openArchivedConversationsPage() {
+    this.navCtrl.push(ArchivedConversationsPage);
+  }
+
+  /**
   * apro il menu delle opzioni 
   * (metodo richiamato da html) 
   * alla chiusura controllo su quale opzione ho premuto e attivo l'azione corrispondete
@@ -297,11 +305,12 @@ export class ListaConversazioniPage extends _MasterPage {
       console.log(" ********* data::: ", data);
       if (data == 'logOut') {
         this.logOut();
-      }
-      else if (data == 'ProfilePage') {
+      } else if (data == 'ProfilePage') {
         if (this.chatManager.getLoggedUser()) {
           this.navCtrl.push(ProfilePage);
         }
+      } else if (data == ArchivedConversationsPage.toString()) {
+        this.openArchivedConversationsPage();
       }
     });
   }
