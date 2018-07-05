@@ -88,21 +88,27 @@ export class ArchivedConversationsProvider {
     const that = this;
     // perform the query
     // it will return the first {displayedConversationsNumber} conversation sorted by timestamp
-    this.nodeArchivedConversationsQueryRef = this.nodeArchivedConversationsRef.orderByChild('timestamp').limitToLast(this.displayedConversationsNumber);
+    this.nodeArchivedConversationsQueryRef = this.nodeArchivedConversationsRef.orderByChild('timestamp');//.limitToLast(this.displayedConversationsNumber);
 
     // subscribe at on add event
     this.nodeArchivedConversationsQueryRef.on("child_added", function (snapshot) {
+      // console.log("ArchivedConversationsProvider::connect::child_added", snapshot.ref);
+      // console.log("ArchivedConversationsProvider::connect::child_added", snapshot.key);
       // console.log("ArchivedConversationsProvider::connect::child_added::snapshot:", snapshot);
       that.onConversationSnapshotAdded(snapshot);
     })
 
     // subscribe at on change event
     this.nodeArchivedConversationsQueryRef.on("child_changed", function (snapshot) {
+      // console.log("ArchivedConversationsProvider::connect::child_changed", snapshot.ref);
+      // console.log("ArchivedConversationsProvider::connect::child_changed", snapshot.key);
       that.onConversationSnapshotChanged(snapshot);
     });
 
     // subscribe at on remove event
     this.nodeArchivedConversationsQueryRef.on("child_removed", function (snapshot) {
+      // console.log("ArchivedConversationsProvider::connect::child_removed::snapshot:", snapshot.ref);
+      // console.log("ArchivedConversationsProvider::connect::child_removed::snapshot:", snapshot.key);
       that.onConversationSnapshotRemoved(snapshot);
     });
   }
@@ -126,6 +132,8 @@ export class ArchivedConversationsProvider {
 
     // add the conversation at the top of the conversations array
     this.archivedConversations.unshift(conversation);
+
+    // @TODO riordina
   }
 
   /**

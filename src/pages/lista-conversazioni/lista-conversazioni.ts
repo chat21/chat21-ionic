@@ -187,7 +187,7 @@ export class ListaConversazioniPage extends _MasterPage {
     if (this.tiledeskConversationProvider.getClosingConversation(uidConvSelected)) return;
 
     //debugger;
-    console.log('-------------> openMessageList ', uidConvSelected);
+    console.log('ListaConversazioniPage::openMessageList::uidConvSelected:', uidConvSelected);
     this.uidConvSelected = uidConvSelected;
     const that = this;
     setTimeout(function () {
@@ -213,8 +213,10 @@ export class ListaConversazioniPage extends _MasterPage {
   checkMessageListIsOpen(uidConvSelected) {
     console.log('-------------> checkMessageListIsOpen ', uidConvSelected);
     if (uidConvSelected === this.uidConvSelected && windowsMatchMedia()) {
+      console.log("ListaConversazioniPage::checkMessageListIsOpen::if::uidConvSelected", uidConvSelected, "this_uidConvSelected", this.uidConvSelected);
       return;
     } else {
+      console.log("ListaConversazioniPage::checkMessageListIsOpen::else::uidConvSelected", uidConvSelected);
       this.openMessageList(uidConvSelected)
     }
   }
