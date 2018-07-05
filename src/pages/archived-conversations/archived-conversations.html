@@ -1,30 +1,24 @@
-<!--
-  Generated template for the ArchivedConversationsPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>ArchivedConversations</ion-title>
+    <ion-title> Archiviate </ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
-<ion-content padding>
-
-  <table>
-    <!-- <thead>
-      <th>Name</th>
-      <th>Index</th>
-    </thead> -->
-    <tbody margin padding>
-      <tr margin padding *ngFor="let archivedConversation of archivedConversations" (click)="onArchivedConversationClicked(archivedConversation)">
-        <td margin padding >{{ archivedConversation | json }}</td>
-      </tr>
-    </tbody>
-  </table>
-
+<ion-content class="list-avatar-page">
+  <ion-list *ngIf="areArchivedConversationsAvailable else emptyListTemplate" >
+  <!-- <ion-list > -->
+    <div *ngFor="let archivedConversation of archivedConversations">
+      <ion-item no-lines ion-item [class.selected]="archivedConversation.uid === uidConvSelected" (click)="onArchivedConversationClicked(archivedConversation)">
+        <ion-avatar item-start>
+          <div class="chat21-avatar" [style.background-image]="'url(' + archivedConversation.image + ')'"></div>
+        </ion-avatar>
+        <h2 class="truncate">{{archivedConversation.conversation_with_fullname}}</h2>
+        <p [class.not-read]="archivedConversation.status == 1" class="truncate" [innerHTML]="convertMessage(archivedConversation.last_message_text)"></p>
+      </ion-item>
+    </div>
+  </ion-list>
 </ion-content>
+
+<ng-template #emptyListTemplate>
+  <span>Nessuna conversazione</span>
+</ng-template>

@@ -5,7 +5,7 @@ import { ChatManager } from '../chat-manager/chat-manager';
 import { UserModel } from '../../models/user';
 import { ConversationModel } from '../../models/conversation';
 import { TYPE_GROUP, LABEL_TU, URL_NO_IMAGE, TYPE_DIRECT } from '../../utils/constants';
-import { getFromNow, contactsRef } from '../../utils/utils';
+import { getFromNow, contactsRef, searchIndexInArrayForUid } from '../../utils/utils';
 
 @Injectable()
 export class ArchivedConversationsProvider {
@@ -96,17 +96,22 @@ export class ArchivedConversationsProvider {
       that.onConversationSnapshotAdded(snapshot);
     })
 
-    // // subscribe at on change event
-    // this.nodeArchivedConversationsQueryRef.on("child_changed", function (snapshot) {
-    //   that.changed(snapshot);
-    // });
+    // subscribe at on change event
+    this.nodeArchivedConversationsQueryRef.on("child_changed", function (snapshot) {
+      that.onConversationSnapshotChanged(snapshot);
+    });
 
-    // // subscribe at on remove event
-    // this.nodeArchivedConversationsQueryRef.on("child_removed", function (snapshot) {
-    //   that.removed(snapshot);
-    // });
+    // subscribe at on remove event
+    this.nodeArchivedConversationsQueryRef.on("child_removed", function (snapshot) {
+      that.onConversationSnapshotRemoved(snapshot);
+    });
   }
 
+  /**
+   * Decode the conversation snapshot to the relative ConversationModel.
+   * Push the conversation to the conversation array
+   * @param snapshot the conversations snapshot
+   */
   private onConversationSnapshotAdded(snapshot) {
 
     // retrieve the snapshot val which contains the conversation data
@@ -119,8 +124,63 @@ export class ArchivedConversationsProvider {
     const conversation = this.completeConversation(childData);
     // console.log("ArchivedConversationsProvider::onConversationSnapshotAdded::conversation:", conversation);
 
-    // add the conversation the the conversations array
-    this.archivedConversations.push(conversation);
+    // add the conversation at the top of the conversations array
+    this.archivedConversations.unshift(conversation);
+  }
+
+  /**
+   * Decode the conversation snapshot to the relative ConversationModel
+   * Look within the array for the decoded conversation: 
+   * if it exists remove it and add it to the top (update)
+   * @param snapshot the conversations snapshot
+   */
+  private onConversationSnapshotChanged(snapshot) {
+
+    // retrieve the snapshot val which contains the conversation data
+    const childData: ConversationModel = snapshot.val();
+
+    // retrieve the snapshot key which coincides with the conversation id 
+    childData.uid = snapshot.key;
+
+    // create the conversation object 
+    const conversation = this.completeConversation(childData);
+    // console.log("ArchivedConversationsProvider::onConversationSnapshotChanged::conversation:", conversation);
+
+    // looking for the retrieved conversation an retrieve its index within the array
+    const index = searchIndexInArrayForUid(this.archivedConversations, conversation.uid);
+    if(index > -1) {
+      // conversations exists 
+      this.archivedConversations.splice(index, 1, conversation); // remove it 
+      // push the conversation to the top to update 
+      this.archivedConversations.unshift(conversation);
+    }
+  }
+
+
+  /**
+  * Decode the conversation snapshot to the relative ConversationModel
+  * Look within the array for the decoded conversation: 
+  * if it exists remove it 
+  * @param snapshot the conversations snapshot
+  */
+  private onConversationSnapshotRemoved(snapshot) {
+
+    // retrieve the snapshot val which contains the conversation data
+    const childData: ConversationModel = snapshot.val();
+
+    // retrieve the snapshot key which coincides with the conversation id 
+    childData.uid = snapshot.key;
+
+    // create the conversation object 
+    const conversation = this.completeConversation(childData);
+    // console.log("ArchivedConversationsProvider::onConversationSnapshotRemoved::conversation:", conversation);
+
+    // looking for the retrieved conversation an retrieve its index within the array
+    const index = searchIndexInArrayForUid(this.archivedConversations, conversation.uid);
+    if (index > -1) {
+      // conversations exists 
+      this.archivedConversations.splice(index, 1); // remove it 
+    }
   }
 
   /**

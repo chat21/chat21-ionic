@@ -35,7 +35,7 @@ import { ArchivedConversationsProvider } from '../../providers/archived-conversa
 })
 export class ListaConversazioniPage extends _MasterPage {
   private conversations: Array<ConversationModel> = [];
-  // private archivedConversations: ConversationModel[];
+  private archivedConversations: ConversationModel[];
 
   private uidReciverFromUrl: string;
   private conversationsHandler: ChatConversationsHandler;
@@ -61,7 +61,7 @@ export class ListaConversazioniPage extends _MasterPage {
     private tiledeskConversationProvider: TiledeskConversationProvider,
     private alertCtrl: AlertController,
     private translate: TranslateService,
-    // private archivedConversationsProvider: ArchivedConversationsProvider
+    private archivedConversationsProvider: ArchivedConversationsProvider
   ) {
     super();
     this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
@@ -242,10 +242,10 @@ export class ListaConversazioniPage extends _MasterPage {
       this.conversationsHandler = handler;
       this.conversations = handler.conversations;
 
-      // // attach the archived conversations provider
-      // this.archivedConversationsProvider.getInstance().init(tenant, loggedUser);
-      // this.archivedConversationsProvider.getInstance().connect();
-      // this.archivedConversations = this.archivedConversationsProvider.getArchviedConversations();
+      // attach the archived conversations provider
+      this.archivedConversationsProvider.getInstance().init(tenant, loggedUser);
+      this.archivedConversationsProvider.getInstance().connect();
+      this.archivedConversations = this.archivedConversationsProvider.getArchviedConversations();
     } else {
       console.log('handler ESISTE ::', handler);
       this.conversationsHandler = handler;
@@ -296,10 +296,11 @@ export class ListaConversazioniPage extends _MasterPage {
    * Open the archived conversations page
    */
   private openArchivedConversationsPage() {
+    // console.log("ListaConversazioniPage::openArchivedConversationsPage::archivedConversations:", this.archivedConversations)
     this.navCtrl.push(ArchivedConversationsPage,
-      // {
-      //   "archivedConversations" :  this.archivedConversations
-      // }
+      {
+        "archivedConversations" :  this.archivedConversations
+      }
     );
   }
 
@@ -457,7 +458,7 @@ export class ListaConversazioniPage extends _MasterPage {
       .subscribe(response => {
         callback('success', response);
       }, errMsg => {
-        // the conversation closing failed: restore the conversation with ù
+        // the conversation closing failed: restore the conversation with
         // conversationId status to false within the isConversationClosingMap
         that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
         callback('error', errMsg);
@@ -466,7 +467,7 @@ export class ListaConversazioniPage extends _MasterPage {
       });
     // END - REMOVE FROM REMOTE 
 
-     // when a conversations is closed shows a placeholder background
+    // when a conversations is closed shows a placeholder background
     if (conversationId === that.uidConvSelected) {
       that.navProxy.pushDetail(PlaceholderPage, {});
     }
