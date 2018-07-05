@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { ConversationModel } from '../../models/conversation';
 import { convertMessage } from '../../utils/utils';
 import { DettaglioConversazionePage } from '../dettaglio-conversazione/dettaglio-conversazione';
 import { NavProxyService } from '../../providers/nav-proxy';
+import { DatabaseProvider } from '../../providers/database/database';
 
 @IonicPage()
 @Component({
@@ -24,6 +25,8 @@ export class ArchivedConversationsPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     private navProxy: NavProxyService,
+    private databaseProvider: DatabaseProvider,
+    private events: Events,
   ) {
     this.areArchivedConversationsAvailable = false; // default value
   }
@@ -36,7 +39,7 @@ export class ArchivedConversationsPage {
 
     // update the archvied conversations availability
     this.areArchivedConversationsAvailable = this.archivedConversations && this.archivedConversations.length > 0;
-    console.log("ArchivedConversationsPage::ionViewDidLoad::areArchivedConversationsAvailable:", this.areArchivedConversationsAvailable);
+    // console.log("ArchivedConversationsPage::ionViewDidLoad::areArchivedConversationsAvailable:", this.areArchivedConversationsAvailable);
   }
 
   ionViewWillUnload() {
@@ -83,7 +86,8 @@ export class ArchivedConversationsPage {
           conversationWithFullname: archivedConversation.conversation_with_fullname,
           channel_type: archivedConversation.channel_type
         });
-        // that.databaseProvider.setUidLastOpenConversation(archivedConversation.uid);
+        that.databaseProvider.setUidLastOpenConversation(archivedConversation.uid);
+        that.events.publish('uidConvSelected:changed', archivedConversation.uid);
       }
     }, 1000);
   }
