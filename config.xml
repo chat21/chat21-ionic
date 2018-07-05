@@ -92,6 +92,7 @@
     <plugin name="phonegap-plugin-push" spec="^2.2.2">
         <variable name="SENDER_ID" value="1096415488178" />
     </plugin>
+    <engine name="browser" />
     <engine name="android" spec="~7.0.0" />
     <engine name="osx" spec="~4.0.1" />
 </widget>

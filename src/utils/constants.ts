@@ -1,6 +1,6 @@
 //TIMES
 // BUILD
-export const CURR_VER_DEV = '29';
+export const CURR_VER_DEV = '30';
 export const CURR_VER_PROD = '0.12';
 
 //export const SERVICE_WORKER_DEV = '/chat/';
