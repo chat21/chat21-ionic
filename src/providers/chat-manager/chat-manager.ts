@@ -8,6 +8,7 @@ import { UserModel } from '../../models/user';
 // handlers
 import { ChatConversationHandler } from '../chat-conversation-handler';
 import { ChatConversationsHandler } from '../chat-conversations-handler';
+import { ChatArchivedConversationsHandler } from '../chat-archived-conversations-handler';
 import { ChatContactsSynchronizer } from '../chat-contacts-synchronizer';
 
 // providers
@@ -30,6 +31,7 @@ export class ChatManager {
   private loggedUser: UserModel;
 
   public conversationsHandler: ChatConversationsHandler;
+  public archivedConversationsHandler: ChatArchivedConversationsHandler;
   public contactsSynchronizer: ChatContactsSynchronizer;
   public openInfoConversation: boolean;
 
@@ -101,7 +103,9 @@ export class ChatManager {
     this.setOffAllReferences();
     console.log(" 2 - disposeConversationsHandler");
     if(this.conversationsHandler){this.disposeConversationsHandler();}
-    console.log(" 3 - disposeContactsSynchronizer");
+    console.log(" 3 - disposeArchivedConversationsHandler");
+    if (this.archivedConversationsHandler) { this.disposeConversationsHandler(); }
+    console.log(" 4 - disposeContactsSynchronizer");
     if(this.contactsSynchronizer){this.disposeContactsSynchronizer();}
     console.log(" OKK ");
     this.conversationsHandler = null;

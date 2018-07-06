@@ -51,6 +51,7 @@ import { GroupService } from '../providers/group/group';
 import { AutosizeDirective } from '../directives/autosize/autosize';
 import { DatabaseProvider } from '../providers/database/database';
 import { ChatConversationsHandler } from '../providers/chat-conversations-handler';
+import { ChatArchivedConversationsHandler } from '../providers/chat-archived-conversations-handler';
 import { ChatConversationHandler } from '../providers/chat-conversation-handler';
 import { ChatManager } from '../providers/chat-manager/chat-manager';
 import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronizer';
@@ -63,7 +64,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TiledeskConversationProvider } from '../providers/tiledesk-conversation/tiledesk-conversation';
 
 import { ArchivedConversationsPage } from '../pages/archived-conversations/archived-conversations';
-import { ArchivedConversationsProvider } from '../providers/archived-conversations/archived-conversations';
+// import { ArchivedConversationsProvider } from '../providers/archived-conversations/archived-conversations';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -157,11 +158,12 @@ export function createTranslateLoader(http: HttpClient) {
     UploadService,
     ChatManager,
     ChatConversationsHandler,
+    ChatArchivedConversationsHandler,
     ChatConversationHandler,
     ChatContactsSynchronizer,
     GroupService,
     TiledeskConversationProvider,
-    ArchivedConversationsProvider,
+    // ArchivedConversationsProvider,
   ]
 })
 export class AppModule {}

@@ -26,7 +26,8 @@ import { TiledeskConversationProvider } from '../../providers/tiledesk-conversat
 
 import { TranslateService } from '@ngx-translate/core';
 import { ArchivedConversationsPage } from '../archived-conversations/archived-conversations';
-import { ArchivedConversationsProvider } from '../../providers/archived-conversations/archived-conversations';
+import { ChatArchivedConversationsHandler } from '../../providers/chat-archived-conversations-handler';
+// import { ArchivedConversationsProvider } from '../../providers/archived-conversations/archived-conversations';
 
 @IonicPage()
 @Component({
@@ -61,7 +62,8 @@ export class ListaConversazioniPage extends _MasterPage {
     private tiledeskConversationProvider: TiledeskConversationProvider,
     private alertCtrl: AlertController,
     private translate: TranslateService,
-    private archivedConversationsProvider: ArchivedConversationsProvider
+    // private archivedConversationsProvider: ArchivedConversationsProvider
+    private chatArchivedConversationsHandler: ChatArchivedConversationsHandler
   ) {
     super();
     this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
@@ -235,22 +237,28 @@ export class ListaConversazioniPage extends _MasterPage {
     const tenant = this.chatManager.getTenant();
     const loggedUser = this.chatManager.getLoggedUser();
     let handler = this.chatManager.conversationsHandler;
+    let tempArchviedConversationsHandler = this.chatManager.archivedConversationsHandler;;
     if (!handler) {
       console.log('handler NON ESISTE ::');
       handler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
+      tempArchviedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(tenant, loggedUser);
       this.chatManager.setConversationsHandler(handler);
       handler.connect();
+      tempArchviedConversationsHandler.connect();
       handler.uidConvSelected = this.uidConvSelected
       this.conversationsHandler = handler;
+      this.chatArchivedConversationsHandler = tempArchviedConversationsHandler;
       this.conversations = handler.conversations;
+      this.archivedConversations = tempArchviedConversationsHandler.conversations;
 
-      // attach the archived conversations provider
-      this.archivedConversationsProvider.getInstance().init(tenant, loggedUser);
-      this.archivedConversationsProvider.getInstance().connect();
-      this.archivedConversations = this.archivedConversationsProvider.getArchviedConversations();
+      // // attach the archived conversations provider
+      // this.archivedConversationsProvider.getInstance().init(tenant, loggedUser);
+      // this.archivedConversationsProvider.getInstance().connect();
+      // this.archivedConversations = this.archivedConversationsProvider.getArchviedConversations();
     } else {
       console.log('handler ESISTE ::', handler);
       this.conversationsHandler = handler;
+      this.chatArchivedConversationsHandler = tempArchviedConversationsHandler;
     }
 
 
