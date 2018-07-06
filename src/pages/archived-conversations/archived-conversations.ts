@@ -21,6 +21,8 @@ export class ArchivedConversationsPage {
 
   private areArchivedConversationsAvailable : boolean;
 
+  private uidConvSelected : string;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -51,16 +53,20 @@ export class ArchivedConversationsPage {
     console.log("ArchivedConversationsPage::onArchivedConversationClicked::archivedConversation:", archivedConversation);
 
     var that = this;
-    // popping the current page
-    this.navCtrl.pop().then(() => {
+
+    // set the current conversation selected within the ui
+    this.uidConvSelected = archivedConversation.uid;
+
+    // // popping the current page
+    // this.navCtrl.pop().then(() => {
 
       // open the new page
       that.openMessageList(archivedConversation);
 
-    }, (err) => {
-      // something didn't work
-      console.error(err);
-    });
+    // }, (err) => {
+    //   // something didn't work
+    //   console.error(err);
+    // });
   }
   
 
@@ -77,7 +83,7 @@ export class ArchivedConversationsPage {
    */
   openMessageList(archivedConversation) {
     const that = this;
-    setTimeout(function () {
+    // setTimeout(function () {
       if (archivedConversation) {
         archivedConversation.status = '0';
         archivedConversation.selected = true;
@@ -89,7 +95,7 @@ export class ArchivedConversationsPage {
         that.databaseProvider.setUidLastOpenConversation(archivedConversation.uid);
         that.events.publish('uidConvSelected:changed', archivedConversation.uid);
       }
-    }, 1000);
+    // }, 1000);
   }
 
 }

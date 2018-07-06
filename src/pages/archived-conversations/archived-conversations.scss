@@ -61,11 +61,28 @@ page-archived-conversations {
             font-size: 11px;
             color:#cccccc;
         }
+
+        .archived {
+            border-radius: 8px;
+            border: 2px solid #cccccc;
+            padding: 4px; 
+            color: #cccccc;
+            font-size: 13px;
+        }
+
         background-color: #0b5c89;
         border-bottom: rgba(0, 0, 0, 0.10)!important;
         border-bottom-width: thin!important;
         border-bottom-style: solid!important;
         // color:#ffffff;
+    }
+
+    .archived {
+        border-radius: 8px;
+        border: 2px solid grey;
+        padding: 4px; 
+        color: grey;
+        font-size: 13px;
     }
     
     .list-avatar-page {
