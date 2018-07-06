@@ -94,6 +94,8 @@ export class MyApp {
     // if (getLocalStorage()) {
     //   getLocalStorage().removeItem('firebase:previous_websocket_failure');
     // }
+
+    localStorage.removeItem('firebase:previous_websocket_failure');
   }
 
 }
