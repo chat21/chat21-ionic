@@ -330,7 +330,7 @@ export class ListaConversazioniPage extends _MasterPage {
         if (this.chatManager.getLoggedUser()) {
           this.navCtrl.push(ProfilePage);
         }
-      } else if (data == ArchivedConversationsPage.toString()) {
+      } else if (data == "ArchivedConversationsPage") {
         this.openArchivedConversationsPage();
       }
     });

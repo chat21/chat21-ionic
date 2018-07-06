@@ -61,6 +61,6 @@ export class PopoverPage {
    * @returns a string that identify the closed page
    */
   openArchivedConversationsPage() {
-    this.viewCtrl.dismiss(ArchivedConversationsPage.toString());
+    this.viewCtrl.dismiss("ArchivedConversationsPage");
   }
 }
