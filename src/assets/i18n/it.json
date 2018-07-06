@@ -45,5 +45,7 @@
     "CONVERSATION_LEFT_ALERT_MSG": "Il gruppo è stato abbandonato con successo.",
     "CANNOT_LEAVE_GROUP_ALERT_MSG": "Impossibile abbandonare il gruppo",
 
-    "GREETING": "Hi, {{ value }}"
+    "GREETING": "Hi, {{ value }}",
+
+    "ARCHIVED_CONVERSATIONS_PAGE_NO_CONVERSATIONS_ARCHIVED": "Non è presente alcuna conversazione nell'archivio"
 }
