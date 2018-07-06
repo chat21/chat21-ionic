@@ -408,6 +408,9 @@ export class DettaglioConversazionePage extends _DetailPage{
     if (msg && msg.trim() != '' || type !== TYPE_MSG_TEXT ){
       this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
       this.conversationHandler.sendMessage(msg, type, metadata, this.conversationWith, this.conversationWithFullname, this.channel_type);
+
+      this.chatManager.conversationsHandler.uidConvSelected = this.conversationWith;
+
       this.doScroll();
     }
   }
