@@ -27,7 +27,6 @@ import { TiledeskConversationProvider } from '../../providers/tiledesk-conversat
 import { TranslateService } from '@ngx-translate/core';
 import { ArchivedConversationsPage } from '../archived-conversations/archived-conversations';
 import { ChatArchivedConversationsHandler } from '../../providers/chat-archived-conversations-handler';
-// import { ArchivedConversationsProvider } from '../../providers/archived-conversations/archived-conversations';
 
 @IonicPage()
 @Component({
@@ -62,7 +61,6 @@ export class ListaConversazioniPage extends _MasterPage {
     private tiledeskConversationProvider: TiledeskConversationProvider,
     private alertCtrl: AlertController,
     private translate: TranslateService,
-    // private archivedConversationsProvider: ArchivedConversationsProvider
     private chatArchivedConversationsHandler: ChatArchivedConversationsHandler
   ) {
     super();
