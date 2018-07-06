@@ -104,6 +104,8 @@ export class AuthService {
   }
   
   logoutUser() {
+    console.log("AuthService::logoutUser")
+
     return firebase.auth().signOut()
     //return this.afAuth.auth.signOut();
     // .then((res) => {

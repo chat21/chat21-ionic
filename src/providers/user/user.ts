@@ -204,7 +204,11 @@ export class UserService {
    * 4 - passo lo stato online al chatmanager
    */
   onAuthStateChanged(){
+    console.log("UserService::onAuthStateChanged");
+
     firebase.auth().onAuthStateChanged(user => {
+      console.log("UserService::onAuthStateChanged::user:", user);
+
       if (!user) {
         console.log(" 3 - PASSO OFFLINE AL CHAT MANAGER");
         this.chatManager.goOffLine();
@@ -278,6 +282,8 @@ export class UserService {
    * al logout vado in automatico su onAuthStateChanged
    */
   logoutUser() {
+    console.log("UserService::logoutUser");
+
     console.log(" 1 - CANCELLO L'UTENTE DAL NODO PRESENZE");
     this.chatPresenceHandler.goOffline();
     console.log(" 2 - RIMUOVO IL TOKEN");
