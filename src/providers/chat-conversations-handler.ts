@@ -80,26 +80,31 @@ export class ChatConversationsHandler {
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
         const conversation = this.completeConversation(childData);
-        this.conversations.splice(0, 0, conversation);
-        console.log("child_added conversationS",conversation);
-        //this.events.publish('conversations:added', conversation);
+        
+        if (this.isValidConversation(childSnapshot.key, conversation)) {
+            this.conversations.splice(0, 0, conversation);
+            console.log("child_added conversationS",conversation);
+            //this.events.publish('conversations:added', conversation);
 
-        // add the conversation from the isConversationClosingMap
-        this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
+            // add the conversation from the isConversationClosingMap
+            this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
 
-        // var clone: ConversationModel[] = this.sort(this.conversations);
-        // console.log("ChatConversationsHandler::added::clone::clone.size", clone.length);
-        // console.log("ChatConversationsHandler::added::clone::conversations.size", this.conversations.length);
-        // clone.splice(0, 0, conversation);       
-        // for (var i = 0; i < clone.length; i++) {
-        //     var item: ConversationModel = clone[i];
-        //     console.log(i + ") ChatConversationsHandler::added::clone::item", item, item.timestamp);
-        // }
-        // this.conversations = clone;
-        // for (var i = 0; i < this.conversations.length; i++) {
-        //     var item: ConversationModel = this.conversations[i];
-        //     console.log(i + ") ChatConversationsHandler::added::clone::conversation", item, item.timestamp);
-        // } 
+            // var clone: ConversationModel[] = this.sort(this.conversations);
+            // console.log("ChatConversationsHandler::added::clone::clone.size", clone.length);
+            // console.log("ChatConversationsHandler::added::clone::conversations.size", this.conversations.length);
+            // clone.splice(0, 0, conversation);       
+            // for (var i = 0; i < clone.length; i++) {
+            //     var item: ConversationModel = clone[i];
+            //     console.log(i + ") ChatConversationsHandler::added::clone::item", item, item.timestamp);
+            // }
+            // this.conversations = clone;
+            // for (var i = 0; i < this.conversations.length; i++) {
+            //     var item: ConversationModel = this.conversations[i];
+            //     console.log(i + ") ChatConversationsHandler::added::clone::conversation", item, item.timestamp);
+            // } 
+        } else {
+            console.error("ChatConversationsHandler::added::conversations with conversationId: ", childSnapshot.key, "is not valid");
+        }
     }
     /**
      * 1 - cerco indice conversazione nell'array conversation
@@ -111,22 +116,27 @@ export class ChatConversationsHandler {
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
         let conversation = this.completeConversation(childData); 
-        //conversation = this.isConversationSelected(conversation, '1');
-        const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
-        this.conversations.splice(index, 1, conversation);
-        this.conversations.sort(compareValues('timestamp', 'desc'));
-        console.log("child_changed conversationS",conversation);
-        //this.events.publish('conversations:changed', conversation);
-          
-        // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
-        // // controllo superfluo sarà sempre maggiore
-        // console.log("child_changed", index);
-        // if(index>-1){
-        //     const conversation = this.completeConversation(childData);
-        //     conversation.status = '1'; 
-        //     this.conversations.splice(index, 1, conversation);
-        //     //this.events.publish('conversations:changed', this.conversations, childSnapshot.key);
-        // }
+
+        if (this.isValidConversation(childSnapshot.key, conversation)) {
+            //conversation = this.isConversationSelected(conversation, '1');
+            const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
+            this.conversations.splice(index, 1, conversation);
+            this.conversations.sort(compareValues('timestamp', 'desc'));
+            console.log("child_changed conversationS",conversation);
+            //this.events.publish('conversations:changed', conversation);
+            
+            // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
+            // // controllo superfluo sarà sempre maggiore
+            // console.log("child_changed", index);
+            // if(index>-1){
+            //     const conversation = this.completeConversation(childData);
+            //     conversation.status = '1'; 
+            //     this.conversations.splice(index, 1, conversation);
+            //     //this.events.publish('conversations:changed', this.conversations, childSnapshot.key);
+            // }
+        } else {
+            console.error("ChatConversationsHandler::changed::conversations with conversationId: ", childSnapshot.key, "is not valid");
+        }
     }
     /**
      * 1 - cerco indice conversazione da eliminare
@@ -306,5 +316,71 @@ export class ChatConversationsHandler {
         if (index > -1) {
             this.conversations.splice(index, 1);
         }
+    }
+
+    // check if the conversations is valid or not
+    private isValidConversation(convToCheckId, convToCheck: ConversationModel) : boolean {
+
+        console.log("[BEGIN] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
+
+        if (!this.isValidField(convToCheck.uid)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'uid is not valid' ");
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.is_new)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'is_new is not valid' ");
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.last_message_text)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'last_message_text is not valid' ");
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.recipient)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'recipient is not valid' ");
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.recipient_fullname)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'recipient_fullname is not valid' ");
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.sender)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'sender is not valid' ");
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.sender_fullname)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'sender_fullname is not valid' ");
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.status)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'status is not valid' ");
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.timestamp)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'timestamp is not valid' ");
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.channel_type)) {
+            console.error("ChatConversationsHandler::isValidConversation:: 'channel_type is not valid' ");
+            return false;
+        }
+
+        console.log("[END] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
+
+        // any other case
+        return true;
+    }
+
+    // checks if a conversation's field is valid or not
+    private isValidField(field) : boolean{
+        return (field === null || field === undefined) ? false : true;
     }
 }
