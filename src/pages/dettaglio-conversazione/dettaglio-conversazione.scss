@@ -198,12 +198,13 @@ page-dettaglio-conversazione {
 
         .message-content-info-support {
             border-radius: 8px;
-            border: 1px solid  #0b5c89;
+            border: 1px solid  #C9E4F6;
             padding-left: 4px;
             padding-right: 4px;
             display: inline-block;
-            background: #0b5c89;
-            color: #fff;
+            background: #C9E4F6;
+            font-size: 0.85em;
+            // color: #fff;
         }
         
         // single message <ng-template #contentMine>
