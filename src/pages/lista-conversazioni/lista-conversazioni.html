@@ -33,7 +33,7 @@
           <!-- <img src="{{conversation.image}}" alt="user" onError="this.src='assets/img/no_image.png';"> -->
         </ion-avatar>
         <h2 class="truncate">{{conversation.conversation_with_fullname}}</h2>
-        <p [class.not-read]="conversation.status == 1" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
+        <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
 
 
         <!-- <span *ngIf="conversation.status == 1;then content else other_content">here is ignored</span>

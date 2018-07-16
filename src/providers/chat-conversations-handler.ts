@@ -123,7 +123,8 @@ export class ChatConversationsHandler {
             this.conversations.splice(index, 1, conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
             console.log("child_changed conversationS",conversation);
-            //this.events.publish('conversations:changed', conversation);
+            
+            // this.events.publish('conversations:changed', this.conversations);
             
             // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
             // // controllo superfluo sarà sempre maggiore
@@ -223,6 +224,12 @@ export class ChatConversationsHandler {
         return conv;
     }
 
+    // set the remote conversation as read 
+    setConversationRead(conversationUid) {
+        var conversationRef = this.ref.ref.child(conversationUid);
+        conversationRef.update ({"is_new" : false});
+    }
+
 
     setStatusConversation(sender, uid): string {
         let status = '0'; //letto
@@ -258,6 +265,7 @@ export class ChatConversationsHandler {
         }
         
     }
+    
     /**
      * calcolo il tempo trascorso da ora al timestamp passato
      * @param timestamp 

@@ -101,6 +101,7 @@ export class ListaConversazioniPage extends _MasterPage {
     this.events.subscribe('loggedUser:login', this.subscribeLoggedUserLogin);
     this.events.subscribe('loggedUser:logout', this.subscribeLoggedUserLogout);
     this.events.subscribe('uidConvSelected:changed', this.subscribeUidConvSelectedChanged);
+    // this.events.subscribe('conversations:changed', this.subscribeConversationsChanged);
   }
 
   /** subscribeUidConvSelectedChanged
@@ -138,6 +139,12 @@ export class ListaConversazioniPage extends _MasterPage {
     //this.conversationWith = null;
     this.uidConvSelected = null;
   }
+
+  // private subscribeConversationsChanged: any = (conversations : ConversationModel[]) => {
+  //   console.log('ListaConversazioniPage::subscribeConversationsChanged::conversationsconversations:', conversations);
+  //   this.conversations = conversations;
+  // }
+
   //// END SUBSCRIBTIONS LIST ////
 
 
@@ -193,6 +200,11 @@ export class ListaConversazioniPage extends _MasterPage {
     setTimeout(function () {
       var conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
       if (conversationSelected) {
+
+        conversationSelected.is_new = false;
+        that.conversationsHandler.setConversationRead(conversationSelected.uid);
+
+
         conversationSelected.status = '0';
         conversationSelected.selected = true;
         that.navProxy.pushDetail(DettaglioConversazionePage, {
