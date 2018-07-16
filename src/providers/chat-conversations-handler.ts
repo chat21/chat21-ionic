@@ -224,7 +224,7 @@ export class ChatConversationsHandler {
         return conv;
     }
 
-    // set the remote conversation as read 
+    // set the remote conversation as read
     setConversationRead(conversationUid) {
         var conversationRef = this.ref.ref.child(conversationUid);
         conversationRef.update ({"is_new" : false});
