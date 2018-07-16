@@ -196,9 +196,13 @@ export function getNowTimestamp(){
 }
 
 export function getFormatData(timestamp): string {
-  const date = new Date(timestamp);
-  const labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
-  return labelDays;
+
+  var dateString = moment.unix(timestamp / 1000).format('L');
+
+  // const date = new Date(timestamp);
+  // const labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
+
+  return dateString;
 }
 
 
