@@ -59,7 +59,8 @@ export class ChatConversationsHandler {
         const that = this;
         const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.userId);
         //const urlNodeFirebase = '/apps/'+tenant+'/users/'+this.loggedUser.uid+'/conversations';
-        this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp'); // .limitToLast(50);
+        // this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp'); // .limitToLast(50);
+        this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(50);
         this.ref.on("child_changed", function(childSnapshot) {
             that.changed(childSnapshot);
         });
@@ -89,19 +90,7 @@ export class ChatConversationsHandler {
             // add the conversation from the isConversationClosingMap
             this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
 
-            // var clone: ConversationModel[] = this.sort(this.conversations);
-            // console.log("ChatConversationsHandler::added::clone::clone.size", clone.length);
-            // console.log("ChatConversationsHandler::added::clone::conversations.size", this.conversations.length);
-            // clone.splice(0, 0, conversation);       
-            // for (var i = 0; i < clone.length; i++) {
-            //     var item: ConversationModel = clone[i];
-            //     console.log(i + ") ChatConversationsHandler::added::clone::item", item, item.timestamp);
-            // }
-            // this.conversations = clone;
-            // for (var i = 0; i < this.conversations.length; i++) {
-            //     var item: ConversationModel = this.conversations[i];
-            //     console.log(i + ") ChatConversationsHandler::added::clone::conversation", item, item.timestamp);
-            // } 
+            this.conversations.sort(compareValues('timestamp', 'desc'));
         } else {
             console.error("ChatConversationsHandler::added::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
@@ -125,16 +114,7 @@ export class ChatConversationsHandler {
             console.log("child_changed conversationS",conversation);
             
             // this.events.publish('conversations:changed', this.conversations);
-            
-            // const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
-            // // controllo superfluo sarà sempre maggiore
-            // console.log("child_changed", index);
-            // if(index>-1){
-            //     const conversation = this.completeConversation(childData);
-            //     conversation.status = '1'; 
-            //     this.conversations.splice(index, 1, conversation);
-            //     //this.events.publish('conversations:changed', this.conversations, childSnapshot.key);
-            // }
+
         } else {
             console.error("ChatConversationsHandler::changed::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
@@ -146,13 +126,16 @@ export class ChatConversationsHandler {
      * @param childSnapshot 
      */
     removed(childSnapshot){
-        console.log("child_removed");
+        console.log("ChatConversationsHandler::onSnapshotRemoved::conversation:", childSnapshot.key);
+
         const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
         // controllo superfluo sarà sempre maggiore
         if(index>-1){
             // splice (<indice dell'elemento da eliminare>, <numero di elementi da eliminare>)
             this.conversations.splice(index, 1);
             //this.events.publish('conversations:update', this.conversations);
+
+            this.conversations.sort(compareValues('timestamp', 'desc'));
         }
 
         // remove the conversation from the isConversationClosingMap
