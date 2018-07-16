@@ -53,7 +53,8 @@ export class ChatArchivedConversationsHandler {
     connect() {
         const that = this;
         const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUser.uid + '/archived_conversations';
-        this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp'); // .limitToLast(200);
+        // this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp'); // .limitToLast(200);
+        this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
 
         this.ref.on("child_added", function (childSnapshot) {
             that.onSnapshotAdded(childSnapshot);
@@ -84,6 +85,8 @@ export class ChatArchivedConversationsHandler {
         // console.log("ChatArchivedConversationsHandler::onSnapshotAdded::conversation:", conversation)
 
         this.conversations.splice(0, 0, conversation);
+
+        this.conversations.sort(compareValues('timestamp', 'desc'));
     }
 
     /**
@@ -114,13 +117,16 @@ export class ChatArchivedConversationsHandler {
      * @param childSnapshot 
      */
     private onSnapshotRemoved(childSnapshot) {
-        // console.log("ChatArchivedConversationsHandler::onSnapshotRemoved::snapshot:", snapshot)
+        // console.log("ChatArchivedConversationsHandler::onSnapshotRemoved::childSnapshot:", childSnapshot)
+        console.log("ChatArchivedConversationsHandler::onSnapshotRemoved::conversation:", childSnapshot.key);
 
         const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
         // controllo superfluo sarà sempre maggiore
         if (index > -1) {
             // splice (<indice dell'elemento da eliminare>, <numero di elementi da eliminare>)
             this.conversations.splice(index, 1);
+
+            this.conversations.sort(compareValues('timestamp', 'desc'));
         }
     }
 
