@@ -11,6 +11,7 @@ import { UserModel } from '../models/user';
 // utils
 import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER } from '../utils/constants';
 import { urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
+import { TranslateService } from '@ngx-translate/core';
 
 //import { TranslateModule } from '@ngx-translate/core';
 //import { TranslateService } from '@ngx-translate/core';
@@ -33,9 +34,11 @@ export class ChatConversationHandler {
   //public events: Events;
 
   constructor(
-    public events: Events
+    public events: Events,
+    private translate: TranslateService
   ) {
-    console.log("CONSTRUCTOR ChatConversationHandlerProvider");
+    // console.log("CONSTRUCTOR ChatConversationHandlerProvider");
+    console.log("CONSTRUCTOR ChatConversationHandlerProvider", translate);
     //this.tenant = this.chatManager.getTenant();
     //this.loggedUser = this.chatManager.getLoggedUser();
     //this.events = new Events();
@@ -87,93 +90,168 @@ export class ChatConversationHandler {
     const firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
     this.messagesRef = firebaseMessages.orderByChild('timestamp').limitToLast(100);
 
+    //// AGGIUNTA MESSAGGIO ////
+    this.messagesRef.on("child_added", function (childSnapshot) {
+      that.onMessageAdded(childSnapshot, lastDate);
+    })
+
     //// SUBSRIBE CHANGE ////
     this.messagesRef.on("child_changed", function(childSnapshot) {
-      const itemMsg = childSnapshot.val();
-      // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-      const calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
-      if(calcolaData != null){
-        lastDate = calcolaData;
-      }
-      // controllo fatto per i gruppi da rifattorizzare
-      (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined')?itemMsg.sender_fullname = itemMsg.sender:itemMsg.sender_fullname;
-      // bonifico messaggio da url
-      let messageText = itemMsg['text'];
-      if (itemMsg['type'] == 'text'){
-        //messageText = urlify(itemMsg['text']);
-      }
-      // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'],itemMsg['attributes'], itemMsg['channel_type']);
-      const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
-      that.messages.splice(index, 1, msg);
-      // aggiorno stato messaggio
-      // questo stato indica che è stato consegnato al client e NON che è stato letto
-      that.setStatusMessage(childSnapshot, that.conversationWith);
-
-      if(that.isSender(msg, that.loggedUser)){
-        that.events.publish('doScroll');
-      }
-      // pubblico messaggio - sottoscritto in dettaglio conversazione
-      //that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, that.messages);
-      //that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, msg);
+      that.onMessageChanged(childSnapshot, lastDate)
     });
 
     this.messagesRef.on("child_removed", function(childSnapshot) {
-      // al momento non previsto!!!
-      const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
-      // controllo superfluo sarà sempre maggiore
-      if(index>-1){
+      that.onMessageRemoved(childSnapshot)
+    });
+  } 
+
+
+  private onMessageAdded(childSnapshot, lastDate) {
+    var that = this;
+
+    //console.log("child_added *****", childSnapshot.key);
+    const itemMsg = childSnapshot.val();
+    // imposto il giorno del messaggio per visualizzare o nascondere l'header data
+    let calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
+    if (calcolaData != null) {
+      lastDate = calcolaData;
+    }
+    // controllo fatto per i gruppi da rifattorizzare
+    (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined') ? itemMsg.sender_fullname = itemMsg.sender : itemMsg.sender_fullname;
+    // bonifico messaggio da url
+    let messageText = itemMsg['text'];
+    if (itemMsg['type'] == 'text') {
+      //messageText = urlify(itemMsg['text']);
+    }
+
+    if (itemMsg['metadata']) {
+      const index = searchIndexInArrayForUid(that.messages, itemMsg['metadata'].uid);
+      if (index > -1) {
         that.messages.splice(index, 1);
-        //this.events.publish('conversations:update-'+that.conversationWith, that.messages);
       }
+    }
+
+    // creo oggetto messaggio e lo aggiungo all'array dei messaggi
+    const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type']);
+    console.log("child_added *****", itemMsg['timestamp'], that.messages, msg);
+
+    if (msg.attributes && msg.attributes.subtype && (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support')) {
+      that.translateInfoSupportMessages(msg);
+    }
+   
+    that.messages.push(msg);
+
+    // aggiorno stato messaggio
+    // questo stato indica che è stato consegnato al client e NON che è stato letto
+    that.setStatusMessage(childSnapshot, that.conversationWith);
+
+    console.log("msg.sender ***** " + msg.sender + " that.loggedUser.uid:::" + that.loggedUser.uid);
+    if (msg.sender === that.loggedUser.uid) {
+      that.events.publish('doScroll');
+    }
+      // pubblico messaggio - sottoscritto in dettaglio conversazione
+      //console.log("publish:: ", 'listMessages:added-'+that.conversationWith, that.events);
+      //that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, msg);
+
+  }
+
+  private onMessageChanged(childSnapshot, lastDate) {
+    var that = this;
+
+    const itemMsg = childSnapshot.val();
+    // imposto il giorno del messaggio per visualizzare o nascondere l'header data
+    const calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
+    if (calcolaData != null) {
+      lastDate = calcolaData;
+    }
+    // controllo fatto per i gruppi da rifattorizzare
+    (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined') ? itemMsg.sender_fullname = itemMsg.sender : itemMsg.sender_fullname;
+    // bonifico messaggio da url
+    let messageText = itemMsg['text'];
+    if (itemMsg['type'] == 'text') {
+      //messageText = urlify(itemMsg['text']);
+    }
+    // creo oggetto messaggio e lo aggiungo all'array dei messaggi
+    const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type']);
+    const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
+    that.messages.splice(index, 1, msg);
+    // aggiorno stato messaggio
+    // questo stato indica che è stato consegnato al client e NON che è stato letto
+    that.setStatusMessage(childSnapshot, that.conversationWith);
+
+    if (that.isSender(msg, that.loggedUser)) {
+      that.events.publish('doScroll');
+    }
+      // pubblico messaggio - sottoscritto in dettaglio conversazione
+      //that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, that.messages);
+      //that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, msg);
+  }
+
+  private onMessageRemoved(childSnapshot) {
+    var that = this; 
+
+    // al momento non previsto!!!
+    const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
+    // controllo superfluo sarà sempre maggiore
+    if (index > -1) {
+      that.messages.splice(index, 1);
+      //this.events.publish('conversations:update-'+that.conversationWith, that.messages);
+    }
 
       // if(!this.isSender(msg)){
       //   that.events.publish('doScroll');
       // }
-    });
+  }
 
-    //// AGGIUNTA MESSAGGIO ////
-    this.messagesRef.on("child_added", function(childSnapshot) {
-      //console.log("child_added *****", childSnapshot.key);
-      const itemMsg = childSnapshot.val();
-      // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-      let calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
-      if(calcolaData != null){
-        lastDate = calcolaData;
-      }
-      // controllo fatto per i gruppi da rifattorizzare
-      (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined')?itemMsg.sender_fullname = itemMsg.sender:itemMsg.sender_fullname;
-      // bonifico messaggio da url
-      let messageText = itemMsg['text'];
-      if (itemMsg['type'] == 'text'){
-        //messageText = urlify(itemMsg['text']);
-      }
+  private translateInfoSupportMessages(message: MessageModel) {
+    // console.log("ChatConversationHandler::translateInfoSupportMessages::message:", message);
 
-      if(itemMsg['metadata']){
-        const index = searchIndexInArrayForUid(that.messages, itemMsg['metadata'].uid);
-        if(index>-1){
-          that.messages.splice(index, 1);
-        }
-      }
-
-      // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type']);
-      console.log("child_added *****", itemMsg['timestamp'], that.messages, msg);
-      that.messages.push(msg);
-    
-      // aggiorno stato messaggio
-      // questo stato indica che è stato consegnato al client e NON che è stato letto
-      that.setStatusMessage(childSnapshot, that.conversationWith);
+    // check if the message has attributes, attributes.subtype and these values
+    if (message.attributes && message.attributes.subtype && (message.attributes.subtype === 'info' || message.attributes.subtype === 'info/support')) {
       
-      console.log("msg.sender ***** "+msg.sender+" that.loggedUser.uid:::"+that.loggedUser.uid);
-      if (msg.sender === that.loggedUser.uid){
-        that.events.publish('doScroll');
-      }
-      // pubblico messaggio - sottoscritto in dettaglio conversazione
-      //console.log("publish:: ", 'listMessages:added-'+that.conversationWith, that.events);
-      //that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, msg);
-    })
-  } 
+      // check if the message attributes has parameters and it is of the "MEMBER_JOINED_GROUP" type
+      // [BEGIN MEMBER_JOINED_GROUP]
+      if ((message.attributes.messagelabel && message.attributes.messagelabel.parameters && message.attributes.messagelabel.key === 'MEMBER_JOINED_GROUP')) {
+        
+        var subject;
+        var verb;
+        var complement;
+        
+        if (message.attributes.messagelabel.parameters.member_id === this.loggedUser.uid) {
+          // logged user has been added to the group
+          subject = this.translate.get('INFO_SUPPORT_USER_ADDED_SUBJECT')['value'];
+          verb = this.translate.get('INFO_SUPPORT_USER_ADDED_YOU_VERB')['value'];
+          complement = this.translate.get('INFO_SUPPORT_USER_ADDED_COMPLEMENT')['value'];
+        } else {
+          if (message.attributes.messagelabel.parameters.fullname) {
+            // other user has been added to the group (and he has a fullname)
+            subject = message.attributes.messagelabel.parameters.fullname;
+            verb = this.translate.get('INFO_SUPPORT_USER_ADDED_VERB')['value'];
+            complement = this.translate.get('INFO_SUPPORT_USER_ADDED_COMPLEMENT')['value'];
+          } else {
+            // other user has been added to the group (and he has not a fullname, so use hes useruid)
+            subject = message.attributes.messagelabel.parameters.member_id;
+            verb = this.translate.get('INFO_SUPPORT_USER_ADDED_VERB')['value'];
+            complement = this.translate.get('INFO_SUPPORT_USER_ADDED_COMPLEMENT')['value'];
+          }
+        }
+
+        // perform translation
+        this.translate.get('INFO_SUPPORT_USER_ADDED_MESSAGE', {
+          'subject': subject,
+          'verb': verb,
+          'complement': complement
+        }).subscribe((res: string) => {
+          message.text = res;
+        });
+
+      } // [END MEMBER_JOINED_GROUP]
+    }
+   
+
+  }
+
+
   /**
    * arriorno lo stato del messaggio
    * questo stato indica che è stato consegnato al client e NON che è stato letto

@@ -47,7 +47,11 @@
 
   "GREETING": "Hi, {{ value }}",
 
-  "ARCHIVED_CONVERSATIONS_PAGE_NO_CONVERSATIONS_ARCHIVED" : "There is no conversation in the archive"
+  "ARCHIVED_CONVERSATIONS_PAGE_NO_CONVERSATIONS_ARCHIVED" : "There is no conversation in the archive", 
 
-  
+  "INFO_SUPPORT_USER_ADDED_SUBJECT": "you",
+  "INFO_SUPPORT_USER_ADDED_YOU_VERB": "have been added",
+  "INFO_SUPPORT_USER_ADDED_VERB": "has been added",
+  "INFO_SUPPORT_USER_ADDED_COMPLEMENT": "to the group",
+  "INFO_SUPPORT_USER_ADDED_MESSAGE" : "{{ subject }} {{ verb }} {{ complement }}"
 }

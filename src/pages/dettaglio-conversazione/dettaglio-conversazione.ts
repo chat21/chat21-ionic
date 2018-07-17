@@ -20,6 +20,7 @@ import { PopoverPage } from '../popover/popover';
 // utils
 import { TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
 import { isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @IonicPage()
@@ -73,7 +74,8 @@ export class DettaglioConversazionePage extends _DetailPage{
     public chatManager: ChatManager,
     public actionSheetCtrl: ActionSheetController,
     public platform: Platform,
-    private upSvc: UploadService
+    private upSvc: UploadService,
+    private translateService : TranslateService
   ) {
     super();
     //// recupero id utente e fullname con cui si conversa
@@ -250,7 +252,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     if (!handler) {
       console.log('ENTRO ***',this.conversationHandler);
       //const handler = 
-      this.conversationHandler = new ChatConversationHandler(this.events);
+      this.conversationHandler = new ChatConversationHandler(this.events, this.translateService);
       this.conversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname,this.currentUserDetail,this.tenant);
       //this.chatConversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname,this.currentUserDetail,this.tenant);
       

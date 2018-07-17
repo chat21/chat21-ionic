@@ -47,5 +47,11 @@
 
     "GREETING": "Hi, {{ value }}",
 
-    "ARCHIVED_CONVERSATIONS_PAGE_NO_CONVERSATIONS_ARCHIVED": "Non è presente alcuna conversazione nell'archivio"
+    "ARCHIVED_CONVERSATIONS_PAGE_NO_CONVERSATIONS_ARCHIVED": "Non è presente alcuna conversazione nell'archivio",
+
+    "INFO_SUPPORT_USER_ADDED_SUBJECT": "",
+    "INFO_SUPPORT_USER_ADDED_YOU_VERB": "sei stato aggiunto",
+    "INFO_SUPPORT_USER_ADDED_VERB": "è stato aggiunto",
+    "INFO_SUPPORT_USER_ADDED_COMPLEMENT": "al gruppo",
+    "INFO_SUPPORT_USER_ADDED_MESSAGE": "{{ subject }} {{ verb }} {{ complement }}"
 }
