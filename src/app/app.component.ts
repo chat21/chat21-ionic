@@ -85,7 +85,7 @@ export class MyApp {
 
       const language = document.documentElement.lang;
       console.log('language: ', language);
-      this.translate.use(language);
+      this.translate.use("language");
     });
 
     // // solve the issue : "Cannot read property 'myID' of undefined"
