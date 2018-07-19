@@ -10,7 +10,7 @@ import { UserModel } from '../models/user';
 //import { ChatManager } from './chat-manager/chat-manager';
 // utils
 import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER } from '../utils/constants';
-import { urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
+import { compareValues, urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 
 //import { TranslateModule } from '@ngx-translate/core';
@@ -140,6 +140,7 @@ export class ChatConversationHandler {
     }
    
     that.messages.push(msg);
+    this.messages.sort(compareValues('timestamp', 'asc'));
 
     // aggiorno stato messaggio
     // questo stato indica che è stato consegnato al client e NON che è stato letto
