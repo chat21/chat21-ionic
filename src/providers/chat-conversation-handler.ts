@@ -124,7 +124,7 @@ export class ChatConversationHandler {
       }
 
       that.messages.push(msg);
-      this.messages.sort(compareValues('timestamp', 'asc'));
+      that.messages.sort(compareValues('timestamp', 'asc'));
 
       // aggiorno stato messaggio
       // questo stato indica che è stato consegnato al client e NON che è stato letto
