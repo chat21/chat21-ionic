@@ -83,7 +83,11 @@ export class MyApp {
       // init chat manager
       this.chatManager.configureWithAppId(tenant);
 
-      const language = document.documentElement.lang;
+      // const language = document.documentElement.lang;
+      let language = window.navigator.language; // detect browser language
+      if (language == null || language == undefined ) {
+        language = "en";
+      }
       console.log('language: ', language);
       this.translate.use(language);
     });
