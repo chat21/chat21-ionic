@@ -435,7 +435,26 @@ page-dettaglio-conversazione {
         .message:hover .buttonInfo { 
             display: block;
         }
-        
 
 
+
+        // BEGIN PANNELLO LATERALE
+        #btn-panel-info:disabled,
+        #btn-panel-info[disabled]{
+            color: #424242;
+            opacity: 100;
+            font-size: 16px;
+        }
+
+        #panel-info {
+            border-left: 1px solid #dedede;
+            height: 52px;
+            margin-right: 230px;
+            padding-top: 10px;
+        }
+
+         #btn-panel-info {
+            padding-top: -10px;
+        }
+        // END PANNELLO LATERALE
     }
