@@ -1,3 +1,5 @@
+Chat21 is the core of the open source livechat platform [Tiledesk.com](http://www.tiledesk.com).
+
 # Features #
 With Chat21-ionic you can:
 * Send a direct message to a user (one to one message)
