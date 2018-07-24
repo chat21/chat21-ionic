@@ -313,6 +313,7 @@ export class InfoConversationPage {
     }
     this.members = this.getListMembers(this.groupDetail.members);
     // console.log(this.groupDetail.members.length);
+    console.log("InfoConversationPage::setDetailGroup::members", this.members);
 
 
     // console.log("setDetailGroup.groupDetail.members", this.groupDetail.members);
@@ -333,14 +334,16 @@ export class InfoConversationPage {
 
   /** */
   getListMembers(members): UserModel[]{ 
+    console.log("InfoConversationPage::getListMembers::members", members);
     let arrayMembers = [];
     // var membersSize = 0;
     members.forEach(member => {
-      console.log("loadUserDetail: ", member);
+      console.log("InfoConversationPage::getListMembers::member", member);
       let userDetail = new UserModel(member, '', '', member, '', URL_NO_IMAGE);
       if (member.trim() !== '' && member.trim() !== SYSTEM) {
         this.userService.getUserDetail(member)
         .then(function(snapshot) { 
+          console.log("InfoConversationPage::getListMembers::snapshot", snapshot);
           if (snapshot.val()){
             const user = snapshot.val();
             const fullname = user.firstname+" "+user.lastname;  
@@ -356,7 +359,7 @@ export class InfoConversationPage {
               fullname.trim(), 
               imageUrl
             );  
-            console.log("userDetail: ", userDetail)
+            console.log("InfoConversationPage::getListMembers::userDetail", userDetail);
           }
           console.log("---------------> : ", member);
           arrayMembers.push(userDetail);
@@ -369,7 +372,7 @@ export class InfoConversationPage {
     });
 
     // arrayMembers.length = membersSize; // fix the array size
-    console.log("arrayMembers", arrayMembers);
+    console.log("InfoConversationPage::getListMembers::arrayMembers", arrayMembers);
     return arrayMembers;
   }
 

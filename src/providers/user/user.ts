@@ -126,7 +126,9 @@ export class UserService {
     getUserDetail(uid): any {
       const tenant = this.chatManager.getTenant();
       const urlNodeConcacts = contactsRef(tenant) + uid;
-      return firebase.database().ref(urlNodeConcacts).once('value');
+      var ref =  firebase.database().ref(urlNodeConcacts).once('value');
+      console.log("UserService::getUserDetail::ref:", ref.toString());
+      return ref;
     }
 
     getListMembers(members): UserModel[]{ 
