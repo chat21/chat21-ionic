@@ -85,6 +85,9 @@ export class ArchivedConversationsPage {
     const that = this;
     // setTimeout(function () {
       if (archivedConversation) {
+
+        archivedConversation.is_new = false;
+
         archivedConversation.status = '0';
         archivedConversation.selected = true;
         that.navProxy.pushDetail(DettaglioConversazionePage, {

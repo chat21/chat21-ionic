@@ -165,6 +165,9 @@ export class InfoConversationPage {
     this.channel_type = channel_type;
     this.attributes = attributes;
     if(attributes){
+
+      console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes)
+
       this.attributesClient = (attributes.client)?attributes.client:'';
       this.attributesSourcePage = (attributes.sourcePage)?urlify(attributes.sourcePage):'';
       //this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';

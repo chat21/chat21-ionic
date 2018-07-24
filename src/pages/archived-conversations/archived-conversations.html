@@ -13,7 +13,7 @@
           <div class="chat21-avatar" [style.background-image]="'url(' + archivedConversation.image + ')'"></div>
         </ion-avatar>
         <h2 class="truncate">{{archivedConversation.conversation_with_fullname}}</h2>
-        <p [class.not-read]="archivedConversation.status == 1" class="truncate" [innerHTML]="convertMessage(archivedConversation.last_message_text)"></p>
+        <p [class.not-read]="archivedConversation.is_new" class="truncate" [innerHTML]="convertMessage(archivedConversation.last_message_text)"></p>
      
         <!-- <ion-note item-end>{{archivedConversation.time_last_message}}</ion-note> -->
 
