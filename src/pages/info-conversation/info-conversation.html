@@ -87,6 +87,13 @@
                         <span light class="lighter">{{attributes.userEmail}}</span>
                     </div>
 
+                    <div *ngIf="customAttributes"  class="custom-attributes-container" >
+                        <div class="chat21-row custom-attributes" *ngFor="let attr of customAttributes">
+                            <span class="">{{ attr.key }}: </span>
+                            <span class="lighter">{{ attr.value }} </span>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="break-line"></div>
             </div>

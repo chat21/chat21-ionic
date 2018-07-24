@@ -373,8 +373,8 @@ export class DettaglioConversazionePage extends _DetailPage{
     try {
       msgRicevuti = this.messages.find(item => item.sender !== this.currentUserDetail.uid);
       attributes = msgRicevuti.attributes;
-    }
-    catch(err) {
+    } catch (err) {
+      console.error("DettaglioConversazionePage::onInfoConversation:error:", err)
     }
     //const msgRicevuti = this.messages.find(item => item.sender !== this.currentUserDetail.uid);
     console.log('msgRicevuti::::: ', msgRicevuti);

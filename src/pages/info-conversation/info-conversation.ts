@@ -33,6 +33,7 @@ export class InfoConversationPage {
   public currentUserDetail: UserModel;
   public profileYourself: boolean;
   public attributes: any = {};
+  private customAttributes = []; 
   public attributesClient: string = '';
   public attributesSourcePage: string = '';
   public attributesDepartments: string = '';
@@ -164,6 +165,7 @@ export class InfoConversationPage {
     this.uidSelected = uidUserSelected;
     this.channel_type = channel_type;
     this.attributes = attributes;
+
     if(attributes){
 
       console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes)
@@ -171,9 +173,49 @@ export class InfoConversationPage {
       this.attributesClient = (attributes.client)?attributes.client:'';
       this.attributesSourcePage = (attributes.sourcePage)?urlify(attributes.sourcePage):'';
       //this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
+
+      this.createCustomAttributesMap(attributes);
+      // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes);
+      console.log("InfoConversationPage::subcribeOnOpenInfoConversation::customAttributes", this.customAttributes);
+     
     }
     this.populateDetail();
   };
+
+  // create a new attributes map without 'client', 'departmentId', 'departmentName', 'sourcePage', 'userEmail', 'userName'
+  private createCustomAttributesMap(attributes) {
+    // perform a deep copy of the attributes item.
+    // it prevents the privacy leak issue
+    var temp = JSON.parse(JSON.stringify(attributes));
+    // remove 'client'
+    if (temp && temp['client']) delete temp['client'];
+    // remove 'departmentId'
+    if (temp && temp['departmentId']) delete temp['departmentId'];
+    // remove 'departmentName'
+    if (temp && temp['departmentName']) delete temp['departmentName'];
+    // remove 'sourcePage'
+    if (temp && temp['sourcePage']) delete temp['sourcePage'];
+    // remove 'userEmail'
+    if (temp && temp['userEmail']) delete temp['userEmail'];
+    // remove 'userName'
+    if (temp && temp['userName']) delete temp['userName'];
+
+    // add the remaining keys to the customAttributes array
+    for (var key in temp) {
+      if (temp.hasOwnProperty(key)) {
+        var val = temp[key];
+    
+        // create the array item
+        var item = {
+          "key": key, 
+          "value" : val
+        }
+
+        // add the item to the custom attributes array
+        this.customAttributes.push(item);
+      }
+    }
+  }
 
   /** */
   subcribeChangeStatusUserSelected: any = (lastConnectionDate, online) => {
