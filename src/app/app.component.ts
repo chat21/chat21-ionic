@@ -84,12 +84,18 @@ export class MyApp {
       this.chatManager.configureWithAppId(tenant);
 
       // const language = document.documentElement.lang;
-      let language = window.navigator.language; // detect browser language
-      if (language == null || language == undefined ) {
-        language = "en";
-      }
-      console.log('language: ', language);
+      // let language = window.navigator.language; // detect browser language
+      // if (language == null || language == undefined) {
+      //   language = "en";
+      // }
+      // console.log('language: ', language);
+      this.translate.setDefaultLang('en');
+      this.translate.use('en');
+
+      let language = (navigator.language.indexOf('-') != -1) ? navigator.language.substring(0, navigator.language.indexOf('-')) : navigator.language;
       this.translate.use(language);
+
+      console.log('language: ', language);
     });
 
     // // solve the issue : "Cannot read property 'myID' of undefined"
