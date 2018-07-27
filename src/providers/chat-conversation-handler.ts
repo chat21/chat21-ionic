@@ -70,7 +70,7 @@ export class ChatConversationHandler {
             client: this.CLIENT_BROWSER,
             sourcePage: location.href,
             userEmail: this.loggedUser.email,
-            userName: this.loggedUser.fullname
+            userFullname: this.loggedUser.fullname
         };
         console.log('>>>>>>>>>>>>>> setAttributes: ', JSON.stringify(attributes));
         sessionStorage.setItem('attributes', JSON.stringify(attributes));

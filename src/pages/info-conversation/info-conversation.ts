@@ -182,7 +182,7 @@ export class InfoConversationPage {
     this.populateDetail();
   };
 
-  // create a new attributes map without 'client', 'departmentId', 'departmentName', 'sourcePage', 'userEmail', 'userName'
+  // create a new attributes map without 'client', 'departmentId', 'departmentName', 'sourcePage', 'userEmail', 'userFullname'
   private createCustomAttributesMap(attributes) {
     // perform a deep copy of the attributes item.
     // it prevents the privacy leak issue
@@ -197,8 +197,8 @@ export class InfoConversationPage {
     if (temp && temp['sourcePage']) delete temp['sourcePage'];
     // remove 'userEmail'
     if (temp && temp['userEmail']) delete temp['userEmail'];
-    // remove 'userName'
-    if (temp && temp['userName']) delete temp['userName'];
+    // remove 'userFullname'
+    if (temp && temp['userFullname']) delete temp['userFullname'];
 
     // add the remaining keys to the customAttributes array
     for (var key in temp) {

@@ -79,9 +79,9 @@
                         <span class="">{{ 'LABEL_DEPARTMENT_NAME' | translate }}</span>
                         <span light class="lighter">{{attributes.departmentName}}</span>
                     </div>
-                    <div *ngIf="attributes && attributes.userName && attributes.userEmail" class="chat21-row">
+                    <div *ngIf="attributes && attributes.userFullname && attributes.userEmail" class="chat21-row">
                         <span class="">{{ 'LABEL_NAME' | translate }}</span>
-                        <span light class="lighter">{{attributes.userName}}</span>
+                        <span light class="lighter">{{attributes.userFullname}}</span>
                         <br/>
                         <span class="">{{ 'LABEL_EMAIL' | translate }}</span>
                         <span light class="lighter">{{attributes.userEmail}}</span>
