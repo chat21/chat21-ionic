@@ -17,6 +17,9 @@ import { ChatConversationHandler } from '../../providers/chat-conversation-handl
 // utils
 import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, LABEL_ANNULLA, LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
 import { getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
+import { PlaceholderPage } from '../placeholder/placeholder';
+import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
+import { TiledeskConversationProvider } from '../../providers/tiledesk-conversation/tiledesk-conversation';
 
 
 @Component({
@@ -48,7 +51,7 @@ export class InfoConversationPage {
 
   private loadingDialog : any;
   private confirmDialog : any;
-  
+
 
   constructor(
     public events: Events,
@@ -58,6 +61,8 @@ export class InfoConversationPage {
     public upSvc: UploadService,
     public zone: NgZone,
     public conversationHandler: ChatConversationHandler,
+    private conversationsHandler : ChatConversationsHandler,
+    private tiledeskConversationProvider : TiledeskConversationProvider,
     public alertCtrl: AlertController,
     public translate: TranslateService,
     private loadingCtrl: LoadingController, 
@@ -80,9 +85,9 @@ export class InfoConversationPage {
     // nn passa mai di qui!!!!
     console.log('InfoConversationPage ionViewWillLeave');
     //this.unsubscribeInfoConversation();
-    
+
   }
-  
+
   initialize(){
     this.profileYourself = false;
     this.currentUserDetail = this.chatManager.getLoggedUser();
@@ -131,31 +136,7 @@ export class InfoConversationPage {
           that.openPopupConfirmation('cannot-leave-group');
         }
       });
-    } else if(action === 'close') {
-      // // dismiss the confirm dialog
-      // this.dismissConfirmDialog();
-
-      // create and show loading dialog
-      var spinnerMessage;
-      this.translate.get('CLOSING_CONVERSATION_SPINNER_MSG').subscribe(
-        value => {
-          spinnerMessage = value;
-        }
-      )
-      this.createLoadingDialog(spinnerMessage);
-
-      this.closeGroup(function callback(result) {
-        if(result == 'success') {
-          // dismiss the loading dialog
-          that.dismissLoadingDialog();
-          that.openPopupConfirmation('conversation-closed');
-        } else if(result == 'error') {
-          // dismiss the loading dialog
-          that.dismissLoadingDialog();
-          that.openPopupConfirmation('cannot-close-conversation');
-        }
-      });
-    }
+    } 
   }
 
   /** */
@@ -177,7 +158,7 @@ export class InfoConversationPage {
       this.createCustomAttributesMap(attributes);
       // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes);
       console.log("InfoConversationPage::subcribeOnOpenInfoConversation::customAttributes", this.customAttributes);
-     
+
     }
     this.populateDetail();
   };
@@ -204,7 +185,7 @@ export class InfoConversationPage {
     for (var key in temp) {
       if (temp.hasOwnProperty(key)) {
         var val = temp[key];
-    
+
         // create the array item
         var item = {
           "key": key, 
@@ -329,7 +310,7 @@ export class InfoConversationPage {
 
     console.log("setDetailGroup.conversationEnabled", this.conversationEnabled);
   }
-  
+
 
 
   /** */
@@ -399,7 +380,7 @@ export class InfoConversationPage {
     //     spinnerMessage = value;
     //   }
     // );
-    
+
     // this.loadingDialog = createLoading(this.loadingCtrl, spinnerMessage);
     // this.loadingDialog.present();
 
@@ -490,7 +471,7 @@ export class InfoConversationPage {
    */
   openPopupConfirmation(action){
     // console.log("openPopupConfirmation");
-    
+
     //debugger;
     let alertTitle = '';
     let alertMessage = '';
@@ -523,28 +504,7 @@ export class InfoConversationPage {
         }
       )
       onlyOkButton = false;
-    }  else if(action === 'close'){
-      this.translate.get('CLOSE_ALERT_MSG').subscribe(
-        value => {
-          alertMessage = value;
-        }
-      )
-      onlyOkButton = false;
-    } else if (action === 'conversation-closed') {
-      this.translate.get('CONVERSATION_CLOSED_ALERT_MSG').subscribe(
-        value => {
-          alertMessage = value;
-        }
-      )
-      onlyOkButton = true;
-    } else if (action === 'cannot-close-conversation') {
-      this.translate.get('CANNOT_CLOSE_CONVERSATION_ALERT_MSG').subscribe(
-        value => {
-          alertMessage = value;
-        }
-      )
-      onlyOkButton = false;
-    } 
+    }  
 
     // console.log("onlyOkButton", onlyOkButton);
 
@@ -580,5 +540,123 @@ export class InfoConversationPage {
       this.confirmDialog.dismiss();
       this.confirmDialog = null;
     }
+  }
+
+  private closeConversation(conversationId) {
+    console.log("InfoConversationPage::closeConversation::conversationId", conversationId);
+
+    var isSupportConversation = conversationId.startsWith("support-group");
+    // console.log("InfoConversationPage::closeConversation::isSupportConversation", isSupportConversation);
+
+    if (!isSupportConversation) {
+      console.log("InfoConversationPage::closeConversation:: is not a support group");
+
+      this.deleteConversation(conversationId, function (result, data) {
+        if (result === 'success') {
+          console.log("InfoConversationPage::closeConversation::deleteConversation::response", data);
+          // console.log("InfoConversationPage::closeConversation::deleteConversation::response::conversation::", conversation);
+        } else if (result === 'error') {
+          console.error("InfoConversationPage::closeConversation::deleteConversation::error", data);
+          // console.error("InfoConversationPage::closeConversation::deleteConversation::error::conversation::", conversation);
+        }
+      });
+
+      // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
+    } else {
+      console.log("InfoConversationPage::closeConversation::closeConversation:: is a support group");
+
+      // the conversationId is:
+      // - the recipientId if it is a direct conversation;
+      // - the groupId if it is a group conversation;
+      // the groupId can reference:
+      // - a normal group;
+      // - a support  group if it starts with "support-group"
+      this.closeSupportGroup(conversationId, function (result, data) {
+        if (result === 'success') {
+          console.log("InfoConversationPage::closeConversation::closeSupportGroup::response", data);
+          // console.log("InfoConversationPage::closeConversation::closeSupportGroup::response::conversation::", conversation);
+
+        } else if (result === 'error') {
+          console.error("InfoConversationPage::closeConversation::closeSupportGroup::error", data);
+          // console.error("InfoConversationPage::closeConversation::closeSupportGroup::error::conversation::", conversation);
+        }
+      });
+    }
+  }
+
+  // close the support group
+  // more details availables at 
+  // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#close-support-group
+  private closeSupportGroup(groupId, callback) {
+
+    var that = this;
+
+    // BEGIN -  REMOVE FROM LOCAL MEMORY 
+    // console.log("performClosingConversation::conversations::BEFORE", JSON.stringify(this.conversationsHandler.conversations) )
+    this.conversationsHandler.removeByUid(groupId); // remove the item 
+    // this.conversations = this.conversationsHandler.conversations; // update conversations
+    // console.log("performClosingConversation::conversations::AFTER", JSON.stringify(this.conversationsHandler.conversations))
+    // END -  REMOVE FROM LOCAL MEMORY 
+
+    // BEGIN - REMOVE FROM REMOTE 
+    //set the conversation from the isConversationClosingMap that is waiting to be closed
+    this.tiledeskConversationProvider.setClosingConversation(groupId, true);
+
+    this.groupService.closeGroup(groupId)
+      .subscribe(response => {
+        callback('success', response);
+      }, errMsg => {
+        // the conversation closing failed: restore the conversation with 
+        // conversationId status to false within the isConversationClosingMap
+        that.tiledeskConversationProvider.setClosingConversation(groupId, false);
+
+        callback('error', errMsg);
+      }, () => {
+        console.log("InfoConversationPage::closeSupportGroup::completition");
+      });
+    // END - REMOVE FROM REMOTE 
+
+    // // when a conversations is closed shows a placeholder background
+    // if (groupId === that.uidSelected) {
+    //   that.navProxy.pushDetail(PlaceholderPage, {});
+    // }
+  }
+
+  // delete a conversation form the personal timeline
+  // more details availables at 
+  // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
+  private deleteConversation(conversationId, callback) {
+    // console.log("InfoConversationPage::deleteConversation::conversationId", conversationId);
+
+    var that = this;
+
+    // END - REMOVE FROM LOCAL MEMORY 
+    // console.log("deleteConversation::conversations::BEFORE", JSON.stringify(this.conversationsHandler.conversations))
+    this.conversationsHandler.removeByUid(conversationId); // remove the item 
+    // this.conversations = this.conversationsHandler.conversations; // update conversations
+    // console.log("deleteConversation::conversations::AFTER", JSON.stringify(this.conversationsHandler.conversations))
+    // END - REMOVE FROM LOCAL MEMORY 
+
+    // BEGIN - REMOVE FROM REMOTE 
+    //set the conversation from the isConversationClosingMap that is waiting to be closed
+    this.tiledeskConversationProvider.setClosingConversation(conversationId, true);
+
+    this.tiledeskConversationProvider.deleteConversation(conversationId)
+      .subscribe(response => {
+        callback('success', response);
+      }, errMsg => {
+        // the conversation closing failed: restore the conversation with
+        // conversationId status to false within the isConversationClosingMap
+        that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
+        callback('error', errMsg);
+      }, () => {
+        console.log("InfoConversationPage::deleteConversation::completition");
+      });
+    // END - REMOVE FROM REMOTE 
+
+    // // when a conversations is closed shows a placeholder background
+    // if (conversationId === that.uidSelected) {
+    //   that.navProxy.pushDetail(PlaceholderPage, {});
+    // }
   }
 }

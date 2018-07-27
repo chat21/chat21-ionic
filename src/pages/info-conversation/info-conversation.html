@@ -152,7 +152,7 @@
         </ion-card> -->
             <ion-card *ngIf="isSupportGroup()">
                 <div class="chat21-content" style="width: 100%">
-                    <button [disabled]="!conversationEnabled" item-right ion-button clear icon-start color="danger" (click)="openPopupConfirmation('close')">
+                    <button [disabled]="!conversationEnabled" item-right ion-button clear icon-start color="danger" (click)="closeConversation(uidSelected);$event.stopPropagation();">
                         <ion-icon name='close' is-active="false"></ion-icon>
                         {{ 'LABEL_CLOSE_GROUP' | translate }}
                     </button>
