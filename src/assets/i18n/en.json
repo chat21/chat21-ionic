@@ -35,8 +35,8 @@
   "ALERT_TITLE": "WARNING",
   "CLOSE_ALERT_CONFIRM_LABEL": "OK",
   "CLOSE_ALERT_CANCEL_LABEL": "CANCEL",
-  "LEAVE_ALERT_MSG": "Leave the group? <br> <b> The action is not reversible </b>",
-  "CLOSE_ALERT_MSG": "Close the conversation? <br> <b> The action is not reversible </b>",
+  "LEAVE_ALERT_MSG": "Leave the group?",
+  "CLOSE_ALERT_MSG": "Close the conversation?",
   "CLOSING_CONVERSATION_SPINNER_MSG": "Please wait.<br> We are closing the conversation",
   "CONVERSATION_CLOSED_ALERT_MSG" : "The conversation was successfully closed.",
   "CANNOT_CLOSE_CONVERSATION_ALERT_MSG": "Unable to close the conversation",
@@ -51,7 +51,7 @@
 
   "INFO_SUPPORT_USER_ADDED_SUBJECT": "you",
   "INFO_SUPPORT_USER_ADDED_YOU_VERB": "have been added",
-  "INFO_SUPPORT_USER_ADDED_VERB": "has been added",
-  "INFO_SUPPORT_USER_ADDED_COMPLEMENT": "to the group",
+  "INFO_SUPPORT_USER_ADDED_VERB": "joined",
+  "INFO_SUPPORT_USER_ADDED_COMPLEMENT": "the chat",
   "INFO_SUPPORT_USER_ADDED_MESSAGE" : "{{ subject }} {{ verb }} {{ complement }}"
 }

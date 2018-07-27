@@ -35,8 +35,8 @@
     "ALERT_TITLE": "ATTENZIONE",
     "CLOSE_ALERT_CONFIRM_LABEL" : "OK",
     "CLOSE_ALERT_CANCEL_LABEL": "ANNULLA",
-    "LEAVE_ALERT_MSG": "Abbandonare il gruppo? <br> <b> L'azione non è reversibile </b>",
-    "CLOSE_ALERT_MSG": "Chiudere la conversazione? <br> <b> L'azione non è reversibile </b>",
+    "LEAVE_ALERT_MSG": "Abbandonare il gruppo?",
+    "CLOSE_ALERT_MSG": "Chiudere la conversazione?",
     "CLOSING_CONVERSATION_SPINNER_MSG": "Attendere prego.. <br> Stiamo chiudendo la conversazione",
     "CONVERSATION_CLOSED_ALERT_MSG": "La conversazione è stata chiusa con successo.",
     "CANNOT_CLOSE_CONVERSATION_ALERT_MSG": "Impossibile chiudere la conversazione",
@@ -51,7 +51,7 @@
 
     "INFO_SUPPORT_USER_ADDED_SUBJECT": "",
     "INFO_SUPPORT_USER_ADDED_YOU_VERB": "sei stato aggiunto",
-    "INFO_SUPPORT_USER_ADDED_VERB": "è stato aggiunto",
-    "INFO_SUPPORT_USER_ADDED_COMPLEMENT": "al gruppo",
+    "INFO_SUPPORT_USER_ADDED_VERB": "si è unito",
+    "INFO_SUPPORT_USER_ADDED_COMPLEMENT": "alla chat",
     "INFO_SUPPORT_USER_ADDED_MESSAGE": "{{ subject }} {{ verb }} {{ complement }}"
 }
