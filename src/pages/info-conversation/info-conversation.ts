@@ -20,6 +20,8 @@ import { getFormatData, createConfirm, urlify, isExistInArray, createLoading } f
 import { PlaceholderPage } from '../placeholder/placeholder';
 import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
 import { TiledeskConversationProvider } from '../../providers/tiledesk-conversation/tiledesk-conversation';
+import { ConversationModel } from '../../models/conversation';
+import { ChatArchivedConversationsHandler } from '../../providers/chat-archived-conversations-handler';
 
 
 @Component({
@@ -52,6 +54,7 @@ export class InfoConversationPage {
   private loadingDialog : any;
   private confirmDialog : any;
 
+  private isCloseBtnEnabled: boolean = false;
 
   constructor(
     public events: Events,
@@ -62,11 +65,11 @@ export class InfoConversationPage {
     public zone: NgZone,
     public conversationHandler: ChatConversationHandler,
     private conversationsHandler : ChatConversationsHandler,
+    private archivedConversationsHandler : ChatArchivedConversationsHandler,
     private tiledeskConversationProvider : TiledeskConversationProvider,
     public alertCtrl: AlertController,
     public translate: TranslateService,
-    private loadingCtrl: LoadingController, 
-
+    private loadingCtrl: LoadingController,
   ) {
     this.profileYourself = false;
     this.online = false; 
@@ -103,6 +106,7 @@ export class InfoConversationPage {
     // this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
     // this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
     this.events.subscribe('PopupConfirmation', this.subcribePopupConfirmation);
+
     console.log('this.conversationHandler.listSubsriptions',this.conversationHandler.listSubsriptions);
   }
 
@@ -205,7 +209,6 @@ export class InfoConversationPage {
   };
 
 
-
   /**
    * unsubscribe all subscribe events
    */
@@ -216,6 +219,9 @@ export class InfoConversationPage {
     // this.events.unsubscribe('loadUserDetail:complete', null);
     // this.events.unsubscribe('loadGroupDetail:complete', null);
     this.events.unsubscribe('PopupConfirmation', null);
+
+    this.events.unsubscribe('conversationAdded', null);
+    this.events.unsubscribe('archivedConversationAdded', null);
   }
   // ----------------------------------------- //
 
@@ -248,6 +254,16 @@ export class InfoConversationPage {
       .catch(function(err) {
         console.log('Unable to get permission to notify.', err);
       });
+
+      // enable/disable the close conversation button when the view is opened
+      if (this.existsInArray(this.conversationsHandler.conversations, this.uidSelected)) {
+        // not archived
+        this.isCloseBtnEnabled = true;
+      } else if (this.existsInArray(this.archivedConversationsHandler.conversations, this.uidSelected)) {
+        // archived
+        this.isCloseBtnEnabled = false;
+      }
+
     } else {
       this.profileYourself = false;
       //this.userDetail = new UserModel(this.uidSelected, '', '', '', '', '');
@@ -546,7 +562,6 @@ export class InfoConversationPage {
     console.log("InfoConversationPage::closeConversation::conversationId", conversationId);
 
     var isSupportConversation = conversationId.startsWith("support-group");
-    // console.log("InfoConversationPage::closeConversation::isSupportConversation", isSupportConversation);
 
     if (!isSupportConversation) {
       console.log("InfoConversationPage::closeConversation:: is not a support group");
@@ -554,10 +569,8 @@ export class InfoConversationPage {
       this.deleteConversation(conversationId, function (result, data) {
         if (result === 'success') {
           console.log("InfoConversationPage::closeConversation::deleteConversation::response", data);
-          // console.log("InfoConversationPage::closeConversation::deleteConversation::response::conversation::", conversation);
         } else if (result === 'error') {
           console.error("InfoConversationPage::closeConversation::deleteConversation::error", data);
-          // console.error("InfoConversationPage::closeConversation::deleteConversation::error::conversation::", conversation);
         }
       });
 
@@ -574,11 +587,8 @@ export class InfoConversationPage {
       this.closeSupportGroup(conversationId, function (result, data) {
         if (result === 'success') {
           console.log("InfoConversationPage::closeConversation::closeSupportGroup::response", data);
-          // console.log("InfoConversationPage::closeConversation::closeSupportGroup::response::conversation::", conversation);
-
         } else if (result === 'error') {
           console.error("InfoConversationPage::closeConversation::closeSupportGroup::error", data);
-          // console.error("InfoConversationPage::closeConversation::closeSupportGroup::error::conversation::", conversation);
         }
       });
     }
@@ -659,4 +669,14 @@ export class InfoConversationPage {
     //   that.navProxy.pushDetail(PlaceholderPage, {});
     // }
   }
+
+   private existsInArray(array: ConversationModel[], uid) : boolean{
+     var index = array.map(function (o) { return o.uid; }).indexOf(uid);
+
+     console.log('echouid', uid);
+     console.log('echoindex', index);
+
+     return index > -1;
+
+    }
 }
