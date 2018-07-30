@@ -233,6 +233,18 @@ export class ChatConversationHandler {
         });
 
       } // [END MEMBER_JOINED_GROUP]
+
+      // [END CHAT_REOPENED]
+      else if ((message.attributes.messagelabel && message.attributes.messagelabel.key === 'CHAT_REOPENED')) {
+        message.text = this.translate.get('INFO_SUPPORT_CHAT_REOPENED')['value'];
+      }
+      // [END CHAT_REOPENED]
+
+      // [END CHAT_CLOSED]
+      else if ((message.attributes.messagelabel && message.attributes.messagelabel.key === 'CHAT_CLOSED')) {
+        message.text = this.translate.get('INFO_SUPPORT_CHAT_CLOSED')['value'];
+      }
+      // [END CHAT_CLOSED]
     }
    
 

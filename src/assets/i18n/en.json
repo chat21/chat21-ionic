@@ -53,5 +53,8 @@
   "INFO_SUPPORT_USER_ADDED_YOU_VERB": "have been added",
   "INFO_SUPPORT_USER_ADDED_VERB": "joined",
   "INFO_SUPPORT_USER_ADDED_COMPLEMENT": "the chat",
-  "INFO_SUPPORT_USER_ADDED_MESSAGE" : "{{ subject }} {{ verb }} {{ complement }}"
+  "INFO_SUPPORT_USER_ADDED_MESSAGE" : "{{ subject }} {{ verb }} {{ complement }}",
+
+  "INFO_SUPPORT_CHAT_REOPENED": "Chat reopened",
+  "INFO_SUPPORT_CHAT_CLOSED": "Chat closed"
 }
