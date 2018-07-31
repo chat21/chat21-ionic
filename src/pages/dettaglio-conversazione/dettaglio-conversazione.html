@@ -45,78 +45,85 @@
 
   <span *ngIf="messages.length > 0;then content_messages else contentMessageWelcome">here is ignored</span>
   <ng-template #content_messages>
-    <ion-list no-lines>
-      <div *ngFor="let message of messages">
-        <div *ngIf="message && message.headerDate && message.headerDate != ''">
-          <ion-item text-wrap>
-            <div class="rowDay">
-              <span class="headerDay">{{message.headerDate}}</span>
-            </div>
-          </ion-item>
-        </div>
-        <ion-item class="itemMessage" text-wrap>
-          <span *ngIf="isSender(message); then contentMine else contentOther"></span>
-          <ng-template #contentMine>
-            <div class="statusMessage">
-              <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>
-              <ion-icon *ngIf="message.status==MSG_STATUS_SENT" name="ios-checkmark"></ion-icon>
-              <ion-icon *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" name="ios-done-all"></ion-icon>
-            </div>
-            <div class="message message-mine" (mouseover)="showButtonInfo()">
-              <span class="buttonInfo" (click)="presentPopover($event, message)">
-              </span>
-              <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
-                [height]="getSizeImg(message).height" />
-              <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
-              <div *ngIf="message.type == 'text';">
-                <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
-                <ng-template #contentPopup>
-                  <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div>
-                </ng-template>
-                <ng-template #contentNewTab>
-                  <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div>
-                </ng-template>
-              </div>
-              <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
-            </div>
-          </ng-template>
-
-          <ng-template #contentOther>
-            <div *ngIf="message.attributes && (message.attributes.subtype == 'info' || message.attributes.subtype == 'info/support') then conversWithSystem else conversWithOther"></div>
-          </ng-template>
-
-          <ng-template #conversWithSystem>
-            <div class="info-support-container">
-              <span *ngIf="message.attributes && (message.attributes.subtype == 'info' || message.attributes.subtype == 'info/support')" class="message-content-info-support"> {{ message.text }} </span>
-            </div>
-          </ng-template>
-         
-
-          <ng-template #conversWithOther>
-              <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
-              <div class="message message-other" (mouseover)="showButtonInfo()">
-                <span class="buttonInfo" [ngClass]="message.uid" (click)="presentPopover($event, message)">
-                </span>
-                <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
-                  [height]="getSizeImg(message).height" />
-                <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
-              
-              
-                <div *ngIf="message.type == 'text';">
-                  <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
-                  <ng-template #contentPopup>
-                    <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div>
-                  </ng-template>
-                  <ng-template #contentNewTab>
-                    <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div>
-                  </ng-template>
+    <div #scrollMe id="scroll-me" style="height:100%; overflow-y:auto;" (scroll)="onScroll($event)">
+      <div id="chat21-contentScroll">
+        <ion-list no-lines>
+          <div *ngFor="let message of messages">
+            <div *ngIf="message && message.headerDate && message.headerDate != ''">
+              <ion-item text-wrap>
+                <div class="rowDay">
+                  <span class="headerDay">{{message.headerDate}}</span>
                 </div>
-                <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
-              </div>
-          </ng-template>
-        </ion-item>
+              </ion-item>
+            </div>
+
+            <ion-item class="itemMessage" text-wrap>
+              <span *ngIf="isSender(message); then contentMine else contentOther"></span>
+              <ng-template #contentMine>
+                <div class="statusMessage">
+                  <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>
+                  <ion-icon *ngIf="message.status==MSG_STATUS_SENT" name="ios-checkmark"></ion-icon>
+                  <ion-icon *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" name="ios-done-all"></ion-icon>
+                </div>
+                <div class="message message-mine" (mouseover)="showButtonInfo()">
+                  <span class="buttonInfo" (click)="presentPopover($event, message)"> </span>
+                  <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
+                  [height]="getSizeImg(message).height" />
+                  <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
+                  <div *ngIf="message.type == 'text';">
+                    <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
+                    <ng-template #contentPopup>
+                      <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div>
+                    </ng-template>
+                    <ng-template #contentNewTab>
+                      <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div>
+                    </ng-template>
+                  </div>
+                  <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
+                </div>
+              </ng-template>
+
+              <ng-template #contentOther>
+                <div *ngIf="message.attributes && (message.attributes.subtype == 'info' || message.attributes.subtype == 'info/support') then conversWithSystem else conversWithOther"></div>
+              </ng-template>
+
+              <ng-template #conversWithSystem>
+                <div class="info-support-container">
+                  <span *ngIf="message.attributes && (message.attributes.subtype == 'info' || message.attributes.subtype == 'info/support')" class="message-content-info-support"> {{ message.text }} </span>
+                </div>
+              </ng-template>
+        
+
+              <ng-template #conversWithOther>
+                  <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
+                  <div class="message message-other" (mouseover)="showButtonInfo()">
+                    <span class="buttonInfo" [ngClass]="message.uid" (click)="presentPopover($event, message)">
+                    </span>
+                    <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
+                      [height]="getSizeImg(message).height" />
+                    <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
+                  
+                  
+                    <div *ngIf="message.type == 'text';">
+                      <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
+                      <ng-template #contentPopup>
+                        <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div>
+                      </ng-template>
+                      <ng-template #contentNewTab>
+                        <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div>
+                      </ng-template>
+                    </div>
+                    <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
+                  </div>
+              </ng-template>
+            </ion-item>
+          </div>
+        </ion-list>
       </div>
-    </ion-list>
+    </div>
+    <div *ngIf="showButtonToBottom" id="chat21-buttonToBottom" (click)="scrollBottom()">
+      <div *ngIf="NUM_BADGES!=0" id="chat21-divBudge">{{NUM_BADGES}}</div>
+    </div>
   </ng-template>
 
   <ng-template #contentMessageWelcome>
@@ -124,7 +131,6 @@
       {{ 'LABEL_NO_MSG_HERE' | translate }}
     </div>
   </ng-template>
-
 </ion-content>
 
 

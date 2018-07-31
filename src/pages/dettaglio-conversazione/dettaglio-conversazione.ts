@@ -21,6 +21,7 @@ import { PopoverPage } from '../popover/popover';
 import { TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
 import { isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from '../../../node_modules/rxjs/Subscription';
 
 
 @IonicPage()
@@ -31,6 +32,11 @@ import { TranslateService } from '@ngx-translate/core';
 export class DettaglioConversazionePage extends _DetailPage{
   @ViewChild(Content) content: Content;
   @ViewChild('messageTextArea') messageTextArea: ElementRef; 
+
+  @ViewChild('scrollMe') private scrollMe: ElementRef;
+  showButtonToBottom = false;
+  contentScroll: any;
+  NUM_BADGES = 0;
 
   private tenant: string;
   private conversationHandler: ChatConversationHandler;
@@ -114,7 +120,36 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.events.subscribe('openInfoMessage', this.onOpenInfoMessage);
     // subscribe message videochat
     this.events.subscribe('openVideoChat', this.onOpenVideoChat);
+  }
 
+  /**
+    *
+    */
+  // LISTEN TO SCROLL POSITION
+  onScroll(event: any): void {
+    if (this.scrollMe) {
+      const divScrollMe = this.scrollMe.nativeElement;
+      const checkContentScrollPosition = this.isContentScrollEnd(divScrollMe);
+      if (checkContentScrollPosition) {
+        this.showButtonToBottom = false;
+        this.NUM_BADGES = 0;
+      } else {
+        this.showButtonToBottom = true;
+        // this.scrollToBottom();
+      }
+    }
+  }
+
+  private isContentScrollEnd(divScrollMe): boolean {
+    // console.log('checkContentScrollPosition ::', divScrollMe);
+    // console.log('divScrollMe.diff ::', divScrollMe.scrollHeight - divScrollMe.scrollTop);
+    // console.log('divScrollMe.clientHeight ::', divScrollMe.clientHeight);
+    if (divScrollMe.scrollTop === (divScrollMe.scrollHeight - divScrollMe.offsetHeight)) {
+      // console.log('SONO ALLA FINE ::');
+      return true;
+    } else {
+      return false;
+    }
   }
 
   //// CALLBACK SUBSCRIBTIONS ////
@@ -235,6 +270,23 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.chatPresenceHandler.userIsOnline(this.conversationWith);
     this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
     this.initConversationHandler();
+
+    var that = this;
+    // NUOVO MESSAGGIO!!
+   this.conversationHandler.obsAdded
+      .subscribe(newMessage => {
+        if (that.scrollMe) {
+          const divScrollMe = that.scrollMe.nativeElement;
+          const checkContentScrollPosition = that.isContentScrollEnd(divScrollMe);
+          if (checkContentScrollPosition) {
+            setTimeout(function () {
+              that.scrollBottom();
+            }, 100);
+          } else {
+            that.NUM_BADGES++;
+          }
+        }
+      });
   }
   /**
    * recupero da chatManager l'handler
@@ -311,13 +363,11 @@ export class DettaglioConversazionePage extends _DetailPage{
    * Scroll to bottom of page after a short delay.
    */
   scrollBottom() {
-    let that = this;
-    setTimeout(function() {
-      //console.log('scrollBottom **************', that.content._scroll);
-      if(that.content._scroll){
-        that.content.scrollToBottom(0);
-      }
-    }, 1);
+
+    var scrollDiv = document.getElementById("scroll-me");
+    if (scrollDiv) {
+      scrollDiv.scrollTop = scrollDiv.scrollHeight;
+    }
   }
   /**
    * Scroll to top of the page after a short delay.

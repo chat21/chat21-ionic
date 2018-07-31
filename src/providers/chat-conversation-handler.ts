@@ -12,6 +12,7 @@ import { UserModel } from '../models/user';
 import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER } from '../utils/constants';
 import { compareValues, urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from '../../node_modules/rxjs/BehaviorSubject';
 
 
 //import { TranslateModule } from '@ngx-translate/core';
@@ -34,6 +35,8 @@ export class ChatConversationHandler {
   public CLIENT_BROWSER: string;
   //public events: Events;
 
+  obsAdded: BehaviorSubject<MessageModel>;
+
   constructor(
     public events: Events,
     private translate: TranslateService
@@ -45,6 +48,7 @@ export class ChatConversationHandler {
     //this.events = new Events();
     this.listSubsriptions = [];
     this.CLIENT_BROWSER = navigator.userAgent;
+    this.obsAdded = new BehaviorSubject<MessageModel>(null);
   }
   /**
    * inizializzo conversation handler
@@ -134,6 +138,8 @@ export class ChatConversationHandler {
       if (msg.sender === that.loggedUser.uid) {
         that.events.publish('doScroll');
       }
+
+      that.obsAdded.next(msg);
       // pubblico messaggio - sottoscritto in dettaglio conversazione
       //console.log("publish:: ", 'listMessages:added-'+that.conversationWith, that.events);
       //that.events.publish('listMessages:added-'+that.conversationWith, that.conversationWith, msg);

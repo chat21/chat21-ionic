@@ -6,3 +6,5 @@ old
 package-lock.json
 coverage.html
 package copia.json
+.sourcemaps/
+.sourcemaps/*
