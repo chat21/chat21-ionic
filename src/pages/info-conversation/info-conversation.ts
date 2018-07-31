@@ -23,6 +23,8 @@ import { TiledeskConversationProvider } from '../../providers/tiledesk-conversat
 import { ConversationModel } from '../../models/conversation';
 import { ChatArchivedConversationsHandler } from '../../providers/chat-archived-conversations-handler';
 
+import { NavProxyService } from '../../providers/nav-proxy';
+
 
 @Component({
   selector: 'page-info-conversation',
@@ -54,8 +56,6 @@ export class InfoConversationPage {
   private loadingDialog : any;
   private confirmDialog : any;
 
-  private isCloseBtnEnabled: boolean = false;
-
   constructor(
     public events: Events,
     public chatManager: ChatManager,
@@ -70,6 +70,7 @@ export class InfoConversationPage {
     public alertCtrl: AlertController,
     public translate: TranslateService,
     private loadingCtrl: LoadingController,
+    private navProxy: NavProxyService,
   ) {
     this.profileYourself = false;
     this.online = false; 
@@ -140,7 +141,9 @@ export class InfoConversationPage {
           that.openPopupConfirmation('cannot-leave-group');
         }
       });
-    } 
+    } else if (action === 'close') {
+      this.closeConversation(this.uidSelected);
+    }
   }
 
   /** */
@@ -254,15 +257,6 @@ export class InfoConversationPage {
       .catch(function(err) {
         console.log('Unable to get permission to notify.', err);
       });
-
-      // enable/disable the close conversation button when the view is opened
-      if (this.existsInArray(this.conversationsHandler.conversations, this.uidSelected)) {
-        // not archived
-        this.isCloseBtnEnabled = true;
-      } else if (this.existsInArray(this.archivedConversationsHandler.conversations, this.uidSelected)) {
-        // archived
-        this.isCloseBtnEnabled = false;
-      }
 
     } else {
       this.profileYourself = false;
@@ -427,19 +421,6 @@ export class InfoConversationPage {
   /** */
   closeGroup(callback) {
 
-    // var spinnerMessage;
-    // this.translate.get('CLOSING_CONVERSATION_SPINNER_MSG').subscribe(
-    //   value => {
-    //     spinnerMessage = value;
-    //   }
-    // )
-    // // this.loading = this.loadingCtrl.create({
-    // //   spinner: 'circles',
-    // //   content: spinnerMessage,
-    // // });
-
-    // this.loadingDialog = createLoading(this.loadingCtrl, spinnerMessage);
-    // this.loadingDialog.present();
 
     this.conversationEnabled = false;
     this.events.publish('conversationEnabled', false);
@@ -520,7 +501,14 @@ export class InfoConversationPage {
         }
       )
       onlyOkButton = false;
-    }  
+    } else if (action === 'close') {
+      this.translate.get('CLOSE_ALERT_MSG').subscribe(
+        value => {
+          alertMessage = value;
+        }
+      )
+      onlyOkButton = false;
+    }
 
     // console.log("onlyOkButton", onlyOkButton);
 
@@ -626,10 +614,10 @@ export class InfoConversationPage {
       });
     // END - REMOVE FROM REMOTE 
 
-    // // when a conversations is closed shows a placeholder background
-    // if (groupId === that.uidSelected) {
-    //   that.navProxy.pushDetail(PlaceholderPage, {});
-    // }
+    // when a conversations is closed shows a placeholder background
+    if (groupId === that.uidSelected) {
+      that.navProxy.pushDetail(PlaceholderPage, {});
+    }
   }
 
   // delete a conversation form the personal timeline
@@ -664,10 +652,10 @@ export class InfoConversationPage {
       });
     // END - REMOVE FROM REMOTE 
 
-    // // when a conversations is closed shows a placeholder background
-    // if (conversationId === that.uidSelected) {
-    //   that.navProxy.pushDetail(PlaceholderPage, {});
-    // }
+    // when a conversations is closed shows a placeholder background
+    if (conversationId === that.uidSelected) {
+      that.navProxy.pushDetail(PlaceholderPage, {});
+    }
   }
 
    private existsInArray(array: ConversationModel[], uid) : boolean{

@@ -24,6 +24,7 @@ export class ChatConversationsHandler {
     private loggedUser: UserModel;
     private userId: string;
     private ref: firebase.database.Query;
+
     //public LABEL_TU: string;
     constructor(
         public events: Events,
@@ -71,6 +72,9 @@ export class ChatConversationsHandler {
             that.added(childSnapshot);
         })
     }
+
+
+   
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
     /**
      * 1 - aggiungo alla pos 0 la nuova conversazione all'array di conversazioni 
