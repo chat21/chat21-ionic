@@ -271,16 +271,13 @@ export class InfoConversationPage {
       //   console.log('Unable to get permission to notify.', err);
       // });
 
-      // init conversation subscription
-      this.conversationsHandler.addConversationListener(this.currentUserDetail.uid, this.uidSelected);
+      // init conversation subscription (close btn)
       this.events.subscribe(this.uidSelected + '-listener', this.subscribeConversationListener);
+      this.conversationsHandler.addConversationListener(this.currentUserDetail.uid, this.uidSelected);
       
       // init group details subscription
-      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected);
       this.events.subscribe(this.uidSelected + '-details', this.subscribeGroupDetails);
-      // this.events.subscribe(this.uidSelected + '-details-added', this.subscribeGroupDetailsAdded);
-      // this.events.subscribe(this.uidSelected + '-details-changed', this.subscribeGroupDetailsChanged);
-      // this.events.subscribe(this.uidSelected + '-details-removed', this.subscribeGroupDetailsRemoved);
+      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected);
 
     } else {
       this.profileYourself = false;
@@ -333,6 +330,7 @@ export class InfoConversationPage {
         that.attributes = snapshot.val().attributes; 
         that.updateAttributes(snapshot.val().attributes);
       }
+      // render layout
       that.setDetailGroup(snapshot);
     }
   }
@@ -354,7 +352,8 @@ export class InfoConversationPage {
 
 
   setDetailGroup(snapshot){
-    // console.log("InfoConversationPage::setDetailGroup::snapshot", snapshot.val());
+    console.log("InfoConversationPage::setDetailGroup::snapshot", snapshot.val());
+
     const group = snapshot.val();
     this.groupDetail = new GroupModel(
       snapshot.key, 
@@ -380,6 +379,8 @@ export class InfoConversationPage {
     } else {
       this.isLoggedUserGroupMember = true;
     }
+
+    // debugger
   }
 
 
