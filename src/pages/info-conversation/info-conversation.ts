@@ -78,21 +78,23 @@ export class InfoConversationPage {
   }
 
   ngOnInit() {
+    console.log('InfoConversationPage::ngOnInit');
     this.initialize();
-    console.log('InfoConversationPage ngOnInit');
   }
 
-  /**
-   * quando esco dalla pagina distruggo i subscribe
-   */
-  ionViewWillLeave() {
-    // nn passa mai di qui!!!!
-    console.log('InfoConversationPage ionViewWillLeave');
-    //this.unsubscribeInfoConversation();
+  // /**
+  //  * quando esco dalla pagina distruggo i subscribe
+  //  */
+  // ionViewWillLeave() {
+  //   // nn passa mai di qui!!!!
+  //   console.log('InfoConversationPage ionViewWillLeave');
+  //   //this.unsubscribeInfoConversation();
 
-  }
+  // }
+
 
   initialize(){
+    console.log('InfoConversationPage::initialize');
     this.profileYourself = false;
     this.currentUserDetail = this.chatManager.getLoggedUser();
     this.userDetail = new UserModel('', '', '', '', '', '');
@@ -102,13 +104,14 @@ export class InfoConversationPage {
 
   /** SUBSCRIPTIONS */
   setSubscriptions(){
+    console.log('InfoConversationPage::setSubscriptions');
     this.events.subscribe('onOpenInfoConversation', this.subcribeOnOpenInfoConversation);
     this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
     // this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
     // this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
     this.events.subscribe('PopupConfirmation', this.subcribePopupConfirmation);
 
-    console.log('this.conversationHandler.listSubsriptions',this.conversationHandler.listSubsriptions);
+    // console.log('this.conversationHandler.listSubsriptions',this.conversationHandler.listSubsriptions);
   }
 
   /**  */
@@ -148,30 +151,40 @@ export class InfoConversationPage {
 
   /** */
   subcribeOnOpenInfoConversation: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
+    console.log('InfoConversationPage::subcribeOnOpenInfoConversation');
+
     // se openInfoConversation === false il pannello è chiuso!
     if(!openInfoConversation){ return; } 
     this.uidSelected = uidUserSelected;
     this.channel_type = channel_type;
     this.attributes = attributes;
 
-    if(attributes){
+    this.updateAttributes(this.attributes);
+    
+    this.populateDetail();
+  };
 
-      console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes)
+  private updateAttributes(attributes) {
+    console.log('InfoConversationPage::updateAttributes');
 
-      this.attributesClient = (attributes.client)?attributes.client:'';
-      this.attributesSourcePage = (attributes.sourcePage)?urlify(attributes.sourcePage):'';
+    if (attributes) {
+
+      // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes)
+
+      this.attributesClient = (attributes.client) ? attributes.client : '';
+      this.attributesSourcePage = (attributes.sourcePage) ? urlify(attributes.sourcePage) : '';
       //this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
 
       this.createCustomAttributesMap(attributes);
       // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes);
-      console.log("InfoConversationPage::subcribeOnOpenInfoConversation::customAttributes", this.customAttributes);
-
+      // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::customAttributes", this.customAttributes);
     }
-    this.populateDetail();
-  };
+  }
 
   // create a new attributes map without 'client', 'departmentId', 'departmentName', 'sourcePage', 'userEmail', 'userFullname'
   private createCustomAttributesMap(attributes) {
+    var tempMap = []; 
+
     // perform a deep copy of the attributes item.
     // it prevents the privacy leak issue
     var temp = JSON.parse(JSON.stringify(attributes));
@@ -200,9 +213,11 @@ export class InfoConversationPage {
         }
 
         // add the item to the custom attributes array
-        this.customAttributes.push(item);
+        tempMap.push(item);
       }
     }
+
+    this.customAttributes = tempMap;
   }
 
   /** */
@@ -216,7 +231,7 @@ export class InfoConversationPage {
    * unsubscribe all subscribe events
    */
   closeDetailConversation: any = e => {
-    console.log('UNSUBSCRIBE -> unsubescribeAll', this.events);
+    // console.log('UNSUBSCRIBE -> unsubescribeAll', this.events);
     this.events.unsubscribe('onOpenInfoConversation', null);
     this.events.unsubscribe('changeStatusUserSelected', null);
     // this.events.unsubscribe('loadUserDetail:complete', null);
@@ -225,6 +240,10 @@ export class InfoConversationPage {
 
     this.events.unsubscribe('conversationAdded', null);
     this.events.unsubscribe('archivedConversationAdded', null);
+
+    this.events.unsubscribe(this.uidSelected + '-details', null);
+
+   
   }
   // ----------------------------------------- //
 
@@ -236,6 +255,8 @@ export class InfoConversationPage {
    * 3 - dettaglio user
   */
   populateDetail(){
+    console.log('InfoConversationPage::populateDetail');
+
     // debugger;
     const that = this;
     if(!this.uidSelected){
@@ -246,33 +267,59 @@ export class InfoConversationPage {
     } else if(this.channel_type === TYPE_GROUP) {
       this.profileYourself = false;
       this.members = [];
-      //this.groupDetail = new GroupModel(this.uidSelected, 0, '', [], '', '');
-      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected)
-      .then(function(snapshot) { 
-        //this.groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
-        if (snapshot.val()){
-          that.setDetailGroup(snapshot);
-        }
-      })
-      .catch(function(err) {
-        console.log('Unable to get permission to notify.', err);
-      });
+      // //this.groupDetail = new GroupModel(this.uidSelected, 0, '', [], '', '');
+      // this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected)
+      // .then(function(snapshot) { 
+      //   //this.groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
+      //   if (snapshot.val()){
+      //     that.setDetailGroup(snapshot);
+      //   }
+      // })
+      // .catch(function(err) {
+      //   console.log('Unable to get permission to notify.', err);
+      // });
+      
+      // init subscription
+      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected);
+      this.events.subscribe(this.uidSelected + '-details', this.subscribeGroupDetails);
+      // this.events.subscribe(this.uidSelected + '-details-added', this.subscribeGroupDetailsAdded);
+      // this.events.subscribe(this.uidSelected + '-details-changed', this.subscribeGroupDetailsChanged);
+      // this.events.subscribe(this.uidSelected + '-details-removed', this.subscribeGroupDetailsRemoved);
 
     } else {
       this.profileYourself = false;
       //this.userDetail = new UserModel(this.uidSelected, '', '', '', '', '');
       this.userService.loadUserDetail(this.uidSelected)
       .then(function(snapshot) { 
-        console.log('snapshot:: ', snapshot.val());
+        // console.log('snapshot:: ', snapshot.val());
         if (snapshot.val()){
           that.setDetailUser(snapshot);
         }
       })
       .catch(function(err) {
-        console.log('Unable to get permission to notify.', err);
+        console.error('Unable to get permission to notify.', err);
       });
     } 
   }
+
+
+  subscribeGroupDetails: any = (snapshot) => {
+    console.log('InfoConversationPage::subscribeGroupDetails');
+
+    var that = this;  
+    
+    // console.log("InfoConversation::subscribeGroupDetails::snapshot:", snapshot.val())
+
+    if (snapshot.val()){
+      if (snapshot.val().attributes) {
+        // update the local attributes variable
+        that.attributes = snapshot.val().attributes; 
+        that.updateAttributes(snapshot.val().attributes);
+      }
+      that.setDetailGroup(snapshot);
+    }
+  }
+
 
   setDetailUser(snapshot){
     //let userDetail = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
@@ -290,6 +337,7 @@ export class InfoConversationPage {
 
 
   setDetailGroup(snapshot){
+    // console.log("InfoConversationPage::setDetailGroup::snapshot", snapshot.val());
     const group = snapshot.val();
     this.groupDetail = new GroupModel(
       snapshot.key, 
@@ -304,7 +352,7 @@ export class InfoConversationPage {
     }
     this.members = this.getListMembers(this.groupDetail.members);
     // console.log(this.groupDetail.members.length);
-    console.log("InfoConversationPage::setDetailGroup::members", this.members);
+    // console.log("InfoConversationPage::setDetailGroup::members", this.members);
 
 
     // console.log("setDetailGroup.groupDetail.members", this.groupDetail.members);
@@ -318,23 +366,23 @@ export class InfoConversationPage {
       //this.events.publish('conversationEnabled', true);
     }
 
-    console.log("setDetailGroup.conversationEnabled", this.conversationEnabled);
+    // console.log("setDetailGroup.conversationEnabled", this.conversationEnabled);
   }
 
 
 
   /** */
   getListMembers(members): UserModel[]{ 
-    console.log("InfoConversationPage::getListMembers::members", members);
+    // console.log("InfoConversationPage::getListMembers::members", members);
     let arrayMembers = [];
     // var membersSize = 0;
     members.forEach(member => {
-      console.log("InfoConversationPage::getListMembers::member", member);
+      // console.log("InfoConversationPage::getListMembers::member", member);
       let userDetail = new UserModel(member, '', '', member, '', URL_NO_IMAGE);
       if (member.trim() !== '' && member.trim() !== SYSTEM) {
         this.userService.getUserDetail(member)
         .then(function(snapshot) { 
-          console.log("InfoConversationPage::getListMembers::snapshot", snapshot);
+          // console.log("InfoConversationPage::getListMembers::snapshot", snapshot);
           if (snapshot.val()){
             const user = snapshot.val();
             const fullname = user.firstname+" "+user.lastname;  
@@ -350,26 +398,26 @@ export class InfoConversationPage {
               fullname.trim(), 
               imageUrl
             );  
-            console.log("InfoConversationPage::getListMembers::userDetail", userDetail);
+            // console.log("InfoConversationPage::getListMembers::userDetail", userDetail);
           }
-          console.log("---------------> : ", member);
+          // console.log("---------------> : ", member);
           arrayMembers.push(userDetail);
           // membersSize++;
         })
         .catch(function(err) {
-          console.log('Unable to get permission to notify.', err);
+          console.error('Unable to get permission to notify.', err);
         });
       }
     });
 
     // arrayMembers.length = membersSize; // fix the array size
-    console.log("InfoConversationPage::getListMembers::arrayMembers", arrayMembers);
+    // console.log("InfoConversationPage::getListMembers::arrayMembers", arrayMembers);
     return arrayMembers;
   }
 
   /** */
   arrayDepartments(departments): any[] {
-    console.log('departments:::: ', departments);
+    // console.log('departments:::: ', departments);
     let arrayDepartments = [];
     const departmentsStr = JSON.stringify(departments);
     JSON.parse(departmentsStr, (key, value) => {
@@ -401,7 +449,7 @@ export class InfoConversationPage {
     this.groupService.leaveAGroup(uidGroup, uidUser)
     .subscribe(
       response => {
-        console.log('leaveGroup OK sender ::::', response);
+        // console.log('leaveGroup OK sender ::::', response);
         this.dismissLoadingDialog();
         callback('success');
       },
@@ -409,11 +457,11 @@ export class InfoConversationPage {
         this.dismissLoadingDialog();
         this.conversationEnabled = true;
         this.events.publish('conversationEnabled', true);
-        console.log('leaveGroup ERROR MESSAGE', errMsg);
+        console.error('leaveGroup ERROR MESSAGE', errMsg);
         callback('error');
       },
       () => {
-        console.log('leaveGroup API ERROR NESSUNO');
+        // console.log('leaveGroup API ERROR NESSUNO');
       }
     );
   }
@@ -428,7 +476,7 @@ export class InfoConversationPage {
     this.groupService.closeGroup(uidGroup)
     .subscribe(
       response => {
-        console.log('OK closeGroup ::::', response);
+        // console.log('OK closeGroup ::::', response);
         // this.loading.dismiss();
         // this.dismissLoading();
         callback('success');
@@ -437,12 +485,12 @@ export class InfoConversationPage {
         // this.dismissLoading();
         this.conversationEnabled = true;
         this.events.publish('conversationEnabled', true);
-        console.log('closeGroup ERROR MESSAGE', errMsg);
+        console.error('closeGroup ERROR MESSAGE', errMsg);
         // this.loading.dismiss();
         callback('error');
       },
       () => {
-        console.log('closeGroup API ERROR NESSUNO');
+        // console.log('closeGroup API ERROR NESSUNO');
       }
     );
   }
@@ -547,16 +595,16 @@ export class InfoConversationPage {
   }
 
   private closeConversation(conversationId) {
-    console.log("InfoConversationPage::closeConversation::conversationId", conversationId);
+    // console.log("InfoConversationPage::closeConversation::conversationId", conversationId);
 
     var isSupportConversation = conversationId.startsWith("support-group");
 
     if (!isSupportConversation) {
-      console.log("InfoConversationPage::closeConversation:: is not a support group");
+      // console.log("InfoConversationPage::closeConversation:: is not a support group");
 
       this.deleteConversation(conversationId, function (result, data) {
         if (result === 'success') {
-          console.log("InfoConversationPage::closeConversation::deleteConversation::response", data);
+          // console.log("InfoConversationPage::closeConversation::deleteConversation::response", data);
         } else if (result === 'error') {
           console.error("InfoConversationPage::closeConversation::deleteConversation::error", data);
         }
@@ -564,7 +612,7 @@ export class InfoConversationPage {
 
       // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
     } else {
-      console.log("InfoConversationPage::closeConversation::closeConversation:: is a support group");
+      // console.log("InfoConversationPage::closeConversation::closeConversation:: is a support group");
 
       // the conversationId is:
       // - the recipientId if it is a direct conversation;
@@ -574,7 +622,7 @@ export class InfoConversationPage {
       // - a support  group if it starts with "support-group"
       this.closeSupportGroup(conversationId, function (result, data) {
         if (result === 'success') {
-          console.log("InfoConversationPage::closeConversation::closeSupportGroup::response", data);
+          // console.log("InfoConversationPage::closeConversation::closeSupportGroup::response", data);
         } else if (result === 'error') {
           console.error("InfoConversationPage::closeConversation::closeSupportGroup::error", data);
         }
@@ -610,7 +658,7 @@ export class InfoConversationPage {
 
         callback('error', errMsg);
       }, () => {
-        console.log("InfoConversationPage::closeSupportGroup::completition");
+        // console.log("InfoConversationPage::closeSupportGroup::completition");
       });
     // END - REMOVE FROM REMOTE 
 
@@ -648,7 +696,7 @@ export class InfoConversationPage {
         that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
         callback('error', errMsg);
       }, () => {
-        console.log("InfoConversationPage::deleteConversation::completition");
+        // console.log("InfoConversationPage::deleteConversation::completition");
       });
     // END - REMOVE FROM REMOTE 
 
@@ -661,8 +709,8 @@ export class InfoConversationPage {
    private existsInArray(array: ConversationModel[], uid) : boolean{
      var index = array.map(function (o) { return o.uid; }).indexOf(uid);
 
-     console.log('echouid', uid);
-     console.log('echoindex', index);
+    //  console.log('echouid', uid);
+    //  console.log('echoindex', index);
 
      return index > -1;
 

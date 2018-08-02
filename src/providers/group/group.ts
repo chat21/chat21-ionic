@@ -42,26 +42,42 @@ export class GroupService {
     return firebase.database().ref(urlNodeContacts);
   } 
 
+  // loadGroupDetail(uidUser, uidGroup){
+  //   console.log("loadGroudDetail: ", uidGroup);
+  //   const userFirebase = this.initGroupDetails(uidUser, uidGroup);
+  //   return userFirebase.once('value');
+  //   // userFirebase.on("value", function(snapshot) {
+  //   //     this.groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
+  //   //     if (snapshot.val()){
+  //   //       const group = snapshot.val();
+  //   //       console.log("group:: ", group);
+  //   //       this.groupDetail = new GroupModel(
+  //   //         snapshot.key, 
+  //   //         getFormatData(group.createdOn), 
+  //   //         group.iconURL,
+  //   //         that.getUidMembers(group.members), 
+  //   //         group.name, 
+  //   //         group.owner
+  //   //       );    
+  //   //     }
+  //   //     that.events.publish('loadGroupDetail:complete', groupDetail);
+  //   //   });
+  // }
+
   loadGroupDetail(uidUser, uidGroup){
-    console.log("loadGroudDetail: ", uidGroup);
-    const userFirebase = this.initGroupDetails(uidUser, uidGroup);
-    return userFirebase.once('value');
-    // userFirebase.on("value", function(snapshot) {
-    //     this.groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
-    //     if (snapshot.val()){
-    //       const group = snapshot.val();
-    //       console.log("group:: ", group);
-    //       this.groupDetail = new GroupModel(
-    //         snapshot.key, 
-    //         getFormatData(group.createdOn), 
-    //         group.iconURL,
-    //         that.getUidMembers(group.members), 
-    //         group.name, 
-    //         group.owner
-    //       );    
-    //     }
-    //     that.events.publish('loadGroupDetail:complete', groupDetail);
-    //   });
+    console.log("GroupService::loadGroudDetail::uidUser:", uidUser, "uidGroup:", uidGroup);
+
+    var that = this;
+   
+    const reference = this.initGroupDetails(uidUser, uidGroup);
+    // console.log("GroupService::loadGroudDetail::reference:", reference.toString());
+
+    reference.on('value', function (snapshot) {
+      setTimeout(function () {
+        that.events.publish(uidGroup + '-details', snapshot);
+      }, 100);
+     
+    });
   }
 
   leaveAGroup(uidGroup, uidUser): Observable<string> {
