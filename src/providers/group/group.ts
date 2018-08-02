@@ -73,9 +73,10 @@ export class GroupService {
     // console.log("GroupService::loadGroudDetail::reference:", reference.toString());
 
     reference.on('value', function (snapshot) {
-      setTimeout(function () {
+      console.log("GroupService::loadGroudDetail::snapshot:", snapshot.val());
+      // setTimeout(function () {
         that.events.publish(uidGroup + '-details', snapshot);
-      }, 100);
+      // }, 100);
      
     });
   }
