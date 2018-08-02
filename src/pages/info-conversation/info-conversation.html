@@ -161,7 +161,7 @@
             </ion-card>
             <ion-card>
                 <div class="chat21-content" style="width: 100%">
-                    <button item-left ion-button clear icon-start color="danger" (click)="openPopupConfirmation('leave')">
+                    <button [disabled]="!isLoggedUserGroupMember" item-left ion-button clear icon-start color="danger" (click)="openPopupConfirmation('leave')">
                         <ion-icon name='exit' is-active="false"></ion-icon>
                         {{ 'LABEL_LEAVE_GROUP' | translate }}
                     </button>

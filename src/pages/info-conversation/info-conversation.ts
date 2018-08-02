@@ -56,6 +56,8 @@ export class InfoConversationPage {
   private loadingDialog : any;
   private confirmDialog : any;
 
+  private isLoggedUserGroupMember : boolean;
+
   constructor(
     public events: Events,
     public chatManager: ChatManager,
@@ -74,6 +76,7 @@ export class InfoConversationPage {
   ) {
     this.profileYourself = false;
     this.online = false; 
+    this.isLoggedUserGroupMember = false;
     this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
   }
 
@@ -360,9 +363,11 @@ export class InfoConversationPage {
 
     if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.groupDetail.members.length <= 1 ){
       this.conversationEnabled = false;
+      this.isLoggedUserGroupMember = false;
       //this.events.publish('conversationEnabled', false);
     } else {
       this.conversationEnabled = true;
+      this.isLoggedUserGroupMember = true;
       //this.events.publish('conversationEnabled', true);
     }
 
@@ -715,4 +720,6 @@ export class InfoConversationPage {
      return index > -1;
 
     }
+
+    
 }
