@@ -60,8 +60,7 @@ export class ChatConversationsHandler {
         const that = this;
         const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.userId);
         //const urlNodeFirebase = '/apps/'+tenant+'/users/'+this.loggedUser.uid+'/conversations';
-        // this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp'); // .limitToLast(50);
-        this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(50);
+        this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
         this.ref.on("child_changed", function(childSnapshot) {
             that.changed(childSnapshot);
         });
