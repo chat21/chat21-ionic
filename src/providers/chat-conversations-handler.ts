@@ -313,6 +313,24 @@ export class ChatConversationsHandler {
         }
     }
 
+    addConversationListener(uidUser, conversationId) {
+        console.log("ChatConversationsHandler::addConversationListener::uidUser:", uidUser, "conversationId:", conversationId);
+
+        var that = this;
+
+        const tenant = this.chatManager.getTenant();
+        const url = '/apps/' + tenant + '/users/' + uidUser + '/conversations/' + conversationId;
+        const reference = firebase.database().ref(url);
+        console.log("ChatConversationsHandler::addConversationListener::reference:", reference.toString());
+
+        reference.on('value', function (snapshot) {
+            setTimeout(function () {
+                that.events.publish(conversationId + '-listener', snapshot);
+            }, 100);
+
+        });
+    }
+
     // check if the conversations is valid or not
     private isValidConversation(convToCheckId, convToCheck: ConversationModel) : boolean {
 

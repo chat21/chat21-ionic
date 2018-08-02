@@ -12,8 +12,6 @@ import { UserService } from '../../providers/user/user';
 import { GroupService } from '../../providers/group/group';
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 
-import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
-
 // utils
 import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, LABEL_ANNULLA, LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
 import { getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
@@ -21,7 +19,6 @@ import { PlaceholderPage } from '../placeholder/placeholder';
 import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
 import { TiledeskConversationProvider } from '../../providers/tiledesk-conversation/tiledesk-conversation';
 import { ConversationModel } from '../../models/conversation';
-import { ChatArchivedConversationsHandler } from '../../providers/chat-archived-conversations-handler';
 
 import { NavProxyService } from '../../providers/nav-proxy';
 
@@ -65,9 +62,7 @@ export class InfoConversationPage {
     public groupService: GroupService,
     public upSvc: UploadService,
     public zone: NgZone,
-    public conversationHandler: ChatConversationHandler,
     private conversationsHandler : ChatConversationsHandler,
-    private archivedConversationsHandler : ChatArchivedConversationsHandler,
     private tiledeskConversationProvider : TiledeskConversationProvider,
     public alertCtrl: AlertController,
     public translate: TranslateService,
@@ -113,8 +108,6 @@ export class InfoConversationPage {
     // this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
     // this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
     this.events.subscribe('PopupConfirmation', this.subcribePopupConfirmation);
-
-    // console.log('this.conversationHandler.listSubsriptions',this.conversationHandler.listSubsriptions);
   }
 
   /**  */
@@ -241,12 +234,8 @@ export class InfoConversationPage {
     // this.events.unsubscribe('loadGroupDetail:complete', null);
     this.events.unsubscribe('PopupConfirmation', null);
 
-    this.events.unsubscribe('conversationAdded', null);
-    this.events.unsubscribe('archivedConversationAdded', null);
-
     this.events.unsubscribe(this.uidSelected + '-details', null);
-
-   
+    this.events.unsubscribe(this.uidSelected + '-listener', null);
   }
   // ----------------------------------------- //
 
@@ -281,8 +270,12 @@ export class InfoConversationPage {
       // .catch(function(err) {
       //   console.log('Unable to get permission to notify.', err);
       // });
+
+      // init conversation subscription
+      this.conversationsHandler.addConversationListener(this.currentUserDetail.uid, this.uidSelected);
+      this.events.subscribe(this.uidSelected + '-listener', this.subscribeConversationListener);
       
-      // init subscription
+      // init group details subscription
       this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected);
       this.events.subscribe(this.uidSelected + '-details', this.subscribeGroupDetails);
       // this.events.subscribe(this.uidSelected + '-details-added', this.subscribeGroupDetailsAdded);
@@ -305,13 +298,34 @@ export class InfoConversationPage {
     } 
   }
 
+  // subscriptio on conversation changes
+  subscribeConversationListener: any = (snapshot) => {
+    console.log('InfoConversationPage::subscribeConversationListener');
 
+    var that = this;
+
+    console.log("InfoConversationPage::subscribeConversationListener::snapshot:", snapshot.ref.toString());
+
+    if (snapshot.val()) {
+      console.log("InfoConversationPage::subscribeConversationListener::snapshotVal:", snapshot.val())
+      // conversation exists within conversation list
+      that.conversationEnabled = true;
+    } else {
+      // conversation not exists within conversation list
+      that.conversationEnabled = false;
+    }
+
+    console.log("InfoConversationPage::subscribeConversationListener::conversationEnabled:", this.conversationEnabled);
+
+  }
+
+  // subscriptiuo on group changes
   subscribeGroupDetails: any = (snapshot) => {
     console.log('InfoConversationPage::subscribeGroupDetails');
 
     var that = this;  
     
-    // console.log("InfoConversation::subscribeGroupDetails::snapshot:", snapshot.val())
+    // console.log("InfoConversationPage::subscribeGroupDetails::snapshot:", snapshot.val())
 
     if (snapshot.val()){
       if (snapshot.val().attributes) {
@@ -362,16 +376,10 @@ export class InfoConversationPage {
     // console.log("setDetailGroup.groupDetail.members.length", this.members.length);
 
     if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.groupDetail.members.length <= 1 ){
-      this.conversationEnabled = false;
       this.isLoggedUserGroupMember = false;
-      //this.events.publish('conversationEnabled', false);
     } else {
-      this.conversationEnabled = true;
       this.isLoggedUserGroupMember = true;
-      //this.events.publish('conversationEnabled', true);
     }
-
-    // console.log("setDetailGroup.conversationEnabled", this.conversationEnabled);
   }
 
 
@@ -447,8 +455,6 @@ export class InfoConversationPage {
     // this.loadingDialog = createLoading(this.loadingCtrl, spinnerMessage);
     // this.loadingDialog.present();
 
-    this.conversationEnabled = false;
-    this.events.publish('conversationEnabled', false);
     const uidUser = this.chatManager.getLoggedUser().uid; //'U4HL3GWjBsd8zLX4Vva0s7W2FN92';
     const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
     this.groupService.leaveAGroup(uidGroup, uidUser)
@@ -460,8 +466,6 @@ export class InfoConversationPage {
       },
       errMsg => {
         this.dismissLoadingDialog();
-        this.conversationEnabled = true;
-        this.events.publish('conversationEnabled', true);
         console.error('leaveGroup ERROR MESSAGE', errMsg);
         callback('error');
       },
@@ -473,10 +477,6 @@ export class InfoConversationPage {
 
   /** */
   closeGroup(callback) {
-
-
-    this.conversationEnabled = false;
-    this.events.publish('conversationEnabled', false);
     const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
     this.groupService.closeGroup(uidGroup)
     .subscribe(
@@ -488,8 +488,6 @@ export class InfoConversationPage {
       },
       errMsg => {
         // this.dismissLoading();
-        this.conversationEnabled = true;
-        this.events.publish('conversationEnabled', true);
         console.error('closeGroup ERROR MESSAGE', errMsg);
         // this.loading.dismiss();
         callback('error');
