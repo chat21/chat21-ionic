@@ -479,24 +479,34 @@ export class InfoConversationPage {
   /** */
   closeGroup(callback) {
     const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
-    this.groupService.closeGroup(uidGroup)
-    .subscribe(
-      response => {
-        // console.log('OK closeGroup ::::', response);
-        // this.loading.dismiss();
-        // this.dismissLoading();
-        callback('success');
-      },
-      errMsg => {
-        // this.dismissLoading();
-        console.error('closeGroup ERROR MESSAGE', errMsg);
-        // this.loading.dismiss();
-        callback('error');
-      },
-      () => {
-        // console.log('closeGroup API ERROR NESSUNO');
+    var that = this;
+    this.groupService.closeGroup(uidGroup, function(response, error) {
+      if (error) {
+        console.error('closeGroup ERROR MESSAGE', error);
+        callback('error', error);
       }
-    );
+      else {
+        callback('success', response);
+      }
+    });
+    // this.groupService.closeGroup(uidGroup)
+    // .subscribe(
+    //   response => {
+    //     // console.log('OK closeGroup ::::', response);
+    //     // this.loading.dismiss();
+    //     // this.dismissLoading();
+    //     callback('success');
+    //   },
+    //   errMsg => {
+    //     // this.dismissLoading();
+    //     console.error('closeGroup ERROR MESSAGE', errMsg);
+    //     // this.loading.dismiss();
+    //     callback('error');
+    //   },
+    //   () => {
+    //     // console.log('closeGroup API ERROR NESSUNO');
+    //   }
+    // );
   }
 
   /** */
@@ -652,19 +662,31 @@ export class InfoConversationPage {
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(groupId, true);
 
-    this.groupService.closeGroup(groupId)
-      .subscribe(response => {
-        callback('success', response);
-      }, errMsg => {
+    this.groupService.closeGroup(groupId, function(response, error) {
+      if (error) {
         // the conversation closing failed: restore the conversation with 
         // conversationId status to false within the isConversationClosingMap
         that.tiledeskConversationProvider.setClosingConversation(groupId, false);
+        callback('error', error);
+      }
+      else {
+        callback('success', response);
+      }
+    });
 
-        callback('error', errMsg);
-      }, () => {
-        // console.log("InfoConversationPage::closeSupportGroup::completition");
-      });
-    // END - REMOVE FROM REMOTE 
+    // this.groupService.closeGroup(groupId)
+    //   .subscribe(response => {
+    //     callback('success', response);
+    //   }, errMsg => {
+    //     // the conversation closing failed: restore the conversation with 
+    //     // conversationId status to false within the isConversationClosingMap
+    //     that.tiledeskConversationProvider.setClosingConversation(groupId, false);
+
+    //     callback('error', errMsg);
+    //   }, () => {
+    //     // console.log("InfoConversationPage::closeSupportGroup::completition");
+    //   });
+    // // END - REMOVE FROM REMOTE 
 
     // when a conversations is closed shows a placeholder background
     if (groupId === that.uidSelected) {
@@ -691,18 +713,28 @@ export class InfoConversationPage {
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(conversationId, true);
 
-    this.tiledeskConversationProvider.deleteConversation(conversationId)
-      .subscribe(response => {
-        callback('success', response);
-      }, errMsg => {
-        // the conversation closing failed: restore the conversation with
-        // conversationId status to false within the isConversationClosingMap
+    this.tiledeskConversationProvider.deleteConversation(conversationId, function(response, error) {
+      if (error) {
         that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
-        callback('error', errMsg);
-      }, () => {
-        // console.log("InfoConversationPage::deleteConversation::completition");
-      });
-    // END - REMOVE FROM REMOTE 
+        callback('error', error);
+      }
+      else {
+        callback('success', response);
+      }
+    });
+
+    // this.tiledeskConversationProvider.deleteConversation(conversationId)
+    //   .subscribe(response => {
+    //     callback('success', response);
+    //   }, errMsg => {
+    //     // the conversation closing failed: restore the conversation with
+    //     // conversationId status to false within the isConversationClosingMap
+    //     that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
+    //     callback('error', errMsg);
+    //   }, () => {
+    //     // console.log("InfoConversationPage::deleteConversation::completition");
+    //   });
+    // // END - REMOVE FROM REMOTE 
 
     // when a conversations is closed shows a placeholder background
     if (conversationId === that.uidSelected) {

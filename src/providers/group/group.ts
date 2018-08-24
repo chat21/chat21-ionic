@@ -3,6 +3,7 @@ import 'rxjs/add/operator/map';
 import { Events } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+// import 'rxjs/add/observable/fromPromise';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 // models
@@ -102,28 +103,35 @@ export class GroupService {
     .map(res => (res.json()));
    }
 
-   closeGroup(uidGroup): Observable<string> {
+   closeGroup(uidGroup, callback) {
     const appId = this.chatManager.getTenant();
-    const token = this.userService.returnToken();
-    const headers = new Headers();
-    headers.append('Accept', 'application/json');
-    headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Bearer '+token);
+    // const token = this.userService.returnToken();
+    var that = this;
+    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+    .then(function(token) {
+        console.log('idToken.', token);
+        const headers = new Headers();
+        headers.append('Accept', 'application/json');
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', 'Bearer '+token);
 
-    const options = new RequestOptions({ headers: headers });
-    const url = this.BASE_URL_LEAVE_GROUP +'supportapi/' + appId + '/groups/' + uidGroup;
-    const body = {};
-    console.log('---------------> 1 - url: ', url);
-    console.log('---------------> 2 - options: ', options);
-    // console.log('------------------> body: ', JSON.stringify(body));
-    return this.http
-    .put(url, body, options)
-    // .map(res => (res.json()));
-      .map((res) => {
-        // return res.json();
-        return JSON.stringify(res);
-      });
-   }
+        const options = new RequestOptions({ headers: headers });
+        const url = that.BASE_URL_LEAVE_GROUP +'supportapi/' + appId + '/groups/' + uidGroup;
+        const body = {};
+        console.log('---------------> 1 - url: ', url);
+        console.log('---------------> 2 - options: ', options);
+        console.log('------------------> that.http: ', that.http);
+        that.http
+          .put(url, body, options)
+          .map((res) => {
+            callback(res, null);
+          }).subscribe();
+    }).catch(function(error) {
+      // Handle error
+      console.log('idToken error: ', error);
+      callback(null, error);
+    });
+  }
 
   
   getUidMembers(members): string[]{

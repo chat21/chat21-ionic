@@ -435,18 +435,27 @@ export class ListaConversazioniPage extends _MasterPage {
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(groupId, true);
 
-    this.groupService.closeGroup(groupId)
-      .subscribe(response => {
-        callback('success', response);
-      }, errMsg => {
+    this.groupService.closeGroup(groupId, function(response, error) {
+      if (error) {
         // the conversation closing failed: restore the conversation with 
         // conversationId status to false within the isConversationClosingMap
         that.tiledeskConversationProvider.setClosingConversation(groupId, false);
-
-        callback('error', errMsg);
-      }, () => {
-        console.log("ListaConversazioniPage::closeSupportGroup::completition");
-      });
+        callback('error', error);
+      }
+      else {
+        callback('success', response);
+      }
+    });
+      // .subscribe(response => {
+      //   callback('success', response);
+      // }, errMsg => {
+      //   // the conversation closing failed: restore the conversation with
+      //   // conversationId status to false within the isConversationClosingMap
+      //   that.tiledeskConversationProvider.setClosingConversation(groupId, false);
+      //   callback('error', errMsg);
+      // }, () => {
+      //   console.log("ListaConversazioniPage::closeSupportGroup::completition");
+      // });
     // END - REMOVE FROM REMOTE 
 
     // when a conversations is closed shows a placeholder background
@@ -474,18 +483,26 @@ export class ListaConversazioniPage extends _MasterPage {
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(conversationId, true);
 
-    this.tiledeskConversationProvider.deleteConversation(conversationId)
-      .subscribe(response => {
-        callback('success', response);
-      }, errMsg => {
-        // the conversation closing failed: restore the conversation with
-        // conversationId status to false within the isConversationClosingMap
+    this.tiledeskConversationProvider.deleteConversation(conversationId, function(response, error) {
+      if (error) {
         that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
-        callback('error', errMsg);
-      }, () => {
-        console.log("ListaConversazioniPage::deleteConversation::completition");
-      });
-    // END - REMOVE FROM REMOTE 
+        callback('error', error);
+      }
+      else {
+        callback('success', response);
+      }
+    });
+    //   .subscribe(response => {
+    //     callback('success', response);
+    //   }, errMsg => {
+    //     // the conversation closing failed: restore the conversation with
+    //     // conversationId status to false within the isConversationClosingMap
+    //     that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
+    //     callback('error', errMsg);
+    //   }, () => {
+    //     console.log("ListaConversazioniPage::deleteConversation::completition");
+    //   });
+    // // END - REMOVE FROM REMOTE 
 
     // when a conversations is closed shows a placeholder background
     if (conversationId === that.uidConvSelected) {

@@ -2,7 +2,8 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
+// firebase
+import * as firebase from 'firebase/app';
 // ====== [BEGIN chat21]
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { UserService } from '../../providers/user/user';
@@ -61,28 +62,31 @@ export class TiledeskConversationProvider {
   //       -H "Authorization: Bearer <FIREBASE_ID_TOKEN>" \
   //       https://us-central1-<FIREBASE_PROJECT_ID>.cloudfunctions.net/api/<APP_ID>/conversations/<RECIPIENT_ID>
 
-  public deleteConversation(recipientId) {
+  public deleteConversation(recipientId, callback) {
 
-    const token = this.userService.returnToken(); // retrieve the user auth token
-
-    // create the header of the request
-    const headers = new Headers();
-    headers.append('Accept', 'application/json');
-    headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Bearer ' + token);
-
-    // create the request url 
-    const url = this.BASE_URL + '/api/' + this.appId + '/conversations/' + recipientId;
-    // console.log("TiledeskConversationProvider::deleteConversation::url", url);
-
-    // create the request options
-    const options = new RequestOptions({ headers: headers });
-    // console.log("TiledeskConversationProvider::deleteConversation::options", options);
-
-    // make the call
-    return this.http
-      .delete(url, options)
-     .map((response: Response) => response.json())
+    // const token = this.userService.returnToken(); // retrieve the user auth token
+    const appId = this.chatManager.getTenant();
+    var that = this;
+    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+    .then(function(token) {
+      console.log('idToken.', token);
+      // create the header of the request
+      const headers = new Headers();
+      headers.append('Accept', 'application/json');
+      headers.append('Content-Type', 'application/json');
+      headers.append('Authorization', 'Bearer ' + token);
+      const url = that.BASE_URL + '/api/' + appId + '/conversations/' + recipientId;
+      const options = new RequestOptions({ headers: headers });
+      that.http
+        .delete(url, options)
+        .map((response: Response) => {
+          callback(response, null);
+        }).subscribe();
+    }).catch(function(error) {
+      // Handle error
+      console.log('idToken error: ', error);
+      callback(null, error);
+    });
   }
 
   /**

@@ -26,15 +26,15 @@ export class AutosizeDirective implements OnInit {
   onInput(event, rangeParent, textArea:HTMLTextAreaElement, data:string, inputType:string):void { //textArea:HTMLTextAreaElement
     //let messageString = textArea.attributes.getNamedItem('ng-reflect-model').value.trim();
     let messageString = this.element.nativeElement.getElementsByTagName('textarea')[0].value;
-    console.log('************ $messageString2', messageString.trim());
+    // console.log('************ $messageString2', messageString.trim());
     if(messageString == ''){
       this.element.nativeElement.getElementsByTagName('textarea')[0].value = '';
       //textArea.attributes.getNamedItem('ng-reflect-model').value = '';
-      console.log('************ messageString ----->',this.element.nativeElement.getElementsByTagName('textarea')[0].value,'<-----');
+      // console.log('************ messageString ----->',this.element.nativeElement.getElementsByTagName('textarea')[0].value,'<-----');
       return;
     }    
     if (event.inputType == "insertLineBreak" && messageString == null){
-      console.log('************ insertLineBreak');
+      // console.log('************ insertLineBreak');
       return;
     }
     // se messageString contiene \n non dimensiono!!!
@@ -56,17 +56,17 @@ export class AutosizeDirective implements OnInit {
     let textArea = this.element.nativeElement.getElementsByTagName('textarea')[0];
     textArea.style.overflow = 'hidden';
     textArea.style.height = 'auto';  
-    console.log('************ adjust **************', textArea.value);
+    // console.log('************ adjust **************', textArea.value);
     if (textArea.scrollHeight <=  MIN_HEIGHT_TEXTAREA ){
-      console.log('************ OK H **************');
+      // console.log('************ OK H **************');
       return;
     }
     else if (textArea.scrollHeight <=  MAX_HEIGHT_TEXTAREA){
-      console.log('************ SET NW H **************');
+      // console.log('************ SET NW H **************');
       textArea.style.height = textArea.scrollHeight + "px";
     }
     else {
-      console.log('************ SET H MAX **************');
+      // console.log('************ SET H MAX **************');
       textArea.style.height = MAX_HEIGHT_TEXTAREA + "px";
     }
   }
@@ -74,7 +74,7 @@ export class AutosizeDirective implements OnInit {
   reset():void{
     //console.log('************ SET H MIN **************');
     let textArea = this.element.nativeElement.getElementsByTagName('textarea')[0];
-    console.log('************ SET H MIN **************', textArea.value);
+    // console.log('************ SET H MIN **************', textArea.value);
     textArea.value = "";
     textArea.style.height = MIN_HEIGHT_TEXTAREA + "px";
   }
