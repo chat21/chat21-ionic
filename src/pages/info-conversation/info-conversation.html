@@ -129,16 +129,16 @@
         </div>
         </a>
         </ion-card> -->
-            <!-- <ion-card *ngIf="isSupportGroup()">
+        <ion-card *ngIf="isSupportGroup()">
         <div class="chat21-content" style="float:left; width: 100%">  
             <button ion-button clear icon-start block color="default">
                 <ion-icon name='mail' is-active="false"></ion-icon>
-                <a href="{{URL_SEND_BY_EMAIL}}{{uidSelected}}">
+                <a href="{{URL_SEND_BY_EMAIL}}{{uidSelected}}/messages.html">
                   {{ 'LABEL_SEND_BY_EMAIL' | translate }}
                 </a>
             </button>
         </div>
-        </ion-card> -->
+        </ion-card>
             <!-- <ion-card *ngIf="isSupportGroup()">
         <div class="chat21-content" style="float:left; width: 100%">  
             <button [disabled]="!conversationEnabled" ion-button clear icon-start block color="default" (click)="setVideoChat()">
