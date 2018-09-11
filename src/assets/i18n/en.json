@@ -15,7 +15,7 @@
   "LABEL_CLIENT": "Clients: ",
   "LABEL_SOURCEPAGE": "Source: ",
   "LABEL_DEPARTMENT_ID": "Department id: ",
-  "LABEL_DEPARTMENT_NAME": "Department name: ",
+  "LABEL_DEPARTMENT_NAME": "Department: ",
   "LABEL_NAME": "User Name: ",
   "LABEL_EMAIL": "Email: ",
   "LABEL_MEMBERS": "Participants",

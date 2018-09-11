@@ -93,9 +93,11 @@ export class NavProxyService {
             // ...so, not the placeholder page:
             let index = this.masterNav.getViews().length;
             // add it to the master view...
-            this.masterNav.insert(index,
+            this.masterNav.insert(
+                index,
                 detailView.component,
-                detailView.data);
+                detailView.data
+            );
         }
     }
 }

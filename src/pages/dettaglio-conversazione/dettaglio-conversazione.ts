@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { PopoverController, Platform, ActionSheetController, IonicPage, NavParams, Content, Events, NavController } from 'ionic-angular';
 // models
 import { UserModel } from '../../models/user';
@@ -58,6 +58,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   private openInfoConversation: boolean;
   private openInfoMessage: boolean;
   private conversationEnabled: boolean = true;
+  private isMobile: boolean = true;
   
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
@@ -101,6 +102,18 @@ export class DettaglioConversazionePage extends _DetailPage{
     // DESTROY INFO CONVERSATION 
     console.log('1 - DESTROY INFO CONVERSATION',this.events);
     this.events.publish('closeDetailConversation', true);
+    console.log(">>>>>>>>>>>> ", this.navProxy.onSplitPaneChanged);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    const newInnerWidth = event.target.innerWidth
+    console.log("newInnerWidth ", newInnerWidth);
+    if (newInnerWidth < 991) {
+      console.log("sparisci!!!!!")
+      this.openInfoMessage = false;
+      this.openInfoConversation = false;
+    }
   }
 
   //// SUBSCRIBTIONS ////
@@ -222,12 +235,17 @@ export class DettaglioConversazionePage extends _DetailPage{
   }
 
   //// SYSTEM FUNCTIONS ////
+
+
+  ionViewWillEnter() {
+    this.initialize();
+  }
   /**
    * quando ho renderizzato la pagina richiamo il metodo di inizialize
    */
   ionViewDidEnter(){
     //console.log('ionViewDidEnter');
-    this.initialize();
+    // this.initialize();
   }
   /**
    * quando esco dalla pagina distruggo i subscribe
@@ -258,14 +276,26 @@ export class DettaglioConversazionePage extends _DetailPage{
     (!this.channel_type || this.channel_type == 'undefined')?this.channel_type=TYPE_DIRECT:this.channel_type;
     this.messages = []; // list messages of conversation
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
+    
     this.openInfoMessage = false; // indica se è aperto il box info message
+    const innerWidth = window.innerWidth;
+    console.log('const innerWidth = ', innerWidth);
+    if (innerWidth < 991) {
+      console.log("sparisci!!!!!")
+      this.openInfoMessage = false;
+      this.openInfoConversation = false;
+    }
+    else {
+      this.openInfoConversation = this.chatManager.getOpenInfoConversation();
+    }
+
     this.online = false;
     this.lastConnectionDate = '';
-
+    
     this.tenant = this.chatManager.getTenant();
     this.currentUserDetail = this.chatManager.getLoggedUser();
-    this.openInfoConversation = this.chatManager.getOpenInfoConversation();
-
+    
+    
     
     this.chatPresenceHandler.userIsOnline(this.conversationWith);
     this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
