@@ -37,6 +37,7 @@
     "add": "^2.0.6",
     "build": "^0.1.4",
     "cordova-android": "~7.0.0",
+    "cordova-browser": "~5.0.4",
     "cordova-ios": "^4.5.4",
     "cordova-osx": "~4.0.1",
     "cordova-plugin-console": "^1.1.0",
@@ -59,13 +60,12 @@
     "rxjs": "5.5.11",
     "sw-toolbox": "3.6.0",
     "uk.co.workingedge.cordova.plugin.sqliteporter": "^1.0.5",
-    "zone.js": "0.8.26",
-    "cordova-browser": "~5.0.4"
+    "zone.js": "0.8.26"
   },
   "devDependencies": {
     "@angular/cli": "^1.7.4",
     "@angular/tsc-wrapped": "^4.4.6",
-    "@ionic/app-scripts": "3.1.10",
+    "@ionic/app-scripts": "^3.2.0",
     "@ionic/cli-plugin-proxy": "1.5.8",
     "ionic": "3.20.0",
     "typescript": "^2.6.2"

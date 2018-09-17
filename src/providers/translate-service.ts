@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
  
 export class CustomTranslateService {
 
+
     public ARRAY_DAYS: string[];
     public LABEL_TO: string;
     public LABEL_LAST_ACCESS: string;
@@ -16,7 +17,10 @@ export class CustomTranslateService {
     public LABEL_TODAY: string;
     //public translate: TranslateService;
 
+    //constructor(public translate: TranslateService) {
+    lang:any;
     constructor(public translate: TranslateService) {
+      
       // this language will be used as a fallback when a translation isn't found in the current language
       const language = document.documentElement.lang;
       console.log('language: ', language, this.translate);
@@ -53,7 +57,5 @@ export class CustomTranslateService {
           this.ARRAY_DAYS = value;
         }
       )
-  
     }
-
   }

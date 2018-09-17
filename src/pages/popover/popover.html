@@ -9,15 +9,15 @@
 
 <ion-list *ngIf="type===TYPE_POPUP_LIST_CONVERSATIONS">
   <!--<ion-list-header>Ionic</ion-list-header>-->
-  <button ion-item (click)="goToProfilePage()">Profilo</button>
-  <button ion-item (click)="openArchivedConversationsPage()">Chiuse</button>
+  <button ion-item (click)="goToProfilePage()">{{ 'LABEL_PROFILE' | translate }}</button>
+  <button ion-item (click)="openArchivedConversationsPage()">{{ 'LABEL_CLOSE' | translate }}</button>
   <!-- <button ion-item (click)="close()">Impostazioni</button> -->
-  <button ion-item (click)="logOut()">Disconnetti</button>
+  <button ion-item (click)="logOut()">{{ 'LABEL_DISCONNECT' | translate }}</button>
   
 </ion-list>
 <ion-list *ngIf="type===TYPE_POPUP_DETAIL_MESSAGE">
     <!--<ion-list-header>Ionic</ion-list-header>-->
-    <button ion-item (click)="goToInfoMessage()">Info messaggio</button>
+    <button ion-item (click)="goToInfoMessage()">{{ 'LABEL_INFO_MESSAGE' | translate }}</button>
     <!-- <button ion-item >Rispondi</button>
     <button ion-item >Inoltra</button>
     <button ion-item >Messaggio importante</button>

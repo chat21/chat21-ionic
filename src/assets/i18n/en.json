@@ -19,7 +19,7 @@
   "LABEL_NAME": "User Name: ",
   "LABEL_EMAIL": "Email: ",
   "LABEL_MEMBERS": "Participants",
-  "LABEL_INFO_MESSAGE": "Info Message",
+  "LABEL_INFO_MESSAGE": "Info message",
   "LABEL_READ_BY": "Read by",
   "LABEL_STATUS_MESSAGE": "state",
   "LABEL_SENT_THE": "sent on",
@@ -56,5 +56,12 @@
   "INFO_SUPPORT_USER_ADDED_MESSAGE" : "{{ subject }} {{ verb }} {{ complement }}",
 
   "INFO_SUPPORT_CHAT_REOPENED": "Chat reopened",
-  "INFO_SUPPORT_CHAT_CLOSED": "Chat closed"
+  "INFO_SUPPORT_CHAT_CLOSED": "Chat closed",
+
+  "LABEL_PROFILE": "Profile",
+  "LABEL_CLOSE": "Closed",
+  "LABEL_DISCONNECT": "Disconnect",
+
+
+  "LABEL_NEW_CHAT": "New chat"
 }
