@@ -1,7 +1,7 @@
 
   <ion-header *ngIf="showPage">
     <ion-navbar>
-      <ion-title>Accedi a {{tenant}}</ion-title>
+      <ion-title>{{ 'LABEL_LOGIN_TO' | translate }} {{tenant}}</ion-title>
     </ion-navbar>
   </ion-header>
 
@@ -9,40 +9,40 @@
     <div class="content-page">
     <form [formGroup]="loginForm" (submit)="loginUserFirebase()" novalidate>
       <ion-item>
-        <ion-label stacked>Email</ion-label>
+        <ion-label stacked>{{ 'LABEL_EMAIL' | translate }}</ion-label>
         <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)"
-          placeholder="Il tuo indirizzo email"
+          placeholder="{{ 'LABEL_PLACEHOLDER_EMAIL' | translate }}"
           [class.invalid]="!loginForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
       </ion-item>
       <div class="div-error-message">
       <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && (emailChanged || submitAttempt)">
-        <p>Inserisci un indirizzo email valido.</p>
+        <p>{{ 'LABEL_ERROR_EMAIL' | translate }}</p>
       </ion-item>
       </div>
 
       <ion-item>
-        <ion-label stacked>Password</ion-label>
+        <ion-label stacked>{{ 'LABEL_PASSWORD' | translate }}</ion-label>
         <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)"
           placeholder="La tua password"
           [class.invalid]="!loginForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
       </ion-item>
       <div class="div-error-message">
       <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid  && (passwordChanged || submitAttempt)">
-        <p>La password deve essere di almeno 6 caratteri.</p>
+        <p>{{ 'LABEL_ERROR_PASSWORD' | translate }}</p>
       </ion-item>
       </div>
     
     </form>
 
     <button ion-button block class="full" type="submit" (click)="loginUserFirebase()">
-      Login
+      {{ 'LABEL_LOGIN' | translate }}
     </button>
     <!-- <button ion-button outline (click)="signInWithFacebook()">Facebook Login</button> -->
     <button ion-button block (click)="register()">
-      Registrati
+      {{ 'LABEL_SIGIN' | translate }}
     </button>
     <button ion-button block (click)="resetPwd()">
-      Password dimenticata?
+      {{ 'LABEL_FORGOT_PASSWORD' | translate }}
     </button>
     </div>
   </ion-content>

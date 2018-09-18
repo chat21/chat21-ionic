@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Rigenera Password</ion-title>
+    <ion-title>{{ 'LABEL_NEW_PASSWORD' | translate }}</ion-title>
     <ion-buttons left>
         <button ion-button icon-only (click)="goBack()">
           <ion-icon name="close"></ion-icon>
@@ -22,18 +22,18 @@
   <!-- <h2>Rigenera Password</h2> -->
   <form [formGroup]="resetpwdForm" (submit)="resetPwd()" novalidate>
     <ion-item>
-      <ion-label stacked>Email</ion-label>
+      <ion-label stacked>{{ 'LABEL_EMAIL' | translate }}</ion-label>
       <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)"
-        placeholder="Il tuo indirizzo email"
+        placeholder="{{ 'LABEL_PLACEHOLDER_EMAIL' | translate }}"
         [class.invalid]="!resetpwdForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
     </ion-item>
     <div class="div-error-message">
     <ion-item class="error-message" *ngIf="!resetpwdForm.controls.email.valid  && (emailChanged || submitAttempt)">
-      <p>Inserisci un indirizzo email valido.</p>
+      <p>{{ 'LABEL_ERROR_EMAIL' | translate }}</p>
     </ion-item>
     </div>
     <button ion-button block class="full" type="submit">
-      Rigenera Password
+      {{ 'LABEL_NEW_PASSWORD' | translate }} 
     </button>
   </form>
   </div>

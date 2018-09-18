@@ -62,7 +62,27 @@
     "LABEL_CLOSE": "Chiuse",
     "LABEL_DISCONNECT": "Disconnetti",
 
-    "LABEL_NEW_CHAT": "Nuova chat"
+    "LABEL_NEW_CHAT": "Nuova chat",
 
+    
+    "LABEL_LOGIN_TO": "Accedi a",
+    "LABEL_PASSWORD": "PAssword",
+    "LABEL_ERROR_EMAIL": "Inserisci un indirizzo email valido.",
+    "LABEL_ERROR_PASSWORD": "La password deve essere di almeno 6 caratteri.",
+    "LABEL_LOGIN": "Login",
+    "LABEL_SIGIN": "Registrati",
+    "LABEL_FORGOT_PASSWORD": "Password dimenticata?",
+
+    "LABEL_REGISTRATION": "Registrazione",
+    "LABEL_PLACEHOLDER_EMAIL": "Il tuo indirizzo email",
+    "LABEL_PLACEHOLDER_PASSWORD": "La tua password",
+    "LABEL_PLACEHOLDER_NAME": "Il tuo Nome",
+    "LABEL_PLACEHOLDER_LAST_NAME": "Il tuo Cognome",
+    "LABEL_LAST_NAME": "Cognome",
+    "LABEL_FIELD_NOT_EMPTY": "Il campo non può essere vuoto.",
+
+    "LABEL_NEW_PASSWORD": "Rigenera Password",
+  
+    "LABEL_CLOSED": "Chiuse"
     
 }
