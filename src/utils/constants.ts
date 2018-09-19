@@ -29,20 +29,19 @@ export const BCK_COLOR_CONVERSATION_SELECTED: string = "#EEEEEE";
 export const BCK_COLOR_CONVERSATION_UNSELECTED: string = "#FFFFFF";
 
 // LABELS
-export const LABEL_IMAGE = "immagine";
-export const LABEL_TU = "tu: ";
-export const LABEL_MSG_PUSH_START_CHAT = "Premi qui per chattare con qualcuno";
-export const LABEL_MSG_START_CHAT = "inizia a chattare";
-export const LABEL_ACTIVE_NOW = "attivo/a ora";
-export const LABEL_NO_MSG_HERE = "Ancora nessun messaggio qui...";
-export const LABEL_TODAY = "Oggi";
-export const LABEL_TOMORROW = "Ieri";
-export const LABEL_LAST_ACCESS = "ultimo accesso";
-export const LABEL_TO = "alle";
-export const ARRAY_DAYS = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
-
-export const LABEL_ANNULLA = "ANNULLA";
-export const LABEL_OK = "OK";
+// export const LABEL_IMAGE = "immagine";
+// export const LABEL_TU = "tu: ";
+// export const LABEL_MSG_PUSH_START_CHAT = "Premi qui per chattare con qualcuno";
+// export const LABEL_MSG_START_CHAT = "inizia a chattare";
+// export const LABEL_ACTIVE_NOW = "attivo/a ora";
+// export const LABEL_NO_MSG_HERE = "Ancora nessun messaggio qui...";
+// export const LABEL_TODAY = "Oggi";
+// export const LABEL_TOMORROW = "Ieri";
+// export const LABEL_LAST_ACCESS = "ultimo accesso";
+// export const LABEL_TO = "alle";
+// export const ARRAY_DAYS = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
+// export const LABEL_ANNULLA = "ANNULLA";
+// export const LABEL_OK = "OK";
 
 export const TYPE_SUPPORT_GROUP: string = 'support-group';
 

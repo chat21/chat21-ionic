@@ -3,8 +3,9 @@ import { Events, ViewController, IonicPage, NavParams } from 'ionic-angular';
 // models
 import { MessageModel } from '../../models/message';
 // utils
-import { TYPE_POPUP_LIST_CONVERSATIONS, TYPE_POPUP_DETAIL_MESSAGE } from '../../utils/constants';
+import { TYPE_POPUP_LIST_CONVERSATIONS, TYPE_POPUP_DETAIL_MESSAGE, CURR_VER_DEV, CURR_VER_PROD } from '../../utils/constants';
 import { ArchivedConversationsPage } from '../archived-conversations/archived-conversations';
+import { AlertController } from 'ionic-angular';
 
 
 @IonicPage()
@@ -12,6 +13,8 @@ import { ArchivedConversationsPage } from '../archived-conversations/archived-co
   selector: 'page-popover',
   templateUrl: 'popover.html'
 })
+
+
 
 export class PopoverPage {
 
@@ -24,7 +27,8 @@ export class PopoverPage {
   constructor(
     public viewCtrl: ViewController,
     public navParams: NavParams,
-    public events: Events
+    public events: Events,
+    private alertCtrl: AlertController
   ) {
     this.type = navParams.get('typePopup');
     this.message = navParams.get('message');
@@ -62,5 +66,24 @@ export class PopoverPage {
    */
   openArchivedConversationsPage() {
     this.viewCtrl.dismiss("ArchivedConversationsPage");
+  }
+
+
+  openInfo(){
+    var BUILD_VERSION = '<p style="text-align: center;">version ' + CURR_VER_PROD + ' build ' + CURR_VER_DEV+'</p>'; // 'b.0.5';
+    var that = this;
+    let alert = this.alertCtrl.create({
+      title: '',
+      subTitle: BUILD_VERSION,
+      buttons: [
+      {
+          text: 'OK',
+          role: 'ok',
+          handler: data => {
+            that.viewCtrl.dismiss();
+          }
+      }]
+    });
+    alert.present();
   }
 }

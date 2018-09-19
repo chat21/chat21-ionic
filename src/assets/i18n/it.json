@@ -83,6 +83,7 @@
 
     "LABEL_NEW_PASSWORD": "Rigenera Password",
   
-    "LABEL_CLOSED": "Chiuse"
-    
+    "LABEL_CLOSED": "Chiuse",
+    "LABEL_INFO": "informazioni"
+
 }

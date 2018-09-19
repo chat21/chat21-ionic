@@ -2,10 +2,10 @@
 import * as moment from 'moment/moment';
 import 'moment/locale/it.js';
 
-import { LABEL_ANNULLA, LABEL_OK, ARRAY_DAYS, LABEL_TODAY, LABEL_TOMORROW, LABEL_LAST_ACCESS, LABEL_TO } from './constants';
+//import { LABEL_ANNULLA, LABEL_OK, ARRAY_DAYS, LABEL_TODAY, LABEL_TOMORROW, LABEL_LAST_ACCESS, LABEL_TO } from './constants';
 
-
-
+//import { TranslateService } from '@ngx-translate/core';
+//import { CustomTranslateService } from './translate-service';
 
 /**
  * Shortest description  for phone and tablet
@@ -102,9 +102,15 @@ export function removeHtmlTags(text) {
  * ieri; 
  * giorno della settimana (lunedì, martedì, ecc)
  */
-export function setHeaderDate(timestamp, lastDate?): string {
+export function setHeaderDate(translate, timestamp, lastDate?): string {
+
+
     var date = new Date(timestamp);
     let now: Date = new Date();
+
+    var LABEL_TODAY = translate.get('LABEL_TODAY')['value'];
+    var LABEL_TOMORROW = translate.get('LABEL_TOMORROW')['value'];
+
     var labelDays:string = LABEL_TODAY;
     var _MS_PER_DAY = 1000 * 60 * 60 * 24;
     // Esclude l'ora ed il fuso orario
@@ -120,7 +126,7 @@ export function setHeaderDate(timestamp, lastDate?): string {
     } else if( days == 1 ){
       labelDays = LABEL_TOMORROW;
     } else {
-      labelDays = convertDayToString(date.getDay());
+      labelDays = convertDayToString(translate, date.getDay());
     }
     // console.log('setHeaderDate labelDays: ********************',labelDays);
     // se le date sono diverse o la data di riferimento non è impostata
@@ -140,7 +146,13 @@ export function setHeaderDate(timestamp, lastDate?): string {
    * utilizzata per calcolare data ultimo accesso utente
    * @param timestamp 
    */
-  export function setLastDate(timestamp): string {
+  export function setLastDate(translate, timestamp): string {
+
+      var LABEL_TODAY = translate.get('LABEL_TODAY')['value'];
+      var LABEL_TOMORROW = translate.get('LABEL_TOMORROW')['value'];
+      var LABEL_TO = translate.get('LABEL_TO')['value'];
+      var LABEL_LAST_ACCESS = translate.get('LABEL_LAST_ACCESS')['value'];
+
       var date = new Date(timestamp);
       let now: Date = new Date();
       var labelDays:string = "";
@@ -153,7 +165,7 @@ export function setHeaderDate(timestamp, lastDate?): string {
       } else if (now.getDay() - date.getDay() == 1){
         labelDays = LABEL_TOMORROW;
       } else {
-        labelDays = convertDayToString(date.getDay());
+        labelDays = convertDayToString(translate, date.getDay());
       }
       // aggiungo orario
       const orario = date.getHours() +":"+ date.getMinutes();
@@ -161,9 +173,10 @@ export function setHeaderDate(timestamp, lastDate?): string {
   }
 
 
-export function convertDayToString(day){
+export function convertDayToString(translate, day){
   //['Lunedì', 'Martedì', 'Mercoledì','Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
-   return ARRAY_DAYS[day];
+  var ARRAY_DAYS = translate.get('ARRAY_DAYS')['value'];
+  return ARRAY_DAYS[day];
 }
 
 // function for dynamic sorting
@@ -242,7 +255,9 @@ export function getFromNow(timestamp): string {
     //console.log("timestamp: ",timestamp, " - 1483228800 - ", moment.unix(1483228800).fromNow());
     // console.log();
     
-    moment.locale('it');
+    //console.log("window.navigator.language: ", window.navigator.language);
+   
+    moment.locale(window.navigator.language);
     let date_as_string = moment.unix(timestamp).fromNow();
     return date_as_string;
 }
@@ -309,7 +324,9 @@ export function isExistInArray(members, currentUid){
   return members.includes(currentUid);
 }
 
-export function createConfirm(alertCtrl, events, title, message, action, onlyOkButton) {
+export function createConfirm(translate, alertCtrl, events, title, message, action, onlyOkButton) {
+  var LABEL_ANNULLA = translate.get('LABEL_ANNULLA')['value'];
+  var LABEL_OK = translate.get('LABEL_OK')['value'];
 
   var buttons;
   if (onlyOkButton) {

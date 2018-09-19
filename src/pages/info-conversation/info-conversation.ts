@@ -574,7 +574,7 @@ export class InfoConversationPage {
 
     // console.log("onlyOkButton", onlyOkButton);
 
-    this.confirmDialog = createConfirm(this.alertCtrl, this.events, alertTitle, alertMessage, action, onlyOkButton);
+    this.confirmDialog = createConfirm(this.translate, this.alertCtrl, this.events, alertTitle, alertMessage, action, onlyOkButton);
     this.confirmDialog.present();
   }
 

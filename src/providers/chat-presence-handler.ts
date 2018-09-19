@@ -11,6 +11,7 @@ import { ChatManager } from './chat-manager/chat-manager';
 // utils
 import { setLastDate } from '../utils/utils';
 
+import { TranslateService } from '@ngx-translate/core';
 
 //import { ApplicationContext } from './application-context/application-context';
 
@@ -30,7 +31,8 @@ export class ChatPresenceHandler {
 
   constructor(
     public events: Events,
-    public chatManager: ChatManager
+    public chatManager: ChatManager,
+    public translate: TranslateService
   ) {
     this.tenant = chatManager.getTenant();
     this.urlNodeFirebase = '/apps/'+this.tenant+'/';
@@ -82,7 +84,7 @@ export class ChatPresenceHandler {
    */
   getTimeLastConnection(timestamp:string){
     //let timestampNumber = parseInt(timestamp)/1000;
-    let time = setLastDate(timestamp);
+    let time = setLastDate(this.translate, timestamp);
     return time;
   }
 

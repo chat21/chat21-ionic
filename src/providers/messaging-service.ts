@@ -68,7 +68,6 @@ export class MessagingService {
         //     // registration failed :(
         //     console.log('ServiceWorker registration failed: ', err);
         // });
-
     }
 
     getPermission() {

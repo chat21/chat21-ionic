@@ -19,6 +19,7 @@ import { BehaviorSubject } from '../../node_modules/rxjs/BehaviorSubject';
 //import { TranslateService } from '@ngx-translate/core';
 //import { CustomTranslateService } from './translate-service';
 
+
 @Injectable()
 export class ChatConversationHandler {
   private urlNodeFirebase: string;
@@ -39,7 +40,7 @@ export class ChatConversationHandler {
 
   constructor(
     public events: Events,
-    private translate: TranslateService
+    public translate: TranslateService
   ) {
     // console.log("CONSTRUCTOR ChatConversationHandlerProvider");
     console.log("CONSTRUCTOR ChatConversationHandlerProvider", translate);
@@ -94,13 +95,15 @@ export class ChatConversationHandler {
     this.urlNodeFirebase = this.urlNodeFirebase+this.conversationWith;
     const firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
     this.messagesRef = firebaseMessages.orderByChild('timestamp').limitToLast(100);
+    console.log("this.translate *****", this.translate);
 
     //// AGGIUNTA MESSAGGIO ////
     this.messagesRef.on("child_added", function (childSnapshot) {
-      //console.log("child_added *****", childSnapshot.key);
+      
       const itemMsg = childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-      let calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
+      console.log("that.translate *****", that.translate);
+      let calcolaData = setHeaderDate(that.translate, itemMsg['timestamp'], lastDate);
       if (calcolaData != null) {
         lastDate = calcolaData;
       }
@@ -149,7 +152,7 @@ export class ChatConversationHandler {
     this.messagesRef.on("child_changed", function(childSnapshot) {
       const itemMsg = childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-      const calcolaData = setHeaderDate(itemMsg['timestamp'], lastDate);
+      const calcolaData = setHeaderDate(that.translate, itemMsg['timestamp'], lastDate);
       if (calcolaData != null) {
         lastDate = calcolaData;
       }
@@ -317,7 +320,7 @@ export class ChatConversationHandler {
     const language = document.documentElement.lang;
     const sender_fullname = this.loggedUser.fullname;
     const recipient_fullname = conversationWithDetailFullname;
-    const dateSendingMessage = setHeaderDate(timestamp);
+    const dateSendingMessage = setHeaderDate(this.translate, timestamp);
     let firebaseMessagesCustomUid = firebase.database().ref(this.urlNodeFirebase);
     const message = new MessageModel(
       '',
