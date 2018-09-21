@@ -13,6 +13,7 @@ export class ConversationModel {
     public status: string,
     public timestamp: string,
     public time_last_message: string,
-    public selected: boolean
+    public selected: boolean,
+    public color: string
   ) { }
 }

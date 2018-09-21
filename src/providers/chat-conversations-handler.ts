@@ -9,9 +9,11 @@ import { ConversationModel } from '../models/conversation';
 // services
 import { ChatManager } from './chat-manager/chat-manager';
 // utils
-import { TYPE_GROUP, LABEL_TU, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
+import { TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
 import { compareValues, getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
 import { TiledeskConversationProvider } from './tiledesk-conversation/tiledesk-conversation';
+import { TranslateService } from '@ngx-translate/core';
+
 // import { LABEL_TU } from '../utils/constants';
 
 @Injectable()
@@ -29,6 +31,7 @@ export class ChatConversationsHandler {
     constructor(
         public events: Events,
         public chatManager: ChatManager,
+        public translate: TranslateService,
         private tiledeskConversationsProvider : TiledeskConversationProvider
     ) {
     }
@@ -179,6 +182,7 @@ export class ChatConversationsHandler {
      */
     completeConversation(conv):ConversationModel{
         //debugger;
+        var LABEL_TU = this.translate.get('LABEL_TU')['value'];
         conv.selected = false;
         if(!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === ''){
             conv.sender_fullname = conv.sender;
@@ -199,6 +203,7 @@ export class ChatConversationsHandler {
             conversation_with_fullname = conv.recipient_fullname;
             conv.last_message_text = conv.last_message_text;
         }
+        
         conv.conversation_with_fullname = conversation_with_fullname;
 
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
@@ -206,7 +211,7 @@ export class ChatConversationsHandler {
 
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.time_last_message = time_last_message;
-        
+        conv.color = this.getRandomColorBck();
         return conv;
     }
 
@@ -230,6 +235,9 @@ export class ChatConversationsHandler {
     setImageConversation(conv, conversation_with) {
 
         let image = URL_NO_IMAGE;
+        conv.image = 'https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F'+conversation_with+'%2Fthumb_photo.jpg?alt=media';
+        
+        /*
         if(conv.channel_type === TYPE_DIRECT) {
             const urlNodeConcacts = contactsRef(this.tenant) + conversation_with + '/imageurl/';
             firebase.database().ref(urlNodeConcacts).once('value')
@@ -248,7 +256,8 @@ export class ChatConversationsHandler {
             })
         } else {
             conv.image = image;
-        }
+        }*/
+
         
     }
     
@@ -395,4 +404,13 @@ export class ChatConversationsHandler {
     private isValidField(field) : boolean{
         return (field === null || field === undefined) ? false : true;
     }
+
+
+    private getRandomColorBck(){
+        var arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
+        var num = Math.floor(Math.random() * 6);
+        return arrayBckColor[num];
+    }
+  
+      
 }

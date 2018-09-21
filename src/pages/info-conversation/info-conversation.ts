@@ -13,7 +13,7 @@ import { GroupService } from '../../providers/group/group';
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 
 // utils
-import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, LABEL_ANNULLA, LABEL_ACTIVE_NOW, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
 import { getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
 import { PlaceholderPage } from '../placeholder/placeholder';
 import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
@@ -46,7 +46,6 @@ export class InfoConversationPage {
   public conversationEnabled: boolean;
 
   public TYPE_GROUP = TYPE_GROUP;
-  public LABEL_ACTIVE_NOW = LABEL_ACTIVE_NOW;
   public URL_SEND_BY_EMAIL = URL_SEND_BY_EMAIL;
   public URL_VIDEO_CHAT = URL_VIDEO_CHAT;
 
@@ -112,6 +111,7 @@ export class InfoConversationPage {
 
   /**  */
   subcribePopupConfirmation: any = (resp, action) => {
+    var LABEL_ANNULLA = this.translate.get('LABEL_ANNULLA')['value'];
     if(resp === LABEL_ANNULLA) { return; }
 
     var that = this;

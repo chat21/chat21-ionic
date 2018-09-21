@@ -509,4 +509,21 @@ export class ListaConversazioniPage extends _MasterPage {
       that.navProxy.pushDetail(PlaceholderPage, {});
     }
   }
+
+  avatarPlaceholder(conversation_with_fullname) {
+    var arrayName = conversation_with_fullname.split(" ");
+    var initials = '';
+    arrayName.forEach(member => {
+      if(member.trim().length > 1 && initials.length < 3){
+        initials += member.substring(0,1).toUpperCase();
+      }
+    });
+    return initials;
+  }
+
+
+  
+
+  
+
 }

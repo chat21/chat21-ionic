@@ -4,8 +4,9 @@ import * as firebase from 'firebase/app';
 import { UserModel } from '../models/user';
 import { ConversationModel } from '../models/conversation';
 import { ChatManager } from './chat-manager/chat-manager';
-import { TYPE_GROUP, LABEL_TU, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
+import { TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
 import { compareValues, getFromNow, contactsRef, searchIndexInArrayForUid } from '../utils/utils';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ChatArchivedConversationsHandler {
@@ -13,15 +14,13 @@ export class ChatArchivedConversationsHandler {
     private tenant: string;
     private loggedUser: UserModel;
     private userId: string;
-
     private ref: firebase.database.Query;
-
     public conversations: ConversationModel[] = [];
-
     public uidConvSelected: String = '';
 
     constructor(
-        public chatManager: ChatManager
+        public chatManager: ChatManager,
+        public translate: TranslateService
     ) {
     }
 
@@ -149,6 +148,7 @@ export class ChatArchivedConversationsHandler {
      */
     private completeConversation(conv): ConversationModel {
         //debugger;
+        var LABEL_TU = this.translate.get('LABEL_TU')['value'];
         conv.selected = false;
         if (!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === '') {
             conv.sender_fullname = conv.sender;
