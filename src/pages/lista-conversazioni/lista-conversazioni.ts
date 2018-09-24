@@ -258,6 +258,7 @@ export class ListaConversazioniPage extends _MasterPage {
       handler.uidConvSelected = this.uidConvSelected
       this.conversationsHandler = handler;
       this.chatArchivedConversationsHandler = tempArchviedConversationsHandler;
+      console.log('handler.conversations ::'+handler.conversations);
       this.conversations = handler.conversations;
       this.archivedConversations = tempArchviedConversationsHandler.conversations;
 

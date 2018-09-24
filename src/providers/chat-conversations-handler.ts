@@ -291,7 +291,15 @@ export class ChatConversationsHandler {
      * dispose reference di conversations
      */
     dispose() {
+        this.conversations = [];
+        this.uidConvSelected = '';
+
         this.ref.off();
+        this.ref.off("child_changed");
+        this.ref.off("child_removed");
+        this.ref.off("child_added");
+    
+        console.log("DISPOSE::: ",this.ref);
     }
 
     // private clone(convs: ConversationModel[]): ConversationModel[] {

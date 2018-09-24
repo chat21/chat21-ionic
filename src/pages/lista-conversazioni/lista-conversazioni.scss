@@ -1,4 +1,12 @@
 page-lista-conversazioni {
+
+    .bar-button-default-md,
+    .bar-button-default-ios {
+        color:#424242;
+    }
+    .bar-button-default-ios {
+        color:#424242;
+    }
     ion-title{
         img{
             height: 30px;
@@ -51,6 +59,7 @@ page-lista-conversazioni {
             padding: 8px 9px;
             background-color: #ffffff;
             
+
             ion-avatar{
                 position: relative;
                 padding:0;
@@ -96,11 +105,12 @@ page-lista-conversazioni {
                 &.label-ios {
                     margin: 0;
                 }
+                max-width: calc( 100% - 25px);
                 h2 {
                     color: #222;
                     font-weight: 700;
                     white-space: nowrap;
-                    margin: 8px 0 0 0;
+                    margin: 0px 0 0 0;
                     font-size: 1.6rem;
                 }
                 p {
@@ -121,7 +131,7 @@ page-lista-conversazioni {
                     position: relative;
                 }
                 .note{
-                    font-size: 12px;
+                    font-size: 10px;
                     color: #b3b3b3;
                     position: absolute;
                     right: 0;
