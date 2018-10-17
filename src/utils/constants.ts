@@ -1,7 +1,7 @@
 //TIMES
 // BUILD
-export const CURR_VER_DEV = '43';
-export const CURR_VER_PROD = '0.95';
+export const CURR_VER_DEV = '46';
+export const CURR_VER_PROD = '0.102';
 
 //export const SERVICE_WORKER_DEV = '/chat/';
 //export const SERVICE_WORKER_PROD = './chat/';
@@ -53,7 +53,7 @@ export const MAX_WIDTH_IMAGES: number = 300;
 export const TYPE_DIRECT: string = 'direct';
 export const TYPE_GROUP: string = 'group';
 export const SYSTEM: string = 'system';
-export const URL_NO_IMAGE: string = 'assets/img/no_image.png';
+export const URL_NO_IMAGE: string = '';//assets/img/no_image.png';
 export const LABEL_NOICON: string = 'NOICON';
 export const CLIENT_BROWSER: string = 'browser';
 export const TYPE_POPUP_LIST_CONVERSATIONS: string = 'LIST_CONVERSATIONS';

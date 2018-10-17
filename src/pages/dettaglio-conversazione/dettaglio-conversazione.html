@@ -26,11 +26,8 @@
       <button id="btn-panel-info" disabled ion-button>
         {{ 'Info' }}
       </button>
+      
     </ion-buttons>
-
-
-   
-
   </ion-navbar>
 </ion-header>
 
@@ -41,8 +38,6 @@
   <page-info-message></page-info-message>
 </div>
 <ion-content class="messagesView " [class.halfscreen]="openInfoConversation || openInfoMessage">
-
-
   <span *ngIf="messages.length > 0;then content_messages else contentMessageWelcome">here is ignored</span>
   <ng-template #content_messages>
     <div #scrollMe id="scroll-me" style="height:100%; overflow-y:auto;" (scroll)="onScroll($event)">

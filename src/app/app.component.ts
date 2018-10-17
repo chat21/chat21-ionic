@@ -92,9 +92,17 @@ export class MyApp {
       this.translate.setDefaultLang('en');
       this.translate.use('en');
 
-      let language = (navigator.language.indexOf('-') != -1) ? navigator.language.substring(0, navigator.language.indexOf('-')) : navigator.language;
+      console.log('navigator.language: ', navigator.language);
+      var language;
+      if(navigator.language.indexOf('-') != -1){
+        language = navigator.language.substring(0, navigator.language.indexOf('-'));
+      } else if(navigator.language.indexOf('_') != -1){
+        language = navigator.language.substring(0, navigator.language.indexOf('_'));
+      } else {
+        language = navigator.language;
+      }
+      //let language = (navigator.language.indexOf('-') != -1) ? navigator.language.substring(0, navigator.language.indexOf('-')) : navigator.language;
       this.translate.use(language);
-
       console.log('language: ', language);
     });
 

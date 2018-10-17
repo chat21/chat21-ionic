@@ -325,8 +325,9 @@ export function isExistInArray(members, currentUid){
 }
 
 export function createConfirm(translate, alertCtrl, events, title, message, action, onlyOkButton) {
-  var LABEL_ANNULLA = translate.get('LABEL_ANNULLA')['value'];
-  var LABEL_OK = translate.get('LABEL_OK')['value'];
+
+  var LABEL_ANNULLA = translate.get('CLOSE_ALERT_CANCEL_LABEL')['value'];
+  var LABEL_OK = translate.get('CLOSE_ALERT_CONFIRM_LABEL')['value'];
 
   var buttons;
   if (onlyOkButton) {
@@ -395,5 +396,36 @@ function convert(str) {
   str = str.replace(/"/g, '&quot;');
   str = str.replace(/'/g, '&#039;');
   return str;
+}
+
+export function getColorBck(str){
+  var arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
+  var num = 0;
+  if(str){
+      var code = str.charCodeAt((str.length-1));
+      num = Math.round(code%arrayBckColor.length);
+      console.log('************** code',str.length, code, arrayBckColor.length, num);
+  }
+  return arrayBckColor[num];
+}
+
+export function avatarPlaceholder(conversation_with_fullname) {
+  var initials = '';
+  if(conversation_with_fullname){
+      var arrayName = conversation_with_fullname.split(" ");
+      arrayName.forEach(member => {
+          if(member.trim().length > 1 && initials.length < 3){
+              initials += member.substring(0,1).toUpperCase();
+          }
+      });
+  }
+  return initials;
+}
+
+
+export function urlExists(url) {
+  console.log("imageExists::::::"+url);
+  url = "https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F5ad5bd40c975820014ba9009%2Fthumb_photo.jpg?alt=media";
+  return false;
 }
 

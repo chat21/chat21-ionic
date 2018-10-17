@@ -39,17 +39,17 @@ export class NavProxyService {
     pushDetail(page: any, params: any) {
         console.log("pushDetail",this.isOn);
         (this.isOn) ?
-            this.detailNav.setRoot(page, params):
+            this.detailNav.setRoot(page, params,{animate:false}):
             //this.detailNav.push(page, params);
-            this.masterNav.push(page, params);
+            this.masterNav.push(page, params,{animate:false});
     }
 
     pushMaster(page: any, params: any) {
-        this.masterNav.push(page, params);
+        this.masterNav.push(page, params,{animate:false});
     }
 
     setRootMaster(page: any, params: any) {
-        this.masterNav.setRoot(page, params);
+        this.masterNav.setRoot(page, params,{animate:false});
     }
 
     /**
@@ -75,7 +75,7 @@ export class NavProxyService {
                 instanceof _DetailPage) {
                 // if the current view is a 'Detail' page...
                 // - remove it from the 'master' nav stack...
-                this.masterNav.pop();
+                this.masterNav.pop({animate: false, duration: 0});
                 // - and add it to the 'detail' nav stack...
                 this.detailNav.setRoot(
                     currentView.component,

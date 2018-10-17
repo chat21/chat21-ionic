@@ -28,11 +28,9 @@
       <ion-item no-lines ion-item [class.selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of conversations"
         (click)="openMessageList(conversation.uid)">
         <ion-avatar item-start>
-            
-            <div class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="avatarPlaceholder(conversation.conversation_with_fullname)"></div>
-          <!-- <div class="avatar-placeholder" [style.background-color]="getRandomColorBck($event)" [innerHTML]="avatarPlaceholder(conversation.conversation_with_fullname)"></div> -->
-          <div class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
-          <!-- <img src="{{conversation.image}}" alt="user" onerror="this.onerror=null;this.src='assets/img/no_image.png';">  -->
+          <!-- <span *ngIf="conversation.image; then avatarImage else avatarPlaceholder">here is ignored</span> -->
+          <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
+          <div #avatarImage *ngIf="conversation.image" class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
         </ion-avatar>
         <h2 class="truncate">{{conversation.conversation_with_fullname }}</h2>
         <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>

@@ -111,7 +111,8 @@ export class InfoConversationPage {
 
   /**  */
   subcribePopupConfirmation: any = (resp, action) => {
-    var LABEL_ANNULLA = this.translate.get('LABEL_ANNULLA')['value'];
+    
+    var LABEL_ANNULLA = this.translate.get('CLOSE_ALERT_CANCEL_LABEL')['value'];
     if(resp === LABEL_ANNULLA) { return; }
 
     var that = this;

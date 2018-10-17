@@ -5,7 +5,7 @@ export class ConversationModel {
     public conversation_with_fullname: string,
     public recipient: string,
     public recipient_fullname: string,
-    public image: any,//string,
+    public image: string,
     public is_new: boolean,
     public last_message_text: string,
     public sender: string,
@@ -14,6 +14,7 @@ export class ConversationModel {
     public timestamp: string,
     public time_last_message: string,
     public selected: boolean,
-    public color: string
+    public color: string,
+    public avatar: string
   ) { }
 }

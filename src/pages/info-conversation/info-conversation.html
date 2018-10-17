@@ -139,14 +139,14 @@
             </button>
         </div>
         </ion-card>
-            <!-- <ion-card *ngIf="isSupportGroup()">
-        <div class="chat21-content" style="float:left; width: 100%">  
-            <button [disabled]="!conversationEnabled" ion-button clear icon-start block color="default" (click)="setVideoChat()">
-                <ion-icon name='videocam' is-active="false"></ion-icon>
-                {{ 'LABEL_VIDEO_CHAT' | translate }}
-            </button>
-        </div>
-        </ion-card> -->
+            <ion-card *ngIf="isSupportGroup()">
+                <div class="chat21-content" style="float:left; width: 100%">  
+                    <button [disabled]="!conversationEnabled" ion-button clear icon-start block color="default" (click)="setVideoChat()">
+                        <ion-icon name='videocam' is-active="false"></ion-icon>
+                        {{ 'LABEL_VIDEO_CHAT' | translate }}
+                    </button>
+                </div>
+            </ion-card> 
             <ion-card *ngIf="isSupportGroup()">
                 <div class="chat21-content" style="width: 100%">
                     <button [disabled]="!conversationEnabled" item-right ion-button clear icon-start color="danger" (click)="openPopupConfirmation('close');$event.stopPropagation();">

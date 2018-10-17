@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
+
 import 'rxjs/add/operator/map';
 import * as firebase from 'firebase/app';
 import { UserModel } from '../models/user';
@@ -7,6 +8,8 @@ import { ChatManager } from './chat-manager/chat-manager';
 import { TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
 import { compareValues, getFromNow, contactsRef, searchIndexInArrayForUid } from '../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
+
+import { UploadService } from '../providers/upload-service/upload-service';
 
 @Injectable()
 export class ChatArchivedConversationsHandler {
@@ -20,7 +23,9 @@ export class ChatArchivedConversationsHandler {
 
     constructor(
         public chatManager: ChatManager,
-        public translate: TranslateService
+        public translate: TranslateService,
+        public upSvc: UploadService,
+        public zone: NgZone
     ) {
     }
 
@@ -296,4 +301,5 @@ export class ChatArchivedConversationsHandler {
     private isValidField(field): boolean {
         return (field === null || field === undefined) ? false : true;
     }
+
 }

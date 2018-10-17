@@ -50,7 +50,7 @@ export class UpdateImageProfilePage {
   }
   
   displayImage(uidContact){
-    this.upSvc.display(uidContact)
+    this.upSvc.display(uidContact, '')
     .then((url) => {
       this.zone.run(() => {
         this.image = url;

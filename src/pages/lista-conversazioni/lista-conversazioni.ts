@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { Events, PopoverController, IonicPage, NavController, NavParams, ModalController, Modal, AlertController } from 'ionic-angular';
 // models
 import { ConversationModel } from '../../models/conversation';
@@ -200,11 +200,8 @@ export class ListaConversazioniPage extends _MasterPage {
     setTimeout(function () {
       var conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
       if (conversationSelected) {
-
         conversationSelected.is_new = false;
         that.conversationsHandler.setConversationRead(conversationSelected.uid);
-
-
         conversationSelected.status = '0';
         conversationSelected.selected = true;
         that.navProxy.pushDetail(DettaglioConversazionePage, {
@@ -215,7 +212,7 @@ export class ListaConversazioniPage extends _MasterPage {
         that.databaseProvider.setUidLastOpenConversation(uidConvSelected);
       }
       //that.conversationWith = uidConvSelected;
-    }, 1000);
+    }, 0);
   }
 
   /**
@@ -511,19 +508,23 @@ export class ListaConversazioniPage extends _MasterPage {
     }
   }
 
-  avatarPlaceholder(conversation_with_fullname) {
-    var arrayName = conversation_with_fullname.split(" ");
-    var initials = '';
-    arrayName.forEach(member => {
-      if(member.trim().length > 1 && initials.length < 3){
-        initials += member.substring(0,1).toUpperCase();
-      }
-    });
-    return initials;
-  }
+  // avatarPlaceholder(conversation_with_fullname) {
+  //   var arrayName = conversation_with_fullname.split(" ");
+  //   var initials = '';
+  //   arrayName.forEach(member => {
+  //     if(member.trim().length > 1 && initials.length < 3){
+  //       initials += member.substring(0,1).toUpperCase();
+  //     }
+  //   });
+  //   return initials;
+  // }
 
+  // getColorBck(){
+  //   var arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
+  //   var num = Math.floor(Math.random() * 6);
+  //   return arrayBckColor[num];
+  // }
 
-  
 
   
 

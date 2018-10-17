@@ -88,9 +88,16 @@ export class UploadService {
     subscribe(next, error, complete);
   }
 
-  display(uidContact) {
+  display(uidContact, format?) {
+    console.log('display format::'+format);
     if(uidContact && uidContact!=''){
-      const urlImagesNodeFirebase = '/apps/'+this.tenant+'/contacts/'+uidContact+"-imageProfile";
+      var urlImagesNodeFirebase;
+      if(format == 'thumb'){
+        urlImagesNodeFirebase = '/profiles/'+uidContact+'/thumb_photo.jpg';
+      } else {
+        urlImagesNodeFirebase = '/profiles/'+uidContact+'/photo.jpg';
+      }
+      //const urlImagesNodeFirebase = '/apps/'+this.tenant+'/contacts/'+uidContact+"-imageProfile";
       return firebase.storage().ref().child(urlImagesNodeFirebase).getDownloadURL()
     }
   }

@@ -89,7 +89,8 @@ export class ProfilePage {
    */
   displayImage(uidContact){
     const that = this;
-    this.upSvc.display(uidContact)
+    console.log(" ********* displayImage::: ");
+    this.upSvc.display(uidContact, 'thumb')
     .then((url) => {
       that.zone.run(() => {
         if(that.profileYourself){
@@ -100,13 +101,13 @@ export class ProfilePage {
       });
     })
     .catch((error)=>{
-      console.log("error::: ",error);
+      console.log("displayImage error::: ",error);
     });
   }
   /**
    * chiudo il popup profilo utente
    */
   goBack(){
-    this.navCtrl.pop();
+    this.navCtrl.pop({animate: false, duration: 0});
   }
 }

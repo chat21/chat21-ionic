@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
+
 import 'rxjs/add/operator/map';
 import { Events } from 'ionic-angular';
 // firebase
@@ -14,7 +15,8 @@ import { compareValues, getFromNow, contactsRef, conversationsPathForUserId, sea
 import { TiledeskConversationProvider } from './tiledesk-conversation/tiledesk-conversation';
 import { TranslateService } from '@ngx-translate/core';
 
-// import { LABEL_TU } from '../utils/constants';
+import { avatarPlaceholder, getColorBck, urlExists } from '../utils/utils';
+import { UploadService } from '../providers/upload-service/upload-service';
 
 @Injectable()
 export class ChatConversationsHandler {
@@ -26,13 +28,16 @@ export class ChatConversationsHandler {
     private loggedUser: UserModel;
     private userId: string;
     private ref: firebase.database.Query;
+    public audio: any;
 
     //public LABEL_TU: string;
     constructor(
         public events: Events,
         public chatManager: ChatManager,
         public translate: TranslateService,
-        private tiledeskConversationsProvider : TiledeskConversationProvider
+        private tiledeskConversationsProvider : TiledeskConversationProvider,
+        public upSvc: UploadService,
+        public zone: NgZone
     ) {
     }
 
@@ -66,12 +71,14 @@ export class ChatConversationsHandler {
         this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
         this.ref.on("child_changed", function(childSnapshot) {
             that.changed(childSnapshot);
+            that.soundMessage();
         });
         this.ref.on("child_removed", function(childSnapshot) {
             that.removed(childSnapshot);
         });
         this.ref.on("child_added", function(childSnapshot) {
             that.added(childSnapshot);
+            that.soundMessage();
         })
     }
 
@@ -208,10 +215,14 @@ export class ChatConversationsHandler {
 
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
         this.setImageConversation(conv, conversation_with);
+    
+        
 
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.time_last_message = time_last_message;
-        conv.color = this.getRandomColorBck();
+        conv.avatar = avatarPlaceholder(conversation_with_fullname);
+        conv.color = getColorBck(conversation_with_fullname);
+
         return conv;
     }
 
@@ -232,11 +243,10 @@ export class ChatConversationsHandler {
         return status;
     }
 
-    setImageConversation(conv, conversation_with) {
-
+    setImageConversation2(conv, conversation_with) {
         let image = URL_NO_IMAGE;
         conv.image = 'https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F'+conversation_with+'%2Fthumb_photo.jpg?alt=media';
-        
+        console.log("urlExists::: ",urlExists(conv.image));
         /*
         if(conv.channel_type === TYPE_DIRECT) {
             const urlNodeConcacts = contactsRef(this.tenant) + conversation_with + '/imageurl/';
@@ -257,10 +267,29 @@ export class ChatConversationsHandler {
         } else {
             conv.image = image;
         }*/
-
-        
     }
     
+
+     /**
+     * carico url immagine profilo passando id utente
+     */
+    setImageConversation(conv, conversation_with){
+        const that = this;
+        console.log("********** displayImage uidContact::: ", conversation_with);
+        if(conversation_with){
+            this.upSvc.display(conversation_with, 'thumb')
+            .then((url) => {
+                console.log("**********XX displayImage url::: ", url);
+                conv.image = url;
+                //return url;
+            }).catch((error) => {
+                console.log("**********XX  displayImage error::: ", error);
+                conv.image = null;
+                //return '';
+            });
+        }
+    }
+
     /**
      * calcolo il tempo trascorso da ora al timestamp passato
      * @param timestamp 
@@ -413,12 +442,36 @@ export class ChatConversationsHandler {
         return (field === null || field === undefined) ? false : true;
     }
 
-
-    private getRandomColorBck(){
-        var arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
-        var num = Math.floor(Math.random() * 6);
-        return arrayBckColor[num];
-    }
+    // private getColorBck(str){
+    //     var arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
+    //     var num = 0;
+    //     if(str){
+    //         var code = str.charCodeAt((str.length-1));
+    //         num = Math.round(code%arrayBckColor.length);
+    //         console.log('************** code',str.length, code, arrayBckColor.length, num);
+    //     }
+    //     return arrayBckColor[num];
+    // }
+    // private avatarPlaceholder(conversation_with_fullname) {
+    //     var initials = '';
+    //     if(conversation_with_fullname){
+    //         var arrayName = conversation_with_fullname.split(" ");
+    //         arrayName.forEach(member => {
+    //             if(member.trim().length > 1 && initials.length < 3){
+    //                 initials += member.substring(0,1).toUpperCase();
+    //             }
+    //         });
+    //     }
+    //     return initials;
+    // }
   
+
+    soundMessage(){
+        console.log('****** soundMessage *****');
+        this.audio = new Audio();
+        this.audio.src = 'assets/pling.mp3';
+        this.audio.load();
+        this.audio.play();
+    }
       
 }
