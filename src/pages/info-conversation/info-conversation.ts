@@ -11,6 +11,7 @@ import { UploadService } from '../../providers/upload-service/upload-service';
 import { UserService } from '../../providers/user/user';
 import { GroupService } from '../../providers/group/group';
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
+import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // utils
 import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
@@ -54,6 +55,8 @@ export class InfoConversationPage {
 
   private isLoggedUserGroupMember : boolean;
 
+  arrayUsersStatus = [];
+
   constructor(
     public events: Events,
     public chatManager: ChatManager,
@@ -67,6 +70,7 @@ export class InfoConversationPage {
     public translate: TranslateService,
     private loadingCtrl: LoadingController,
     private navProxy: NavProxyService,
+    public chatPresenceHandler: ChatPresenceHandler
   ) {
     this.profileYourself = false;
     this.online = false; 
@@ -77,6 +81,11 @@ export class InfoConversationPage {
   ngOnInit() {
     console.log('InfoConversationPage::ngOnInit');
     this.initialize();
+  }
+
+  ionViewWillLeave() {
+    console.log('------------> ionViewWillLeave');
+    this.unsubescribeAll();
   }
 
   // /**
@@ -92,12 +101,55 @@ export class InfoConversationPage {
 
   initialize(){
     console.log('InfoConversationPage::initialize');
+    this.arrayUsersStatus = [];
     this.profileYourself = false;
     this.currentUserDetail = this.chatManager.getLoggedUser();
     this.userDetail = new UserModel('', '', '', '', '', '');
     this.groupDetail = new GroupModel('', 0, '', [], '', '');
     this.setSubscriptions();
   }
+
+  //// SUBSCRIBTIONS ////
+  /** 
+   * subscriptions list 
+  */
+ initSubscriptions(uid){
+  console.log('initSubscriptions.', uid);
+  //this.arrayUsersStatus['7CzGOPMbDrXq3Im7APVq5K3advl2'] = true; 
+  // subscribe stato utente con cui si conversa ONLINE
+  this.events.subscribe('statusUser:online-'+uid, this.statusUserOnline);
+  // subscribe stato utente con cui si conversa ONLINE
+  this.events.subscribe('statusUser:offline-'+uid, this.statusUserOffline);
+}
+
+  /**
+   * on subscribe stato utente con cui si conversa ONLINE
+   */
+  statusUserOnline: any = (uid) => {
+    //if(uid !== this.conversationWith){return;}
+    this.arrayUsersStatus[uid] = true;
+    console.log('************** ONLINE',this.arrayUsersStatus);
+  }
+  /**
+   * on subscribe stato utente con cui si conversa OFFLINE
+   */
+  statusUserOffline: any = (uid) => {
+    this.arrayUsersStatus[uid] = false;
+    console.log('************** OFFLINE', this.arrayUsersStatus);
+  }
+  //// UNSUBSCRIPTIONS ////
+  /**
+   * unsubscribe all subscribe events
+   */
+  unsubescribeAll(){
+    this.arrayUsersStatus.forEach((value, key) => {
+      console.log("unsubscribe key", key)
+      this.events.unsubscribe('statusUser:online-'+key, null);
+      this.events.unsubscribe('statusUser:offline-'+key, null);
+    });
+    
+  }
+
 
   /** SUBSCRIPTIONS */
   setSubscriptions(){
@@ -391,6 +443,7 @@ export class InfoConversationPage {
     // console.log("InfoConversationPage::getListMembers::members", members);
     let arrayMembers = [];
     // var membersSize = 0;
+    let that = this;
     members.forEach(member => {
       // console.log("InfoConversationPage::getListMembers::member", member);
       let userDetail = new UserModel(member, '', '', member, '', URL_NO_IMAGE);
@@ -418,6 +471,10 @@ export class InfoConversationPage {
           // console.log("---------------> : ", member);
           arrayMembers.push(userDetail);
           // membersSize++;
+
+          that.initSubscriptions(userDetail.uid);
+          that.chatPresenceHandler.userIsOnline(userDetail.uid);
+          
         })
         .catch(function(err) {
           console.error('Unable to get permission to notify.', err);
@@ -468,7 +525,7 @@ export class InfoConversationPage {
       },
       errMsg => {
         this.dismissLoadingDialog();
-        console.error('leaveGroup ERROR MESSAGE', errMsg);
+        console.log('leaveGroup ERROR MESSAGE', errMsg);
         callback('error');
       },
       () => {
@@ -621,7 +678,7 @@ export class InfoConversationPage {
         if (result === 'success') {
           // console.log("InfoConversationPage::closeConversation::deleteConversation::response", data);
         } else if (result === 'error') {
-          console.error("InfoConversationPage::closeConversation::deleteConversation::error", data);
+          console.log("InfoConversationPage::closeConversation::deleteConversation::error", data);
         }
       });
 
@@ -639,7 +696,7 @@ export class InfoConversationPage {
         if (result === 'success') {
           // console.log("InfoConversationPage::closeConversation::closeSupportGroup::response", data);
         } else if (result === 'error') {
-          console.error("InfoConversationPage::closeConversation::closeSupportGroup::error", data);
+          console.log("InfoConversationPage::closeConversation::closeSupportGroup::error", data);
         }
       });
     }

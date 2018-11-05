@@ -35,7 +35,7 @@ export class ChatPresenceHandler {
     public translate: TranslateService
   ) {
     this.tenant = chatManager.getTenant();
-    this.urlNodeFirebase = '/apps/'+this.tenant+'/';
+    this.urlNodeFirebase = '/apps/'+this.tenant;
   }
 
   /**
@@ -50,6 +50,7 @@ export class ChatPresenceHandler {
     //this.lastOnlineForUser(userid);
     const that = this;
     let myConnectionsRefURL = this.urlNodeFirebase+"/presence/"+userid+"/connections";
+    console.log('-----> REF: ',myConnectionsRefURL);
     const connectionsRef = firebase.database().ref().child(myConnectionsRefURL);
     connectionsRef.on("value", (child) => {
       if(child.val()){
