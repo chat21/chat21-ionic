@@ -108,7 +108,7 @@
                                 <!-- <img src="{{member.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';"> -->
                             </ion-avatar>
                             <h2>
-                                <span  [ngStyle]="{ 'background-color':(arrayUsersStatus[member.uid])?'green':'red' }" class="c21-point">&nbsp;</span>
+                                <span  [ngStyle]="{ 'background-color':(arrayUsersStatus[member.uid])?'#24d066':'#db4437' }" class="c21-point">&nbsp;</span>
                                 <span *ngIf="member.fullname" class="chat21-name truncate read">{{member.fullname}}</span>
                                 <span *ngIf="!member.fullname" class="chat21-name truncate read">{{ 'LABEL_GUEST' | translate }}</span>
                             </h2>

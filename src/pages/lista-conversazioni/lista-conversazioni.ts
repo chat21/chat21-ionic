@@ -76,6 +76,8 @@ export class ListaConversazioniPage extends _MasterPage {
     /** RECUPERO IL RECIPIENTID 
     * nel caso in cui viene pasato nell'url della pagina
     * per aprire una conversazione
+    * 
+    * USARE getParameterByName(name) del widget
     */
     let TEMP = location.search.split('recipient=')[1];
     if (TEMP) { this.uidReciverFromUrl = TEMP.split('&')[0]; }
