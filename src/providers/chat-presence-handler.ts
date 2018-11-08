@@ -50,14 +50,14 @@ export class ChatPresenceHandler {
     //this.lastOnlineForUser(userid);
     const that = this;
     let myConnectionsRefURL = this.urlNodeFirebase+"/presence/"+userid+"/connections";
-    console.log('-----> REF: ',myConnectionsRefURL);
     const connectionsRef = firebase.database().ref().child(myConnectionsRefURL);
     connectionsRef.on("value", (child) => {
       if(child.val()){
-        that.events.publish('statusUser:online-'+userid, userid,'online');
+        that.events.publish('statusUser:online-'+userid, userid, true);
       }
       else {
-        that.events.publish('statusUser:offline-'+userid, userid,'offline');
+        that.events.publish('statusUser:online-'+userid, userid, false);
+        //that.events.publish('statusUser:offline-'+userid, userid,'offline');
       }
     })
   }

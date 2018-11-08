@@ -11,11 +11,12 @@ import { GroupModel } from '../../models/group';
 // firebase
 import * as firebase from 'firebase/app';
 // utils
-import {isExistInArray, getFormatData } from '../../utils/utils';
+import { isExistInArray, getFormatData, searchIndexInArrayForUid } from '../../utils/utils';
 import { TYPE_SUPPORT_GROUP } from '../../utils/constants';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { UserService } from '../../providers/user/user';
+
 
 
 @Injectable()
@@ -25,6 +26,8 @@ export class GroupService {
   public groupDetail: GroupModel;
   observable: any;
   public arrayMembers;
+  public listRefMembersInfo = [];
+  refLoadGroupDetail;
 
   constructor(
     public http: Http,
@@ -37,50 +40,44 @@ export class GroupService {
     console.log('Hello GroupProvider Provider');
   }
 
-  initGroupDetails(uidUser, uidGroup) {
-    const tenant = this.chatManager.getTenant();
-    const urlNodeContacts = '/apps/'+tenant+'/users/'+uidUser+'/groups/'+uidGroup;
-    return firebase.database().ref(urlNodeContacts);
-  } 
-
-  // loadGroupDetail(uidUser, uidGroup){
-  //   console.log("loadGroudDetail: ", uidGroup);
-  //   const userFirebase = this.initGroupDetails(uidUser, uidGroup);
-  //   return userFirebase.once('value');
-  //   // userFirebase.on("value", function(snapshot) {
-  //   //     this.groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
-  //   //     if (snapshot.val()){
-  //   //       const group = snapshot.val();
-  //   //       console.log("group:: ", group);
-  //   //       this.groupDetail = new GroupModel(
-  //   //         snapshot.key, 
-  //   //         getFormatData(group.createdOn), 
-  //   //         group.iconURL,
-  //   //         that.getUidMembers(group.members), 
-  //   //         group.name, 
-  //   //         group.owner
-  //   //       );    
-  //   //     }
-  //   //     that.events.publish('loadGroupDetail:complete', groupDetail);
-  //   //   });
+  // /** */
+  // initGroupDetails(uidUser, uidGroup) {
+  //   const tenant = this.chatManager.getTenant();
+  //   const urlNodeContacts = '/apps/' + tenant + '/users/' + uidUser + '/groups/' + uidGroup;
+  //   console.log("urlNodeContacts", urlNodeContacts);
+  //   return firebase.database().ref(urlNodeContacts);
   // }
 
-  loadGroupDetail(uidUser, uidGroup){
-    console.log("GroupService::loadGroudDetail::uidUser:", uidUser, "uidGroup:", uidGroup);
+  // /** */
+  // loadGroupDetail(uidUser, uidGroup) {
+  //   console.log("GroupService::loadGroudDetail::uidUser:", uidUser, "uidGroup:", uidGroup);
+  //   var that = this;
+  //   const reference = this.initGroupDetails(uidUser, uidGroup);
+  //   // console.log("GroupService::loadGroudDetail::reference:", reference.toString());
+  //   reference.on('value', function (snapshot) {
+  //     console.log("GroupService::loadGroudDetail::snapshot:", snapshot.val());
+  //     that.events.publish(uidGroup + '-details', snapshot);
+  //   });
+  // }
 
-    var that = this;
-   
-    const reference = this.initGroupDetails(uidUser, uidGroup);
-    // console.log("GroupService::loadGroudDetail::reference:", reference.toString());
 
-    reference.on('value', function (snapshot) {
-      console.log("GroupService::loadGroudDetail::snapshot:", snapshot.val());
-      // setTimeout(function () {
-        that.events.publish(uidGroup + '-details', snapshot);
-      // }, 100);
-     
+  loadGroupDetail(uidUser, uidGroup) {
+    const that = this;
+    const tenant = this.chatManager.getTenant();
+    const urlNode = '/apps/' + tenant + '/users/' + uidUser + '/groups/' + uidGroup;
+    console.log("urlNodeContacts", urlNode);
+    this.refLoadGroupDetail = firebase.database().ref(urlNode);
+    this.refLoadGroupDetail.on('value', function (snapshot) {
+      that.events.publish('groupDetails', snapshot);
     });
   }
+
+  /**
+   * 
+   */
+
+
+
 
   leaveAGroup(uidGroup, uidUser): Observable<string> {
     const appId = this.chatManager.getTenant();
@@ -88,7 +85,7 @@ export class GroupService {
     const headers = new Headers();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Bearer '+token);
+    headers.append('Authorization', 'Bearer ' + token);
 
     const options = new RequestOptions({ headers: headers });
     const url = this.BASE_URL_LEAVE_GROUP + 'api/' + appId + '/groups/' + uidGroup + '/members/' + uidUser;
@@ -99,24 +96,24 @@ export class GroupService {
     console.log('------------------> options: ', options);
     console.log('------------------> body: ', JSON.stringify(body));
     return this.http
-    .delete(url, options)
-    .map(res => (res.json()));
-   }
+      .delete(url, options)
+      .map(res => (res.json()));
+  }
 
-   closeGroup(uidGroup, callback) {
+  closeGroup(uidGroup, callback) {
     const appId = this.chatManager.getTenant();
     // const token = this.userService.returnToken();
     var that = this;
     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
-    .then(function(token) {
+      .then(function (token) {
         console.log('idToken.', token);
         const headers = new Headers();
         headers.append('Accept', 'application/json');
         headers.append('Content-Type', 'application/json');
-        headers.append('Authorization', 'Bearer '+token);
+        headers.append('Authorization', 'Bearer ' + token);
 
         const options = new RequestOptions({ headers: headers });
-        const url = that.BASE_URL_LEAVE_GROUP +'supportapi/' + appId + '/groups/' + uidGroup;
+        const url = that.BASE_URL_LEAVE_GROUP + 'supportapi/' + appId + '/groups/' + uidGroup;
         const body = {};
         console.log('---------------> 1 - url: ', url);
         console.log('---------------> 2 - options: ', options);
@@ -126,15 +123,15 @@ export class GroupService {
           .map((res) => {
             callback(res, null);
           }).subscribe();
-    }).catch(function(error) {
-      // Handle error
-      console.log('idToken error: ', error);
-      callback(null, error);
-    });
+      }).catch(function (error) {
+        // Handle error
+        console.log('idToken error: ', error);
+        callback(null, error);
+      });
   }
 
-  
-  getUidMembers(members): string[]{
+
+  getUidMembers(members): string[] {
     this.arrayMembers = [];
     const memberStr = JSON.stringify(members);
     JSON.parse(memberStr, (key, value) => {
@@ -144,11 +141,71 @@ export class GroupService {
   }
 
 
-  isSupportGroup(uid){
-    if(uid.indexOf(TYPE_SUPPORT_GROUP) === 0 ){
+  isSupportGroup(uid) {
+    if (uid.indexOf(TYPE_SUPPORT_GROUP) === 0) {
       return true;
     }
     return false;
   }
+
+
+
+  // ========= begin:: subscribe MembersInfo ============//
+  /** */
+
+  // getMembersInfo(uidGroup, tenant, uidUser, uidMember){
+  //   const urlNodeContacts = '/apps/'+tenant+'/users/'+uidUser+'/groups/'+uidGroup+'/membersinfo/'+uidMember;
+  //   console.log("getMembersInfo: ",urlNodeContacts);
+  //   var ref =  firebase.database().ref(urlNodeContacts).once('value');
+  //   return ref;
+  // }
+
+  /** */
+  loadMembersInfo(uidGroup, tenant, uidUser) {
+    const that = this;
+    const urlNodeContacts = '/apps/' + tenant + '/users/' + uidUser + '/groups/' + uidGroup + '/membersinfo';
+    console.log("initMembersInfo: ", urlNodeContacts);
+    var ref = firebase.database().ref(urlNodeContacts);
+    ref.on('value', function (snapshot) {
+      console.log("VALUE: ", snapshot.val());
+      that.events.publish('callbackCheckVerifiedMembers-'+uidUser, snapshot);
+    });
+    this.listRefMembersInfo.push(ref);
+    // firebase.database().ref(urlNodeContacts).on('value', (child) => {
+    //   if(child.val()){
+    //     console.log("publish: ",child.key, child.val());
+    //     that.events.publish('callbackCheckVerifiedMembers-'+uidUser, uidUser);
+    //   }
+    // });
+  }
+  // reference.on("child_changed", function(childSnapshot) {
+  //   that.onChangedMembersInfo(childSnapshot);
+  // });
+  // reference.on("child_removed", function(childSnapshot) {
+  //   that.onRemovedMembersInfo(childSnapshot);
+  // });
+  // reference.on("child_added", function(childSnapshot) {
+  //   that.onAddedMembersInfo(childSnapshot);
+  // })
+
+  onDisconnectMembersInfo() {
+    this.listRefMembersInfo.forEach(ref => {
+      console.log("onDisconnectMembersInfo: ", ref);
+      ref.off();
+    });
+    this.listRefMembersInfo = [];
+  }
+
+  /** */
+  onDisconnectLoadGroupDetail() {
+    if(this.refLoadGroupDetail){
+      this.refLoadGroupDetail.off();
+    }
+  }
+  
+
+
+
+  // ========= end:: subscribe MembersInfo ==============//
 
 }

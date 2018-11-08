@@ -1,5 +1,5 @@
-import { Component, NgZone } from '@angular/core';
-import { AlertController, Events, LoadingController} from 'ionic-angular';
+import { Component, NgZone, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { AlertController, Events, LoadingController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // models
@@ -15,13 +15,16 @@ import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // utils
 import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
-import { getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
+import { searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
 import { PlaceholderPage } from '../placeholder/placeholder';
+
 import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
+import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 import { TiledeskConversationProvider } from '../../providers/tiledesk-conversation/tiledesk-conversation';
 import { ConversationModel } from '../../models/conversation';
 
 import { NavProxyService } from '../../providers/nav-proxy';
+
 
 
 @Component({
@@ -29,16 +32,22 @@ import { NavProxyService } from '../../providers/nav-proxy';
   templateUrl: 'info-conversation.html',
 })
 export class InfoConversationPage {
+  // ========= begin:: Input/Output values ============//
+  @Output() eventClose = new EventEmitter();
+  @Input() tenant: string;
+  @Input() attributes: any = {};
+  @Input() conversationWith: string;
+  @Input() channelType: string;
+  // ========= end:: Input/Output values ============//
 
-  public uidSelected: string;
-  public channel_type: string;
+
+  //public uidSelected: string;
   public userDetail: UserModel;
   public groupDetail: GroupModel;
-  public members: UserModel[];
+  public listMembers: UserModel[];
   public currentUserDetail: UserModel;
   public profileYourself: boolean;
-  public attributes: any = {};
-  private customAttributes = []; 
+  private customAttributes = [];
   public attributesClient: string = '';
   public attributesSourcePage: string = '';
   public attributesDepartments: string = '';
@@ -50,12 +59,14 @@ export class InfoConversationPage {
   public URL_SEND_BY_EMAIL = URL_SEND_BY_EMAIL;
   public URL_VIDEO_CHAT = URL_VIDEO_CHAT;
 
-  private loadingDialog : any;
-  private confirmDialog : any;
+  private loadingDialog: any;
+  private confirmDialog: any;
 
-  private isLoggedUserGroupMember : boolean;
+  private isLoggedUserGroupMember: boolean;
+  
+  
+  private subscriptions = [];
 
-  arrayUsersStatus = [];
 
   constructor(
     public events: Events,
@@ -64,8 +75,9 @@ export class InfoConversationPage {
     public groupService: GroupService,
     public upSvc: UploadService,
     public zone: NgZone,
-    private conversationsHandler : ChatConversationsHandler,
-    private tiledeskConversationProvider : TiledeskConversationProvider,
+    private conversationsHandler: ChatConversationsHandler,
+    private conversationHandler: ChatConversationHandler,
+    private tiledeskConversationProvider: TiledeskConversationProvider,
     public alertCtrl: AlertController,
     public translate: TranslateService,
     private loadingCtrl: LoadingController,
@@ -73,103 +85,288 @@ export class InfoConversationPage {
     public chatPresenceHandler: ChatPresenceHandler
   ) {
     this.profileYourself = false;
-    this.online = false; 
+    this.online = false;
     this.isLoggedUserGroupMember = false;
-    this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
+    //this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
   }
 
   ngOnInit() {
-    console.log('InfoConversationPage::ngOnInit');
+    console.log('ngOnInit:');
     this.initialize();
   }
-
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad');
+    //this.initialize();
+  }
+  ionViewWillEnter() {
+    console.log('ionViewWillEnter');
+    //this.initialize();
+  }
   ionViewWillLeave() {
     console.log('------------> ionViewWillLeave');
-    this.unsubescribeAll();
+    this.unsubscribeAll();
   }
 
-  // /**
-  //  * quando esco dalla pagina distruggo i subscribe
-  //  */
-  // ionViewWillLeave() {
-  //   // nn passa mai di qui!!!!
-  //   console.log('InfoConversationPage ionViewWillLeave');
-  //   //this.unsubscribeInfoConversation();
-
-  // }
-
-
-  initialize(){
+  /**
+   * 1 - set subscriptions
+   * 2 - load group details (async)
+   * 3 - checkVerifiedMembers
+   * 
+   * 
+   * recupero array uid membri
+   */
+  initialize() {
     console.log('InfoConversationPage::initialize');
-    this.arrayUsersStatus = [];
+    this.listMembers = [];
+    this.subscriptions = [];
     this.profileYourself = false;
     this.currentUserDetail = this.chatManager.getLoggedUser();
-    this.userDetail = new UserModel('', '', '', '', '', '');
+    this.userDetail = new UserModel('', '', '', '', '', '', false);
     this.groupDetail = new GroupModel('', 0, '', [], '', '');
     this.setSubscriptions();
+    //this.loadGroupDetail();
+    this.populateDetail();
   }
 
-  //// SUBSCRIBTIONS ////
-  /** 
-   * subscriptions list 
+
+  /** selectUserDetail
+   * se uid conversazione esiste popolo:
+   * 1 - dettaglio current user
+   * 2 - dettaglio gruppo
+   * 3 - dettaglio user
   */
- initSubscriptions(uid){
-  console.log('initSubscriptions.', uid);
-  //this.arrayUsersStatus['7CzGOPMbDrXq3Im7APVq5K3advl2'] = true; 
-  // subscribe stato utente con cui si conversa ONLINE
-  this.events.subscribe('statusUser:online-'+uid, this.statusUserOnline);
-  // subscribe stato utente con cui si conversa ONLINE
-  this.events.subscribe('statusUser:offline-'+uid, this.statusUserOffline);
+ populateDetail() {
+  console.log('InfoConversationPage::populateDetail');
+  if (!this.conversationWith) {
+    console.log('CASO 1');
+    return;
+  } else if (this.conversationWith === this.currentUserDetail.uid) {
+    console.log('MYSELF');
+    this.profileYourself = true;
+    this.userDetail = this.currentUserDetail;
+  }
+  else if (this.channelType === TYPE_GROUP) {
+    console.log('GRUPPO');
+    this.profileYourself = false;
+    this.loadGroupDetail();
+
+    // init conversation subscription (close btn)
+    this.events.subscribe(this.conversationWith + '-listener', this.subscribeConversationListener);
+    this.conversationsHandler.addConversationListener(this.currentUserDetail.uid, this.conversationWith);
+  } else {
+    console.log('CONVERSATION');
+    this.profileYourself = false;
+    this.loadUserDetail();
+  }
 }
 
-  /**
-   * on subscribe stato utente con cui si conversa ONLINE
-   */
-  statusUserOnline: any = (uid) => {
-    //if(uid !== this.conversationWith){return;}
-    this.arrayUsersStatus[uid] = true;
-    console.log('************** ONLINE',this.arrayUsersStatus);
-  }
-  /**
-   * on subscribe stato utente con cui si conversa OFFLINE
-   */
-  statusUserOffline: any = (uid) => {
-    this.arrayUsersStatus[uid] = false;
-    console.log('************** OFFLINE', this.arrayUsersStatus);
-  }
-  //// UNSUBSCRIPTIONS ////
-  /**
-   * unsubscribe all subscribe events
-   */
-  unsubescribeAll(){
-    this.arrayUsersStatus.forEach((value, key) => {
-      console.log("unsubscribe key", key)
-      this.events.unsubscribe('statusUser:online-'+key, null);
-      this.events.unsubscribe('statusUser:offline-'+key, null);
-    });
-    
-  }
+
+// ========= begin:: set User Detail ============//
+/** */
+loadUserDetail(){
+  const that = this;
+  this.userService.loadUserDetail(this.conversationWith)
+  .then(function (snapshot) {
+    if (snapshot.val()) {
+      that.setDetailUser(snapshot);
+    }
+  })
+  .catch(function (err) {
+    console.error('Unable to get permission to notify.', err);
+  });
+}
+
+/** */
+setDetailUser(snapshot) {      
+  const user = snapshot.val();
+  const fullname = user.firstname + " " + user.lastname;
+  this.userDetail = new UserModel(
+    snapshot.key,
+    user.email,
+    user.firstname,
+    user.lastname,
+    fullname.trim(),
+    user.imageurl,
+    false
+  );
+}
+// ========= end:: set User Detail ============//
 
 
   /** SUBSCRIPTIONS */
-  setSubscriptions(){
+  setSubscriptions() {
     console.log('InfoConversationPage::setSubscriptions');
-    this.events.subscribe('onOpenInfoConversation', this.subcribeOnOpenInfoConversation);
     this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
+    //this.events.subscribe('onOpenInfoConversation', this.subcribeOnOpenInfoConversation);
     // this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
     // this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
     this.events.subscribe('PopupConfirmation', this.subcribePopupConfirmation);
   }
 
+
+  /** 
+   * init group details subscription
+   */
+  loadGroupDetail() {
+    const keySubscription = 'groupDetails';
+    if(this.addSubscription(keySubscription)){
+      this.events.subscribe(keySubscription, this.subscribeGroupDetails);
+      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.conversationWith);
+    }
+  }
+
+  /**
+   * information detail group called of groupService.loadGroupDetail
+   */
+  subscribeGroupDetails = (snapshot) => {
+    console.log('InfoConversationPage::subscribeGroupDetails', snapshot);
+    if (snapshot.val()) {
+
+      if (snapshot.val().attributes) {
+        this.attributes = snapshot.val().attributes;
+        this.updateAttributes(snapshot.val().attributes);
+      }
+      const group = snapshot.val();
+      this.groupDetail = new GroupModel(
+        snapshot.key,
+        getFormatData(group.createdOn),
+        group.iconURL,
+        this.groupService.getUidMembers(group.members),
+        group.name,
+        group.owner
+      );
+      if (!this.groupDetail.iconURL || this.groupDetail.iconURL === LABEL_NOICON) {
+        this.groupDetail.iconURL = URL_NO_IMAGE;
+      }
+      this.getListMembers(this.groupDetail.members);
+      if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.groupDetail.members.length <= 1) {
+        this.isLoggedUserGroupMember = false;
+      } else {
+        this.isLoggedUserGroupMember = true;
+      }
+    }
+
+  }
+
+  private updateAttributes(attributes) {
+    console.log('InfoConversationPage::updateAttributes', attributes);
+    if (attributes) {
+      this.attributesClient = (attributes.client) ? attributes.client : '';
+      this.attributesSourcePage = (attributes.sourcePage) ? urlify(attributes.sourcePage) : '';
+      //this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
+      this.createCustomAttributesMap(attributes);
+    }
+  }
+
+
+  /** 
+   * 1 - passo array id menbri della conversazione
+   * 2 - verifico se l'uid è valido e diverso da SYSTEM
+   * 3 - mi sottoscrivo al nodo del dettaglio utente per recuperare le informazioni
+   * 4 - creo un new userDetail lo aggiungo all'array utenti, mi sottoscrivo allo stato (online/offline)
+  */
+ private getListMembers(members) {
+  let that = this;
+  members.forEach(member => {
+    let userDetail;
+    if (member.trim() !== '' && member.trim() !== SYSTEM) {
+      this.userService.getUserDetail(member)
+        .then(function (snapshot) {
+          if (snapshot.val()) {
+            const user = snapshot.val();
+            const fullname = user.firstname + " " + user.lastname;
+            let imageUrl = URL_NO_IMAGE;
+            if (user.imageurl && user.imageurl !== LABEL_NOICON) {
+              imageUrl = user.imageurl;
+            }
+            userDetail = new UserModel(
+              snapshot.key,
+              user.email,
+              user.firstname,
+              user.lastname,
+              fullname.trim(),
+              imageUrl,
+              false,
+              false
+            );
+            // ADD MEMBER TO ARRAY
+            that.listMembers.push(userDetail);
+            // ONLINE/OFFLINE
+            that.userIsOnline(userDetail.uid);
+            // MEMBER CHECKED!!
+            that.checkVerifiedMembers(userDetail.uid);
+          }
+        });
+    }
+  });
+}
+
+
+
+
+  //// SUBSCRIBTIONS ////
+  /** 
+  * subscriptions list 
+  */
+  initSubscriptions(uid) {
+    console.log('initSubscriptions.', uid);
+    //this.arrayUsersStatus['7CzGOPMbDrXq3Im7APVq5K3advl2'] = true; 
+    // subscribe stato utente con cui si conversa ONLINE
+    // this.events.subscribe('statusUser:online-' + uid, this.statusUserOnline);
+    // // subscribe stato utente con cui si conversa ONLINE
+    // this.events.subscribe('statusUser:offline-' + uid, this.statusUserOffline);
+  }
+
+
+  //// UNSUBSCRIPTIONS ////
+  /**
+   * unsubscribe all subscribe events
+   */
+  unsubescribeAll() {
+    // this.arrayUsersStatus.forEach((value, key) => {
+    //   console.log("unsubscribe key", key)
+    //   this.events.unsubscribe('statusUser:online-' + key, null);
+    //   this.events.unsubscribe('statusUser:offline-' + key, null);
+    // });
+
+  }
+
+
+  
+
+  // subcribeOnOpenInfoConversation: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
+  //   console.log('InfoConversationPage::subcribeOnOpenInfoConversation');
+  //   // se openInfoConversation === false il pannello è chiuso!
+  //   if(!openInfoConversation){ return; } 
+  //   this.uidSelected = uidUserSelected;
+  //   this.channel_type = channel_type;
+  //   this.attributes = attributes;
+  //   this.updateAttributes(this.attributes);
+  //   this.populateDetail();
+  // };
+
+  // private updateAttributes(attributes) {
+  //   console.log('InfoConversationPage::updateAttributes');
+  //   if (attributes) {
+
+  //     // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes)
+
+  //     this.attributesClient = (attributes.client) ? attributes.client : '';
+  //     this.attributesSourcePage = (attributes.sourcePage) ? urlify(attributes.sourcePage) : '';
+  //     //this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
+
+  //     this.createCustomAttributesMap(attributes);
+  //     // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes);
+  //     // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::customAttributes", this.customAttributes);
+  //   }
+  // }
+
   /**  */
   subcribePopupConfirmation: any = (resp, action) => {
-    
     var LABEL_ANNULLA = this.translate.get('CLOSE_ALERT_CANCEL_LABEL')['value'];
-    if(resp === LABEL_ANNULLA) { return; }
-
+    if (resp === LABEL_ANNULLA) { return; }
     var that = this;
-
-    if(action === 'leave') {
+    if (action === 'leave') {
       // // dismiss the confirm dialog
       // this.dismissConfirmDialog();
 
@@ -194,46 +391,18 @@ export class InfoConversationPage {
         }
       });
     } else if (action === 'close') {
-      this.closeConversation(this.uidSelected);
+      this.closeConversation(this.conversationWith);
     }
   }
 
   /** */
-  subcribeOnOpenInfoConversation: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
-    console.log('InfoConversationPage::subcribeOnOpenInfoConversation');
 
-    // se openInfoConversation === false il pannello è chiuso!
-    if(!openInfoConversation){ return; } 
-    this.uidSelected = uidUserSelected;
-    this.channel_type = channel_type;
-    this.attributes = attributes;
 
-    this.updateAttributes(this.attributes);
-    
-    this.populateDetail();
-  };
 
-  private updateAttributes(attributes) {
-    console.log('InfoConversationPage::updateAttributes');
-
-    if (attributes) {
-
-      // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes)
-
-      this.attributesClient = (attributes.client) ? attributes.client : '';
-      this.attributesSourcePage = (attributes.sourcePage) ? urlify(attributes.sourcePage) : '';
-      //this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
-
-      this.createCustomAttributesMap(attributes);
-      // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::attributes", attributes);
-      // console.log("InfoConversationPage::subcribeOnOpenInfoConversation::customAttributes", this.customAttributes);
-    }
-  }
 
   // create a new attributes map without 'client', 'departmentId', 'departmentName', 'sourcePage', 'userEmail', 'userFullname'
   private createCustomAttributesMap(attributes) {
-    var tempMap = []; 
-
+    var tempMap = [];
     // perform a deep copy of the attributes item.
     // it prevents the privacy leak issue
     var temp = JSON.parse(JSON.stringify(attributes));
@@ -254,18 +423,15 @@ export class InfoConversationPage {
     for (var key in temp) {
       if (temp.hasOwnProperty(key)) {
         var val = temp[key];
-
         // create the array item
         var item = {
-          "key": key, 
-          "value" : val
+          "key": key,
+          "value": val
         }
-
         // add the item to the custom attributes array
         tempMap.push(item);
       }
     }
-
     this.customAttributes = tempMap;
   }
 
@@ -276,77 +442,9 @@ export class InfoConversationPage {
   };
 
 
-  /**
-   * unsubscribe all subscribe events
-   */
-  closeDetailConversation: any = e => {
-    // console.log('UNSUBSCRIBE -> unsubescribeAll', this.events);
-    this.events.unsubscribe('onOpenInfoConversation', null);
-    this.events.unsubscribe('changeStatusUserSelected', null);
-    // this.events.unsubscribe('loadUserDetail:complete', null);
-    // this.events.unsubscribe('loadGroupDetail:complete', null);
-    this.events.unsubscribe('PopupConfirmation', null);
+  
 
-    this.events.unsubscribe(this.uidSelected + '-details', null);
-    this.events.unsubscribe(this.uidSelected + '-listener', null);
-  }
-  // ----------------------------------------- //
-
-
-  /** selectUserDetail
-   * se uid conversazione esiste popolo:
-   * 1 - dettaglio current user
-   * 2 - dettaglio gruppo
-   * 3 - dettaglio user
-  */
-  populateDetail(){
-    console.log('InfoConversationPage::populateDetail');
-
-    // debugger;
-    const that = this;
-    if(!this.uidSelected){
-      return;
-    } else if(this.uidSelected === this.currentUserDetail.uid){
-      this.profileYourself = true;
-      this.userDetail = this.currentUserDetail;
-    } else if(this.channel_type === TYPE_GROUP) {
-      this.profileYourself = false;
-      this.members = [];
-      // //this.groupDetail = new GroupModel(this.uidSelected, 0, '', [], '', '');
-      // this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected)
-      // .then(function(snapshot) { 
-      //   //this.groupDetail = new GroupModel(snapshot.key, 0, '', [], '', '');        
-      //   if (snapshot.val()){
-      //     that.setDetailGroup(snapshot);
-      //   }
-      // })
-      // .catch(function(err) {
-      //   console.log('Unable to get permission to notify.', err);
-      // });
-
-      // init conversation subscription (close btn)
-      this.events.subscribe(this.uidSelected + '-listener', this.subscribeConversationListener);
-      this.conversationsHandler.addConversationListener(this.currentUserDetail.uid, this.uidSelected);
-      
-      // init group details subscription
-      this.events.subscribe(this.uidSelected + '-details', this.subscribeGroupDetails);
-      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.uidSelected);
-
-    } else {
-      this.profileYourself = false;
-      //this.userDetail = new UserModel(this.uidSelected, '', '', '', '', '');
-      this.userService.loadUserDetail(this.uidSelected)
-      .then(function(snapshot) { 
-        // console.log('snapshot:: ', snapshot.val());
-        if (snapshot.val()){
-          that.setDetailUser(snapshot);
-        }
-      })
-      .catch(function(err) {
-        console.error('Unable to get permission to notify.', err);
-      });
-    } 
-  }
+  
 
   // subscriptio on conversation changes
   subscribeConversationListener: any = (snapshot) => {
@@ -369,123 +467,86 @@ export class InfoConversationPage {
 
   }
 
-  // subscriptiuo on group changes
-  subscribeGroupDetails: any = (snapshot) => {
-    console.log('InfoConversationPage::subscribeGroupDetails');
 
-    var that = this;  
-    
-    // console.log("InfoConversationPage::subscribeGroupDetails::snapshot:", snapshot.val())
 
-    if (snapshot.val()){
-      if (snapshot.val().attributes) {
-        // update the local attributes variable
-        that.attributes = snapshot.val().attributes; 
-        that.updateAttributes(snapshot.val().attributes);
+
+
+
+
+  
+
+
+
+  /** 
+   * 
+  */
+  userIsOnline(uid) {
+    const keySubscription = 'statusUser:online-' + uid;
+    this.events.subscribe(keySubscription, this.callbackUserIsOnline);
+    this.addSubscription(keySubscription);
+    this.chatPresenceHandler.userIsOnline(uid);
+  }
+  /**
+   * on subscribe stato utente con cui si conversa ONLINE
+   */
+  callbackUserIsOnline: any = (uid, status) => {
+    // this.listMembers.forEach(member => {
+    for (var i = 0; i < this.listMembers.length; i++) {
+      const member = this.listMembers[i];
+      if (member.uid === uid) {
+        member.online = status;
+        console.log("----->ONLINE: ", member.uid, uid, member.online);
+        break;
       }
-      // render layout
-      that.setDetailGroup(snapshot);
     }
+    // });
   }
 
 
-  setDetailUser(snapshot){
-    //let userDetail = new UserModel(snapshot.key, '', '', snapshot.key, '', '');        
-    const user = snapshot.val();
-    const fullname = user.firstname+" "+user.lastname;  
-    this.userDetail = new UserModel(
-      snapshot.key, 
-      user.email, 
-      user.firstname, 
-      user.lastname, 
-      fullname.trim(), 
-      user.imageurl
-    );        
+  /**
+  * subscribe to node membersInfo (list Verified Member)
+  * quando mi restituisce un memberinfo lo aggiorno o aggiungo in members[]
+  * 
+  */
+  checkVerifiedMembers(uid) {
+    // DISTRUGGILA ALL'USCITA!!!!!
+    console.log("checkVerifiedMembers");
+    const keySubscription = 'callbackCheckVerifiedMembers-'+uid;
+    if(this.addSubscription(keySubscription)){
+      this.events.subscribe(keySubscription, this.callbackCheckVerifiedMembers);
+      this.groupService.loadMembersInfo(this.conversationWith, this.tenant, uid);
+    }
+    
   }
 
 
-  setDetailGroup(snapshot){
-    console.log("InfoConversationPage::setDetailGroup::snapshot", snapshot.val());
-
-    const group = snapshot.val();
-    this.groupDetail = new GroupModel(
-      snapshot.key, 
-      getFormatData(group.createdOn), 
-      group.iconURL,
-      this.groupService.getUidMembers(group.members), 
-      group.name, 
-      group.owner
-    );    
-    if(!this.groupDetail.iconURL || this.groupDetail.iconURL === LABEL_NOICON){
-      this.groupDetail.iconURL = URL_NO_IMAGE;
-    }
-    this.members = this.getListMembers(this.groupDetail.members);
-    // console.log(this.groupDetail.members.length);
-    // console.log("InfoConversationPage::setDetailGroup::members", this.members);
-
-
-    // console.log("setDetailGroup.groupDetail.members", this.groupDetail.members);
-    // console.log("setDetailGroup.groupDetail.members.length", this.members.length);
-
-    if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.groupDetail.members.length <= 1 ){
-      this.isLoggedUserGroupMember = false;
-    } else {
-      this.isLoggedUserGroupMember = true;
-    }
-
-    // debugger
-  }
-
-
-
-  /** */
-  getListMembers(members): UserModel[]{ 
-    // console.log("InfoConversationPage::getListMembers::members", members);
-    let arrayMembers = [];
-    // var membersSize = 0;
-    let that = this;
-    members.forEach(member => {
-      // console.log("InfoConversationPage::getListMembers::member", member);
-      let userDetail = new UserModel(member, '', '', member, '', URL_NO_IMAGE);
-      if (member.trim() !== '' && member.trim() !== SYSTEM) {
-        this.userService.getUserDetail(member)
-        .then(function(snapshot) { 
-          // console.log("InfoConversationPage::getListMembers::snapshot", snapshot);
-          if (snapshot.val()){
-            const user = snapshot.val();
-            const fullname = user.firstname+" "+user.lastname;  
-            let imageUrl =  URL_NO_IMAGE;
-            if(user.imageurl && user.imageurl !== LABEL_NOICON){
-              imageUrl = user.imageurl;
-            }
-            userDetail = new UserModel(
-              snapshot.key, 
-              user.email, 
-              user.firstname, 
-              user.lastname, 
-              fullname.trim(), 
-              imageUrl
-            );  
-            // console.log("InfoConversationPage::getListMembers::userDetail", userDetail);
-          }
-          // console.log("---------------> : ", member);
-          arrayMembers.push(userDetail);
-          // membersSize++;
-
-          that.initSubscriptions(userDetail.uid);
-          that.chatPresenceHandler.userIsOnline(userDetail.uid);
-          
-        })
-        .catch(function(err) {
-          console.error('Unable to get permission to notify.', err);
-        });
+  /**
+   * verifico se il membro è presente e aggiorno
+   * altrimenti aggiungo
+   */
+  callbackCheckVerifiedMembers: any = (snapshot) => {
+    console.log("callbackCheckVerifiedMembers", snapshot);
+    this.listMembers.forEach(member => {
+      if ( snapshot.hasChild(member.uid) ) {
+        console.log("CHECKED", member.uid);
+        member.checked = true;
+      } else {
+        console.log("UNCHECKED", member.uid);
+        member.checked = false;
       }
     });
 
-    // arrayMembers.length = membersSize; // fix the array size
-    // console.log("InfoConversationPage::getListMembers::arrayMembers", arrayMembers);
-    return arrayMembers;
+    // for (var i = 0; i < this.listMembers.length; i++) {
+    //   const member = this.listMembers[i];
+    //   if (member.uid === uid) {
+    //     member.checked = true;
+    //     console.log("----->VERIFIATO: ", member.uid, uid, member.checked);
+    //   }
+    // }
+
   }
+
+
 
   /** */
   arrayDepartments(departments): any[] {
@@ -503,7 +564,7 @@ export class InfoConversationPage {
 
   //// ACTIONS ////
   /** */
-  leaveGroup(callback){
+  leaveGroup(callback) {
     // var spinnerMessage;
     // this.translate.get('LEAVING_GROUP_SPINNER_MSG').subscribe(
     //   value => {
@@ -515,30 +576,30 @@ export class InfoConversationPage {
     // this.loadingDialog.present();
 
     const uidUser = this.chatManager.getLoggedUser().uid; //'U4HL3GWjBsd8zLX4Vva0s7W2FN92';
-    const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
+    const uidGroup = this.conversationWith;//'support-group-L5Kb42X1MaM71fGgL66';
     this.groupService.leaveAGroup(uidGroup, uidUser)
-    .subscribe(
-      response => {
-        // console.log('leaveGroup OK sender ::::', response);
-        this.dismissLoadingDialog();
-        callback('success');
-      },
-      errMsg => {
-        this.dismissLoadingDialog();
-        console.log('leaveGroup ERROR MESSAGE', errMsg);
-        callback('error');
-      },
-      () => {
-        // console.log('leaveGroup API ERROR NESSUNO');
-      }
-    );
+      .subscribe(
+        response => {
+          // console.log('leaveGroup OK sender ::::', response);
+          this.dismissLoadingDialog();
+          callback('success');
+        },
+        errMsg => {
+          this.dismissLoadingDialog();
+          console.log('leaveGroup ERROR MESSAGE', errMsg);
+          callback('error');
+        },
+        () => {
+          // console.log('leaveGroup API ERROR NESSUNO');
+        }
+      );
   }
 
   /** */
   closeGroup(callback) {
-    const uidGroup = this.uidSelected;//'support-group-L5Kb42X1MaM71fGgL66';
+    const uidGroup = this.conversationWith;//'support-group-L5Kb42X1MaM71fGgL66';
     var that = this;
-    this.groupService.closeGroup(uidGroup, function(response, error) {
+    this.groupService.closeGroup(uidGroup, function (response, error) {
       if (error) {
         console.error('closeGroup ERROR MESSAGE', error);
         callback('error', error);
@@ -568,13 +629,13 @@ export class InfoConversationPage {
   }
 
   /** */
-  setVideoChat(){
+  setVideoChat() {
     // setto url 
-    const url = this.URL_VIDEO_CHAT+'?groupId='+this.groupDetail.uid+'&popup=true';
+    const url = this.URL_VIDEO_CHAT + '?groupId=' + this.groupDetail.uid + '&popup=true';
     this.events.publish('openVideoChat', url);
   }
 
-  getUrlCreaTicket(){
+  getUrlCreaTicket() {
     // setto url 
     return URL_TICKET_CHAT;
     //const url = URL_TICKET_CHAT + '&popup=true';
@@ -586,7 +647,7 @@ export class InfoConversationPage {
    * 
    * @param action 
    */
-  openPopupConfirmation(action){
+  openPopupConfirmation(action) {
     // console.log("openPopupConfirmation");
 
     //debugger;
@@ -600,7 +661,7 @@ export class InfoConversationPage {
 
     var onlyOkButton = false;
 
-    if(action === 'leave'){
+    if (action === 'leave') {
       this.translate.get('LEAVE_ALERT_MSG').subscribe(
         value => {
           alertMessage = value;
@@ -637,7 +698,7 @@ export class InfoConversationPage {
   }
 
   /** */
-  isSupportGroup(){
+  isSupportGroup() {
     //debugger;
     return this.groupService.isSupportGroup(this.groupDetail.uid);
     // let uid = this.groupDetail.uid;
@@ -720,7 +781,7 @@ export class InfoConversationPage {
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(groupId, true);
 
-    this.groupService.closeGroup(groupId, function(response, error) {
+    this.groupService.closeGroup(groupId, function (response, error) {
       if (error) {
         // the conversation closing failed: restore the conversation with 
         // conversationId status to false within the isConversationClosingMap
@@ -747,7 +808,7 @@ export class InfoConversationPage {
     // // END - REMOVE FROM REMOTE 
 
     // when a conversations is closed shows a placeholder background
-    if (groupId === that.uidSelected) {
+    if (groupId === that.conversationWith) {
       that.navProxy.pushDetail(PlaceholderPage, {});
     }
   }
@@ -771,7 +832,7 @@ export class InfoConversationPage {
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(conversationId, true);
 
-    this.tiledeskConversationProvider.deleteConversation(conversationId, function(response, error) {
+    this.tiledeskConversationProvider.deleteConversation(conversationId, function (response, error) {
       if (error) {
         that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
         callback('error', error);
@@ -795,20 +856,61 @@ export class InfoConversationPage {
     // // END - REMOVE FROM REMOTE 
 
     // when a conversations is closed shows a placeholder background
-    if (conversationId === that.uidSelected) {
+    if (conversationId === that.conversationWith) {
       that.navProxy.pushDetail(PlaceholderPage, {});
     }
   }
 
-   private existsInArray(array: ConversationModel[], uid) : boolean{
-     var index = array.map(function (o) { return o.uid; }).indexOf(uid);
+  private existsInArray(array: ConversationModel[], uid): boolean {
+    var index = array.map(function (o) { return o.uid; }).indexOf(uid);
 
     //  console.log('echouid', uid);
     //  console.log('echoindex', index);
 
-     return index > -1;
+    return index > -1;
 
-    }
+  }
 
+
+  onCloseInfoPage() {
+    this.eventClose.emit();
+  }
+
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+
+
+
+  /**
+   * 
+   */
+  addSubscription(key){
+    console.log("addSubscription--->",key);
+    if (!isExistInArray(this.subscriptions, key)){
+      console.log("addSubscription: TRUE");
+      this.subscriptions.push(key);
+      return true;
+    } 
+      console.log("addSubscription: FALSE");
+      return false;
     
+  }
+
+  /**
+   * unsubscribe all subscribe events
+   */
+  unsubscribeAll() {
+    this.subscriptions.forEach((key) => {
+      console.log("unsubscribe:",key);
+      this.events.unsubscribe(key, null);
+    });
+    this.groupService.onDisconnectMembersInfo();
+    this.groupService.onDisconnectLoadGroupDetail();
+  }
+  // ----------------------------------------- //
+
+
 }

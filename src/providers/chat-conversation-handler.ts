@@ -38,6 +38,9 @@ export class ChatConversationHandler {
 
   obsAdded: BehaviorSubject<MessageModel>;
 
+
+  public listMembersInfo: any[];
+
   constructor(
     public events: Events,
     public translate: TranslateService
@@ -51,6 +54,7 @@ export class ChatConversationHandler {
     this.CLIENT_BROWSER = navigator.userAgent;
     this.obsAdded = new BehaviorSubject<MessageModel>(null);
   }
+
   /**
    * inizializzo conversation handler
    * @param recipientId 
@@ -81,7 +85,8 @@ export class ChatConversationHandler {
         sessionStorage.setItem('attributes', JSON.stringify(attributes));
     }
     return attributes;
-}
+  }
+
   /**
    * mi connetto al nodo messages
    * recupero gli ultimi 100 messaggi
@@ -402,6 +407,55 @@ export class ChatConversationHandler {
     });
     
   }
+
+
+
+  // ========= begin:: subscribe MembersInfo ============//
+  /** */
+
+  // initMembersInfo(uidGroup, tenant) {
+  //   console.log("initMembersInfo: ",uidGroup, tenant);
+  //   this.listMembersInfo = [];
+  //   const that = this;
+  //   //const tenant = this.chatManager.getTenant();
+  //   const urlNodeContacts = '/apps/'+tenant+'/groups/'+uidGroup+'/membersinfo/';
+  //   console.log("initMembersInfo: ",urlNodeContacts);
+  //   const ref = firebase.database().ref(urlNodeContacts);
+  //   ref.on("child_changed", function(childSnapshot) {
+  //     that.onChangedMembersInfo(childSnapshot);
+  //   });
+  //   ref.on("child_removed", function(childSnapshot) {
+  //     that.onRemovedMembersInfo(childSnapshot);
+  //   });
+  //   ref.on("child_added", function(childSnapshot) {
+  //     that.onAddedMembersInfo(childSnapshot);
+  //   })
+  // } 
+
+  // onAddedMembersInfo(snapshot){
+  //   const memberInfo = snapshot.val();
+  //   this.listMembersInfo.splice(0, 0, memberInfo);
+  //   console.log("onAddedMembersInfo: ",this.listMembersInfo);
+  // }
+
+  // onRemovedMembersInfo(snapshot){
+  //   const index = searchIndexInArrayForUid(this.listMembersInfo, snapshot.key);
+  //   if (index > -1) {
+  //       this.listMembersInfo.splice(index, 1);
+  //   }
+  //   console.log("onRemovedMembersInfo: ",this.listMembersInfo);
+  // }
+
+  // onChangedMembersInfo(snapshot){
+  //   const memberInfo = snapshot.val();
+  //   const index = searchIndexInArrayForUid(this.listMembersInfo, snapshot.key);
+  //   if (index > -1) {
+  //     this.listMembersInfo.splice(index, 1, memberInfo);
+  //   }
+  //   console.log("onChangedMembersInfo: ",this.listMembersInfo);
+  // }
+
+  // ========= end:: subscribe MembersInfo ==============//
 
   
 

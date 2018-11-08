@@ -38,6 +38,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   contentScroll: any;
   NUM_BADGES = 0;
 
+
   private tenant: string;
   private conversationHandler: ChatConversationHandler;
   private scrollDirection: any = 'bottom';
@@ -55,8 +56,8 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   private selectedFiles: FileList;
   private isFileSelected: boolean;
-  private openInfoConversation: boolean;
-  private openInfoMessage: boolean;
+  private openInfoConversation = false;                    /** check is open info conversation */
+  private openInfoMessage: boolean;                         /** check is open info message */
   private conversationEnabled: boolean = true;
   private isMobile: boolean = true;
   
@@ -85,6 +86,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     private translateService : TranslateService
   ) {
     super();
+
     //// recupero id utente e fullname con cui si conversa
     //// uid utente con cui si conversa
     this.conversationWith = navParams.get('conversationWith');
@@ -95,9 +97,9 @@ export class DettaglioConversazionePage extends _DetailPage{
     (!this.channel_type || this.channel_type == 'undefined')?this.channel_type=TYPE_DIRECT:this.channel_type;
     this.messages = []; // list messages of conversation
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
-    this.openInfoConversation = this.chatManager.openInfoConversation; // indica se è aperto il box info conversation
     this.openInfoMessage = false; // indica se è aperto il box info message
     //// init variables
+    
     this.initSubscriptions();
     // DESTROY INFO CONVERSATION 
     console.log('1 - DESTROY INFO CONVERSATION',this.events);
@@ -183,6 +185,7 @@ export class DettaglioConversazionePage extends _DetailPage{
    */
   onOpenInfoMessage: any = (message) => {
     this.openInfoMessage = true;
+    this.openInfoConversation = false;
     //console.log('OPEN MESSAGE **************', message);
   }
   /**
@@ -277,6 +280,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.messages = []; // list messages of conversation
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
     
+    this.openInfoConversation = false;
     this.openInfoMessage = false; // indica se è aperto il box info message
     const innerWidth = window.innerWidth;
     console.log('const innerWidth = ', innerWidth);
@@ -286,7 +290,7 @@ export class DettaglioConversazionePage extends _DetailPage{
       this.openInfoConversation = false;
     }
     else {
-      this.openInfoConversation = this.chatManager.getOpenInfoConversation();
+      //this.openInfoConversation = this.chatManager.getOpenInfoConversation();
     }
 
     this.online = false;
@@ -422,25 +426,32 @@ export class DettaglioConversazionePage extends _DetailPage{
   //// END Scroll managemant functions ////
 
 
-  //// START FUNZIONI RICHIAMATE DA HTML ////
-  /** 
-   * chiude il box di dx del info messaggio
-  */
-  onCloseInfoPage(){
-    if(this.openInfoMessage){
-      this.openInfoMessage = false;
-    } else {
-      this.onOpenCloseInfoConversation();
-    }
+  // //// START FUNZIONI RICHIAMATE DA HTML ////
+  // /** 
+  //  * chiude il box di dx del info messaggio
+  // */
+  // onCloseInfoPage(){
+  //   if(this.openInfoMessage){
+  //     this.openInfoMessage = false;
+  //   } else {
+  //     this.onOpenCloseInfoConversation();
+  //   }
+  // }
+
+  returnCloseInfoMessage(){
+    this.openInfoMessage = false;
+  }
+  returnCloseInfoConversation(){
+    this.openInfoConversation = false;
   }
 
   /** 
    * 
   */
   onOpenCloseInfoConversation(){
-    this.chatManager.onOpenCloseInfoConversation();
-    this.openInfoConversation =  this.chatManager.openInfoConversation;
-    this.onInfoConversation();
+    this.openInfoMessage = false;
+    this.openInfoConversation = !this.openInfoConversation;
+    console.log('onOpenCloseInfoConversation **************', this.openInfoConversation);
   }
 
   /** */
@@ -458,8 +469,8 @@ export class DettaglioConversazionePage extends _DetailPage{
     }
     //const msgRicevuti = this.messages.find(item => item.sender !== this.currentUserDetail.uid);
     console.log('msgRicevuti::::: ', msgRicevuti);
-    console.log('onUidSelected::::: ', this.conversationWith,  this.openInfoConversation);
-    this.events.publish('onOpenInfoConversation', this.openInfoConversation, this.conversationWith, this.channel_type, attributes);
+    //console.log('onUidSelected::::: ', this.conversationWith,  this.openInfoConversation);
+    //this.events.publish('onOpenInfoConversation', this.openInfoConversation, this.conversationWith, this.channel_type, attributes);
     //this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
   }
 

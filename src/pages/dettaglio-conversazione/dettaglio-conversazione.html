@@ -1,5 +1,7 @@
+
 <ion-header>
   <ion-navbar>
+
     <ion-title>
       <div class="headerUserName" *ngIf="conversationWith">{{conversationWithFullname?conversationWithFullname:''}}
         <span *ngIf="online; then userActive else userInactive"></span>
@@ -12,31 +14,30 @@
       </div>
     </ion-title>
 
-    <ion-buttons end *ngIf="!openInfoConversation && !openInfoMessage">
-        <button end  ion-button icon-only (click)="onOpenCloseInfoConversation()">
+    <ion-buttons end *ngIf="openInfoConversation === false">
+        <button end ion-button icon-only (click)="onOpenCloseInfoConversation()">
           <ion-icon name="information-circle"></ion-icon>
         </button>
     </ion-buttons>
 
-    <ion-buttons *ngIf="openInfoConversation || openInfoMessage" id="panel-info" end>
+    <!-- <ion-buttons *ngIf="openInfoConversation || openInfoMessage" id="panel-info" end>
       <button  ion-button icon-only (click)="onCloseInfoPage()">
         <ion-icon name="close"></ion-icon>
       </button>
+      <button id="btn-panel-info" disabled ion-button>{{'Info'}}</button>
+    </ion-buttons> -->
 
-      <button id="btn-panel-info" disabled ion-button>
-        {{ 'Info' }}
-      </button>
-      
-    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<div id="chat21-info-conversation" [class.open]="openInfoConversation">
-  <page-info-conversation></page-info-conversation>
-</div>
-<div id="chat21-info-message" [class.open]="openInfoMessage">
+
+
+
+
+<!-- <div id="chat21-info-message" [class.open]="openInfoMessage">
   <page-info-message></page-info-message>
-</div>
+</div> -->
+
 <ion-content class="messagesView " [class.halfscreen]="openInfoConversation || openInfoMessage">
   <span *ngIf="messages.length > 0;then content_messages else contentMessageWelcome">here is ignored</span>
   <ng-template #content_messages>
@@ -172,3 +173,20 @@
     </ion-grid>
   </ion-toolbar>
 </ion-footer>
+
+
+
+<div id="chat21-info-message" [class.open]="openInfoMessage">
+    <page-info-message
+    (eventClose)="returnCloseInfoMessage()"
+    ></page-info-message>
+</div>
+<div id="chat21-info-conversation" *ngIf="openInfoConversation" [class.open]="openInfoConversation">
+    <page-info-conversation
+    [tenant]=tenant
+    [attributes]=attributes
+    [channelType]=channel_type
+    [conversationWith]= conversationWith
+    (eventClose)="returnCloseInfoConversation()"
+    ></page-info-conversation>
+</div>

@@ -132,4 +132,20 @@ ion-app, ion-nav, ion-tab, ion-tabs, .app-root, .ion-page {
     }
 }
 
+
+.c21-right{
+    float: right;
+}
+.c21-left{
+    float: left;
+}
+.clearfix:after {
+    display: block;
+    clear: both;
+    content: '';
+}
+.clear{
+    clear: both;
+}
+
 /* END LOADIN */

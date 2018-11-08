@@ -26,7 +26,7 @@ page-dettaglio-conversazione {
             margin: 0px 4px 0px 4px;
         }
         .card-md {
-            margin: 10px 0px 0px 10px;
+            margin: 0px 0px 10px 10px;
             width: calc(100% - 20px);
         }
         .left{
@@ -379,13 +379,14 @@ page-dettaglio-conversazione {
             width: 0px;
             display: none;
         }
+        
         #chat21-info-conversation.open {
             position: absolute;
             height: 100%;
             width: 320px;
-            z-index: 9;
+            z-index: 100;
             right: 0px;
-            top: 59px;
+            top: 0px;
             border-left-style: inset;
             border-color: rgba(0, 0, 0, .15);
             border-left-width: thin;
@@ -402,9 +403,9 @@ page-dettaglio-conversazione {
             position: absolute;
             height: 100%;
             width: 320px;
-            z-index: 9;
+            z-index: 100;
             right: 0px;
-            top: 59px;
+            top: 0px;
             border-left-style: inset;
             border-color: rgba(0, 0, 0, .15);
             border-left-width: thin;

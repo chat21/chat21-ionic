@@ -70,9 +70,9 @@ export class ChatManager {
     this.handlers = [];
   }
 
-  onOpenCloseInfoConversation(){
-    this.openInfoConversation = !this.openInfoConversation;
-  }
+  // onOpenCloseInfoConversation(){
+  //   this.openInfoConversation = !this.openInfoConversation;
+  // }
   /**
    * return tenant
    */

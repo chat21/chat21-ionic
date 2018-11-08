@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Events } from 'ionic-angular';
 import { MessageModel } from '../../models/message';
 
@@ -19,7 +19,9 @@ import { searchIndexInArrayForUid, getSizeImg } from '../../utils/utils';
   templateUrl: 'info-message.html',
 })
 export class InfoMessagePage {
-
+  // ========= begin:: Input/Output values ============//
+  @Output() eventClose = new EventEmitter();
+  // ========= end:: Input/Output values ============//
   public message: MessageModel;
 
   constructor(
@@ -60,6 +62,19 @@ export class InfoMessagePage {
     return getSizeImg(message, 280);
   }
 
+  //// START FUNZIONI RICHIAMATE DA HTML ////
+  /** 
+   * chiude il box di dx del info messaggio
+  */
+ onCloseInfoPage(){
+   console.log('onCloseInfoPage');
+  this.eventClose.emit();
+  // if(this.openInfoMessage){
+  //   this.openInfoMessage = false;
+  // } else {
+  //   this.onOpenCloseInfoConversation();
+  // }
+}
   // setUrlString(text, name): any {
   //   return name;
   //   // if(text) {

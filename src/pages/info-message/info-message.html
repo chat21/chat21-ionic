@@ -1,27 +1,44 @@
+<ion-header no-border>
+  <ion-navbar color="navbarLightColor">
+    
+    <ion-buttons class="c21-buttons">
+        <div class="c21-label-header c21-left">Info message</div>
+        <button class="c21-button-header c21-right" ion-button icon-only (click)="onCloseInfoPage()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+        <!-- <button id="btn-panel-info2"   disabled ion-button>{{'Info'}}</button> -->
+    </ion-buttons>
+    <div class="clear"></div>
+
+  </ion-navbar>
+
+</ion-header>
+
 <ion-content>
-<div class="chat21-right-box scroll-content">
-  <div class="chat21-box-message chat21-box">
+   
+<div class="chat21-right-box">
+  <div class="chat21-box-message">
     <div class="chat21-content info-message-content">
-      <ion-item *ngIf="message" class="itemMessage" text-wrap>
-        <span *ngIf="isSender(message); then contentMine else contentOther"></span>
-        <ng-template #contentMine>
-          <div class="message message-mine" >
-            <img *ngIf="message.type == 'image';"  class="message-content message-content-image" [src]="message.metadata.src"  [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
-            <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
-            <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
-            <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
-          </div>
-        </ng-template>
-        <ng-template #contentOther>
-          <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
-          <div class="message message-other" >
-            <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
-            <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
-            <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
-            <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
-          </div>
-        </ng-template>
-      </ion-item>
+        <ion-item *ngIf="message" class="itemMessage" text-wrap>
+            <span *ngIf="isSender(message); then contentMine else contentOther"></span>
+            <ng-template #contentMine>
+              <div class="message message-mine" >
+                <img *ngIf="message.type == 'image';"  class="message-content message-content-image" [src]="message.metadata.src"  [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+                <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
+                <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
+                <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
+              </div>
+            </ng-template>
+            <ng-template #contentOther>
+              <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
+              <div class="message message-other" >
+                <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+                <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
+                <div *ngIf="message.type == 'text';" class="message-content message-content-text" [innerHTML]="message.text"></div>
+                <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
+              </div>
+            </ng-template>
+          </ion-item>
     </div>
   </div>
   
@@ -30,16 +47,16 @@
       <div class="chat21-header break-line">{{ 'LABEL_INFO_MESSAGE' | translate }}</div>
       <div class="chat21-content">
         <div class="chat21-row">
-          <span class="" >{{ 'LABEL_SENT_THE' | translate }}: </span>
-          <span *ngIf="message" class="lighter" >{{message.timestamp | date: 'dd/MM/yyyy H:mm'}}</span>
+          <span class="c21-key-label">{{ 'LABEL_SENT_THE' | translate }}: </span>
+          <span *ngIf="message" class="c21-content-label" >{{message.timestamp | date: 'dd/MM/yyyy H:mm'}}</span>
         </div>
         <div class="chat21-row">
-          <span class="" >{{ 'LABEL_SENT_BY' | translate }}: </span>
-          <span *ngIf="message" class="lighter" >{{message.sender_fullname}}</span>
+          <span class="c21-key-label">{{ 'LABEL_SENT_BY' | translate }}: </span>
+          <span *ngIf="message" class="c21-content-label" >{{message.sender_fullname}}</span>
         </div>
         <div class="chat21-row">
-          <span class="" >{{ 'LABEL_STATUS_MESSAGE' | translate }}: </span>
-          <span *ngIf="message" class="lighter" >{{message.status}}</span>
+          <span class="c21-key-label">{{ 'LABEL_STATUS_MESSAGE' | translate }}: </span>
+          <span *ngIf="message" class="c21-content-label" >{{message.status}}</span>
         </div>
       </div>
     </div>
@@ -53,4 +70,5 @@
 
 </div>
 </ion-content>
+
   
