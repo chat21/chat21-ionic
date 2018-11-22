@@ -393,6 +393,27 @@ page-dettaglio-conversazione {
             display: inline;
         }
 
+        #chat21-info-user {
+            position: absolute;
+            height: 0px;
+            width: 0px;
+            display: none;
+        }
+        
+        #chat21-info-user.open {
+            position: absolute;
+            height: 100%;
+            width: 320px;
+            z-index: 100;
+            right: 0px;
+            top: 0px;
+            border-left-style: inset;
+            border-color: rgba(0, 0, 0, .15);
+            border-left-width: thin;
+            display: inline;
+        }
+
+        
         #chat21-info-message {
             position: absolute;
             height: 0px;

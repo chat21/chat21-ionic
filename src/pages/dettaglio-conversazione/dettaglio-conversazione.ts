@@ -14,7 +14,7 @@ import { ChatConversationHandler } from '../../providers/chat-conversation-handl
 // pages
 import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
-// import { InfoConversationPage } from '../info-conversation/info-conversation';
+import { InfoUserPage } from '../info-user/info-user';
 // import { InfoMessagePage } from '../info-message/info-message';
 import { PopoverPage } from '../popover/popover';
 // utils
@@ -56,7 +56,8 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   private selectedFiles: FileList;
   private isFileSelected: boolean;
-  private openInfoConversation = false;                    /** check is open info conversation */
+  private openInfoConversation = false;   
+  private openInfoUser = false;                 /** check is open info conversation */
   private openInfoMessage: boolean;                         /** check is open info message */
   private conversationEnabled: boolean = true;
   private isMobile: boolean = true;
@@ -443,6 +444,10 @@ export class DettaglioConversazionePage extends _DetailPage{
   }
   returnCloseInfoConversation(){
     this.openInfoConversation = false;
+  }
+  returnOpenDetailUser(member){
+    console.log('returnOpenDetailUser **************', member);
+    this.openInfoUser = true;
   }
 
   /** 

@@ -4,6 +4,7 @@ export class GroupModel{
         public createdOn: any,
         public iconURL: string,
         public members: any[],
+        public membersinfo: any[],
         public name: string, 
         public owner: string
     ){ }

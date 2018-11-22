@@ -19,6 +19,7 @@ import { ListaConversazioniPage } from '../pages/lista-conversazioni/lista-conve
 import { DettaglioConversazionePage } from '../pages/dettaglio-conversazione/dettaglio-conversazione';
 import { ProfilePage } from '../pages/profile/profile';
 import { InfoConversationPage } from '../pages/info-conversation/info-conversation';
+import { InfoUserPage } from '../pages/info-user/info-user';
 import { InfoMessagePage } from '../pages/info-message/info-message';
 
 // import { AngularFireModule } from 'angularfire2';
@@ -84,6 +85,7 @@ import { ArchivedConversationsPage } from '../pages/archived-conversations/archi
     UpdateImageProfilePage,
     AutosizeDirective,
     InfoConversationPage,
+    InfoUserPage,
     InfoMessagePage,
     ArchivedConversationsPage,
   ],
@@ -136,6 +138,7 @@ import { ArchivedConversationsPage } from '../pages/archived-conversations/archi
     PopoverProfilePage,
     UpdateImageProfilePage,
     InfoConversationPage,
+    InfoUserPage,
     InfoMessagePage,
     ArchivedConversationsPage
   ],

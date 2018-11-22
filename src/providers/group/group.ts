@@ -161,22 +161,29 @@ export class GroupService {
   // }
 
   /** */
+  // loadMembersInfo(uidGroup, tenant, uidUser) {
+  //   const that = this;
+  //   const urlNodeContacts = '/apps/' + tenant + '/users/' + uidUser + '/groups/' + uidGroup + '/membersinfo';
+  //   console.log("initMembersInfo: ", urlNodeContacts);
+  //   var ref = firebase.database().ref(urlNodeContacts);
+  //   ref.on('value', function (snapshot) {
+  //     console.log("VALUE: ", snapshot.val());
+  //     that.events.publish('callbackCheckVerifiedMembers-'+uidUser, snapshot);
+  //   });
+  //   this.listRefMembersInfo.push(ref);
+  // }
+
   loadMembersInfo(uidGroup, tenant, uidUser) {
     const that = this;
-    const urlNodeContacts = '/apps/' + tenant + '/users/' + uidUser + '/groups/' + uidGroup + '/membersinfo';
-    console.log("initMembersInfo: ", urlNodeContacts);
+    //const urlNodeContacts = '/apps/tilechat/groups/support-group-LRmSLsFn5aI3E_5IkiQ/attributes';
+    const urlNodeContacts = '/apps/' + tenant +  '/users/' + uidUser + '/groups/' + uidGroup +'/attributes';
+    console.log("initMembersInfo1: ", urlNodeContacts);
     var ref = firebase.database().ref(urlNodeContacts);
     ref.on('value', function (snapshot) {
-      console.log("VALUE: ", snapshot.val());
+      console.log("VALUE1: ", snapshot.val());
       that.events.publish('callbackCheckVerifiedMembers-'+uidUser, snapshot);
     });
     this.listRefMembersInfo.push(ref);
-    // firebase.database().ref(urlNodeContacts).on('value', (child) => {
-    //   if(child.val()){
-    //     console.log("publish: ",child.key, child.val());
-    //     that.events.publish('callbackCheckVerifiedMembers-'+uidUser, uidUser);
-    //   }
-    // });
   }
   // reference.on("child_changed", function(childSnapshot) {
   //   that.onChangedMembersInfo(childSnapshot);

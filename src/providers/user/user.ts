@@ -127,7 +127,7 @@ export class UserService {
       const tenant = this.chatManager.getTenant();
       const urlNodeConcacts = contactsRef(tenant) + uid;
       var ref =  firebase.database().ref(urlNodeConcacts).once('value');
-      console.log("UserService::getUserDetail::ref:", ref.toString());
+      console.log("UserService::getUserDetail::ref:", urlNodeConcacts);
       return ref;
     }
 
@@ -285,7 +285,6 @@ export class UserService {
    */
   logoutUser() {
     console.log("UserService::logoutUser");
-
     console.log(" 1 - CANCELLO L'UTENTE DAL NODO PRESENZE");
     this.chatPresenceHandler.goOffline();
     console.log(" 2 - RIMUOVO IL TOKEN");

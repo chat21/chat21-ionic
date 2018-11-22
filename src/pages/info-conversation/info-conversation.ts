@@ -122,7 +122,7 @@ export class InfoConversationPage {
     this.profileYourself = false;
     this.currentUserDetail = this.chatManager.getLoggedUser();
     this.userDetail = new UserModel('', '', '', '', '', '', false);
-    this.groupDetail = new GroupModel('', 0, '', [], '', '');
+    this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
     this.setSubscriptions();
     //this.loadGroupDetail();
     this.populateDetail();
@@ -232,6 +232,7 @@ setDetailUser(snapshot) {
         getFormatData(group.createdOn),
         group.iconURL,
         this.groupService.getUidMembers(group.members),
+        group.memberinfo,
         group.name,
         group.owner
       );
