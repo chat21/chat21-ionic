@@ -49,12 +49,12 @@ page-info-conversation {
         border-radius: 50%;
     }
     
-    .c21-checked{
-        background-color: map-get($colors, c21-green);
-    }
-    .c21-unchecked{
-        background-color: map-get($colors, c21-red);
-    }
+    // .c21-checked{
+    //     background-color: map-get($colors, c21-green);
+    // }
+    // .c21-unchecked{
+    //     background-color: map-get($colors, c21-red);
+    // }
     /*********/
    
     .c21-point {
@@ -67,11 +67,31 @@ page-info-conversation {
     .chat21-box {
         min-height: 40px;
     }
-    .chat21-content {
-        // height: auto;
-        padding-top: 10px;
-        padding-bottom: 10px;
+
+
+
+    .card {
+        padding: 10px;
     }
+    .chat21-content {
+        margin: 0;
+        padding: 0;
+        button {
+            text-transform: none;
+            color: #222222;
+            .button-inner{
+                justify-content: left;
+            }
+            ion-icon {
+                color: #a8a8a8;
+            }
+            .c21-button-label{
+                font-weight: normal;
+                margin: 0 0 0 10px;
+            }
+        }
+    }
+    
     .chat21-content a {
         text-decoration: none;
     }

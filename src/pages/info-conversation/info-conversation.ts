@@ -41,7 +41,7 @@ export class InfoConversationPage {
   // ========= end:: Input/Output values ============//
 
 
-  //public uidSelected: string;
+  public uidSelected: string;
   public userDetail: UserModel;
   public groupDetail: GroupModel;
   public listMembers: UserModel[];
@@ -210,7 +210,7 @@ setDetailUser(snapshot) {
   loadGroupDetail() {
     const keySubscription = 'groupDetails';
     if(this.addSubscription(keySubscription)){
-      this.events.subscribe(keySubscription, this.subscribeGroupDetails);
+      this.events.subscribe(keySubscription, this.returnLoadGroupDetail);
       this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.conversationWith);
     }
   }
@@ -218,15 +218,15 @@ setDetailUser(snapshot) {
   /**
    * information detail group called of groupService.loadGroupDetail
    */
-  subscribeGroupDetails = (snapshot) => {
+  returnLoadGroupDetail = (snapshot) => {
     console.log('InfoConversationPage::subscribeGroupDetails', snapshot);
     if (snapshot.val()) {
-
-      if (snapshot.val().attributes) {
-        this.attributes = snapshot.val().attributes;
-        this.updateAttributes(snapshot.val().attributes);
-      }
       const group = snapshot.val();
+      if (group.attributes) {
+        this.attributes = group.attributes;
+        this.updateAttributes(group.attributes);
+      }
+      
       this.groupDetail = new GroupModel(
         snapshot.key,
         getFormatData(group.createdOn),
@@ -268,6 +268,25 @@ setDetailUser(snapshot) {
   */
  private getListMembers(members) {
   let that = this;
+  // autenticazione
+  let uidUserAuthenticated;
+  let emailUserAuthenticated;
+  let fullnameUserAuthenticated;
+  let signInProvider = 'anonymous';
+  if(this.attributes.senderAuthInfo.authVar.uid){
+    uidUserAuthenticated = this.attributes.senderAuthInfo.authVar.uid;
+  }
+  if(this.attributes.senderAuthInfo.userEmail){
+    emailUserAuthenticated = this.attributes.senderAuthInfo.userEmail;
+  }
+  if(this.attributes.senderAuthInfo.userFullname){
+    fullnameUserAuthenticated = this.attributes.senderAuthInfo.userFullname;
+  }
+  if(this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider){
+    signInProvider = this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider;
+  }
+
+
   members.forEach(member => {
     let userDetail;
     if (member.trim() !== '' && member.trim() !== SYSTEM) {
@@ -290,13 +309,32 @@ setDetailUser(snapshot) {
               false,
               false
             );
-            // ADD MEMBER TO ARRAY
-            that.listMembers.push(userDetail);
-            // ONLINE/OFFLINE
-            that.userIsOnline(userDetail.uid);
-            // MEMBER CHECKED!!
-            that.checkVerifiedMembers(userDetail.uid);
+          } else {
+            userDetail = new UserModel(
+              snapshot.key,
+              '',
+              '',
+              '',
+              '',
+              '',
+              false,
+              false
+            );
           }
+          
+          if( signInProvider === 'custom' && uidUserAuthenticated === snapshot.key){
+            userDetail.checked = true;
+            userDetail.email = emailUserAuthenticated;
+            userDetail.fullname = fullnameUserAuthenticated;
+          }
+
+          // ADD MEMBER TO ARRAY
+          that.listMembers.push(userDetail);
+          // ONLINE/OFFLINE
+          that.userIsOnline(userDetail.uid);
+          // MEMBER CHECKED!!
+          // that.checkVerifiedMembers(userDetail.uid);
+
         });
     }
   });
@@ -882,6 +920,10 @@ setDetailUser(snapshot) {
     this.unsubscribeAll();
   }
 
+  sendMail(){
+    const url = this.URL_SEND_BY_EMAIL+this.uidSelected+'/messages.html';
+    window.open(url, '_blank', 'location=yes');
+  }
 
 
 

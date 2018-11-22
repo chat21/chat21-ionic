@@ -100,9 +100,23 @@
                         <ion-item>
                             <ion-avatar item-start [ngStyle]="{ position: relative }">
                                 <div class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div>
-                                <!-- <img src="{{member.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';"> -->
-                                <div class="c21-icon-status c21-checked" *ngIf="member.checked"><ion-icon name="checkmark"></ion-icon></div> 
-                                <div class="c21-icon-status c21-unchecked" *ngIf="!member.checked"><ion-icon name="close"></ion-icon></div> 
+
+                                <div *ngIf="member.checked" class="c21-icon-status c21-checked">
+                                    <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                    viewBox="0 0 26.6 26.6" style="enable-background:new 0 0 26.6 26.6;" xml:space="preserve">
+                                    <style type="text/css">
+                                        .st0{fill:none;}
+                                        .st1{fill:#FFFFFF;}
+                                        .st2{fill:#18BDF7;}
+                                    </style>
+                                    <path class="st0" d="M1.3,1.3h24v24h-24V1.3z"/>
+                                    <path class="st1" d="M13.3,0L2.4,4.9v7.3c0,6.7,4.6,13,10.9,14.5c6.2-1.5,10.9-7.8,10.9-14.5V4.9L13.3,0z"/>
+                                    <path class="st2" d="M13.3,2.3l-9,4v6c0,5.5,3.8,10.7,9,12c5.2-1.3,9-6.5,9-12v-6L13.3,2.3z M11.3,18.3l-4-4l1.4-1.4l2.6,2.6
+                                        l6.6-6.6l1.4,1.4L11.3,18.3z"/>
+                                    </svg>
+                                </div>
+                            
+                                <!-- <div class="c21-icon-status c21-unchecked" *ngIf="!member.checked"><ion-icon name="close"></ion-icon></div>  -->
                             </ion-avatar>
                             <h2>
                                 <span class="c21-point" [ngStyle]="{ 'background-color':(member.online)?'#24d066':'#db4437' }">&nbsp;</span>
@@ -118,50 +132,37 @@
                 </div>
             </ion-card>
 
-            <!-- <ion-card *ngIf="isSupportGroup()">
-        <a href="{{getUrlCreaTicket()}}" target="_blank">
-        <div class="chat21-content" style="float:left; width: 100%">  
-            <button ion-button clear icon-start block color="default">
-                <ion-icon name='help-buoy' is-active="false"></ion-icon>
-                {{ 'LABEL_CREATE_TICKET' | translate }}
-            </button>
-        </div>
-        </a>
-        </ion-card> -->
-            <ion-card *ngIf="isSupportGroup()">
-                <div class="chat21-content" style="float:left; width: 100%">
-                    <button ion-button clear icon-start block color="default">
-                        <ion-icon name='mail' is-active="false"></ion-icon>
-                        <a href="{{URL_SEND_BY_EMAIL}}{{uidSelected}}/messages.html">
-                            {{ 'LABEL_SEND_BY_EMAIL' | translate }}
-                        </a>
+
+            <ion-card >
+                <div *ngIf="isSupportGroup()" class="chat21-content" >
+                    <button ion-button clear icon-start block 
+                      (click)="sendMail()">
+                      <ion-icon name='mail' is-active="false"></ion-icon>
+                      <span class="c21-button-label">{{ 'LABEL_SEND_BY_EMAIL' | translate }}</span>
                     </button>
                 </div>
-            </ion-card>
-            <ion-card *ngIf="isSupportGroup()">
-                <div class="chat21-content" style="float:left; width: 100%">
-                    <button [disabled]="!conversationEnabled" ion-button clear icon-start block color="default" (click)="setVideoChat()">
-                        <ion-icon name='videocam' is-active="false"></ion-icon>
-                        {{ 'LABEL_VIDEO_CHAT' | translate }}
+
+                <div *ngIf="isSupportGroup()" class="chat21-content">
+                    <button [disabled]="!conversationEnabled" ion-button clear icon-start block 
+                      (click)="setVideoChat()">
+                      <ion-icon name='videocam' is-active="false"></ion-icon>
+                      <span class="c21-button-label">{{ 'LABEL_VIDEO_CHAT' | translate }}</span>
                     </button>
                 </div>
-            </ion-card>
-            <ion-card *ngIf="isSupportGroup()">
-                <div class="chat21-content" style="width: 100%">
-                    <button [disabled]="!conversationEnabled" item-right ion-button clear icon-start color="danger"
+
+                <div *ngIf="isSupportGroup()" class="chat21-content">
+                    <button [disabled]="!conversationEnabled" ion-button clear icon-start block
                         (click)="openPopupConfirmation('close');$event.stopPropagation();">
-                        <!-- <button item-right ion-button clear icon-start color="danger" (click)="openPopupConfirmation('close');$event.stopPropagation();"> -->
                         <ion-icon name='close' is-active="false"></ion-icon>
-                        {{ 'LABEL_CLOSE_GROUP' | translate }}
+                        <span class="c21-button-label">{{ 'LABEL_CLOSE_GROUP' | translate }}</span>
                     </button>
                 </div>
-            </ion-card>
-            <ion-card>
-                <div class="chat21-content" style="width: 100%">
-                    <button [disabled]="!isLoggedUserGroupMember" item-left ion-button clear icon-start color="danger"
+
+                <div class="chat21-content">
+                    <button [disabled]="!isLoggedUserGroupMember" ion-button clear icon-start block
                         (click)="openPopupConfirmation('leave')">
                         <ion-icon name='exit' is-active="false"></ion-icon>
-                        {{ 'LABEL_LEAVE_GROUP' | translate }}
+                        <span class="c21-button-label">{{ 'LABEL_LEAVE_GROUP' | translate }}</span>
                     </button>
                 </div>
             </ion-card>
