@@ -232,6 +232,11 @@ export class ChatConversationsHandler {
         conversationRef.update ({"is_new" : false});
     }
 
+    
+    getConversationByUid(conversationUid) {
+        const index = searchIndexInArrayForUid(this.conversations, conversationUid);
+        return this.conversations[index];
+    }
 
     setStatusConversation(sender, uid): string {
         let status = '0'; //letto

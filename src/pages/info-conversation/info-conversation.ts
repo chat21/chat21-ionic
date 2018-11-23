@@ -43,6 +43,7 @@ export class InfoConversationPage {
 
 
   public uidSelected: string;
+  public conversationSelected: ConversationModel;
   public userDetail: UserModel;
   public groupDetail: GroupModel;
   public listMembers: UserModel[];
@@ -124,6 +125,7 @@ export class InfoConversationPage {
     this.currentUserDetail = this.chatManager.getLoggedUser();
     this.userDetail = new UserModel('', '', '', '', '', '', false);
     this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
+    this.conversationSelected = this.conversationsHandler.getConversationByUid(this.conversationWith);
     this.setSubscriptions();
     //this.loadGroupDetail();
     this.populateDetail();
@@ -459,6 +461,8 @@ setDetailUser(snapshot) {
     // remove 'userFullname'
     if (temp && temp['userFullname']) delete temp['userFullname'];
 
+    if (temp && temp['senderAuthInfo']) delete temp['senderAuthInfo'];
+    
     // add the remaining keys to the customAttributes array
     for (var key in temp) {
       if (temp.hasOwnProperty(key)) {

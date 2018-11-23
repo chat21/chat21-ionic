@@ -12,14 +12,18 @@
 
 <ion-content>
     <div *ngIf="groupDetail || userDetail">
-        <ion-card style="min-height:280px">
+        <ion-card style="height:105px">
             <div class="chat21-box-profile chat21-box">
                 <div class="chat21-content">
                     <div class="chat21-image">
+                        <ion-avatar item-start>
+                            <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversationSelected.color" [innerHTML]="conversationSelected.avatar"></div>
+                            <div #avatarImage *ngIf="conversationSelected.image" class="chat21-avatar" [style.background-image]="'url(' + conversationSelected.image + ')'"></div>
+                        </ion-avatar>
                         <!-- <div *ngIf="channelType != TYPE_GROUP" class="chat21-avatar big" [style.background-image]="'url(' + userDetail.imageurl + ')'"></div>
-                        <div *ngIf="channelType == TYPE_GROUP" class="chat21-avatar big" [style.background-image]="'url(' + groupDetail.iconURL + ')'"></div> -->
-                        <img class="clip-circle" *ngIf="channelType != TYPE_GROUP" src="{{userDetail.imageurl}}" alt="user" onError="src='assets/img/no_image.png';">
-                        <img class="clip-circle" *ngIf="channelType == TYPE_GROUP" src="{{groupDetail.iconURL}}" alt="user" onError="src='assets/img/no_image.png';">
+                        <div *ngIf="channelType == TYPE_GROUP" class="chat21-avatar big" [style.background-image]="'url(' + groupDetail.iconURL + ')'"></div> onError="src='assets/img/no_image.png';"-->
+                        <!-- <img class="clip-circle" *ngIf="channelType != TYPE_GROUP" src="{{userDetail.imageurl}}" alt="user" > 
+                        <img class="clip-circle" *ngIf="channelType == TYPE_GROUP" src="{{groupDetail.iconURL}}" alt="user" > -->
                     </div>
 
                     <div class="chat21-info">
@@ -55,8 +59,8 @@
             </div>
         </ion-card>
 
-        <ion-card>
-            <div *ngIf="attributesClient" class="chat21-box-attributes chat21-box">
+        <ion-card *ngIf="channelType == TYPE_GROUP && attributesClient">
+            <div class="chat21-box-attributes chat21-box">
                 <!-- *ngIf="attributesClient"  -->
                 <div class="chat21-header break-line">{{ 'LABEL_INFO_ATTRIBUTE' | translate }}</div>
                 <div class="chat21-content">
@@ -88,7 +92,7 @@
                     </div>
 
                 </div>
-                <div class="break-line"></div>
+
             </div>
         </ion-card>
 

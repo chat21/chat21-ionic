@@ -448,11 +448,11 @@ export class DettaglioConversazionePage extends _DetailPage{
   }
   returnOpenInfoUser(member){
     console.log('returnOpenDetailUser **************', member);
-    this.memberSelected = member;
-    this.openInfoUser = true;
+    //this.memberSelected = member;
+    //this.openInfoUser = true;
   }
   returnCloseInfoUser(){
-    this.openInfoUser = false;
+    //this.openInfoUser = false;
   }
 
   /** 
