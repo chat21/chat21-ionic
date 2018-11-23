@@ -84,6 +84,8 @@
     "LABEL_NEW_PASSWORD": "Rigenera Password",
   
     "LABEL_CLOSED": "Chiuse",
-    "LABEL_INFO": "informazioni"
+    "LABEL_INFO": "informazioni",
+    "ALERT_NOTIFICATION": "Attenzione: l'invio di notifiche è disabilitato, modifica le impostazioni del browser per consentire l'invio notifiche."
+
 
 }

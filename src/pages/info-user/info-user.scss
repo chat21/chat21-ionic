@@ -1,3 +1,78 @@
 page-info-user {
+    font-size: 10px;
 
+
+    .c21-buttons {
+        margin: 0 2px;
+    }
+    .c21-button-header {
+        svg {
+            fill: map-get($colors, c21-gray);
+        }
+    }
+
+    ion-header {
+
+        .c21-label-header {
+            line-height: 32px;
+            font-size: 1.5em;
+            font-weight: 500;
+            color: map-get($colors, c21-dark);
+            padding: 0 10px;
+        }
+    }
+
+    
+
+    ion-content {
+
+        .card {
+            width: 100%;
+            height: 105px;
+            padding: 10px 20px;
+            margin: 0;
+            border-radius: 0;
+        }
+        .scroll-content {
+            margin-top: 56px;
+        }
+
+        .chat21-content{
+            position: relative;
+        }
+        .chat21-image{
+            position: absolute;
+            img {
+                display: inline-block;
+                width: 70px;
+                height: 70px;
+            }
+        }
+        .chat21-info{
+            position: absolute;
+            left: 80px;
+            right: 20px;
+            display: block;
+            // align-items: center;
+            height: 70px;
+            
+            .chat21-name{
+                display: block;
+                margin-top: 10px;
+                font-size: 16px;
+                font-weight: 500;
+                color: map-get($colors, c21-dark);
+            }
+            .chat21-conf{
+                display: block;
+            }
+            .chat21-uid{
+                display: block;
+            }
+        }
+        
+
+
+    }
+   
 }

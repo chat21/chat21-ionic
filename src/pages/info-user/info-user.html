@@ -4,15 +4,64 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
 
-  <ion-navbar>
-    <ion-title>info-user</ion-title>
+
+<ion-header no-border>
+  <ion-navbar color="navbarLightColor">
+      <ion-buttons class="c21-buttons">
+          <button class="c21-button-header c21-left" ion-button icon-only (click)="onCloseInfoPage()">
+              <!-- <ion-icon name="arrow-round-back"></ion-icon> -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21v-2z"/></svg>
+          </button>
+          <div class="c21-label-header c21-left">User info</div>
+      </ion-buttons>
+      <div class="clear"></div>
   </ion-navbar>
-
 </ion-header>
 
+<ion-content>
+    <div *ngIf="userDetail">
+        <ion-card>
+            <div class="chat21-box-profile chat21-box">
+                <div class="chat21-content">
+                    <div class="chat21-image">
+                        <img class="clip-circle" src="{{userDetail.imageurl}}" alt="user" onError="src='assets/img/no_image.png';">
+                    </div>
 
-<ion-content padding>
+                    <div class="chat21-info">
+
+                        <div class="chat21-name">
+                            <span class="truncate read">{{userDetail.fullname}}</span>
+                        </div>
+
+                        <div class="chat21-status">
+                          <span class="c21-point" [ngStyle]="{ 'background-color':(member.online)?'#24d066':'#db4437' }">&nbsp;</span>
+                          <span *ngIf="online" class="truncate read">{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
+                          <span *ngIf="!online" class="truncate read">{{lastConnectionDate}}</span>
+                        </div>
+
+                        <div class="chat21-conf">
+                            <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
+                                <ion-icon name="create"></ion-icon>
+                            </button>
+                        </div>
+
+                        <!-- <div class="chat21-uid">
+        
+                            <span>{{userDetail.uid}}</span>
+                            <span *ngIf="profileYourself" class="email">email: {{userDetail.email}}</span>
+                        </div> -->
+
+                    </div>
+
+                    
+
+                </div>
+
+                
+            </div>
+        </ion-card>
+
+      </div>
 
 </ion-content>

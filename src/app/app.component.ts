@@ -1,5 +1,5 @@
 import { Component, ViewChild, NgZone } from '@angular/core';
-import { Platform, MenuController, Nav, AlertController } from 'ionic-angular';
+import { Events, Platform, MenuController, Nav, AlertController } from 'ionic-angular';
 import * as firebase from 'firebase/app';
 import { ListaConversazioniPage } from '../pages/lista-conversazioni/lista-conversazioni';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -25,6 +25,8 @@ export class MyApp {
   public user:any;
   pages: Array<{title: string, component: any}>;
   isNavBar: string;
+  notificationsEnabled: boolean;
+  
   /**
    * 1 - init firebase
    * 2 - quando
@@ -44,12 +46,14 @@ export class MyApp {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public config: Config,
+    public events: Events,
     private navProxy: NavProxyService,
     public alertCtrl: AlertController,
     public msgService: MessagingService,
     public chatManager: ChatManager,
     public translate: TranslateService
   ) {
+    this.notificationsEnabled = true;
     this.zone = new NgZone({});
     //this.isNavBar = (location.search.split('navBar=')[1]).split('&')[0];
     let TEMP = location.search.split('navBar=')[1];
@@ -63,6 +67,8 @@ export class MyApp {
     firebase.initializeApp(config.get("firebaseConfig"));
     platform.ready().then(() => {
       
+      this.events.subscribe('requestPermission', this.callbackRequestPermission);
+
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
@@ -114,6 +120,15 @@ export class MyApp {
     // }
 
     localStorage.removeItem('firebase:previous_websocket_failure');
+  }
+
+  callbackRequestPermission: any = (permission) => {
+    console.log("callbackRequestPermission", permission);
+    this.notificationsEnabled = permission;
+  }
+  hideAlert(){
+    console.log("hideAlert");
+    this.notificationsEnabled = true;
   }
 
 }

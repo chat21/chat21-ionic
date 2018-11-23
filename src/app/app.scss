@@ -149,3 +149,39 @@ ion-app, ion-nav, ion-tab, ion-tabs, .app-root, .ion-page {
 }
 
 /* END LOADIN */
+
+.c21-alert {
+    &.c21-alert-notification {
+        display: inline-block;
+        margin: 0 auto;
+        position: fixed;
+        -webkit-transition: all .5s ease-in-out 0s;
+        transition: all .5s ease-in-out 0s;
+        z-index: 1031;
+        top: -100px;
+        left: 0px;
+        right: 0px;
+        max-width: 450px;
+        width: 80%;
+        padding: 10px;
+        cursor: pointer;
+        display: block;
+    }
+    &.alert-danger {
+        background-color: #f55a4e;
+        color: #fff;
+        border-radius: 3px;
+        -webkit-box-shadow: 0 12px 20px -10px rgba(244,67,54,.28), 0 4px 20px 0 rgba(0,0,0,.12), 0 7px 8px -5px rgba(244,67,54,.2);
+        box-shadow: 0 12px 20px -10px rgba(244,67,54,.28), 0 4px 20px 0 rgba(0,0,0,.12), 0 7px 8px -5px rgba(244,67,54,.2);
+    }
+    &.animated {
+        top: 10px;
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+    
+}
+
+

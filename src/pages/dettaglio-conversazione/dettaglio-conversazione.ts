@@ -47,6 +47,7 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   private conversationWith: string;
   private currentUserDetail: UserModel;
+  private memberSelected: UserModel;
   private conversationWithFullname: string;
   private channel_type: string;
   private online: boolean;
@@ -445,9 +446,13 @@ export class DettaglioConversazionePage extends _DetailPage{
   returnCloseInfoConversation(){
     this.openInfoConversation = false;
   }
-  returnOpenDetailUser(member){
+  returnOpenInfoUser(member){
     console.log('returnOpenDetailUser **************', member);
+    this.memberSelected = member;
     this.openInfoUser = true;
+  }
+  returnCloseInfoUser(){
+    this.openInfoUser = false;
   }
 
   /** 

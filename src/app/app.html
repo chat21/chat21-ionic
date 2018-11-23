@@ -36,8 +36,21 @@
 </ion-header>
 
 <ion-content>
+  <div (click)="hideAlert()">
     <ion-split-pane (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
         <ion-nav [root]="masterPage" #masterNav></ion-nav>
         <ion-nav [root]="detailPage" #detailNav main></ion-nav>
     </ion-split-pane>
+
+    <div [ngClass]="notificationsEnabled?'':'animated'" class="c21-alert alert-danger fadeInDown c21-alert-notification">
+      <span class="notifications" data-notify="icon">
+        <i class="fa fa-exclamation-circle" style="font-size: 20px;"></i>  
+        <span class="title">
+          {{ 'ALERT_NOTIFICATION' | translate }} 
+        </span> 
+      </span> 
+    </div>
+  </div>
+
+
 </ion-content>

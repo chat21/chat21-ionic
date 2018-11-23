@@ -188,10 +188,13 @@
     [channelType]=channel_type
     [conversationWith]= conversationWith
     (eventClose)="returnCloseInfoConversation()"
-    (eventOpenDetailUser)="returnOpenDetailUser($event)"
+    (eventOpenInfoUser)="returnOpenInfoUser($event)"
     ></page-info-conversation>
 </div>
 
 <div id="chat21-info-user" *ngIf="openInfoUser" [class.open]="openInfoUser">
-    <page-info-user></page-info-user>
+    <page-info-user
+    [member]=memberSelected
+    (eventClose)="returnCloseInfoUser()"
+    ></page-info-user>
 </div>

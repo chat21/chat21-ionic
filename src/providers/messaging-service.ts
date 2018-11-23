@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Events } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import * as firebase from 'firebase';
 
@@ -28,6 +29,7 @@ export class MessagingService {
 
     constructor(
         //private afAuth: AngularFireAuth 
+        public events: Events,
         public config: Config
     ) { 
         // recupero tenant
@@ -70,9 +72,12 @@ export class MessagingService {
         // });
     }
 
+    /**
+     * 
+     */
     getPermission() {
         console.log('Notification getPermission.');
-
+        const that = this;
         // Request permission and get token.....
         this.messaging.requestPermission()
         .then(token => {
@@ -80,11 +85,16 @@ export class MessagingService {
             // TODO(developer): Retrieve an Instance ID token for use with FCM.
             this.token = token;
             console.log('NOTIFICA PERMESSO token.', token);
+            //callback PERMESSO NOTIFICA OK
+            that.events.publish('requestPermission', true);
+            that.getToken();
             //this.updateToken(token);
         })
-        .catch(function(err) {
-            console.log('Unable to get permission to notify.', err);
+        .catch(function() {
+            that.events.publish('requestPermission', false);
+            console.log('Unable to get permission to notify.');
         });
+        
 
         // navigator.serviceWorker.register('./firebase-messaging-sw.js')
         // .then((registration) => {
@@ -129,18 +139,21 @@ export class MessagingService {
         // });
     }
   
-    getToken(user){
+    getToken(){
         // Get Instance ID token. Initially this makes a network call, once retrieved
         // subsequent calls to getToken will return from cache.
         let that = this;
+         //firebase.messaging().getToken()
         this.messaging.getToken()
         .then(function(currentToken) {
+            console.log('currentToken: ', currentToken);
             if (currentToken) {
-                console.log('currentToken: ', currentToken);
                 //sendTokenToServer(currentToken);
                 that.token = currentToken;
                 //updateUIForPushEnabled(currentToken);
-                that.updateToken(user);
+                //that.updateToken(user);
+                that.events.publish('eventGetToken', currentToken);
+                //that.updateToken(user);
             } else {
                 // Show permission request.
                 console.log('No Instance ID token available. Request permission to generate one.');
@@ -161,17 +174,17 @@ export class MessagingService {
     // }
 
 
-    updateToken(user) {
-        console.log("***********************",this.token);
+    updateToken(userUid, token) {
+        console.log("***********************",token);
         //this.afAuth.authState.take(1).subscribe(user => {
-        if (!user || !this.token) return;
+        if (!userUid || !token) return;
         console.log("aggiorno token nel db");
         // aggiorno token nel db
         //let connectionsRef: firebase.database.Reference = this.referenceToUserListToken(user.uid);
-        let conection = this.token;
+        let conection = token;
         var updates = {};
         
-        this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instances/";
+        this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userUid+"/instances/";
         
         let device_model = {
             device_model: navigator.userAgent,
@@ -180,12 +193,14 @@ export class MessagingService {
             platform_version: this.BUILD_VERSION
         }
         updates[this.connectionsRefinstancesId + conection] = device_model;
-        console.log("Aggiorno token ------------>", updates);
+        
         // else{
             // this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+user.uid+"/instanceId/";
             // updates[this.connectionsRefinstancesId] = conection;
         //}
-        firebase.database().ref().update(updates);
+        console.log("Aggiorno token ------------>", updates);
+        firebase.database().ref().update(updates)
+        
         //this.deviceConnectionRef = connectionsRef.push(conection);
         //this.tokenId = conection;//this.deviceConnectionRef.key;
         //console.log("--------->rimuovo token nel db", this.deviceConnectionRef.key);
@@ -195,9 +210,10 @@ export class MessagingService {
     
     removeToken() {
         console.log("rimuovo token nel db", this.token);
+        // this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userUid+"/instances/";
         let connectionsRefURL = "";
         if(this.connectionsRefinstancesId){
-            connectionsRefURL = this.connectionsRefinstancesId;
+            connectionsRefURL = this.connectionsRefinstancesId+'/'+this.token;
             const connectionsRef = firebase.database().ref().child(connectionsRefURL);
             connectionsRef.remove();
         }

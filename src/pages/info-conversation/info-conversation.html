@@ -96,7 +96,7 @@
             <ion-card>
                 <div class="chat21-header break-line">{{ 'LABEL_MEMBERS' | translate }}</div>
                 <div class="chat21-content">
-                    <div *ngFor="let member of listMembers">
+                    <div *ngFor="let member of listMembers" class="c21-member" (click)="openInfoUser(member)" >
                         <ion-item>
                             <ion-avatar item-start [ngStyle]="{ position: relative }">
                                 <div class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div>
@@ -116,13 +116,11 @@
                                     </svg>
                                 </div>
                             
-                                <!-- <div class="c21-icon-status c21-unchecked" *ngIf="!member.checked"><ion-icon name="close"></ion-icon></div>  -->
                             </ion-avatar>
                             <h2>
                                 <span class="c21-point" [ngStyle]="{ 'background-color':(member.online)?'#24d066':'#db4437' }">&nbsp;</span>
                                 <span *ngIf="member.fullname" class="chat21-name truncate read">{{member.fullname}}</span>
                                 <span *ngIf="!member.fullname" class="chat21-name truncate read">{{ 'LABEL_GUEST' | translate }}</span>
-                                 
                             </h2>
                             <p>
                                 <span class="chat21-status truncate read">{{member.uid}}</span>
@@ -168,7 +166,6 @@
             </ion-card>
 
         </div>
-
 
         <div class="chat21-box-images chat21-box">
         </div>

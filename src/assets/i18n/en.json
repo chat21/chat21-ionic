@@ -84,7 +84,8 @@
  "LABEL_NEW_PASSWORD": "Generate a new password",
 
  "LABEL_CLOSED": "Closed",
- "LABEL_INFO": "informations"
+ "LABEL_INFO": "informations",
+ "ALERT_NOTIFICATION": "Warning: sending notifications is disabled, changes the browser settings to allow sending notifications."
 
 
 }

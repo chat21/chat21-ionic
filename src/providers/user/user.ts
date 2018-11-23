@@ -25,6 +25,7 @@ export class UserService {
   public urlNodeContacts: string;
   public uidLastOpenConversation: string;
   public token: string;
+  public userUid: string;
 
 
   constructor(
@@ -39,9 +40,9 @@ export class UserService {
      * 2 - recupero tenant e impoto url contatti 
      */
     platform.ready().then(() => {
-      this.onAuthStateChanged();
       const tenant = this.chatManager.getTenant();
       this.urlNodeContacts = '/apps/'+tenant+'/contacts/';
+      this.onAuthStateChanged();
     });
   }
 
@@ -216,11 +217,18 @@ export class UserService {
         this.chatManager.goOffLine();
       }
       else{
+        this.userUid = user.uid;
         console.log(" 1 - IMPOSTO STATO CONNESSO UTENTE ");
         this.chatPresenceHandler.setupMyPresence(user.uid);
         console.log(" 2 - AGGIORNO IL TOKEN ::: ", user);
-        this.msgService.getToken(user);
-        this.getToken();
+        
+        const keySubscription = 'eventGetToken';
+        this.events.subscribe(keySubscription, this.callbackGetToken);
+        //this.addSubscription(keySubscription);
+        this.msgService.getToken();
+
+
+        //this.getToken(); // perchè???
         console.log(" 3 - CARICO IL DETTAGLIO UTENTE ::: ");
         let that = this;
         const userFirebase = this.initUserDetails(user.uid);
@@ -241,10 +249,27 @@ export class UserService {
     });
   }
 
+  callbackGetToken: any = (token) => {
+    console.log(" 4 - callbackGetToken");
+    this.msgService.updateToken(this.userUid, token);
+  }
 
+  // getToken(user){
+  //   const that = this;
+  //   console.log('getToken');
+  //   firebase.auth().currentUser.getIdToken()
+  //   .then(function(idToken) {
+  //       console.log('idToken.', idToken);
+  //       that.token = idToken;
+  //       that.msgService.updateToken(user, idToken);
+  //   }).catch(function(error) {
+  //     // Handle error
+  //     console.error('error token.', error);
+  //   });
+  // }
   getToken(){
     const that = this;
-    console.log('Notification permission granted.');
+    console.log('getToken.');
     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
     .then(function(idToken) {
         that.token = idToken;

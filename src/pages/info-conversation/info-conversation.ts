@@ -34,6 +34,7 @@ import { NavProxyService } from '../../providers/nav-proxy';
 export class InfoConversationPage {
   // ========= begin:: Input/Output values ============//
   @Output() eventClose = new EventEmitter();
+  @Output() eventOpenInfoUser = new EventEmitter<UserModel>();
   @Input() tenant: string;
   @Input() attributes: any = {};
   @Input() conversationWith: string;
@@ -273,16 +274,16 @@ setDetailUser(snapshot) {
   let emailUserAuthenticated;
   let fullnameUserAuthenticated;
   let signInProvider = 'anonymous';
-  if(this.attributes.senderAuthInfo.authVar.uid){
+  if(this.attributes && this.attributes.senderAuthInfo.authVar.uid){
     uidUserAuthenticated = this.attributes.senderAuthInfo.authVar.uid;
   }
-  if(this.attributes.senderAuthInfo.userEmail){
+  if(this.attributes && this.attributes.senderAuthInfo.userEmail){
     emailUserAuthenticated = this.attributes.senderAuthInfo.userEmail;
   }
-  if(this.attributes.senderAuthInfo.userFullname){
+  if(this.attributes && this.attributes.senderAuthInfo.userFullname){
     fullnameUserAuthenticated = this.attributes.senderAuthInfo.userFullname;
   }
-  if(this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider){
+  if(this.attributes && this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider){
     signInProvider = this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider;
   }
 
@@ -915,7 +916,6 @@ setDetailUser(snapshot) {
     this.eventClose.emit();
   }
 
-
   ngOnDestroy() {
     this.unsubscribeAll();
   }
@@ -925,6 +925,10 @@ setDetailUser(snapshot) {
     window.open(url, '_blank', 'location=yes');
   }
 
+  openInfoUser(member){
+    console.log("openInfoUser", member);
+    this.eventOpenInfoUser.emit(member);
+  }
 
 
   /**

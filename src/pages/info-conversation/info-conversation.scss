@@ -69,6 +69,12 @@ page-info-conversation {
     }
 
 
+    .c21-member {
+        cursor: pointer;
+    }
+    .c21-member:hover {
+        background-color: rgba(158, 158, 158, 0.1);
+    }
 
     .card {
         padding: 10px;
