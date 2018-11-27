@@ -15,7 +15,7 @@ import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // utils
 import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
-import { searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
+import { avatarPlaceholder, getColorBck, searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
 import { PlaceholderPage } from '../placeholder/placeholder';
 
 import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
@@ -123,7 +123,7 @@ export class InfoConversationPage {
     this.subscriptions = [];
     this.profileYourself = false;
     this.currentUserDetail = this.chatManager.getLoggedUser();
-    this.userDetail = new UserModel('', '', '', '', '', '', false);
+    this.userDetail = new UserModel('', '', '', '', '', '', '', '', false);
     this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
     this.conversationSelected = this.conversationsHandler.getConversationByUid(this.conversationWith);
     this.setSubscriptions();
@@ -159,6 +159,8 @@ export class InfoConversationPage {
   } else {
     console.log('CONVERSATION');
     this.profileYourself = false;
+    // status user conversation with
+    this.userIsOnline(this.conversationWith);
     this.loadUserDetail();
   }
 }
@@ -190,6 +192,9 @@ setDetailUser(snapshot) {
     user.lastname,
     fullname.trim(),
     user.imageurl,
+    '',
+    '',
+    false,
     false
   );
 }
@@ -199,10 +204,7 @@ setDetailUser(snapshot) {
   /** SUBSCRIPTIONS */
   setSubscriptions() {
     console.log('InfoConversationPage::setSubscriptions');
-    this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
-    //this.events.subscribe('onOpenInfoConversation', this.subcribeOnOpenInfoConversation);
-    // this.events.subscribe('loadUserDetail:complete', this.subcribeLoadUserDetail);
-    // this.events.subscribe('loadGroupDetail:complete', this.subcribeLoadGroupDetail);
+    // this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
     this.events.subscribe('PopupConfirmation', this.subcribePopupConfirmation);
   }
 
@@ -276,19 +278,23 @@ setDetailUser(snapshot) {
   let emailUserAuthenticated;
   let fullnameUserAuthenticated;
   let signInProvider = 'anonymous';
-  if(this.attributes && this.attributes.senderAuthInfo.authVar.uid){
+  if(this.attributes && this.attributes.senderAuthInfo && this.attributes.senderAuthInfo.authVar && this.attributes.senderAuthInfo.authVar.uid){
     uidUserAuthenticated = this.attributes.senderAuthInfo.authVar.uid;
   }
-  if(this.attributes && this.attributes.senderAuthInfo.userEmail){
+  if(this.attributes && this.attributes.senderAuthInfo && this.attributes.senderAuthInfo.userEmail){
     emailUserAuthenticated = this.attributes.senderAuthInfo.userEmail;
   }
-  if(this.attributes && this.attributes.senderAuthInfo.userFullname){
+  if(this.attributes && this.attributes.senderAuthInfo && this.attributes.senderAuthInfo.userFullname){
     fullnameUserAuthenticated = this.attributes.senderAuthInfo.userFullname;
   }
-  if(this.attributes && this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider){
+  if(this.attributes && 
+    this.attributes.senderAuthInfo && 
+    this.attributes.senderAuthInfo.authVar &&
+    this.attributes.senderAuthInfo.authVar.token &&
+    this.attributes.senderAuthInfo.authVar.token.firebase &&
+    this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider){
     signInProvider = this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider;
   }
-
 
   members.forEach(member => {
     let userDetail;
@@ -299,9 +305,11 @@ setDetailUser(snapshot) {
             const user = snapshot.val();
             const fullname = user.firstname + " " + user.lastname;
             let imageUrl = URL_NO_IMAGE;
+            let avatar;
+            let color;
             if (user.imageurl && user.imageurl !== LABEL_NOICON) {
               imageUrl = user.imageurl;
-            }
+            } 
             userDetail = new UserModel(
               snapshot.key,
               user.email,
@@ -309,12 +317,16 @@ setDetailUser(snapshot) {
               user.lastname,
               fullname.trim(),
               imageUrl,
+              avatar,
+              color,
               false,
               false
             );
           } else {
             userDetail = new UserModel(
               snapshot.key,
+              '',
+              '',
               '',
               '',
               '',
@@ -331,6 +343,14 @@ setDetailUser(snapshot) {
             userDetail.fullname = fullnameUserAuthenticated;
           }
 
+          let fullName = that.translate.get('LABEL_GUEST')['value'];
+          if(userDetail.firstname || userDetail.lastname){
+            fullName = userDetail.firstname+' '+userDetail.lastname; 
+          } 
+          userDetail.avatar = avatarPlaceholder(fullName);
+          userDetail.color = getColorBck(fullName);
+          
+          console.log('userDetail------------->', userDetail);
           // ADD MEMBER TO ARRAY
           that.listMembers.push(userDetail);
           // ONLINE/OFFLINE
@@ -479,11 +499,7 @@ setDetailUser(snapshot) {
     this.customAttributes = tempMap;
   }
 
-  /** */
-  subcribeChangeStatusUserSelected: any = (lastConnectionDate, online) => {
-    this.online = online;
-    this.lastConnectionDate = lastConnectionDate;
-  };
+  
 
 
   
@@ -519,7 +535,7 @@ setDetailUser(snapshot) {
 
   
 
-
+  
 
   /** 
    * 
@@ -527,24 +543,48 @@ setDetailUser(snapshot) {
   userIsOnline(uid) {
     const keySubscription = 'statusUser:online-' + uid;
     this.events.subscribe(keySubscription, this.callbackUserIsOnline);
-    this.addSubscription(keySubscription);
-    this.chatPresenceHandler.userIsOnline(uid);
+    let isNewSubscription = this.addSubscription(keySubscription);
+    if( isNewSubscription ){
+      this.chatPresenceHandler.userIsOnline(uid);
+    }
   }
   /**
    * on subscribe stato utente con cui si conversa ONLINE
    */
   callbackUserIsOnline: any = (uid, status) => {
-    // this.listMembers.forEach(member => {
-    for (var i = 0; i < this.listMembers.length; i++) {
-      const member = this.listMembers[i];
-      if (member.uid === uid) {
-        member.online = status;
-        console.log("----->ONLINE: ", member.uid, uid, member.online);
-        break;
+    if (this.channelType === TYPE_GROUP) {
+      for (var i = 0; i < this.listMembers.length; i++) {
+        const member = this.listMembers[i];
+        if (member.uid === uid) {
+          member.online = status;
+          console.log("----->ONLINE: ", member.uid, uid, member.online);
+          break;
+        }
+      }
+    } else {
+      this.online = status;
+      if ( status == false ) {
+        this.lastOnlineForUser(this.conversationWith);
       }
     }
-    // });
   }
+
+  lastOnlineForUser(uid){
+    const keySubscription = 'lastConnectionDate-' + uid;
+    this.events.subscribe(keySubscription, this.callbackLastOnlineForUser);
+    let isNewSubscription = this.addSubscription(keySubscription);
+    if( isNewSubscription ){
+      console.log("subscribe::lastConnectionDate");
+      this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
+    }
+  }
+
+  callbackLastOnlineForUser:any = (uid, lastConnectionDate) => {
+    console.log("callbackLastOnlineForUser::",lastConnectionDate);
+    this.lastConnectionDate = lastConnectionDate;
+  }
+    
+
 
 
   /**
@@ -945,9 +985,8 @@ setDetailUser(snapshot) {
       this.subscriptions.push(key);
       return true;
     } 
-      console.log("addSubscription: FALSE");
-      return false;
-    
+    console.log("addSubscription: FALSE");
+    return false;
   }
 
   /**

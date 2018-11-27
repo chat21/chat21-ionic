@@ -4,8 +4,8 @@
     "LABEL_MSG_START_CHAT": "inizia a chattare",
     "LABEL_ACTIVE_NOW": "attivo/a ora",
     "LABEL_NO_MSG_HERE": "Ancora nessun messaggio qui...",
-    "LABEL_TODAY": "Oggi",
-    "LABEL_TOMORROW": "Ieri",
+    "LABEL_TODAY": "oggi",
+    "LABEL_TOMORROW": "ieri",
     "LABEL_LAST_ACCESS": "ultimo accesso",
     "LABEL_TO": "alle",
     "ARRAY_DAYS": ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"],
@@ -85,7 +85,7 @@
   
     "LABEL_CLOSED": "Chiuse",
     "LABEL_INFO": "informazioni",
-    "ALERT_NOTIFICATION": "Attenzione: l'invio di notifiche è disabilitato, modifica le impostazioni del browser per consentire l'invio notifiche."
+    "ALERT_NOTIFICATION": "Attenzione: l'invio di notifiche è disabilitato, modifica le impostazioni del browser per consentire l'invio di notifiche."
 
 
 }

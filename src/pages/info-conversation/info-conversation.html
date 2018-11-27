@@ -12,7 +12,7 @@
 
 <ion-content>
     <div *ngIf="groupDetail || userDetail">
-        <ion-card style="height:105px">
+        <ion-card>
             <div class="chat21-box-profile chat21-box">
                 <div class="chat21-content">
                     <div class="chat21-image">
@@ -20,49 +20,64 @@
                             <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversationSelected.color" [innerHTML]="conversationSelected.avatar"></div>
                             <div #avatarImage *ngIf="conversationSelected.image" class="chat21-avatar" [style.background-image]="'url(' + conversationSelected.image + ')'"></div>
                         </ion-avatar>
-                        <!-- <div *ngIf="channelType != TYPE_GROUP" class="chat21-avatar big" [style.background-image]="'url(' + userDetail.imageurl + ')'"></div>
-                        <div *ngIf="channelType == TYPE_GROUP" class="chat21-avatar big" [style.background-image]="'url(' + groupDetail.iconURL + ')'"></div> onError="src='assets/img/no_image.png';"-->
-                        <!-- <img class="clip-circle" *ngIf="channelType != TYPE_GROUP" src="{{userDetail.imageurl}}" alt="user" > 
-                        <img class="clip-circle" *ngIf="channelType == TYPE_GROUP" src="{{groupDetail.iconURL}}" alt="user" > -->
                     </div>
-
                     <div class="chat21-info">
                         <div class="chat21-name">
                             <span *ngIf="channelType == TYPE_GROUP" class="truncate read">{{groupDetail.name}}</span>
-                            <span *ngIf="channelType == TYPE_GROUP" class="truncate read">{{groupDetail.uid}}</span>
                             <span *ngIf="channelType != TYPE_GROUP" class="truncate read">{{userDetail.fullname}}</span>
                         </div>
-
                         <div class="chat21-status">
                             <span *ngIf="channelType != TYPE_GROUP">
                                 <span *ngIf="online" class="truncate read">{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
                                 <span *ngIf="!online" class="truncate read">{{lastConnectionDate}}</span>
                             </span>
-                            <span *ngIf="channelType == TYPE_GROUP" class="truncate read">{{ 'LABEL_CREATED_THE' |
-                                translate }}{{groupDetail.createdOn}}</span>
+                            <span *ngIf="channelType == TYPE_GROUP" class="truncate read">
+                                {{listMembers.length}} {{ 'PARTECIPANTI' | translate }}
+                            </span>
                         </div>
                     </div>
+                </div>
+            </div>
+        </ion-card>
 
+        <ion-card>
+            <div class="chat21-box-info chat21-box">
+                <div class="chat21-content">
+                    <div class="chat21-info">
+                        <span *ngIf="channelType == TYPE_GROUP" class="truncate read c21-uid">
+                            {{groupDetail.uid}}
+                        </span>
+                        <span *ngIf="channelType != TYPE_GROUP" class="truncate read c21-uid">
+                            {{userDetail.uid}}
+                        </span>
+                    </div>
+                    
+                    <div class="chat21-status">
+                        <span *ngIf="channelType == TYPE_GROUP" class="truncate read">
+                            {{ 'LABEL_CREATED_THE' | translate }}{{groupDetail.createdOn}}
+                        </span>
+                    </div>
+        
                     <div class="chat21-conf">
                         <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
                             <ion-icon name="create"></ion-icon>
                         </button>
                     </div>
-
-                </div>
-
-                <div class="chat21-uid">
-                    <!-- <span *ngIf="profileYourself">{{currentUserDetail.uid}}</span> -->
-                    <span>{{userDetail.uid}}</span>
-                    <span *ngIf="profileYourself" class="email">email: {{userDetail.email}}</span>
+        
+                    <div class="chat21-email" *ngIf="channelType != TYPE_GROUP">
+                        <span *ngIf="!profileYourself" class="">{{userDetail.email}}</span>
+                    </div>
                 </div>
             </div>
+
         </ion-card>
+
+        
 
         <ion-card *ngIf="channelType == TYPE_GROUP && attributesClient">
             <div class="chat21-box-attributes chat21-box">
                 <!-- *ngIf="attributesClient"  -->
-                <div class="chat21-header break-line">{{ 'LABEL_INFO_ATTRIBUTE' | translate }}</div>
+                <div class="chat21-header">{{ 'LABEL_INFO_ATTRIBUTE' | translate }}</div>
                 <div class="chat21-content">
                     <div class="chat21-row">
                         <span class="">{{ 'LABEL_CLIENT' | translate }}</span>
@@ -76,10 +91,11 @@
                         <span class="">{{ 'LABEL_DEPARTMENT_NAME' | translate }}</span>
                         <span light class="lighter">{{attributes.departmentName}}</span>
                     </div>
-                    <div *ngIf="attributes && attributes.userFullname && attributes.userEmail" class="chat21-row">
+                    <div *ngIf="attributes && attributes.userFullname" class="chat21-row">
                         <span class="">{{ 'LABEL_NAME' | translate }}</span>
                         <span light class="lighter">{{attributes.userFullname}}</span>
-                        <br />
+                    </div>
+                    <div *ngIf="attributes && attributes.userEmail" class="chat21-row">
                         <span class="">{{ 'LABEL_EMAIL' | translate }}</span>
                         <span light class="lighter">{{attributes.userEmail}}</span>
                     </div>
@@ -96,14 +112,24 @@
             </div>
         </ion-card>
 
-        <div *ngIf="channelType == TYPE_GROUP && listMembers.length > 0" class="chat21-box-members chat21-box">
-            <ion-card>
-                <div class="chat21-header break-line">{{ 'LABEL_MEMBERS' | translate }}</div>
+
+        <ion-card *ngIf="channelType == TYPE_GROUP && listMembers.length > 0">
+            <div class="chat21-box-members chat21-box">
+                <div class="chat21-header">{{ 'LABEL_MEMBERS' | translate }}</div>
                 <div class="chat21-content">
                     <div *ngFor="let member of listMembers" class="c21-member" (click)="openInfoUser(member)" >
                         <ion-item>
+                            <!-- <div class="chat21-image">
+                                <ion-avatar item-start>
+                                    <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversationSelected.color" [innerHTML]="conversationSelected.avatar"></div>
+                                    <div #avatarImage *ngIf="conversationSelected.image" class="chat21-avatar" [style.background-image]="'url(' + conversationSelected.image + ')'"></div>
+                                </ion-avatar>
+                            </div> -->
+
                             <ion-avatar item-start [ngStyle]="{ position: relative }">
-                                <div class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div>
+                                <!-- <div class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div> -->
+                                <div #avatarPlaceholder *ngIf="!member.imageurl" class="avatar-placeholder" [style.background-color]="member.color" [innerHTML]="member.avatar"></div>
+                                <div #avatarImage *ngIf="member.imageurl" class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div>
 
                                 <div *ngIf="member.checked" class="c21-icon-status c21-checked">
                                     <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -127,15 +153,18 @@
                                 <span *ngIf="!member.fullname" class="chat21-name truncate read">{{ 'LABEL_GUEST' | translate }}</span>
                             </h2>
                             <p>
-                                <span class="chat21-status truncate read">{{member.uid}}</span>
+                                <span class="chat21-uid truncate read">{{member.uid}}</span>
                             </p>
                         </ion-item>
                     </div>
                 </div>
-            </ion-card>
+            </div>
+        </ion-card>
+       
 
 
-            <ion-card >
+        <ion-card *ngIf="channelType == TYPE_GROUP">
+            <div class="chat21-box-buttons chat21-box">
                 <div *ngIf="isSupportGroup()" class="chat21-content" >
                     <button ion-button clear icon-start block 
                       (click)="sendMail()">
@@ -167,9 +196,10 @@
                         <span class="c21-button-label">{{ 'LABEL_LEAVE_GROUP' | translate }}</span>
                     </button>
                 </div>
-            </ion-card>
+            </div>
+        </ion-card>
 
-        </div>
+        
 
         <div class="chat21-box-images chat21-box">
         </div>

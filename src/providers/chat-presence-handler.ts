@@ -51,6 +51,7 @@ export class ChatPresenceHandler {
     const that = this;
     let myConnectionsRefURL = this.urlNodeFirebase+"/presence/"+userid+"/connections";
     const connectionsRef = firebase.database().ref().child(myConnectionsRefURL);
+    console.log('userIsOnline', myConnectionsRefURL);
     connectionsRef.on("value", (child) => {
       if(child.val()){
         that.events.publish('statusUser:online-'+userid, userid, true);
@@ -74,7 +75,9 @@ export class ChatPresenceHandler {
     lastOnlineRef.on("value", (child) => {
       if(child.val()){
         const lastConnectionDate = that.getTimeLastConnection(child.val());
-        that.events.publish('lastConnectionDate-'+userid, userid,lastConnectionDate);
+        that.events.publish('lastConnectionDate-'+userid, userid, lastConnectionDate);
+      } else {
+        
       }
     });
   }

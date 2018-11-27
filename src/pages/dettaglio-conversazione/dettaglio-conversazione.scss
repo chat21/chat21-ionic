@@ -10,8 +10,14 @@ page-dettaglio-conversazione {
                 color: #111111;
                 text-align: center;
                 // cursor: pointer;
-                margin-left: -40px;
+                margin-left: -5px;
+                width: calc(100% - 0px);
+                &.infoOpen{
+                    width: calc(100% - 250px);
+                    margin-left: -55px;
+                }
             }
+            
             .headerLastActivity{
                 font-size: 10px;
                 color: #999999;
@@ -383,7 +389,8 @@ page-dettaglio-conversazione {
         #chat21-info-conversation.open {
             position: absolute;
             height: 100%;
-            width: 320px;
+            width: 100%;
+            max-width: 320px;
             z-index: 100;
             right: 0px;
             top: 0px;
@@ -514,4 +521,11 @@ page-dettaglio-conversazione {
             min-width: 14px;
             line-height: 14px;
         }
-    }
+        
+
+    @media (max-width: 451px) {
+        #chat21-info-conversation.open {
+            max-width: 100%;
+        }
+    }    
+}

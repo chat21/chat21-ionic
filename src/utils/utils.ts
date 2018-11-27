@@ -406,6 +406,7 @@ export function getColorBck(str){
       num = Math.round(code%arrayBckColor.length);
       console.log('************** code',str.length, code, arrayBckColor.length, num);
   }
+  console.log('getColorBck------------->',str, arrayBckColor[num]);
   return arrayBckColor[num];
 }
 
@@ -419,6 +420,7 @@ export function avatarPlaceholder(conversation_with_fullname) {
           }
       });
   }
+  console.log('avatarPlaceholder------------->', conversation_with_fullname, initials);
   return initials;
 }
 
