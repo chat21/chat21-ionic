@@ -288,7 +288,7 @@ export class ChatConversationsHandler {
                 conv.image = url;
                 //return url;
             }).catch((error) => {
-                console.log("**********XX  displayImage error::: ", error);
+                //console.log("**********XX  displayImage error::: ", error);
                 conv.image = null;
                 //return '';
             });

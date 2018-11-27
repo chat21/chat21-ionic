@@ -111,10 +111,10 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    const newInnerWidth = event.target.innerWidth
+    const newInnerWidth = event.target.innerWidth;
     console.log("newInnerWidth ", newInnerWidth);
-    if (newInnerWidth < 991) {
-      console.log("sparisci!!!!!")
+    if (newInnerWidth < 768) {
+      console.log("sparisci!!!!!", newInnerWidth)
       this.openInfoMessage = false;
       this.openInfoConversation = false;
     }
@@ -286,7 +286,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.openInfoMessage = false; // indica se è aperto il box info message
     const innerWidth = window.innerWidth;
     console.log('const innerWidth = ', innerWidth);
-    if (innerWidth < 991) {
+    if (innerWidth < 768) {
       console.log("sparisci!!!!!")
       this.openInfoMessage = false;
       this.openInfoConversation = false;
@@ -447,12 +447,14 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.openInfoConversation = false;
   }
   returnOpenInfoUser(member){
-    console.log('returnOpenDetailUser **************', member);
-    //this.memberSelected = member;
-    //this.openInfoUser = true;
+    //console.log('returnOpenDetailUser **************', member);
+    this.memberSelected = member;
+    this.openInfoUser = true;
+    console.log('returnOpenInfoUser **************', this.openInfoUser);
   }
   returnCloseInfoUser(){
-    //this.openInfoUser = false;
+    this.openInfoUser = false;
+    console.log('returnCloseInfoUser **************', this.openInfoUser);
   }
 
   /** 

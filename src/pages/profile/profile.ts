@@ -101,7 +101,7 @@ export class ProfilePage {
       });
     })
     .catch((error)=>{
-      console.log("displayImage error::: ",error);
+      //console.log("displayImage error::: ",error);
     });
   }
   /**

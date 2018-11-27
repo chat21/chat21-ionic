@@ -402,23 +402,27 @@ page-dettaglio-conversazione {
 
         #chat21-info-user {
             position: absolute;
-            height: 0px;
+            height: 100%;
             width: 0px;
-            display: none;
+            display: block;
+            opacity: 0;
+            &.open {
+                width: 100%;
+                max-width: 320px;
+                z-index: 100;
+                right: 0px;
+                top: 0px;
+            }
+            &.modal-page{
+                border-left-style: inset;
+                border-color: map-get($colors, c21-gray-10);
+                border-left-width: thin;
+                opacity: 1;
+                transition: all 0.4s 0.1s;
+            }
         }
         
-        #chat21-info-user.open {
-            position: absolute;
-            height: 100%;
-            width: 320px;
-            z-index: 100;
-            right: 0px;
-            top: 0px;
-            border-left-style: inset;
-            border-color: map-get($colors, c21-gray-10);
-            border-left-width: thin;
-            display: inline;
-        }
+        
 
         
         #chat21-info-message {
@@ -525,6 +529,9 @@ page-dettaglio-conversazione {
 
     @media (max-width: 451px) {
         #chat21-info-conversation.open {
+            max-width: 100%;
+        }
+        #chat21-info-user.open {
             max-width: 100%;
         }
     }    

@@ -20,46 +20,76 @@
 </ion-header>
 
 <ion-content>
-    <div *ngIf="userDetail">
-        <ion-card>
+    <div *ngIf="member">
+        <ion-card class="first-card">
             <div class="chat21-box-profile chat21-box">
                 <div class="chat21-content">
                     <div class="chat21-image">
-                        <img class="clip-circle" src="{{userDetail.imageurl}}" alt="user" onError="src='assets/img/no_image.png';">
+                        <ion-avatar item-start>
+                            <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="member.color" [innerHTML]="member.avatar"></div>
+                            <div #avatarImage *ngIf="member.image" class="chat21-avatar" [style.background-image]="'url(' + member.image + ')'"></div>
+                        </ion-avatar>
                     </div>
+                    <!-- <div class="chat21-image">
+                        <img class="clip-circle" src="{{member.imageurl}}" alt="user" onError="src='assets/img/no_image.png';">
+                    </div> -->
 
                     <div class="chat21-info">
 
                         <div class="chat21-name">
-                            <span class="truncate read">{{userDetail.fullname}}</span>
+                            <span *ngIf="member.fullname" class="truncate read">{{member.fullname}}</span>
+                            <span *ngIf="!member.fullname && member.decoded.name" class="truncate read">{{member.decoded.name}}</span>
                         </div>
 
                         <div class="chat21-status">
                           <span class="c21-point" [ngStyle]="{ 'background-color':(member.online)?'#24d066':'#db4437' }">&nbsp;</span>
-                          <span *ngIf="online" class="truncate read">{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
-                          <span *ngIf="!online" class="truncate read">{{lastConnectionDate}}</span>
+                          <span *ngIf="member.online" class="truncate read c21-label-connection">{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
+                          <span *ngIf="!member.online" class="read c21-label-connection">{{lastConnectionDate}}</span>
                         </div>
-
-                        <div class="chat21-conf">
-                            <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
-                                <ion-icon name="create"></ion-icon>
-                            </button>
-                        </div>
-
-                        <!-- <div class="chat21-uid">
-        
-                            <span>{{userDetail.uid}}</span>
-                            <span *ngIf="profileYourself" class="email">email: {{userDetail.email}}</span>
-                        </div> -->
-
                     </div>
-
-                    
-
                 </div>
-
-                
             </div>
+        </ion-card>
+
+        <ion-card>
+                
+            <div class="chat21-box-info chat21-box">
+                <div class="chat21-header">{{ 'LABEL_INFO_ATTRIBUTE' | translate }}</div>
+                <div class="chat21-content">
+                    <div class="c21-row">
+                        <span class="c21-label">uid: </span>
+                        <span class="truncate read c21-uid">{{member.uid}}</span>
+                    </div>
+                    <div *ngIf="member.email" class="c21-row">
+                            <span class="c21-label">{{ 'LABEL_EMAIL' | translate }}</span>
+                            <span *ngIf="!profileYourself" class="">{{member.email}}</span>
+                        </div>
+                    <div *ngIf="member.decoded.name" class="chat21-row">
+                        <span class="c21-label">{{ 'LABEL_NAME' | translate }}</span>
+                        <span class="lighter">{{member.decoded.name}}</span>
+                    </div>
+                    <div *ngIf="member.decoded.email" class="chat21-row">
+                        <span class="c21-label">{{ 'LABEL_EMAIL' | translate }}</span>
+                        <span class="lighter">{{member.decoded.email}}</span>
+                    </div>
+                    <div *ngIf="member.decoded.external_id" class="chat21-row">
+                        <span class="c21-label">{{ 'LABEL_EXTERNAL_ID' | translate }}</span>
+                        <span class="lighter">{{member.decoded.external_id}}</span>
+                    </div>
+                    <div *ngIf="member.decoded.iat" class="chat21-row">
+                        <span class="c21-label">{{ 'LABEL_IAT' | translate }}</span>
+                        <span class="lighter">{{member.decoded.iat}}</span>
+                    </div>
+                    
+                    <div class="chat21-conf">
+                        <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
+                            <ion-icon name="create"></ion-icon>
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+    
         </ion-card>
 
       </div>

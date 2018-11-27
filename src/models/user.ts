@@ -10,5 +10,6 @@ export class UserModel {
     public color?: string,
     public checked?: boolean,
     public online?: boolean,
+    public decoded?: any
   ) { }
 }

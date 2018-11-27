@@ -1,7 +1,7 @@
 //TIMES
 // BUILD
 export const CURR_VER_DEV = '70';
-export const CURR_VER_PROD = '0.103';
+export const CURR_VER_PROD = '0.905';
 
 //export const SERVICE_WORKER_DEV = '/chat/';
 //export const SERVICE_WORKER_PROD = './chat/';
@@ -35,8 +35,8 @@ export const BCK_COLOR_CONVERSATION_UNSELECTED: string = "#FFFFFF";
 // export const LABEL_MSG_START_CHAT = "inizia a chattare";
 // export const LABEL_ACTIVE_NOW = "attivo/a ora";
 // export const LABEL_NO_MSG_HERE = "Ancora nessun messaggio qui...";
-// export const LABEL_TODAY = "oggi";
-// export const LABEL_TOMORROW = "ieri";
+// export const LABEL_TODAY = "Oggi";
+// export const LABEL_TOMORROW = "Ieri";
 // export const LABEL_LAST_ACCESS = "ultimo accesso";
 // export const LABEL_TO = "alle";
 // export const ARRAY_DAYS = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];

@@ -185,4 +185,18 @@ ion-app, ion-nav, ion-tab, ion-tabs, .app-root, .ion-page {
     
 }
 
+// .modal-page {
+//     z-index: 1;
+//     background-color: transparent;
+//     opacity: 0;
+//     transition: all 0.2s;
+//     right: -100%;
+//     &.open {
+//         // background-color: $trasp-black;
+//         opacity: 1;
+//         transition: all 0.3s;
+//         right: 0px;
+//     }
+// }
+
 

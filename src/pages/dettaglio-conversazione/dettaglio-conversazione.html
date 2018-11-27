@@ -192,8 +192,8 @@
     ></page-info-conversation>
 </div>
 
-<div id="chat21-info-user" *ngIf="openInfoUser" [class.open]="openInfoUser">
-    <page-info-user
+<div id="chat21-info-user" class="modal-page" [class.open]="openInfoUser">
+    <page-info-user *ngIf="openInfoUser"
     [member]=memberSelected
     (eventClose)="returnCloseInfoUser()"
     ></page-info-user>

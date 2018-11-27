@@ -267,13 +267,14 @@ export class UserService {
   //     console.error('error token.', error);
   //   });
   // }
-  getToken(){
+  getToken() {
     const that = this;
-    console.log('getToken.');
+    console.log('getToken.', this.token);
     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
     .then(function(idToken) {
         that.token = idToken;
         console.log('idToken.', idToken);
+        
     }).catch(function(error) {
       // Handle error
       console.log('idToken.', error);

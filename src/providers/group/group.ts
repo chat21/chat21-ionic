@@ -16,6 +16,7 @@ import { TYPE_SUPPORT_GROUP } from '../../utils/constants';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { UserService } from '../../providers/user/user';
+import { MessagingService } from '../../providers/messaging-service';
 
 
 
@@ -32,6 +33,7 @@ export class GroupService {
   constructor(
     public http: Http,
     public events: Events,
+    public msgService: MessagingService,
     public chatManager: ChatManager,
     public userService: UserService
   ) {
@@ -80,8 +82,10 @@ export class GroupService {
 
 
   leaveAGroup(uidGroup, uidUser): Observable<string> {
+
     const appId = this.chatManager.getTenant();
-    const token = this.userService.returnToken();
+    const token = this.msgService.returnToken();
+    // getToken();
     const headers = new Headers();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/json');
@@ -90,6 +94,7 @@ export class GroupService {
     const options = new RequestOptions({ headers: headers });
     const url = this.BASE_URL_LEAVE_GROUP + 'api/' + appId + '/groups/' + uidGroup + '/members/' + uidUser;
     console.log('url: ', url);
+    console.log('token: ', token);
     const body = {
       'app_id': appId
     };
@@ -97,8 +102,11 @@ export class GroupService {
     console.log('------------------> body: ', JSON.stringify(body));
     return this.http
       .delete(url, options)
-      .map(res => (res.json()));
+      .map(res => (res.json()));     
   }
+
+
+
 
   closeGroup(uidGroup, callback) {
     const appId = this.chatManager.getTenant();
