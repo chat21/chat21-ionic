@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
-import { urlify, isExistInArray } from '../../utils/utils';
+import { validateEmail, urlify, isExistInArray } from '../../utils/utils';
 
 
 // models
@@ -27,11 +27,12 @@ export class InfoUserPage {
   // ========= begin:: Input/Output values ============//
   @Output() eventClose = new EventEmitter();
   @Input() member: UserModel;
+  @Input() projectId: string;
   // ========= end:: Input/Output values ============//
   private subscriptions = [];
   public conversationWith: string;
   public lastConnectionDate: string;
-  public decoded = [];
+  public decoded: Array<string> = [];
   
   constructor(
     public events: Events,
@@ -43,35 +44,92 @@ export class InfoUserPage {
   }
 
   ngOnInit() {
-    console.log('ngOnInit:', this.member);
-    this.initialize();
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad InfoUserPage', this.member);
+    console.log('ngOnInit: InfoUserPage', this.member);
+    setTimeout(() => {
+      this.initialize();
+    }, 200);
   }
 
   initialize(){
     console.log('PRE decoded:', this.member.decoded, this.member);
-    this.decoded = this.jsonToArray(this.member.decoded);
-    console.log('POST decoded:', this.decoded);
     this.lastOnlineForUser(this.member.uid);
+    this.decoded = this.completeDecoded(this.member.decoded);
   }
 
 
-  jsonToArray(json){
+  completeDecoded(json){
     var array = [];
-    Object.keys(json).forEach(e => {
-      const itemValue = (json[e].toString());
+    for (const e in json) {
+    //for (let e of Object.keys(json)) {
+      var itemValue = this.searchEmailOrUrlInString(json[e]);
       var item = {key: e, val: itemValue};
-      //var item = json[e];
-
       array.push(item);
-      //console.log('key='+key +'item='+item+array);
-      //console.log(`key=${e} value=${this.member.decoded[e]}`)
-    });
+    }
     return array;
+    //this.events.publish('decodedComplete', array);
   }
+
+  /** SUBSCRIPTIONS */
+  // setSubscriptions() {
+  //   console.log('InfoUserPage::setSubscriptions');
+  //   this.events.subscribe('decodedComplete', this.returnDecodedComplete);
+  //   this.addSubscription('decodedComplete');
+  // }
+
+  // returnDecodedComplete: any = (array) => {
+  //   // this.decoded = array;
+  //   array.forEach(function(element) {
+  //     if(element){
+  //       let item = this.searchEmailOrUrlInString(element);
+  //       this.decoded.push(item);
+  //     }
+  //   });
+  // }
+
+
+  // completeDecoded(json){
+  //   var array = [];
+  //   for (const e in json) {
+  //   //for (let e of Object.keys(json)) {
+  //     var itemValue = (json[e]);
+  //     var item = {key: e, val: itemValue};
+  //     array.push(item);
+  //   }
+  //   this.events.publish('decodedComplete', array);
+  // }
+
+  searchEmailOrUrlInString(item){
+    item = item.toString();
+    return urlify(item);
+    // if( validateEmail(item) ){
+    //   return "<a href='mailto:"+item+"'>"+item+"</a>";
+    // } else {
+    //   return urlify(item);
+    // } 
+  }
+
+  //jsonToArray(json){
+    // Object.keys(json).forEach(e => {
+    //   var itemValue = json[e].toString();
+    //   if( validateEmail(itemValue) ){
+    //     // verifico se è una email
+    //     itemValue = '<a href="mailto:'+itemValue+'">'+itemValue+'</a>';
+    //   } else {
+    //     // verifico se è un link
+    //     itemValue = urlify(itemValue);
+    //   } 
+    //   var item = {key: e, val: itemValue};
+    //   array.push(item);
+    //   //console.log('key='+key +'item='+item+array);
+    //   //console.log(`key=${e} value=${this.member.decoded[e]}`)
+    // });
+    //return array;
+  //}
+
+  
+  
+
+  
 
   // urlify(text){
   //   return convertMessageAndUrlify(text);
@@ -90,6 +148,14 @@ export class InfoUserPage {
   callbackLastOnlineForUser:any = (uid, lastConnectionDate) => {
     console.log("callbackLastOnlineForUser::",lastConnectionDate);
     this.lastConnectionDate = lastConnectionDate;
+  }
+
+
+  openUserDetail(){
+    this.projectId = '5b55e806c93dde00143163dd';
+    var url = "https://support.tiledesk.com/dashboard/#/project/"+this.projectId+"/contact/"+this.member.uid;
+    window.open(url,'_blank');
+    //https://support.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/contact/5bf6705275a5a40015327b91
   }
 
   /** */

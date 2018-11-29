@@ -77,16 +77,6 @@ export function urlify(text?, name?) {
   })
 }
 
-// export function setUrlString(text, name) {
-//   var urlRegex = /((?:(http|https|Http|Https|rtsp|Rtsp):\/\/(?:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,64}(?:\:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,25})?\@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|(?:jobs|j[emop])|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\:\d{1,5})?)(\/(?:(?:[a-zA-Z0-9\;\/\?\:\@\&\=\#\~\-\.\+\!\*\'\(\)\,\_])|(?:\%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
-//   return text.replace(urlRegex, function (url) {
-//     if (!url.match(/^[a-zA-Z]+:\/\//))
-//     {
-//       url = 'http://' + url;
-//     }
-//     return '<a href=\"' + url + '\" target=\"_blank\">' + name + '</a>';
-//   })
-// }
 /**
  * rimuove il tag html dal testo
  * ATTUALMENTE NON USATA
@@ -94,6 +84,7 @@ export function urlify(text?, name?) {
 export function removeHtmlTags(text) {
   return text.replace(/(<([^>]+)>)/ig,"");
 }
+
 /**
  * calcolo il tempo trascorso tra due date 
  * e lo formatto come segue:
@@ -103,7 +94,6 @@ export function removeHtmlTags(text) {
  * giorno della settimana (lunedì, martedì, ecc)
  */
 export function setHeaderDate(translate, timestamp, lastDate?): string {
-
 
     var date = new Date(timestamp);
     let now: Date = new Date();
@@ -203,18 +193,16 @@ export function compareValues(key, order='asc') {
   };
 }
 
+/** */
 export function getNowTimestamp(){
   //console.log("timestamp:", moment().valueOf());
   return moment().valueOf();
 }
 
 export function getFormatData(timestamp): string {
-
   var dateString = moment.unix(timestamp / 1000).format('L');
-
   // const date = new Date(timestamp);
   // const labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
-
   return dateString;
 }
 
@@ -450,3 +438,26 @@ export function jsonToArray(json){
   return array;
 }
 
+
+export function validateEmail(email) {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+export function searchEmailOrUrlInString(item) {
+  item = item.toString();
+  if( validateEmail(item) ){
+    return "<a href='mailto:"+item+"'>"+item+"</a>";
+  } else {
+    return urlify(item);
+  } 
+}
+
+// export function emailValidator(str) {
+//   let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+//   if (str != "" && (str.length > 5 || EMAIL_REGEXP.test(str))) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }

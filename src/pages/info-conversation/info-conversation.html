@@ -12,7 +12,7 @@
 
 <ion-content>
     <div *ngIf="groupDetail || userDetail">
-        <ion-card>
+        <ion-card class="first-card">
             <div class="chat21-box-profile chat21-box">
                 <div class="chat21-content">
                     <div class="chat21-image">
@@ -28,10 +28,10 @@
                         </div>
                         <div class="chat21-status">
                             <span *ngIf="channelType != TYPE_GROUP">
-                                <span *ngIf="online" class="truncate read">{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
-                                <span *ngIf="!online" class="truncate read">{{lastConnectionDate}}</span>
+                                <span *ngIf="online">{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
+                                <span *ngIf="!online">{{lastConnectionDate}}</span>
                             </span>
-                            <span *ngIf="channelType == TYPE_GROUP" class="truncate read">
+                            <span *ngIf="channelType == TYPE_GROUP">
                                 {{listMembers.length}} {{ 'PARTECIPANTI' | translate }}
                             </span>
                         </div>
@@ -44,18 +44,26 @@
             <div class="chat21-box-info chat21-box">
                 <div class="chat21-content">
                     <div class="chat21-info">
-                        <span *ngIf="channelType == TYPE_GROUP" class="read c21-uid">
-                            {{groupDetail.uid}}
-                        </span>
-                        <span *ngIf="channelType != TYPE_GROUP" class="read c21-uid">
-                            {{userDetail.uid}}
-                        </span>
+
+                        <div class="chat21-row">
+                            <div class="c21-label">uid</div>
+                            <div class="lighter">
+                                <span *ngIf="channelType == TYPE_GROUP">
+                                    {{groupDetail.uid}}
+                                </span>
+                                <span *ngIf="channelType != TYPE_GROUP">
+                                    {{userDetail.uid}}
+                                </span>
+                            </div>
+                        </div>
+
                     </div>
                     
                     <div class="chat21-status">
-                        <span *ngIf="channelType == TYPE_GROUP" class="truncate read">
-                            {{ 'LABEL_CREATED_THE' | translate }}{{groupDetail.createdOn}}
-                        </span>
+                        <div *ngIf="channelType == TYPE_GROUP" class="chat21-row">
+                            <div class="c21-label">{{ 'LABEL_CREATED_THE' | translate }}</div>
+                            <div class="lighter">{{groupDetail.createdOn}}</div>
+                        </div>
                     </div>
         
                     <div class="chat21-conf">
@@ -84,34 +92,34 @@
                 <div class="chat21-header">{{ 'LABEL_INFO_ATTRIBUTE' | translate }}</div>
                 <div class="chat21-content">
                     <div class="chat21-row">
-                        <span class="">{{ 'LABEL_CLIENT' | translate }}</span>
-                        <span class="lighter">{{attributesClient}}</span>
+                        <div class="c21-label">{{ 'LABEL_CLIENT' | translate }}</div>
+                        <div class="lighter">{{attributesClient}}</div>
                     </div>
                     <div class="chat21-row">
-                        <span class="">{{ 'LABEL_SOURCEPAGE' | translate }}</span>
-                        <span class="lighter" [innerHTML]="attributesSourcePage"></span>
+                        <div class="c21-label">{{ 'LABEL_SOURCEPAGE' | translate }}</div>
+                        <div class="lighter" [innerHTML]="attributesSourcePage"></div>
                     </div>
                     <div *ngIf="attributes && attributes.departmentId" class="chat21-row">
-                        <span class="">{{ 'LABEL_DEPARTMENT_NAME' | translate }}</span>
-                        <span light class="lighter">{{attributes.departmentName}}</span>
+                        <div class="c21-label">{{ 'LABEL_DEPARTMENT_NAME' | translate }}</div>
+                        <div light class="lighter">{{attributes.departmentName}}</div>
                     </div>
                     <div *ngIf="attributes && attributes.userFullname" class="chat21-row">
-                        <span class="">{{ 'LABEL_NAME' | translate }}</span>
-                        <span light class="lighter">{{attributes.userFullname}}</span>
+                        <div class="c21-label">{{ 'LABEL_NAME' | translate }}</div>
+                        <div light class="lighter">{{attributes.userFullname}}</div>
                     </div>
                     <div *ngIf="attributes && attributes.userEmail" class="chat21-row">
-                        <span class="">{{ 'LABEL_EMAIL' | translate }}</span>
-                        <span light class="lighter">
+                        <div class="c21-label">{{ 'LABEL_EMAIL' | translate }}</div>
+                        <div light class="lighter">
                             <a [href]="'mailto:' + attributes.userEmail + '?Subject='">
                                 {{attributes.userEmail}}
                             </a>
-                        </span>
+                        </div>
                     </div>
 
                     <div *ngIf="customAttributes" class="custom-attributes-container">
-                        <div class="chat21-row custom-attributes" *ngFor="let attr of customAttributes">
-                            <span class="">{{ attr.key }}: </span>
-                            <span class="lighter">{{ attr.value }} </span>
+                        <div *ngFor="let attr of customAttributes" class="chat21-row custom-attributes">
+                            <div class="c21-label">{{ attr.key }}</div>
+                            <div class="lighter">{{ attr.value }}</div>
                         </div>
                     </div>
 

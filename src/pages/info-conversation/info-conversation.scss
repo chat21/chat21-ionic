@@ -4,12 +4,22 @@ page-info-conversation {
     padding: 0px;
     margin: 0px;
 
+    ion-navbar {
+        .toolbar-background{
+            /* height: 55px; */
+            box-shadow: inset 0px -1px 0px #f7f7f7;
+        }
+    }
     ion-content {
         background: #f7f7f7!important;
     }
 
    
-
+    .c21-label {
+        color: map-get($colors, c21-gray);
+        font-weight: 500;
+        line-height: normal;
+    }
 
     .c21-buttons {
         padding: 0;
@@ -31,14 +41,25 @@ page-info-conversation {
         margin-top: 56px;
     }
 
-    .card-md {
+    // .card-md {
+    //     width: 100%;
+    //     margin: 0 0 10px 0;
+    //     border-radius: 0px;
+    //     border-top: 0.2px solid rgba(0,0,0,0.2);
+    //     -webkit-box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2);
+    //     -moz-box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2);
+    //     box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2);
+    // }
+    .first-card{
+        min-height: 105px;
+        height: auto;
+    }
+    .card {
         width: 100%;
-        margin: 0 0 10px 0;
-        border-radius: 0px;
-        border-top: 0.2px solid rgba(0,0,0,0.2);
-        -webkit-box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2);
-        -moz-box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2);
-        box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2);
+        padding: 10px 20px;
+        margin: 0px 0 1px 0;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     .c21-icon-status{
@@ -107,6 +128,7 @@ page-info-conversation {
         }
         .lighter{
             font-weight: normal;
+            line-height: normal;
         }
         
         .chat21-info {
@@ -236,6 +258,7 @@ page-info-conversation {
 
         &.chat21-box-profile {
             height:85px;
+            padding: 0 10px;
             .chat21-content {
                 margin: 0;
                 padding: 0;
@@ -312,7 +335,7 @@ page-info-conversation {
         }
         &.chat21-box-info {
             .chat21-content {
-                padding: 0px 10px;
+                padding: 0px 0px;
                 line-height: 24px;
                 .chat21-info {
                     margin: 0px;

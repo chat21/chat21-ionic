@@ -269,8 +269,7 @@ setDetailUser(snapshot) {
       this.createCustomAttributesMap(attributes);
     }
   }
-
-
+  
   /** 
    * 1 - passo array id menbri della conversazione
    * 2 - verifico se l'uid è valido e diverso da SYSTEM
@@ -299,8 +298,9 @@ setDetailUser(snapshot) {
         }
         if (this.attributes.senderAuthInfo.authVar.token) {
           if (this.attributes.senderAuthInfo.authVar.token.decoded) {
+
             decoded = this.attributes.senderAuthInfo.authVar.token.decoded;
-            //decoded = jsonToArray(this.attributes.senderAuthInfo.authVar.token.decoded);
+            //decoded = this.completeDecoded(this.attributes.senderAuthInfo.authVar.token.decoded);
           }
           if (this.attributes.senderAuthInfo.authVar.token.firebase) {
             if (this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider) {

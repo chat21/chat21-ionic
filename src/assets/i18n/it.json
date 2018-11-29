@@ -12,12 +12,12 @@
 
     "LABEL_CREATED_THE": "gruppo creato il ",
     "LABEL_INFO_ATTRIBUTE": "Info Attributi",
-    "LABEL_CLIENT": "Client: ",
-    "LABEL_SOURCEPAGE": "Source: ",
-    "LABEL_DEPARTMENT_ID": "Id dipartimento: ",
-    "LABEL_DEPARTMENT_NAME": "Dipartimento: ",
-    "LABEL_NAME": "Nome utente: ",
-    "LABEL_EMAIL": "Email: ",
+    "LABEL_CLIENT": "Client ",
+    "LABEL_SOURCEPAGE": "Source ",
+    "LABEL_DEPARTMENT_ID": "Id dipartimento ",
+    "LABEL_DEPARTMENT_NAME": "Dipartimento ",
+    "LABEL_NAME": "Nome utente ",
+    "LABEL_EMAIL": "Email ",
     "LABEL_MEMBERS": "Partecipanti",
     "LABEL_INFO_MESSAGE": "Info messaggio",
     "LABEL_READ_BY": "Letto da",
@@ -84,7 +84,7 @@
     "LABEL_NEW_PASSWORD": "Rigenera Password",
   
     "LABEL_CLOSED": "Chiuse",
-    "LABEL_INFO": "informazioni",
+    "LABEL_INFO": "Informazioni",
     "ALERT_NOTIFICATION": "Attenzione: l'invio di notifiche è disabilitato, modifica le impostazioni del browser per consentire l'invio di notifiche.",
     "LABEL_EXTERNAL_ID": "External Id",
     "LABEL_IAT": "Iat"
