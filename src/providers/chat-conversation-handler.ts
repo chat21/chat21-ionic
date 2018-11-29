@@ -10,7 +10,7 @@ import { UserModel } from '../models/user';
 //import { ChatManager } from './chat-manager/chat-manager';
 // utils
 import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER } from '../utils/constants';
-import { compareValues, urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
+import { replaceBr, compareValues, urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from '../../node_modules/rxjs/BehaviorSubject';
 
@@ -115,6 +115,7 @@ export class ChatConversationHandler {
       // controllo fatto per i gruppi da rifattorizzare
       (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined') ? itemMsg.sender_fullname = itemMsg.sender : itemMsg.sender_fullname;
       // bonifico messaggio da url
+      //let messageText = replaceBr(itemMsg['text']);
       let messageText = itemMsg['text'];
       if (itemMsg['type'] == 'text') {
         //messageText = urlify(itemMsg['text']);
@@ -128,9 +129,10 @@ export class ChatConversationHandler {
       }
 
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
+      
       const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type']);
       console.log("child_added *****", itemMsg['timestamp'], that.messages, msg);
-
+      
       if (msg.attributes && msg.attributes.subtype && (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support')) {
         that.translateInfoSupportMessages(msg);
       }
@@ -164,6 +166,7 @@ export class ChatConversationHandler {
       // controllo fatto per i gruppi da rifattorizzare
       (!itemMsg.sender_fullname || itemMsg.sender_fullname == 'undefined') ? itemMsg.sender_fullname = itemMsg.sender : itemMsg.sender_fullname;
       // bonifico messaggio da url
+      //let messageText = replaceBr(itemMsg['text']);
       let messageText = itemMsg['text'];
       if (itemMsg['type'] == 'text') {
         //messageText = urlify(itemMsg['text']);
@@ -320,6 +323,7 @@ export class ChatConversationHandler {
     console.log("SEND MESSAGE: ", msg, channel_type);
     // console.log("messageTextArea:: ",this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style);
     // const messageString = urlify(msg);
+    // const textMessage = replaceBr(msg);
     const now: Date = new Date();
     const timestamp = now.valueOf();
     const language = document.documentElement.lang;

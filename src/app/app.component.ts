@@ -66,9 +66,7 @@ export class MyApp {
 
     firebase.initializeApp(config.get("firebaseConfig"));
     platform.ready().then(() => {
-      
       this.events.subscribe('requestPermission', this.callbackRequestPermission);
-
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
@@ -110,6 +108,7 @@ export class MyApp {
       //let language = (navigator.language.indexOf('-') != -1) ? navigator.language.substring(0, navigator.language.indexOf('-')) : navigator.language;
       this.translate.use(language);
       console.log('language: ', language);
+
     });
 
     // // solve the issue : "Cannot read property 'myID' of undefined"
@@ -125,6 +124,7 @@ export class MyApp {
   callbackRequestPermission: any = (permission) => {
     console.log("callbackRequestPermission", permission);
     this.notificationsEnabled = permission;
+    this.msgService.getToken();
   }
   hideAlert(){
     console.log("hideAlert");

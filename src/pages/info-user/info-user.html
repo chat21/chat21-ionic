@@ -37,12 +37,12 @@
                     <div class="chat21-info">
 
                         <div class="chat21-name">
-                            <span *ngIf="member.fullname" class="truncate read">{{member.fullname}}</span>
-                            <span *ngIf="!member.fullname && member.decoded.name" class="truncate read">{{member.decoded.name}}</span>
+                            <span class="c21-point" [ngStyle]="{ 'background-color':(member.online)?'#24d066':'#db4437' }">&nbsp;</span>
+                            <span *ngIf="member.fullname" class="truncate2 read2">{{member.fullname}}</span>
+                            <span *ngIf="!member.fullname && member.decoded.name" class="truncate2 read2">{{member.decoded.name}}</span>
                         </div>
 
                         <div class="chat21-status">
-                          <span class="c21-point" [ngStyle]="{ 'background-color':(member.online)?'#24d066':'#db4437' }">&nbsp;</span>
                           <span *ngIf="member.online" class="truncate read c21-label-connection">{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
                           <span *ngIf="!member.online" class="read c21-label-connection">{{lastConnectionDate}}</span>
                         </div>
@@ -60,9 +60,22 @@
                         <span class="c21-label">uid: </span>
                         <span class="truncate read c21-uid">{{member.uid}}</span>
                     </div>
-                    <div *ngIf="member.email" class="c21-row">
+                   
+                    
+                        <div *ngFor="let item of decoded" >
+                            {{item.key}}:{{item.val}}
+                            <!-- convertMessageAndUrlify(message.text) convertMessageAndUrlify -->
+                            
+                        </div> 
+                
+                    
+                    <!-- <div *ngIf="member.email" class="c21-row">
                             <span class="c21-label">{{ 'LABEL_EMAIL' | translate }}</span>
-                            <span *ngIf="!profileYourself" class="">{{member.email}}</span>
+                            <span *ngIf="!profileYourself" class="">
+                                <a [href]="'mailto:' + member.email + '?Subject='">
+                                    {{member.email}}
+                                </a>
+                            </span>
                         </div>
                     <div *ngIf="member.decoded.name" class="chat21-row">
                         <span class="c21-label">{{ 'LABEL_NAME' | translate }}</span>
@@ -70,16 +83,20 @@
                     </div>
                     <div *ngIf="member.decoded.email" class="chat21-row">
                         <span class="c21-label">{{ 'LABEL_EMAIL' | translate }}</span>
-                        <span class="lighter">{{member.decoded.email}}</span>
+                        <span class="lighter">
+                            <a [href]="'mailto:' + member.decoded.email + '?Subject='">
+                                {{member.decoded.email}}
+                            </a>
+                        </span>
                     </div>
                     <div *ngIf="member.decoded.external_id" class="chat21-row">
-                        <span class="c21-label">{{ 'LABEL_EXTERNAL_ID' | translate }}</span>
+                        <span class="c21-label">{{ 'LABEL_EXTERNAL_ID' | translate }}:</span>
                         <span class="lighter">{{member.decoded.external_id}}</span>
                     </div>
                     <div *ngIf="member.decoded.iat" class="chat21-row">
-                        <span class="c21-label">{{ 'LABEL_IAT' | translate }}</span>
+                        <span class="c21-label">{{ 'LABEL_IAT' | translate }}:</span>
                         <span class="lighter">{{member.decoded.iat}}</span>
-                    </div>
+                    </div> -->
                     
                     <div class="chat21-conf">
                         <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">

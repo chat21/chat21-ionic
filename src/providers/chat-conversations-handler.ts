@@ -189,6 +189,7 @@ export class ChatConversationsHandler {
      */
     completeConversation(conv):ConversationModel{
         //debugger;
+        console.log('completeConversation',conv);
         var LABEL_TU = this.translate.get('LABEL_TU')['value'];
         conv.selected = false;
         if(!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === ''){

@@ -398,6 +398,11 @@ function convert(str) {
   return str;
 }
 
+export function replaceBr(text) {
+  const newText = text.replace(/[\n\r]/g, '<br>');
+  return newText;
+}
+
 export function getColorBck(str){
   var arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
   var num = 0;
@@ -429,5 +434,19 @@ export function urlExists(url) {
   console.log("imageExists::::::"+url);
   url = "https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F5ad5bd40c975820014ba9009%2Fthumb_photo.jpg?alt=media";
   return false;
+}
+
+
+export function jsonToArray(json){
+  var array = [];
+  Object.keys(json).forEach(e => {
+
+    //var item = {key: "+e+", val: "+json[e]+"};
+    var item = json[e];
+    array.push(item);
+    //console.log('key='+key +'item='+item+array);
+    //console.log(`key=${e} value=${this.member.decoded[e]}`)
+  });
+  return array;
 }
 

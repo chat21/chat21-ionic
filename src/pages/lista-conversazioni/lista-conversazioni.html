@@ -32,7 +32,7 @@
           <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
           <div #avatarImage *ngIf="conversation.image" class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
         </ion-avatar>
-        <h2 class="truncate">{{conversation.conversation_with_fullname }}</h2>
+        <h2 class="truncate">{{ conversation.conversation_with_fullname }}</h2>
         <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
 
 

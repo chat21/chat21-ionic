@@ -84,7 +84,8 @@ export class GroupService {
   leaveAGroup(uidGroup, uidUser): Observable<string> {
 
     const appId = this.chatManager.getTenant();
-    const token = this.msgService.returnToken();
+    const token = this.userService.returnToken();
+    console.log('token: ', token);
     // getToken();
     const headers = new Headers();
     headers.append('Accept', 'application/json');

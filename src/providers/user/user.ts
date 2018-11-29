@@ -225,10 +225,8 @@ export class UserService {
         const keySubscription = 'eventGetToken';
         this.events.subscribe(keySubscription, this.callbackGetToken);
         //this.addSubscription(keySubscription);
-        this.msgService.getToken();
-
-
-        //this.getToken(); // perchè???
+        //this.msgService.getToken();
+        this.getToken(); // perchè???
         console.log(" 3 - CARICO IL DETTAGLIO UTENTE ::: ");
         let that = this;
         const userFirebase = this.initUserDetails(user.uid);
@@ -254,19 +252,6 @@ export class UserService {
     this.msgService.updateToken(this.userUid, token);
   }
 
-  // getToken(user){
-  //   const that = this;
-  //   console.log('getToken');
-  //   firebase.auth().currentUser.getIdToken()
-  //   .then(function(idToken) {
-  //       console.log('idToken.', idToken);
-  //       that.token = idToken;
-  //       that.msgService.updateToken(user, idToken);
-  //   }).catch(function(error) {
-  //     // Handle error
-  //     console.error('error token.', error);
-  //   });
-  // }
   getToken() {
     const that = this;
     console.log('getToken.', this.token);
@@ -274,10 +259,10 @@ export class UserService {
     .then(function(idToken) {
         that.token = idToken;
         console.log('idToken.', idToken);
-        
+        that.msgService.updateToken(this.userUid, idToken);
     }).catch(function(error) {
       // Handle error
-      console.log('idToken.', error);
+      console.log('error idToken.', error);
     });
   }
 

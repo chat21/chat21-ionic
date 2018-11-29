@@ -87,7 +87,6 @@ export class MessagingService {
             console.log('NOTIFICA PERMESSO token.', token);
             //callback PERMESSO NOTIFICA OK
             that.events.publish('requestPermission', true);
-            that.getToken();
             //this.updateToken(token);
         })
         .catch(function() {
@@ -143,7 +142,7 @@ export class MessagingService {
         // Get Instance ID token. Initially this makes a network call, once retrieved
         // subsequent calls to getToken will return from cache.
         let that = this;
-         //firebase.messaging().getToken()
+        //firebase.messaging().getToken()
         this.messaging.getToken()
         .then(function(currentToken) {
             console.log('currentToken: ', currentToken);
@@ -183,9 +182,7 @@ export class MessagingService {
         //let connectionsRef: firebase.database.Reference = this.referenceToUserListToken(user.uid);
         let conection = token;
         var updates = {};
-        
         this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userUid+"/instances/";
-        
         let device_model = {
             device_model: navigator.userAgent,
             language: navigator.language,
@@ -220,7 +217,6 @@ export class MessagingService {
     }
 
     referenceToUserListToken(userid){
-
         this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instances/";
         // else{
             //this.connectionsRefinstancesId = this.urlNodeFirebase+"/users/"+userid+"/instanceId/";

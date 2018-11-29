@@ -4,16 +4,16 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
-import { isExistInArray } from '../../utils/utils';
+import { urlify, isExistInArray } from '../../utils/utils';
 
 
 // models
 import { UserModel } from '../../models/user';
 import { initializeApp } from 'firebase';
+import { text } from '@angular/core/src/render3/instructions';
 
 /**
  * Generated class for the InfoUserPage page.
- *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
@@ -28,12 +28,10 @@ export class InfoUserPage {
   @Output() eventClose = new EventEmitter();
   @Input() member: UserModel;
   // ========= end:: Input/Output values ============//
-
   private subscriptions = [];
   public conversationWith: string;
   public lastConnectionDate: string;
-  
-
+  public decoded = [];
   
   constructor(
     public events: Events,
@@ -52,12 +50,32 @@ export class InfoUserPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad InfoUserPage', this.member);
   }
-  
 
   initialize(){
+    console.log('PRE decoded:', this.member.decoded, this.member);
+    this.decoded = this.jsonToArray(this.member.decoded);
+    console.log('POST decoded:', this.decoded);
     this.lastOnlineForUser(this.member.uid);
   }
 
+
+  jsonToArray(json){
+    var array = [];
+    Object.keys(json).forEach(e => {
+      const itemValue = (json[e].toString());
+      var item = {key: e, val: itemValue};
+      //var item = json[e];
+
+      array.push(item);
+      //console.log('key='+key +'item='+item+array);
+      //console.log(`key=${e} value=${this.member.decoded[e]}`)
+    });
+    return array;
+  }
+
+  // urlify(text){
+  //   return convertMessageAndUrlify(text);
+  // }
 
   lastOnlineForUser(uid){
     const keySubscription = 'lastConnectionDate-' + uid;
@@ -85,6 +103,7 @@ export class InfoUserPage {
     console.log("addSubscription: FALSE");
     return false;
   }
+
   /**
    * unsubscribe all subscribe events
    */

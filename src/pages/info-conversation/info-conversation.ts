@@ -15,7 +15,7 @@ import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // utils
 import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
-import { avatarPlaceholder, getColorBck, searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
+import { jsonToArray, avatarPlaceholder, getColorBck, searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
 import { PlaceholderPage } from '../placeholder/placeholder';
 
 import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
@@ -84,18 +84,20 @@ export class InfoConversationPage {
     private navProxy: NavProxyService,
     public chatPresenceHandler: ChatPresenceHandler
   ) {
-    this.profileYourself = false;
-    this.online = false;
-    this.isLoggedUserGroupMember = false;
+    
     //this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
   }
 
   ngOnInit() {
-    console.log('ngOnInit:');
-    this.initialize();
+    console.log('ngOnInit:InfoConversationPage');
+    const that = this;
+    setTimeout(function () {
+      that.initialize();
+    }, 100);
   }
+    
   ionViewDidLoad() {
-    console.log('ionViewDidLoad');
+    console.log('ionViewDidLoad:InfoConversationPage');
     //this.initialize();
   }
   ionViewWillEnter() {
@@ -103,7 +105,7 @@ export class InfoConversationPage {
     //this.initialize();
   }
   ionViewWillLeave() {
-    console.log('------------> ionViewWillLeave');
+    console.log('------------> ionViewWillLeave:InfoConversationPage');
     this.unsubscribeAll();
   }
 
@@ -116,7 +118,11 @@ export class InfoConversationPage {
    * recupero array uid membri
    */
   initialize() {
-    console.log('InfoConversationPage::initialize');
+    console.log('InfoConversationPage::initialize', this.conversationWith);
+    this.profileYourself = false;
+    this.online = false;
+    this.isLoggedUserGroupMember = false;
+
     this.listMembers = [];
     this.subscriptions = [];
     this.profileYourself = false;
@@ -124,8 +130,8 @@ export class InfoConversationPage {
     this.userDetail = new UserModel('', '', '', '', '', '', '', '', false, false, '');
     this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
     this.conversationSelected = this.conversationsHandler.getConversationByUid(this.conversationWith);
+    console.log('conversationSelected::',this.conversationSelected);
     this.setSubscriptions();
-    //this.loadGroupDetail();
     this.populateDetail();
   }
 
@@ -204,7 +210,9 @@ setDetailUser(snapshot) {
     console.log('InfoConversationPage::setSubscriptions');
     // this.events.subscribe('changeStatusUserSelected', this.subcribeChangeStatusUserSelected);
     this.events.subscribe('PopupConfirmation', this.subcribePopupConfirmation);
+    this.addSubscription('PopupConfirmation');
   }
+
 
 
   /** 
@@ -222,7 +230,6 @@ setDetailUser(snapshot) {
    * information detail group called of groupService.loadGroupDetail
    */
   returnLoadGroupDetail = (snapshot) => {
-
     console.log('InfoConversationPage::subscribeGroupDetails', snapshot.val());
     if (snapshot.val()) {
       this.group = snapshot.val();
@@ -293,6 +300,7 @@ setDetailUser(snapshot) {
         if (this.attributes.senderAuthInfo.authVar.token) {
           if (this.attributes.senderAuthInfo.authVar.token.decoded) {
             decoded = this.attributes.senderAuthInfo.authVar.token.decoded;
+            //decoded = jsonToArray(this.attributes.senderAuthInfo.authVar.token.decoded);
           }
           if (this.attributes.senderAuthInfo.authVar.token.firebase) {
             if (this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider) {
@@ -348,19 +356,30 @@ setDetailUser(snapshot) {
             );
           }
           
+          // set fullname
+          if(!userDetail.fullname || userDetail.fullname === ''){
+            userDetail.fullname = that.translate.get('LABEL_GUEST')['value'];
+            console.log('1 - userDetail.fullname------------->', userDetail.fullname);
+          }
+          if(userDetail.firstname || userDetail.lastname){
+            userDetail.fullname = userDetail.firstname+' '+userDetail.lastname; 
+            console.log('2 - userDetail.fullname------------->', userDetail.fullname);
+          } 
           if( signInProvider === 'custom' && uidUserAuthenticated === snapshot.key){
             userDetail.checked = true;
             userDetail.email = emailUserAuthenticated;
-            userDetail.fullname = fullnameUserAuthenticated;
             userDetail.decoded = decoded;
+            if(fullnameUserAuthenticated) {
+              userDetail.fullname = fullnameUserAuthenticated;
+              console.log('3 - userDetail.fullname------------->', userDetail.fullname);
+            }
+            if( userDetail.decoded && userDetail.decoded.name) {
+              userDetail.fullname = userDetail.decoded.name;
+              console.log('4 - userDetail.fullname------------->', userDetail.fullname);
+            }
           }
-
-          let fullName = that.translate.get('LABEL_GUEST')['value'];
-          if(userDetail.firstname || userDetail.lastname){
-            fullName = userDetail.firstname+' '+userDetail.lastname; 
-          } 
-          userDetail.avatar = avatarPlaceholder(fullName);
-          userDetail.color = getColorBck(fullName);
+          userDetail.avatar = avatarPlaceholder(userDetail.fullname);
+          userDetail.color = getColorBck(userDetail.fullname);
           
           console.log('userDetail------------->', userDetail);
           // ADD MEMBER TO ARRAY
@@ -437,13 +456,11 @@ setDetailUser(snapshot) {
 
   /**  */
   subcribePopupConfirmation: any = (resp, action) => {
+    var that = this;
+    console.log("subcribePopupConfirmation", resp, action);
     var LABEL_ANNULLA = this.translate.get('CLOSE_ALERT_CANCEL_LABEL')['value'];
     if (resp === LABEL_ANNULLA) { return; }
-    var that = this;
     if (action === 'leave') {
-      // // dismiss the confirm dialog
-      // this.dismissConfirmDialog();
-
       // create and show loading dialog
       var spinnerMessage;
       this.translate.get('LEAVING_GROUP_SPINNER_MSG').subscribe(
@@ -748,9 +765,7 @@ setDetailUser(snapshot) {
         alertTitle = value;
       }
     )
-
     var onlyOkButton = false;
-
     if (action === 'leave') {
       this.translate.get('LEAVE_ALERT_MSG').subscribe(
         value => {
@@ -780,9 +795,7 @@ setDetailUser(snapshot) {
       )
       onlyOkButton = false;
     }
-
     // console.log("onlyOkButton", onlyOkButton);
-
     this.confirmDialog = createConfirm(this.translate, this.alertCtrl, this.events, alertTitle, alertMessage, action, onlyOkButton);
     this.confirmDialog.present();
   }
@@ -967,7 +980,8 @@ setDetailUser(snapshot) {
   }
 
   ngOnDestroy() {
-    this.unsubscribeAll();
+    console.log("ngOnDestroy");
+    //this.unsubscribeAll();
   }
 
   sendMail(){

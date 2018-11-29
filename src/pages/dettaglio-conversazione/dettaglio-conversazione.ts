@@ -19,7 +19,7 @@ import { InfoUserPage } from '../info-user/info-user';
 import { PopoverPage } from '../popover/popover';
 // utils
 import { TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
-import { isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
+import { replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
 
@@ -240,10 +240,11 @@ export class DettaglioConversazionePage extends _DetailPage{
   }
 
   //// SYSTEM FUNCTIONS ////
-
+  ngOnInit() {
+    this.initialize();
+  }
 
   ionViewWillEnter() {
-    this.initialize();
   }
   /**
    * quando ho renderizzato la pagina richiamo il metodo di inizialize
@@ -254,9 +255,12 @@ export class DettaglioConversazionePage extends _DetailPage{
   }
   /**
    * quando esco dalla pagina distruggo i subscribe
+   * e chiudo la finestra di info
    */
   ionViewWillLeave() {
     console.log('------------> ionViewWillLeave');
+    this.openInfoMessage = false;
+    this.openInfoConversation = false;
     this.unsubescribeAll();
   }
 
@@ -280,10 +284,6 @@ export class DettaglioConversazionePage extends _DetailPage{
     console.log('----------> initialize DettaglioConversazionePage',this.chatManager.handlers);
     (!this.channel_type || this.channel_type == 'undefined')?this.channel_type=TYPE_DIRECT:this.channel_type;
     this.messages = []; // list messages of conversation
-    this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
-    
-    this.openInfoConversation = false;
-    this.openInfoMessage = false; // indica se è aperto il box info message
     const innerWidth = window.innerWidth;
     console.log('const innerWidth = ', innerWidth);
     if (innerWidth < 768) {
@@ -297,12 +297,8 @@ export class DettaglioConversazionePage extends _DetailPage{
 
     this.online = false;
     this.lastConnectionDate = '';
-    
     this.tenant = this.chatManager.getTenant();
     this.currentUserDetail = this.chatManager.getLoggedUser();
-    
-    
-    
     this.chatPresenceHandler.userIsOnline(this.conversationWith);
     this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
     this.initConversationHandler();
@@ -310,19 +306,23 @@ export class DettaglioConversazionePage extends _DetailPage{
     var that = this;
     // NUOVO MESSAGGIO!!
    this.conversationHandler.obsAdded
-      .subscribe(newMessage => {
-        if (that.scrollMe) {
-          const divScrollMe = that.scrollMe.nativeElement;
-          const checkContentScrollPosition = that.isContentScrollEnd(divScrollMe);
-          if (checkContentScrollPosition) {
-            setTimeout(function () {
-              that.scrollBottom();
-            }, 100);
-          } else {
-            that.NUM_BADGES++;
-          }
+    .subscribe(newMessage => {
+      if (that.scrollMe) {
+        const divScrollMe = that.scrollMe.nativeElement;
+        const checkContentScrollPosition = that.isContentScrollEnd(divScrollMe);
+        if (checkContentScrollPosition) {
+          setTimeout(function () {
+            that.scrollBottom();
+          }, 100);
+        } else {
+          that.NUM_BADGES++;
         }
-      });
+      }
+    });
+    
+    this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
+    this.openInfoMessage = false; // indica se è aperto il box info message
+    this.openInfoConversation = true;
   }
   /**
    * recupero da chatManager l'handler
@@ -504,21 +504,15 @@ export class DettaglioConversazionePage extends _DetailPage{
   sendMessage(msg, type, metadata?) {
     (metadata) ? metadata = metadata : metadata = '';
     console.log("SEND MESSAGE: ", msg, this.messages);
-    // if (type == 'image'){
-    //   msg = 'Image: ' + metadata['src'];
-    // } else if(type == 'file'){
-    //   msg = 'file';
-    // }
-    //(!msg)? msg = metadata.type: msg;
     if (msg && msg.trim() != '' || type !== TYPE_MSG_TEXT ){
+      //const textMsg = replaceBr(msg);
       this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style.height = MIN_HEIGHT_TEXTAREA+"px";
       this.conversationHandler.sendMessage(msg, type, metadata, this.conversationWith, this.conversationWithFullname, this.channel_type);
-
       this.chatManager.conversationsHandler.uidConvSelected = this.conversationWith;
-
       this.doScroll();
     }
   }
+
   /**
    * 
    * @param metadata 

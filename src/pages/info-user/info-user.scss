@@ -22,7 +22,8 @@ page-info-user {
     ion-content {
         background: #f7f7f7!important;
         .first-card{
-            height: 105px;
+            min-height: 105px;
+            height: auto;
         }
         .card {
             width: 100%;

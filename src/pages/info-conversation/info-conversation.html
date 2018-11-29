@@ -23,8 +23,8 @@
                     </div>
                     <div class="chat21-info">
                         <div class="chat21-name">
-                            <span *ngIf="channelType == TYPE_GROUP" class="truncate read">{{groupDetail.name}}</span>
-                            <span *ngIf="channelType != TYPE_GROUP" class="truncate read">{{userDetail.fullname}}</span>
+                            <span *ngIf="channelType == TYPE_GROUP" class="read">{{conversationSelected.conversation_with_fullname}}</span>
+                            <span *ngIf="channelType != TYPE_GROUP" class="read">{{userDetail.fullname}}</span>
                         </div>
                         <div class="chat21-status">
                             <span *ngIf="channelType != TYPE_GROUP">
@@ -44,10 +44,10 @@
             <div class="chat21-box-info chat21-box">
                 <div class="chat21-content">
                     <div class="chat21-info">
-                        <span *ngIf="channelType == TYPE_GROUP" class="truncate read c21-uid">
+                        <span *ngIf="channelType == TYPE_GROUP" class="read c21-uid">
                             {{groupDetail.uid}}
                         </span>
-                        <span *ngIf="channelType != TYPE_GROUP" class="truncate read c21-uid">
+                        <span *ngIf="channelType != TYPE_GROUP" class="read c21-uid">
                             {{userDetail.uid}}
                         </span>
                     </div>
@@ -65,7 +65,11 @@
                     </div>
         
                     <div class="chat21-email" *ngIf="channelType != TYPE_GROUP">
-                        <span *ngIf="!profileYourself" class="">{{userDetail.email}}</span>
+                        <span *ngIf="!profileYourself" class="">
+                            <a [href]="'mailto:' + userDetail.email + '?Subject='">
+                                {{userDetail.email}}
+                            </a>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -97,7 +101,11 @@
                     </div>
                     <div *ngIf="attributes && attributes.userEmail" class="chat21-row">
                         <span class="">{{ 'LABEL_EMAIL' | translate }}</span>
-                        <span light class="lighter">{{attributes.userEmail}}</span>
+                        <span light class="lighter">
+                            <a [href]="'mailto:' + attributes.userEmail + '?Subject='">
+                                {{attributes.userEmail}}
+                            </a>
+                        </span>
                     </div>
 
                     <div *ngIf="customAttributes" class="custom-attributes-container">
@@ -149,11 +157,12 @@
                             </ion-avatar>
                             <h2>
                                 <span class="c21-point" [ngStyle]="{ 'background-color':(member.online)?'#24d066':'#db4437' }">&nbsp;</span>
-                                <span *ngIf="member.fullname" class="chat21-name truncate read">{{member.fullname}}</span>
-                                <span *ngIf="!member.fullname" class="chat21-name truncate read">{{ 'LABEL_GUEST' | translate }}</span>
+                                <span class="chat21-name">{{member.fullname}}</span>
+                                <!-- <span *ngIf="!member.fullname && member.decoded.name" class="truncate read">{{member.decoded.name}}</span>
+                                <span *ngIf="!member.fullname && !member.decoded.name" class="chat21-name truncate read">{{ 'LABEL_GUEST' | translate }}</span> -->
                             </h2>
                             <p>
-                                <span class="chat21-uid truncate read">{{member.uid}}</span>
+                                <span class="chat21-uid read">{{member.uid}}</span>
                             </p>
                         </ion-item>
                     </div>
@@ -201,11 +210,9 @@
 
         
 
-        <div class="chat21-box-images chat21-box">
-        </div>
-        <div class="chat21-box-documents chat21-box">
-        </div>
-        <div class="chat21-box-links chat21-box">
-        </div>
+        <div class="chat21-box-images chat21-box"></div>
+        <div class="chat21-box-documents chat21-box"></div>
+        <div class="chat21-box-links chat21-box"></div>
+
     </div>
 </ion-content>
