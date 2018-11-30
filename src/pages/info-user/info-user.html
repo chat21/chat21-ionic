@@ -65,7 +65,7 @@
                         <div *ngFor="let item of decoded" class="c21-row">
                             <div class="c21-label">{{item.key}}</div>
                             <div *ngIf="item.key == 'iat'">
-                                <span>{{item.val | date:'dd/MM/yyyy'}}</span>
+                                <span>{{item.val | date:'dd/MM/yyyy HH:mm'}}</span>
                             </div>
                             <div *ngIf="item.key != 'iat'" >
                                 <div class="c21-value" [innerHTML]="item.val"></div>
@@ -82,20 +82,6 @@
                 </div>
             </div>
     
-        </ion-card>
-
-
-        <ion-card>
-            <div class="chat21-box-button chat21-box">
-                <div class="chat21-header"></div>
-                <div class="chat21-content">
-                    <div class="c21-row">
-                        <button class="c21-button" icon-only (click)="openUserDetail()">
-                            DETTAGLIO CONTATTO <ion-icon name="ios-arrow-forward" style="line-height: 24px; vertical-align: middle;"></ion-icon> 
-                        </button>
-                    </div>
-                </div>
-            </div>
         </ion-card>
 
       </div>

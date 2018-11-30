@@ -87,6 +87,7 @@
     "LABEL_INFO": "Informazioni",
     "ALERT_NOTIFICATION": "Attenzione: l'invio di notifiche è disabilitato, modifica le impostazioni del browser per consentire l'invio di notifiche.",
     "LABEL_EXTERNAL_ID": "External Id",
-    "LABEL_IAT": "Iat"
+    "LABEL_IAT": "Iat",
+    "LABEL_REQUEST_DETAIL": "Dettaglio richiesta"
 
 }

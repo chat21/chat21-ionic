@@ -27,7 +27,6 @@ export class InfoUserPage {
   // ========= begin:: Input/Output values ============//
   @Output() eventClose = new EventEmitter();
   @Input() member: UserModel;
-  @Input() projectId: string;
   // ========= end:: Input/Output values ============//
   private subscriptions = [];
   public conversationWith: string;
@@ -148,14 +147,6 @@ export class InfoUserPage {
   callbackLastOnlineForUser:any = (uid, lastConnectionDate) => {
     console.log("callbackLastOnlineForUser::",lastConnectionDate);
     this.lastConnectionDate = lastConnectionDate;
-  }
-
-
-  openUserDetail(){
-    this.projectId = '5b55e806c93dde00143163dd';
-    var url = "https://support.tiledesk.com/dashboard/#/project/"+this.projectId+"/contact/"+this.member.uid;
-    window.open(url,'_blank');
-    //https://support.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/contact/5bf6705275a5a40015327b91
   }
 
   /** */

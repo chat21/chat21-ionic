@@ -353,6 +353,11 @@ page-info-conversation {
             padding: 0px 0px 10px 0px;
         }
 
+        &.ffegref{
+            margin: 0;
+            font-size: 13px;
+            font-weight: 500;
+        }
 
         &.chat21-box-members {
             ion-avatar{
@@ -392,6 +397,14 @@ page-info-conversation {
                 text-transform: none;
                 color: map-get($colors, c21-dark);
             }
+            .c21-link {
+                .c21-button-label {
+                    font-size: 13px;
+                    margin: 0px;
+                    font-weight: 500;
+                }
+            }
+
         }
         
     }

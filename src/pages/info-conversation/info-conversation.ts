@@ -269,7 +269,7 @@ setDetailUser(snapshot) {
       this.createCustomAttributesMap(attributes);
     }
   }
-  
+
   /** 
    * 1 - passo array id menbri della conversazione
    * 2 - verifico se l'uid è valido e diverso da SYSTEM
@@ -284,21 +284,24 @@ setDetailUser(snapshot) {
   let fullnameUserAuthenticated;
   let signInProvider = 'anonymous';
   let decoded;
+  let projectId;
   if(this.attributes){
+    if (this.attributes.projectId) {
+      projectId = this.attributes.projectId;
+    }
+    if (this.attributes.userFullname) {
+      fullnameUserAuthenticated = this.attributes.userFullname;
+    }
+    if (this.attributes.userEmail) {
+      emailUserAuthenticated = this.attributes.userEmail;
+    }
     if (this.attributes.senderAuthInfo) {
-      if (this.attributes.senderAuthInfo.userFullname) {
-        fullnameUserAuthenticated = this.attributes.senderAuthInfo.userFullname;
-      }
-      if (this.attributes.senderAuthInfo.userEmail) {
-        emailUserAuthenticated = this.attributes.senderAuthInfo.userEmail;
-      }
       if (this.attributes.senderAuthInfo.authVar) {
         if (this.attributes.senderAuthInfo.authVar.uid) {
           uidUserAuthenticated = this.attributes.senderAuthInfo.authVar.uid;
         }
         if (this.attributes.senderAuthInfo.authVar.token) {
           if (this.attributes.senderAuthInfo.authVar.token.decoded) {
-
             decoded = this.attributes.senderAuthInfo.authVar.token.decoded;
             //decoded = this.completeDecoded(this.attributes.senderAuthInfo.authVar.token.decoded);
           }
@@ -311,8 +314,7 @@ setDetailUser(snapshot) {
       }
     } 
   } 
-    
-
+  
   members.forEach(member => {
     let userDetail;
     if (member.trim() !== '' && member.trim() !== SYSTEM) {
@@ -365,7 +367,8 @@ setDetailUser(snapshot) {
             userDetail.fullname = userDetail.firstname+' '+userDetail.lastname; 
             console.log('2 - userDetail.fullname------------->', userDetail.fullname);
           } 
-          if( signInProvider === 'custom' && uidUserAuthenticated === snapshot.key){
+          if( uidUserAuthenticated === snapshot.key ){
+            console.log('2.5 - uidUserAuthenticated------------->', uidUserAuthenticated, snapshot.key);
             userDetail.checked = true;
             userDetail.email = emailUserAuthenticated;
             userDetail.decoded = decoded;
@@ -373,7 +376,7 @@ setDetailUser(snapshot) {
               userDetail.fullname = fullnameUserAuthenticated;
               console.log('3 - userDetail.fullname------------->', userDetail.fullname);
             }
-            if( userDetail.decoded && userDetail.decoded.name) {
+            if( signInProvider === 'custom' && userDetail.decoded && userDetail.decoded.name) {
               userDetail.fullname = userDetail.decoded.name;
               console.log('4 - userDetail.fullname------------->', userDetail.fullname);
             }
@@ -994,6 +997,16 @@ setDetailUser(snapshot) {
     this.eventOpenInfoUser.emit(member);
   }
 
+
+  openUserRequest(){
+    // this.projectId = '5b55e806c93dde00143163dd';
+    // "https://support.tiledesk.com/dashboard/#/project/5af02d8f705ac600147f0cbb/request/support-group-LEOsofmVWYtljdxTf3c/messages";
+    
+    var url = "https://support.tiledesk.com/dashboard/#/project/"+this.attributes.projectId+"/request/"+this.conversationWith+"/messages";
+    console.log('openUserDetail:', url);
+    window.open(url,'_blank');
+    //https://support.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/contact/5bf6705275a5a40015327b91
+  }
 
   /**
    * 

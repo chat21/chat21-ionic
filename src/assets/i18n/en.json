@@ -87,7 +87,8 @@
  "LABEL_INFO": "Informations",
  "ALERT_NOTIFICATION": "Warning: sending notifications is disabled, changes the browser settings to allow sending notifications.",
  "LABEL_EXTERNAL_ID": "External Id",
- "LABEL_IAT": "Iat"
+ "LABEL_IAT": "Iat",
+ "LABEL_REQUEST_DETAIL": "Request detail"
 
 
 }

@@ -14,7 +14,7 @@ page-dettaglio-conversazione {
                 width: calc(100% - 0px);
                 &.infoOpen{
                     width: calc(100% - 250px);
-                    margin-left: -55px;
+                    margin-left: -35px;
                 }
             }
             
@@ -83,7 +83,7 @@ page-dettaglio-conversazione {
     
         .messagesView {
             height: 100%;
-            background-image: url('../assets/chat21-ionic-pattern-2.svg');
+            // background-image: url('../assets/chat21-ionic-pattern-2.svg');
             .messageFirst{
                 text-align: center;
                 font-size: 1.4em;
@@ -138,7 +138,8 @@ page-dettaglio-conversazione {
             }
             &.message-other {
                 float: none;
-                background-color: #d2d2d2;
+                //background-color: #d2d2d2;
+                background-color: #f0f0f0;
                 color: black;
                 // margin-left: 11px;
                 &::before {

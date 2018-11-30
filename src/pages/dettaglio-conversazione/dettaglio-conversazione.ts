@@ -44,6 +44,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   private scrollDirection: any = 'bottom';
   private messages: Array<MessageModel> = [];
   private arrayLocalImmages:  Array<any> = [];
+  private projectId: string;
 
   private conversationWith: string;
   private currentUserDetail: UserModel;

@@ -83,7 +83,16 @@
             </div>
 
         </ion-card>
-
+        <ion-card *ngIf="channelType == TYPE_GROUP">
+            <div class="chat21-box-buttons chat21-box">
+                <div class="c21-link">
+                    <button class="c21-button" icon-only (click)="openUserRequest()">
+                        <span class="c21-button-label">{{ 'LABEL_REQUEST_DETAIL' | translate }}</span>
+                        <ion-icon name="ios-arrow-forward" style="line-height: 24px; vertical-align: middle;"></ion-icon> 
+                    </button>
+                </div>
+            </div>
+        </ion-card>
         
 
         <ion-card *ngIf="channelType == TYPE_GROUP && attributesClient">
@@ -182,6 +191,8 @@
 
         <ion-card *ngIf="channelType == TYPE_GROUP">
             <div class="chat21-box-buttons chat21-box">
+ 
+
                 <div *ngIf="isSupportGroup()" class="chat21-content" >
                     <button ion-button clear icon-start block 
                       (click)="sendMail()">
@@ -221,6 +232,8 @@
         <div class="chat21-box-images chat21-box"></div>
         <div class="chat21-box-documents chat21-box"></div>
         <div class="chat21-box-links chat21-box"></div>
+
+        
 
     </div>
 </ion-content>
