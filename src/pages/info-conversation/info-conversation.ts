@@ -131,7 +131,7 @@ export class InfoConversationPage {
     this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
     this.conversationSelected = this.conversationsHandler.getConversationByUid(this.conversationWith);
     console.log('conversationSelected::',this.conversationSelected);
-    this.setSubscriptions();
+    // this.setSubscriptions();
     this.populateDetail();
   }
 
@@ -759,6 +759,7 @@ setDetailUser(snapshot) {
    * @param action 
    */
   openPopupConfirmation(action) {
+    this.setSubscriptions();
     // console.log("openPopupConfirmation");
     //debugger;
     let alertTitle = '';
@@ -834,21 +835,17 @@ setDetailUser(snapshot) {
   }
 
   private closeConversation(conversationId) {
-    // console.log("InfoConversationPage::closeConversation::conversationId", conversationId);
-
+    console.log("InfoConversationPage::closeConversation::conversationId", conversationId);
     var isSupportConversation = conversationId.startsWith("support-group");
-
     if (!isSupportConversation) {
       // console.log("InfoConversationPage::closeConversation:: is not a support group");
-
       this.deleteConversation(conversationId, function (result, data) {
         if (result === 'success') {
-          // console.log("InfoConversationPage::closeConversation::deleteConversation::response", data);
+          console.log("InfoConversationPage::closeConversation::deleteConversation::OK", data);
         } else if (result === 'error') {
           console.log("InfoConversationPage::closeConversation::deleteConversation::error", data);
         }
       });
-
       // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
     } else {
       // console.log("InfoConversationPage::closeConversation::closeConversation:: is a support group");
@@ -984,7 +981,7 @@ setDetailUser(snapshot) {
 
   ngOnDestroy() {
     console.log("ngOnDestroy");
-    //this.unsubscribeAll();
+    this.unsubscribeAll();
   }
 
   sendMail(){
