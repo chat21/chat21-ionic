@@ -101,3 +101,6 @@ https://firebase.google.com/docs/hosting/quickstart?authuser=0
 
 * Run on simulator : `ionic cordova run ios`
 * Run on device : `ionic cordova run ios --device`
+
+# Run on OSX
+* Build on Mac with: `ionic cordova build osx`
