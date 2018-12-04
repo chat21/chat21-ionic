@@ -42,6 +42,9 @@ importScripts('https://www.gstatic.com/firebasejs/4.2.0/firebase.js');
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 // [START background_handler]
+
+
+//NB. Using firebase notification with data and message this code is UNUSED
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
