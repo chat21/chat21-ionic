@@ -20,5 +20,7 @@ cd ../../../
 
 aws cloudfront create-invalidation --distribution-id E2DTAKWHWQ7C3J --paths "/*"
 
-echo new version deployed on s3://tiledesk-dashboard/chat/
+#echo new version deployed on s3://tiledesk-dashboard/chat/
+echo new version deployed on s3://tiledesk-dashboard/chat/$NEW_BUILD/
+
 echo available on https://s3.eu-west-1.amazonaws.com/tiledesk-dashboard/chat/index.html

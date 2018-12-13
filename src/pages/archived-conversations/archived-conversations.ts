@@ -14,7 +14,8 @@ import { DatabaseProvider } from '../../providers/database/database';
 export class ArchivedConversationsPage {
 
   // the list of th archived conversations
-  private archivedConversations : ConversationModel[];
+  private archivedConversations: ConversationModel[];
+  conversationSelected: ConversationModel;
 
   // used within the html template
   convertMessage = convertMessage;
@@ -31,22 +32,42 @@ export class ArchivedConversationsPage {
     private events: Events,
   ) {
     this.areArchivedConversationsAvailable = false; // default value
+    
+    const that = this;
+    this.databaseProvider.getUidLastOpenConversation()
+    .then(function (uid) {
+      //console.log('getUidLastOpenConversation:: ' + uid + 'that.uidReciverFromUrl:: ' + that.uidReciverFromUrl);
+      that.uidConvSelected = uid;
+      //that.chatConversationsHandler.uidConvSelected = uidConvSelected;
+      that.inizialize();
+    })
+    .catch((error) => {
+      console.log("error::: ", error);
+    });
   }
 
   ionViewDidLoad() {
-   
+  }
+
+  ionViewWillUnload() {
+    this.archivedConversations = []; // clear the archived conversations list
+    // this.conversationSelected = null;
+    // this.uidConvSelected = null;
+  }
+
+  inizialize(){
     // get the list of archived conversations from the navigation and preload the archived conversations list
     this.archivedConversations = this.navParams.get('archivedConversations');
     // console.log("ArchivedConversationsPage::ionViewDidLoad::archivedConversations:", archivedConversations);
 
     // update the archvied conversations availability
     this.areArchivedConversationsAvailable = this.archivedConversations && this.archivedConversations.length > 0;
+
+    this.openMessageList(this.archivedConversations[this.uidConvSelected]);
     // console.log("ArchivedConversationsPage::ionViewDidLoad::areArchivedConversationsAvailable:", this.areArchivedConversationsAvailable);
   }
 
-  ionViewWillUnload() {
-    this.archivedConversations = []; // clear the archived conversations list
-  }
+  
 
   // click on a single conversation
   private onArchivedConversationClicked(archivedConversation) {
@@ -61,7 +82,7 @@ export class ArchivedConversationsPage {
     // this.navCtrl.pop().then(() => {
 
       // open the new page
-      that.openMessageList(archivedConversation);
+    this.openMessageList(archivedConversation);
 
     // }, (err) => {
     //   // something didn't work
@@ -85,9 +106,7 @@ export class ArchivedConversationsPage {
     const that = this;
     // setTimeout(function () {
       if (archivedConversation) {
-
         archivedConversation.is_new = false;
-
         archivedConversation.status = '0';
         archivedConversation.selected = true;
         that.navProxy.pushDetail(DettaglioConversazionePage, {
@@ -97,6 +116,7 @@ export class ArchivedConversationsPage {
         });
         that.databaseProvider.setUidLastOpenConversation(archivedConversation.uid);
         that.events.publish('uidConvSelected:changed', archivedConversation.uid);
+        that.conversationSelected = archivedConversation;
       }
     // }, 1000);
   }

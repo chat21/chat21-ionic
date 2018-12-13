@@ -202,7 +202,7 @@ export class ChatArchivedConversationsHandler {
             const urlNodeConcacts = contactsRef(this.tenant) + conversation_with + '/imageurl/';
             firebase.database().ref(urlNodeConcacts).once('value')
                 .then(function (snapshot) {
-                    //console.log("urlNodeConcacts::: ", snapshot.val(), urlNodeConcacts);
+                    console.log("urlNodeConcacts::: ", urlNodeConcacts);
                     //conv.image = snapshot.val();
                     if (snapshot.val().trim()) {
                         //return snapshot.val();

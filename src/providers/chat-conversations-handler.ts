@@ -24,6 +24,7 @@ export class ChatConversationsHandler {
     public conversations: ConversationModel[] = [];
     public uidConvSelected: String = '';
 
+
     private tenant: string;
     private loggedUser: UserModel;
     private userId: string;
@@ -97,13 +98,14 @@ export class ChatConversationsHandler {
         
         if (this.isValidConversation(childSnapshot.key, conversation)) {
             this.conversations.splice(0, 0, conversation);
-            console.log("child_added conversationS",conversation);
+            console.log("child_added conversationS", conversation);
+            this.events.publish('conversationsAdd', conversation);
             //this.events.publish('conversations:added', conversation);
-
             // add the conversation from the isConversationClosingMap
             this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
-
             this.conversations.sort(compareValues('timestamp', 'desc'));
+            // aggiungo un subscribe che richiama confronto uiselected e apro dettaglio paggina!!!!
+
         } else {
             console.error("ChatConversationsHandler::added::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
@@ -125,9 +127,7 @@ export class ChatConversationsHandler {
             this.conversations.splice(index, 1, conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
             console.log("child_changed conversationS",conversation);
-            
             // this.events.publish('conversations:changed', this.conversations);
-
         } else {
             console.error("ChatConversationsHandler::changed::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }

@@ -326,9 +326,15 @@ setDetailUser(snapshot) {
             let imageUrl = URL_NO_IMAGE;
             let avatar;
             let color;
+            let decodedUid;
             if (user.imageurl && user.imageurl !== LABEL_NOICON) {
               imageUrl = user.imageurl;
             } 
+            // console.log('________________________________>' + snapshot.key + '===' + uidUserAuthenticated);
+            if (snapshot.key === uidUserAuthenticated) { 
+              decodedUid = decoded;
+            } 
+            
             userDetail = new UserModel(
               snapshot.key,
               user.email,
@@ -340,7 +346,7 @@ setDetailUser(snapshot) {
               color,
               false,
               false,
-              decoded
+              decodedUid
             );
           } else {
             userDetail = new UserModel(
@@ -367,7 +373,8 @@ setDetailUser(snapshot) {
             userDetail.fullname = userDetail.firstname+' '+userDetail.lastname; 
             console.log('2 - userDetail.fullname------------->', userDetail.fullname);
           } 
-          if( uidUserAuthenticated === snapshot.key ){
+          userDetail.checked = false;
+          if( signInProvider === 'custom' && uidUserAuthenticated === snapshot.key ){
             console.log('2.5 - uidUserAuthenticated------------->', uidUserAuthenticated, snapshot.key);
             userDetail.checked = true;
             userDetail.email = emailUserAuthenticated;

@@ -12,7 +12,7 @@
 
 <ion-content>
     <div *ngIf="groupDetail || userDetail">
-        <ion-card class="first-card">
+        <ion-card *ngIf="conversationSelected" class="first-card">
             <div class="chat21-box-profile chat21-box">
                 <div class="chat21-content">
                     <div class="chat21-image">
@@ -156,7 +156,7 @@
                                 <div #avatarPlaceholder *ngIf="!member.imageurl" class="avatar-placeholder" [style.background-color]="member.color" [innerHTML]="member.avatar"></div>
                                 <div #avatarImage *ngIf="member.imageurl" class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div>
 
-                                <div *ngIf="member.checked" class="c21-icon-status c21-checked">
+                                <div *ngIf="member.checked === true" class="c21-icon-status c21-checked">
                                     <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                     viewBox="0 0 26.6 26.6" style="enable-background:new 0 0 26.6 26.6;" xml:space="preserve">
                                     <style type="text/css">
