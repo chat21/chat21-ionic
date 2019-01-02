@@ -65,7 +65,7 @@
                         <div *ngFor="let item of decoded" class="c21-row">
                             <div class="c21-label">{{item.key}}</div>
                             <div *ngIf="item.key == 'iat'">
-                                <span>{{item.val | date:'dd/MM/yyyy HH:mm'}}</span>
+                                <span>{{item.val | date:'dd/MM/yyyy HH:mm:ss'}}</span>
                             </div>
                             <div *ngIf="item.key != 'iat'" >
                                 <div class="c21-value" [innerHTML]="item.val"></div>
