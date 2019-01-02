@@ -3,7 +3,6 @@ platforms
 www
 plugins
 old
-package-lock.json
 coverage.html
 package copia.json
 .sourcemaps/
