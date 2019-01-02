@@ -42,7 +42,7 @@ export class InfoConversationPage {
   // ========= end:: Input/Output values ============//
 
   public group: any;
-  public uidSelected: string;
+  // public uidSelected: string;
   public conversationSelected: ConversationModel;
   public userDetail: UserModel;
   public groupDetail: GroupModel;
@@ -995,7 +995,7 @@ setDetailUser(snapshot) {
   }
 
   sendMail(){
-    const url = this.URL_SEND_BY_EMAIL+this.uidSelected+'/messages.html';
+    const url = this.URL_SEND_BY_EMAIL+this.conversationSelected.uid+'/messages.html';
     window.open(url, '_blank', 'location=yes');
   }
 
