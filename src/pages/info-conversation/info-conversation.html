@@ -127,8 +127,16 @@
 
                     <div *ngIf="customAttributes" class="custom-attributes-container">
                         <div *ngFor="let attr of customAttributes" class="chat21-row custom-attributes">
-                            <div class="c21-label">{{ attr.key }}</div>
-                            <div class="lighter">{{ attr.value }}</div>
+                            <div class="c21-label">{{ attr.key | translate }}</div>
+                        
+                            
+                            <div *ngIf="attr.key !== 'projectId';then content else other_content">here is ignored</div>    
+                            <ng-template #content><div class="lighter">{{ attr.value }}</div></ng-template>
+                            <ng-template #other_content>
+                                <a [href]= "urlProjectId + attr.value + '/home'">
+                                {{ attr.value }}
+                                </a>
+                            </ng-template>
                         </div>
                     </div>
 

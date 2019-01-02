@@ -221,12 +221,12 @@ export class UserService {
         console.log(" 1 - IMPOSTO STATO CONNESSO UTENTE ");
         this.chatPresenceHandler.setupMyPresence(user.uid);
         console.log(" 2 - AGGIORNO IL TOKEN ::: ", user);
-        
         const keySubscription = 'eventGetToken';
         this.events.subscribe(keySubscription, this.callbackGetToken);
         //this.addSubscription(keySubscription);
         //this.msgService.getToken();
-        this.getToken(); // perchè???
+        
+        this.msgService.getToken(); //this.getToken(); // perchè???
         console.log(" 3 - CARICO IL DETTAGLIO UTENTE ::: ");
         let that = this;
         const userFirebase = this.initUserDetails(user.uid);
@@ -252,19 +252,24 @@ export class UserService {
     this.msgService.updateToken(this.userUid, token);
   }
 
-  getToken() {
-    const that = this;
-    console.log('getToken.', this.token);
-    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
-    .then(function(idToken) {
-        that.token = idToken;
-        console.log('idToken.', idToken);
-        that.msgService.updateToken(this.userUid, idToken);
-    }).catch(function(error) {
-      // Handle error
-      console.log('error idToken.', error);
-    });
-  }
+  // getToken() {
+  //   // https://firebase.google.com/docs/auth/admin/verify-id-tokens
+  //   const that = this;
+  //   console.log('getToken. firebase.auth().currentUser: ', firebase.auth().currentUser);
+  //   if(firebase.auth().currentUser){
+  //     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+  //     .then(function(idToken) {
+  //         that.token = idToken;
+  //         console.log('idToken.', idToken);
+  //         that.msgService.updateToken(that.userUid, idToken);
+  //     }).catch(function(error) {
+  //       // Handle error
+  //       console.log('error idToken.', error);
+  //     });
+  //   }
+    
+  // }
+
 
   returnToken():string{
     return this.token;

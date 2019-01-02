@@ -67,6 +67,8 @@ export class InfoConversationPage {
   private isLoggedUserGroupMember: boolean;
   private subscriptions = [];
 
+  public urlProjectId = "https://support.tiledesk.com/dashboard/#/project/";
+
 
   constructor(
     public events: Events,
@@ -531,6 +533,7 @@ setDetailUser(snapshot) {
           "key": key,
           "value": val
         }
+        
         // add the item to the custom attributes array
         tempMap.push(item);
       }

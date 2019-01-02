@@ -154,7 +154,7 @@
         <ion-col col-auto>
           <div class="text_message">
             <ion-textarea [disabled]="!conversationEnabled" autosize #messageTextArea id="messageTextArea" [(ngModel)]="messageString"
-              placeholder="Enter a message" rows="1" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString);"
+              placeholder="{{ 'LABEL_ENTER_MSG' | translate }}" rows="1" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString);"
               autofocus></ion-textarea>
             <!-- <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->
           </div>

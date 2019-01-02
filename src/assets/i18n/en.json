@@ -16,6 +16,8 @@
   "LABEL_SOURCEPAGE": "Source ",
   "LABEL_DEPARTMENT_ID": "Department id ",
   "LABEL_DEPARTMENT_NAME": "Department ",
+  "requester_id": "Requester ID",
+  "projectId": "Project ID ",
   "LABEL_NAME": "User Name ",
   "LABEL_EMAIL": "Email ",
   "LABEL_MEMBERS": "Participants",
@@ -88,7 +90,8 @@
  "ALERT_NOTIFICATION": "Warning: sending notifications is disabled, changes the browser settings to allow sending notifications.",
  "LABEL_EXTERNAL_ID": "External Id",
  "LABEL_IAT": "Iat",
- "LABEL_REQUEST_DETAIL": "Request detail"
+ "LABEL_REQUEST_DETAIL": "Request detail",
+ "LABEL_ENTER_MSG": "Enter a message"
 
 
 }
