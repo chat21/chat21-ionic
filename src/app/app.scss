@@ -185,6 +185,13 @@ ion-app, ion-nav, ion-tab, ion-tabs, .app-root, .ion-page {
     
 }
 
+ion-navbar {
+    .toolbar-background{
+        /* height: 55px; */
+        box-shadow: inset 0px -1px 0px #f7f7f7;
+    }
+}
+
 // .modal-page {
 //     z-index: 1;
 //     background-color: transparent;

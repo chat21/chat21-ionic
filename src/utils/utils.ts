@@ -66,12 +66,15 @@ export function urlify(text?, name?) {
     {
       return;
     } 
-    // else if (!url.match(/^[a-zA-Z]+:\/\//)){
-    //   url = 'http://' + url;
-    // }
+  
     var label = url;
     if(name){
       label = name;
+    }
+    if(url.indexOf('@') !== -1 ){
+      return '<a href=\"mailto:' + url + '\">' + label + '</a>';
+    } else if (!url.match(/^[a-zA-Z]+:\/\//)){
+      url = 'http://' + url;
     }
     return '<a href=\"' + url + '\" target=\"_blank\">' + label + '</a>';
   })
@@ -158,7 +161,7 @@ export function setHeaderDate(translate, timestamp, lastDate?): string {
         labelDays = convertDayToString(translate, date.getDay());
       }
       // aggiungo orario
-      const orario = date.getHours() +":"+ date.getMinutes();
+      const orario = date.getHours() +":"+ (date.getMinutes()<10?'0':'') + date.getMinutes();
       return LABEL_LAST_ACCESS + ' ' + labelDays + ' ' + LABEL_TO + ' ' + orario;
   }
 
@@ -299,17 +302,14 @@ export function strip_tags(html){
 }
 
 export function isExistInArray(members, currentUid){
-  console.log("isExistInArray -- ::: ", members, currentUid);
-  // let resp = false;
-  // members.forEach(function(element) {
-  //   console.log("element::: ", element['uid'], element);
-  //   if (element['uid'] === currentUid) {
-  //     resp = true;
-  //     return;
-  //   }
-  // });   
-  // return resp;
   return members.includes(currentUid);
+}
+
+export function isInArray(key: string, array:Array<string>){
+  if ( array.indexOf(key) > -1 ){
+    return true;
+  } 
+  return false;
 }
 
 export function createConfirm(translate, alertCtrl, events, title, message, action, onlyOkButton) {

@@ -221,20 +221,19 @@ export class ListaConversazioniPage extends _MasterPage {
     // if the conversation from the isConversationClosingMap is waiting to be closed 
     // deny the click on the conversation
     if (this.tiledeskConversationProvider.getClosingConversation(uidConvSelected)) return;
-
-    //debugger;
-    console.log('ListaConversazioniPage::openMessageList::uidConvSelected:', uidConvSelected);
     this.uidConvSelected = uidConvSelected;
     this.chatConversationsHandler.uidConvSelected = uidConvSelected;
     const that = this;
     setTimeout(function () {
       var conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
       if (conversationSelected) {
+        console.log('conversationSelected: ', conversationSelected);
         conversationSelected.is_new = false;
         that.conversationsHandler.setConversationRead(conversationSelected.uid);
         conversationSelected.status = '0';
         conversationSelected.selected = true;
         that.navProxy.pushDetail(DettaglioConversazionePage, {
+          conversationSelected: conversationSelected,
           conversationWith: uidConvSelected,
           conversationWithFullname: conversationSelected.conversation_with_fullname,
           channel_type: conversationSelected.channel_type

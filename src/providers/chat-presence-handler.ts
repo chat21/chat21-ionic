@@ -53,6 +53,7 @@ export class ChatPresenceHandler {
     const connectionsRef = firebase.database().ref().child(myConnectionsRefURL);
     console.log('userIsOnline', myConnectionsRefURL);
     connectionsRef.on("value", (child) => {
+      console.log('statusUser:online-'+userid);
       if(child.val()){
         that.events.publish('statusUser:online-'+userid, userid, true);
       }
@@ -62,6 +63,8 @@ export class ChatPresenceHandler {
       }
     })
   }
+
+
   /**
    * mi sottoscrivo al nodo presence/uid/lastOnline
    * e recupero la data dell'ultimo stato online
@@ -71,6 +74,7 @@ export class ChatPresenceHandler {
   lastOnlineForUser(userid){
     const that = this;
     let lastOnlineRefURL = this.urlNodeFirebase+"/presence/"+userid+"/lastOnline";
+    console.log('lastOnlineForUser: ', lastOnlineRefURL);
     const lastOnlineRef = firebase.database().ref().child(lastOnlineRefURL);
     lastOnlineRef.on("value", (child) => {
       if(child.val()){

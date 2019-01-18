@@ -1,7 +1,7 @@
 //TIMES
 // BUILD
-export const CURR_VER_DEV = '71';
-export const CURR_VER_PROD = '0.927';
+export const CURR_VER_DEV = '1.072';
+export const CURR_VER_PROD = '0.933';
 
 //export const SERVICE_WORKER_DEV = '/chat/';
 //export const SERVICE_WORKER_PROD = './chat/';
@@ -44,6 +44,7 @@ export const BCK_COLOR_CONVERSATION_UNSELECTED: string = "#FFFFFF";
 // export const LABEL_OK = "OK";
 
 export const TYPE_SUPPORT_GROUP: string = 'support-group';
+
 
 
 // TYPES MESSAGES

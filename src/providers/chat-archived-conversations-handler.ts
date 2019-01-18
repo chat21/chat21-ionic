@@ -57,6 +57,7 @@ export class ChatArchivedConversationsHandler {
     connect() {
         const that = this;
         const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUser.uid + '/archived_conversations';
+        console.log('url conversations: ', urlNodeFirebase);
         this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(400);
 
         this.ref.on("child_added", function (childSnapshot) {

@@ -250,6 +250,7 @@ export class UserService {
   callbackGetToken: any = (token) => {
     console.log(" 4 - callbackGetToken");
     this.msgService.updateToken(this.userUid, token);
+    this.token = token;
   }
 
   // getToken() {

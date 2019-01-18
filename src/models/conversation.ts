@@ -9,6 +9,7 @@ export class ConversationModel {
     public is_new: boolean,
     public last_message_text: string,
     public sender: string,
+    public senderAuthInfo: any,
     public sender_fullname: string,
     public status: string,
     public timestamp: string,

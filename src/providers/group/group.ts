@@ -67,7 +67,7 @@ export class GroupService {
     const that = this;
     const tenant = this.chatManager.getTenant();
     const urlNode = '/apps/' + tenant + '/users/' + uidUser + '/groups/' + uidGroup;
-    console.log("urlNodeContacts", urlNode);
+    console.log("url groups: ", urlNode);
     this.refLoadGroupDetail = firebase.database().ref(urlNode);
     this.refLoadGroupDetail.on('value', function (snapshot) {
       that.events.publish('groupDetails', snapshot);
@@ -81,29 +81,38 @@ export class GroupService {
 
 
 
-  leaveAGroup(uidGroup, uidUser): Observable<string> {
-
+  leaveAGroup(uidGroup, uidUser, callback) {
     const appId = this.chatManager.getTenant();
-    const token = this.userService.returnToken();
-    console.log('token: ', token);
-    // getToken();
-    const headers = new Headers();
-    headers.append('Accept', 'application/json');
-    headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Bearer ' + token);
+    // const token = this.userService.returnToken();
+    var that = this;
+    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+    .then(function (token) {
+      console.log('token: ', token);
+      const headers = new Headers();
+      headers.append('Accept', 'application/json');
+      headers.append('Content-Type', 'application/json');
+      headers.append('Authorization', 'Bearer ' + token);
 
-    const options = new RequestOptions({ headers: headers });
-    const url = this.BASE_URL_LEAVE_GROUP + 'api/' + appId + '/groups/' + uidGroup + '/members/' + uidUser;
-    console.log('url: ', url);
-    console.log('token: ', token);
-    const body = {
-      'app_id': appId
-    };
-    console.log('------------------> options: ', options);
-    console.log('------------------> body: ', JSON.stringify(body));
-    return this.http
-      .delete(url, options)
-      .map(res => (res.json()));     
+      const options = new RequestOptions({ headers: headers });
+      const url = that.BASE_URL_LEAVE_GROUP + 'api/' + appId + '/groups/' + uidGroup + '/members/' + uidUser;
+      console.log('url: ', url);
+      console.log('token: ', token);
+      const body = {
+        'app_id': appId
+      };
+      console.log('------------------> options: ', options);
+      console.log('------------------> body: ', JSON.stringify(body));
+      that.http
+        .delete(url, options)
+        .map((res) => {
+          callback(res, null);
+        }).subscribe();
+    }).catch(function (error) {
+      // Handle error
+      console.log('idToken error: ', error);
+      callback(null, error);
+    });
+       
   }
 
 

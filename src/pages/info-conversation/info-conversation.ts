@@ -42,6 +42,8 @@ export class InfoConversationPage {
   // ========= end:: Input/Output values ============//
 
   public group: any;
+  public uidUserAuthenticated: string;
+  public signInProvider: string;
   // public uidSelected: string;
   public conversationSelected: ConversationModel;
   public userDetail: UserModel;
@@ -97,15 +99,14 @@ export class InfoConversationPage {
       that.initialize();
     }, 100);
   }
-    
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad:InfoConversationPage');
-    //this.initialize();
-  }
-  ionViewWillEnter() {
-    console.log('ionViewWillEnter');
-    //this.initialize();
-  }
+  
+  // ionViewDidLoad() {
+  //   console.log('ionViewDidLoad:InfoConversationPage');
+  // }
+  // ionViewWillEnter() {
+  //   console.log('ionViewWillEnter');
+  // }
+
   ionViewWillLeave() {
     console.log('------------> ionViewWillLeave:InfoConversationPage');
     this.unsubscribeAll();
@@ -116,7 +117,6 @@ export class InfoConversationPage {
    * 2 - load group details (async)
    * 3 - checkVerifiedMembers
    * 
-   * 
    * recupero array uid membri
    */
   initialize() {
@@ -124,7 +124,6 @@ export class InfoConversationPage {
     this.profileYourself = false;
     this.online = false;
     this.isLoggedUserGroupMember = false;
-
     this.listMembers = [];
     this.subscriptions = [];
     this.profileYourself = false;
@@ -133,7 +132,6 @@ export class InfoConversationPage {
     this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
     this.conversationSelected = this.conversationsHandler.getConversationByUid(this.conversationWith);
     console.log('conversationSelected::',this.conversationSelected);
-    // this.setSubscriptions();
     this.populateDetail();
   }
 
@@ -232,6 +230,7 @@ setDetailUser(snapshot) {
    * information detail group called of groupService.loadGroupDetail
    */
   returnLoadGroupDetail = (snapshot) => {
+
     console.log('InfoConversationPage::subscribeGroupDetails', snapshot.val());
     if (snapshot.val()) {
       this.group = snapshot.val();
@@ -239,7 +238,6 @@ setDetailUser(snapshot) {
         this.attributes = this.group.attributes;
         this.updateAttributes(this.group.attributes);
       }
-
       this.groupDetail = new GroupModel(
         snapshot.key,
         getFormatData(this.group.createdOn),
@@ -252,12 +250,16 @@ setDetailUser(snapshot) {
       if (!this.groupDetail.iconURL || this.groupDetail.iconURL === LABEL_NOICON) {
         this.groupDetail.iconURL = URL_NO_IMAGE;
       }
+
       this.getListMembers(this.groupDetail.members);
+      console.log('ListMembers: ',this.groupDetail.members, this.uidUserAuthenticated);
+
       if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.groupDetail.members.length <= 1) {
         this.isLoggedUserGroupMember = false;
       } else {
         this.isLoggedUserGroupMember = true;
       }
+
     }
 
   }
@@ -281,10 +283,11 @@ setDetailUser(snapshot) {
  private getListMembers(members) {
   let that = this;
   // autenticazione
-  let uidUserAuthenticated;
+  // let uidUserAuthenticated;
+  this.uidUserAuthenticated = '';
   let emailUserAuthenticated;
   let fullnameUserAuthenticated;
-  let signInProvider = 'anonymous';
+  this.signInProvider = 'anonymous';
   let decoded;
   let projectId;
   if(this.attributes){
@@ -300,7 +303,7 @@ setDetailUser(snapshot) {
     if (this.attributes.senderAuthInfo) {
       if (this.attributes.senderAuthInfo.authVar) {
         if (this.attributes.senderAuthInfo.authVar.uid) {
-          uidUserAuthenticated = this.attributes.senderAuthInfo.authVar.uid;
+          this.uidUserAuthenticated = this.attributes.senderAuthInfo.authVar.uid;
         }
         if (this.attributes.senderAuthInfo.authVar.token) {
           if (this.attributes.senderAuthInfo.authVar.token.decoded) {
@@ -309,14 +312,15 @@ setDetailUser(snapshot) {
           }
           if (this.attributes.senderAuthInfo.authVar.token.firebase) {
             if (this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider) {
-              signInProvider = this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider;
+              this.signInProvider = this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider;
             }
           }
         }
       }
     } 
   } 
-  
+  console.log(' this.uidUserAuthenticated: ',  this.uidUserAuthenticated, this.attributes);
+  this.listMembers = [];
   members.forEach(member => {
     let userDetail;
     if (member.trim() !== '' && member.trim() !== SYSTEM) {
@@ -333,7 +337,7 @@ setDetailUser(snapshot) {
               imageUrl = user.imageurl;
             } 
             // console.log('________________________________>' + snapshot.key + '===' + uidUserAuthenticated);
-            if (snapshot.key === uidUserAuthenticated) { 
+            if (snapshot.key === that.uidUserAuthenticated) { 
               decodedUid = decoded;
             } 
             
@@ -369,15 +373,20 @@ setDetailUser(snapshot) {
           // set fullname
           if(!userDetail.fullname || userDetail.fullname === ''){
             userDetail.fullname = that.translate.get('LABEL_GUEST')['value'];
-            console.log('1 - userDetail.fullname------------->', userDetail.fullname);
+            console.log('0 - userDetail.fullname------------->', userDetail.fullname);
+          } 
+          if( that.uidUserAuthenticated === snapshot.key && fullnameUserAuthenticated && fullnameUserAuthenticated !== 'undefined'){
+            console.log('1 - fullnameUserAuthenticated------------->', fullnameUserAuthenticated);
+            userDetail.fullname = fullnameUserAuthenticated;
           }
           if(userDetail.firstname || userDetail.lastname){
             userDetail.fullname = userDetail.firstname+' '+userDetail.lastname; 
             console.log('2 - userDetail.fullname------------->', userDetail.fullname);
           } 
+
           userDetail.checked = false;
-          if( signInProvider === 'custom' && uidUserAuthenticated === snapshot.key ){
-            console.log('2.5 - uidUserAuthenticated------------->', uidUserAuthenticated, snapshot.key);
+          if( that.signInProvider === 'custom' && that.uidUserAuthenticated === snapshot.key ){
+            console.log('2.5 - uidUserAuthenticated------------->', that.uidUserAuthenticated, snapshot.key);
             userDetail.checked = true;
             userDetail.email = emailUserAuthenticated;
             userDetail.decoded = decoded;
@@ -385,11 +394,12 @@ setDetailUser(snapshot) {
               userDetail.fullname = fullnameUserAuthenticated;
               console.log('3 - userDetail.fullname------------->', userDetail.fullname);
             }
-            if( signInProvider === 'custom' && userDetail.decoded && userDetail.decoded.name) {
+            if( that.signInProvider === 'custom' && userDetail.decoded && userDetail.decoded.name) {
               userDetail.fullname = userDetail.decoded.name;
               console.log('4 - userDetail.fullname------------->', userDetail.fullname);
             }
-          }
+          } 
+
           userDetail.avatar = avatarPlaceholder(userDetail.fullname);
           userDetail.color = getColorBck(userDetail.fullname);
           
@@ -697,23 +707,31 @@ setDetailUser(snapshot) {
 
     const uidUser = this.chatManager.getLoggedUser().uid; //'U4HL3GWjBsd8zLX4Vva0s7W2FN92';
     const uidGroup = this.conversationWith;//'support-group-L5Kb42X1MaM71fGgL66';
- 
-    this.groupService.leaveAGroup(uidGroup, uidUser)
-      .subscribe(
-        response => {
-          //console.log('leaveGroup OK sender ::::', response);
-          //this.dismissLoadingDialog();
-          callback('success');
-        },
-        errMsg => {
-          //this.dismissLoadingDialog();
-          //console.log('leaveGroup ERROR MESSAGE', errMsg);
-          callback('error');
-        },
-        () => {
-          // console.log('leaveGroup API ERROR NESSUNO');
-        }
-      );
+    this.groupService.leaveAGroup(uidGroup, uidUser, function (response, error) {
+      if (error) {
+        console.error('closeGroup ERROR MESSAGE', error);
+        callback('error', error);
+      }
+      else {
+        callback('success', response);
+      }
+    });
+    // this.groupService.leaveAGroup(uidGroup, uidUser)
+    //   .subscribe(
+    //     response => {
+    //       console.log('leaveGroup OK sender ::::', response);
+    //       //this.dismissLoadingDialog();
+    //       callback('success');
+    //     },
+    //     errMsg => {
+    //       //this.dismissLoadingDialog();
+    //       console.log('leaveGroup ERROR MESSAGE', errMsg);
+    //       callback('error');
+    //     },
+    //     () => {
+    //       console.log('leaveGroup API ERROR NESSUNO');
+    //     }
+    //   );
   }
 
   /** */
@@ -1042,5 +1060,13 @@ setDetailUser(snapshot) {
   }
   // ----------------------------------------- //
 
+  isExistUidUserAuthenticatedInMembers(){
+    if(this.signInProvider === 'custom' && this.uidUserAuthenticated && this.groupDetail){
+      //console.log('uidUserAuthenticated',this.uidUserAuthenticated);
+      return isExistInArray(this.groupDetail.members, this.uidUserAuthenticated);
+    }
+    return false;
+  }
+  
 
 }

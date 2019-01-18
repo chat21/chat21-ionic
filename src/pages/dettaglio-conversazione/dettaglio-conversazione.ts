@@ -18,10 +18,12 @@ import { InfoUserPage } from '../info-user/info-user';
 // import { InfoMessagePage } from '../info-message/info-message';
 import { PopoverPage } from '../popover/popover';
 // utils
-import { TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT } from '../../utils/constants';
-import { replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
+import { TYPE_SUPPORT_GROUP, TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, TYPE_GROUP } from '../../utils/constants';
+import { isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
+import { ConversationModel } from '../../models/conversation';
+
 
 
 @IonicPage()
@@ -32,24 +34,35 @@ import { Subscription } from '../../../node_modules/rxjs/Subscription';
 export class DettaglioConversazionePage extends _DetailPage{
   @ViewChild(Content) content: Content;
   @ViewChild('messageTextArea') messageTextArea: ElementRef; 
-
   @ViewChild('scrollMe') private scrollMe: ElementRef;
+
   showButtonToBottom = false;
   contentScroll: any;
   NUM_BADGES = 0;
 
-
+  private subscriptions: Array<string>;
   private tenant: string;
   private conversationHandler: ChatConversationHandler;
+
   private scrollDirection: any = 'bottom';
   private messages: Array<MessageModel> = [];
   private arrayLocalImmages:  Array<any> = [];
   private projectId: string;
 
-  private conversationWith: string;
+  //aggiunta 
+  private conversationSelected: ConversationModel;
+
+  
   private currentUserDetail: UserModel;
   private memberSelected: UserModel;
+
+  private conversationWith: string;
   private conversationWithFullname: string;
+
+  private uidConversationWith: string;
+  private fullnameConversationWith: string;
+  private conversationType: string;
+
   private channel_type: string;
   private online: boolean;
   private lastConnectionDate: string;
@@ -89,6 +102,9 @@ export class DettaglioConversazionePage extends _DetailPage{
     private translateService : TranslateService
   ) {
     super();
+    this.subscriptions = [];
+    // passo oggetto conversazione
+    this.conversationSelected = navParams.get('conversationSelected');
 
     //// recupero id utente e fullname con cui si conversa
     //// uid utente con cui si conversa
@@ -126,18 +142,77 @@ export class DettaglioConversazionePage extends _DetailPage{
    * subscriptions list 
   */
   initSubscriptions(){
-    // subscribe stato utente con cui si conversa ONLINE
-    this.events.subscribe('statusUser:online-'+this.conversationWith, this.statusUserOnline);
-    // subscribe stato utente con cui si conversa ONLINE
-    this.events.subscribe('statusUser:offline-'+this.conversationWith, this.statusUserOffline);
-    // subscribe data ultima connessione utente con cui si conversa
-    this.events.subscribe('lastConnectionDate-'+this.conversationWith, this.updateLastConnectionDate);
     // subscribe elenco messaggi
-    this.events.subscribe('doScroll', this.goToBottom);
+    let key = 'doScroll';
+    if(!isInArray(key, this.subscriptions)){
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.goToBottom);
+    }
     // subscribe dettaglio messaggio
-    this.events.subscribe('openInfoMessage', this.onOpenInfoMessage);
+    key = 'openInfoMessage';
+    if(!isInArray(key, this.subscriptions)){
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.onOpenInfoMessage);
+    }
     // subscribe message videochat
-    this.events.subscribe('openVideoChat', this.onOpenVideoChat);
+    key = 'openVideoChat';
+    if(!isInArray(key, this.subscriptions)){
+      this.subscriptions.push(key);
+      this.events.subscribe('openVideoChat', this.onOpenVideoChat);
+    }
+    
+  }
+
+
+
+  /**
+   * individuo nella conversazione id e nome dell'utente con il quale sto conversando
+   * se il tipo di chat è DIRECT o SUPPORT GROUP: id = recipient/sender e fullname = recipient_fullname/sender_fullname
+   * altrimenti se è un semplice GRUPPO: id = recipient e fullname = recipient_fullname
+   */
+  setConversationWith(){
+    // GROUP CONVERSATION 
+    this.conversationType = TYPE_GROUP;
+    let uidConversationWith = this.conversationSelected.recipient;
+    let fullnameConversationWith = this.conversationSelected.recipient_fullname;
+    // DIRECT CONVERSATION
+    if(this.conversationSelected.channel_type === TYPE_DIRECT) {
+      this.conversationType = TYPE_DIRECT;
+      if(this.conversationSelected.recipient === this.currentUserDetail.uid ) {
+        uidConversationWith = this.conversationSelected.sender;
+        fullnameConversationWith = this.conversationSelected.sender_fullname;
+      } else {
+        uidConversationWith = this.conversationSelected.recipient;
+        fullnameConversationWith = this.conversationSelected.recipient_fullname;
+      }
+    }
+    // SUPPORT GROUP CONVERSATION 
+    else if(this.conversationSelected.channel_type === TYPE_GROUP && this.conversationSelected.recipient.startsWith(TYPE_SUPPORT_GROUP)) {
+      this.conversationType = TYPE_SUPPORT_GROUP;
+      if(this.conversationSelected.senderAuthInfo && this.conversationSelected.senderAuthInfo.authVar && this.conversationSelected.senderAuthInfo.authVar.uid){
+        uidConversationWith = this.conversationSelected.senderAuthInfo.authVar.uid;
+        fullnameConversationWith = this.conversationSelected.recipient_fullname;
+      }
+    }
+    
+    this.uidConversationWith = uidConversationWith;
+    this.fullnameConversationWith = fullnameConversationWith
+
+    if(this.conversationType != TYPE_GROUP) {
+      // subscribe data ultima connessione utente con cui si conversa
+      let key = 'lastConnectionDate-'+uidConversationWith;
+      if(!isInArray(key, this.subscriptions)){
+        this.subscriptions.push(key);
+        this.events.subscribe(key, this.updateLastConnectionDate);
+      }
+      // subscribe status utente con il quale si conversa (online/offline)
+      key = 'statusUser:online-'+uidConversationWith;
+      if(!isInArray(key, this.subscriptions)){
+        this.subscriptions.push(key);
+        this.events.subscribe(key, this.statusUserOnline);
+      }
+    }
+    
   }
 
   /**
@@ -159,11 +234,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   }
 
   private isContentScrollEnd(divScrollMe): boolean {
-    // console.log('checkContentScrollPosition ::', divScrollMe);
-    // console.log('divScrollMe.diff ::', divScrollMe.scrollHeight - divScrollMe.scrollTop);
-    // console.log('divScrollMe.clientHeight ::', divScrollMe.clientHeight);
     if (divScrollMe.scrollTop === (divScrollMe.scrollHeight - divScrollMe.offsetHeight)) {
-      // console.log('SONO ALLA FINE ::');
       return true;
     } else {
       return false;
@@ -191,32 +262,41 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.openInfoConversation = false;
     //console.log('OPEN MESSAGE **************', message);
   }
+
   /**
    * on subscribe stato utente con cui si conversa ONLINE
    */
-  statusUserOnline: any = (uid) => {
-    if(uid !== this.conversationWith){return;}
-    this.online = true;
-    this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
-    console.log('************** ONLINE');
+  statusUserOnline: any = (uid: string, status: boolean) => {
+    console.log('************** statusUserOnline',uid, status);
+    // if(uid !== this.conversationWith){return;}
+    if(status === true){
+      console.log('************** ONLINE');
+      this.online = true;
+    } else {
+      console.log('************** OFFLINE');
+      this.online = false;
+    }
+    //this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
   }
-  /**
-   * on subscribe stato utente con cui si conversa OFFLINE
-   */
-  statusUserOffline: any = (uid) => {
-    if(uid !== this.conversationWith){return;}
-    this.online = false;
-    this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
-    console.log('************** OFFLINE');
-  }
+  // /**
+  //  * on subscribe stato utente con cui si conversa OFFLINE
+  //  */
+  // statusUserOffline: any = (uid) => {
+  //   if(uid !== this.conversationWith){return;}
+  //   this.online = false;
+  //   this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
+  //   console.log('************** OFFLINE');
+  // }
+
   /**
    * on subscribe data ultima connessione utente con cui si conversa
    */
-  updateLastConnectionDate: any = (uid,lastConnectionDate) => {
+  updateLastConnectionDate: any = (uid: string, lastConnectionDate: string) => {
     this.lastConnectionDate = lastConnectionDate;
-    this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
+    // this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
     console.log('************** updateLastConnectionDate',this.lastConnectionDate);
   }
+
   /**
    * on subcribe doScroll add message
    */
@@ -231,13 +311,15 @@ export class DettaglioConversazionePage extends _DetailPage{
    * unsubscribe all subscribe events
    */
   unsubescribeAll(){
-    //this.events.unsubscribe('doScroll', null);
-    //this.events.unsubscribe('openInfoMessage', null);
-    this.events.unsubscribe('statusUser:online-'+this.conversationWith, null);
-    this.events.unsubscribe('statusUser:offline-'+this.conversationWith, null);
-    this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, null);
-    this.events.unsubscribe('conversationEnabled', null);
-    //this.events.unsubscribe('openVideoChat', null);
+    console.log('unsubescribeAll: ', this.subscriptions);
+    this.subscriptions.forEach(subscription => {
+      console.log('unsubescribeAll: ', subscription);
+      this.events.unsubscribe(subscription, null);
+    });
+    
+    // this.events.unsubscribe('statusUser:online-'+this.conversationWith, null);
+    // this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, null);
+    // this.events.unsubscribe('conversationEnabled', null);
   }
 
   //// SYSTEM FUNCTIONS ////
@@ -300,8 +382,12 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.lastConnectionDate = '';
     this.tenant = this.chatManager.getTenant();
     this.currentUserDetail = this.chatManager.getLoggedUser();
-    this.chatPresenceHandler.userIsOnline(this.conversationWith);
-    this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
+
+    
+    this.setConversationWith();
+    console.log('conversationSelected: ',this.uidConversationWith);
+    this.chatPresenceHandler.userIsOnline(this.uidConversationWith);
+    this.chatPresenceHandler.lastOnlineForUser(this.uidConversationWith);
     this.initConversationHandler();
 
     var that = this;
@@ -324,6 +410,8 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
     this.openInfoMessage = false; // indica se è aperto il box info message
     this.openInfoConversation = true;
+
+    
   }
   /**
    * recupero da chatManager l'handler
@@ -400,7 +488,6 @@ export class DettaglioConversazionePage extends _DetailPage{
    * Scroll to bottom of page after a short delay.
    */
   scrollBottom() {
-
     var scrollDiv = document.getElementById("scroll-me");
     if (scrollDiv) {
       scrollDiv.scrollTop = scrollDiv.scrollHeight;
@@ -448,7 +535,6 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.openInfoConversation = false;
   }
   returnOpenInfoUser(member){
-    //console.log('returnOpenDetailUser **************', member);
     this.memberSelected = member;
     this.openInfoUser = true;
     console.log('returnOpenInfoUser **************', this.openInfoUser);

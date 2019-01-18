@@ -26,7 +26,7 @@
     "LABEL_STATUS_MESSAGE": "stato",
     "LABEL_SENT_THE": "inviato il",
     "LABEL_SENT_BY": "da",
-    "LABEL_GUEST": "Ospite",
+    "LABEL_GUEST": "Guest",
 
     "LABEL_CREATE_TICKET": "Crea un ticket",
     "LABEL_SEND_BY_EMAIL": "Invia per email",
