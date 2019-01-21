@@ -100,9 +100,9 @@
                   <div class="message message-other" (mouseover)="showButtonInfo()">
                     <span class="buttonInfo" [ngClass]="message.uid" (click)="presentPopover($event, message)">
                     </span>
-                    <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
+                    <img *ngIf="isImage(message);" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
                       [height]="getSizeImg(message).height" />
-                    <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
+                    <div *ngIf="isFile(message);" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
                   
                   
                     <div *ngIf="message.type == 'text';">

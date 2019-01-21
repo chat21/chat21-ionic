@@ -149,7 +149,7 @@
                             <div *ngIf="attr.key !== 'projectId';then content else other_content">here is ignored</div>    
                             <ng-template #content><div class="lighter">{{ attr.value }}</div></ng-template>
                             <ng-template #other_content>
-                                <a [href]= "urlProjectId + attr.value + '/home'">
+                                <a [href]= "urlProjectId + attr.value + '/home'" target="_blank">
                                 {{ attr.value }}
                                 </a>
                             </ng-template>

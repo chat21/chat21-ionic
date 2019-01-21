@@ -428,7 +428,6 @@ export function urlExists(url) {
 export function jsonToArray(json){
   var array = [];
   Object.keys(json).forEach(e => {
-
     //var item = {key: "+e+", val: "+json[e]+"};
     var item = json[e];
     array.push(item);
@@ -451,6 +450,22 @@ export function searchEmailOrUrlInString(item) {
   } else {
     return urlify(item);
   } 
+}
+
+
+export function isURL(str: string) {
+  var pattern = new RegExp('^(https?:\/\/)?'+ // protocol
+    '((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|'+ // domain name
+    '((\d{1,3}\.){3}\d{1,3}))'+ // OR ip (v4) address
+    '(\:\d+)?(\/[-a-z\d%_.~+]*)*'+ // port and path
+    '(\?[;&a-z\d%_.~+=-]*)?'+ // query string
+    '(\#[-a-z\d_]*)?$','i'); // fragment locater
+  console.log('pattern: ', pattern);
+  if(!pattern.test(str)) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 // export function emailValidator(str) {

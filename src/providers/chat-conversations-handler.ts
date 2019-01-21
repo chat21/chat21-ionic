@@ -72,15 +72,19 @@ export class ChatConversationsHandler {
         this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
         this.ref.on("child_changed", function(childSnapshot) {
             that.changed(childSnapshot);
-            that.soundMessage();
         });
         this.ref.on("child_removed", function(childSnapshot) {
             that.removed(childSnapshot);
         });
         this.ref.on("child_added", function(childSnapshot) {
             that.added(childSnapshot);
-            that.soundMessage();
         })
+
+        // SET AUDIO
+        this.audio = new Audio();
+        this.audio.src = 'assets/pling.mp3';
+        this.audio.load(); 
+
     }
 
 
@@ -109,6 +113,10 @@ export class ChatConversationsHandler {
         } else {
             console.error("ChatConversationsHandler::added::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
+
+        if(conversation.is_new){
+            this.soundMessage();
+        }
     }
     /**
      * 1 - cerco indice conversazione nell'array conversation
@@ -130,6 +138,10 @@ export class ChatConversationsHandler {
             // this.events.publish('conversations:changed', this.conversations);
         } else {
             console.error("ChatConversationsHandler::changed::conversations with conversationId: ", childSnapshot.key, "is not valid");
+        }
+
+        if(conversation.is_new){
+            this.soundMessage();
         }
     }
     /**
@@ -473,11 +485,24 @@ export class ChatConversationsHandler {
   
 
     soundMessage(){
-        console.log('****** soundMessage *****');
-        this.audio = new Audio();
-        this.audio.src = 'assets/pling.mp3';
-        this.audio.load();
-        this.audio.play();
+        console.log('****** soundMessage *****', this.audio);
+        const that = this;
+        // this.audio = new Audio();
+        // this.audio.src = 'assets/pling.mp3';
+        // this.audio.load();
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        setTimeout(function() {
+            that.audio.play()
+            .then(function() {
+                console.log('****** then *****');
+            })
+            .catch(function() {
+                console.log('****** catch *****');
+            });
+        }, 0);       
+        
     }
+
       
 }

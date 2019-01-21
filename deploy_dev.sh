@@ -27,7 +27,7 @@ fi
 echo 'ver: ---->'$NEW_VER
 echo 'build: ---->'$NEW_BUILD
 
-sed -i -e "s/$start$build/$start$NEW_BUILD/g" src/utils/constants.ts
+sed -i -e "s/$start$ver.$build/$start$NEW_VER.$NEW_BUILD/g" src/utils/constants.ts
 ionic cordova platform add browser --save
 ionic cordova build browser
 

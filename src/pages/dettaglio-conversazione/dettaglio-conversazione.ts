@@ -19,7 +19,7 @@ import { InfoUserPage } from '../info-user/info-user';
 import { PopoverPage } from '../popover/popover';
 // utils
 import { TYPE_SUPPORT_GROUP, TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, TYPE_GROUP } from '../../utils/constants';
-import { isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
+import { isURL, isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
 import { ConversationModel } from '../../models/conversation';
@@ -171,6 +171,10 @@ export class DettaglioConversazionePage extends _DetailPage{
    * altrimenti se è un semplice GRUPPO: id = recipient e fullname = recipient_fullname
    */
   setConversationWith(){
+    console.log('conversationSelected: ', this.conversationSelected);
+    if(!this.conversationSelected){
+      return;
+    }
     // GROUP CONVERSATION 
     this.conversationType = TYPE_GROUP;
     let uidConversationWith = this.conversationSelected.recipient;
@@ -868,6 +872,20 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.doScroll();
   }
 
+  public isImage(message: any){
+    if( message && message.type && message.metadata && message.metadata.src && message.type === 'image' ){
+      return true;
+    }
+    return false;
+  }
+
+  public isFile(message: any){
+    if( message && message.type && message.metadata && message.metadata.src && message.type === 'file' ){
+      return false;
+    }
+    return false;
+  }
+  
 
 }
 
