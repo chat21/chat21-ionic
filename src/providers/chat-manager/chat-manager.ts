@@ -11,9 +11,6 @@ import { ChatConversationsHandler } from '../chat-conversations-handler';
 import { ChatArchivedConversationsHandler } from '../chat-archived-conversations-handler';
 import { ChatContactsSynchronizer } from '../chat-contacts-synchronizer';
 
-// providers
-import { DatabaseProvider } from '../database/database';
-
 
 
 /*
@@ -29,7 +26,6 @@ export class ChatManager {
   private tenant: string;
   public handlers: ChatConversationHandler[];
   private loggedUser: UserModel;
-
   public conversationsHandler: ChatConversationsHandler;
   public archivedConversationsHandler: ChatArchivedConversationsHandler;
   public contactsSynchronizer: ChatContactsSynchronizer;
@@ -37,9 +33,7 @@ export class ChatManager {
 
   constructor(
     public events: Events,
-    //public chatConversationsHandler: ChatConversationsHandler,
-    public chatContactsSynchronizer: ChatContactsSynchronizer,
-    public databaseProvider:DatabaseProvider
+    public chatContactsSynchronizer: ChatContactsSynchronizer
   ) {
     this.init();
   }
@@ -66,7 +60,6 @@ export class ChatManager {
   configureWithAppId(app_id) {
     this.tenant = app_id;
     this.loggedUser = null;
-    this.databaseProvider.initialize(app_id);
     this.handlers = [];
   }
 
@@ -175,7 +168,6 @@ export class ChatManager {
    * @param conversationId 
    */
   getConversationHandlerByConversationId(conversationId):any {
-    
     const resultArray =  this.handlers.filter(function(handler) {
       console.log('FILTRO::: ***', conversationId, handler.conversationWith);
       return handler.conversationWith == conversationId;

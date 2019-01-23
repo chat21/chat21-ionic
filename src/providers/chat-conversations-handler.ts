@@ -18,12 +18,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { avatarPlaceholder, getColorBck, urlExists } from '../utils/utils';
 import { UploadService } from '../providers/upload-service/upload-service';
 
+import { DatabaseProvider } from '../providers/database/database';
+
 @Injectable()
 export class ChatConversationsHandler {
 
     public conversations: ConversationModel[] = [];
     public uidConvSelected: String = '';
-
 
     private tenant: string;
     private loggedUser: UserModel;
@@ -38,7 +39,8 @@ export class ChatConversationsHandler {
         public translate: TranslateService,
         private tiledeskConversationsProvider : TiledeskConversationProvider,
         public upSvc: UploadService,
-        public zone: NgZone
+        public zone: NgZone,
+        public databaseProvider: DatabaseProvider
     ) {
     }
 
@@ -57,8 +59,25 @@ export class ChatConversationsHandler {
         this.tenant = tenant;
         this.loggedUser = loggedUser;
         this.userId = loggedUser.uid;
-        //this.conversations = [];
+        this.conversations = [];
+        this.databaseProvider.initialize(this.loggedUser, this.tenant);
+        this.getConversationsFromStorage();
         return this;
+    }
+
+    /**
+     * 
+     */
+    getConversationsFromStorage(){
+        const that = this;
+        this.databaseProvider.getConversations()
+        .then(function (conversations) {
+            console.log('getConversations:: ' + conversations);
+            that.events.publish('loadedConversationsStorage', conversations);
+        })
+        .catch((error) => {
+            console.log("error::: getConversations:: ", error);
+        });
     }
     /**
      * mi connetto al nodo conversations
@@ -79,12 +98,10 @@ export class ChatConversationsHandler {
         this.ref.on("child_added", function(childSnapshot) {
             that.added(childSnapshot);
         })
-
         // SET AUDIO
         this.audio = new Audio();
         this.audio.src = 'assets/pling.mp3';
         this.audio.load(); 
-
     }
 
 
@@ -99,25 +116,27 @@ export class ChatConversationsHandler {
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
         const conversation = this.completeConversation(childData);
-        
         if (this.isValidConversation(childSnapshot.key, conversation)) {
-            this.conversations.splice(0, 0, conversation);
             console.log("child_added conversationS", conversation);
-            this.events.publish('conversationsAdd', conversation);
-            //this.events.publish('conversations:added', conversation);
             // add the conversation from the isConversationClosingMap
             this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
+            const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
+            if(index > -1){
+                this.conversations.splice(index, 1, conversation);
+            } else {
+                this.conversations.splice(0, 0, conversation);
+                this.databaseProvider.setConversation(conversation);
+            }
             this.conversations.sort(compareValues('timestamp', 'desc'));
-            // aggiungo un subscribe che richiama confronto uiselected e apro dettaglio paggina!!!!
-
+            this.events.publish('conversationsChanged', this.conversations);
         } else {
             console.error("ChatConversationsHandler::added::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
-
         if(conversation.is_new){
             this.soundMessage();
         }
     }
+
     /**
      * 1 - cerco indice conversazione nell'array conversation
      * 2 - sostituisco conversazione
@@ -128,18 +147,16 @@ export class ChatConversationsHandler {
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
         let conversation = this.completeConversation(childData); 
-
         if (this.isValidConversation(childSnapshot.key, conversation)) {
             //conversation = this.isConversationSelected(conversation, '1');
             const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
             this.conversations.splice(index, 1, conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
-            console.log("child_changed conversationS",conversation);
-            // this.events.publish('conversations:changed', this.conversations);
+            this.databaseProvider.setConversation(conversation);
+            this.events.publish('conversationsChanged', this.conversations);
         } else {
             console.error("ChatConversationsHandler::changed::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
-
         if(conversation.is_new){
             this.soundMessage();
         }
@@ -152,15 +169,12 @@ export class ChatConversationsHandler {
      */
     removed(childSnapshot){
         console.log("ChatConversationsHandler::onSnapshotRemoved::conversation:", childSnapshot.key);
-
         const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
-        // controllo superfluo sarà sempre maggiore
         if(index>-1){
-            // splice (<indice dell'elemento da eliminare>, <numero di elementi da eliminare>)
             this.conversations.splice(index, 1);
-            //this.events.publish('conversations:update', this.conversations);
-
             this.conversations.sort(compareValues('timestamp', 'desc'));
+            this.databaseProvider.removeConversation(childSnapshot.key);
+            this.events.publish('conversationsChanged', this.conversations);
         }
 
         // remove the conversation from the isConversationClosingMap
@@ -228,14 +242,10 @@ export class ChatConversationsHandler {
 
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
         this.setImageConversation(conv, conversation_with);
-    
-        
-
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.time_last_message = time_last_message;
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
-
         return conv;
     }
 
@@ -301,7 +311,7 @@ export class ChatConversationsHandler {
                 conv.image = url;
                 //return url;
             }).catch((error) => {
-                //console.log("**********XX  displayImage error::: ", error);
+                console.log("**********XX  displayImage error::: ", error);
                 conv.image = null;
                 //return '';
             });
@@ -373,14 +383,13 @@ export class ChatConversationsHandler {
         const index = searchIndexInArrayForUid(this.conversations, uid);
         if (index > -1) {
             this.conversations.splice(index, 1);
+            this.events.publish('conversationsChanged', this.conversations);
         }
     }
 
     addConversationListener(uidUser, conversationId) {
         console.log("ChatConversationsHandler::addConversationListener::uidUser:", uidUser, "conversationId:", conversationId);
-
         var that = this;
-
         const tenant = this.chatManager.getTenant();
         const url = '/apps/' + tenant + '/users/' + uidUser + '/conversations/' + conversationId;
         const reference = firebase.database().ref(url);
@@ -498,7 +507,7 @@ export class ChatConversationsHandler {
                 console.log('****** then *****');
             })
             .catch(function() {
-                console.log('****** catch *****');
+                console.log('***//tiledesk-dashboard/chat*');
             });
         }, 0);       
         

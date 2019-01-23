@@ -5,6 +5,7 @@ import { convertMessage } from '../../utils/utils';
 import { DettaglioConversazionePage } from '../dettaglio-conversazione/dettaglio-conversazione';
 import { NavProxyService } from '../../providers/nav-proxy';
 import { DatabaseProvider } from '../../providers/database/database';
+import { UserModel } from '../../models/user';
 
 @IonicPage()
 @Component({
@@ -12,16 +13,17 @@ import { DatabaseProvider } from '../../providers/database/database';
   templateUrl: 'archived-conversations.html',
 })
 export class ArchivedConversationsPage {
+  private loggedUser: UserModel;
+  private tenant: string;
 
   // the list of th archived conversations
   private archivedConversations: ConversationModel[];
-  conversationSelected: ConversationModel;
+  private conversationSelected: ConversationModel;
 
   // used within the html template
-  convertMessage = convertMessage;
+  private convertMessage = convertMessage;
 
   private areArchivedConversationsAvailable : boolean;
-
   private uidConvSelected : string;
 
   constructor(
@@ -29,65 +31,48 @@ export class ArchivedConversationsPage {
     public navParams: NavParams,
     private navProxy: NavProxyService,
     private databaseProvider: DatabaseProvider,
-    private events: Events,
+    private events: Events
   ) {
-    this.areArchivedConversationsAvailable = false; // default value
-    
+    this.areArchivedConversationsAvailable = false;
+    this.tenant = navParams.get('tenant');
+    this.loggedUser = navParams.get('loggedUser');
+
     const that = this;
+    this.databaseProvider.initialize(this.loggedUser, this.tenant);
     this.databaseProvider.getUidLastOpenConversation()
-    .then(function (uid) {
-      //console.log('getUidLastOpenConversation:: ' + uid + 'that.uidReciverFromUrl:: ' + that.uidReciverFromUrl);
+    .then(function (uid: string) {
       that.uidConvSelected = uid;
-      //that.chatConversationsHandler.uidConvSelected = uidConvSelected;
       that.inizialize();
     })
-    .catch((error) => {
+    .catch((error: any) => {
       console.log("error::: ", error);
     });
   }
 
-  ionViewDidLoad() {
-  }
 
   ionViewWillUnload() {
     this.archivedConversations = []; // clear the archived conversations list
-    // this.conversationSelected = null;
-    // this.uidConvSelected = null;
   }
 
   inizialize(){
     // get the list of archived conversations from the navigation and preload the archived conversations list
     this.archivedConversations = this.navParams.get('archivedConversations');
-    // console.log("ArchivedConversationsPage::ionViewDidLoad::archivedConversations:", archivedConversations);
 
     // update the archvied conversations availability
     this.areArchivedConversationsAvailable = this.archivedConversations && this.archivedConversations.length > 0;
 
     this.openMessageList(this.archivedConversations[this.uidConvSelected]);
-    // console.log("ArchivedConversationsPage::ionViewDidLoad::areArchivedConversationsAvailable:", this.areArchivedConversationsAvailable);
   }
 
   
-
   // click on a single conversation
   private onArchivedConversationClicked(archivedConversation) {
-    console.log("ArchivedConversationsPage::onArchivedConversationClicked::archivedConversation:", archivedConversation);
-
-    var that = this;
-
     // set the current conversation selected within the ui
     this.uidConvSelected = archivedConversation.uid;
-
     // // popping the current page
     // this.navCtrl.pop().then(() => {
-
-      // open the new page
+    // open the new page
     this.openMessageList(archivedConversation);
-
-    // }, (err) => {
-    //   // something didn't work
-    //   console.error(err);
-    // });
   }
   
 
@@ -104,7 +89,7 @@ export class ArchivedConversationsPage {
    */
   openMessageList(archivedConversation) {
     const that = this;
-    // setTimeout(function () {
+    setTimeout(function () {
       if (archivedConversation) {
         archivedConversation.is_new = false;
         archivedConversation.status = '0';
@@ -118,7 +103,7 @@ export class ArchivedConversationsPage {
         that.events.publish('uidConvSelected:changed', archivedConversation.uid);
         that.conversationSelected = archivedConversation;
       }
-    // }, 1000);
+    }, 0);
   }
 
 }

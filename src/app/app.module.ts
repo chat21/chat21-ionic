@@ -116,7 +116,7 @@ import { ArchivedConversationsPage } from '../pages/archived-conversations/archi
     }),
     IonicStorageModule.forRoot({
       name: "tilechat",
-      storeName: 'contacts',
+      storeName: 'settings',
       driverOrder: ['indexeddb','sqlite', 'websql', 'indexeddb', 'localstorage']
     })
     // AngularFireModule.initializeApp(this.firebaseConfig)

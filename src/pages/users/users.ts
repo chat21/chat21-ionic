@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ViewController, Events, IonicPage, NavController } from 'ionic-angular';
+import { ViewController, Events, IonicPage, NavController, NavParams } from 'ionic-angular';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/map';
 // pages
@@ -11,7 +11,8 @@ import { DatabaseProvider } from './../../providers/database/database';
 import { NavProxyService } from '../../providers/nav-proxy';
 // utils
 import { compareValues } from '../../utils/utils';
-//import { PARENT_PAGE_DETAIL_CONVERSATION } from '../../utils/constants';
+
+import { UserModel } from '../../models/user';
 
 
 @IonicPage()
@@ -30,23 +31,26 @@ export class UsersPage {
   private searchTerm: string = '';
   private searchControl: FormControl;
   private searching: any = false;
+  
   // private currentUser: firebase.User;
   // private myUser: UserModel;
   // private parentPage: string;
 
+  private loggedUser: UserModel;
+  private tenant: string;
+
   constructor(
     public navCtrl: NavController,
     public viewCtrl: ViewController,
-    //public navParams: NavParams,
-    //public afAuth: AngularFireAuth,
-    //db: AngularFireDatabase,
-    //config: Config,
+    public navParams: NavParams,
     public events: Events,
     public navProxy: NavProxyService,
-    public databaseprovider: DatabaseProvider
-    //private platform: Platform
+    public databaseProvider: DatabaseProvider
   ) 
-  {}
+  {
+    this.tenant = navParams.get('tenant');
+    this.loggedUser = navParams.get('loggedUser');
+  }
   /**
    * 
    */
@@ -75,7 +79,8 @@ export class UsersPage {
     if (!this.contacts || this.contacts.lenght == 0){
       // console.log('ngOnInit contacts', this.contacts);
       // apro db locale e recupero tutti gli users ordinati per fullname dalla query firebase
-      this.databaseprovider.getContactsLimit()
+      this.databaseProvider.initialize(this.loggedUser, this.tenant);
+      this.databaseProvider.getContactsLimit()
       .then(function(data) { 
         //console.log("contacts:", data); 
         that.contacts = data;

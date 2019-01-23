@@ -17,7 +17,7 @@ export class ChatContactsSynchronizer {
 
     constructor(
         private config: Config,
-        private databaseprovider: DatabaseProvider
+        private databaseProvider: DatabaseProvider
     ) { 
     }
     /**
@@ -28,6 +28,7 @@ export class ChatContactsSynchronizer {
     initWithTenant(tenant, user) {
         this.tenant = tenant;
         this.loggeduser = user;
+        this.databaseProvider.initialize(this.loggeduser, this.tenant);
         return this;
     }
     /**
@@ -36,7 +37,7 @@ export class ChatContactsSynchronizer {
      */
     startSynchro(){
         let that = this;
-        this.databaseprovider.getTimestamp()
+        this.databaseProvider.getTimestamp()
         .then(function(lastUpdate) { 
             that.loadFirebaseContactsData(lastUpdate);
         });
@@ -86,8 +87,9 @@ export class ChatContactsSynchronizer {
         }
         user.fullname = fullname;
         // console.log("fullname:",fullname);
-        this.databaseprovider.setTimestamp();
-        this.databaseprovider.addContact(user.uid, user.email, user.firstname, user.lastname, user.fullname, user.imageurl);  
+        
+        this.databaseProvider.setTimestamp();
+        this.databaseProvider.addContact(user.uid, user.email, user.firstname, user.lastname, user.fullname, user.imageurl);  
     }
     /**
      * salvo data ultimo aggiornamento nel DB
@@ -95,9 +97,9 @@ export class ChatContactsSynchronizer {
      * @param child 
      */
     removeContact(child) {
-        this.databaseprovider.setTimestamp();
+        this.databaseProvider.setTimestamp();
         let user = child;
-        this.databaseprovider.removeContact(user.uid);
+        this.databaseProvider.removeContact(user.uid);
     }
     /**
      * dispose reference di contacts synchronizer

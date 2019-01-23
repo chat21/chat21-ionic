@@ -167,12 +167,11 @@ page-lista-conversazioni {
         }
 
         .item-block.selected{
-            background-color: #0b5c89;
-            border-bottom: rgba(0, 0, 0, 0.10);
-            border-bottom-width: thin;
-            border-bottom-style: solid;
             color:#ffffff;
-
+            background-color: #0b5c89;
+            // border-bottom: rgba(0, 0, 0, 0.10);
+            // border-bottom-width: thin;
+            // border-bottom-style: solid;
             .close-conversation-button {
                 ion-icon {
                     color: white;

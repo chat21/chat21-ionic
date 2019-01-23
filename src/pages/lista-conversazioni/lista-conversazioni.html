@@ -26,13 +26,12 @@
     <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
     <ng-template #contentConversations>
       <ion-item no-lines ion-item [class.selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of conversations"
-        (click)="openMessageList(conversation.uid)">
+        (mousedown)="setUidConvSelected(conversation.uid)" (mouseup)="openMessageList()">
         <ion-avatar item-start>
-          <!-- <span *ngIf="conversation.image; then avatarImage else avatarPlaceholder">here is ignored</span> -->
           <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
           <div #avatarImage *ngIf="conversation.image" class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
         </ion-avatar>
-        <h2 class="truncate">{{ conversation.conversation_with_fullname }}</h2>
+        <div class="truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
         <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
 
 

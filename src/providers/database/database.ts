@@ -4,40 +4,64 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
+import { Config } from 'ionic-angular';
+
+// models
+import { UserModel } from '../../models/user';
 // firebase
 import * as firebase from 'firebase/app';
 //utils
-import { getNowTimestamp } from '../../utils/utils';
+import { getNowTimestamp, compareValues } from '../../utils/utils';
 
 /**
  * GESTIONE SALVATAGGIO IMMAGINI IN FIREBASE
  */
 @Injectable()
 export class DatabaseProvider {
-  private storageSettings: Storage;
+  public tenant: string;
+  public storageSettings: Storage;
+  public storageContacts: Storage;
+  public storageConversations: Storage;
+  public loggedUser: UserModel;
 
   constructor(
-    private storage: Storage
-  ) {}
+    public config: Config
+  ) {
+  }
 
+  initialize(loggedUser:UserModel, tenant: string){
+    this.loggedUser = loggedUser;
+    this.tenant = tenant;
+    if(!this.storageSettings || !this.storageContacts || !this.storageConversations){
+      this.storageSettings = this.configStorage('settings-'+loggedUser.uid);
+      this.storageContacts = this.configStorage('contacts-'+loggedUser.uid);
+      this.storageConversations = this.configStorage('conversations-'+loggedUser.uid);
+    }
+  }
   /**
    * inizializzo databaseprovider 
    * creo un nuovo storage
    * chiamato nell'init di chat-manager
    * @param tenant 
    */
-  initialize(tenant){
+  configStorage(storeName: string){
+    let driverOrder = ['indexeddb','localstorage','sqlite','websql'];
+    if(storeName.startsWith('settings')){
+      driverOrder = ['localstorage','indexeddb','sqlite','websql'];
+    }
     let configStorage = {
-      name: tenant,
-      storeName: 'settings',
-      driverOrder: ['indexeddb','sqlite', 'websql', 'indexeddb', 'localstorage']
+      name: this.tenant,
+      storeName: storeName,
+      driverOrder: driverOrder
     };
-    this.storageSettings = new Storage(configStorage);
+    return  new Storage(configStorage);
   }
   /**
    * ritorno data ultimo aggiornamento salvata nel DB locale
    */
   getTimestamp(){
+    // settings
+    // const storageSettings = this.configStorage('settings');
     return this.storageSettings.get('lastUpdate')
     .then(function(lastUpdate) { 
       return lastUpdate;
@@ -47,24 +71,36 @@ export class DatabaseProvider {
    * salvo data ultimo aggiornamento nel DB locale
    */
   setTimestamp(){
+    // settings
     let lastUpdate = getNowTimestamp();
     //console.log("SALVO NEL DB DATA UPDATE:", lastUpdate);
+    //const storageSettings = this.configStorage('settings');
     this.storageSettings.set('lastUpdate',lastUpdate);
   }
   /**
    * ritorno uid ultima conversazione aperta salvata nel DB locale
    */
   getUidLastOpenConversation() {
+    // settings
     console.log("getUidLastOpenConversation");
-    return this.storageSettings.get('uidLastOpenConversation')
+    return this.storageSettings.get('uidLastOpenConversation');
   }
   /**
    * salvo uid ultima conversazione aperta nel DB
    * @param uid 
    */
   setUidLastOpenConversation(uid){
+    // settings
     console.log("SALVO NEL DB UID ULTIMA CHAT APERTA:", uid);
-    this.storageSettings.set('uidLastOpenConversation',uid);
+    //const storageSettings = this.configStorage('settings');
+    //return storageSettings.set('uidLastOpenConversation',uid)
+    this.storageSettings.set('uidLastOpenConversation',uid)
+    .then(()=>{
+      console.log("SALVATO:", uid);
+    })
+    .catch(function(error){
+      console.log("ERRORE SALVATAGGIO:", error);
+    })
   }
   /**
    * ritorno contatti salvati nel DB locale
@@ -74,7 +110,8 @@ export class DatabaseProvider {
   getContactsLimit(limit?) {
     let idCurrentUser = firebase.auth().currentUser.uid;
     let contacts = [];
-    return this.storage.forEach( (data, key, index) => {
+    //const storageSettings = this.configStorage('contacts');
+    return this.storageContacts.forEach( (data, key, index) => {
       limit>0?limit:null;
       //console.log("INDEX::", index, limit);
       if (index<limit || !limit){
@@ -104,24 +141,17 @@ export class DatabaseProvider {
    * @param imageurl 
    */
   addContact(uid, email, firstname, lastname, fullname, imageurl) {
-    //let data = [uid, email, firstname, lastname, fullname, imageurl];
-    //this.storage.ready().then(() => {
       //INSERT OR REPLACE
       let value = {
-        "imageurl" : (imageurl && imageurl!='undefined')?imageurl:'',
-        "email" : (email && email!='undefined')?email:'',
-        "firstname" : (firstname && firstname!='undefined')?firstname:'',
-        "lastname" : (lastname && lastname!='undefined')?lastname:'',
-        "fullname" : (fullname && fullname!='undefined')?fullname:'',
-        "uid" : uid
+          "imageurl" : (imageurl && imageurl!='undefined')?imageurl:'',
+          "email" : (email && email!='undefined')?email:'',
+          "firstname" : (firstname && firstname!='undefined')?firstname:'',
+          "lastname" : (lastname && lastname!='undefined')?lastname:'',
+          "fullname" : (fullname && fullname!='undefined')?fullname:'',
+          "uid" : uid
       }
-      //this.storage.set(`contacts:${ uid }`,value);
-      this.storage.set(uid,value);
-    // })
-    // .catch((error) => {
-    //   console.log("error::", error);
-    //   //return contacts;
-    // });
+      //const storageSettings = this.configStorage('contacts');
+      this.storageContacts.set(uid, value);
   }
   /**
    * rimuovo un contatto dal DB locale
@@ -129,11 +159,42 @@ export class DatabaseProvider {
    */
   removeContact(uid){
     //this.storage.ready().then(() => {
-      this.storage.remove(uid);
+      //const storageSettings = this.configStorage('contacts');
+      this.storageContacts.remove(uid);
     // })
     // .catch((error) => {
     //   console.log("error::", error);
     //   //return contacts;
     // });
+  }
+
+
+  /**
+   * 
+   */
+  getConversations() {
+    console.log("getConversations ::");
+    let conversations = [];
+    //const storageSettings = this.configStorage('conversations');
+    return this.storageConversations.forEach( (data, key, index) => {
+      conversations.push(data);
+    })
+    .then(function() { 
+      conversations.sort(compareValues('timestamp', 'desc'));
+      return conversations;
+    });
+
+  }
+  /** */
+  setConversation(conversation:any) {
+    console.log("setConversation",  conversation);
+    //const storageSettings = this.configStorage('conversations');
+    return this.storageConversations.set(conversation.uid, conversation)
+  }
+  /** */
+  removeConversation(uid: string){
+    console.log("removeConversation");
+    // const storageSettings = this.configStorage('conversations');
+    this.storageConversations.remove(uid);
   }
 }

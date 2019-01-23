@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-
+import { Events } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import * as firebase from 'firebase/app';
 import { UserModel } from '../models/user';
@@ -22,6 +22,7 @@ export class ChatArchivedConversationsHandler {
     public uidConvSelected: String = '';
 
     constructor(
+        public events: Events,
         public chatManager: ChatManager,
         public translate: TranslateService,
         public upSvc: UploadService,
@@ -45,7 +46,6 @@ export class ChatArchivedConversationsHandler {
         this.tenant = tenant;
         this.loggedUser = loggedUser;
         this.userId = loggedUser.uid;
-        //this.conversations = [];
         return this;
     }
 
@@ -59,19 +59,15 @@ export class ChatArchivedConversationsHandler {
         const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUser.uid + '/archived_conversations';
         console.log('url conversations: ', urlNodeFirebase);
         this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(400);
-
         this.ref.on("child_added", function (childSnapshot) {
             that.onSnapshotAdded(childSnapshot);
         })
-
         this.ref.on("child_changed", function (childSnapshot) {
             that.onSnapshotChanged(childSnapshot);
         });
-
         this.ref.on("child_removed", function (childSnapshot) {
             that.onSnapshotRemoved(childSnapshot);
         });
-
     }
 
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
@@ -81,17 +77,18 @@ export class ChatArchivedConversationsHandler {
      * @param snapshot
      */
     private onSnapshotAdded(snapshot) {
-        // console.log("ChatArchivedConversationsHandler::onSnapshotAdded::snapshot:", snapshot)
         const childData: ConversationModel = snapshot.val();
         childData.uid = snapshot.key;
         const conversation = this.completeConversation(childData);
-      
         if (this.isValidConversation(snapshot.key, conversation)) {
-            this.conversations.splice(0, 0, conversation);
-            console.log("child_added conversationS", conversation);
-            //this.events.publish('conversations:added', conversation);
-
+            const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
+            if(index > -1){
+                this.conversations.splice(index, 1, conversation);
+            } else {
+                this.conversations.splice(0, 0, conversation);
+            }
             this.conversations.sort(compareValues('timestamp', 'desc'));
+            this.events.publish('archivedConversationsChanged', this.conversations);
         } else {
             console.error("ChatArchivedConversationsHandler::added::conversations with conversationId: ", snapshot.key, "is not valid");
         }
@@ -105,20 +102,15 @@ export class ChatArchivedConversationsHandler {
      */
     private onSnapshotChanged(snapshot) {
         // console.log("ChatArchivedConversationsHandler::onSnapshotChanged::snapshot:", snapshot)
-
         const childData: ConversationModel = snapshot.val();
         childData.uid = snapshot.key;
-
         let conversation = this.completeConversation(childData);
         if (this.isValidConversation(snapshot.key, conversation)) {
             //conversation = this.isConversationSelected(conversation, '1');
             const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
             this.conversations.splice(index, 1, conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
-            console.log("child_changed conversationS", conversation);
-
-            // this.events.publish('conversations:changed', this.conversations);
-
+            this.events.publish('archivedConversationsChanged', this.conversations);
         } else {
             console.error("ChatArchivedConversationsHandler::changed::conversations with conversationId: ", snapshot.key, "is not valid");
         }
@@ -133,14 +125,11 @@ export class ChatArchivedConversationsHandler {
     private onSnapshotRemoved(childSnapshot) {
         // console.log("ChatArchivedConversationsHandler::onSnapshotRemoved::childSnapshot:", childSnapshot)
         console.log("ChatArchivedConversationsHandler::onSnapshotRemoved::conversation:", childSnapshot.key);
-
         const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
-        // controllo superfluo sarà sempre maggiore
-        if (index > -1) {
-            // splice (<indice dell'elemento da eliminare>, <numero di elementi da eliminare>)
+        if(index>-1){
             this.conversations.splice(index, 1);
-
             this.conversations.sort(compareValues('timestamp', 'desc'));
+            this.events.publish('archivedConversationsChanged', this.conversations);
         }
     }
 

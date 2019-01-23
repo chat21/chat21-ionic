@@ -77,10 +77,6 @@ export class GroupService {
   /**
    * 
    */
-
-
-
-
   leaveAGroup(uidGroup, uidUser, callback) {
     const appId = this.chatManager.getTenant();
     // const token = this.userService.returnToken();

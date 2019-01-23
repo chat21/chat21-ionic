@@ -2,6 +2,8 @@ import { Component, NgZone } from '@angular/core';
 import { Events, PopoverController, IonicPage, NavController, NavParams, ModalController, Modal, AlertController } from 'ionic-angular';
 // models
 import { ConversationModel } from '../../models/conversation';
+import { UserModel } from '../../models/user';
+
 // pages
 import { LoginPage } from '../authentication/login/login';
 import { PlaceholderPage } from '../placeholder/placeholder';
@@ -28,6 +30,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ArchivedConversationsPage } from '../archived-conversations/archived-conversations';
 import { ChatArchivedConversationsHandler } from '../../providers/chat-archived-conversations-handler';
 import { isGeneratedFile } from '@angular/compiler/src/aot/util';
+import { User } from 'firebase';
 
 @IonicPage()
 @Component({
@@ -35,8 +38,10 @@ import { isGeneratedFile } from '@angular/compiler/src/aot/util';
   templateUrl: 'lista-conversazioni.html',
 })
 export class ListaConversazioniPage extends _MasterPage {
+  private loggedUser: UserModel;
   private conversations: Array<ConversationModel> = [];
   private archivedConversations: ConversationModel[];
+  private tenant: string;
 
   private uidReciverFromUrl: string;
   private conversationsHandler: ChatConversationsHandler;
@@ -70,15 +75,14 @@ export class ListaConversazioniPage extends _MasterPage {
     // /** RECUPERO ID CONVERSAZIONE
     // * se vengo da dettaglio conversazione
     // * o da users con conversazione attiva recupero conversationWith
-    // * //this.conversationWith = navParams.get('conversationWith');
     // */
     this.uidConvSelected = navParams.get('conversationWith');
-    this.openMessageList(this.uidConvSelected);
+    //this.openMessageList();
+    this.tenant = chatManager.getTenant();
 
     /** RECUPERO IL RECIPIENTID 
     * nel caso in cui viene pasato nell'url della pagina
     * per aprire una conversazione
-    * 
     * USARE getParameterByName(name) del widget
     */
     let TEMP = location.search.split('recipient=')[1];
@@ -99,52 +103,52 @@ export class ListaConversazioniPage extends _MasterPage {
     this.initSubscriptions();
   }
 
-
-  ionViewDidEnter(){
-    /** RECUPERO ID CONVERSAZIONE
-    * se vengo da dettaglio conversazione
-    * o da users con conversazione attiva recupero conversationWith
-    * //this.conversationWith = navParams.get('conversationWith');
-    */
-   //this.uidConvSelected = this.navParams.get('conversationWith');
-   //this.openMessageList(this.uidConvSelected);
-  }
-  
-
-
   //// SUBSCRIBTIONS ////
   /** */
   initSubscriptions() {
-    console.log('************** initSubscriptions ***********************');
-    this.events.subscribe('conversationsAdd', this.subscribeConversationsAdd);
+    this.events.subscribe('loadedConversationsStorage', this.loadedConversationsStorage);
+    this.events.subscribe('conversationsChanged', this.conversationsChanged);
+    this.events.subscribe('archivedConversationsChanged', this.archivedConversationsChanged);
     this.events.subscribe('loggedUser:login', this.subscribeLoggedUserLogin);
     this.events.subscribe('loggedUser:logout', this.subscribeLoggedUserLogout);
     this.events.subscribe('uidConvSelected:changed', this.subscribeUidConvSelectedChanged);
-    // this.events.subscribe('conversations:changed', this.subscribeConversationsChanged);
+  }
+  /** 
+   * evento richiamato quando ho finito di caricare le conversazioni dallo storage
+  */
+  loadedConversationsStorage: any = conversations => {
+    this.conversations = conversations;
+    this.openMessageList();
+  }
+  /** 
+   * evento richiamato su add, change, remove di una conversazione
+  */
+  conversationsChanged = (conversations: ConversationModel[]) => {
+    this.conversations = conversations;
   }
 
-  
+  archivedConversationsChanged = (conversations: ConversationModel[]) => {
+    this.archivedConversations = conversations;
+  }
   /** subscribeUidConvSelectedChanged
-   * quando si clicca su una conversazione (si seleziona) 
-   * apro elenco conversazione maessaggi 
+   * evento richiamato quando si seleziona un utente nell'elenco degli user 
+   * apro dettaglio conversazione 
   */
-  subscribeUidConvSelectedChanged: any = uidConvSelected => {
-    console.log('************** subscribeUidConvSelectedChanged', uidConvSelected);
+  subscribeUidConvSelectedChanged = (uidConvSelected: string) => {
     this.checkMessageListIsOpen(uidConvSelected);
   }
-
   /** subscribeLoggedUserLogin
    * effettuato il login: 
    * 1 - dismetto modale
    * 2 - carico lista conversazioni
    * 3 - se non ci sono conversazioni carico placeholder
   */
-  subscribeLoggedUserLogin: any = (user) => {
+  subscribeLoggedUserLogin = (user: any) => {
     console.log('************** subscribeLoggedUserLogin', user);
+    this.loggedUser = user;
     this.profileModal.dismiss({ animate: false, duration: 0 });
     this.loadListConversations();
   }
-
   /** subscribeLoggedUserLogout
    * effettuato il logout:
    * 1 - mostro placeholder
@@ -152,27 +156,13 @@ export class ListaConversazioniPage extends _MasterPage {
    * 3 - mostro modale login
    * 4 - resetto conversationWith
   */
-  subscribeLoggedUserLogout: any = (user) => {
+  subscribeLoggedUserLogout = (user: any) => {
     console.log('************** subscribeLoggedUserLogout', user);
     this.conversations = [];
     this.profileModal.present();
     //this.conversationWith = null;
     this.uidConvSelected = null;
   }
-
-  subscribeConversationsAdd: any = (conversation) => {
-    console.log('************** subscribeConversationsAdd');
-    if(this.uidConvSelected == conversation.uid){
-      this.events.unsubscribe('conversationsAdd', null);
-      this.showDetailConversation();
-    }
-  }
-
-  // private subscribeConversationsChanged: any = (conversations : ConversationModel[]) => {
-  //   console.log('ListaConversazioniPage::subscribeConversationsChanged::conversationsconversations:', conversations);
-  //   this.conversations = conversations;
-  // }
-
   //// END SUBSCRIBTIONS LIST ////
 
 
@@ -185,24 +175,32 @@ export class ListaConversazioniPage extends _MasterPage {
   * init ConversationsHandler e carico elenco conversazioni
   */
   loadListConversations() {
-    //debugger;
+    const that = this;
+    this.databaseProvider.initialize(this.loggedUser, this.tenant);
     if (this.uidReciverFromUrl) {
-      this.uidConvSelected = this.uidReciverFromUrl;
-      this.chatConversationsHandler.uidConvSelected = this.uidConvSelected;
-      this.uidReciverFromUrl = null;
+      this.setUidConvSelected(this.uidReciverFromUrl);
       this.initConversationsHandler();
+      this.uidReciverFromUrl = null;
     } else {
-      const that = this;
       this.databaseProvider.getUidLastOpenConversation()
-        .then(function (uid) {
-          console.log('getUidLastOpenConversation:: ' + uid + 'that.uidReciverFromUrl:: ' + that.uidReciverFromUrl);
-          that.uidConvSelected = uid;
-          that.initConversationsHandler();
-        })
-        .catch((error) => {
-          console.log("error::: ", error);
-        });
+      .then(function (uid: string) {
+        console.log('getUidLastOpenConversation:: ' + uid);
+        that.setUidConvSelected(uid);
+        that.initConversationsHandler();
+      })
+      .catch((error) => {
+        console.log("error::: ", error);
+      });
     }
+  }
+
+  /**
+   * 
+   * @param uidConvSelected 
+   */
+  setUidConvSelected(uidConvSelected: string){
+    this.uidConvSelected = uidConvSelected;
+    this.chatConversationsHandler.uidConvSelected = uidConvSelected;
   }
 
   /**
@@ -216,46 +214,46 @@ export class ListaConversazioniPage extends _MasterPage {
    * 3 salvo id conv nello storage
    * @param uidConvSelected  
    */
-  openMessageList(uidConvSelected) {
+  openMessageList() {
     console.log('openMessageList::');
-    // if the conversation from the isConversationClosingMap is waiting to be closed 
-    // deny the click on the conversation
-    if (this.tiledeskConversationProvider.getClosingConversation(uidConvSelected)) return;
-    this.uidConvSelected = uidConvSelected;
-    this.chatConversationsHandler.uidConvSelected = uidConvSelected;
     const that = this;
+  
     setTimeout(function () {
-      var conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
+      var conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
       if (conversationSelected) {
-        console.log('conversationSelected: ', conversationSelected);
+        console.log('openMessageList::', conversationSelected);
         conversationSelected.is_new = false;
         that.conversationsHandler.setConversationRead(conversationSelected.uid);
         conversationSelected.status = '0';
         conversationSelected.selected = true;
         that.navProxy.pushDetail(DettaglioConversazionePage, {
           conversationSelected: conversationSelected,
-          conversationWith: uidConvSelected,
+          conversationWith: that.uidConvSelected,
           conversationWithFullname: conversationSelected.conversation_with_fullname,
           channel_type: conversationSelected.channel_type
         });
-        that.databaseProvider.setUidLastOpenConversation(uidConvSelected);
+        that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
       }
-      //that.conversationWith = uidConvSelected;
-    }, 0);
+    }, 200);
+    // if the conversation from the isConversationClosingMap is waiting to be closed 
+    // deny the click on the conversation
+    if (this.tiledeskConversationProvider.getClosingConversation(this.uidConvSelected)) return;
   }
+
+  
 
   /**
    * 
    * @param uidConvSelected 
    */
   checkMessageListIsOpen(uidConvSelected) {
-    console.log('-------------> checkMessageListIsOpen ', uidConvSelected);
     if (uidConvSelected === this.uidConvSelected && windowsMatchMedia()) {
       console.log("ListaConversazioniPage::checkMessageListIsOpen::if::uidConvSelected", uidConvSelected, "this_uidConvSelected", this.uidConvSelected);
       return;
     } else {
       console.log("ListaConversazioniPage::checkMessageListIsOpen::else::uidConvSelected", uidConvSelected);
-      this.openMessageList(uidConvSelected);
+      this.setUidConvSelected(uidConvSelected);
+      this.openMessageList();
     }
   }
 
@@ -268,64 +266,67 @@ export class ListaConversazioniPage extends _MasterPage {
    * inizializzo la pagina
    */
   initConversationsHandler() {
-
     console.log('-------------> initConversationsHandler');
     const tenant = this.chatManager.getTenant();
     const loggedUser = this.chatManager.getLoggedUser();
-    let handler = this.chatManager.conversationsHandler;
-    let tempArchviedConversationsHandler = this.chatManager.archivedConversationsHandler;;
-    if (!handler) {
-      console.log('handler NON ESISTE ::');
-      handler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
-      tempArchviedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(tenant, loggedUser);
-      this.chatManager.setConversationsHandler(handler);
-      handler.connect();
-      tempArchviedConversationsHandler.connect();
-      handler.uidConvSelected = this.uidConvSelected
-      this.conversationsHandler = handler;
-      this.chatArchivedConversationsHandler = tempArchviedConversationsHandler;
-      console.log('handler.conversations ::'+handler.conversations);
-      this.conversations = handler.conversations;
-      this.archivedConversations = tempArchviedConversationsHandler.conversations;
-      this.showDetailConversation();
-      // // attach the archived conversations provider
-      // this.archivedConversationsProvider.getInstance().init(tenant, loggedUser);
-      // this.archivedConversationsProvider.getInstance().connect();
-      // this.archivedConversations = this.archivedConversationsProvider.getArchviedConversations();
+
+    let conversationHandler = this.chatManager.conversationsHandler;
+    let archviedConversationsHandler = this.chatManager.archivedConversationsHandler;
+    if (!conversationHandler) {
+      // 1 - init chatConversationsHandler and  archviedConversationsHandler
+      conversationHandler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
+      archviedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(tenant, loggedUser);
+      
+      // 2 - bind conversations to conversationHandler.conversations
+      //this.conversations = conversationHandler.conversations;
+      //this.archivedConversations = archviedConversationsHandler.conversations;
+
+      // 3 - set uidConvSelected in conversationHandler
+      conversationHandler.uidConvSelected = this.uidConvSelected
+      archviedConversationsHandler.uidConvSelected = this.uidConvSelected
+
+      // 4 - save conversationHandler in chatManager
+      this.chatManager.setConversationsHandler(conversationHandler);
+
+      // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
+      conversationHandler.connect();
+      archviedConversationsHandler.connect();
+
+      // 6 - imposto i conversationsHandler globali
+      this.conversationsHandler = conversationHandler;
+      this.chatArchivedConversationsHandler = archviedConversationsHandler;
+    
     } else {
-      console.log('handler ESISTE ::', handler);
-      this.conversationsHandler = handler;
-      this.chatArchivedConversationsHandler = tempArchviedConversationsHandler;
-      this.showDetailConversation();
+      console.log('handler ESISTE ::', conversationHandler);
+      this.conversationsHandler = conversationHandler;
+      this.chatArchivedConversationsHandler = archviedConversationsHandler;
     }
-
-    //this.navProxy.isOn = true;
-    //
-    // if(this.conversations.length <= 0){
-    //   this.navProxy.pushDetail(PlaceholderPage,{});
-    // }
-
+    this.showDetailConversation();
   }
 
 
-
+  /**
+   * se mi trovo in visualizzazione desktop (dettaglio conversazione aperto sulla dx)
+   *  - se esite uidConvSelected apro il dettaglio conversazione
+   *  - altrimenti setto uidConvSelected alla prima conversazione ed apro il dettaglio conversazione
+   */
   showDetailConversation(){
-    //console.log('plt::', windowsMatchMedia());
     if (this.uidConvSelected) {
       console.log('openMessageList 1 ::');
       // se visualizzazione è desktop
       if (windowsMatchMedia()) {
-        this.openMessageList(this.uidConvSelected);
+        this.setUidConvSelected(this.uidConvSelected);
+        this.openMessageList();
       }
     } else if (this.conversations.length > 0) {
       console.log('openMessageList 2 ::');
       this.uidConvSelected = this.conversations[0].uid;
       // se visualizzazione è desktop
       if (windowsMatchMedia()) {
-        this.openMessageList(this.uidConvSelected);
+        this.setUidConvSelected(this.uidConvSelected);
+        this.openMessageList();
       }
-    }
-    else {
+    } else {
       console.log('openMessageList 3 ::');
       // se visualizzazione è desktop
       if (windowsMatchMedia()) {
@@ -334,27 +335,32 @@ export class ListaConversazioniPage extends _MasterPage {
     }
   }
 
+
+  //// START HTML ACTIONS////
   /**
   * apro pagina elenco users 
-  * metodo richiamato da html 
+  * (metodo richiamato da html) 
   */
-  openUsersList(event) {
+  private openUsersList(event: any) {
     //this.navCtrl.setRoot(UsersPage);
     this.navCtrl.push(UsersPage, {
-      contacts: ""
+      contacts: "",
+      'tenant': this.tenant,
+      'loggedUser': this.loggedUser
     });
   }
 
   /**
    * Open the archived conversations page
+   * (metodo richiamato da html) 
    */
   private openArchivedConversationsPage() {
-    // console.log("ListaConversazioniPage::openArchivedConversationsPage::archivedConversations:", this.archivedConversations)
-    this.navCtrl.push(ArchivedConversationsPage,
-      {
-        "archivedConversations" :  this.archivedConversations
-      }
-    );
+   
+    this.navCtrl.push(ArchivedConversationsPage, {
+      'archivedConversations' :  this.archivedConversations,
+      'tenant': this.tenant,
+      'loggedUser': this.loggedUser
+     });
   }
 
   /**
@@ -362,7 +368,8 @@ export class ListaConversazioniPage extends _MasterPage {
   * (metodo richiamato da html) 
   * alla chiusura controllo su quale opzione ho premuto e attivo l'azione corrispondete
   */
-  presentPopover(event) {
+  private presentPopover(event) {
+    const that = this;
     let popover = this.popoverCtrl.create(PopoverPage, { typePopup: TYPE_POPUP_LIST_CONVERSATIONS });
     popover.present({
       ev: event
@@ -370,13 +377,13 @@ export class ListaConversazioniPage extends _MasterPage {
     popover.onDidDismiss((data: string) => {
       console.log(" ********* data::: ", data);
       if (data == 'logOut') {
-        this.logOut();
+        that.logOut();
       } else if (data == 'ProfilePage') {
         if (this.chatManager.getLoggedUser()) {
           this.navCtrl.push(ProfilePage);
         }
       } else if (data == "ArchivedConversationsPage") {
-        this.openArchivedConversationsPage();
+        that.openArchivedConversationsPage();
       }
     });
   }
@@ -386,65 +393,55 @@ export class ListaConversazioniPage extends _MasterPage {
    * 1 - aggiungo placeholderPage 
    * 2 - richiamo il logout di firebase
    */
-  logOut() {
+  private logOut() {
     //this.navProxy.pushDetail(PlaceholderPage,{});
     this.userService.logoutUser();
   }
 
-
-  loadingIsActive() {
-    // if(this.conversations && this.conversations.length>0){
-    //   return true;
-    // } else {
-    //   return false;
-    // }
-
-    var conv = JSON.stringify(this.conversations);
-    // console.log("ListaConversazioniPage::loadingIsActive::conversations", conv);
-
-    return conv && conv.length > 0;
+  /**
+   * metodo mostra un placeholder di benvenuto se non ci sono conversazioni
+   * ritardato dopo 5 sec per dare il tempo di caricare lo storico delle conversazioni
+   * dallo storage locale o da remoto
+   * (metodo richiamato da html) 
+   */
+  private loadingIsActive() {
+    setTimeout(function () {
+      if(this.conversations && this.conversations.length > 0){
+        return false;
+      }
+      return true;
+    }, 5000);
   }
 
+  /**
+   * chiudo conversazione
+   * (metodo richiamato da html) 
+   * @param conversation 
+   */
   private closeConversation(conversation) {
-    console.log("ListaConversazioniPage::closeConversation::conversation", conversation);
-
     var conversationId = conversation.uid;
-    // console.log("ListaConversazioniPage::closeConversation::conversationId", conversationId);
-
     var isSupportConversation = conversationId.startsWith("support-group");
-    // console.log("ListaConversazioniPage::closeConversation::isSupportConversation", isSupportConversation);
-
     if (!isSupportConversation) {
-      console.log("ListaConversazioniPage::closeConversation:: is not a support group");
-
       this.deleteConversation(conversationId, function (result, data) {
         if (result === 'success') {
           console.log("ListaConversazioniPage::closeConversation::deleteConversation::response", data);
-          // console.log("ListaConversazioniPage::closeConversation::deleteConversation::response::conversation::", conversation);
         } else if (result === 'error') {
           console.error("ListaConversazioniPage::closeConversation::deleteConversation::error", data);
-          // console.error("ListaConversazioniPage::closeConversation::deleteConversation::error::conversation::", conversation);
         }
       });
-
       // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
     } else {
-      console.log("ListaConversazioniPage::closeConversation::closeConversation:: is a support group");
-
       // the conversationId is:
       // - the recipientId if it is a direct conversation;
       // - the groupId if it is a group conversation;
       // the groupId can reference:
       // - a normal group;
       // - a support  group if it starts with "support-group"
-      this.closeSupportGroup(conversationId, function (result, data) {
+      this.closeSupportGroup(conversationId, function (result: string, data: any) {
         if (result === 'success') {
           console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response", data);
-          // console.log("ListaConversazioniPage::closeConversation::closeSupportGroup::response::conversation::", conversation);
-
         } else if (result === 'error') {
           console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error", data);
-          // console.error("ListaConversazioniPage::closeConversation::closeSupportGroup::error::conversation::", conversation);
         }
       });
     }
@@ -454,20 +451,14 @@ export class ListaConversazioniPage extends _MasterPage {
   // more details availables at 
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#close-support-group
   private closeSupportGroup(groupId, callback) {
-
     var that = this;
-
     // BEGIN -  REMOVE FROM LOCAL MEMORY 
-    // console.log("performClosingConversation::conversations::BEFORE", JSON.stringify(this.conversationsHandler.conversations) )
     this.conversationsHandler.removeByUid(groupId); // remove the item 
-    this.conversations = this.conversationsHandler.conversations; // update conversations
-    // console.log("performClosingConversation::conversations::AFTER", JSON.stringify(this.conversationsHandler.conversations))
     // END -  REMOVE FROM LOCAL MEMORY 
-
+    
     // BEGIN - REMOVE FROM REMOTE 
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(groupId, true);
-
     this.groupService.closeGroup(groupId, function(response, error) {
       if (error) {
         // the conversation closing failed: restore the conversation with 
@@ -479,18 +470,6 @@ export class ListaConversazioniPage extends _MasterPage {
         callback('success', response);
       }
     });
-      // .subscribe(response => {
-      //   callback('success', response);
-      // }, errMsg => {
-      //   // the conversation closing failed: restore the conversation with
-      //   // conversationId status to false within the isConversationClosingMap
-      //   that.tiledeskConversationProvider.setClosingConversation(groupId, false);
-      //   callback('error', errMsg);
-      // }, () => {
-      //   console.log("ListaConversazioniPage::closeSupportGroup::completition");
-      // });
-    // END - REMOVE FROM REMOTE 
-
     // when a conversations is closed shows a placeholder background
     if (groupId === that.uidConvSelected) {
       that.navProxy.pushDetail(PlaceholderPage, {});
@@ -501,21 +480,14 @@ export class ListaConversazioniPage extends _MasterPage {
   // more details availables at 
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
   private deleteConversation(conversationId, callback) {
-    // console.log("ListaConversazioniPage::deleteConversation::conversationId", conversationId);
-
     var that = this;
-
     // END - REMOVE FROM LOCAL MEMORY 
-    // console.log("deleteConversation::conversations::BEFORE", JSON.stringify(this.conversationsHandler.conversations))
     this.conversationsHandler.removeByUid(conversationId); // remove the item 
-    this.conversations = this.conversationsHandler.conversations; // update conversations
-    // console.log("deleteConversation::conversations::AFTER", JSON.stringify(this.conversationsHandler.conversations))
     // END - REMOVE FROM LOCAL MEMORY 
 
     // BEGIN - REMOVE FROM REMOTE 
-    //set the conversation from the isConversationClosingMap that is waiting to be closed
+    // set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(conversationId, true);
-
     this.tiledeskConversationProvider.deleteConversation(conversationId, function(response, error) {
       if (error) {
         that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
@@ -525,42 +497,11 @@ export class ListaConversazioniPage extends _MasterPage {
         callback('success', response);
       }
     });
-    //   .subscribe(response => {
-    //     callback('success', response);
-    //   }, errMsg => {
-    //     // the conversation closing failed: restore the conversation with
-    //     // conversationId status to false within the isConversationClosingMap
-    //     that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
-    //     callback('error', errMsg);
-    //   }, () => {
-    //     console.log("ListaConversazioniPage::deleteConversation::completition");
-    //   });
-    // // END - REMOVE FROM REMOTE 
-
     // when a conversations is closed shows a placeholder background
-    if (conversationId === that.uidConvSelected) {
+    if (conversationId === this.uidConvSelected) {
       that.navProxy.pushDetail(PlaceholderPage, {});
     }
   }
-
-  // avatarPlaceholder(conversation_with_fullname) {
-  //   var arrayName = conversation_with_fullname.split(" ");
-  //   var initials = '';
-  //   arrayName.forEach(member => {
-  //     if(member.trim().length > 1 && initials.length < 3){
-  //       initials += member.substring(0,1).toUpperCase();
-  //     }
-  //   });
-  //   return initials;
-  // }
-
-  // getColorBck(){
-  //   var arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
-  //   var num = Math.floor(Math.random() * 6);
-  //   return arrayBckColor[num];
-  // }
-
-
-  
+  //// END HTML ACTIONS////
 
 }
