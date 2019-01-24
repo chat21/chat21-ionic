@@ -95,4 +95,5 @@
         <variable name="SENDER_ID" value="1096415488178" />
     </plugin>
     <plugin name="uk.co.workingedge.cordova.plugin.sqliteporter" spec="^1.0.5" />
+    <plugin name="cordova-plugin-file" spec="^6.0.1" />
 </widget>

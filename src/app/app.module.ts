@@ -31,21 +31,20 @@ import { AuthService } from '../providers/auth-service';
 import { ChatPresenceHandler } from '../providers/chat-presence-handler';
 import { UploadService } from '../providers/upload-service/upload-service';
 
-
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
 import { NavProxyService } from '../providers/nav-proxy';
 import { PlaceholderPage } from '../pages/placeholder/placeholder';
 import { PopoverPage } from '../pages/popover/popover';
 import { PopoverProfilePage } from '../pages/popover-profile/popover-profile';
 import { UpdateImageProfilePage } from '../pages/update-image-profile/update-image-profile';
-
+import { ArchivedConversationsPage } from '../pages/archived-conversations/archived-conversations';
 //import { FirebaseProvider } from '../providers/firebase-provider';
 
-// SQLite
-
+// @ionic
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import { SQLitePorter } from '@ionic-native/sqlite-porter';
 import { SQLite } from '@ionic-native/sqlite';
+
 import { MessagingService } from '../providers/messaging-service';
 import { UserService } from '../providers/user/user';
 import { GroupService } from '../providers/group/group';
@@ -57,8 +56,6 @@ import { ChatConversationHandler } from '../providers/chat-conversation-handler'
 import { ChatManager } from '../providers/chat-manager/chat-manager';
 import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronizer';
 
-
-
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -66,7 +63,7 @@ import { TiledeskConversationProvider } from '../providers/tiledesk-conversation
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
-import { ArchivedConversationsPage } from '../pages/archived-conversations/archived-conversations';
+import { IonicImageLoader } from 'ionic-image-loader';
 
 @NgModule({
   declarations: [
@@ -101,6 +98,7 @@ import { ArchivedConversationsPage } from '../pages/archived-conversations/archi
       }
     }),
     IonicStorageModule.forRoot(),
+    IonicImageLoader.forRoot(),
     IonicModule.forRoot(MyApp,{
       firebaseConfig : {
         apiKey: 'AIzaSyDWMsqHBKmWVT7mWiSqBfRpS5U8YwTl7H0',

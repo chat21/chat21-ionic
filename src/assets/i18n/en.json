@@ -39,6 +39,7 @@
   "CLOSE_ALERT_CANCEL_LABEL": "CANCEL",
   "LEAVE_ALERT_MSG": "Leave the group?",
   "CLOSE_ALERT_MSG": "Close the conversation?",
+  "VIDEOCHAT_ALERT_MSG": "Service unavailable",
   "CLOSING_CONVERSATION_SPINNER_MSG": "Please wait.<br> We are closing the conversation",
   "CONVERSATION_CLOSED_ALERT_MSG" : "The conversation was successfully closed.",
   "CANNOT_CLOSE_CONVERSATION_ALERT_MSG": "Unable to close the conversation",

@@ -131,7 +131,7 @@ export class ChatConversationHandler {
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
       
       const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type']);
-      console.log("child_added *****", itemMsg['timestamp'], that.messages, msg);
+      //console.log("child_added *****", itemMsg['timestamp'], that.messages, msg);
       
       if (msg.attributes && msg.attributes.subtype && (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support')) {
         that.translateInfoSupportMessages(msg);

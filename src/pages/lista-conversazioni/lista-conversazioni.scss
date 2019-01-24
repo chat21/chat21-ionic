@@ -2,9 +2,7 @@ page-lista-conversazioni {
     .not-read {
         font-weight:bold!important;
         font-size: 13px!important;
-        // color: #555!important;
     }
-
     .bar-button-default-md,
     .bar-button-default-ios {
         color:#424242;
@@ -47,7 +45,6 @@ page-lista-conversazioni {
         bottom: 0px;
     }
     
-
     .list-md .item.item-block.item-md,
     .list-ios .item.item-block.item-ios {
         border-bottom: rgba(0, 0, 0, 0.1);
@@ -64,7 +61,6 @@ page-lista-conversazioni {
             padding: 8px 9px;
             background-color: #ffffff;
             
-
             ion-avatar{
                 position: relative;
                 padding:0;
@@ -148,14 +144,14 @@ page-lista-conversazioni {
                 }
 
                .close-conversation-button {
-                    padding: 0px 10px;
+                    padding: 0px 0px;
                     margin: 0;
-                    height: 100%;
+                    height: 24px;
                     font-size: 24px;
                     // font-size: x-large;
                     ion-icon {
                         padding:0;
-                        margin: 10px 0 0 0;
+                        margin: 0px 0 0 0;
                     }
                     &.button-ios{
                         // font-size: xx-large;
@@ -200,9 +196,22 @@ page-lista-conversazioni {
     
     
     
-    
+    .close-conversation-button-icon::before{
+        font-size: 12px;
+        padding: 0;
+        margin: 0;
+        height: 24px;
+        width: 24px;
+    }
 
-   
-
+    .c21-point {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        line-height: 10px;
+        background-color: #0b5c89;
+        float: left;
+        margin: 3px 3px 0px 0px;
+    }
 
 }

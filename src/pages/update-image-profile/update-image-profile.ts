@@ -51,14 +51,24 @@ export class UpdateImageProfilePage {
   
   displayImage(uidContact){
     this.upSvc.display(uidContact, '')
-    .then((url) => {
-      this.zone.run(() => {
-        this.image = url;
-      });
-    })
-    .catch((error)=>{
-      console.log("error::: ",error);
-    });
+    .then(onResolve, onReject)
+    function onResolve(foundURL) { 
+        console.log('foundURL', foundURL);
+        this.image = foundURL; 
+    } 
+    function onReject(error){ 
+        console.log('error.code', error.code); 
+        this.image = 'assets/img/no_image.png';
+    }
+
+    // .then((url) => {
+    //   this.zone.run(() => {
+    //     this.image = url;
+    //   });
+    // })
+    // .catch((error)=>{
+    //   console.log("error::: ",error);
+    // });
   }
 
   fileChange(event){

@@ -32,6 +32,7 @@ import { ChatArchivedConversationsHandler } from '../../providers/chat-archived-
 import { isGeneratedFile } from '@angular/compiler/src/aot/util';
 import { User } from 'firebase';
 
+
 @IonicPage()
 @Component({
   selector: 'page-lista-conversazioni',
@@ -223,7 +224,6 @@ export class ListaConversazioniPage extends _MasterPage {
       if (conversationSelected) {
         console.log('openMessageList::', conversationSelected);
         conversationSelected.is_new = false;
-        that.conversationsHandler.setConversationRead(conversationSelected.uid);
         conversationSelected.status = '0';
         conversationSelected.selected = true;
         that.navProxy.pushDetail(DettaglioConversazionePage, {
@@ -232,6 +232,7 @@ export class ListaConversazioniPage extends _MasterPage {
           conversationWithFullname: conversationSelected.conversation_with_fullname,
           channel_type: conversationSelected.channel_type
         });
+        that.conversationsHandler.setConversationRead(conversationSelected.uid);
         that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
       }
     }, 200);
@@ -284,18 +285,19 @@ export class ListaConversazioniPage extends _MasterPage {
       // 3 - set uidConvSelected in conversationHandler
       conversationHandler.uidConvSelected = this.uidConvSelected
       archviedConversationsHandler.uidConvSelected = this.uidConvSelected
-
+      
       // 4 - save conversationHandler in chatManager
       this.chatManager.setConversationsHandler(conversationHandler);
-
+    
       // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
       conversationHandler.connect();
       archviedConversationsHandler.connect();
 
-      // 6 - imposto i conversationsHandler globali
+      // // 6 - imposto i conversationsHandler globali
       this.conversationsHandler = conversationHandler;
       this.chatArchivedConversationsHandler = archviedConversationsHandler;
     
+      
     } else {
       console.log('handler ESISTE ::', conversationHandler);
       this.conversationsHandler = conversationHandler;

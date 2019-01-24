@@ -418,11 +418,11 @@ export function avatarPlaceholder(conversation_with_fullname) {
 }
 
 
-export function urlExists(url) {
-  console.log("imageExists::::::"+url);
-  url = "https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F5ad5bd40c975820014ba9009%2Fthumb_photo.jpg?alt=media";
-  return false;
-}
+// export function urlExists(url) {
+//   console.log("imageExists::::::"+url);
+//   url = "https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F5ad5bd40c975820014ba9009%2Fthumb_photo.jpg?alt=media";
+//   return false;
+// }
 
 
 export function jsonToArray(json){

@@ -90,51 +90,28 @@ export class UploadService {
 
   display(uidContact, format?) {
     console.log('display format::'+format);
+    //https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F5aaa99024c3b110014b478f0%2Fthumb_photo.jpg?alt=media&token=45fe1056-4b58-440a-8efd-1b85e54514ce
     if(uidContact && uidContact!=''){
       var urlImagesNodeFirebase;
       if(format == 'thumb'){
         urlImagesNodeFirebase = '/profiles/'+uidContact+'/thumb_photo.jpg';
       } else {
         urlImagesNodeFirebase = '/profiles/'+uidContact+'/photo.jpg';
-      }
-      return firebase.storage().ref().child(urlImagesNodeFirebase).getDownloadURL()
+      } 
+      console.log('display format:: '+urlImagesNodeFirebase);
+      const storage = firebase.storage().ref().child(urlImagesNodeFirebase);
+      return storage.getDownloadURL();
+      //.then(onResolve, onReject)
     }
+    // function onResolve(foundURL) { 
+    //   console.log('foundURL', foundURL);
+    //   return foundURL; 
+    // } 
+    // function onReject(error){ 
+    //     console.log('error.code', error.code); 
+    //     return;
+    // }
   }
 
-  display2(uidContact, format?) {
-    if(uidContact && uidContact!=''){
-        let urlImagesNodeFirebase;
-        if(format == 'thumb'){
-          urlImagesNodeFirebase = '/profiles/'+uidContact+'/thumb_photo.jpg';
-        } else {
-          urlImagesNodeFirebase = '/profiles/'+uidContact+'/photo.jpg';
-        }
-        let starsRef = firebase.storage().ref().child(urlImagesNodeFirebase);
-        // Get the download URL
-        starsRef.getDownloadURL()
-        .then(function(url) {
-          // Insert url into an <img> tag to "download"
-          return url;
-        }).catch(function(error) {
-          // A full list of error codes is available at
-          // https://firebase.google.com/docs/storage/web/handle-errors
-          switch (error.code) {
-            case 'storage/object-not-found':
-              // File doesn't exist
-              break;
-            case 'storage/unauthorized':
-              // User doesn't have permission to access the object
-              break;
-            case 'storage/canceled':
-              // User canceled the upload
-              break;
-            case 'storage/unknown':
-              // Unknown error occurred, inspect the server response
-              break;
-          }
-          return error;
-        });
-    }
-  }
 
 }

@@ -22,6 +22,8 @@
   <div text-center>
     <img class="clip-circle" *ngIf="profileYourself" src="{{this.currentUserDetail.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';">
     <img class="clip-circle" *ngIf="!profileYourself" src="{{this.userDetail.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';">
+    
+    
     <!-- <button ion-button icon-only clear small color="twitter">
       <ion-icon name="logo-twitter"></ion-icon>
     </button>

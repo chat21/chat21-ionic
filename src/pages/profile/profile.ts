@@ -91,19 +91,40 @@ export class ProfilePage {
     const that = this;
     console.log(" ********* displayImage::: ");
     this.upSvc.display(uidContact, 'thumb')
-    .then((url) => {
-      that.zone.run(() => {
+    .then(onResolve, onReject)
+    function onResolve(foundURL) {
+        console.log('foundURL', foundURL);
         if(that.profileYourself){
-          that.currentUserDetail.imageurl = url;
+          that.currentUserDetail.imageurl = foundURL;
         }else{
-          that.userDetail.imageurl = url;
+          that.userDetail.imageurl = foundURL;
         }
-      });
-    })
-    .catch((error)=>{
-      //console.log("displayImage error::: ",error);
-    });
+    } 
+    function onReject(error){ 
+        console.log('error.code', error.code); 
+        const foundURL = 'assets/img/no_image.png';
+        if(that.profileYourself){
+          that.currentUserDetail.imageurl = foundURL;
+        }else{
+          that.userDetail.imageurl = foundURL;
+        }
+    }
+
+
+    // .then((url) => {
+    //   that.zone.run(() => {
+    //     if(that.profileYourself){
+    //       that.currentUserDetail.imageurl = url;
+    //     }else{
+    //       that.userDetail.imageurl = url;
+    //     }
+    //   });
+    // })
+    // .catch((error)=>{
+    //   //console.log("displayImage error::: ",error);
+    // });
   }
+
   /**
    * chiudo il popup profilo utente
    */

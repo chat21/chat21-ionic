@@ -15,7 +15,7 @@ import { compareValues, getFromNow, contactsRef, conversationsPathForUserId, sea
 import { TiledeskConversationProvider } from './tiledesk-conversation/tiledesk-conversation';
 import { TranslateService } from '@ngx-translate/core';
 
-import { avatarPlaceholder, getColorBck, urlExists } from '../utils/utils';
+import { avatarPlaceholder, getColorBck } from '../utils/utils';
 import { UploadService } from '../providers/upload-service/upload-service';
 
 import { DatabaseProvider } from '../providers/database/database';
@@ -121,6 +121,7 @@ export class ChatConversationsHandler {
             // add the conversation from the isConversationClosingMap
             this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
             const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
+            // patch immagini
             if(index > -1){
                 this.conversations.splice(index, 1, conversation);
             } else {
@@ -239,9 +240,11 @@ export class ChatConversationsHandler {
         }
         
         conv.conversation_with_fullname = conversation_with_fullname;
-
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
-        this.setImageConversation(conv, conversation_with);
+        // NOTA: le immagini le devo ricaricare solo quando entro nel dettaglio di una conversazione!!!!!
+        if(!conv.image || conv.image === undefined ||  conv.image !== 'no-image'){
+            this.setImageConversation(conv, conversation_with);
+        }
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.time_last_message = time_last_message;
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
@@ -271,31 +274,6 @@ export class ChatConversationsHandler {
         return status;
     }
 
-    setImageConversation2(conv, conversation_with) {
-        let image = URL_NO_IMAGE;
-        conv.image = 'https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F'+conversation_with+'%2Fthumb_photo.jpg?alt=media';
-        console.log("urlExists::: ",urlExists(conv.image));
-        /*
-        if(conv.channel_type === TYPE_DIRECT) {
-            const urlNodeConcacts = contactsRef(this.tenant) + conversation_with + '/imageurl/';
-            firebase.database().ref(urlNodeConcacts).once('value')
-            .then(function(snapshot) {
-                //console.log("urlNodeConcacts::: ", snapshot.val(), urlNodeConcacts);
-                //conv.image = snapshot.val();
-                if(snapshot.val().trim()){
-                    //return snapshot.val();
-                    conv.image = snapshot.val();
-                } else {
-                    conv.image = image;
-                }
-            })
-            .catch(function(err) {
-                conv.image = image;
-            })
-        } else {
-            conv.image = image;
-        }*/
-    }
     
 
      /**
@@ -303,18 +281,23 @@ export class ChatConversationsHandler {
      */
     setImageConversation(conv, conversation_with){
         const that = this;
-        console.log("********** displayImage uidContact::: ", conversation_with);
+        console.log("********** displayImage uidContact::: ", that.ref.ref.child(conv.uid));
+        var conversationRef = that.ref.ref.child(conv.uid);
         if(conversation_with){
             this.upSvc.display(conversation_with, 'thumb')
-            .then((url) => {
-                console.log("**********XX displayImage url::: ", url);
-                conv.image = url;
-                //return url;
-            }).catch((error) => {
-                console.log("**********XX  displayImage error::: ", error);
-                conv.image = null;
-                //return '';
-            });
+            .then(onResolve, onReject);
+        }
+        function onResolve(foundURL) { 
+            console.log('foundURL', conv, foundURL);
+            conv.image = foundURL; 
+            // salvo in cache e sul DB!!!
+            conversationRef.update ({"image" : foundURL});
+            that.databaseProvider.setConversation(conv);
+        } 
+        function onReject(error){ 
+            console.log('error.code', error.code); 
+            conversationRef.update ({"image" : 'no-image'});
+            conv.image = ''; //'assets/img/no_image.png';
         }
     }
 
@@ -394,71 +377,66 @@ export class ChatConversationsHandler {
         const url = '/apps/' + tenant + '/users/' + uidUser + '/conversations/' + conversationId;
         const reference = firebase.database().ref(url);
         console.log("ChatConversationsHandler::addConversationListener::reference:", reference.toString());
-
         reference.on('value', function (snapshot) {
             setTimeout(function () {
                 that.events.publish(conversationId + '-listener', snapshot);
             }, 100);
-
         });
     }
 
     // check if the conversations is valid or not
     private isValidConversation(convToCheckId, convToCheck: ConversationModel) : boolean {
-
-        console.log("[BEGIN] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
-
+        //console.log("[BEGIN] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
         if (!this.isValidField(convToCheck.uid)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'uid is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'uid is not valid' ");
             return false;
         }
-
         if (!this.isValidField(convToCheck.is_new)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'is_new is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'is_new is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.last_message_text)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'last_message_text is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'last_message_text is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.recipient)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'recipient is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'recipient is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.recipient_fullname)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'recipient_fullname is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'recipient_fullname is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.sender)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'sender is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'sender is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.sender_fullname)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'sender_fullname is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'sender_fullname is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.status)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'status is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'status is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.timestamp)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'timestamp is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'timestamp is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.channel_type)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'channel_type is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'channel_type is not valid' ");
             return false;
         }
 
-        console.log("[END] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
+        //console.log("[END] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
 
         // any other case
         return true;

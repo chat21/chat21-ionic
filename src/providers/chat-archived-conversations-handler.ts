@@ -229,59 +229,59 @@ export class ChatArchivedConversationsHandler {
     // check if the conversations is valid or not
     private isValidConversation(convToCheckId, convToCheck: ConversationModel): boolean {
 
-        console.log("[BEGIN] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
+        //console.log("[BEGIN] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
 
         if (!this.isValidField(convToCheck.uid)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'uid is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'uid is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.is_new)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'is_new is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'is_new is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.last_message_text)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'last_message_text is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'last_message_text is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.recipient)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'recipient is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'recipient is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.recipient_fullname)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'recipient_fullname is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'recipient_fullname is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.sender)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'sender is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'sender is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.sender_fullname)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'sender_fullname is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'sender_fullname is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.status)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'status is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'status is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.timestamp)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'timestamp is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'timestamp is not valid' ");
             return false;
         }
 
         if (!this.isValidField(convToCheck.channel_type)) {
-            console.error("ChatConversationsHandler::isValidConversation:: 'channel_type is not valid' ");
+            //console.error("ChatConversationsHandler::isValidConversation:: 'channel_type is not valid' ");
             return false;
         }
 
-        console.log("[END] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
+        //console.log("[END] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
 
         // any other case
         return true;

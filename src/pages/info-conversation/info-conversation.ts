@@ -131,6 +131,9 @@ export class InfoConversationPage {
     this.userDetail = new UserModel('', '', '', '', '', '', '', '', false, false, '');
     this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
     this.conversationSelected = this.conversationsHandler.getConversationByUid(this.conversationWith);
+    if(this.conversationSelected && this.conversationSelected.image === 'no-image') {
+      this.conversationSelected.image = null;
+    }
     console.log('conversationSelected::',this.conversationSelected);
     this.populateDetail();
   }
@@ -771,7 +774,8 @@ setDetailUser(snapshot) {
   setVideoChat() {
     // setto url 
     const url = this.URL_VIDEO_CHAT + '?groupId=' + this.groupDetail.uid + '&popup=true';
-    this.events.publish('openVideoChat', url);
+    // this.events.publish('openVideoChat', url);
+    this.openPopupConfirmation('video-chat');
   }
 
   getUrlCreaTicket() {
@@ -821,6 +825,13 @@ setDetailUser(snapshot) {
       onlyOkButton = false;
     } else if (action === 'close') {
       this.translate.get('CLOSE_ALERT_MSG').subscribe(
+        value => {
+          alertMessage = value;
+        }
+      )
+      onlyOkButton = false;
+    } else if (action === 'video-chat') {
+      this.translate.get('VIDEOCHAT_ALERT_MSG').subscribe(
         value => {
           alertMessage = value;
         }
