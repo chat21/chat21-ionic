@@ -1,4 +1,12 @@
 # chat21-ionic ver 1.0
+### 0.935
+- change css in the header of list conversation
+- added number of conversations with new messages
+- fixes bug image conversation in info conversation
+- change css in the conversation list (new message, close message)
+- fixes bug load image on firebase storage
+- added IonicImageLoader for load and cache images
+- fixes bug cache conversation list, contacts and settings (IonicStorageModule)
 
 ### 0.934
 - link projectId open in _blank
