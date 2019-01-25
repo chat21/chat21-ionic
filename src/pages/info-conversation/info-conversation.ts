@@ -19,6 +19,8 @@ import { jsonToArray, avatarPlaceholder, getColorBck, searchIndexInArrayForUid, 
 import { PlaceholderPage } from '../placeholder/placeholder';
 
 import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
+import { ChatArchivedConversationsHandler } from '../../providers/chat-archived-conversations-handler';
+
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
 import { TiledeskConversationProvider } from '../../providers/tiledesk-conversation/tiledesk-conversation';
 import { ConversationModel } from '../../models/conversation';
@@ -80,6 +82,7 @@ export class InfoConversationPage {
     public upSvc: UploadService,
     public zone: NgZone,
     private conversationsHandler: ChatConversationsHandler,
+    private chatArchivedConversationsHandler: ChatArchivedConversationsHandler,
     private conversationHandler: ChatConversationHandler,
     private tiledeskConversationProvider: TiledeskConversationProvider,
     public alertCtrl: AlertController,
@@ -131,6 +134,9 @@ export class InfoConversationPage {
     this.userDetail = new UserModel('', '', '', '', '', '', '', '', false, false, '');
     this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
     this.conversationSelected = this.conversationsHandler.getConversationByUid(this.conversationWith);
+    if(!this.conversationSelected){
+      this.conversationSelected = this.chatArchivedConversationsHandler.getConversationByUid(this.conversationWith);
+    }
     console.log('conversationSelected::',this.conversationSelected);
     this.populateDetail();
   }
@@ -144,10 +150,9 @@ export class InfoConversationPage {
   */
  populateDetail() {
   console.log('InfoConversationPage::populateDetail');
-
-  if(this.conversationSelected && (this.conversationSelected.image === 'no-image' || this.conversationSelected.image === undefined)) {
-    this.conversationSelected.image = null;
-  }
+  // if(!this.conversationSelected.image || this.conversationSelected.image === undefined ) {
+  //   this.conversationSelected.image = '';
+  // }
   
   if (!this.conversationWith) {
     console.log('CASO 1');

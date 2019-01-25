@@ -96,7 +96,7 @@ export function removeHtmlTags(text) {
  * ieri; 
  * giorno della settimana (lunedì, martedì, ecc)
  */
-export function setHeaderDate(translate, timestamp, lastDate?): string {
+export function setHeaderDate_old(translate, timestamp, lastDate?): string {
 
     var date = new Date(timestamp);
     let now: Date = new Date();
@@ -125,6 +125,34 @@ export function setHeaderDate(translate, timestamp, lastDate?): string {
     // se le date sono diverse o la data di riferimento non è impostata
     // ritorna la data calcolata
     // altrimenti torna null 
+    if (lastDate != labelDays || lastDate == null || lastDate == ''){
+      return labelDays;
+    } else {
+      return null;
+    }
+  }
+
+  export function setHeaderDate(translate, timestamp, lastDate?): string {
+    var LABEL_TODAY = translate.get('LABEL_TODAY')['value'];
+    var LABEL_TOMORROW = translate.get('LABEL_TOMORROW')['value'];
+
+    const date = new Date(timestamp);
+    const now: Date = new Date();
+    let labelDays = '';
+    if (now.getFullYear() !== date.getFullYear()) {
+      labelDays = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
+    } else if (now.getMonth() !== date.getMonth()) {
+      labelDays = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
+    } else if (now.getDay() === date.getDay()) {
+      labelDays = LABEL_TODAY;
+    } else if (now.getDay() - date.getDay() === 1) {
+      labelDays = LABEL_TOMORROW;
+    } else {
+      labelDays = convertDayToString(translate, date.getDay());
+    }
+    // se le date sono diverse o la data di riferimento non è impostata
+    // ritorna la data calcolata
+    // altrimenti torna null
     if (lastDate != labelDays || lastDate == null || lastDate == ''){
       return labelDays;
     } else {

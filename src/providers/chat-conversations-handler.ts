@@ -42,6 +42,7 @@ export class ChatConversationsHandler {
         public zone: NgZone,
         public databaseProvider: DatabaseProvider
     ) {
+        
     }
 
     /**
@@ -61,7 +62,6 @@ export class ChatConversationsHandler {
         this.userId = loggedUser.uid;
         this.conversations = [];
         this.databaseProvider.initialize(this.loggedUser, this.tenant);
-        this.getConversationsFromStorage();
         return this;
     }
 
@@ -114,9 +114,9 @@ export class ChatConversationsHandler {
     added(childSnapshot){
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
+        console.log("child_added conversationS");
         const conversation = this.completeConversation(childData);
         if (this.isValidConversation(childSnapshot.key, conversation)) {
-            console.log("child_added conversationS", conversation);
             // add the conversation from the isConversationClosingMap
             this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
             const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
@@ -153,7 +153,7 @@ export class ChatConversationsHandler {
             this.conversations.splice(index, 1, conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
             this.databaseProvider.setConversation(conversation);
-            this.events.publish('conversationsChanged', this.conversations);
+            //this.events.publish('conversationsChanged', this.conversations);
         } else {
             console.error("ChatConversationsHandler::changed::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
@@ -241,9 +241,15 @@ export class ChatConversationsHandler {
         conv.conversation_with_fullname = conversation_with_fullname;
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
         // NOTA: le immagini le devo ricaricare solo quando entro nel dettaglio di una conversazione!!!!!
-        if(!conv.image || conv.image === undefined ||  conv.image !== 'no-image'){
-            this.setImageConversation(conv, conversation_with);
+        if(conv.image === 'no-image'){
+            console.log('no-image', conv);
+            var conversationRef = this.ref.ref.child(conv.uid);
+            conversationRef.child('image').remove();
+            console.log('no-image conversationRef', conversationRef);
         }
+        // if(!conv.image || conv.image === undefined || conv.image === null || conv.image === 'no-image'){
+        //     this.setImageConversation(conv, conversation_with);
+        // }
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.time_last_message = time_last_message;
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
@@ -282,22 +288,22 @@ export class ChatConversationsHandler {
         const that = this;
         console.log("********** displayImage uidContact::: ", that.ref.ref.child(conv.uid));
         var conversationRef = that.ref.ref.child(conv.uid);
-        if(conversation_with){
-            this.upSvc.display(conversation_with, 'thumb')
-            .then(onResolve, onReject);
-        }
-        function onResolve(foundURL) { 
-            console.log('foundURL', conv, foundURL);
-            conv.image = foundURL; 
-            // salvo in cache e sul DB!!!
-            conversationRef.update ({"image" : foundURL});
-            that.databaseProvider.setConversation(conv);
-        } 
-        function onReject(error){ 
-            console.log('error.code', error.code); 
-            conversationRef.update ({"image" : 'no-image'});
-            conv.image = ''; //'assets/img/no_image.png';
-        }
+        // if(conversation_with){
+        //     this.upSvc.display(conversation_with, 'thumb')
+        //     .then(onResolve, onReject);
+        // }
+        // function onResolve(foundURL) { 
+        //     console.log('foundURL', conv, foundURL);
+        //     conv.image = foundURL; 
+        //     // salvo in cache e sul DB!!!
+        //     conversationRef.update({"image" : foundURL});
+        //     that.databaseProvider.setConversation(conv);
+        // } 
+        // function onReject(error){ 
+        //     console.log('error.code', error.code); 
+        //     conversationRef.child('image').remove();
+        //     conv.image = '';
+        // }
     }
 
     /**
@@ -495,10 +501,10 @@ export class ChatConversationsHandler {
         setTimeout(function() {
             that.audio.play()
             .then(function() {
-                console.log('****** then *****');
+                // console.log('****** then *****');
             })
             .catch(function() {
-                console.log('***//tiledesk-dashboard/chat*');
+                // console.log('***//tiledesk-dashboard/chat*');
             });
         }, 0);       
         

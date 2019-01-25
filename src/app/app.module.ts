@@ -63,8 +63,6 @@ import { TiledeskConversationProvider } from '../providers/tiledesk-conversation
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
-import { IonicImageLoader } from 'ionic-image-loader';
-
 @NgModule({
   declarations: [
     MyApp,
@@ -98,7 +96,6 @@ import { IonicImageLoader } from 'ionic-image-loader';
       }
     }),
     IonicStorageModule.forRoot(),
-    IonicImageLoader.forRoot(),
     IonicModule.forRoot(MyApp,{
       firebaseConfig : {
         apiKey: 'AIzaSyDWMsqHBKmWVT7mWiSqBfRpS5U8YwTl7H0',

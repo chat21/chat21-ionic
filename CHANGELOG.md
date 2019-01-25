@@ -1,12 +1,20 @@
 # chat21-ionic ver 1.0
+
 ### 0.935
+- added timestamp =  firebase.database.ServerValue.TIMESTAMP in send message
+- fixes bug spinner il list conversations
+- fixes bug load image profile
+- deleted IonicImageLoader
+- fixes bug info conversation (load image) in archived conversations
 - change css in the header of list conversation
 - added number of conversations with new messages
 - fixes bug image conversation in info conversation
 - change css in the conversation list (new message, close message)
 - fixes bug load image on firebase storage
 - added IonicImageLoader for load and cache images
-- fixes bug cache conversation list, contacts and settings (IonicStorageModule)
+- fixes bug cache for user (conversation list, contacts and settings)
+- add IonicStorageModule
+- add popup on videochat
 
 ### 0.934
 - link projectId open in _blank

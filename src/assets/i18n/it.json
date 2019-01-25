@@ -69,7 +69,7 @@
 
     
     "LABEL_LOGIN_TO": "Accedi a",
-    "LABEL_PASSWORD": "PAssword",
+    "LABEL_PASSWORD": "Password",
     "LABEL_ERROR_EMAIL": "Inserisci un indirizzo email valido.",
     "LABEL_ERROR_PASSWORD": "La password deve essere di almeno 6 caratteri.",
     "LABEL_LOGIN": "Login",

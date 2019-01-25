@@ -313,9 +313,10 @@ page-info-conversation {
             
                 
                 .chat21-info {
-                    margin: 15px 10px;
+                    margin: 15px 0px 15px 4px;
                     float: left;
-                    max-width: 200px;
+                    max-width: 220px;
+                    font-size: 11px;
                     .chat21-name {
                         font-size: 17px;
                     }
@@ -326,8 +327,8 @@ page-info-conversation {
                     .chat21-status {
                         color: map-get($colors, c21-gray);
                         font-weight: normal;
-                        font-size: 13px;
-                        font-weight: 500;
+                        font-size: 12px;
+                        font-weight: 400;
                         margin: 5px 0px 0px 0px;
                     }
                 }

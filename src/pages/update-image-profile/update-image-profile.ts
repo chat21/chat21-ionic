@@ -40,7 +40,7 @@ export class UpdateImageProfilePage {
       this.fileChange(event);
     }
     else{
-      this.displayImage(this.uidContact);
+      //this.displayImage(this.uidContact);
     }
 
   }
@@ -50,16 +50,16 @@ export class UpdateImageProfilePage {
   }
   
   displayImage(uidContact){
-    this.upSvc.display(uidContact, '')
-    .then(onResolve, onReject)
-    function onResolve(foundURL) { 
-        console.log('foundURL', foundURL);
-        this.image = foundURL; 
-    } 
-    function onReject(error){ 
-        console.log('error.code', error.code); 
-        this.image = 'assets/img/no_image.png';
-    }
+    // this.upSvc.display(uidContact, '')
+    // .then(onResolve, onReject)
+    // function onResolve(foundURL) { 
+    //     console.log('foundURL', foundURL);
+    //     this.image = foundURL; 
+    // } 
+    // function onReject(error){ 
+    //     console.log('error.code', error.code); 
+    //     this.image = '';
+    // }
 
     // .then((url) => {
     //   this.zone.run(() => {

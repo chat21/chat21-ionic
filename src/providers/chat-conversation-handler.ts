@@ -321,11 +321,13 @@ export class ChatConversationHandler {
     (!channel_type || channel_type == 'undefined')?channel_type='direct':channel_type;
     console.log('messages: ',  this.messages);
     console.log("SEND MESSAGE: ", msg, channel_type);
-    // console.log("messageTextArea:: ",this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0].style);
-    // const messageString = urlify(msg);
-    // const textMessage = replaceBr(msg);
     const now: Date = new Date();
-    const timestamp = now.valueOf();
+    // const timestamp = now.valueOf();
+    
+    const timestamp =  firebase.database.ServerValue.TIMESTAMP;
+    console.log('timestamp: ',timestamp);
+    console.log('timestamp: ',firebase.database['ServerValue']['TIMESTAMP']);
+    
     const language = document.documentElement.lang;
     const sender_fullname = this.loggedUser.fullname;
     const recipient_fullname = conversationWithDetailFullname;

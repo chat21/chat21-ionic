@@ -44,6 +44,7 @@ export class ListaConversazioniPage extends _MasterPage {
   private archivedConversations: ConversationModel[];
   private tenant: string;
   private numberOpenConv: number = 0;
+  private loadingIsActive: boolean = true;
 
   private uidReciverFromUrl: string;
   private conversationsHandler: ChatConversationsHandler;
@@ -103,6 +104,7 @@ export class ListaConversazioniPage extends _MasterPage {
     */
     this.profileModal = this.modalCtrl.create(LoginPage, null, { enableBackdropDismiss: false });
     this.initSubscriptions();
+    this.checkLoadingIsActive(5000);
   }
 
   //// SUBSCRIBTIONS ////
@@ -119,9 +121,11 @@ export class ListaConversazioniPage extends _MasterPage {
    * evento richiamato quando ho finito di caricare le conversazioni dallo storage
   */
   loadedConversationsStorage: any = conversations => {
-    this.conversations = conversations;
-    this.numberOpenConv = this.conversationsHandler.countIsNew();
-    this.openMessageList();
+    if(conversations && conversations.length > 0 ){
+      this.conversations = conversations;
+      this.numberOpenConv = this.conversationsHandler.countIsNew();
+      this.openMessageList();
+    }
   }
   /** 
    * evento richiamato su add, change, remove di una conversazione
@@ -273,39 +277,34 @@ export class ListaConversazioniPage extends _MasterPage {
     console.log('-------------> initConversationsHandler');
     const tenant = this.chatManager.getTenant();
     const loggedUser = this.chatManager.getLoggedUser();
+    // let conversationHandler = this.chatManager.conversationsHandler;
+    // let archviedConversationsHandler = this.chatManager.archivedConversationsHandler;
 
-    let conversationHandler = this.chatManager.conversationsHandler;
-    let archviedConversationsHandler = this.chatManager.archivedConversationsHandler;
-    if (!conversationHandler) {
+    if (!this.conversationsHandler) {
       // 1 - init chatConversationsHandler and  archviedConversationsHandler
-      conversationHandler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
-      archviedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(tenant, loggedUser);
-      
+      this.conversationsHandler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
+      this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(tenant, loggedUser);
+      this.chatConversationsHandler.getConversationsFromStorage();
       // 2 - bind conversations to conversationHandler.conversations
       //this.conversations = conversationHandler.conversations;
       //this.archivedConversations = archviedConversationsHandler.conversations;
-
       // 3 - set uidConvSelected in conversationHandler
-      conversationHandler.uidConvSelected = this.uidConvSelected
-      archviedConversationsHandler.uidConvSelected = this.uidConvSelected
-      
-      // 4 - save conversationHandler in chatManager
-      this.chatManager.setConversationsHandler(conversationHandler);
-    
+      this.conversationsHandler.uidConvSelected = this.uidConvSelected
+      this.chatArchivedConversationsHandler.uidConvSelected = this.uidConvSelected
       // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-      conversationHandler.connect();
-      archviedConversationsHandler.connect();
-
-      // // 6 - imposto i conversationsHandler globali
-      this.conversationsHandler = conversationHandler;
-      this.chatArchivedConversationsHandler = archviedConversationsHandler;
-    
-      
-    } else {
-      console.log('handler ESISTE ::', conversationHandler);
-      this.conversationsHandler = conversationHandler;
-      this.chatArchivedConversationsHandler = archviedConversationsHandler;
+      this.conversationsHandler.connect();
+      this.chatArchivedConversationsHandler.connect();
+      // 6 - imposto i conversationsHandler globali
+      // this.conversationsHandler = conversationHandler;
+      // this.chatArchivedConversationsHandler = archviedConversationsHandler;
+      // 4 - save conversationHandler in chatManager
+      this.chatManager.setConversationsHandler(this.conversationsHandler);
     }
+    //  else {
+    //   console.log('handler ESISTE ::', conversationHandler);
+    //   this.conversationsHandler = conversationHandler;
+    //   this.chatArchivedConversationsHandler = archviedConversationsHandler;
+    // }
     this.showDetailConversation();
   }
 
@@ -409,13 +408,11 @@ export class ListaConversazioniPage extends _MasterPage {
    * dallo storage locale o da remoto
    * (metodo richiamato da html) 
    */
-  private loadingIsActive() {
+  private checkLoadingIsActive(time:number) {
+    const that = this;
     setTimeout(function () {
-      if(this.conversations && this.conversations.length > 0){
-        return false;
-      }
-      return true;
-    }, 5000);
+      that.loadingIsActive = false;
+    }, time);
   }
 
   /**

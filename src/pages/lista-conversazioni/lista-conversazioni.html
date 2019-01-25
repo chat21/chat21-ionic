@@ -29,8 +29,7 @@
         (mousedown)="setUidConvSelected(conversation.uid)" (mouseup)="openMessageList()">
         <ion-avatar item-start>
           <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
-          <img-loader #avatarImage class="chat21-avatar" src="{{conversation.image}}"></img-loader>
-          <!-- <div #avatarImage *ngIf="conversation.image" class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div> -->
+          <div #avatarImage *ngIf="conversation.image && conversation.image != ''" class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
         </ion-avatar>
         <div class="truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
         <div>
@@ -59,13 +58,13 @@
     </ng-template>
 
     <ng-template #contentMessageWelcome>
-      <div [class.active]="!loadingIsActive()" class="chat21-spinner" id="chat21-spinner">
+      <div [class.active]="loadingIsActive" class="chat21-spinner" id="chat21-spinner">
         <div class="chat21-bounce1"></div>
         <div class="chat21-bounce2"></div>
         <div class="chat21-bounce3"></div>
         <span>loading</span>
       </div>
-      <div *ngIf="loadingIsActive()" id="content_message_wellcome">
+      <div *ngIf="!loadingIsActive && conversations.length == 0" id="content_message_wellcome">
         <!-- [style.display]="styleMessageWelcome === true ? 'inline' : 'none'" -->
         <div class="messaggio">{{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}</div>
         <div class="pulsanti">

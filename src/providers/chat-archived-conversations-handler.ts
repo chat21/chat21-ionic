@@ -168,10 +168,15 @@ export class ChatArchivedConversationsHandler {
 
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
         // NOTA: le immagini le devo ricaricare solo quando entro nel dettaglio di una conversazione!!!!!
-        console.log('conv.image', conv.image);
-        if(!conv.image || conv.image === undefined ||  conv.image !== 'no-image'){
-            this.setImageConversation(conv, conversation_with);
+        if(conv.image === 'no-image'){
+            console.log('no-image', conv);
+            var conversationRef = this.ref.ref.child(conv.uid);
+            conversationRef.child('image').remove();
+            console.log('no-image conversationRef', conversationRef);
         }
+        // if(!conv.image || conv.image === undefined || conv.image === null || conv.image === 'no-image'){
+        //     this.setImageConversation(conv, conversation_with);
+        // }
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.time_last_message = time_last_message;
 
@@ -199,22 +204,22 @@ export class ChatArchivedConversationsHandler {
         const that = this;
         console.log("********** displayImage uidContact::: ", that.ref.ref.child(conv.uid));
         var conversationRef = that.ref.ref.child(conv.uid);
-        if(conversation_with){
-            this.upSvc.display(conversation_with, 'thumb')
-            .then(onResolve, onReject);
-        }
-        function onResolve(foundURL) { 
-            console.log('foundURL', conv, foundURL);
-            conv.image = foundURL; 
-            // salvo in cache e sul DB!!!
-            conversationRef.update ({"image" : foundURL});
-            // that.databaseProvider.setConversation(conv);
-        } 
-        function onReject(error){ 
-            console.log('error.code', error.code); 
-            conversationRef.update ({"image" : 'no-image'});
-            conv.image = ''; //'assets/img/no_image.png';
-        }
+        // if(conversation_with){
+        //     this.upSvc.display(conversation_with, 'thumb')
+        //     .then(onResolve, onReject);
+        // }
+        // function onResolve(foundURL) { 
+        //     console.log('foundURL', conv, foundURL);
+        //     conv.image = foundURL; 
+        //     // salvo in cache e sul DB!!!
+        //     conversationRef.update ({"image" : foundURL});
+        //     // that.databaseProvider.setConversation(conv);
+        // } 
+        // function onReject(error: any){ 
+        //     console.log('error.code', error.code); 
+        //     conversationRef.child('image').remove();
+        //     conv.image = '';
+        // }
     }
 
     // private setImageConversation(conv, conversation_with) {
@@ -324,4 +329,9 @@ export class ChatArchivedConversationsHandler {
         return (field === null || field === undefined) ? false : true;
     }
 
+
+    getConversationByUid(conversationUid) {
+        const index = searchIndexInArrayForUid(this.conversations, conversationUid);
+        return this.conversations[index];
+    }
 }

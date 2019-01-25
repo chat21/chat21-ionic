@@ -88,11 +88,11 @@ export class UploadService {
     subscribe(next, error, complete);
   }
 
-  display(uidContact, format?) {
-    console.log('display format::'+format);
+  display(uidContact: string, format?: string) {
+    console.log('display format:: '+format);
     //https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F5aaa99024c3b110014b478f0%2Fthumb_photo.jpg?alt=media&token=45fe1056-4b58-440a-8efd-1b85e54514ce
     if(uidContact && uidContact!=''){
-      var urlImagesNodeFirebase;
+      var urlImagesNodeFirebase: string;
       if(format == 'thumb'){
         urlImagesNodeFirebase = '/profiles/'+uidContact+'/thumb_photo.jpg';
       } else {
@@ -101,7 +101,6 @@ export class UploadService {
       console.log('display format:: '+urlImagesNodeFirebase);
       const storage = firebase.storage().ref().child(urlImagesNodeFirebase);
       return storage.getDownloadURL();
-      //.then(onResolve, onReject)
     }
     // function onResolve(foundURL) { 
     //   console.log('foundURL', foundURL);
