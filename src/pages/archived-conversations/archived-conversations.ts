@@ -57,10 +57,8 @@ export class ArchivedConversationsPage {
   inizialize(){
     // get the list of archived conversations from the navigation and preload the archived conversations list
     this.archivedConversations = this.navParams.get('archivedConversations');
-
     // update the archvied conversations availability
     this.areArchivedConversationsAvailable = this.archivedConversations && this.archivedConversations.length > 0;
-
     this.openMessageList(this.archivedConversations[this.uidConvSelected]);
   }
 

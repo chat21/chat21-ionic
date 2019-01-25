@@ -72,7 +72,6 @@ export class ChatConversationsHandler {
         const that = this;
         this.databaseProvider.getConversations()
         .then(function (conversations) {
-            console.log('getConversations:: ' + conversations);
             that.events.publish('loadedConversationsStorage', conversations);
         })
         .catch((error) => {
@@ -469,6 +468,20 @@ export class ChatConversationsHandler {
     //     }
     //     return initials;
     // }
+
+
+    /**
+     * 
+     */
+    countIsNew(){
+        let num = 0;
+        this.conversations.forEach(function(element) {
+            if(element.is_new === true){
+            num++;
+            }
+        });   
+        return num;
+    }
   
 
     soundMessage(){

@@ -10,14 +10,17 @@
     <div *ngFor="let archivedConversation of archivedConversations">
       <ion-item no-lines ion-item [class.selected]="archivedConversation.uid === uidConvSelected" (click)="onArchivedConversationClicked(archivedConversation)">
         <ion-avatar item-start>
-          <div class="chat21-avatar" [style.background-image]="'url(' + archivedConversation.image + ')'"></div>
+            <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="archivedConversation.color" [innerHTML]="archivedConversation.avatar"></div>
+            <img-loader #avatarImage class="chat21-avatar" src="{{archivedConversation.image}}"></img-loader>
         </ion-avatar>
         <h2 class="truncate">{{archivedConversation.conversation_with_fullname}}</h2>
-        <p [class.not-read]="archivedConversation.is_new" class="truncate" [innerHTML]="convertMessage(archivedConversation.last_message_text)"></p>
-     
-        <!-- <ion-note item-end>{{archivedConversation.time_last_message}}</ion-note> -->
 
-        <span item-end class="archived"> {{ 'LABEL_CLOSED' | translate }} </span> 
+        <div>
+            <span class="c21-point" *ngIf="archivedConversation.is_new" [ngStyle]="{ 'background-color':(archivedConversation.uid === uidConvSelected)?'#ffffff':'#0b5c89' }">&nbsp;</span>
+            <p [class.not-read]="archivedConversation.is_new" class="truncate" [innerHTML]="convertMessage(archivedConversation.last_message_text)"></p>
+        </div>
+        
+        <span item-end class="archived"> {{ 'LABEL_CLOSE' | translate }} </span> 
       </ion-item>
     </div>
   </ion-list>

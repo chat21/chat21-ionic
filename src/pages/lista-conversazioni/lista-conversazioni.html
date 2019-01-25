@@ -5,7 +5,7 @@
     </button>
     <ion-title>
       <img src="assets/chat21-logo.svg" alt="{{this.tenant}}">
-      <!-- <sub class="build_version" stacked ion-text color="default">{{BUILD_VERSION}}</sub> -->
+      <div *ngIf="numberOpenConv > 0" class="c21-number-open-conv">({{numberOpenConv}})</div>
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="openUsersList($event)">

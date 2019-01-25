@@ -6,7 +6,7 @@ import { UserModel } from '../models/user';
 import { ConversationModel } from '../models/conversation';
 import { ChatManager } from './chat-manager/chat-manager';
 import { TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
-import { compareValues, getFromNow, contactsRef, searchIndexInArrayForUid } from '../utils/utils';
+import { avatarPlaceholder, getColorBck, compareValues, getFromNow, contactsRef, searchIndexInArrayForUid } from '../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 
 import { UploadService } from '../providers/upload-service/upload-service';
@@ -167,10 +167,16 @@ export class ChatArchivedConversationsHandler {
         conv.conversation_with_fullname = conversation_with_fullname;
 
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
-        this.setImageConversation(conv, conversation_with);
-
+        // NOTA: le immagini le devo ricaricare solo quando entro nel dettaglio di una conversazione!!!!!
+        console.log('conv.image', conv.image);
+        if(!conv.image || conv.image === undefined ||  conv.image !== 'no-image'){
+            this.setImageConversation(conv, conversation_with);
+        }
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.time_last_message = time_last_message;
+
+        conv.avatar = avatarPlaceholder(conversation_with_fullname);
+        conv.color = getColorBck(conversation_with_fullname);
 
         return conv;
     }
@@ -185,29 +191,55 @@ export class ChatArchivedConversationsHandler {
         return status;
     }
 
-    private setImageConversation(conv, conversation_with) {
 
-        let image = URL_NO_IMAGE;
-        if (conv.channel_type === TYPE_DIRECT) {
-            const urlNodeConcacts = contactsRef(this.tenant) + conversation_with + '/imageurl/';
-            firebase.database().ref(urlNodeConcacts).once('value')
-                .then(function (snapshot) {
-                    console.log("urlNodeConcacts::: ", urlNodeConcacts);
-                    //conv.image = snapshot.val();
-                    if (snapshot.val().trim()) {
-                        //return snapshot.val();
-                        conv.image = snapshot.val();
-                    } else {
-                        conv.image = image;
-                    }
-                })
-                .catch(function (err) {
-                    conv.image = image;
-                })
-        } else {
-            conv.image = image;
+    /**
+     * carico url immagine profilo passando id utente
+     */
+    setImageConversation(conv, conversation_with){
+        const that = this;
+        console.log("********** displayImage uidContact::: ", that.ref.ref.child(conv.uid));
+        var conversationRef = that.ref.ref.child(conv.uid);
+        if(conversation_with){
+            this.upSvc.display(conversation_with, 'thumb')
+            .then(onResolve, onReject);
+        }
+        function onResolve(foundURL) { 
+            console.log('foundURL', conv, foundURL);
+            conv.image = foundURL; 
+            // salvo in cache e sul DB!!!
+            conversationRef.update ({"image" : foundURL});
+            // that.databaseProvider.setConversation(conv);
+        } 
+        function onReject(error){ 
+            console.log('error.code', error.code); 
+            conversationRef.update ({"image" : 'no-image'});
+            conv.image = ''; //'assets/img/no_image.png';
         }
     }
+
+    // private setImageConversation(conv, conversation_with) {
+
+    //     let image = URL_NO_IMAGE;
+    //     if (conv.channel_type === TYPE_DIRECT) {
+    //         const urlNodeConcacts = contactsRef(this.tenant) + conversation_with + '/imageurl/';
+    //         firebase.database().ref(urlNodeConcacts).once('value')
+    //             .then(function (snapshot) {
+    //                 console.log("urlNodeConcacts::: ", urlNodeConcacts);
+    //                 //conv.image = snapshot.val();
+    //                 if (snapshot.val().trim()) {
+    //                     //return snapshot.val();
+    //                     conv.image = snapshot.val();
+    //                 } else {
+    //                     conv.image = image;
+    //                 }
+    //             })
+    //             .catch(function (err) {
+    //                 conv.image = image;
+    //             })
+    //     } else {
+    //         conv.image = image;
+    //     }
+    // }
 
     /**
      * calcolo il tempo trascorso da ora al timestamp passato

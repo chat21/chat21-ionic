@@ -43,6 +43,7 @@ export class ListaConversazioniPage extends _MasterPage {
   private conversations: Array<ConversationModel> = [];
   private archivedConversations: ConversationModel[];
   private tenant: string;
+  private numberOpenConv: number = 0;
 
   private uidReciverFromUrl: string;
   private conversationsHandler: ChatConversationsHandler;
@@ -119,6 +120,7 @@ export class ListaConversazioniPage extends _MasterPage {
   */
   loadedConversationsStorage: any = conversations => {
     this.conversations = conversations;
+    this.numberOpenConv = this.conversationsHandler.countIsNew();
     this.openMessageList();
   }
   /** 
@@ -126,6 +128,7 @@ export class ListaConversazioniPage extends _MasterPage {
   */
   conversationsChanged = (conversations: ConversationModel[]) => {
     this.conversations = conversations;
+    this.numberOpenConv = this.conversationsHandler.countIsNew();
   }
 
   archivedConversationsChanged = (conversations: ConversationModel[]) => {
