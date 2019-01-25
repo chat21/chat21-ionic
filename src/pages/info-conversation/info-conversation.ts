@@ -131,9 +131,6 @@ export class InfoConversationPage {
     this.userDetail = new UserModel('', '', '', '', '', '', '', '', false, false, '');
     this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
     this.conversationSelected = this.conversationsHandler.getConversationByUid(this.conversationWith);
-    if(this.conversationSelected && this.conversationSelected.image === 'no-image') {
-      this.conversationSelected.image = null;
-    }
     console.log('conversationSelected::',this.conversationSelected);
     this.populateDetail();
   }
@@ -147,6 +144,11 @@ export class InfoConversationPage {
   */
  populateDetail() {
   console.log('InfoConversationPage::populateDetail');
+
+  if(this.conversationSelected && (this.conversationSelected.image === 'no-image' || this.conversationSelected.image === undefined)) {
+    this.conversationSelected.image = null;
+  }
+  
   if (!this.conversationWith) {
     console.log('CASO 1');
     return;

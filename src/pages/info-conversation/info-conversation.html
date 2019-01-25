@@ -18,7 +18,6 @@
                     <div class="chat21-image">
                         <ion-avatar item-start>
                             <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversationSelected.color" [style.background-image]="'url(' + conversationSelected.image + ')'" [innerHTML]="conversationSelected.avatar"></div>
-                            <!-- <div #avatarImage *ngIf="conversationSelected.image" class="chat21-avatar" [style.background-image]="'url(' + conversationSelected.image + ')'"></div> -->
                             <img-loader #avatarImage *ngIf="conversationSelected.image" class="chat21-avatar" src="{{conversationSelected.image}}"></img-loader>
                             <div *ngIf="isSupportGroup() && isExistUidUserAuthenticatedInMembers()"  style="line-height: 45px;" class="c21-icon-status c21-checked">
                                 <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"

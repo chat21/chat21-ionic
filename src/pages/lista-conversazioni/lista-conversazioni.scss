@@ -216,12 +216,28 @@ page-lista-conversazioni {
 
     .c21-number-open-conv {
         display: inline-flex;
-        font-size: 14px;
+        font-size: 12px;
         line-height: 14px;
         height: 14px;
         margin: auto;
         padding: 0px 4px;
         vertical-align: super;
+        color: #666666;
     }
+
+
+    .icon{
+        &.ion-md-create,
+        &.material-icons,
+        &.ion-md-more {
+            padding: 0;
+            min-width: 20px;
+            font-size: 20px;
+            line-height: 1;
+            pointer-events: none;
+            color: #666666;
+        }  
+    }
+    
 
 }
