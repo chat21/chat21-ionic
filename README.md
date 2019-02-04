@@ -64,9 +64,9 @@ In the Firebase Console open the Authentication section > SIGN IN METHOD tab you
 https://firebase.google.com/docs/auth/
 * Update app.module.ts: 
     * open `/src/app/app.module.ts` and change tenant name (optional)
-    https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
 * Update firebase-messaging-sw.js: 
     * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: "..." with < your messagingSenderId >
+    More info here :  https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
 * Update manifest.json: 
     * open `/src/manifest.json` and replace "name": "chat21-ionic" and "short_name": "chat21-ionic" with the name of your project (optional)
 
