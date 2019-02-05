@@ -6,7 +6,7 @@ import { MessageModel } from '../../models/message';
 import { TYPE_POPUP_LIST_CONVERSATIONS, TYPE_POPUP_DETAIL_MESSAGE, CURR_VER_DEV, CURR_VER_PROD } from '../../utils/constants';
 import { ArchivedConversationsPage } from '../archived-conversations/archived-conversations';
 import { AlertController } from 'ionic-angular';
-
+import * as PACKAGE from '../../../package.json';
 
 @IonicPage()
 @Component({
@@ -70,7 +70,11 @@ export class PopoverPage {
 
 
   openInfo(){
-    var BUILD_VERSION = '<p style="text-align: center;">version ' + CURR_VER_PROD + ' build ' + CURR_VER_DEV+'</p>'; // 'b.0.5';
+
+    console.log('version::: '+PACKAGE.version);
+    var BUILD_VERSION = '<p style="text-align: center;">version ' + PACKAGE.version +'</p>'; // 'b.0.5';
+
+    // var BUILD_VERSION = '<p style="text-align: center;">version ' + CURR_VER_PROD + ' build ' + CURR_VER_DEV+'</p>'; // 'b.0.5';
     var that = this;
     let alert = this.alertCtrl.create({
       title: '',
