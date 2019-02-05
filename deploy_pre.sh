@@ -18,7 +18,7 @@ cd platforms/browser/www
 aws s3 sync . s3://tiledesk-dashboard-pre/chat/
 cd ../../../
 
-aws cloudfront create-invalidation --distribution-id E2DTAKWHWQ7C3J --paths "/*"
+#aws cloudfront create-invalidation --distribution-id E2DTAKWHWQ7C3J --paths "/*"
 
 echo new version deployed on s3://tiledesk-dashboard-pre/chat/
 echo available on https://s3.eu-west-1.amazonaws.com/tiledesk-dashboard-pre/chat/index.html
