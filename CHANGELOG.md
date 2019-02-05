@@ -1,6 +1,6 @@
 # chat21-ionic ver 1.0
 
-### 0.935
+### 1.0.2
 - added timestamp =  firebase.database.ServerValue.TIMESTAMP in send message
 - fixes bug spinner il list conversations
 - fixes bug load image profile
@@ -17,6 +17,8 @@
 - add popup on videochat
 - fixes bug format date last access
 - fixed bug local time in send
+- add num version in package
+- add npm publish
 
 ### 0.934
 - link projectId open in _blank
