@@ -1,7 +1,4 @@
-
-
-
-# npm version patch
+npm version patch
 version=`node -e 'console.log(require("./package.json").version)'`
 echo "version $version"
 
