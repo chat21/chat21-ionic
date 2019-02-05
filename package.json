@@ -1,9 +1,14 @@
 {
-    "name": "ionic-hello-world",
-    "version": "0.0.1",
-    "author": "Ionic Framework ",
-    "homepage": "http://ionicframework.com/",
-    "private": true,
+    "name": "chat21-ionic",
+    "version": "0.934.0",
+    "author": "Dario De Pascalis - Frontiere21 SRL",
+    "license": "AGPL-3.0",
+    "homepage": "https://www.tiledesk.com",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/chat21/chat21-ionic"
+    },
+    "private": false,
     "scripts": {
         "clean": "ionic-app-scripts clean",
         "build": "ionic-app-scripts build",

@@ -819,7 +819,9 @@ export class DettaglioConversazionePage extends _DetailPage{
     // if(type_msg == 'file'){
     //   message.text = metadata.src;
     // }
-    this.messages.push(message);
+
+
+    //this.messages.push(message);
     // message.metadata.uid = message.uid;
     console.log('addLocalMessage: ', this.messages);
     //this.isFileSelected = true;

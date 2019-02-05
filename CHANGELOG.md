@@ -15,6 +15,8 @@
 - fixes bug cache for user (conversation list, contacts and settings)
 - add IonicStorageModule
 - add popup on videochat
+- fixes bug format date last access
+- fixed bug local time in send
 
 ### 0.934
 - link projectId open in _blank

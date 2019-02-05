@@ -1,9 +1,14 @@
-# environment=$(< src/utils/constants.ts)
-# start="CURR_VER_DEV = '"
-# end="'"
-# one=${environment#*$start}
-# build=${one%%$end*} #two=${one%,*} -> %% prendo la prima istanza; % prendo la seconda
-# NEW_BUILD=$(($build + 1))
+npm version patch
+version=`node -e 'console.log(require("./package.json").version)'`
+echo "version $version"
+
+if [ "$version" != "" ]; then
+    git tag -a "v$version" -m "`git log -1 --format=%s`"
+    echo "Created a new tag, v$version"
+    git push --tags
+    npm publish
+fi
+
 environment=$(< src/utils/constants.ts)
 start="CURR_VER_DEV = '"
 two="."

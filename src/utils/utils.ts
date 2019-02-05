@@ -178,9 +178,11 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
       let now: Date = new Date();
       var labelDays:string = "";
       if (now.getFullYear() != date.getFullYear()){
-        labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
+        const month = date.getMonth()+1;
+        labelDays = date.getDay()+"/"+month+"/"+date.getFullYear();
       } else if (now.getMonth() != date.getMonth()){
-        labelDays = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
+        const month = date.getMonth()+1;
+        labelDays = date.getDay()+"/"+month+"/"+date.getFullYear();
       } else if (now.getDay() == date.getDay()){
         labelDays = LABEL_TODAY;
       } else if (now.getDay() - date.getDay() == 1){
