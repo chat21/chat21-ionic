@@ -1,16 +1,17 @@
 # chat21-ionic ver 1.0
-### 1.0...
+### 1.0... 
 - change color css conv selected
 - change position point blu new message
 - bug fix css conv archived 
 - link corretti nei messaggi
 - dettaglio richiesta solo x gruppi supporto
 - msg truncate in list conv
+- carico img profile da url in conv. list, info conv., partecipanti 
 
-- controllo immagine profilo
-- apro info messaggio
-- cambio requester id -> tender out info
-- immagine senza bordo nel msg conversazione
+- (da fare) apro info messaggio 
+- (da fare) cambio requester id -> tender out info
+- (da fare) immagine senza bordo nel msg conversazione
+- (da fare) ottimizzare view contatti 
 
 
 
