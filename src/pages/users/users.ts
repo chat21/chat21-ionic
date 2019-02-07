@@ -11,7 +11,6 @@ import { DatabaseProvider } from './../../providers/database/database';
 import { NavProxyService } from '../../providers/nav-proxy';
 // utils
 import { compareValues } from '../../utils/utils';
-
 import { UserModel } from '../../models/user';
 
 

@@ -27,33 +27,26 @@
     <ng-template #contentConversations>
       <ion-item no-lines ion-item [class.selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of conversations"
         (mousedown)="setUidConvSelected(conversation.uid)" (mouseup)="openMessageList()">
+        
         <ion-avatar item-start>
           <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
           <div #avatarImage *ngIf="conversation.image && conversation.image != ''" class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
         </ion-avatar>
+        
         <div class="truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
+
         <div>
-          <span class="c21-point" *ngIf="conversation.is_new" [ngStyle]="{ 'background-color':(conversation.uid === uidConvSelected)?'#ffffff':'#0b5c89' }">&nbsp;</span>
           <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
         </div>
-        
-
-        <!-- <span *ngIf="conversation.status == 1;then content else other_content">here is ignored</span>
-        <ng-template #content>
-          <p *ngIf="!conversation.last_message_text" class="truncate read">{{ LABEL_IMAGE | translate }}</p>
-          <p *ngIf="conversation.last_message_text" class="truncate not-read" [innerHTML]="conversation.last_message_text"></p>
-        </ng-template>
-        <ng-template #other_content>
-          <p *ngIf="!conversation.last_message_text" class="truncate read">{{ LABEL_IMAGE | translate }}</p>
-          <p *ngIf="conversation.last_message_text" class="truncate read" [innerHTML]="conversation.last_message_text"></p>
-        </ng-template> -->
 
         <ion-note item-end>{{conversation.time_last_message}}</ion-note>
+
         <button id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
           <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="close" item-end></ion-icon>
-          <!-- source: https://ionicframework.com/docs/v1/api/directive/ionSpinner/ -->
-          <!-- <ion-spinner class="close-conversation-button-icon" style="display:none"  id="{{ 'close_button_loading' + conversation.uid }}" icon="spiral"></ion-spinner> -->
         </button>
+
+        <div item-end class="c21-point" *ngIf="conversation.is_new">&nbsp;</div>
+
       </ion-item>
     </ng-template>
 

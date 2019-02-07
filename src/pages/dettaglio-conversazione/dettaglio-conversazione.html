@@ -70,6 +70,9 @@
                   <span class="buttonInfo" (click)="presentPopover($event, message)"> </span>
                   <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
                   [height]="getSizeImg(message).height" />
+                  <!-- <div *ngIf="message.type == 'file';" class="message-content message-content-text">
+                    <a href=message.metadata.src target="_blank">X1 message.metadata.name?message.metadata.name:message.metadata.src</a>
+                  </div> -->
                   <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
                   <div *ngIf="message.type == 'text';">
                     <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
@@ -103,7 +106,9 @@
                     <img *ngIf="isImage(message);" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
                       [height]="getSizeImg(message).height" />
                     <div *ngIf="isFile(message);" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
-                  
+                    <!-- <div *ngIf="isFile(message);" class="message-content message-content-text">
+                      <a href=message.metadata.src target="_blank">X2 message.metadata.name?message.metadata.name:message.metadata.src</a>
+                    </div> -->
                   
                     <div *ngIf="message.type == 'text';">
                       <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>

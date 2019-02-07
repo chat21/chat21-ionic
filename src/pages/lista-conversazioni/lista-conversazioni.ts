@@ -14,7 +14,8 @@ import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
 import { convertMessage, windowsMatchMedia } from '../../utils/utils';
-import { CURR_VER_PROD, CURR_VER_DEV, TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
+import { TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
+import * as PACKAGE from '../../../package.json';
 // services
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { NavProxyService } from '../../providers/nav-proxy';
@@ -73,7 +74,7 @@ export class ListaConversazioniPage extends _MasterPage {
     private chatArchivedConversationsHandler: ChatArchivedConversationsHandler
   ) {
     super();
-    this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
+    this.BUILD_VERSION = 'v.' + PACKAGE.version; // 'b.0.5';
 
     // /** RECUPERO ID CONVERSAZIONE
     // * se vengo da dettaglio conversazione

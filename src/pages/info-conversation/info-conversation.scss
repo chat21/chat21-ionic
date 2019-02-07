@@ -375,8 +375,10 @@ page-info-conversation {
                 color: map-get($colors, c21-gray);
             }
             .avatar-placeholder{
-                // background-color: #eeeeee;
-                display: inline-block;
+                display: block;
+                position: absolute;
+                top: 0px;
+                left: 0px;
                 width: 54px;
                 height: 54px;
                 background-size: cover;

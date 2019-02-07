@@ -18,18 +18,14 @@
                     <div class="chat21-image">
                         <ion-avatar item-start>
                             <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversationSelected.color" [innerHTML]="conversationSelected.avatar"></div>
-                            <div #avatarImage *ngIf="conversationSelected.image && conversationSelected.image != ''" class="chat21-avatar" [style.background-image]="'url(' + conversationSelected.image + ')'"></div>
+                            <div #avatarImage class="chat21-avatar" [style.background-image]="'url(' + conversationSelected.image + ')'"></div>
+                            
                             <div *ngIf="isSupportGroup() && isExistUidUserAuthenticatedInMembers()"  style="line-height: 45px;" class="c21-icon-status c21-checked">
                                 <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                 viewBox="0 0 26.6 26.6" style="enable-background:new 0 0 26.6 26.6;" xml:space="preserve">
-                                <style type="text/css">
-                                    .st0{fill:none;}
-                                    .st1{fill:#FFFFFF;}
-                                    .st2{fill:#18BDF7;}
-                                </style>
-                                <path class="st0" d="M1.3,1.3h24v24h-24V1.3z"/>
-                                <path class="st1" d="M13.3,0L2.4,4.9v7.3c0,6.7,4.6,13,10.9,14.5c6.2-1.5,10.9-7.8,10.9-14.5V4.9L13.3,0z"/>
-                                <path class="st2" d="M13.3,2.3l-9,4v6c0,5.5,3.8,10.7,9,12c5.2-1.3,9-6.5,9-12v-6L13.3,2.3z M11.3,18.3l-4-4l1.4-1.4l2.6,2.6
+                                <path class="st0" style="fill:none;" d="M1.3,1.3h24v24h-24V1.3z"/>
+                                <path class="st1" style="fill:#FFFFFF;" d="M13.3,0L2.4,4.9v7.3c0,6.7,4.6,13,10.9,14.5c6.2-1.5,10.9-7.8,10.9-14.5V4.9L13.3,0z"/>
+                                <path class="st2" style="fill:#18BDF7;" d="M13.3,2.3l-9,4v6c0,5.5,3.8,10.7,9,12c5.2-1.3,9-6.5,9-12v-6L13.3,2.3z M11.3,18.3l-4-4l1.4-1.4l2.6,2.6
                                     l6.6-6.6l1.4,1.4L11.3,18.3z"/>
                                 </svg>
                             </div>
@@ -98,7 +94,7 @@
             </div>
 
         </ion-card>
-        <ion-card *ngIf="channelType == TYPE_GROUP">
+        <ion-card *ngIf="isSupportGroup()">
             <div class="chat21-box-buttons chat21-box">
                 <div class="c21-link">
                     <button class="c21-button" icon-only (click)="openUserRequest()">
@@ -121,7 +117,10 @@
                     </div>
                     <div class="chat21-row">
                         <div class="c21-label">{{ 'LABEL_SOURCEPAGE' | translate }}</div>
-                        <div class="lighter" [innerHTML]="attributesSourcePage"></div>
+                        <!-- <div class="lighter" [innerHTML]="attributesSourcePage"></div> -->
+                        <div class="lighter">
+                            <a href="{{attributesSourcePage}}" target="_blank">{{attributesSourcePage}}</a>
+                        </div>
                     </div>
                     <div *ngIf="attributes && attributes.departmentId" class="chat21-row">
                         <div class="c21-label">{{ 'LABEL_DEPARTMENT_NAME' | translate }}</div>
@@ -168,21 +167,16 @@
                     <div *ngFor="let member of listMembers" class="c21-member" (click)="openInfoUser(member)" >
                         <ion-item>
                             <ion-avatar item-start [ngStyle]="{ position: relative }">
-                                <!-- <div class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div> -->
-                                <div #avatarPlaceholder *ngIf="!member.imageurl" class="avatar-placeholder" [style.background-color]="member.color" [innerHTML]="member.avatar"></div>
+
+                                <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="member.color" [innerHTML]="member.avatar"></div>
                                 <div #avatarImage *ngIf="member.imageurl && member.imageurl!=''" class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div>
 
                                 <div *ngIf="member.checked === true" class="c21-icon-status c21-checked">
                                     <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                     viewBox="0 0 26.6 26.6" style="enable-background:new 0 0 26.6 26.6;" xml:space="preserve">
-                                    <style type="text/css">
-                                        .st0{fill:none;}
-                                        .st1{fill:#FFFFFF;}
-                                        .st2{fill:#18BDF7;}
-                                    </style>
-                                    <path class="st0" d="M1.3,1.3h24v24h-24V1.3z"/>
-                                    <path class="st1" d="M13.3,0L2.4,4.9v7.3c0,6.7,4.6,13,10.9,14.5c6.2-1.5,10.9-7.8,10.9-14.5V4.9L13.3,0z"/>
-                                    <path class="st2" d="M13.3,2.3l-9,4v6c0,5.5,3.8,10.7,9,12c5.2-1.3,9-6.5,9-12v-6L13.3,2.3z M11.3,18.3l-4-4l1.4-1.4l2.6,2.6
+                                    <path class="st0" style="fill:none;" d="M1.3,1.3h24v24h-24V1.3z"/>
+                                    <path class="st1" style="fill:#FFFFFF;" d="M13.3,0L2.4,4.9v7.3c0,6.7,4.6,13,10.9,14.5c6.2-1.5,10.9-7.8,10.9-14.5V4.9L13.3,0z"/>
+                                    <path class="st2" style="fill:#18BDF7;" d="M13.3,2.3l-9,4v6c0,5.5,3.8,10.7,9,12c5.2-1.3,9-6.5,9-12v-6L13.3,2.3z M11.3,18.3l-4-4l1.4-1.4l2.6,2.6
                                         l6.6-6.6l1.4,1.4L11.3,18.3z"/>
                                     </svg>
                                 </div>

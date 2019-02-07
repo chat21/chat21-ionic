@@ -24,6 +24,10 @@
       <ion-avatar item-left>
           <img src= {{user.image}} alt="user" onError="this.src='assets/img/no_image.png';">
       </ion-avatar>
+
+      <!-- <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="user.color" [innerHTML]="user.avatar"></div>
+      <div #avatarImage class="chat21-avatar" [style.background-image]="'url(' + user.image + ')'"></div> -->
+                           
        <h2 class="label">
           <span *ngIf="user.fullname">{{ user.fullname }}</span>
           <span *ngIf="!user.fullname">{{ 'LABEL_GUEST' | translate }}</span>

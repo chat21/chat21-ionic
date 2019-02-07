@@ -7,74 +7,56 @@ page-archived-conversations {
    
     .date-right{
         text-align: right;
-        //font-size: x-small;
         color: #333333;
         align-self: flex-start;
         padding: 6px;
     }
-    
-    .item-block {
-        margin-left:0px!important;
-        .label{
-            font-size: 9px!important;
-            color:#333333;
-            h2{
-                font-size: 12px;
+    .list{
+        margin: 0 0 16px;
+        .item.item-block {
+            cursor: pointer;
+            margin-left:0px!important;
+            background-color: #ffffff;
+            border-bottom: rgba(169, 169, 169, 0.1);
+            border-bottom-width: thin!important;
+            border-bottom-style: solid!important;
+
+            .label{
+                font-size: 9px!important;
                 color:#333333;
+                h2{
+                    font-size: 12px;
+                    color:#222;
+                }
+                p{
+                    font-size: 12px;
+                    color:gray;
+                }
             }
-            p{
-                font-size: 12px;
-                color:#666666;
+            .note {
+                font-size: 11px;
+                color:#cccccc;
             }
         }
-        .note {
-            font-size: 11px;
-            color:#cccccc;
-        }
-        background-color: #ffffff;
-        border-bottom: rgba(0, 0, 0, 0.10)!important;
-        border-bottom-width: thin!important;
-        border-bottom-style: solid!important;
-    }
     
-    .item-block.selected{
-        margin-left:0px!important;
+        .item-block.selected{
+            margin-left:0px!important;
+            background-color: #f2f2f2;
+            border-bottom: rgba(255, 255, 255, 0.1);
+            border-bottom-width: thin!important;
+            border-bottom-style: solid!important;
 
-        .close-conversation-button ion-icon {
-            color: white;
-        }
-        .close-conversation-button ion-spinner svg circle{ 
-            stroke: white !important;
-        }
-
-        .label{
-            h2{
-                font-size: 12px;
-                color:#ffffff;
+            .close-conversation-button ion-icon {
+                color: white;
             }
-            p{
-                font-size: 12px;
-                color:#ffffff;
+            .close-conversation-button ion-spinner svg circle{ 
+                stroke: white !important;
+            }
+            .note {
+                font-size: 11px;
+                color:#cccccc;
             }
         }
-        .note {
-            font-size: 11px;
-            color:#cccccc;
-        }
-
-        .archived {
-            border-radius: 8px;
-            border: 2px solid #cccccc;
-            padding: 4px; 
-            color: #cccccc;
-            font-size: 13px;
-        }
-
-        background-color: #0b5c89;
-        border-bottom: rgba(0, 0, 0, 0.10)!important;
-        border-bottom-width: thin!important;
-        border-bottom-style: solid!important;
-        // color:#ffffff;
     }
 
     .archived {

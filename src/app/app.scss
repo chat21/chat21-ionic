@@ -38,10 +38,10 @@ body {
 }
 
 .truncate {
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    width: 100%!important;
+    white-space: nowrap!important;
+    overflow: hidden!important;
+    text-overflow: ellipsis!important;
 }
   
 
@@ -58,7 +58,12 @@ ion-app, ion-nav, ion-tab, ion-tabs, .app-root, .ion-page {
 }
 
 .chat21-avatar {
-    background-color: #eeeeee;
+    background-color: transparent;
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    
     display: inline-block;
     width: 54px;
     height: 54px;
@@ -205,5 +210,9 @@ ion-navbar {
 //         right: 0px;
 //     }
 // }
+
+.split-pane-side {
+    border-right: 1px solid rgba(169, 169, 169, 0.1)!important;
+}
 
 

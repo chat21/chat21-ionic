@@ -1,4 +1,18 @@
 # chat21-ionic ver 1.0
+### 1.0...
+- change color css conv selected
+- change position point blu new message
+- bug fix css conv archived 
+- link corretti nei messaggi
+- dettaglio richiesta solo x gruppi supporto
+- msg truncate in list conv
+
+- controllo immagine profilo
+- apro info messaggio
+- cambio requester id -> tender out info
+- immagine senza bordo nel msg conversazione
+
+
 
 ### 1.0.2
 - added timestamp =  firebase.database.ServerValue.TIMESTAMP in send message

@@ -15,7 +15,7 @@ import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // utils
 import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
-import { jsonToArray, avatarPlaceholder, getColorBck, searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
+import { getImageUrlThumb, jsonToArray, avatarPlaceholder, getColorBck, searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
 import { PlaceholderPage } from '../placeholder/placeholder';
 
 import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
@@ -240,7 +240,6 @@ setDetailUser(snapshot) {
    * information detail group called of groupService.loadGroupDetail
    */
   returnLoadGroupDetail = (snapshot) => {
-
     console.log('InfoConversationPage::subscribeGroupDetails', snapshot.val());
     if (snapshot.val()) {
       this.group = snapshot.val();
@@ -278,7 +277,8 @@ setDetailUser(snapshot) {
     console.log('InfoConversationPage::updateAttributes', attributes);
     if (attributes) {
       this.attributesClient = (attributes.client) ? attributes.client : '';
-      this.attributesSourcePage = (attributes.sourcePage) ? urlify(attributes.sourcePage) : '';
+      this.attributesSourcePage = (attributes.sourcePage) ? attributes.sourcePage : '';
+      //this.attributesSourcePage = (attributes.sourcePage) ? urlify(attributes.sourcePage) : '';
       this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
       this.createCustomAttributesMap(attributes);
     }
@@ -339,31 +339,28 @@ setDetailUser(snapshot) {
           if (snapshot.val()) {
             const user = snapshot.val();
             const fullname = user.firstname + " " + user.lastname;
-            let imageUrl = URL_NO_IMAGE;
             let avatar;
             let color;
             let decodedUid;
-            if (user.imageurl && user.imageurl !== LABEL_NOICON) {
-              imageUrl = user.imageurl;
-            } 
-            // console.log('________________________________>' + snapshot.key + '===' + uidUserAuthenticated);
             if (snapshot.key === that.uidUserAuthenticated) { 
               decodedUid = decoded;
             } 
-            
+            let imageurl = getImageUrlThumb(snapshot.key);
+
             userDetail = new UserModel(
               snapshot.key,
               user.email,
               user.firstname,
               user.lastname,
               fullname.trim(),
-              imageUrl,
+              imageurl,
               avatar,
               color,
               false,
               false,
               decodedUid
             );
+
           } else {
             userDetail = new UserModel(
               snapshot.key,
@@ -409,10 +406,8 @@ setDetailUser(snapshot) {
               console.log('4 - userDetail.fullname------------->', userDetail.fullname);
             }
           } 
-
           userDetail.avatar = avatarPlaceholder(userDetail.fullname);
           userDetail.color = getColorBck(userDetail.fullname);
-          
           console.log('userDetail------------->', userDetail);
           // ADD MEMBER TO ARRAY
           that.listMembers.push(userDetail);
@@ -420,13 +415,30 @@ setDetailUser(snapshot) {
           that.userIsOnline(userDetail.uid);
           // MEMBER CHECKED!!
           // that.checkVerifiedMembers(userDetail.uid);
-
         });
     }
   });
 }
 
-
+    /**
+     * carico url immagine profilo passando id utente
+     */
+  //   setImageUser(userDetail){
+  //     const that = this;
+  //     if(userDetail.uid){
+  //         this.upSvc.display(userDetail.uid, 'thumb')
+  //         .then(onResolve, onReject);
+  //     }
+  //     function onResolve(foundURL) { 
+  //         console.log('foundURL', userDetail, foundURL);
+  //         userDetail.imageurl = foundURL; 
+  //         // salvo in cache e sul DB!!!
+  //     } 
+  //     function onReject(error){ 
+  //         console.log('error.code', error); 
+  //         userDetail.imageurl = '';
+  //     }
+  // }
 
 
   //// SUBSCRIBTIONS ////
@@ -1044,7 +1056,6 @@ setDetailUser(snapshot) {
   openUserRequest(){
     // this.projectId = '5b55e806c93dde00143163dd';
     // "https://support.tiledesk.com/dashboard/#/project/5af02d8f705ac600147f0cbb/request/support-group-LEOsofmVWYtljdxTf3c/messages";
-    
     var url = "https://support.tiledesk.com/dashboard/#/project/"+this.attributes.projectId+"/request/"+this.conversationWith+"/messages";
     console.log('openUserDetail:', url);
     window.open(url,'_blank');

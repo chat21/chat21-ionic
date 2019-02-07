@@ -60,13 +60,10 @@ export function searchIndexInArrayForUid(items, key){
  */
 export function urlify(text?, name?) {
   if(!text) return name;
-  var regex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
+  //https://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url
+  var regex=/(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,63}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?/;
   return text.replace(regex, function (url) {
-    if (url.match(/^[/]/))
-    {
-      return;
-    } 
-  
+    if (url.match(/^[/]/)){ return; } 
     var label = url;
     if(name){
       label = name;
@@ -76,7 +73,8 @@ export function urlify(text?, name?) {
     } else if (!url.match(/^[a-zA-Z]+:\/\//)){
       url = 'http://' + url;
     }
-    return '<a href=\"' + url + '\" target=\"_blank\">' + label + '</a>';
+    let link = '<a href=\"' + url + '\" target=\"_blank\">' + label + '</a>';
+    return link
   })
 }
 
@@ -100,10 +98,8 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
 
     var date = new Date(timestamp);
     let now: Date = new Date();
-
     var LABEL_TODAY = translate.get('LABEL_TODAY')['value'];
     var LABEL_TOMORROW = translate.get('LABEL_TOMORROW')['value'];
-
     var labelDays:string = LABEL_TODAY;
     var _MS_PER_DAY = 1000 * 60 * 60 * 24;
     // Esclude l'ora ed il fuso orario
@@ -140,9 +136,11 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
     const now: Date = new Date();
     let labelDays = '';
     if (now.getFullYear() !== date.getFullYear()) {
-      labelDays = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
+      const month = date.getMonth()+1;
+      labelDays = date.getDay() + '/' + month + '/' + date.getFullYear();
     } else if (now.getMonth() !== date.getMonth()) {
-      labelDays = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
+      const month = date.getMonth()+1;
+      labelDays = date.getDay() + '/' + month + '/' + date.getFullYear();
     } else if (now.getDay() === date.getDay()) {
       labelDays = LABEL_TODAY;
     } else if (now.getDay() - date.getDay() === 1) {
@@ -397,7 +395,7 @@ export function createLoading(loadinController, message) {
 
 
 export function convertMessageAndUrlify(messageText){
-  messageText = convert(messageText);
+  //messageText = convert(messageText);
   messageText = urlify(messageText);
   return messageText;
 }
@@ -447,6 +445,11 @@ export function avatarPlaceholder(conversation_with_fullname) {
   return initials;
 }
 
+export function getImageUrlThumb(uid: string){
+  let imageurl ="https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/";
+      imageurl = imageurl+'profiles%2F'+uid+'%2Fthumb_photo.jpg?alt=media';
+  return imageurl;
+}
 
 // export function urlExists(url) {
 //   console.log("imageExists::::::"+url);
@@ -497,6 +500,7 @@ export function isURL(str: string) {
     return true;
   }
 }
+
 
 // export function emailValidator(str) {
 //   let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;

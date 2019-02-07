@@ -174,12 +174,8 @@ export class ChatArchivedConversationsHandler {
             conversationRef.child('image').remove();
             console.log('no-image conversationRef', conversationRef);
         }
-        // if(!conv.image || conv.image === undefined || conv.image === null || conv.image === 'no-image'){
-        //     this.setImageConversation(conv, conversation_with);
-        // }
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.time_last_message = time_last_message;
-
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
 
@@ -195,56 +191,6 @@ export class ChatArchivedConversationsHandler {
         }
         return status;
     }
-
-
-    /**
-     * carico url immagine profilo passando id utente
-     */
-    setImageConversation(conv, conversation_with){
-        const that = this;
-        console.log("********** displayImage uidContact::: ", that.ref.ref.child(conv.uid));
-        var conversationRef = that.ref.ref.child(conv.uid);
-        // if(conversation_with){
-        //     this.upSvc.display(conversation_with, 'thumb')
-        //     .then(onResolve, onReject);
-        // }
-        // function onResolve(foundURL) { 
-        //     console.log('foundURL', conv, foundURL);
-        //     conv.image = foundURL; 
-        //     // salvo in cache e sul DB!!!
-        //     conversationRef.update ({"image" : foundURL});
-        //     // that.databaseProvider.setConversation(conv);
-        // } 
-        // function onReject(error: any){ 
-        //     console.log('error.code', error.code); 
-        //     conversationRef.child('image').remove();
-        //     conv.image = '';
-        // }
-    }
-
-    // private setImageConversation(conv, conversation_with) {
-
-    //     let image = URL_NO_IMAGE;
-    //     if (conv.channel_type === TYPE_DIRECT) {
-    //         const urlNodeConcacts = contactsRef(this.tenant) + conversation_with + '/imageurl/';
-    //         firebase.database().ref(urlNodeConcacts).once('value')
-    //             .then(function (snapshot) {
-    //                 console.log("urlNodeConcacts::: ", urlNodeConcacts);
-    //                 //conv.image = snapshot.val();
-    //                 if (snapshot.val().trim()) {
-    //                     //return snapshot.val();
-    //                     conv.image = snapshot.val();
-    //                 } else {
-    //                     conv.image = image;
-    //                 }
-    //             })
-    //             .catch(function (err) {
-    //                 conv.image = image;
-    //             })
-    //     } else {
-    //         conv.image = image;
-    //     }
-    // }
 
     /**
      * calcolo il tempo trascorso da ora al timestamp passato

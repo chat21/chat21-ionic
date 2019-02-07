@@ -39,36 +39,11 @@ export class UpdateImageProfilePage {
       this.selectedFiles = this.event.target.files;
       this.fileChange(event);
     }
-    else{
-      //this.displayImage(this.uidContact);
-    }
 
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UpdateImageProfilePage');
-  }
-  
-  displayImage(uidContact){
-    // this.upSvc.display(uidContact, '')
-    // .then(onResolve, onReject)
-    // function onResolve(foundURL) { 
-    //     console.log('foundURL', foundURL);
-    //     this.image = foundURL; 
-    // } 
-    // function onReject(error){ 
-    //     console.log('error.code', error.code); 
-    //     this.image = '';
-    // }
-
-    // .then((url) => {
-    //   this.zone.run(() => {
-    //     this.image = url;
-    //   });
-    // })
-    // .catch((error)=>{
-    //   console.log("error::: ",error);
-    // });
   }
 
   fileChange(event){

@@ -45,16 +45,23 @@ page-lista-conversazioni {
         bottom: 0px;
     }
     
-    .list-md .item.item-block.item-md,
-    .list-ios .item.item-block.item-ios {
-        border-bottom: rgba(0, 0, 0, 0.1);
-        border-bottom-width: thin;
-        border-bottom-style: solid!important;
-    }
+    
+
+    // .list-md .item.item-block.item-md,
+    // .list-ios .item.item-block.item-ios {
+    //     border-bottom: rgba(169, 169, 169, 0.1);
+    //     border-bottom-width: thin;
+    //     border-bottom-style: solid!important;
+    // }
     .list{
         margin: 0 0 16px;
-        .item-block {
-            border-width: 0;
+        .item.item-block {
+            cursor: pointer;
+            border-bottom: rgba(169, 169, 169, 0.1);
+            border-bottom-width: thin;
+            border-bottom-style: solid!important;
+
+
             display: flex;
             align-items: center;
             margin: 0px;
@@ -163,26 +170,17 @@ page-lista-conversazioni {
         }
 
         .item-block.selected{
-            color:#ffffff;
-            background-color: #0b5c89;
-            // border-bottom: rgba(0, 0, 0, 0.10);
-            // border-bottom-width: thin;
-            // border-bottom-style: solid;
-            .close-conversation-button {
-                ion-icon {
-                    color: white;
-                }
-            }
+            background-color: #f2f2f2;
+            border-bottom: rgba(255, 255, 255, 0.1);
+            border-bottom-width: thin;
+            border-bottom-style: solid!important;
             .label{
                 h2{
-                    color:#ffffff;
+                    color: #222;
                 }
                 p{
-                    color:#ffffff;
+                    color:grey;
                 }
-            }
-            .note {
-                color:#cccccc;
             }
         }
     }
@@ -212,6 +210,10 @@ page-lista-conversazioni {
         background-color: #0b5c89;
         float: left;
         margin: 3px 3px 0px 0px;
+
+        position: absolute;
+        right: 8px;
+        bottom: 2px;
     }
 
     .c21-number-open-conv {
@@ -238,6 +240,7 @@ page-lista-conversazioni {
             color: #666666;
         }  
     }
+
     
 
 }

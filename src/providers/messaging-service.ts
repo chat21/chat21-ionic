@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 import * as firebase from 'firebase';
 
 import { Config } from 'ionic-angular';
-import { CURR_VER_DEV, CURR_VER_PROD } from '../utils/constants';
+import * as PACKAGE from '../../package.json';
 
 //import { AuthService } from './auth-service';
 
@@ -35,7 +35,7 @@ export class MessagingService {
         // recupero tenant
         this.tenant = config.get("appConfig").tenant;
         this.urlNodeFirebase = '/apps/'+this.tenant;
-        this.BUILD_VERSION = 'v.' + CURR_VER_PROD + ' b.' + CURR_VER_DEV; // 'b.0.5';
+        this.BUILD_VERSION = 'v.' + PACKAGE.version; // 'b.0.5';
 
         // Callback fired if Instance ID token is updated.
         // this.messaging.onTokenRefresh(function() {

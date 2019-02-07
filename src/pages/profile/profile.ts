@@ -58,14 +58,12 @@ export class ProfilePage {
     if (!this.uidUser){ // || this.userDetail.uid == this.uidUser
       this.profileYourself = true;
       this.currentUserDetail = this.chatManager.getLoggedUser();
-      //this.displayImage(this.currentUserDetail.uid);
     }
     else {
       this.profileYourself = false;
       console.log('this.uidUser',this.uidUser);
       this.userDetail = new UserModel(this.uidUser, '', '', this.uidUser, '', '');
       this.userService.loadUserDetail(this.uidUser);
-      //this.displayImage(this.uidUser);
     }
   }
   /**
@@ -84,45 +82,7 @@ export class ProfilePage {
       console.log(" ********* data::: ", data);
     });
   }
-  /**
-   * carico url immagine profilo passando id utente
-   */
-  displayImage(uidContact: string){
-    const that = this;
-    console.log(" ********* displayImage::: ");
-    // this.upSvc.display(uidContact, 'thumb')
-    // .then(onResolve, onReject)
-    // function onResolve(foundURL:string) {
-    //     console.log('foundURL', foundURL);
-    //     if(that.profileYourself){
-    //       that.currentUserDetail.imageurl = foundURL;
-    //     }else{
-    //       that.userDetail.imageurl = foundURL;
-    //     }
-    // } 
-    // function onReject(error:any){ 
-    //     console.log('error.code', error.code); 
-    //     if(that.profileYourself){
-    //       that.currentUserDetail.imageurl = '';
-    //     }else{
-    //       that.userDetail.imageurl = '';
-    //     }
-    // }
 
-
-    // .then((url) => {
-    //   that.zone.run(() => {
-    //     if(that.profileYourself){
-    //       that.currentUserDetail.imageurl = url;
-    //     }else{
-    //       that.userDetail.imageurl = url;
-    //     }
-    //   });
-    // })
-    // .catch((error)=>{
-    //   //console.log("displayImage error::: ",error);
-    // });
-  }
 
   /**
    * chiudo il popup profilo utente

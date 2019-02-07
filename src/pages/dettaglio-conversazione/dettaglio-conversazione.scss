@@ -424,7 +424,7 @@ page-dettaglio-conversazione {
             &.modal-page{
                 border-left-style: inset;
                 border-color: map-get($colors, c21-gray-10);
-                border-left-width: thin;
+                border-left-width: 0;
                 opacity: 1;
                 transition: all 0.4s 0.1s;
             }

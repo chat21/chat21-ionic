@@ -11,7 +11,7 @@ import { ConversationModel } from '../models/conversation';
 import { ChatManager } from './chat-manager/chat-manager';
 // utils
 import { TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
-import { compareValues, getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
+import { getImageUrlThumb, compareValues, getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
 import { TiledeskConversationProvider } from './tiledesk-conversation/tiledesk-conversation';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -120,7 +120,6 @@ export class ChatConversationsHandler {
             // add the conversation from the isConversationClosingMap
             this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
             const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
-            // patch immagini
             if(index > -1){
                 this.conversations.splice(index, 1, conversation);
             } else {
@@ -224,7 +223,6 @@ export class ChatConversationsHandler {
         if(!conv.recipient_fullname || conv.recipient_fullname === 'undefined' || conv.recipient_fullname.trim() === ''){
             conv.recipient_fullname = conv.recipient;
         }
-
         let conversation_with_fullname = conv.sender_fullname;
         let conversation_with = conv.sender;
         if(conv.sender === this.loggedUser.uid){
@@ -237,25 +235,16 @@ export class ChatConversationsHandler {
             conversation_with_fullname = conv.recipient_fullname;
             conv.last_message_text = conv.last_message_text;
         }
-        
         conv.conversation_with_fullname = conversation_with_fullname;
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
-        // NOTA: le immagini le devo ricaricare solo quando entro nel dettaglio di una conversazione!!!!!
-        if(conv.image === 'no-image'){
-            console.log('no-image', conv);
-            var conversationRef = this.ref.ref.child(conv.uid);
-            conversationRef.child('image').remove();
-            console.log('no-image conversationRef', conversationRef);
-        }
-        // if(!conv.image || conv.image === undefined || conv.image === null || conv.image === 'no-image'){
-        //     this.setImageConversation(conv, conversation_with);
-        // }
         const time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.time_last_message = time_last_message;
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
+        conv.image = getImageUrlThumb(conversation_with);
         return conv;
     }
+    
 
     // set the remote conversation as read
     setConversationRead(conversationUid) {
@@ -284,27 +273,27 @@ export class ChatConversationsHandler {
      /**
      * carico url immagine profilo passando id utente
      */
-    setImageConversation(conv, conversation_with){
-        const that = this;
-        console.log("********** displayImage uidContact::: ", that.ref.ref.child(conv.uid));
-        var conversationRef = that.ref.ref.child(conv.uid);
-        // if(conversation_with){
-        //     this.upSvc.display(conversation_with, 'thumb')
-        //     .then(onResolve, onReject);
-        // }
-        // function onResolve(foundURL) { 
-        //     console.log('foundURL', conv, foundURL);
-        //     conv.image = foundURL; 
-        //     // salvo in cache e sul DB!!!
-        //     conversationRef.update({"image" : foundURL});
-        //     that.databaseProvider.setConversation(conv);
-        // } 
-        // function onReject(error){ 
-        //     console.log('error.code', error.code); 
-        //     conversationRef.child('image').remove();
-        //     conv.image = '';
-        // }
-    }
+    // setImageConversation(conv, conversation_with){
+    //     const that = this;
+    //     console.log("********** displayImage uidContact::: ", that.ref.ref.child(conv.uid));
+    //     var conversationRef = that.ref.ref.child(conv.uid);
+    //     if(conversation_with){
+    //         this.upSvc.display(conversation_with, 'thumb')
+    //         .then(onResolve, onReject);
+    //     }
+    //     function onResolve(foundURL) { 
+    //         console.log('foundURL', conv, foundURL);
+    //         conv.image = foundURL; 
+    //         // salvo in cache e sul DB!!!
+    //         conversationRef.update({"image" : foundURL});
+    //         that.databaseProvider.setConversation(conv);
+    //     } 
+    //     function onReject(error){ 
+    //         console.log('error.code', error.code); 
+    //         conversationRef.child('image').remove();
+    //         conv.image = '';
+    //     }
+    // }
 
     /**
      * calcolo il tempo trascorso da ora al timestamp passato
