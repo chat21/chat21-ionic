@@ -92,6 +92,9 @@
     "LABEL_EXTERNAL_ID": "External Id",
     "LABEL_IAT": "Iat",
     "LABEL_REQUEST_DETAIL": "Dettaglio richiesta",
-    "LABEL_ENTER_MSG": "Scrivi un messaggio"
+    "LABEL_ENTER_MSG": "Scrivi un messaggio",
+
+    "LABEL_MSG_LOGIN_TILEDESK": "Effettua il login per iniziare a chattare",
+    "LABEL_ARCHIVED": "Archiviate"
 
 }

@@ -81,7 +81,6 @@ export class ListaConversazioniPage extends _MasterPage {
     // * o da users con conversazione attiva recupero conversationWith
     // */
     this.uidConvSelected = navParams.get('conversationWith');
-    //this.openMessageList();
     this.tenant = chatManager.getTenant();
 
     /** RECUPERO IL RECIPIENTID 
@@ -103,7 +102,7 @@ export class ListaConversazioniPage extends _MasterPage {
      * 3 - visualizzo la pg di login
      * 4 - resetto conversationWith
     */
-    this.profileModal = this.modalCtrl.create(LoginPage, null, { enableBackdropDismiss: false });
+    this.profileModal = this.modalCtrl.create(LoginPage, {tenant: this.tenant}, { enableBackdropDismiss: false });
     this.initSubscriptions();
     this.checkLoadingIsActive(5000);
   }
@@ -125,13 +124,19 @@ export class ListaConversazioniPage extends _MasterPage {
     if(conversations && conversations.length > 0 ){
       this.conversations = conversations;
       this.numberOpenConv = this.conversationsHandler.countIsNew();
-      this.openMessageList();
     }
+    this.showDetailConversation();
   }
   /** 
    * evento richiamato su add, change, remove di una conversazione
+   * se uidConvSelected è null (la prima volta cha apro la chat)
+   * imposto prima conv come uidConvSelected 
   */
   conversationsChanged = (conversations: ConversationModel[]) => {
+    // if(!this.uidConvSelected){
+    //   this.setUidConvSelected(conversations[0].uid);
+    //   this.showDetailConversation();
+    // }
     this.conversations = conversations;
     this.numberOpenConv = this.conversationsHandler.countIsNew();
   }
@@ -194,7 +199,9 @@ export class ListaConversazioniPage extends _MasterPage {
       this.databaseProvider.getUidLastOpenConversation()
       .then(function (uid: string) {
         console.log('getUidLastOpenConversation:: ' + uid);
-        that.setUidConvSelected(uid);
+        if(uid){
+          that.setUidConvSelected(uid);
+        }
         that.initConversationsHandler();
       })
       .catch((error) => {
@@ -224,9 +231,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * @param uidConvSelected  
    */
   openMessageList() {
-    console.log('openMessageList::');
     const that = this;
-  
     setTimeout(function () {
       var conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
       if (conversationSelected) {
@@ -306,7 +311,9 @@ export class ListaConversazioniPage extends _MasterPage {
     //   this.conversationsHandler = conversationHandler;
     //   this.chatArchivedConversationsHandler = archviedConversationsHandler;
     // }
-    this.showDetailConversation();
+    
+    
+    //this.showDetailConversation();
   }
 
 
@@ -325,10 +332,10 @@ export class ListaConversazioniPage extends _MasterPage {
       }
     } else if (this.conversations.length > 0) {
       console.log('openMessageList 2 ::');
-      this.uidConvSelected = this.conversations[0].uid;
+      // this.uidConvSelected = this.conversations[0].uid;
       // se visualizzazione è desktop
-      if (windowsMatchMedia()) {
-        this.setUidConvSelected(this.uidConvSelected);
+      if (windowsMatchMedia()) {    
+        //this.setUidConvSelected(this.uidConvSelected);
         this.openMessageList();
       }
     } else {

@@ -49,9 +49,9 @@ export class PopoverPage {
 
   goToInfoMessage(){
    // pubblico open info message passando il messaggio
-   this.viewCtrl.dismiss();
+   console.log('goToInfoMessage **************', this.message);
    this.events.publish('openInfoMessage', (this.message));
-   console.log('goToInfoMessage **************');
+   this.viewCtrl.dismiss();
   }
   /**
    * chiudo il popover passando 'logOut' al chiamante (lista conversazioni)

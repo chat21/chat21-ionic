@@ -1,18 +1,26 @@
 # chat21-ionic ver 1.0
-### 1.0... 
-- change color css conv selected
-- change position point blu new message
-- bug fix css conv archived 
-- link corretti nei messaggi
-- dettaglio richiesta solo x gruppi supporto
-- msg truncate in list conv
-- carico img profile da url in conv. list, info conv., partecipanti 
 
-- (da fare) apro info messaggio 
-- (da fare) cambio requester id -> tender out info
+### next release 
 - (da fare) immagine senza bordo nel msg conversazione
-- (da fare) ottimizzare view contatti 
+- (da fare) apri immagine nel dettaglio conversazione in una nw finestra
+- (da fare) aggiungo br nel messaggio
+- (da fare) ottimizzare view contatti (css header, titolo, <-, img profile, cache)
 
+
+### 1.0.3 
+- change color css conversation selected
+- change position blue point on new message
+- fixes bug css archived conversations (image, point, header, icon)
+- fixes bug link in message
+- fixes bug button 'Request detail' only support-group
+- fixes bug truncate message in list conversations
+- load image profile from firestore url in conv. list, info conv., Participants 
+- fixes bug user info: load image profilo
+- fixes bug info conversation on first load
+- add button login on tiledesk (if hostname is tiledesk)
+- change get 'date last access' for id in support-group (sostituito senderAuthInfo.authVar.uid con requester_id)
+- fixes bug conversation selected for first open (blank page)
+- fixes bug open page 'message info' (message selected = null) 
 
 
 ### 1.0.2

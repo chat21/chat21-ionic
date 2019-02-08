@@ -14,7 +14,7 @@ import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // utils
-import { URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { URL_PROJECT_ID, URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
 import { getImageUrlThumb, jsonToArray, avatarPlaceholder, getColorBck, searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
 import { PlaceholderPage } from '../placeholder/placeholder';
 
@@ -71,8 +71,6 @@ export class InfoConversationPage {
   private isLoggedUserGroupMember: boolean;
   private subscriptions = [];
 
-  public urlProjectId = "https://support.tiledesk.com/dashboard/#/project/";
-
 
   constructor(
     public events: Events,
@@ -91,24 +89,27 @@ export class InfoConversationPage {
     private navProxy: NavProxyService,
     public chatPresenceHandler: ChatPresenceHandler
   ) {
-    
     //this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
-  }
-
-  ngOnInit() {
-    console.log('ngOnInit:InfoConversationPage');
+    console.log('constructor');
     const that = this;
     setTimeout(function () {
       that.initialize();
     }, 100);
   }
+
+  ngOnInit() {
+    console.log('ngOnInit:InfoConversationPage');
+    
+  }
   
-  // ionViewDidLoad() {
-  //   console.log('ionViewDidLoad:InfoConversationPage');
-  // }
-  // ionViewWillEnter() {
-  //   console.log('ionViewWillEnter');
-  // }
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad:InfoConversationPage');
+  }
+
+  ionViewWillEnter() {
+    console.log('ionViewWillEnter');
+    
+  }
 
   ionViewWillLeave() {
     console.log('------------> ionViewWillLeave:InfoConversationPage');
@@ -166,7 +167,6 @@ export class InfoConversationPage {
     console.log('GRUPPO');
     this.profileYourself = false;
     this.loadGroupDetail();
-    // init conversation subscription (close btn)
     this.events.subscribe(this.conversationWith + '-listener', this.subscribeConversationListener);
     this.conversationsHandler.addConversationListener(this.currentUserDetail.uid, this.conversationWith);
   } else {
@@ -346,7 +346,6 @@ setDetailUser(snapshot) {
               decodedUid = decoded;
             } 
             let imageurl = getImageUrlThumb(snapshot.key);
-
             userDetail = new UserModel(
               snapshot.key,
               user.email,
@@ -1066,7 +1065,7 @@ setDetailUser(snapshot) {
    * 
    */
   addSubscription(key){
-    console.log("addSubscription--->",key);
+    console.log("addSubscription--->",key, this.subscriptions);
     if (!isExistInArray(this.subscriptions, key)){
       console.log("addSubscription: TRUE");
       this.subscriptions.push(key);

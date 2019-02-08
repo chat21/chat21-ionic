@@ -114,7 +114,7 @@ export class ChatConversationsHandler {
     added(childSnapshot){
         const childData:ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
-        console.log("child_added conversationS");
+        console.log("child_added conversationS", childSnapshot.val());
         const conversation = this.completeConversation(childData);
         if (this.isValidConversation(childSnapshot.key, conversation)) {
             // add the conversation from the isConversationClosingMap
@@ -213,7 +213,6 @@ export class ChatConversationsHandler {
      * @param conv 
      */
     completeConversation(conv):ConversationModel{
-        //debugger;
         console.log('completeConversation',conv);
         var LABEL_TU = this.translate.get('LABEL_TU')['value'];
         conv.selected = false;
@@ -236,9 +235,9 @@ export class ChatConversationsHandler {
             conv.last_message_text = conv.last_message_text;
         }
         conv.conversation_with_fullname = conversation_with_fullname;
+
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
-        const time_last_message = this.getTimeLastMessage(conv.timestamp);
-        conv.time_last_message = time_last_message;
+        conv.time_last_message = this.getTimeLastMessage(conv.timestamp);;
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
         conv.image = getImageUrlThumb(conversation_with);
@@ -365,7 +364,6 @@ export class ChatConversationsHandler {
     }
 
     addConversationListener(uidUser, conversationId) {
-        console.log("ChatConversationsHandler::addConversationListener::uidUser:", uidUser, "conversationId:", conversationId);
         var that = this;
         const tenant = this.chatManager.getTenant();
         const url = '/apps/' + tenant + '/users/' + uidUser + '/conversations/' + conversationId;

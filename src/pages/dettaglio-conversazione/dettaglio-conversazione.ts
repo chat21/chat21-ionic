@@ -48,6 +48,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   private messages: Array<MessageModel> = [];
   private arrayLocalImmages:  Array<any> = [];
   private projectId: string;
+  public messageSelected: any;
 
   //aggiunta 
   private conversationSelected: ConversationModel;
@@ -119,7 +120,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.openInfoMessage = false; // indica se è aperto il box info message
     //// init variables
     
-    this.initSubscriptions();
+    //this.initSubscriptions();
     // DESTROY INFO CONVERSATION 
     console.log('1 - DESTROY INFO CONVERSATION',this.events);
     this.events.publish('closeDetailConversation', true);
@@ -193,12 +194,14 @@ export class DettaglioConversazionePage extends _DetailPage{
     // SUPPORT GROUP CONVERSATION 
     else if(this.conversationSelected.channel_type === TYPE_GROUP && this.conversationSelected.recipient.startsWith(TYPE_SUPPORT_GROUP)) {
       this.conversationType = TYPE_SUPPORT_GROUP;
+      if(this.conversationSelected.attributes && this.conversationSelected.attributes.requester_id){
+        uidConversationWith = this.conversationSelected.attributes.requester_id;
+      }
       if(this.conversationSelected.senderAuthInfo && this.conversationSelected.senderAuthInfo.authVar && this.conversationSelected.senderAuthInfo.authVar.uid){
-        uidConversationWith = this.conversationSelected.senderAuthInfo.authVar.uid;
+        // uidConversationWith = this.conversationSelected.senderAuthInfo.authVar.uid;
         fullnameConversationWith = this.conversationSelected.recipient_fullname;
       }
     }
-    
     this.uidConversationWith = uidConversationWith;
     this.fullnameConversationWith = fullnameConversationWith
 
@@ -264,6 +267,7 @@ export class DettaglioConversazionePage extends _DetailPage{
   onOpenInfoMessage: any = (message) => {
     this.openInfoMessage = true;
     this.openInfoConversation = false;
+    this.messageSelected = message;
     //console.log('OPEN MESSAGE **************', message);
   }
 
@@ -320,7 +324,7 @@ export class DettaglioConversazionePage extends _DetailPage{
       console.log('unsubescribeAll: ', subscription);
       this.events.unsubscribe(subscription, null);
     });
-    
+    this.subscriptions = [];
     // this.events.unsubscribe('statusUser:online-'+this.conversationWith, null);
     // this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, null);
     // this.events.unsubscribe('conversationEnabled', null);
@@ -328,18 +332,24 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   //// SYSTEM FUNCTIONS ////
   ngOnInit() {
-    this.initialize();
+    console.log('------------> ngOnInit');
+    
   }
 
   ionViewWillEnter() {
+    console.log('------------> ionViewWillEnter');
+    this.initSubscriptions();
+    this.initialize();
   }
   /**
    * quando ho renderizzato la pagina richiamo il metodo di inizialize
    */
+
   ionViewDidEnter(){
-    //console.log('ionViewDidEnter');
+    console.log('------------> ionViewDidEnter');
     // this.initialize();
   }
+
   /**
    * quando esco dalla pagina distruggo i subscribe
    * e chiudo la finestra di info
@@ -348,6 +358,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     console.log('------------> ionViewWillLeave');
     this.openInfoMessage = false;
     this.openInfoConversation = false;
+
     this.unsubescribeAll();
   }
 
@@ -410,12 +421,9 @@ export class DettaglioConversazionePage extends _DetailPage{
         }
       }
     });
-    
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
     this.openInfoMessage = false; // indica se è aperto il box info message
     this.openInfoConversation = true;
-
-    
   }
   /**
    * recupero da chatManager l'handler
@@ -457,7 +465,6 @@ export class DettaglioConversazionePage extends _DetailPage{
       //[self subscribe:handler];
       this.conversationHandler = handler;
       this.messages = this.conversationHandler.messages;
-      console.log('NON ENTRO2  ***',this.conversationHandler, this.messages );
       this.doScroll();
     }
     // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi

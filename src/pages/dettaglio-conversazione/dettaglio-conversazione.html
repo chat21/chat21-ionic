@@ -188,6 +188,7 @@
 
 <div id="chat21-info-message" [class.open]="openInfoMessage">
     <page-info-message
+    [message]='messageSelected'
     (eventClose)="returnCloseInfoMessage()"
     ></page-info-message>
 </div>

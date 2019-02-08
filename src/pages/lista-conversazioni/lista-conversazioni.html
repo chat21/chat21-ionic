@@ -24,29 +24,23 @@
 <ion-content class="list-avatar-page">
   <ion-list>
     <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
+    
     <ng-template #contentConversations>
       <ion-item no-lines ion-item [class.selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of conversations"
         (mousedown)="setUidConvSelected(conversation.uid)" (mouseup)="openMessageList()">
-        
         <ion-avatar item-start>
           <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
-          <div #avatarImage *ngIf="conversation.image && conversation.image != ''" class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
+          <div #avatarImage class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
         </ion-avatar>
-        
         <div class="truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
-
         <div>
           <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
         </div>
-
         <ion-note item-end>{{conversation.time_last_message}}</ion-note>
-
         <button id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
           <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="close" item-end></ion-icon>
         </button>
-
         <div item-end class="c21-point" *ngIf="conversation.is_new">&nbsp;</div>
-
       </ion-item>
     </ng-template>
 
@@ -58,7 +52,6 @@
         <span>loading</span>
       </div>
       <div *ngIf="!loadingIsActive && conversations.length == 0" id="content_message_wellcome">
-        <!-- [style.display]="styleMessageWelcome === true ? 'inline' : 'none'" -->
         <div class="messaggio">{{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}</div>
         <div class="pulsanti">
           <button ion-button icon-start color="273e53" (click)="openUsersList($event)">

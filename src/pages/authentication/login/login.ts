@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { AlertController, LoadingController, ModalController } from 'ionic-angular';
+import { AlertController, LoadingController, ModalController, NavParams } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 // pages
 import { RegisterPage } from '../../authentication/register/register';
 import { ResetpwdPage } from '../../authentication/resetpwd/resetpwd';
 // services
 import { AuthService } from '../../../providers/auth-service';
-//import { UserService } from '../../../providers/user/user';
+import { URL_DASHBOARD, BASE_URL_HOSTNAME } from '../../../utils/constants';
 
 @Component({
   selector: 'page-login',
@@ -18,9 +18,12 @@ export class LoginPage {
   private submitAttempt: boolean = false;
   private loading: any;
   private showPage: boolean;
+  private tenant: string;
+  private hostname: string;
 
   constructor(
     private modalCtrl: ModalController,
+    public navParams: NavParams,
     private authService: AuthService, 
     private formBuilder: FormBuilder,
     private alertCtrl: AlertController, 
@@ -28,6 +31,8 @@ export class LoginPage {
     //private userService: UserService
   ) {
     //console.log("LOGIN PAGE");
+    this.tenant = navParams.get('tenant');
+    this.hostname = window.location.hostname;
   }
 
   /**
@@ -89,6 +94,19 @@ export class LoginPage {
     profileModal.present({animate: false, duration: 0});
     //this.navCtrl.push(ResetpwdPage);
   }
+
+  /**
+   * 
+   */
+  tiledeskLogin(){
+    window.open(URL_DASHBOARD, "_blank");
+  }
+  
+  isHostname(){
+    if(this.hostname === BASE_URL_HOSTNAME){return true}
+    return false
+  }
+
   /**
    * quando premo sul pulsante login richiamo questa func che:
    * effettuo il login e se riesce chiudo tutte le pg aperte

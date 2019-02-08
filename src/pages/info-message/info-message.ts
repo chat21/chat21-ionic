@@ -1,5 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { Events } from 'ionic-angular';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Events, NavParams } from 'ionic-angular';
 import { MessageModel } from '../../models/message';
 
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
@@ -20,12 +20,14 @@ import { searchIndexInArrayForUid, getSizeImg } from '../../utils/utils';
 })
 export class InfoMessagePage {
   // ========= begin:: Input/Output values ============//
+  @Input() message: any;
   @Output() eventClose = new EventEmitter();
   // ========= end:: Input/Output values ============//
-  public message: MessageModel;
+  // public message: MessageModel;
 
   constructor(
     public events: Events,
+    public navParams: NavParams,
     public conversationHandler: ChatConversationHandler,
     public chatManager: ChatManager
   ) {
@@ -38,14 +40,14 @@ export class InfoMessagePage {
 
   initialize() {
     console.log('initialize InfoMessagePage');
-    this.events.subscribe('openInfoMessage', this.openInfoMessage);
-    this.events.subscribe('closeInfoMessage', this.openInfoMessage);
+    // this.events.subscribe('openInfoMessage', this.openInfoMessage);
+    // this.events.subscribe('closeInfoMessage', this.openInfoMessage);
   }
 
-  openInfoMessage: any = (message) => {
-    this.message = message;
-    console.log('**************** OPEN MESSAGE **************', message);
-  }
+  // openInfoMessage: any = (message) => {
+  //   this.message = message;
+  //   console.log('**************** OPEN MESSAGE **************', message);
+  // }
 
 
   //// START FUNZIONI RICHIAMATE DA HTML ////

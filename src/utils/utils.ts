@@ -1,8 +1,7 @@
 
 import * as moment from 'moment/moment';
 import 'moment/locale/it.js';
-
-//import { LABEL_ANNULLA, LABEL_OK, ARRAY_DAYS, LABEL_TODAY, LABEL_TOMORROW, LABEL_LAST_ACCESS, LABEL_TO } from './constants';
+import { FIREBASESTORAGE_BASE_URL_IMAGE } from './constants';
 
 //import { TranslateService } from '@ngx-translate/core';
 //import { CustomTranslateService } from './translate-service';
@@ -446,8 +445,7 @@ export function avatarPlaceholder(conversation_with_fullname) {
 }
 
 export function getImageUrlThumb(uid: string){
-  let imageurl ="https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/";
-      imageurl = imageurl+'profiles%2F'+uid+'%2Fthumb_photo.jpg?alt=media';
+  let imageurl = FIREBASESTORAGE_BASE_URL_IMAGE+'profiles%2F'+uid+'%2Fthumb_photo.jpg?alt=media';
   return imageurl;
 }
 

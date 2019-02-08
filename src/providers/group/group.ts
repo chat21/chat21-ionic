@@ -70,6 +70,7 @@ export class GroupService {
     console.log("url groups: ", urlNode);
     this.refLoadGroupDetail = firebase.database().ref(urlNode);
     this.refLoadGroupDetail.on('value', function (snapshot) {
+      console.log("on value: ", snapshot);
       that.events.publish('groupDetails', snapshot);
     });
   }

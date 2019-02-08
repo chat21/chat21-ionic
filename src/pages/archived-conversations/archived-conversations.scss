@@ -1,5 +1,17 @@
 page-archived-conversations {
+    .c21-title-header {
+        
+    }
+    .toolbar-title.toolbar-title-md, 
+    .toolbar-title.toolbar-title-ios, 
+    .toolbar-title.toolbar-title-wp { 
+        font-size: 16px;
+        color:#3c3c3c;
+    }
+    
    ion-title{
+       font-size: 20px;
+       color:#3c3c3c;
         img{
             height: 30px;
         }
@@ -61,10 +73,14 @@ page-archived-conversations {
 
     .archived {
         border-radius: 8px;
-        border: 2px solid grey;
-        padding: 4px; 
+        border: 0px solid grey;
+        padding: 0px; 
         color: grey;
         font-size: 13px;
+        svg{
+           fill: #666666;
+        }
+        
     }
     
     .list-avatar-page {
@@ -76,7 +92,7 @@ page-archived-conversations {
     }
     .not-read {
         font-weight:bold!important;
-        font-size: 13px!important;
+        font-size: 12px!important;
     }
     .read{
         font-weight:normal;
@@ -129,5 +145,10 @@ page-archived-conversations {
         background-color: #0b5c89;
         float: left;
         margin: 3px 3px 0px 0px;
+
+        position: absolute;
+        right: 18px;
+        bottom: 10px;
+
     }
 }

@@ -28,7 +28,7 @@
                     <div class="chat21-image">
                         <ion-avatar item-start>
                             <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="member.color" [innerHTML]="member.avatar"></div>
-                            <div #avatarImage *ngIf="member.image && member.image !=''" class="chat21-avatar" [style.background-image]="'url(' + member.image + ')'"></div>
+                            <div #avatarImage class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div>
                         </ion-avatar>
                     </div>
 
