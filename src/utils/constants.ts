@@ -62,7 +62,7 @@ export const URL_SEND_BY_EMAIL: string = "mailto:?subject=Transcript Chat Conver
 export const URL_VIDEO_CHAT: string = 'https://videochat.tiledesk.com/add-user-group.html';
 export const URL_TICKET_CHAT: string = 'https://chat21sdk.atlassian.net/secure/CreateIssue!default.jspa';
 export const FIREBASESTORAGE_BASE_URL_IMAGE: string = 'https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/';
-export const BASE_URL_HOSTNAME: string = 'tiledesk';
+export const BASE_URL_HOSTNAME: string = 'support.tiledesk.com';
 export const URL_DASHBOARD: string = 'https://support.tiledesk.com/dashboard/';
 export const URL_PROJECT_ID = "https://support.tiledesk.com/dashboard/#/project/";
 

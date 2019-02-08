@@ -103,6 +103,7 @@ export class LoginPage {
   }
   
   isHostname(){
+    // alert( "domain: " + this.hostname + BASE_URL_HOSTNAME);
     if(this.hostname === BASE_URL_HOSTNAME){return true}
     return false
   }
