@@ -7,6 +7,9 @@
 - (da fare) ottimizzare view contatti (css header, titolo, <-, img profile, cache)
 
 
+### 1.0.6
+- fixes bug leave group and close group
+
 ### 1.0.3 
 - change color css conversation selected
 - change position blue point on new message

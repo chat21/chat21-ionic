@@ -140,6 +140,7 @@ export class InfoConversationPage {
     }
     console.log('conversationSelected::',this.conversationSelected);
     this.populateDetail();
+    this.setSubscriptions();
   }
 
 
@@ -154,7 +155,6 @@ export class InfoConversationPage {
   // if(!this.conversationSelected.image || this.conversationSelected.image === undefined ) {
   //   this.conversationSelected.image = '';
   // }
-  
   if (!this.conversationWith) {
     console.log('CASO 1');
     return;
@@ -809,7 +809,6 @@ setDetailUser(snapshot) {
    * @param action 
    */
   openPopupConfirmation(action) {
-    this.setSubscriptions();
     // console.log("openPopupConfirmation");
     //debugger;
     let alertTitle = '';
