@@ -10,6 +10,9 @@
 ### 1.0.6
 - fixes bug leave group and close group
 
+### 1.0.5
+- add button login on tiledesk (if hostname is tiledesk)
+
 ### 1.0.3 
 - change color css conversation selected
 - change position blue point on new message
@@ -20,7 +23,6 @@
 - load image profile from firestore url in conv. list, info conv., Participants 
 - fixes bug user info: load image profilo
 - fixes bug info conversation on first load
-- add button login on tiledesk (if hostname is tiledesk)
 - change get 'date last access' for id in support-group (sostituito senderAuthInfo.authVar.uid con requester_id)
 - fixes bug conversation selected for first open (blank page)
 - fixes bug open page 'message info' (message selected = null) 
