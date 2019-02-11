@@ -6,6 +6,9 @@
 - (da fare) aggiungo br nel messaggio
 - (da fare) ottimizzare view contatti (css header, titolo, <-, img profile, cache)
 
+### 1.0.7
+- fixes bug on change user (logout/login)
+- fixes bug on change conversation selected and conversation archived selected
 
 ### 1.0.6
 - fixes bug leave group and close group

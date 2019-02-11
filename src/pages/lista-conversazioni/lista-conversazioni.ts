@@ -105,6 +105,9 @@ export class ListaConversazioniPage extends _MasterPage {
     this.profileModal = this.modalCtrl.create(LoginPage, {tenant: this.tenant}, { enableBackdropDismiss: false });
     this.initSubscriptions();
     this.checkLoadingIsActive(5000);
+    if (windowsMatchMedia()) {
+      this.navProxy.pushDetail(PlaceholderPage, {});
+    }
   }
 
   //// SUBSCRIBTIONS ////
@@ -121,6 +124,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * evento richiamato quando ho finito di caricare le conversazioni dallo storage
   */
   loadedConversationsStorage: any = conversations => {
+    console.log('************** loadedConversationsStorage');
     if(conversations && conversations.length > 0 ){
       this.conversations = conversations;
       this.numberOpenConv = this.conversationsHandler.countIsNew();
@@ -137,6 +141,7 @@ export class ListaConversazioniPage extends _MasterPage {
     //   this.setUidConvSelected(conversations[0].uid);
     //   this.showDetailConversation();
     // }
+    
     this.conversations = conversations;
     this.numberOpenConv = this.conversationsHandler.countIsNew();
   }
@@ -148,8 +153,8 @@ export class ListaConversazioniPage extends _MasterPage {
    * evento richiamato quando si seleziona un utente nell'elenco degli user 
    * apro dettaglio conversazione 
   */
-  subscribeUidConvSelectedChanged = (uidConvSelected: string) => {
-    this.checkMessageListIsOpen(uidConvSelected);
+  subscribeUidConvSelectedChanged = (uidConvSelected: string, type: string) => {
+    this.checkMessageListIsOpen(uidConvSelected, type);
   }
   /** subscribeLoggedUserLogin
    * effettuato il login: 
@@ -160,8 +165,9 @@ export class ListaConversazioniPage extends _MasterPage {
   subscribeLoggedUserLogin = (user: any) => {
     console.log('************** subscribeLoggedUserLogin', user);
     this.loggedUser = user;
-    this.profileModal.dismiss({ animate: false, duration: 0 });
+    this.checkLoadingIsActive(5000);
     this.loadListConversations();
+    this.profileModal.dismiss({ animate: false, duration: 0 });
   }
   /** subscribeLoggedUserLogout
    * effettuato il logout:
@@ -199,12 +205,12 @@ export class ListaConversazioniPage extends _MasterPage {
       this.databaseProvider.getUidLastOpenConversation()
       .then(function (uid: string) {
         console.log('getUidLastOpenConversation:: ' + uid);
-        if(uid){
-          that.setUidConvSelected(uid);
-        }
+        that.setUidConvSelected(uid);
         that.initConversationsHandler();
       })
       .catch((error) => {
+        that.setUidConvSelected();
+        that.initConversationsHandler();
         console.log("error::: ", error);
       });
     }
@@ -214,7 +220,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * 
    * @param uidConvSelected 
    */
-  setUidConvSelected(uidConvSelected: string){
+  setUidConvSelected(uidConvSelected?: string){
     this.uidConvSelected = uidConvSelected;
     this.chatConversationsHandler.uidConvSelected = uidConvSelected;
   }
@@ -230,10 +236,10 @@ export class ListaConversazioniPage extends _MasterPage {
    * 3 salvo id conv nello storage
    * @param uidConvSelected  
    */
-  openMessageList() {
+  openMessageList(type?: string) {
     const that = this;
     setTimeout(function () {
-      var conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
+      const conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
       if (conversationSelected) {
         console.log('openMessageList::', conversationSelected);
         conversationSelected.is_new = false;
@@ -247,8 +253,13 @@ export class ListaConversazioniPage extends _MasterPage {
         });
         that.conversationsHandler.setConversationRead(conversationSelected.uid);
         that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
+      } else if(!type) {
+        if (windowsMatchMedia()) {
+          that.navProxy.pushDetail(PlaceholderPage, {});
+        }
       }
     }, 200);
+    
     // if the conversation from the isConversationClosingMap is waiting to be closed 
     // deny the click on the conversation
     if (this.tiledeskConversationProvider.getClosingConversation(this.uidConvSelected)) return;
@@ -260,14 +271,14 @@ export class ListaConversazioniPage extends _MasterPage {
    * 
    * @param uidConvSelected 
    */
-  checkMessageListIsOpen(uidConvSelected) {
+  checkMessageListIsOpen(uidConvSelected, type?) {
     if (uidConvSelected === this.uidConvSelected && windowsMatchMedia()) {
       console.log("ListaConversazioniPage::checkMessageListIsOpen::if::uidConvSelected", uidConvSelected, "this_uidConvSelected", this.uidConvSelected);
       return;
     } else {
       console.log("ListaConversazioniPage::checkMessageListIsOpen::else::uidConvSelected", uidConvSelected);
       this.setUidConvSelected(uidConvSelected);
-      this.openMessageList();
+      this.openMessageList(type);
     }
   }
 
@@ -286,7 +297,7 @@ export class ListaConversazioniPage extends _MasterPage {
     // let conversationHandler = this.chatManager.conversationsHandler;
     // let archviedConversationsHandler = this.chatManager.archivedConversationsHandler;
 
-    if (!this.conversationsHandler) {
+    // if (!this.conversationsHandler) {
       // 1 - init chatConversationsHandler and  archviedConversationsHandler
       this.conversationsHandler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
       this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(tenant, loggedUser);
@@ -305,15 +316,11 @@ export class ListaConversazioniPage extends _MasterPage {
       // this.chatArchivedConversationsHandler = archviedConversationsHandler;
       // 4 - save conversationHandler in chatManager
       this.chatManager.setConversationsHandler(this.conversationsHandler);
-    }
-    //  else {
-    //   console.log('handler ESISTE ::', conversationHandler);
-    //   this.conversationsHandler = conversationHandler;
-    //   this.chatArchivedConversationsHandler = archviedConversationsHandler;
     // }
-    
-    
-    //this.showDetailConversation();
+    // else {
+    //   console.log('handler ESISTE ::', this.conversationsHandler);
+    // }
+  
   }
 
 
@@ -324,7 +331,7 @@ export class ListaConversazioniPage extends _MasterPage {
    */
   showDetailConversation(){
     if (this.uidConvSelected) {
-      console.log('openMessageList 1 ::');
+      console.log('openMessageList 1 ::', this.uidConvSelected);
       // se visualizzazione è desktop
       if (windowsMatchMedia()) {
         this.setUidConvSelected(this.uidConvSelected);
