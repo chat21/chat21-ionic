@@ -108,7 +108,7 @@ export class UsersPage {
     //   conversationWith:conversationWith
     // });
     //pubblico id conv attiva e chiudo pagina 
-    this.events.publish('uidConvSelected:changed', conversationWith);
+    this.events.publish('uidConvSelected:changed', conversationWith, 'new');
     this.viewCtrl.dismiss();
     this.navProxy.pushDetail(DettaglioConversazionePage,{ 
       conversationWith:conversationWith,

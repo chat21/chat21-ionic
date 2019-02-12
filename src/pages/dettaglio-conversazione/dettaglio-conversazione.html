@@ -1,12 +1,11 @@
 
 <ion-header no-border>
-  <ion-navbar class="toolbar-md-navbarLightColor">
 
+  <ion-navbar class="toolbar-md-navbarLightColor">
     <ion-title>
       <div class="headerUserName" [class.infoOpen]="openInfoConversation || openInfoMessage" *ngIf="conversationWith">
         <span *ngIf="conversationType != 'group'" class="c21-point" [ngStyle]="{ 'background-color':(online)?'#24d066':'#db4437' }">&nbsp;</span>
         <span>{{conversationWithFullname?conversationWithFullname:''}}</span>
-        
         <span *ngIf="online; then userActive else userInactive"></span>
         <ng-template #userActive>
           <div class="headerLastActivity">{{ 'LABEL_ACTIVE_NOW' | translate }}</div>
@@ -14,9 +13,7 @@
         <ng-template #userInactive>
           <div class="headerLastActivity">{{lastConnectionDate}}</div>
         </ng-template>
-        
       </div>
-
     </ion-title>
 
     <ion-buttons end *ngIf="openInfoConversation === false">

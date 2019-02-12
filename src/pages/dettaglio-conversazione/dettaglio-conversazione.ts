@@ -124,7 +124,7 @@ export class DettaglioConversazionePage extends _DetailPage{
     // DESTROY INFO CONVERSATION 
     console.log('1 - DESTROY INFO CONVERSATION',this.events);
     this.events.publish('closeDetailConversation', true);
-    console.log(">>>>>>>>>>>> ", this.navProxy.onSplitPaneChanged);
+    // console.log(">>>>>>>>>>>> ", this.navProxy.onSplitPaneChanged);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -173,50 +173,51 @@ export class DettaglioConversazionePage extends _DetailPage{
    */
   setConversationWith(){
     console.log('conversationSelected: ', this.conversationSelected);
-    if(!this.conversationSelected){
-      return;
-    }
-    // GROUP CONVERSATION 
-    this.conversationType = TYPE_GROUP;
-    let uidConversationWith = this.conversationSelected.recipient;
-    let fullnameConversationWith = this.conversationSelected.recipient_fullname;
-    // DIRECT CONVERSATION
-    if(this.conversationSelected.channel_type === TYPE_DIRECT) {
-      this.conversationType = TYPE_DIRECT;
-      if(this.conversationSelected.recipient === this.currentUserDetail.uid ) {
-        uidConversationWith = this.conversationSelected.sender;
-        fullnameConversationWith = this.conversationSelected.sender_fullname;
-      } else {
-        uidConversationWith = this.conversationSelected.recipient;
-        fullnameConversationWith = this.conversationSelected.recipient_fullname;
+    if(this.conversationSelected){
+      // GROUP CONVERSATION 
+      this.conversationType = TYPE_GROUP;
+      let uidConversationWith = this.conversationSelected.recipient;
+      let fullnameConversationWith = this.conversationSelected.recipient_fullname;
+      // DIRECT CONVERSATION
+      if(this.conversationSelected.channel_type === TYPE_DIRECT) {
+        this.conversationType = TYPE_DIRECT;
+        if(this.conversationSelected.recipient === this.currentUserDetail.uid ) {
+          uidConversationWith = this.conversationSelected.sender;
+          fullnameConversationWith = this.conversationSelected.sender_fullname;
+        } else {
+          uidConversationWith = this.conversationSelected.recipient;
+          fullnameConversationWith = this.conversationSelected.recipient_fullname;
+        }
       }
-    }
-    // SUPPORT GROUP CONVERSATION 
-    else if(this.conversationSelected.channel_type === TYPE_GROUP && this.conversationSelected.recipient.startsWith(TYPE_SUPPORT_GROUP)) {
-      this.conversationType = TYPE_SUPPORT_GROUP;
-      if(this.conversationSelected.attributes && this.conversationSelected.attributes.requester_id){
-        uidConversationWith = this.conversationSelected.attributes.requester_id;
+      // SUPPORT GROUP CONVERSATION 
+      else if(this.conversationSelected.channel_type === TYPE_GROUP && this.conversationSelected.recipient.startsWith(TYPE_SUPPORT_GROUP)) {
+        this.conversationType = TYPE_SUPPORT_GROUP;
+        if(this.conversationSelected.attributes && this.conversationSelected.attributes.requester_id){
+          uidConversationWith = this.conversationSelected.attributes.requester_id;
+        }
+        if(this.conversationSelected.senderAuthInfo && this.conversationSelected.senderAuthInfo.authVar && this.conversationSelected.senderAuthInfo.authVar.uid){
+          // uidConversationWith = this.conversationSelected.senderAuthInfo.authVar.uid;
+          fullnameConversationWith = this.conversationSelected.recipient_fullname;
+        }
       }
-      if(this.conversationSelected.senderAuthInfo && this.conversationSelected.senderAuthInfo.authVar && this.conversationSelected.senderAuthInfo.authVar.uid){
-        // uidConversationWith = this.conversationSelected.senderAuthInfo.authVar.uid;
-        fullnameConversationWith = this.conversationSelected.recipient_fullname;
-      }
+      this.uidConversationWith = uidConversationWith;
+      this.fullnameConversationWith = fullnameConversationWith
     }
-    this.uidConversationWith = uidConversationWith;
-    this.fullnameConversationWith = fullnameConversationWith
 
-    if(this.conversationType != TYPE_GROUP) {
-      // subscribe data ultima connessione utente con cui si conversa
-      let key = 'lastConnectionDate-'+uidConversationWith;
-      if(!isInArray(key, this.subscriptions)){
-        this.subscriptions.push(key);
-        this.events.subscribe(key, this.updateLastConnectionDate);
-      }
-      // subscribe status utente con il quale si conversa (online/offline)
-      key = 'statusUser:online-'+uidConversationWith;
-      if(!isInArray(key, this.subscriptions)){
-        this.subscriptions.push(key);
-        this.events.subscribe(key, this.statusUserOnline);
+    if(this.uidConversationWith){
+      if(this.conversationType != TYPE_GROUP) {
+        // subscribe data ultima connessione utente con cui si conversa
+        let key = 'lastConnectionDate-'+this.uidConversationWith;
+        if(!isInArray(key, this.subscriptions)){
+          this.subscriptions.push(key);
+          this.events.subscribe(key, this.updateLastConnectionDate);
+        }
+        // subscribe status utente con il quale si conversa (online/offline)
+        key = 'statusUser:online-'+this.uidConversationWith;
+        if(!isInArray(key, this.subscriptions)){
+          this.subscriptions.push(key);
+          this.events.subscribe(key, this.statusUserOnline);
+        }
       }
     }
     
