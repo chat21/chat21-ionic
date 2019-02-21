@@ -6,6 +6,9 @@
 - (da fare) aggiungo br nel messaggio
 - (da fare) ottimizzare view contatti (css header, titolo, <-, img profile, cache)
 
+### 1.0.11
+- enables authentication outside of tiledesk domains
+
 ### 1.0.8
 - fixes bug on new conversation (detail conversation hidden)
 
