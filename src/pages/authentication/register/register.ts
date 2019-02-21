@@ -50,8 +50,11 @@ export class RegisterPage {
    * @param input 
    */
   elementChanged(input){
-    let field = input.inputControl.firstname;
-    this[field + "Changed"] = true;
+    if(input && input.inputControl){
+      let field = input.inputControl.firstname;
+      this[field + "Changed"] = true;
+    }
+    return
   }
   /**
    * metodo chiamato dalla pagina html alla pressione del tasto 'registrati'
@@ -72,11 +75,13 @@ export class RegisterPage {
         this.userService.saveCurrentUserDetail(newUser.uid, this.registerForm.value.email, this.registerForm.value.firstname, this.registerForm.value.lastname)
         .then(_ => {
           console.log('success saveCurrentUserDetail');
-          this.loading.dismiss().then( () => {
-            //dismetto la modale ricarico lista conversazioni passando user
-            //this.loading.dismiss();
-            this.viewCtrl.dismiss({animate: false, duration: 0});
-          });
+          this.viewCtrl.dismiss({animate: false, duration: 0});
+          // this.loading.dismiss().then( () => {
+          //   //dismetto la modale ricarico lista conversazioni passando user
+          //   //this.loading.dismiss();
+          //   console.log('success!!!!');
+          //   this.viewCtrl.dismiss({animate: false, duration: 0});
+          // });
         }) 
         .catch(err => {
           console.log(err,'ERROR saveCurrentUserDetail');

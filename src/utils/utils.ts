@@ -1,7 +1,8 @@
 
 import * as moment from 'moment/moment';
 import 'moment/locale/it.js';
-import { FIREBASESTORAGE_BASE_URL_IMAGE } from './constants';
+import { FIREBASESTORAGE_BASE_URL_IMAGE, BASE_URL_HOSTNAME } from './constants';
+
 
 //import { TranslateService } from '@ngx-translate/core';
 //import { CustomTranslateService } from './translate-service';
@@ -499,6 +500,11 @@ export function isURL(str: string) {
   }
 }
 
+export function isHostname(){
+  const hostname = window.location.hostname;
+  if(hostname === BASE_URL_HOSTNAME){return true}
+  return false
+}
 
 // export function emailValidator(str) {
 //   let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;

@@ -7,6 +7,7 @@ import { ResetpwdPage } from '../../authentication/resetpwd/resetpwd';
 // services
 import { AuthService } from '../../../providers/auth-service';
 import { URL_DASHBOARD, BASE_URL_HOSTNAME } from '../../../utils/constants';
+import { isHostname } from '../../../utils/utils';
 
 @Component({
   selector: 'page-login',
@@ -20,6 +21,8 @@ export class LoginPage {
   private showPage: boolean;
   private tenant: string;
   private hostname: string;
+  
+  isHostname = isHostname;
 
   constructor(
     private modalCtrl: ModalController,
@@ -102,11 +105,11 @@ export class LoginPage {
     window.open(URL_DASHBOARD, "_blank");
   }
   
-  isHostname(){
-    // alert( "domain: " + this.hostname + BASE_URL_HOSTNAME);
-    if(this.hostname === BASE_URL_HOSTNAME){return true}
-    return false
-  }
+  // isHostname(){
+  //   // alert( "domain: " + this.hostname + BASE_URL_HOSTNAME);
+  //   if(this.hostname === BASE_URL_HOSTNAME){return true}
+  //   return false
+  // }
 
   /**
    * quando premo sul pulsante login richiamo questa func che:

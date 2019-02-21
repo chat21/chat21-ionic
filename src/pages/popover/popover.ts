@@ -8,6 +8,8 @@ import { ArchivedConversationsPage } from '../archived-conversations/archived-co
 import { AlertController } from 'ionic-angular';
 import * as PACKAGE from '../../../package.json';
 
+import { isHostname } from '../../utils/utils';
+
 @IonicPage()
 @Component({
   selector: 'page-popover',
@@ -23,6 +25,8 @@ export class PopoverPage {
 
   TYPE_POPUP_LIST_CONVERSATIONS = TYPE_POPUP_LIST_CONVERSATIONS;
   TYPE_POPUP_DETAIL_MESSAGE = TYPE_POPUP_DETAIL_MESSAGE;
+
+  isHostname = isHostname;
 
   constructor(
     public viewCtrl: ViewController,
