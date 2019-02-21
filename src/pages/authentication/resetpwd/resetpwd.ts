@@ -41,8 +41,11 @@ export class ResetpwdPage {
    * @param input 
    */
   elementChanged(input){
-    let field = input.inputControl.firstname;
-    this[field + "Changed"] = true;
+    if(input && input.inputControl){
+      let field = input.inputControl.firstname;
+      this[field + "Changed"] = true;
+    }
+    return
   }
   /**
    * metodo chiamato dalla pagina html alla pressione del tasto 'recupera password'
