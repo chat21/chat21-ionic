@@ -27,7 +27,6 @@
         "@angular/http": "5.2.11",
         "@angular/platform-browser": "5.2.11",
         "@angular/platform-browser-dynamic": "5.2.11",
-        "@firebase/app": "^0.1.10",
         "@ionic-native/core": "^4.8.0",
         "@ionic-native/file": "^4.8.0",
         "@ionic-native/keyboard": "4.8.0",
