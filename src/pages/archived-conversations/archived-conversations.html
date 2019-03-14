@@ -1,0 +1,32 @@
+<ion-header no-border>
+  <ion-navbar class="toolbar-md-navbarLightColor">
+    <ion-title class="c21-title-header"> {{ 'LABEL_ARCHIVED' | translate }} </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="list-avatar-page">
+  <ion-list *ngIf="areArchivedConversationsAvailable else emptyListTemplate" >
+  <!-- <ion-list > -->
+    <div *ngFor="let archivedConversation of archivedConversations">
+      <ion-item no-lines ion-item [class.selected]="archivedConversation.uid === uidConvSelected" (click)="onArchivedConversationClicked(archivedConversation)">
+        <ion-avatar item-start>
+            <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="archivedConversation.color" [innerHTML]="archivedConversation.avatar"></div>
+            <div #avatarImage *ngIf="archivedConversation.image && archivedConversation.image != ''" class="chat21-avatar" [style.background-image]="'url(' + archivedConversation.image + ')'"></div>
+        </ion-avatar>
+        <h2 class="truncate">{{archivedConversation.conversation_with_fullname}}</h2>
+        <div>
+            <p [class.not-read]="archivedConversation.is_new" class="truncate" [innerHTML]="convertMessage(archivedConversation.last_message_text)"></p>
+        </div>
+        <span item-end class="archived">
+          <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zm-8.89 11.92L6.5 12H10v-2h4v2h3.5l-5.15 5.15c-.19.19-.51.19-.7 0zM5.12 5l.81-1h12l.94 1H5.12z"/></svg> -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/></svg>
+        </span>
+        <div class="c21-point" *ngIf="archivedConversation.is_new">&nbsp;</div>
+      </ion-item>
+    </div>
+  </ion-list>
+</ion-content>
+
+<ng-template #emptyListTemplate>
+    <div class="no-archvied-chat">{{ 'ARCHIVED_CONVERSATIONS_PAGE_NO_CONVERSATIONS_ARCHIVED' | translate }}</div>
+</ng-template>

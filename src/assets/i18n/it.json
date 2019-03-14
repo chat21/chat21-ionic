@@ -1,0 +1,100 @@
+{
+    "LABEL_TU": "tu: ",
+    "LABEL_MSG_PUSH_START_CHAT": "Premi qui per chattare con qualcuno",
+    "LABEL_MSG_START_CHAT": "inizia a chattare",
+    "LABEL_ACTIVE_NOW": "attivo/a ora",
+    "LABEL_NO_MSG_HERE": "Ancora nessun messaggio qui...",
+    "LABEL_TODAY": "oggi",
+    "LABEL_TOMORROW": "ieri",
+    "LABEL_LAST_ACCESS": "ultimo accesso",
+    "LABEL_TO": "alle",
+    "ARRAY_DAYS": ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"],
+
+    "LABEL_CREATED_THE": "gruppo creato il ",
+    "LABEL_INFO_ATTRIBUTE": "Info Attributi",
+    "LABEL_CLIENT": "Client ",
+    "LABEL_SOURCEPAGE": "Pagina sorgente ",
+    "LABEL_DEPARTMENT_ID": "Id dipartimento ",
+    "LABEL_DEPARTMENT_NAME": "Dipartimento ",
+    "requester_id": "Id richiesta",
+    "projectId": "Id progetto",
+    "LABEL_NAME": "Nome utente ",
+    "LABEL_EMAIL": "Email ",
+    "LABEL_MEMBERS": "Partecipanti",
+    "LABEL_INFO_MESSAGE": "Info messaggio",
+    "LABEL_READ_BY": "Letto da",
+    "LABEL_STATUS_MESSAGE": "stato",
+    "LABEL_SENT_THE": "inviato il",
+    "LABEL_SENT_BY": "da",
+    "LABEL_GUEST": "Guest",
+
+    "LABEL_CREATE_TICKET": "Crea un ticket",
+    "LABEL_SEND_BY_EMAIL": "Invia per email",
+    "LABEL_VIDEO_CHAT": "Video chiamata",
+    "LABEL_LEAVE_GROUP": "Abbandona il gruppo",
+    "LABEL_CLOSE_GROUP": "Chiudi",
+
+    "ALERT_TITLE": "ATTENZIONE",
+    "CLOSE_ALERT_CONFIRM_LABEL" : "OK",
+    "CLOSE_ALERT_CANCEL_LABEL": "ANNULLA",
+    "LEAVE_ALERT_MSG": "Abbandonare il gruppo?",
+    "CLOSE_ALERT_MSG": "Chiudere la conversazione?",
+    "VIDEOCHAT_ALERT_MSG": "Servizio non disponibile",
+    "CLOSING_CONVERSATION_SPINNER_MSG": "Attendere prego.. <br> Stiamo chiudendo la conversazione",
+    "CONVERSATION_CLOSED_ALERT_MSG": "La conversazione è stata chiusa con successo.",
+    "CANNOT_CLOSE_CONVERSATION_ALERT_MSG": "Impossibile chiudere la conversazione",
+
+    "LEAVING_GROUP_SPINNER_MSG": "Attendere prego <br> Stai abbandonando il gruppo",
+    "CONVERSATION_LEFT_ALERT_MSG": "Il gruppo è stato abbandonato con successo.",
+    "CANNOT_LEAVE_GROUP_ALERT_MSG": "Impossibile abbandonare il gruppo",
+
+    "GREETING": "Hi, {{ value }}",
+
+    "ARCHIVED_CONVERSATIONS_PAGE_NO_CONVERSATIONS_ARCHIVED": "Non è presente alcuna conversazione nell'archivio",
+
+    "INFO_SUPPORT_USER_ADDED_SUBJECT": "",
+    "INFO_SUPPORT_USER_ADDED_YOU_VERB": "sei stato aggiunto",
+    "INFO_SUPPORT_USER_ADDED_VERB": "si è unito",
+    "INFO_SUPPORT_USER_ADDED_COMPLEMENT": "alla chat",
+    "INFO_SUPPORT_USER_ADDED_MESSAGE": "{{ subject }} {{ verb }} {{ complement }}",
+
+    "INFO_SUPPORT_CHAT_REOPENED": "Chat riaperta",
+    "INFO_SUPPORT_CHAT_CLOSED": "Chat chiusa",
+
+    "LABEL_PROFILE": "Profilo",
+    "LABEL_CLOSE": "Chiusa",
+    "LABEL_DISCONNECT": "Disconnetti",
+
+    "LABEL_NEW_CHAT": "Nuova chat",
+
+    
+    "LABEL_LOGIN_TO": "Accedi a",
+    "LABEL_PASSWORD": "Password",
+    "LABEL_ERROR_EMAIL": "Inserisci un indirizzo email valido.",
+    "LABEL_ERROR_PASSWORD": "La password deve essere di almeno 6 caratteri.",
+    "LABEL_LOGIN": "Login",
+    "LABEL_SIGIN": "Registrati",
+    "LABEL_FORGOT_PASSWORD": "Password dimenticata?",
+
+    "LABEL_REGISTRATION": "Registrazione",
+    "LABEL_PLACEHOLDER_EMAIL": "Il tuo indirizzo email",
+    "LABEL_PLACEHOLDER_PASSWORD": "La tua password",
+    "LABEL_PLACEHOLDER_NAME": "Il tuo Nome",
+    "LABEL_PLACEHOLDER_LAST_NAME": "Il tuo Cognome",
+    "LABEL_LAST_NAME": "Cognome",
+    "LABEL_FIELD_NOT_EMPTY": "Il campo non può essere vuoto.",
+
+    "LABEL_NEW_PASSWORD": "Rigenera Password",
+  
+    "LABEL_CLOSED": "Chiuse",
+    "LABEL_INFO": "Informazioni",
+    "ALERT_NOTIFICATION": "Attenzione: l'invio di notifiche è disabilitato, modifica le impostazioni del browser per consentire l'invio di notifiche.",
+    "LABEL_EXTERNAL_ID": "External Id",
+    "LABEL_IAT": "Iat",
+    "LABEL_REQUEST_DETAIL": "Dettaglio richiesta",
+    "LABEL_ENTER_MSG": "Scrivi un messaggio",
+
+    "LABEL_MSG_LOGIN_TILEDESK": "Effettua il login per iniziare a chattare",
+    "LABEL_ARCHIVED": "Archiviate"
+
+}

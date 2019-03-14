@@ -1,0 +1,85 @@
+<ion-header  no-border>
+  <ion-navbar class="toolbar-md-navbarLightColor">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <img src="assets/chat21-logo.svg" alt="{{this.tenant}}">
+      <div *ngIf="numberOpenConv > 0" class="c21-number-open-conv">({{numberOpenConv}})</div>
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="openUsersList($event)">
+        <ion-icon name="create"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="openArchivedConversationsPage($event)">
+        <ion-icon class="material-icons">history</ion-icon>
+      </button>
+      <button ion-button icon-only (click)="presentPopover($event)">
+        <ion-icon name="more"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="list-avatar-page">
+  <ion-list>
+    <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
+    
+    <ng-template #contentConversations>
+      <ion-item no-lines ion-item [class.selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of conversations"
+        (mousedown)="setUidConvSelected(conversation.uid)" (mouseup)="openMessageList()">
+        <ion-avatar item-start>
+          <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
+          <div #avatarImage class="chat21-avatar" [style.background-image]="'url(' + conversation.image + ')'"></div>
+        </ion-avatar>
+        <div class="truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
+        <div>
+          <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
+        </div>
+        <ion-note item-end>{{conversation.time_last_message}}</ion-note>
+        <button id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
+          <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="close" item-end></ion-icon>
+        </button>
+        <div item-end class="c21-point" *ngIf="conversation.is_new">&nbsp;</div>
+      </ion-item>
+    </ng-template>
+
+    <ng-template #contentMessageWelcome>
+      <div [class.active]="loadingIsActive" class="chat21-spinner" id="chat21-spinner">
+        <div class="chat21-bounce1"></div>
+        <div class="chat21-bounce2"></div>
+        <div class="chat21-bounce3"></div>
+        <span>loading</span>
+      </div>
+      <div *ngIf="!loadingIsActive && conversations.length == 0" id="content_message_wellcome">
+        <div class="messaggio">{{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}</div>
+        <div class="pulsanti">
+          <button ion-button icon-start color="273e53" (click)="openUsersList($event)">
+            {{ 'LABEL_MSG_START_CHAT' | translate }}
+          </button>
+        </div>
+      </div>
+    </ng-template>
+
+  </ion-list>
+</ion-content>
+
+
+
+
+<!--<ion-content padding>
+  <ion-searchbar (input)="search($event)"></ion-searchbar>
+  <ion-list>
+    <button ion-item *ngFor="let conversazione of conversations | async" (click)="goToDetails(conversazione)">
+      <ion-avatar item-start>
+        <img src= {{conversazione.image}} alt="user" onError="this.src='assets/img/no_image.svg';">
+      </ion-avatar>
+      <h2>{{conversazione.convers_with_fullname}}</h2>
+      <span *ngIf="conversazione.status == 1;then content else other_content">here is ignored</span>
+      <ng-template #content><p style="font-weight: bold;">{{conversazione.last_message_text}}</p></ng-template>
+      <ng-template #other_content><p>{{conversazione.last_message_text}}</p></ng-template>
+      <ion-note item-end class="date-right">{{getTimeLastMessage(conversazione.timestamp)}}</ion-note>
+   </button>
+  </ion-list>
+
+</ion-content>-->

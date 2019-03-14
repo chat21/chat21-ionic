@@ -1,0 +1,208 @@
+
+<ion-header no-border>
+
+  <ion-navbar class="toolbar-md-navbarLightColor">
+    <ion-title>
+      <div class="headerUserName" [class.infoOpen]="openInfoConversation || openInfoMessage" *ngIf="conversationWith">
+        <span *ngIf="conversationType != 'group'" class="c21-point" [ngStyle]="{ 'background-color':(online)?'#24d066':'#db4437' }">&nbsp;</span>
+        <span>{{conversationWithFullname?conversationWithFullname:''}}</span>
+        <span *ngIf="online; then userActive else userInactive"></span>
+        <ng-template #userActive>
+          <div class="headerLastActivity">{{ 'LABEL_ACTIVE_NOW' | translate }}</div>
+        </ng-template>
+        <ng-template #userInactive>
+          <div class="headerLastActivity">{{lastConnectionDate}}</div>
+        </ng-template>
+      </div>
+    </ion-title>
+
+    <ion-buttons end *ngIf="openInfoConversation === false">
+        <button end ion-button icon-only (click)="onOpenCloseInfoConversation()">
+          <ion-icon name="information-circle"></ion-icon>
+        </button>
+    </ion-buttons>
+
+    <!-- <ion-buttons *ngIf="openInfoConversation || openInfoMessage" id="panel-info" end>
+      <button  ion-button icon-only (click)="onCloseInfoPage()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+      <button id="btn-panel-info" disabled ion-button>{{'Info'}}</button>
+    </ion-buttons> -->
+
+  </ion-navbar>
+</ion-header>
+
+
+
+
+
+<!-- <div id="chat21-info-message" [class.open]="openInfoMessage">
+  <page-info-message></page-info-message>
+</div> -->
+
+<ion-content class="messagesView " [class.halfscreen]="openInfoConversation || openInfoMessage">
+  <span *ngIf="messages.length > 0;then content_messages else contentMessageWelcome">here is ignored</span>
+  <ng-template #content_messages>
+    <div #scrollMe id="scroll-me" style="height:100%; overflow-y:auto;" (scroll)="onScroll($event)">
+      <div id="chat21-contentScroll">
+        <ion-list no-lines>
+          <div *ngFor="let message of messages">
+            <div *ngIf="message && message.headerDate && message.headerDate != ''">
+              <ion-item text-wrap>
+                <div class="rowDay">
+                  <span class="headerDay">{{message.headerDate}}</span>
+                </div>
+              </ion-item>
+            </div>
+
+            <ion-item class="itemMessage" text-wrap>
+              <span *ngIf="isSender(message); then contentMine else contentOther"></span>
+              <ng-template #contentMine>
+                <div class="statusMessage">
+                  <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>
+                  <ion-icon *ngIf="message.status==MSG_STATUS_SENT" name="ios-checkmark"></ion-icon>
+                  <ion-icon *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" name="ios-done-all"></ion-icon>
+                </div>
+                <div class="message message-mine" (mouseover)="showButtonInfo()">
+                  <span class="buttonInfo" (click)="presentPopover($event, message)"> </span>
+                  <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
+                  [height]="getSizeImg(message).height" />
+                  <!-- <div *ngIf="message.type == 'file';" class="message-content message-content-text">
+                    <a href=message.metadata.src target="_blank">X1 message.metadata.name?message.metadata.name:message.metadata.src</a>
+                  </div> -->
+                  <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
+                  <div *ngIf="message.type == 'text';">
+                    <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
+                    <ng-template #contentPopup>
+                      <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div>
+                    </ng-template>
+                    <ng-template #contentNewTab>
+                      <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div>
+                    </ng-template>
+                  </div>
+                  <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
+                </div>
+              </ng-template>
+
+              <ng-template #contentOther>
+                <div *ngIf="message.attributes && (message.attributes.subtype == 'info' || message.attributes.subtype == 'info/support') then conversWithSystem else conversWithOther"></div>
+              </ng-template>
+
+              <ng-template #conversWithSystem>
+                <div class="info-support-container">
+                  <span *ngIf="message.attributes && (message.attributes.subtype == 'info' || message.attributes.subtype == 'info/support')" class="message-content-info-support"> {{ message.text }} </span>
+                </div>
+              </ng-template>
+        
+
+              <ng-template #conversWithOther>
+                  <div *ngIf="channel_type=='group'" class="message_sender_fullname">{{message.sender_fullname}}</div>
+                  <div class="message message-other" (mouseover)="showButtonInfo()">
+                    <span class="buttonInfo" [ngClass]="message.uid" (click)="presentPopover($event, message)">
+                    </span>
+                    <img *ngIf="isImage(message);" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
+                      [height]="getSizeImg(message).height" />
+                    <div *ngIf="isFile(message);" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
+                    <!-- <div *ngIf="isFile(message);" class="message-content message-content-text">
+                      <a href=message.metadata.src target="_blank">X2 message.metadata.name?message.metadata.name:message.metadata.src</a>
+                    </div> -->
+                  
+                    <div *ngIf="message.type == 'text';">
+                      <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
+                      <ng-template #contentPopup>
+                        <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div>
+                      </ng-template>
+                      <ng-template #contentNewTab>
+                        <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div>
+                      </ng-template>
+                    </div>
+                    <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
+                  </div>
+              </ng-template>
+            </ion-item>
+          </div>
+        </ion-list>
+      </div>
+    </div>
+    <div *ngIf="showButtonToBottom" id="chat21-buttonToBottom" (click)="scrollBottom()">
+      <div *ngIf="NUM_BADGES!=0" id="chat21-divBudge">{{NUM_BADGES}}</div>
+    </div>
+  </ng-template>
+
+  <ng-template #contentMessageWelcome>
+    <div class="messageFirst" [style.display]="style_message_welcome === true ? '' : 'none'">
+      {{ 'LABEL_NO_MSG_HERE' | translate }}
+    </div>
+  </ng-template>
+</ion-content>
+
+
+<ion-footer [class.halfscreen]="openInfoConversation || openInfoMessage">
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row #messagesPageFooter id="messages-page-footer">
+        <!-- *ngIf="conversationEnabled || channel_type!='group'"         -->
+        <ion-col col-2 col-bottom>
+          <!-- <button ion-button clear class="message-editor-button active">
+            <ion-icon name="add-circle" isActive="true" (click)="presentActionSheet()"></ion-icon>
+          </button> -->
+
+          <label for="chat21-file" [class.active]="!isFileSelected" class="chat21-textarea-button">
+            <ion-icon ios="ios-attach" md="md-attach" class="chat21-icon left active"></ion-icon>
+          </label>
+          <!-- <label for="chat21-file" [class.active]="!isFileSelected" class="chat21-textarea-button" id="chat21-start-upload-doc" ></label> -->
+
+          <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-reset" (click)="resetLoadImage()"></div>
+          <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-send" (click)="loadImage()"></div>
+          <input [disabled]="!conversationEnabled" style='display:none' type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf"
+            name="chat21-file" id="chat21-file" class="inputfile" (change)="detectFiles($event)" />
+
+        </ion-col>
+        <ion-col col-auto>
+          <div class="text_message">
+            <ion-textarea [disabled]="!conversationEnabled" autosize #messageTextArea id="messageTextArea" [(ngModel)]="messageString"
+              placeholder="{{ 'LABEL_ENTER_MSG' | translate }}" rows="1" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString);"
+              autofocus></ion-textarea>
+            <!-- <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->
+          </div>
+
+          <div class="button_send">
+            <button [disabled]="!conversationEnabled" ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active"
+              (focus)="doScroll()" (click)="controlOfMessage(messageString)">
+              <ion-icon name="send" isActive="true"></ion-icon>
+            </button>
+            <button disabled ion-button clear *ngIf="!messageString || messageString.trim()==''" class="message-editor-button right inactive">
+              <ion-icon name="send" isActive="false"></ion-icon>
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>
+
+
+
+<div id="chat21-info-message" [class.open]="openInfoMessage">
+    <page-info-message
+    [message]='messageSelected'
+    (eventClose)="returnCloseInfoMessage()"
+    ></page-info-message>
+</div>
+<div id="chat21-info-conversation" *ngIf="openInfoConversation" [class.open]="openInfoConversation">
+    <page-info-conversation
+    [tenant]=tenant
+    [attributes]=attributes
+    [channelType]=channel_type
+    [conversationWith]= conversationWith
+    (eventClose)="returnCloseInfoConversation()"
+    (eventOpenInfoUser)="returnOpenInfoUser($event)"
+    ></page-info-conversation>
+</div>
+
+<div id="chat21-info-user" class="modal-page" [class.open]="openInfoUser">
+    <page-info-user *ngIf="openInfoUser"
+    [member]=memberSelected
+    (eventClose)="returnCloseInfoUser()"
+    ></page-info-user>
+</div>

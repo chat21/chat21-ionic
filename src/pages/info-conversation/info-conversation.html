@@ -1,0 +1,245 @@
+<ion-header no-border>
+    <ion-navbar color="navbarLightColor">
+        <ion-buttons class="c21-buttons">
+            <div class="c21-label-header c21-left">Info conversation</div>
+            <button class="c21-button-header c21-right" ion-button icon-only (click)="onCloseInfoPage()">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-buttons>
+        <div class="clear"></div>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <div *ngIf="groupDetail || userDetail">
+        <ion-card *ngIf="conversationSelected" class="first-card">
+            <div class="chat21-box-profile chat21-box">
+                <div class="chat21-content">
+                    <div class="chat21-image">
+                        <ion-avatar item-start>
+                            <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversationSelected.color" [innerHTML]="conversationSelected.avatar"></div>
+                            <div #avatarImage class="chat21-avatar" [style.background-image]="'url(' + conversationSelected.image + ')'"></div>
+                            <div *ngIf="isSupportGroup() && isExistUidUserAuthenticatedInMembers()"  style="line-height: 45px;" class="c21-icon-status c21-checked">
+                                <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                viewBox="0 0 26.6 26.6" style="enable-background:new 0 0 26.6 26.6;" xml:space="preserve">
+                                <path class="st0" style="fill:none;" d="M1.3,1.3h24v24h-24V1.3z"/>
+                                <path class="st1" style="fill:#FFFFFF;" d="M13.3,0L2.4,4.9v7.3c0,6.7,4.6,13,10.9,14.5c6.2-1.5,10.9-7.8,10.9-14.5V4.9L13.3,0z"/>
+                                <path class="st2" style="fill:#18BDF7;" d="M13.3,2.3l-9,4v6c0,5.5,3.8,10.7,9,12c5.2-1.3,9-6.5,9-12v-6L13.3,2.3z M11.3,18.3l-4-4l1.4-1.4l2.6,2.6l6.6-6.6l1.4,1.4L11.3,18.3z"/>
+                                </svg>
+                            </div>
+                        </ion-avatar>
+                    </div>
+                    <div class="chat21-info">
+                        <div class="chat21-name">
+                            <span *ngIf="channelType == TYPE_GROUP" class="read">{{conversationSelected.conversation_with_fullname}}</span>
+                            <span *ngIf="channelType != TYPE_GROUP" class="read">{{userDetail.fullname}}</span>
+                        </div>
+                        <div class="chat21-status">
+                            <span *ngIf="channelType != TYPE_GROUP">
+                                <span *ngIf="online">{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
+                                <span *ngIf="!online">{{lastConnectionDate}}</span>
+                            </span>
+                            <span *ngIf="channelType == TYPE_GROUP">
+                                {{listMembers.length}} {{ 'PARTECIPANTI' | translate }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ion-card>
+
+        <ion-card>
+            <div class="chat21-box-info chat21-box">
+                <div class="chat21-content">
+                    <div class="chat21-info">
+
+                        <div class="chat21-row">
+                            <div class="c21-label">uid</div>
+                            <div class="lighter">
+                                <span *ngIf="channelType == TYPE_GROUP">
+                                    {{groupDetail.uid}}
+                                </span>
+                                <span *ngIf="channelType != TYPE_GROUP">
+                                    {{userDetail.uid}}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="chat21-status">
+                        <div *ngIf="channelType == TYPE_GROUP" class="chat21-row">
+                            <div class="c21-label">{{ 'LABEL_CREATED_THE' | translate }}</div>
+                            <div class="lighter">{{groupDetail.createdOn}}</div>
+                        </div>
+                    </div>
+        
+                    <div class="chat21-conf">
+                        <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
+                            <ion-icon name="create"></ion-icon>
+                        </button>
+                    </div>
+        
+                    <div class="chat21-email" *ngIf="channelType != TYPE_GROUP" class="chat21-row">
+                        <span *ngIf="!profileYourself">
+                            <a [href]="'mailto:' + userDetail.email + '?Subject='">
+                                {{userDetail.email}}
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </ion-card>
+        <ion-card *ngIf="isSupportGroup()">
+            <div class="chat21-box-buttons chat21-box">
+                <div class="c21-link">
+                    <button class="c21-button" icon-only (click)="openUserRequest()">
+                        <span class="c21-button-label">{{ 'LABEL_REQUEST_DETAIL' | translate }}</span>
+                        <ion-icon name="ios-arrow-forward" style="line-height: 24px; vertical-align: middle;"></ion-icon> 
+                    </button>
+                </div>
+            </div>
+        </ion-card>
+        
+
+        <ion-card *ngIf="channelType == TYPE_GROUP && attributesClient">
+            <div class="chat21-box-attributes chat21-box">
+                <!-- *ngIf="attributesClient"  -->
+                <div class="chat21-header">{{ 'LABEL_INFO_ATTRIBUTE' | translate }}</div>
+                <div class="chat21-content">
+                    <div class="chat21-row">
+                        <div class="c21-label">{{ 'LABEL_CLIENT' | translate }}</div>
+                        <div class="lighter">{{attributesClient}}</div>
+                    </div>
+                    <div class="chat21-row">
+                        <div class="c21-label">{{ 'LABEL_SOURCEPAGE' | translate }}</div>
+                        <!-- <div class="lighter" [innerHTML]="attributesSourcePage"></div> -->
+                        <div class="lighter">
+                            <a href="{{attributesSourcePage}}" target="_blank">{{attributesSourcePage}}</a>
+                        </div>
+                    </div>
+                    <div *ngIf="attributes && attributes.departmentId" class="chat21-row">
+                        <div class="c21-label">{{ 'LABEL_DEPARTMENT_NAME' | translate }}</div>
+                        <div light class="lighter">{{attributes.departmentName}}</div>
+                    </div>
+                    <div *ngIf="attributes && attributes.userFullname" class="chat21-row">
+                        <div class="c21-label">{{ 'LABEL_NAME' | translate }}</div>
+                        <div light class="lighter">{{attributes.userFullname}}</div>
+                    </div>
+                    <div *ngIf="attributes && attributes.userEmail" class="chat21-row">
+                        <div class="c21-label">{{ 'LABEL_EMAIL' | translate }}</div>
+                        <div light class="lighter">
+                            <a [href]="'mailto:' + attributes.userEmail + '?Subject='">
+                                {{attributes.userEmail}}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div *ngIf="customAttributes" class="custom-attributes-container">
+                        <div *ngFor="let attr of customAttributes" class="chat21-row custom-attributes">
+                            <div class="c21-label">{{ attr.key | translate }}</div>
+                        
+                            
+                            <div *ngIf="attr.key !== 'projectId';then content else other_content">here is ignored</div>    
+                            <ng-template #content><div class="lighter">{{ attr.value }}</div></ng-template>
+                            <ng-template #other_content>
+                                <a [href]= "URL_PROJECT_ID + attr.value + '/home'" target="_blank">
+                                {{ attr.value }}
+                                </a>
+                            </ng-template>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </ion-card>
+
+
+        <ion-card *ngIf="channelType == TYPE_GROUP && listMembers.length > 0">
+            <div class="chat21-box-members chat21-box">
+                <div class="chat21-header">{{ 'LABEL_MEMBERS' | translate }}</div>
+                <div class="chat21-content">
+                    <div *ngFor="let member of listMembers" class="c21-member" (click)="openInfoUser(member)" >
+                        <ion-item>
+                            <ion-avatar item-start [ngStyle]="{ position: relative }">
+
+                                <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="member.color" [innerHTML]="member.avatar"></div>
+                                <div #avatarImage *ngIf="member.imageurl && member.imageurl!=''" class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div>
+
+                                <div *ngIf="member.checked === true" class="c21-icon-status c21-checked small">
+                                    <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                    viewBox="0 0 26.6 26.6" style="enable-background:new 0 0 26.6 26.6;" xml:space="preserve">
+                                    <path class="st0" style="fill:none;" d="M1.3,1.3h24v24h-24V1.3z"/>
+                                    <path class="st1" style="fill:#FFFFFF;" d="M13.3,0L2.4,4.9v7.3c0,6.7,4.6,13,10.9,14.5c6.2-1.5,10.9-7.8,10.9-14.5V4.9L13.3,0z"/>
+                                    <path class="st2" style="fill:#18BDF7;" d="M13.3,2.3l-9,4v6c0,5.5,3.8,10.7,9,12c5.2-1.3,9-6.5,9-12v-6L13.3,2.3z M11.3,18.3l-4-4l1.4-1.4l2.6,2.6l6.6-6.6l1.4,1.4L11.3,18.3z"/>
+                                    </svg>
+                                </div>
+                            
+                            </ion-avatar>
+                            <h2>
+                                <span class="c21-point" [ngStyle]="{ 'background-color':(member.online)?'#24d066':'#db4437' }">&nbsp;</span>
+                                <span class="chat21-name">{{member.fullname}}</span>
+                                <!-- <span *ngIf="!member.fullname && member.decoded.name" class="truncate read">{{member.decoded.name}}</span>
+                                <span *ngIf="!member.fullname && !member.decoded.name" class="chat21-name truncate read">{{ 'LABEL_GUEST' | translate }}</span> -->
+                            </h2>
+                            <p>
+                                <span class="chat21-uid read">{{member.uid}}</span>
+                            </p>
+                        </ion-item>
+                    </div>
+                </div>
+            </div>
+        </ion-card>
+       
+
+
+        <ion-card *ngIf="channelType == TYPE_GROUP">
+            <div class="chat21-box-buttons chat21-box">
+ 
+
+                <div *ngIf="isSupportGroup()" class="chat21-content" >
+                    <button ion-button clear icon-start block 
+                      (click)="sendMail()">
+                      <ion-icon name='mail' is-active="false"></ion-icon>
+                      <span class="c21-button-label">{{ 'LABEL_SEND_BY_EMAIL' | translate }}</span>
+                    </button>
+                </div>
+
+                <div *ngIf="isSupportGroup()" class="chat21-content">
+                    <button [disabled]="!conversationEnabled" ion-button clear icon-start block 
+                      (click)="setVideoChat()">
+                      <ion-icon name='videocam' is-active="false"></ion-icon>
+                      <span class="c21-button-label">{{ 'LABEL_VIDEO_CHAT' | translate }}</span>
+                    </button>
+                </div>
+
+                <div *ngIf="isSupportGroup()" class="chat21-content">
+                    <button [disabled]="!conversationEnabled" ion-button clear icon-start block
+                        (click)="openPopupConfirmation('close');$event.stopPropagation();">
+                        <ion-icon name='close' is-active="false"></ion-icon>
+                        <span class="c21-button-label">{{ 'LABEL_CLOSE_GROUP' | translate }}</span>
+                    </button>
+                </div>
+
+                <div class="chat21-content">
+                    <button [disabled]="!isLoggedUserGroupMember" ion-button clear icon-start block
+                        (click)="openPopupConfirmation('leave')">
+                        <ion-icon name='exit' is-active="false"></ion-icon>
+                        <span class="c21-button-label">{{ 'LABEL_LEAVE_GROUP' | translate }}</span>
+                    </button>
+                </div>
+            </div>
+        </ion-card>
+
+        
+
+        <div class="chat21-box-images chat21-box"></div>
+        <div class="chat21-box-documents chat21-box"></div>
+        <div class="chat21-box-links chat21-box"></div>
+
+        
+
+    </div>
+</ion-content>

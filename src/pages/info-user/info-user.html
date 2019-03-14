@@ -1,0 +1,89 @@
+<!--
+  Generated template for the InfoUserPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+
+<ion-header no-border>
+  <ion-navbar color="navbarLightColor">
+      <ion-buttons class="c21-buttons">
+          <button class="c21-button-header c21-left" ion-button icon-only (click)="onCloseInfoPage()">
+              <!-- <ion-icon name="arrow-round-back"></ion-icon> -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+          </button>
+          <div class="c21-label-header c21-left">User info</div>
+      </ion-buttons>
+      <div class="clear"></div>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <div *ngIf="member">
+        <ion-card class="first-card">
+            <div class="chat21-box-profile chat21-box">
+                <div class="chat21-content">
+                    
+                    <div class="chat21-image">
+                        <ion-avatar item-start>
+                            <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="member.color" [innerHTML]="member.avatar"></div>
+                            <div #avatarImage class="chat21-avatar" [style.background-image]="'url(' + member.imageurl + ')'"></div>
+                        </ion-avatar>
+                    </div>
+
+                    <div class="chat21-info">
+
+                        <div class="chat21-name">
+                            <span class="c21-point" [ngStyle]="{ 'background-color':(member.online)?'#24d066':'#db4437' }">&nbsp;</span>
+                            <span *ngIf="member.fullname" class="">{{member.fullname}}</span>
+                            <span *ngIf="!member.fullname && member.decoded.name" class="">{{member.decoded.name}}</span>
+                        </div>
+
+                        <div class="chat21-status">
+                          <span *ngIf="member.online" class="c21-label-connection">{{ 'LABEL_ACTIVE_NOW' | translate }}</span>
+                          <span *ngIf="!member.online" class="c21-label-connection">{{lastConnectionDate}}</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </ion-card>
+
+        <ion-card>
+                
+            <div class="chat21-box-info chat21-box">
+                <div class="chat21-header">{{ 'LABEL_INFO' | translate }}</div>
+                <div class="chat21-content">
+
+                    <div class="c21-row">
+                        <div class="c21-label">uid </div>
+                        <div class="c21-uid">{{member.uid}}</div>
+                    </div>
+                   
+                    <div *ngIf="member.decoded">
+                        <div *ngFor="let item of decoded" class="c21-row">
+                            <div class="c21-label">{{item.key}}</div>
+                            <div *ngIf="item.key == 'iat'">
+                                <span>{{item.val | date:'dd/MM/yyyy HH:mm:ss'}}</span>
+                            </div>
+                            <div *ngIf="item.key != 'iat'" >
+                                <div class="c21-value" [innerHTML]="item.val"></div>
+                            </div>                            
+                        </div> 
+                    </div> 
+                    
+                    <!-- <div class="chat21-conf">
+                        <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
+                            <ion-icon name="create"></ion-icon>
+                        </button>
+                    </div> -->
+                    
+                </div>
+            </div>
+    
+        </ion-card>
+
+      </div>
+
+</ion-content>

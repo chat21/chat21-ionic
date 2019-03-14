@@ -1,0 +1,56 @@
+
+  <ion-header *ngIf="showPage">
+    <ion-navbar>
+      <ion-title>{{ 'LABEL_LOGIN_TO' | translate }} {{tenant}}</ion-title>
+    </ion-navbar>
+  </ion-header>
+
+  <ion-content padding class="sample-modal-page" *ngIf="showPage">
+    <!-- <span *ngIf="isHostname(); then contentMine else contentOther"></span> -->
+    <div *ngIf="isHostname()" #contentPage class="content-page">
+        <div class="c21-start-msg">{{ 'LABEL_MSG_LOGIN_TILEDESK' | translate }}</div>
+        <button ion-button block class="full" type="submit" (click)="tiledeskLogin()">
+          {{ 'LABEL_LOGIN' | translate }}
+        </button>
+    </div>
+    <div *ngIf="!isHostname()" #contentOther class="content-page">
+      <form [formGroup]="loginForm" (submit)="loginUserFirebase()" novalidate>
+        <ion-item>
+          <ion-label stacked>{{ 'LABEL_EMAIL' | translate }}</ion-label>
+          <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)"
+            placeholder="{{ 'LABEL_PLACEHOLDER_EMAIL' | translate }}"
+            [class.invalid]="!loginForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
+        </ion-item>
+        <div class="div-error-message">
+        <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && (emailChanged || submitAttempt)">
+          <p>{{ 'LABEL_ERROR_EMAIL' | translate }}</p>
+        </ion-item>
+        </div>
+
+        <ion-item>
+          <ion-label stacked>{{ 'LABEL_PASSWORD' | translate }}</ion-label>
+          <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)"
+            placeholder="La tua password"
+            [class.invalid]="!loginForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
+        </ion-item>
+        <div class="div-error-message">
+        <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid  && (passwordChanged || submitAttempt)">
+          <p>{{ 'LABEL_ERROR_PASSWORD' | translate }}</p>
+        </ion-item>
+        </div>
+      
+      </form>
+
+      <button ion-button block class="full" type="submit" (click)="loginUserFirebase()">
+        {{ 'LABEL_LOGIN' | translate }}
+      </button>
+      <button ion-button block (click)="register()">
+        {{ 'LABEL_SIGIN' | translate }}
+      </button>
+      <button ion-button block (click)="resetPwd()">
+        {{ 'LABEL_FORGOT_PASSWORD' | translate }}
+      </button>
+    </div>
+
+      
+  </ion-content>
