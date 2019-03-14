@@ -1,8 +1,0 @@
-{
-  "name": "listaUtenti",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "ionic-angular",
-  "app_id": ""
-}
