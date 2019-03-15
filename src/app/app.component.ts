@@ -2,8 +2,11 @@ import { Component, ViewChild, NgZone } from '@angular/core';
 import { Events, Platform, MenuController, Nav, AlertController } from 'ionic-angular';
 import * as firebase from 'firebase/app';
 import { ListaConversazioniPage } from '../pages/lista-conversazioni/lista-conversazioni';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+// import { StatusBar } from '@ionic-native/status-bar';
+// import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+
 import { Config } from 'ionic-angular';
 import {NavProxyService} from '../providers/nav-proxy';
 //import {PlaceholderPage} from '../pages/placeholder/placeholder';

@@ -83,7 +83,7 @@ export class MessagingService {
         .then(token => {
             console.log('Notification permission granted.');
             // TODO(developer): Retrieve an Instance ID token for use with FCM.
-            that.token = token;
+            //that.token = token;
             console.log('NOTIFICA PERMESSO token.', token);
             //callback PERMESSO NOTIFICA OK
             that.events.publish('requestPermission', true);

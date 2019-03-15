@@ -756,7 +756,8 @@ export class DettaglioConversazionePage extends _DetailPage{
     
           if(typeFile.indexOf('image') !== -1 ){
             const file4Load = new Image;
-            file4Load.src = reader.result;
+            // if (typeof reader.result == 'string' || reader.result instanceof String) {}
+            file4Load.src = reader.result.toString();
             file4Load.title = nameImg;
             file4Load.onload = function() {
               console.log('that.file4Load: ', file4Load);

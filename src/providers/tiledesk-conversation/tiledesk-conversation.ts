@@ -1,7 +1,9 @@
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+// import { Observable } from 'rxjs/Observable';
+// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 // firebase
 import * as firebase from 'firebase/app';
 // ====== [BEGIN chat21]

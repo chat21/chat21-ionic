@@ -40,10 +40,14 @@ import { ArchivedConversationsPage } from '../pages/archived-conversations/archi
 //import { FirebaseProvider } from '../providers/firebase-provider';
 
 // @ionic
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { SQLitePorter } from '@ionic-native/sqlite-porter';
-import { SQLite } from '@ionic-native/sqlite';
+// import { StatusBar } from '@ionic-native/status-bar';
+// import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+
+
+import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
+import { SQLite } from '@ionic-native/sqlite/ngx';
 
 import { MessagingService } from '../providers/messaging-service';
 import { UserService } from '../providers/user/user';

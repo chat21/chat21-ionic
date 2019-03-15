@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Events } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+
 // import 'rxjs/add/observable/fromPromise';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
+
 
 // models
 import { GroupModel } from '../../models/group';
