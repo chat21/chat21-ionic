@@ -14,6 +14,8 @@ import { MessagingService } from '../providers/messaging-service';
 import { ChatManager } from '../providers/chat-manager/chat-manager';
 import { TranslateService } from '@ngx-translate/core';
 
+import { environment } from '../environments/environment';
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -29,6 +31,8 @@ export class MyApp {
   pages: Array<{title: string, component: any}>;
   isNavBar: string;
   notificationsEnabled: boolean;
+
+  firebaseConfig = environment.firebaseConfig;
   
   /**
    * 1 - init firebase
@@ -67,7 +71,9 @@ export class MyApp {
     // this language will be used as a fallback when a translation isn't found in the current language
     //translate.setDefaultLang('it');
 
-    firebase.initializeApp(config.get("firebaseConfig"));
+
+    //firebase.initializeApp(config.get("firebaseConfig"));
+    firebase.initializeApp(this.firebaseConfig);
     platform.ready().then(() => {
       this.events.subscribe('requestPermission', this.callbackRequestPermission);
       // Okay, so the platform is ready and our plugins are available.
