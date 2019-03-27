@@ -20,7 +20,7 @@
         "ionic:build": "ionic-app-scripts build",
         "ionic:serve": "ionic-app-scripts serve",
         "compodoc": "./node_modules/.bin/compodoc -d ./docs/ -p ./tsconfig.json",
-        "postinstall": "ionic-app-scripts build"
+        "postinstall": "ionic cordova platform add browser --save && ionic cordova build browser"
     },
     "dependencies": {
         "@angular/animations": "7.2.9",
