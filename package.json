@@ -46,6 +46,7 @@
         "@ngx-translate/http-loader": "^4.0.0",
         "add": "^2.0.6",
         "build": "^0.1.4",
+        "cordova": "^9.0.0",
         "cordova-android": "^8.0.0",
         "cordova-browser": "^6.0.0",
         "cordova-ios": "^5.0.0",
@@ -59,6 +60,7 @@
         "device": "^0.3.9",
         "express": "^4.16.4",
         "firebase": "5.9.0",
+        "ionic": "^4.12.0",
         "ionic-angular": "3.9.4",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "4.5.5",
@@ -71,9 +73,9 @@
         "rxjs": "6.4.0",
         "rxjs-compat": "^6.4.0",
         "sw-toolbox": "3.6.0",
+        "typescript": "3.3.3333",
         "uk.co.workingedge.cordova.plugin.sqliteporter": "^1.1.0",
-        "zone.js": "0.8.29",
-        "typescript": "3.3.3333"
+        "zone.js": "0.8.29"
     },
     "resolutions": {
         "grpc": "^1.12.0"

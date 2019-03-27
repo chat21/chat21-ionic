@@ -6,10 +6,10 @@ URL_VER=${version//[.]//}
 echo 'URL_VER: ---->'$URL_VER
 
 if [ "$version" != "" ]; then
-    git tag -a "v$version-RC" -m "`git log -1 --format=%s`"
+    git tag -a "v$version" -m "`git log -1 --format=%s`"
     echo "Created a new tag, v$version"
     git push --tags
-    npm publish --tag RC
+    npm publish
 fi
 
 sed -i -e "s/$URL_VER/g" src/utils/constants.ts
