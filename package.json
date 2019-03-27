@@ -72,7 +72,8 @@
         "rxjs-compat": "^6.4.0",
         "sw-toolbox": "3.6.0",
         "uk.co.workingedge.cordova.plugin.sqliteporter": "^1.1.0",
-        "zone.js": "0.8.29"
+        "zone.js": "0.8.29",
+        "typescript": "3.3.3333"
     },
     "resolutions": {
         "grpc": "^1.12.0"
@@ -81,8 +82,7 @@
         "@angular/cli": "^7.3.6",
         "@angular/tsc-wrapped": "^4.4.6",
         "@ionic/app-scripts": "^3.2.3",
-        "@ionic/cli-plugin-proxy": "^1.5.9",
-        "typescript": "3.3.3333"
+        "@ionic/cli-plugin-proxy": "^1.5.9"
     },
     "cordovaPlugins": [
         "cordova-plugin-whitelist",
