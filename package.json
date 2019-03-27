@@ -11,7 +11,7 @@
     "private": false,
     "bin": {
         "chat21-ionic": "./bin/chat21-ionic"
-      },
+    },
     "scripts": {
         "clean": "ionic-app-scripts clean",
         "build": "ionic-app-scripts build",
@@ -19,7 +19,8 @@
         "lint": "ionic-app-scripts lint",
         "ionic:build": "ionic-app-scripts build",
         "ionic:serve": "ionic-app-scripts serve",
-        "compodoc": "./node_modules/.bin/compodoc -d ./docs/ -p ./tsconfig.json"
+        "compodoc": "./node_modules/.bin/compodoc -d ./docs/ -p ./tsconfig.json",
+        "postinstall": "ionic-app-scripts build"
     },
     "dependencies": {
         "@angular/animations": "7.2.9",
