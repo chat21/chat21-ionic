@@ -9,6 +9,9 @@
         "url": "https://github.com/chat21/chat21-ionic"
     },
     "private": false,
+    "bin": {
+        "chat21-ionic": "./bin/chat21-ionic"
+      },
     "scripts": {
         "clean": "ionic-app-scripts clean",
         "build": "ionic-app-scripts build",
@@ -44,7 +47,7 @@
         "cordova-android": "^8.0.0",
         "cordova-browser": "^6.0.0",
         "cordova-ios": "^5.0.0",
-        "cordova-osx": "~5.0.0",
+        "cordova-osx": "4.0.2",
         "cordova-plugin-console": "^1.1.0",
         "cordova-plugin-device": "^2.0.2",
         "cordova-plugin-splashscreen": "^5.0.2",
@@ -57,6 +60,7 @@
         "ionic-angular": "3.9.4",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "4.5.5",
+        "macos": "0.0.1",
         "material-design-icons": "^3.0.1",
         "moment": "^2.24.0",
         "npm": "^6.9.0",
