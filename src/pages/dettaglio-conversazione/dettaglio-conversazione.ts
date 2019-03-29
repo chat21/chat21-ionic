@@ -193,6 +193,9 @@ export class DettaglioConversazionePage extends _DetailPage{
       else if(this.conversationSelected.channel_type === TYPE_GROUP && this.conversationSelected.recipient.startsWith(TYPE_SUPPORT_GROUP)) {
         this.conversationType = TYPE_SUPPORT_GROUP;
         console.log('SUPPORT GROUP CONVERSATION ------------>', this.conversationType)
+        console.log('this.conversationSelected ------------>', this.conversationSelected)
+        console.log('this.conversationSelected.attributes ------------>', this.conversationSelected.attributes)
+        console.log('this.conversationSelected.attributes.requester_id ------------>', this.conversationSelected.attributes.requester_id)
         if(this.conversationSelected.attributes && this.conversationSelected.attributes.requester_id){
           uidConversationWith = this.conversationSelected.attributes.requester_id;
           console.log('RECUPERO requester_id ------------>', uidConversationWith)

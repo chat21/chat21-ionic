@@ -11,7 +11,8 @@
   "ARRAY_DAYS": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
 
   "LABEL_CREATED_THE": "group created on",
-  "LABEL_INFO_ATTRIBUTE": "Info Attributes",
+  "LABEL_INFO_ATTRIBUTE": "Attributes",
+  "LABEL_INFO_ADVANCED": "Advanced",
   "LABEL_CLIENT": "Clients ",
   "LABEL_SOURCEPAGE": "Source ",
   "LABEL_DEPARTMENT_ID": "Department id ",

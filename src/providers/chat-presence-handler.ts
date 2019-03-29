@@ -144,9 +144,9 @@ export class ChatPresenceHandler {
           //this.deviceConnectionRef = myConnectionsRef.set(true);
           let conection = true;
           //that.deviceConnectionRef = 
-          that.myConnectionsRef.push(conection);
+          const keyMyConnectionRef = that.myConnectionsRef.push(conection);
           //!!! quando faccio logout devo disconnettermi
-          that.myConnectionsRef.onDisconnect().remove();
+          keyMyConnectionRef.onDisconnect().remove();
           // when I disconnect, update the last time I was seen online
           let now: Date = new Date();
           let timestamp = now.valueOf();
@@ -164,19 +164,19 @@ export class ChatPresenceHandler {
    */
   goOffline() {
     console.log("goOffline.", this.myConnectionsRef)
-    this.removeConnectionReference();
+    // this.removeConnectionReference();
     this.removeLastOnlineReference();
   }
 
-  removeConnectionReference(){
-    if(this.myConnectionsRef){
-      this.myConnectionsRef.off();
-      console.log("goOffline 1", this.myConnectionsRef)
-      this.myConnectionsRef.remove();
-      console.log("goOffline 2", this.myConnectionsRef)
-    }
-    this.myConnectionsRef = null;
-  }
+  // removeConnectionReference(){
+  //   if(this.myConnectionsRef){
+  //     this.myConnectionsRef.off();
+  //     console.log("goOffline 1", this.myConnectionsRef)
+  //     this.myConnectionsRef.remove();
+  //     console.log("goOffline 2", this.myConnectionsRef)
+  //   }
+  //   this.myConnectionsRef = null;
+  // }
 
   removeLastOnlineReference(){
     if(this.lastOnlineRef){

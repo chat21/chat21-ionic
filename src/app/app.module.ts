@@ -3,7 +3,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 
 import { HttpModule, Http } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
-
+// import { LinkyModule } from 'angular-linky';
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
@@ -100,6 +100,7 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
+    // LinkyModule,
     IonicModule.forRoot(MyApp,{
       // firebaseConfig : {
       //   apiKey: 'AIzaSyDWMsqHBKmWVT7mWiSqBfRpS5U8YwTl7H0',

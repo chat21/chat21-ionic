@@ -14,6 +14,12 @@ page-info-conversation {
         background: #f7f7f7!important;
     }
 
+    .c21-link {
+        color: #488aff;
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: normal;
+    }
    
     .c21-label {
         color: map-get($colors, c21-gray);
@@ -92,6 +98,7 @@ page-info-conversation {
         border-radius: 50%;
         display: inline-block;
         line-height: 10px;
+        margin-right: 5px;
     }
     
 
@@ -405,11 +412,16 @@ page-info-conversation {
                 color: map-get($colors, c21-dark);
             }
             .c21-link {
+                color: #488aff;
+                text-decoration: none;
+                cursor: pointer;
+
                 .c21-button-label {
                     font-size: 13px;
                     margin: 0px;
                     font-weight: 500;
                 }
+                
             }
 
         }

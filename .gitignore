@@ -1,1 +1,6 @@
 node_modules
+.sourcemaps
+.vscode
+plugins
+www
+firebase-messaging-sw_old.js
