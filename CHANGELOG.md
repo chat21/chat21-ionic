@@ -6,6 +6,11 @@
 - (da fare) aggiungo br nel messaggio
 - (da fare) ottimizzare view contatti (css header, titolo, <-, img profile, cache)
 
+### 1.0.13-beta-1
+- add tab info advanced
+- add angular-linky
+- fixes bug status online/offline
+
 ### 1.0.11
 - enables authentication outside of tiledesk domains
 
