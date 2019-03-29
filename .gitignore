@@ -4,3 +4,4 @@ node_modules
 plugins
 www
 firebase-messaging-sw_old.js
+platforms

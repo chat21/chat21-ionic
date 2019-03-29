@@ -78,8 +78,8 @@
                     </ng-template>
                     <ng-template #contentNewTab>
                   
-                      <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div>
-                      <!-- <p class="message-content message-content-text" [innerHTML]="message.text | linky"></p> -->
+                      <!-- <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div> -->
+                      <div class="message-content message-content-text" [innerHTML]="message.text | linky"></div>
                     </ng-template>
                   </div>
                   <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
@@ -115,7 +115,8 @@
                         <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div>
                       </ng-template>
                       <ng-template #contentNewTab>
-                        <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div>
+                        <!-- <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div> -->
+                        <div class="message-content message-content-text" [innerHTML]="message.text | linky"></div>
                       </ng-template>
                     </div>
                     <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
