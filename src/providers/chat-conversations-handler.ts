@@ -152,7 +152,7 @@ export class ChatConversationsHandler {
             this.conversations.splice(index, 1, conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
             this.databaseProvider.setConversation(conversation);
-            //this.events.publish('conversationsChanged', this.conversations);
+            this.events.publish('conversationsChanged', this.conversations);
         } else {
             console.error("ChatConversationsHandler::changed::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }

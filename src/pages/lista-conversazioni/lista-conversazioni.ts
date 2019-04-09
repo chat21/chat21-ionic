@@ -13,7 +13,7 @@ import { _MasterPage } from '../_MasterPage';
 import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
-import { convertMessage, windowsMatchMedia } from '../../utils/utils';
+import { convertMessage, windowsMatchMedia, isHostname } from '../../utils/utils';
 import { TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
 import * as PACKAGE from '../../../package.json';
 // services
@@ -54,6 +54,7 @@ export class ListaConversazioniPage extends _MasterPage {
   private BUILD_VERSION: string;
 
   convertMessage = convertMessage;
+  isHostname = isHostname;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -113,7 +114,7 @@ export class ListaConversazioniPage extends _MasterPage {
   //// SUBSCRIBTIONS ////
   /** */
   initSubscriptions() {
-    this.events.subscribe('loadedConversationsStorage', this.loadedConversationsStorage);
+    //this.events.subscribe('loadedConversationsStorage', this.loadedConversationsStorage);
     this.events.subscribe('conversationsChanged', this.conversationsChanged);
     this.events.subscribe('archivedConversationsChanged', this.archivedConversationsChanged);
     this.events.subscribe('loggedUser:login', this.subscribeLoggedUserLogin);
@@ -301,6 +302,7 @@ export class ListaConversazioniPage extends _MasterPage {
       // 1 - init chatConversationsHandler and  archviedConversationsHandler
       this.conversationsHandler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
       this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(tenant, loggedUser);
+      
       this.chatConversationsHandler.getConversationsFromStorage();
       // 2 - bind conversations to conversationHandler.conversations
       //this.conversations = conversationHandler.conversations;

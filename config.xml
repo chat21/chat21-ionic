@@ -18,10 +18,19 @@
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
-    <preference name="FadeSplashScreenDuration" value="300" />
-    <preference name="SplashShowOnlyFirstTime" value="false" />
-    <preference name="SplashScreen" value="screen" />
+    <preference name="SplashShowOnlyFirstTime" value="true" />
     <preference name="SplashScreenDelay" value="3000" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="FadeSplashScreenDuration" value="0" />
+    <preference name="StatusBarBackgroundColor" value="#ffffff" />
+    <platform name="browser">
+        <preference name="SplashScreen" value="assets/splash.png" />
+        <preference name="AutoHideSplashScreen" value="true" />
+        <preference name="SplashScreenWidth" value="2732" />
+        <preference name="SplashScreenHeight" value="2732" />
+        <preference name="SplashScreenBackgroundColor" value="white" />
+        <preference name="SplashScreenDelay" value="0" />
+    </platform>
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />

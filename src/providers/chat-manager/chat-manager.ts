@@ -11,6 +11,8 @@ import { ChatConversationsHandler } from '../chat-conversations-handler';
 import { ChatArchivedConversationsHandler } from '../chat-archived-conversations-handler';
 import { ChatContactsSynchronizer } from '../chat-contacts-synchronizer';
 
+// utils
+import { isHostname } from '../../utils/utils';
 
 
 /*
@@ -120,7 +122,10 @@ export class ChatManager {
     // //this.msgService.getToken(user);
     //console.log(" 3 - PUBBLICO STATO LOGGEDUSER: LOGIN");
     //this.conversationsHandler = this.chatConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
-    this.initContactsSynchronizer();
+    
+    if(!isHostname){
+      this.initContactsSynchronizer();
+    }
     this.events.publish('loggedUser:login', this.loggedUser);
   }
 

@@ -8,9 +8,11 @@
       <div *ngIf="numberOpenConv > 0" class="c21-number-open-conv">({{numberOpenConv}})</div>
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="openUsersList($event)">
+
+      <button *ngIf="!isHostname()" ion-button icon-only (click)="openUsersList($event)">
         <ion-icon name="create"></ion-icon>
       </button>
+
       <button ion-button icon-only (click)="openArchivedConversationsPage($event)">
         <ion-icon class="material-icons">history</ion-icon>
       </button>
