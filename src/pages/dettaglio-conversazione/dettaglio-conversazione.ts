@@ -77,6 +77,9 @@ export class DettaglioConversazionePage extends _DetailPage{
   private openInfoMessage: boolean;                         /** check is open info message */
   private conversationEnabled: boolean = true;
   private isMobile: boolean = true;
+
+  private advancedAttributes: any = [];
+  private openInfoAdvanced: boolean = false;
   
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
@@ -563,6 +566,19 @@ export class DettaglioConversazionePage extends _DetailPage{
     this.openInfoUser = false;
     console.log('returnCloseInfoUser **************', this.openInfoUser);
   }
+
+  returnOpenInfoAdvanced(advanced){
+    console.log('returnOpenInfoAdvanced **************', advanced);
+    this.advancedAttributes = advanced;
+    this.openInfoAdvanced = true;
+  }
+  returnCloseInfoAdvanced(){
+    this.openInfoAdvanced = false;
+    this.advancedAttributes = [];
+    console.log('returnCloseInfoAdvanced **************', this.openInfoAdvanced);
+  }
+
+  
 
   /** 
    * 

@@ -71,12 +71,10 @@
 
         </ion-card>
         <ion-card *ngIf="isSupportGroup()">
-            <div class="chat21-box-buttons chat21-box">
-                <div class="c21-link">
-                    <button class="c21-button" icon-only (click)="openUserRequest()">
-                        <span class="c21-button-label">{{ 'LABEL_REQUEST_DETAIL' | translate }}</span>
-                        <ion-icon name="ios-arrow-forward" style="line-height: 24px; vertical-align: middle;"></ion-icon> 
-                    </button>
+            <div class="chat21-box-buttons chat21-box"  style="padding: 0px 0px 0px 10px;">
+                <div class="c21-link" (click)="openUserRequest()">
+                    <span left class="c21-button-label" style="line-height: 24px;">{{ 'LABEL_REQUEST_DETAIL' | translate }}</span>
+                    <ion-icon class="ios-arrow-forward" name="open"></ion-icon> 
                 </div>
             </div>
         </ion-card>
@@ -151,6 +149,9 @@
                             <p>
                                 <span class="chat21-uid read">{{member.uid}}</span>
                             </p>
+
+                            <ion-icon class="ios-arrow-forward" name="ios-arrow-forward" style="top:15px"></ion-icon> 
+                     
                         </ion-item>
                     </div>
                 </div>
@@ -159,58 +160,19 @@
        
 
 
-        <ion-card >
-            <!-- *ngIf="channelType == TYPE_GROUP && attributesClient" -->
-            <div class="chat21-box-advanced chat21-box">
-                <!-- *ngIf="attributesClient"  -->
-                <div class="chat21-header">{{ 'LABEL_INFO_ADVANCED' | translate }}</div>
-                <div class="chat21-content">
-
-                    <div class="chat21-info">
-                        <div class="chat21-row">
-                            <div class="c21-label">uid</div>
-                            <div class="lighter">
-                                <span *ngIf="channelType == TYPE_GROUP">
-                                    {{groupDetail.uid}}
-                                </span>
-                                <span *ngIf="channelType != TYPE_GROUP">
-                                    {{userDetail.uid}}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="chat21-status">
-                        <div *ngIf="channelType == TYPE_GROUP" class="chat21-row">
-                            <div class="c21-label">{{ 'LABEL_CREATED_THE' | translate }}</div>
-                            <div class="lighter">{{groupDetail.createdOn}}</div>
-                        </div>
-                    </div>
-
-                    <div *ngIf="customAttributes" class="custom-attributes-container">
-                        <div *ngFor="let attr of customAttributes" class="chat21-row custom-attributes">
-                            <div class="c21-label">{{ attr.key | translate }}</div>
-                            <div *ngIf="attr.key !== 'projectId';then content else other_content">here is ignored</div>    
-                            <ng-template #content><div class="lighter">{{ attr.value }}</div></ng-template>
-                            <ng-template #other_content>
-                                
-                                <div class="c21-link" (click)="openProjectHome()">
-                                    {{ attr.value }}
-                                </div>
-
-                            </ng-template>
-                        </div>
-                    </div>
-                    
+        <ion-card>
+            <div class="chat21-box-buttons chat21-box"  style="padding: 0px 0px 0px 10px;" (click)="openInfoAdvancedPage()">
+                <div class="c21-link">
+                    <span class="c21-button-label" style="line-height: 24px;">{{ 'LABEL_INFO_ADVANCED' | translate }}</span>
+                    <ion-icon class="ios-arrow-forward" name="ios-arrow-forward"></ion-icon> 
                 </div>
-
             </div>
         </ion-card>
+
 
         <ion-card *ngIf="channelType == TYPE_GROUP">
             <div class="chat21-box-buttons chat21-box">
  
-
                 <div *ngIf="isSupportGroup()" class="chat21-content" >
                     <button ion-button clear icon-start block 
                       (click)="sendMail()">

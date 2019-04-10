@@ -37,6 +37,7 @@ export class InfoConversationPage {
   // ========= begin:: Input/Output values ============//
   @Output() eventClose = new EventEmitter();
   @Output() eventOpenInfoUser = new EventEmitter<UserModel>();
+  @Output() eventOpenInfoAdvanced = new EventEmitter<any>();
   @Input() tenant: string;
   @Input() attributes: any = {};
   @Input() conversationWith: string;
@@ -1069,6 +1070,27 @@ setDetailUser(snapshot) {
     //https://support.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/contact/5bf6705275a5a40015327b91
   }
 
+  openInfoAdvancedPage(){
+    var advancedAttributes = []
+    var item: any = {}
+    if(this.channelType == TYPE_GROUP){
+      item['key'] = "ID_CONVERSATION";
+      item['value'] = this.groupDetail.uid;
+    } else {
+      item = {"key":"ID_CONVERSATION", "value": this.userDetail.uid}
+    }
+    advancedAttributes.push(item)
+    item = {"key":"LABEL_CREATED_THE", "value": this.groupDetail.createdOn}
+    advancedAttributes.push(item)
+    // advancedAttributes['createdOn'] = this.groupDetail.createdOn
+    this.customAttributes.forEach(attr => {
+      //advancedAttributes[attr.key] = attr.value
+      item = {"key":attr.key, "value": attr.value}
+      advancedAttributes.push(item)
+    });
+    console.log("advancedAttributes", advancedAttributes);
+    this.eventOpenInfoAdvanced.emit(advancedAttributes);
+  }
   /**
    * 
    */

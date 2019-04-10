@@ -10,6 +10,7 @@
     "LABEL_TO": "alle",
     "ARRAY_DAYS": ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"],
 
+    "ID_CONVERSATION": "Id conversazione",
     "LABEL_CREATED_THE": "gruppo creato il ",
     "LABEL_INFO_ATTRIBUTE": "Attributi",
     "LABEL_INFO_ADVANCED": "Avanzate",

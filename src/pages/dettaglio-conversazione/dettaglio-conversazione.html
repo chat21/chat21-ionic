@@ -192,6 +192,7 @@
     (eventClose)="returnCloseInfoMessage()"
     ></page-info-message>
 </div>
+
 <div id="chat21-info-conversation" *ngIf="openInfoConversation" [class.open]="openInfoConversation">
     <page-info-conversation
     [tenant]=tenant
@@ -200,6 +201,7 @@
     [conversationWith]= conversationWith
     (eventClose)="returnCloseInfoConversation()"
     (eventOpenInfoUser)="returnOpenInfoUser($event)"
+    (eventOpenInfoAdvanced)="returnOpenInfoAdvanced($event)"
     ></page-info-conversation>
 </div>
 
@@ -208,4 +210,11 @@
     [member]=memberSelected
     (eventClose)="returnCloseInfoUser()"
     ></page-info-user>
+</div>
+
+<div id="chat21-info-advanced" class="modal-page" [class.open]="openInfoAdvanced">
+    <page-info-advanced *ngIf="openInfoAdvanced"
+    [attributes]=advancedAttributes
+    (eventClose)="returnCloseInfoAdvanced()"
+    ></page-info-advanced>
 </div>

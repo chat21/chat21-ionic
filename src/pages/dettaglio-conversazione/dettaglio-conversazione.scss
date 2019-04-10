@@ -409,7 +409,8 @@ page-dettaglio-conversazione {
             display: inline;
         }
 
-        #chat21-info-user {
+        #chat21-info-user,
+        #chat21-info-advanced {
             position: absolute;
             height: 100%;
             width: 0px;
@@ -540,8 +541,12 @@ page-dettaglio-conversazione {
         #chat21-info-conversation.open {
             max-width: 100%;
         }
-        #chat21-info-user.open {
-            max-width: 100%;
+        #chat21-info-user,
+        #chat21-info-advanced{
+            .open {
+                max-width: 100%;
+            }
         }
+        
     }    
 }

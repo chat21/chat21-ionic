@@ -4,6 +4,15 @@ page-info-conversation {
     padding: 0px;
     margin: 0px;
 
+    .ios-arrow-forward {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        line-height: 24px; 
+        vertical-align: middle;
+        color: map-get($colors, c21-gray);
+    }
+
     ion-navbar {
         .toolbar-background{
             /* height: 55px; */
@@ -19,6 +28,7 @@ page-info-conversation {
         text-decoration: none;
         cursor: pointer;
         font-weight: normal;
+        position: relative;
     }
    
     .c21-label {
@@ -111,7 +121,7 @@ page-info-conversation {
 
     }
     .c21-member:hover {
-        background-color: rgba(158, 158, 158, 0.1);
+        background-color: rgba(158, 158, 158, 0.0);
     }
 
     .card {
@@ -415,6 +425,7 @@ page-info-conversation {
                 color: #488aff;
                 text-decoration: none;
                 cursor: pointer;
+                position: relative;
 
                 .c21-button-label {
                     font-size: 13px;

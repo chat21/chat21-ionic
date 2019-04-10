@@ -10,6 +10,7 @@
   "LABEL_TO": "at",
   "ARRAY_DAYS": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
 
+  "ID_CONVERSATION": "Id conversation",
   "LABEL_CREATED_THE": "group created on",
   "LABEL_INFO_ATTRIBUTE": "Attributes",
   "LABEL_INFO_ADVANCED": "Advanced",
