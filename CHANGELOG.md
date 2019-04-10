@@ -6,7 +6,14 @@
 - (da fare) aggiungo br nel messaggio
 - (da fare) ottimizzare view contatti (css header, titolo, <-, img profile, cache)
 
-### 1.0.13-beta-1
+### 1.0.14
+- disabled cache conversations
+- fixes bug send image
+- fixes bug splash-screen on browser platform
+- hidden users list on "tiledesk" domain
+- disabled sync users on "tiledesk" domain
+
+### 1.0.13
 - add tab info advanced
 - add angular-linky
 - fixes bug status online/offline
