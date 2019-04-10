@@ -86,7 +86,7 @@ export class UpdateImageProfilePage {
       // For instance, get the download URL: https://firebasestorage.googleapis.com/...
       var downloadURL = uploadTask.snapshot.downloadURL;
       const urlNodeConcacts = contactsRef(tenant) + uidContact + '/imageurl/';
-      console.log('Uploaded a blob or file! ', urlNodeConcacts);
+      console.log('2 Uploaded a blob or file! ', urlNodeConcacts);
       firebase.database().ref(urlNodeConcacts).set(downloadURL);
     });
     // .then(function(snapshot) {

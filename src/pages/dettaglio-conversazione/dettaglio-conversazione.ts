@@ -871,30 +871,59 @@ export class DettaglioConversazionePage extends _DetailPage{
     const file = this.selectedFiles.item(0);
     console.log('Uploaded a file! ', file);
     const currentUpload = new UploadModel(file);
-    this.upSvc.pushUploadMessage(currentUpload)
-    .then(function(snapshot) {
-      console.log('Uploaded a blob or file! ', snapshot.downloadURL);
-      // metadata.src = snapshot.downloadURL;
-      // that.sendMessage('', type_msg, metadata);
+    let uploadTask = this.upSvc.pushUploadMessage(currentUpload)
 
-
-      metadata.src = snapshot.downloadURL;
-      let type_message = TYPE_MSG_TEXT;
-      let message = 'File: ' + metadata.src;
-      if (metadata.type.startsWith('image')) {
-          type_message = TYPE_MSG_IMAGE;
-          message = 'Image: ' + metadata.src;
-      }
-      that.sendMessage(message, type_message, metadata);
-
-
-    })
-    .catch(function(error) {
-      // Handle Errors here.
+    // Register three observers:
+    // 1. 'state_changed' observer, called any time the state changes
+    // 2. Error observer, called on failure
+    // 3. Completion observer, called on successful completion
+    uploadTask.on('state_changed', function(snapshot){
+      // Observe state change events such as progress, pause, and resume
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+    }, function(error) {
+      // Handle unsuccessful uploads
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log('error: ', errorCode, errorMessage);
+    }, function() {
+      // Handle successful uploads on complete
+      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        console.log('File available at', downloadURL);
+        
+        metadata.src = downloadURL;
+        let type_message = TYPE_MSG_TEXT;
+        let message = 'File: ' + metadata.src;
+        if (metadata.type.startsWith('image')) {
+            type_message = TYPE_MSG_IMAGE;
+            message = 'Image: ' + metadata.src;
+        }
+        that.sendMessage(message, type_message, metadata);
+      });
     });
+
+
+    // .then(function(snapshot) {
+    //   console.log('1 Uploaded a blob or file! ', snapshot);
+    //   // metadata.src = snapshot.downloadURL;
+    //   // that.sendMessage('', type_msg, metadata);
+    //   metadata.src = snapshot.downloadURL;
+    //   let type_message = TYPE_MSG_TEXT;
+    //   let message = 'File: ' + metadata.src;
+    //   if (metadata.type.startsWith('image')) {
+    //       type_message = TYPE_MSG_IMAGE;
+    //       message = 'Image: ' + metadata.src;
+    //   }
+    //   that.sendMessage(message, type_message, metadata);
+    // })
+    // .catch(function(error) {
+    //   // Handle Errors here.
+    //   const errorCode = error.code;
+    //   const errorMessage = error.message;
+    //   console.log('error: ', errorCode, errorMessage);
+    // });
     console.log('reader-result: ', file);
   }
   /**
