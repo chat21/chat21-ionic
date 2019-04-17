@@ -47,6 +47,7 @@
       <div id="chat21-contentScroll">
         <ion-list no-lines>
           <div *ngFor="let message of messages">
+
             <div *ngIf="message && message.headerDate && message.headerDate != ''">
               <ion-item text-wrap>
                 <div class="rowDay">
@@ -57,6 +58,7 @@
 
             <ion-item class="itemMessage" text-wrap>
               <span *ngIf="isSender(message); then contentMine else contentOther"></span>
+              
               <ng-template #contentMine>
                 <div class="statusMessage">
                   <ion-icon *ngIf="!message.status" name="ios-clock-outline" style="font-size: 1.3em;"></ion-icon>
@@ -65,11 +67,10 @@
                 </div>
                 <div class="message message-mine" (mouseover)="showButtonInfo()">
                   <span class="buttonInfo" (click)="presentPopover($event, message)"> </span>
-                  <img *ngIf="message.type == 'image';" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
-                  [height]="getSizeImg(message).height" />
-                  <!-- <div *ngIf="message.type == 'file';" class="message-content message-content-text">
-                    <a href=message.metadata.src target="_blank">X1 message.metadata.name?message.metadata.name:message.metadata.src</a>
-                  </div> -->
+                  <div *ngIf="message.type == 'image';" (click)="popupUrl(message.metadata.src,'windowName')">
+                      <img class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
+                      [height]="getSizeImg(message).height" />
+                  </div>
                   <div *ngIf="message.type == 'file';" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
                   <div *ngIf="message.type == 'text';">
                     <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
@@ -77,13 +78,14 @@
                       <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{strip_tags(message.text)}}</div>
                     </ng-template>
                     <ng-template #contentNewTab>
-                  
-                      <!-- <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div> -->
+                      <!-- <div class="message-content message-content-text" [innerHTML]="convertMessageAndUrlify(message.text)"></div> [innerHTML]="message.text | linky" {{message.text | linky}} -->
                       <div class="message-content message-content-text" [innerHTML]="message.text | linky"></div>
                     </ng-template>
                   </div>
-                  <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
+                  <!-- <div [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div> -->
+      
                 </div>
+                <div class="message-timestamp right">{{message.timestamp | date: 'H:mm'}}</div>
               </ng-template>
 
               <ng-template #contentOther>
@@ -102,8 +104,10 @@
                   <div class="message message-other" (mouseover)="showButtonInfo()">
                     <span class="buttonInfo" [ngClass]="message.uid" (click)="presentPopover($event, message)">
                     </span>
-                    <img *ngIf="isImage(message);" class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
+                    <div *ngIf="isImage(message);" (click)="popupUrl(message.metadata.src,'windowName')">
+                      <img class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width"
                       [height]="getSizeImg(message).height" />
+                    </div>
                     <div *ngIf="isFile(message);" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>
                     <!-- <div *ngIf="isFile(message);" class="message-content message-content-text">
                       <a href=message.metadata.src target="_blank">X2 message.metadata.name?message.metadata.name:message.metadata.src</a>
@@ -119,8 +123,10 @@
                         <div class="message-content message-content-text" [innerHTML]="message.text | linky"></div>
                       </ng-template>
                     </div>
-                    <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span>
+                    <!-- <span [class.image]="message.type == 'image'" class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</span> -->
                   </div>
+
+                  <div class="message-timestamp">{{message.timestamp | date: 'H:mm'}}</div>
               </ng-template>
             </ion-item>
           </div>
@@ -157,7 +163,7 @@
 
           <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-reset" (click)="resetLoadImage()"></div>
           <div [class.active]="isFileSelected" class="chat21-textarea-button" id="chat21-button-send" (click)="loadImage()"></div>
-          <input [disabled]="!conversationEnabled" style='display:none' type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf"
+          <input [disabled]="!conversationEnabled" style='display:none' type="file" accept="image/*,.pdf,.zip"
             name="chat21-file" id="chat21-file" class="inputfile" (change)="detectFiles($event)" />
 
         </ion-col>
@@ -170,13 +176,16 @@
           </div>
 
           <div class="button_send">
-            <button [disabled]="!conversationEnabled" ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active"
+            <button [disabled]="!conversationEnabled" ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active" (focus)="doScroll()" (click)="controlOfMessage(messageString)">
+              <span>{{ 'LABEL_SEND' | translate }}</span>
+            </button>
+            <!-- <button [disabled]="!conversationEnabled" ion-button clear *ngIf="messageString && messageString.trim()!=''" class="message-editor-button right active"
               (focus)="doScroll()" (click)="controlOfMessage(messageString)">
               <ion-icon name="send" isActive="true"></ion-icon>
             </button>
             <button disabled ion-button clear *ngIf="!messageString || messageString.trim()==''" class="message-editor-button right inactive">
               <ion-icon name="send" isActive="false"></ion-icon>
-            </button>
+            </button> -->
           </div>
         </ion-col>
       </ion-row>

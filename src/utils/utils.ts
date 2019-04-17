@@ -329,6 +329,14 @@ export function strip_tags(html){
     return (html.replace( /<.*?>/g, '' )).trim();
 }
 
+export function htmlEntities(str) {
+    return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 export function isExistInArray(members, currentUid){
   return members.includes(currentUid);
 }
@@ -406,7 +414,7 @@ export function convertMessage(messageText) {
 }
 
 function convert(str) {
-  //str = str.replace(/&/g, '&amp;');
+  str = str.replace(/&/g, '&amp;');
   str = str.replace(/>/g, '&gt;');
   str = str.replace(/</g, '&lt;');
   str = str.replace(/"/g, '&quot;');
@@ -425,9 +433,7 @@ export function getColorBck(str){
   if(str){
       var code = str.charCodeAt((str.length-1));
       num = Math.round(code%arrayBckColor.length);
-      console.log('************** code',str.length, code, arrayBckColor.length, num);
   }
-  console.log('getColorBck------------->',str, arrayBckColor[num]);
   return arrayBckColor[num];
 }
 
@@ -441,7 +447,7 @@ export function avatarPlaceholder(conversation_with_fullname) {
           }
       });
   }
-  console.log('avatarPlaceholder------------->', conversation_with_fullname, initials);
+  // console.log('avatarPlaceholder------------->', conversation_with_fullname, initials);
   return initials;
 }
 

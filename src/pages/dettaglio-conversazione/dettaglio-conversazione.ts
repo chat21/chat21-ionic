@@ -19,7 +19,7 @@ import { InfoUserPage } from '../info-user/info-user';
 import { PopoverPage } from '../popover/popover';
 // utils
 import { TYPE_SUPPORT_GROUP, TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA,MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, TYPE_GROUP } from '../../utils/constants';
-import { isURL, isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
+import { htmlEntities, isURL, isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
 import { ConversationModel } from '../../models/conversation';
@@ -80,7 +80,7 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   private advancedAttributes: any = [];
   private openInfoAdvanced: boolean = false;
-  
+
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
   MSG_STATUS_RETURN_RECEIPT = MSG_STATUS_RETURN_RECEIPT;
@@ -88,7 +88,6 @@ export class DettaglioConversazionePage extends _DetailPage{
   isPopupUrl = isPopupUrl;
   popupUrl = popupUrl;
   strip_tags = strip_tags;
-  
   convertMessageAndUrlify = convertMessageAndUrlify;
   
   constructor(
@@ -707,7 +706,7 @@ export class DettaglioConversazionePage extends _DetailPage{
 
   /** */
   showButtonInfo(){
-    console.log('showButtonInfo');
+    //console.log('showButtonInfo');
   }
   /**
    * 
@@ -755,10 +754,10 @@ export class DettaglioConversazionePage extends _DetailPage{
    * @param event 
    */
   detectFiles(event) {
-    console.log('event: ', event.target.files[0].name, event.target.files);
-    if (event) {
+    if (event && event.target && event.target.files) {
       this.selectedFiles = event.target.files;
       this.fileChange(event);
+      console.log('event: ', event.target.files);
     }
   }
 
@@ -949,7 +948,6 @@ export class DettaglioConversazionePage extends _DetailPage{
     }
     return false;
   }
-  
 
 }
 

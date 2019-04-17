@@ -10,7 +10,7 @@ import { UserModel } from '../models/user';
 //import { ChatManager } from './chat-manager/chat-manager';
 // utils
 import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER } from '../utils/constants';
-import { replaceBr, compareValues, urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
+import { htmlEntities, replaceBr, compareValues, urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from '../../node_modules/rxjs/BehaviorSubject';
 
@@ -119,6 +119,7 @@ export class ChatConversationHandler {
       let messageText = itemMsg['text'];
       if (itemMsg['type'] == 'text') {
         //messageText = urlify(itemMsg['text']);
+        messageText = htmlEntities(itemMsg['text']);
       }
 
       if (itemMsg['metadata']) {
@@ -170,6 +171,7 @@ export class ChatConversationHandler {
       let messageText = itemMsg['text'];
       if (itemMsg['type'] == 'text') {
         //messageText = urlify(itemMsg['text']);
+        messageText = htmlEntities(itemMsg['text']);
       }
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
       const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type']);

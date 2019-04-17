@@ -70,6 +70,7 @@ page-dettaglio-conversazione {
             // min-height: auto!important;
             min-height: 30px!important;
             margin-bottom: 10px;
+            padding-bottom: 15px;
         }
         .itemMessage {
             height: 100%;
@@ -91,6 +92,7 @@ page-dettaglio-conversazione {
     
         .messagesView {
             height: 100%;
+            border-width: 0px;
             // background-image: url('../assets/chat21-ionic-pattern-2.svg');
             .messageFirst{
                 text-align: center;
@@ -116,15 +118,32 @@ page-dettaglio-conversazione {
         }
           
         // single message 
+        .message-timestamp {
+            color: #666666;
+            padding: 0px 4px 0px 0px;
+            font-size: x-small;
+            position: absolute;
+            bottom: -4px;
+        }
+        .message-timestamp.right {
+            text-align: right;
+            right: 24px;
+        }
         .message{
             display: inline-block;
             position: relative;
-            // max-width: 45vh;
-            // max-width: 100%;
             border-radius: 10px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
             font-size: 14px;
+
+            // min-width: 38px;
+            // min-height: 31px;
     
+            img{
+                cursor: pointer;
+                background-color: #ffffff;
+            }
+
             &.message-mine {
                 float: right;
                 background-color: #0b5c89;
@@ -165,9 +184,6 @@ page-dettaglio-conversazione {
                 }
             }
 
-            .message-timestamp.image{
-                // background-color: #ffffff;
-            }
 
             &.message-other::before, &.message-mine::before {
                 content: "";
@@ -202,7 +218,10 @@ page-dettaglio-conversazione {
             .message-content-image{
                 border-radius: 8px 8px 4px 4px;
                 padding: 0px;
-                margin: 2px 2px 10px 2px;
+                margin: 0px 0px 0px 0px;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
             }            
         }
 
@@ -256,14 +275,14 @@ page-dettaglio-conversazione {
                 // width: calc(100% - 40px);
             }
             .message-editor-button {
-                font-size: 1.4em;
+                font-size: 0.8em;
                 position: absolute;
                 bottom: 2px;
                 padding: 0px;
                 height: 30px;
     
                 &.right{
-                    font-size: 2em;
+                    font-size: 0.8em;
                 }
                 &.inactive{
                     color:rgba(11, 92, 137, 0.30)
@@ -272,6 +291,10 @@ page-dettaglio-conversazione {
                     color: #0b5c89;
                 }
             }
+            .message-editor-button:hover {
+                background-color: rgba(158, 158, 158, 0.0);
+            }
+
 
             .chat21-icon {
                 font-size: 1.4em;
@@ -414,7 +437,7 @@ page-dettaglio-conversazione {
             position: absolute;
             height: 100%;
             width: 0px;
-            display: block;
+            display: none;
             opacity: 0;
             &.open {
                 width: 100%;
@@ -422,11 +445,12 @@ page-dettaglio-conversazione {
                 z-index: 100;
                 right: 0px;
                 top: 0px;
+                display: block;
             }
             &.modal-page{
                 border-left-style: inset;
                 border-color: map-get($colors, c21-gray-10);
-                border-left-width: 0;
+                border-left-width: thin;
                 opacity: 1;
                 transition: all 0.4s 0.1s;
             }

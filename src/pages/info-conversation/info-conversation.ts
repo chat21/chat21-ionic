@@ -1074,14 +1074,15 @@ setDetailUser(snapshot) {
     var advancedAttributes = []
     var item: any = {}
     if(this.channelType == TYPE_GROUP){
-      item['key'] = "ID_CONVERSATION";
-      item['value'] = this.groupDetail.uid;
+      item = {"key":"ID_CONVERSATION", "value": this.groupDetail.uid}
+      advancedAttributes.push(item)
+      item = {"key":"LABEL_CREATED_THE", "value": this.groupDetail.createdOn}
+      advancedAttributes.push(item)
     } else {
       item = {"key":"ID_CONVERSATION", "value": this.userDetail.uid}
+      advancedAttributes.push(item)
     }
-    advancedAttributes.push(item)
-    item = {"key":"LABEL_CREATED_THE", "value": this.groupDetail.createdOn}
-    advancedAttributes.push(item)
+    
     // advancedAttributes['createdOn'] = this.groupDetail.createdOn
     this.customAttributes.forEach(attr => {
       //advancedAttributes[attr.key] = attr.value

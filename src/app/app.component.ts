@@ -31,7 +31,6 @@ export class MyApp {
   pages: Array<{title: string, component: any}>;
   isNavBar: string;
   notificationsEnabled: boolean;
-
   firebaseConfig = environment.firebaseConfig;
   
   /**

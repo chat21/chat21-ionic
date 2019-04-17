@@ -52,9 +52,9 @@ export class ListaConversazioniPage extends _MasterPage {
   private uidConvSelected: string;
   private profileModal: Modal;
   private BUILD_VERSION: string;
+  private isHostname: boolean;
 
   convertMessage = convertMessage;
-  isHostname = isHostname;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -75,6 +75,7 @@ export class ListaConversazioniPage extends _MasterPage {
     private chatArchivedConversationsHandler: ChatArchivedConversationsHandler
   ) {
     super();
+    this.isHostname = isHostname();
     this.BUILD_VERSION = 'v.' + PACKAGE.version; // 'b.0.5';
 
     // /** RECUPERO ID CONVERSAZIONE

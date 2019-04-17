@@ -9,6 +9,7 @@
     "LABEL_LAST_ACCESS": "ultimo accesso",
     "LABEL_TO": "alle",
     "ARRAY_DAYS": ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"],
+    "LABEL_SEND": "Invia",
 
     "ID_CONVERSATION": "Id conversazione",
     "LABEL_CREATED_THE": "gruppo creato il ",
@@ -97,6 +98,9 @@
     "LABEL_ENTER_MSG": "Scrivi un messaggio",
 
     "LABEL_MSG_LOGIN_TILEDESK": "Effettua il login per iniziare a chattare",
-    "LABEL_ARCHIVED": "Archiviate"
+    "LABEL_ARCHIVED": "Archiviate",
+
+    "LABEL_INFO_CONVERSATION": "Info conversatione",
+    "LABEL_INFO_USER": "Info utente"
 
 }

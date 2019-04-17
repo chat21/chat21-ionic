@@ -6,6 +6,17 @@
 - (da fare) aggiungo br nel messaggio
 - (da fare) ottimizzare view contatti (css header, titolo, <-, img profile, cache)
 
+### 1.0.15
+- change css modal PopoverPage
+- change css footer conversation detail
+- change css ballons conversation detail
+- change css info conversation
+- enabled send message with html tags 
+- enabled send all image type
+- enabled send files pdf, zip
+- fixes bug send second image
+- open detail image in new tab browser
+
 ### 1.0.14
 - disabled cache conversations
 - fixes bug send image
