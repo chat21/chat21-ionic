@@ -13,8 +13,8 @@
   <button ion-item (click)="openArchivedConversationsPage()">{{ 'LABEL_CLOSED' | translate }}</button>
   <button ion-item (click)="openInfo()">{{ 'LABEL_INFO' | translate }}</button>
   <button *ngIf="!isHostname()" ion-item (click)="logOut()">{{ 'LABEL_DISCONNECT' | translate }}</button>
-  
 </ion-list>
+
 <ion-list *ngIf="type===TYPE_POPUP_DETAIL_MESSAGE">
     <!--<ion-list-header>Ionic</ion-list-header>-->
     <button ion-item (click)="goToInfoMessage()">{{ 'LABEL_INFO_MESSAGE' | translate }}</button>

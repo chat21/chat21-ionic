@@ -20,14 +20,12 @@
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="SplashShowOnlyFirstTime" value="true" />
     <preference name="SplashScreenDelay" value="3000" />
-    <preference name="SplashScreen" value="screen" />
+    <preference name="SplashScreen" value="assets/splash_white.jpg" />
     <preference name="FadeSplashScreenDuration" value="0" />
     <preference name="StatusBarBackgroundColor" value="#ffffff" />
     <platform name="browser">
-        <preference name="SplashScreen" value="assets/splash.png" />
+        <preference name="SplashScreen" value="assets/transparent.png" />
         <preference name="AutoHideSplashScreen" value="true" />
-        <preference name="SplashScreenWidth" value="2732" />
-        <preference name="SplashScreenHeight" value="2732" />
         <preference name="SplashScreenBackgroundColor" value="white" />
         <preference name="SplashScreenDelay" value="0" />
     </platform>

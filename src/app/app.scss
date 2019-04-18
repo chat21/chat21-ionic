@@ -43,7 +43,10 @@ body {
     overflow: hidden!important;
     text-overflow: ellipsis!important;
 }
-  
+
+.popover-md .popover-content{
+    width: auto!important;
+}
 
 ion-backdrop{  
     display: block;

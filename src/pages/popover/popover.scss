@@ -1,5 +1,23 @@
 page-popover {
     .list{
-        margin: -1px 0 0px;
+        margin: 4px 0px;
+    
+        .item{
+            font-size: 1.4rem;
+            padding: 0px 20px;
+            color: map-get($colors, c21-dark);
+            min-height: auto;
+            .item-inner{
+                padding: 0px;
+                border-bottom: 0px;
+            }
+        }
+        .item:hover {
+            background-color: whitesmoke;
+        }
+        .label{
+            margin: 5px 0px;
+        }
     }
+
 }

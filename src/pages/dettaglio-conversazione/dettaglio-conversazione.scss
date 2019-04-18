@@ -473,7 +473,7 @@ page-dettaglio-conversazione {
             right: 0px;
             top: 0px;
             border-left-style: inset;
-            border-color: rgba(0, 0, 0, .15);
+            border-color: map-get($colors, c21-gray-10);
             border-left-width: thin;
             display: inline;
         }
