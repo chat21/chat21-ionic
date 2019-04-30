@@ -1,13 +1,5 @@
 # chat21-ionic ver 1.0
 
-### next release 
-- (fatto) immagine senza bordo nel msg conversazione
-- (fatto) apri immagine nel dettaglio conversazione in una nw finestra
-- (da fare) aggiungere gallery immagini
-- (da fare) aggiungo br nel messaggio
-- (da fare) ottimizzare view contatti (css header, titolo, <-, img profile, cache)
-- (da fare) visualizzare alert errore su browser che non supportano sdk firebase
-- (da fare) se ho abbandonato il gruppo disabilito campo input
 
 ### 1.0.15
 - change css modal PopoverPage
