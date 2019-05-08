@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 1.0.16
+- fixes bug contacts in chat-manager
+
 
 ### 1.0.15
 - change css modal PopoverPage

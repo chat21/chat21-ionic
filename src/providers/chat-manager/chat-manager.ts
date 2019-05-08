@@ -33,6 +33,7 @@ export class ChatManager {
   public contactsSynchronizer: ChatContactsSynchronizer;
   public openInfoConversation: boolean;
 
+
   constructor(
     public events: Events,
     public chatContactsSynchronizer: ChatContactsSynchronizer
@@ -122,11 +123,15 @@ export class ChatManager {
     // //this.msgService.getToken(user);
     //console.log(" 3 - PUBBLICO STATO LOGGEDUSER: LOGIN");
     //this.conversationsHandler = this.chatConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
-    
-    if(!isHostname){
+    if(isHostname() === false) {
+      console.log(" goOnLine: isHostname", isHostname());
       this.initContactsSynchronizer();
     }
     this.events.publish('loggedUser:login', this.loggedUser);
+  }
+
+  private newMethod() {
+    return false;
   }
 
   /**
@@ -220,6 +225,7 @@ export class ChatManager {
    * inizio la sincronizzazione
    */
   initContactsSynchronizer() {
+    console.log(" initContactsSynchronizer:: ", this.contactsSynchronizer, this.tenant, this.loggedUser);
     if (!this.contactsSynchronizer) {
       this.contactsSynchronizer = this.chatContactsSynchronizer.initWithTenant(this.tenant, this.loggedUser);
       //this.contactsSynchronizer = this.createContactsSynchronizerForUser();

@@ -37,8 +37,10 @@ export class ChatContactsSynchronizer {
      */
     startSynchro(){
         let that = this;
+        console.log("startSynchro: ");
         this.databaseProvider.getTimestamp()
         .then(function(lastUpdate) { 
+            console.log("lastUpdate: ", lastUpdate);
             that.loadFirebaseContactsData(lastUpdate);
         });
     }
