@@ -508,8 +508,8 @@ export function isURL(str: string) {
 
 export function isHostname(){
   const hostname = window.location.hostname;
-  console.log("hostname: ", hostname);
-  console.log("BASE_URL_HOSTNAME: ", BASE_URL_HOSTNAME);
+  // console.log("hostname: ", hostname);
+  // console.log("BASE_URL_HOSTNAME: ", BASE_URL_HOSTNAME);
   if(hostname === BASE_URL_HOSTNAME){return true}
   return false
 }

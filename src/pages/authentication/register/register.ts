@@ -64,18 +64,19 @@ export class RegisterPage {
   createAccount(){
     this.submitAttempt = true;
     if (!this.registerForm.valid){
-      // console.log(this.registerForm.value);
+      console.log(this.registerForm.value);
       // non faccio nulla perchè gli errori sono evidenziati in rosso nella pg html
     } else {
       console.log("createAccount", this.authService);
       this.authService.register(this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.firstname, this.registerForm.value.lastname)
       .then((newUser) => {
         // creo current user detail
-        console.log("register",newUser.uid, this.userService);
-        this.userService.saveCurrentUserDetail(newUser.uid, this.registerForm.value.email, this.registerForm.value.firstname, this.registerForm.value.lastname)
+        console.log("register::: ",newUser.user, this.userService);
+        this.userService.saveCurrentUserDetail(newUser.user.uid, this.registerForm.value.email, this.registerForm.value.firstname, this.registerForm.value.lastname)
         .then(_ => {
           console.log('success saveCurrentUserDetail');
           this.viewCtrl.dismiss({animate: false, duration: 0});
+          this.loading.dismiss();
           // this.loading.dismiss().then( () => {
           //   //dismetto la modale ricarico lista conversazioni passando user
           //   //this.loading.dismiss();

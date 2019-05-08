@@ -2,6 +2,7 @@
 
 ### 1.0.16
 - fixes bug contacts in chat-manager
+- fixes bug new user registration
 
 
 ### 1.0.15
