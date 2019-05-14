@@ -18,6 +18,7 @@ With Chat21-ionic you can:
 # Live Demo #
 Visit https://web.chat21.org/ to see a live demo of chat21-ionic.
 <img src="https://user-images.githubusercontent.com/9556761/57690553-2e680980-7642-11e9-8840-b486f91ed283.jpg" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
+<img src="https://user-images.githubusercontent.com/9556761/57690579-3de75280-7642-11e9-927d-adad585a6ba2.jpg" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
 
 # Documentation #
 In progress
