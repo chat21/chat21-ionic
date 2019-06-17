@@ -1,11 +1,13 @@
+import { firebaseConfig } from '../environments/firebase-config'; // please comment on this line when changing the values ​​of firebase {}
+
 export const environment = {
     production: false,
     firebaseConfig : {
-        apiKey: 'AIzaSyDWMsqHBKmWVT7mWiSqBfRpS5U8YwTl7H0',
-        authDomain: 'chat-v2-dev.firebaseapp.com',
-        databaseURL: 'https://chat-v2-dev.firebaseio.com',
-        projectId: 'chat-v2-dev',
-        storageBucket: 'chat-v2-dev.appspot.com',
-        messagingSenderId: '77360455507'
+        apiKey: firebaseConfig.apiKey,
+        authDomain: firebaseConfig.authDomain,
+        databaseURL: firebaseConfig.databaseURL,
+        projectId: firebaseConfig.projectId,
+        storageBucket: firebaseConfig.storageBucket,
+        messagingSenderId: firebaseConfig.messagingSenderId
     }
   }
