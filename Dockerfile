@@ -21,8 +21,10 @@ COPY nginx.conf /etc/nginx/nginx.conf
 ## Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
 
+
+COPY platforms/browser/www/ /usr/share/nginx/html
+
 WORKDIR /usr/share/nginx/html
-COPY platforms/browser/www/ .
 
 RUN echo "Chat21 Ionic Started!!"
 
