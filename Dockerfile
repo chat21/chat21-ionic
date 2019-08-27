@@ -21,8 +21,8 @@ COPY nginx.conf /etc/nginx/nginx.conf
 ## Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
 
+COPY --from=builder /app/platforms/browser/www/ /usr/share/nginx/html
 
-COPY /app/platforms/browser/www/ /usr/share/nginx/html
 
 WORKDIR /usr/share/nginx/html
 
