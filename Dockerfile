@@ -3,6 +3,8 @@
 # We label our stage as ‘builder’
 FROM node:10-alpine as builder
 
+RUN npm install -g ionic cordova
+
 WORKDIR /app
 
 COPY . ./
