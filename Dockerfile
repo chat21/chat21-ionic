@@ -22,7 +22,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /usr/share/nginx/html/*
 
 
-COPY platforms/browser/www/ /usr/share/nginx/html
+COPY /app/platforms/browser/www/ /usr/share/nginx/html
 
 WORKDIR /usr/share/nginx/html
 
