@@ -3,7 +3,7 @@
 # We label our stage as ‘builder’
 FROM node:10-alpine as builder
 
-RUN npm install -g ionic cordova
+RUN npm install -g ionic cordova@8.0.0
 
 WORKDIR /app
 
