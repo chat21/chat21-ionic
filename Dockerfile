@@ -11,6 +11,7 @@ COPY . ./
 
 RUN npm install
 
+RUN mkdir ./www
 
 RUN cordova platform add browser@latest
 
