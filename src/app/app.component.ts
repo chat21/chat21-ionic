@@ -15,6 +15,7 @@ import { ChatManager } from '../providers/chat-manager/chat-manager';
 import { TranslateService } from '@ngx-translate/core';
 
 import { environment } from '../environments/environment';
+import { AppConfigProvider } from '../providers/app-config/app-config';
 
 @Component({
   templateUrl: 'app.html'
@@ -31,7 +32,7 @@ export class MyApp {
   pages: Array<{title: string, component: any}>;
   isNavBar: string;
   notificationsEnabled: boolean;
-  firebaseConfig = environment.firebaseConfig;
+  //firebaseConfig = environment.firebaseConfig;
   
   /**
    * 1 - init firebase
@@ -57,7 +58,8 @@ export class MyApp {
     public alertCtrl: AlertController,
     public msgService: MessagingService,
     public chatManager: ChatManager,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public appConfigProvider: AppConfigProvider
   ) {
     this.notificationsEnabled = true;
     this.zone = new NgZone({});
@@ -72,7 +74,14 @@ export class MyApp {
 
 
     //firebase.initializeApp(config.get("firebaseConfig"));
-    firebase.initializeApp(this.firebaseConfig);
+    //firebase.initializeApp(this.firebaseConfig);
+    if (!appConfigProvider.getConfig().firebase || appConfigProvider.getConfig().firebase.apiKey === 'CHANGEIT') {
+      // tslint:disable-next-line:max-line-length
+      throw new Error('firebase config is not defined. Please create your firebase-config.json. See the Chat21-Web_widget Installation Page');
+    }
+    firebase.initializeApp(appConfigProvider.getConfig().firebase);  // here shows the error
+
+
     platform.ready().then(() => {
       this.events.subscribe('requestPermission', this.callbackRequestPermission);
       // Okay, so the platform is ready and our plugins are available.

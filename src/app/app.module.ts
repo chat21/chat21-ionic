@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 
 import { HttpModule, Http } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
@@ -7,7 +7,7 @@ import { LinkyModule } from 'angular-linky';
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-
+import { environment } from '../environments/environment';
 
 
 //import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
@@ -61,13 +61,26 @@ import { ChatConversationHandler } from '../providers/chat-conversation-handler'
 import { ChatManager } from '../providers/chat-manager/chat-manager';
 import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronizer';
 
+
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TiledeskConversationProvider } from '../providers/tiledesk-conversation/tiledesk-conversation';
+import { AppConfigProvider } from '../providers/app-config/app-config';
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
+
+const appInitializerFn = (appConfig: AppConfigProvider) => {
+  return () => {
+    if (environment.remoteConfig) {
+      return appConfig.loadAppConfig();
+    }
+  };
+};
+
 
 @NgModule({
   declarations: [
@@ -138,6 +151,13 @@ export function createTranslateLoader(http: HttpClient) {
     ArchivedConversationsPage
   ],
   providers: [
+    AppConfigProvider, // https://juristr.com/blog/2018/01/ng-app-runtime-config/
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFn,
+      multi: true,
+      deps: [AppConfigProvider]
+    },
     //ApplicationContext,
     StatusBar,
     SplashScreen,
@@ -157,7 +177,7 @@ export function createTranslateLoader(http: HttpClient) {
     ChatConversationHandler,
     ChatContactsSynchronizer,
     GroupService,
-    TiledeskConversationProvider,
+    TiledeskConversationProvider
   ]
 })
 export class AppModule {}
