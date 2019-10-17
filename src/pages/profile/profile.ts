@@ -9,6 +9,8 @@ import { UserService } from '../../providers/user/user';
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 // pages
 import { PopoverProfilePage } from '../popover-profile/popover-profile';
+// utils
+import { isHostname } from '../../utils/utils';
 
 /**
  * Generated class for the ProfilePage page.
@@ -24,6 +26,7 @@ export class ProfilePage {
   public uidUser: string;
 
   public profileYourself: boolean;
+  isHostname = isHostname;
   //public selectedFiles: FileList;
   //public currentUpload: UploadModel;
   
@@ -66,6 +69,7 @@ export class ProfilePage {
       this.userService.loadUserDetail(this.uidUser);
     }
   }
+
   /**
    * metodo richiamato dalla pg html del current user 
    * alla pressione sul pulsante modifica della foto profillo

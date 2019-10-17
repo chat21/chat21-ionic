@@ -593,16 +593,18 @@ export class DettaglioConversazionePage extends _DetailPage{
     // ordino array x tempo decrescente
     // cerco messaggi non miei
     // prendo il primo
-    let msgRicevuti;
-    let attributes = [];
+    let msgRicevuti: any;
+    let attributes: any[] = [];
     try {
       msgRicevuti = this.messages.find(item => item.sender !== this.currentUserDetail.uid);
-      attributes = msgRicevuti.attributes;
+      if(msgRicevuti){
+        attributes = msgRicevuti.attributes;
+      }
+      console.log('msgRicevuti::::: ', msgRicevuti);
     } catch (err) {
-      console.error("DettaglioConversazionePage::onInfoConversation:error:", err)
+      console.log("DettaglioConversazionePage::onInfoConversation:error:", err)
     }
     //const msgRicevuti = this.messages.find(item => item.sender !== this.currentUserDetail.uid);
-    console.log('msgRicevuti::::: ', msgRicevuti);
     //console.log('onUidSelected::::: ', this.conversationWith,  this.openInfoConversation);
     //this.events.publish('onOpenInfoConversation', this.openInfoConversation, this.conversationWith, this.channel_type, attributes);
     //this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));

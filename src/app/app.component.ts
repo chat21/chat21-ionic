@@ -75,11 +75,12 @@ export class MyApp {
 
     //firebase.initializeApp(config.get("firebaseConfig"));
     //firebase.initializeApp(this.firebaseConfig);
-    if (!appConfigProvider.getConfig().firebase || appConfigProvider.getConfig().firebase.apiKey === 'CHANGEIT') {
+    
+    if (!appConfigProvider.getConfig().firebaseConfig || appConfigProvider.getConfig().firebaseConfig.apiKey === 'CHANGEIT') {
       // tslint:disable-next-line:max-line-length
       throw new Error('firebase config is not defined. Please create your firebase-config.json. See the Chat21-Web_widget Installation Page');
     }
-    firebase.initializeApp(appConfigProvider.getConfig().firebase);  // here shows the error
+    firebase.initializeApp(appConfigProvider.getConfig().firebaseConfig);  // here shows the error
 
 
     platform.ready().then(() => {

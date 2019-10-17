@@ -23,7 +23,7 @@
     <img class="clip-circle" *ngIf="profileYourself" src="{{this.currentUserDetail.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';">
     <img class="clip-circle" *ngIf="!profileYourself" src="{{this.userDetail.imageurl}}" alt="user" onError="this.src='assets/img/no_image.png';">
 
-    <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
+    <button *ngIf="profileYourself && !isHostname" class="icon_modify" icon-only (click)="presentPopover($event)">
       <ion-icon name="create"></ion-icon>
     </button>
   </div>

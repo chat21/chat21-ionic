@@ -77,7 +77,7 @@ export class DatabaseProvider {
   setTimestamp(){
     // settings
     let lastUpdate = getNowTimestamp();
-    //console.log("SALVO NEL DB DATA UPDATE:", lastUpdate);
+    // console.log("SALVO NEL DB DATA UPDATE:", lastUpdate);
     //const storageSettings = this.configStorage('settings');
     this.storageSettings.set('lastUpdate',lastUpdate);
   }
@@ -95,7 +95,7 @@ export class DatabaseProvider {
    */
   setUidLastOpenConversation(uid){
     // settings
-    console.log("SALVO NEL DB UID ULTIMA CHAT APERTA:", uid);
+    // console.log("SALVO NEL DB UID ULTIMA CHAT APERTA:", uid);
     //const storageSettings = this.configStorage('settings');
     //return storageSettings.set('uidLastOpenConversation',uid)
     this.storageSettings.set('uidLastOpenConversation',uid)

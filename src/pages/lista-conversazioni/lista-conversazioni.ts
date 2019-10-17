@@ -13,7 +13,7 @@ import { _MasterPage } from '../_MasterPage';
 import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
-import { convertMessage, windowsMatchMedia, isHostname } from '../../utils/utils';
+import { getParameterByName, convertMessage, windowsMatchMedia, isHostname } from '../../utils/utils';
 import { TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
 import * as PACKAGE from '../../../package.json';
 // services
@@ -46,6 +46,7 @@ export class ListaConversazioniPage extends _MasterPage {
   private tenant: string;
   private numberOpenConv: number = 0;
   private loadingIsActive: boolean = true;
+  private numberTotConv: number = 0;
 
   private uidReciverFromUrl: string;
   private conversationsHandler: ChatConversationsHandler;
@@ -53,9 +54,10 @@ export class ListaConversazioniPage extends _MasterPage {
   private profileModal: Modal;
   private BUILD_VERSION: string;
   private isHostname: boolean;
+  private timerIdOpenConversation: NodeJS.Timer;
 
   convertMessage = convertMessage;
-
+  
   constructor(
     public popoverCtrl: PopoverController,
     public modalCtrl: ModalController,
@@ -75,24 +77,21 @@ export class ListaConversazioniPage extends _MasterPage {
     private chatArchivedConversationsHandler: ChatArchivedConversationsHandler
   ) {
     super();
+    var that = this;
     this.isHostname = isHostname();
     this.BUILD_VERSION = 'v.' + PACKAGE.version; // 'b.0.5';
 
-    // /** RECUPERO ID CONVERSAZIONE
-    // * se vengo da dettaglio conversazione
-    // * o da users con conversazione attiva recupero conversationWith
-    // */
+    /** RECUPERO ID CONVERSAZIONE
+      * se vengo da dettaglio conversazione
+      * o da users con conversazione attiva recupero conversationWith
+      */
     this.uidConvSelected = navParams.get('conversationWith');
     this.tenant = chatManager.getTenant();
-
-    /** RECUPERO IL RECIPIENTID 
-    * nel caso in cui viene pasato nell'url della pagina
-    * per aprire una conversazione
-    * USARE getParameterByName(name) del widget
-    */
-    let TEMP = location.search.split('recipient=')[1];
-    if (TEMP) { this.uidReciverFromUrl = TEMP.split('&')[0]; }
-
+    
+    
+    /** OPEN CONVERSATION DETAIL (controllo ogni 3 sec) */
+    //this.getUidReciverFromUrl();
+    this.openConversationInPageDetail();
 
     /** SUBSCRIBE USER LOGGED
      * sul LOGIN:
@@ -110,7 +109,95 @@ export class ListaConversazioniPage extends _MasterPage {
     if (windowsMatchMedia()) {
       this.navProxy.pushDetail(PlaceholderPage, {});
     }
+    //this.openDetailConversation();
   }
+
+  /** RECUPERO IL RECIPIENTID 
+    * nel caso in cui viene pasato nell'url della pagina
+    * per aprire una conversazione
+    * USARE getParameterByName(name) del widget
+    */
+    // getUidReciverFromUrl(){
+    //   try{
+    //     let TEMP = getParameterByName('recipient');
+    //     if (TEMP) { 
+    //       this.uidReciverFromUrl = TEMP; 
+    //     }
+    //     TEMP = getParameterByName('recipientFullname');
+    //     if (TEMP) { 
+    //       this.uidReciverFromUrl = TEMP; 
+    //     }
+    //   } catch (err) {
+    //     console.error("-> error:", err)
+    //   }
+    // }
+
+  // openDetailConversation(){
+  //   const that = this;
+  //   /** RECUPERO IL RECIPIENTID dall'url */
+  //   if(!this.loggedUser){
+  //     this.loadingIsActive = false;
+  //     return;
+  //   }
+  //   try {
+  //     let TEMP = location.search.split('recipient=')[1];
+  //     if (TEMP) { 
+  //       this.uidReciverFromUrl = TEMP.split('&')[0]; 
+  //       this.setUidConvSelected(this.uidReciverFromUrl);
+  //       //this.goToChat(this.uidReciverFromUrl, this.uidReciverFromUrl);
+  //     } else {
+  //       this.loadingIsActive = false;
+  //     }
+  //   } catch (err) {
+  //     console.error("-> error:", err)
+  //     this.loadingIsActive = false;
+  //   }
+  //   this.showDetailConversation();
+  // }
+
+  /** 
+   * imposto un setInterval di 3 sec
+   * verifico se il num delle conversazioni è aumentato
+   * se sono cambiate aggiorno numberTotConv per rifare il controllo
+   * altrimenti se esiste già una conversazione con l'utente passato nell'url (uidReciverFromUrl):
+   *  - apro dettaglio conversazione 
+   *  - altrimenti creo una nuova conversazione
+   * cancello intervallo;
+   * NOTA: da spostare nella classe di service delle conversazioni e utilizzare con una sottoscrizione
+   */
+  openConversationInPageDetail(){
+    var that = this;
+    this.timerIdOpenConversation = setInterval(function() {
+      if(that.conversations.length > that.numberTotConv){
+        that.numberTotConv = that.conversations.length;
+      } else {
+        let uidReciverFromUrlTEMP = getParameterByName('recipient');
+        if (uidReciverFromUrlTEMP) { 
+          that.uidReciverFromUrl = uidReciverFromUrlTEMP; 
+        }
+        let recipientFullnameTEMP = getParameterByName('recipientFullname');
+        if(!recipientFullnameTEMP){
+          recipientFullnameTEMP = uidReciverFromUrlTEMP;
+        }
+        if (that.uidReciverFromUrl && windowsMatchMedia()) {
+          console.log('************** conversationsChanged: '+that.conversations.length);
+          const conversationSelected = that.conversations.find(item => item.uid === that.uidReciverFromUrl);
+          if (conversationSelected) {
+            that.setUidConvSelected(conversationSelected.uid);
+            that.openMessageList();
+          } else {
+            that.goToChat(uidReciverFromUrlTEMP, recipientFullnameTEMP);
+          }
+          that.uidReciverFromUrl = null;
+        } else if (that.uidConvSelected && windowsMatchMedia()) {
+          that.setUidConvSelected(that.uidConvSelected);
+          that.openMessageList();
+        }
+        clearInterval(that.timerIdOpenConversation);
+      }
+    }, 2000);
+  }
+
 
   //// SUBSCRIBTIONS ////
   /** */
@@ -125,28 +212,53 @@ export class ListaConversazioniPage extends _MasterPage {
   /** 
    * evento richiamato quando ho finito di caricare le conversazioni dallo storage
   */
-  loadedConversationsStorage: any = conversations => {
-    console.log('************** loadedConversationsStorage');
-    if(conversations && conversations.length > 0 ){
-      this.conversations = conversations;
-      this.numberOpenConv = this.conversationsHandler.countIsNew();
-    }
-    this.showDetailConversation();
-  }
+  // loadedConversationsStorage: any = conversations => {
+  //   console.log('************** loadedConversationsStorage');
+  //   if(conversations && conversations.length > 0 ){
+  //     this.conversations = conversations;
+  //     this.numberOpenConv = this.conversationsHandler.countIsNew();
+  //   }
+  //   this.showDetailConversation();
+  // }
   /** 
    * evento richiamato su add, change, remove di una conversazione
-   * se uidConvSelected è null (la prima volta cha apro la chat)
+   * se uidConvSelected è null (la prima volta che apro la chat)
    * imposto prima conv come uidConvSelected 
   */
   conversationsChanged = (conversations: ConversationModel[]) => {
-    // if(!this.uidConvSelected){
-    //   this.setUidConvSelected(conversations[0].uid);
-    //   this.showDetailConversation();
-    // }
-    
+    var that = this;
     this.conversations = conversations;
     this.numberOpenConv = this.conversationsHandler.countIsNew();
+  
+    // setTimeout(function () {
+    //     // controllo se la conv è aperta 
+    //     if (that.uidReciverFromUrl && windowsMatchMedia()) {
+    //       console.log('************** conversationsChanged: '+that.conversations.length);
+    //       that.setUidConvSelected(that.uidReciverFromUrl);
+    //       that.openMessageList();
+    //       that.uidReciverFromUrl = null;
+    //     } 
+    // }, 1000);
+    
+
   }
+
+  /**
+   * metodo invocato dalla pagina html alla selezione dell'utente
+   * imposta conversazione attiva nella pagina elenco conversazioni
+   * carica elenco messaggi conversazione nella pagina conversazione
+   * @param conversationWith 
+   */
+  goToChat(conversationWith: string, conversationWithFullname: string) {
+    console.log('**************** goToChat conversationWith:: ',conversationWith);
+    //pubblico id conv attiva e chiudo pagina 
+    this.events.publish('uidConvSelected:changed', conversationWith, 'new');
+    this.navProxy.pushDetail(DettaglioConversazionePage,{ 
+      conversationWith:conversationWith,
+      conversationWithFullname:conversationWithFullname 
+    });
+  }
+
 
   archivedConversationsChanged = (conversations: ConversationModel[]) => {
     this.archivedConversations = conversations;
@@ -168,6 +280,7 @@ export class ListaConversazioniPage extends _MasterPage {
     console.log('************** subscribeLoggedUserLogin', user);
     this.loggedUser = user;
     this.checkLoadingIsActive(5000);
+    //this.openDetailConversation();
     this.loadListConversations();
     this.profileModal.dismiss({ animate: false, duration: 0 });
   }
@@ -189,6 +302,11 @@ export class ListaConversazioniPage extends _MasterPage {
 
 
 
+  ionViewDidLeave() {
+    clearTimeout(this.timerIdOpenConversation);  
+  }
+
+
   /**
   * START GESTIONE CONVERSAZIONI
   * se esiste recupero uidReciverFromUrl passato nell'url
@@ -199,10 +317,11 @@ export class ListaConversazioniPage extends _MasterPage {
   loadListConversations() {
     const that = this;
     this.databaseProvider.initialize(this.loggedUser, this.tenant);
+    console.log('loadListConversations:: ' + this.uidReciverFromUrl);
     if (this.uidReciverFromUrl) {
       this.setUidConvSelected(this.uidReciverFromUrl);
       this.initConversationsHandler();
-      this.uidReciverFromUrl = null;
+      //this.uidReciverFromUrl = null;
     } else {
       this.databaseProvider.getUidLastOpenConversation()
       .then(function (uid: string) {
@@ -332,30 +451,30 @@ export class ListaConversazioniPage extends _MasterPage {
    *  - se esite uidConvSelected apro il dettaglio conversazione
    *  - altrimenti setto uidConvSelected alla prima conversazione ed apro il dettaglio conversazione
    */
-  showDetailConversation(){
-    if (this.uidConvSelected) {
-      console.log('openMessageList 1 ::', this.uidConvSelected);
-      // se visualizzazione è desktop
-      if (windowsMatchMedia()) {
-        this.setUidConvSelected(this.uidConvSelected);
-        this.openMessageList();
-      }
-    } else if (this.conversations.length > 0) {
-      console.log('openMessageList 2 ::');
-      // this.uidConvSelected = this.conversations[0].uid;
-      // se visualizzazione è desktop
-      if (windowsMatchMedia()) {    
-        //this.setUidConvSelected(this.uidConvSelected);
-        this.openMessageList();
-      }
-    } else {
-      console.log('openMessageList 3 ::');
-      // se visualizzazione è desktop
-      if (windowsMatchMedia()) {
-        this.navProxy.pushDetail(PlaceholderPage, {});
-      }
-    }
-  }
+  // showDetailConversation(){
+  //   if (this.uidConvSelected) {
+  //     console.log('openMessageList 1 ::', this.uidConvSelected);
+  //     // se visualizzazione è desktop
+  //     if (windowsMatchMedia()) {
+  //       this.setUidConvSelected(this.uidConvSelected);
+  //       this.openMessageList();
+  //     }
+  //   } else if (this.conversations.length > 0) {
+  //     console.log('openMessageList 2 ::');
+  //     // this.uidConvSelected = this.conversations[0].uid;
+  //     // se visualizzazione è desktop
+  //     if (windowsMatchMedia()) {    
+  //       //this.setUidConvSelected(this.uidConvSelected);
+  //       this.openMessageList();
+  //     }
+  //   } else {
+  //     console.log('openMessageList 3 ::');
+  //     // se visualizzazione è desktop
+  //     if (windowsMatchMedia()) {
+  //       this.navProxy.pushDetail(PlaceholderPage, {});
+  //     }
+  //   }
+  // }
 
 
   //// START HTML ACTIONS////
