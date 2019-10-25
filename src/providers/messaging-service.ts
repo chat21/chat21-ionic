@@ -58,8 +58,15 @@ export class MessagingService {
     }
 
     initMessage() {
+      try {
         this.messaging = firebase.messaging();
         console.log('initMessage:::: ', this.messaging);
+      }
+      catch(err) {
+        console.log('error initializing firebase messaging system');
+      }
+      
+        
         // //navigator.serviceworker.register('/XXXXX/sw.js', {scope: '/XXXX/non-existant-path/')
         // navigator.serviceWorker.register(SERVICE_WORKER_DEV, {scope: "firebase-cloud-messaging-push-scope"})
         // .then(function (registration) {
