@@ -83,6 +83,8 @@ export class MessagingService {
      * 
      */
     getPermission() {
+       try {
+        
         console.log('Notification getPermission.');
         const that = this;
         // Request permission and get token.....
@@ -100,6 +102,13 @@ export class MessagingService {
             that.events.publish('requestPermission', false);
             console.log('Unable to get permission to notify.');
         });
+         
+      }
+      catch(err) {
+        console.log('error getPermission firebase messaging system');
+      }
+      
+        
         
 
         // navigator.serviceWorker.register('./firebase-messaging-sw.js')
@@ -146,7 +155,8 @@ export class MessagingService {
     }
   
     getToken(){
-        // Get Instance ID token. Initially this makes a network call, once retrieved
+      try {
+         // Get Instance ID token. Initially this makes a network call, once retrieved
         // subsequent calls to getToken will return from cache.
         let that = this;
         //firebase.messaging().getToken()
@@ -173,6 +183,12 @@ export class MessagingService {
             //showToken('Error retrieving Instance ID token. ', err);
             //setTokenSentToServer(false);
         });
+      }
+      catch(err) {
+        console.log('error gettting token firebase messaging system');
+      }
+      
+       
     }
 
     // returnToken(): string {
