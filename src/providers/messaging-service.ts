@@ -250,10 +250,15 @@ export class MessagingService {
     }
 
     receiveMessage() {
+      try {
         this.messaging.onMessage((payload) => {
             console.log("OKKKK -------------> Message received. ", payload);
             //this.currentMessage.next(payload)
         });
+      }
+      catch(err) {
+        console.log('error receviving message');
+      }
     }
 
     returnToken(){
