@@ -16,7 +16,7 @@ export class AppConfigProvider {
     return this.http.get(this.appConfig.remoteConfigUrl)
       .toPromise()
       .then(data => {
-        this.appConfig.firebase = data;
+        this.appConfig.firebaseConfig = data;
       }).catch(err => {
         console.log('error loadAppConfig' + err);
       });
