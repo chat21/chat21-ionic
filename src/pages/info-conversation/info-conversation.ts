@@ -14,8 +14,8 @@ import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
 // utils
-import { URL_PROJECT_ID, URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
-import { getImageUrlThumb, jsonToArray, avatarPlaceholder, getColorBck, searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
+import { FIREBASESTORAGE_BASE_URL_IMAGE, URL_PROJECT_ID, URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { jsonToArray, avatarPlaceholder, getColorBck, searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
 import { PlaceholderPage } from '../placeholder/placeholder';
 
 import { ChatConversationsHandler } from '../../providers/chat-conversations-handler';
@@ -26,6 +26,7 @@ import { TiledeskConversationProvider } from '../../providers/tiledesk-conversat
 import { ConversationModel } from '../../models/conversation';
 
 import { NavProxyService } from '../../providers/nav-proxy';
+import { AppConfigProvider } from '../../providers/app-config/app-config';
 
 
 
@@ -71,6 +72,7 @@ export class InfoConversationPage {
 
   private isLoggedUserGroupMember: boolean;
   private subscriptions = [];
+  // private FIREBASESTORAGE_BASE_URL_IMAGE: string;
 
 
   constructor(
@@ -88,11 +90,13 @@ export class InfoConversationPage {
     public translate: TranslateService,
     private loadingCtrl: LoadingController,
     private navProxy: NavProxyService,
-    public chatPresenceHandler: ChatPresenceHandler
+    public chatPresenceHandler: ChatPresenceHandler,
+    public appConfig: AppConfigProvider
   ) {
     //this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
     console.log('constructor');
     const that = this;
+    // this.FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().storageBucket;
     setTimeout(function () {
       that.initialize();
     }, 100);
@@ -346,7 +350,7 @@ setDetailUser(snapshot) {
             if (snapshot.key === that.uidUserAuthenticated) { 
               decodedUid = decoded;
             } 
-            let imageurl = getImageUrlThumb(snapshot.key);
+            let imageurl = that.getImageUrlThumb(snapshot.key);
             userDetail = new UserModel(
               snapshot.key,
               user.email,
@@ -420,6 +424,10 @@ setDetailUser(snapshot) {
   });
 }
 
+getImageUrlThumb(uid: string){
+  let imageurl = FIREBASESTORAGE_BASE_URL_IMAGE+'profiles%2F'+uid+'%2Fthumb_photo.jpg?alt=media';
+  return imageurl;
+}
     /**
      * carico url immagine profilo passando id utente
      */

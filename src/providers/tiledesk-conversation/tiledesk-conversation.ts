@@ -9,6 +9,7 @@ import * as firebase from 'firebase/app';
 // ====== [BEGIN chat21]
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { UserService } from '../../providers/user/user';
+import { AppConfigProvider } from '../../providers/app-config/app-config';
 // ====== [END chat21]
 
 
@@ -37,6 +38,7 @@ export class TiledeskConversationProvider {
   constructor(
     public http: Http,
     private chatManager: ChatManager,
+    public appConfig: AppConfigProvider,
     private userService: UserService
   ) {
     this.init();
@@ -44,7 +46,8 @@ export class TiledeskConversationProvider {
   }
 
   private init() {
-    this.BASE_URL = "https://us-central1-chat-v2-dev.cloudfunctions.net";
+    //this.BASE_URL = "https://us-central1-chat-v2-dev.cloudfunctions.net";
+    this.BASE_URL = this.appConfig.getConfig().apiUrl;
     // console.log("TiledeskConversationProvider::init::BASE_URL::url", this.BASE_URL);
 
     // retrieve the appId from the chat21 sdk

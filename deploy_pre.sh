@@ -1,10 +1,27 @@
-environment=$(< src/utils/constants.ts)
-start="CURR_VER_PROD = '0."
-end="'"
-one=${environment#*$start}
-build=${one%%$end*} #two=${one%,*} -> %% prendo la prima istanza; % prendo la seconda
-NEW_BUILD=$(($build + 1))
-sed -i -e "s/$start$build/$start$NEW_BUILD/g" src/utils/constants.ts
+# environment=$(< src/utils/constants.ts)
+# start="CURR_VER_PROD = '0."
+# end="'"
+# one=${environment#*$start}
+# build=${one%%$end*} #two=${one%,*} -> %% prendo la prima istanza; % prendo la seconda
+# NEW_BUILD=$(($build + 1))
+# sed -i -e "s/$start$build/$start$NEW_BUILD/g" src/utils/constants.ts
+
+npm version prerelease --preid=beta
+version=`node -e 'console.log(require("./package.json").version)'`
+echo "version $version"
+
+URL_VER=${version//[.]//}
+echo 'URL_VER: ---->'$URL_VER
+
+if [ "$version" != "" ]; then
+    git tag -a "v$version" -m "`git log -1 --format=%s`"
+    echo "Created a new tag, v$version"
+    git push --tags
+    npm publish
+fi
+
+sed -i -e "s/$URL_VER/g" src/utils/constants.ts
+
 # ng build --prod --base-href /$NEW_BUILD/
 #ionic cordova build browser --prod
 

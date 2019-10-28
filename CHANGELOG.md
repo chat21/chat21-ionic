@@ -1,4 +1,13 @@
 # chat21-ionic ver 1.0
+### 1.0.18
+- change BASE_URL (get it from remote)
+- add chat21ApiUrl in firebaseConfig
+
+### 1.0.17
+- new - change font size .messageFirst from 1.4em to 1.2em
+- new - change font size .content_message_wellcome from 1.4em to 1.2em
+- new - open detail conversation from url parameters 'recipient' and 'recipientFullname'
+- new - manage photo disabled on support.tiledesk.com
 
 ### 1.0.16
 - fixes bug contacts in chat-manager

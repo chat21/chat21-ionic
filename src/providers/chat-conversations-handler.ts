@@ -10,8 +10,8 @@ import { ConversationModel } from '../models/conversation';
 // services
 import { ChatManager } from './chat-manager/chat-manager';
 // utils
-import { TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
-import { getImageUrlThumb, compareValues, getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
+import { FIREBASESTORAGE_BASE_URL_IMAGE, TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
+import { compareValues, getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
 import { TiledeskConversationProvider } from './tiledesk-conversation/tiledesk-conversation';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -19,6 +19,7 @@ import { avatarPlaceholder, getColorBck } from '../utils/utils';
 import { UploadService } from '../providers/upload-service/upload-service';
 
 import { DatabaseProvider } from '../providers/database/database';
+import { AppConfigProvider } from '../providers/app-config/app-config';
 
 @Injectable()
 export class ChatConversationsHandler {
@@ -31,6 +32,7 @@ export class ChatConversationsHandler {
     private userId: string;
     private ref: firebase.database.Query;
     public audio: any;
+    //private FIREBASESTORAGE_BASE_URL_IMAGE: string;
 
     //public LABEL_TU: string;
     constructor(
@@ -40,9 +42,10 @@ export class ChatConversationsHandler {
         private tiledeskConversationsProvider : TiledeskConversationProvider,
         public upSvc: UploadService,
         public zone: NgZone,
-        public databaseProvider: DatabaseProvider
+        public databaseProvider: DatabaseProvider,
+        public appConfig: AppConfigProvider
     ) {
-        
+        //this.FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().storageBucket;
     }
 
     /**
@@ -240,8 +243,13 @@ export class ChatConversationsHandler {
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);;
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
-        conv.image = getImageUrlThumb(conversation_with);
+        conv.image = this.getImageUrlThumb(conversation_with);
         return conv;
+    }
+
+    getImageUrlThumb(uid: string){
+        let imageurl = FIREBASESTORAGE_BASE_URL_IMAGE+'profiles%2F'+uid+'%2Fthumb_photo.jpg?alt=media';
+        return imageurl;
     }
     
 

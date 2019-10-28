@@ -22,6 +22,8 @@ import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { UserService } from '../../providers/user/user';
 import { MessagingService } from '../../providers/messaging-service';
 
+import { AppConfigProvider } from '../../providers/app-config/app-config';
+
 
 
 @Injectable()
@@ -38,10 +40,12 @@ export class GroupService {
     public http: Http,
     public events: Events,
     public msgService: MessagingService,
+    public appConfig: AppConfigProvider,
     public chatManager: ChatManager,
     public userService: UserService
   ) {
-    this.BASE_URL_LEAVE_GROUP = 'https://us-central1-chat-v2-dev.cloudfunctions.net/';
+    //this.BASE_URL_LEAVE_GROUP = 'https://us-central1-chat-v2-dev.cloudfunctions.net/';
+    this.BASE_URL_LEAVE_GROUP = this.appConfig.getConfig().apiUrl;
     this.observable = new BehaviorSubject<boolean>(null);
     console.log('Hello GroupProvider Provider');
   }
