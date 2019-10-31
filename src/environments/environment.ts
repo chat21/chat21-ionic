@@ -3,13 +3,14 @@
 export const environment = {
     production: false,
     remoteConfig: true,
-    remoteConfigUrl: '/firebase-config.json',
+    remoteConfigUrl: './firebase-config.json',
     firebaseConfig : {
         apiKey: 'CHANGEIT',
         authDomain: 'CHANGEIT',
         databaseURL: 'CHANGEIT',
         projectId: 'CHANGEIT',
         storageBucket: 'CHANGEIT',
-        messagingSenderId: 'CHANGEIT'
+        messagingSenderId: 'CHANGEIT',
+        chat21ApiUrl: 'CHANGEIT'
     }
   }
