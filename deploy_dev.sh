@@ -18,7 +18,7 @@ ionic cordova build browser
 
 cp -p src/firebase-messaging-sw.js platforms/browser/www/
 cp -p src/manifest.json platforms/browser/www/
-cp -p src/firebase-config.json platforms/browser/www/
+# cp -p src/firebase-config.json platforms/browser/www/
 
 cd platforms/browser/www
 aws s3 sync . s3://tiledesk-dashboard/chat/dev/$URL_VER/
