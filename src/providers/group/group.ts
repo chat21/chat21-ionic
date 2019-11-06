@@ -99,7 +99,7 @@ export class GroupService {
       headers.append('Authorization', 'Bearer ' + token);
 
       const options = new RequestOptions({ headers: headers });
-      const url = that.BASE_URL_LEAVE_GROUP + 'api/' + appId + '/groups/' + uidGroup + '/members/' + uidUser;
+      const url = that.BASE_URL_LEAVE_GROUP + '/api/' + appId + '/groups/' + uidGroup + '/members/' + uidUser;
       console.log('url: ', url);
       console.log('token: ', token);
       const body = {
@@ -136,7 +136,7 @@ export class GroupService {
         headers.append('Authorization', 'Bearer ' + token);
 
         const options = new RequestOptions({ headers: headers });
-        const url = that.BASE_URL_LEAVE_GROUP + 'supportapi/' + appId + '/groups/' + uidGroup;
+        const url = that.BASE_URL_LEAVE_GROUP + '/supportapi/' + appId + '/groups/' + uidGroup;
         const body = {};
         console.log('---------------> 1 - url: ', url);
         console.log('---------------> 2 - options: ', options);

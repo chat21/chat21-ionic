@@ -47,7 +47,7 @@ export class TiledeskConversationProvider {
 
   private init() {
     //this.BASE_URL = "https://us-central1-chat-v2-dev.cloudfunctions.net";
-    this.BASE_URL = this.appConfig.getConfig().apiUrl;
+    this.BASE_URL = this.appConfig.getConfig().chat21ApiUrl;
     // console.log("TiledeskConversationProvider::init::BASE_URL::url", this.BASE_URL);
 
     // retrieve the appId from the chat21 sdk
