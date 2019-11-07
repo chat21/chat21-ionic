@@ -45,7 +45,7 @@ export class GroupService {
     public userService: UserService
   ) {
     //this.BASE_URL_LEAVE_GROUP = 'https://us-central1-chat-v2-dev.cloudfunctions.net/';
-    this.BASE_URL_LEAVE_GROUP = this.appConfig.getConfig().apiUrl;
+    this.BASE_URL_LEAVE_GROUP = this.appConfig.getConfig().firebaseConfig.chat21ApiUrl;
     this.observable = new BehaviorSubject<boolean>(null);
     console.log('Hello GroupProvider Provider');
   }
@@ -99,6 +99,7 @@ export class GroupService {
       headers.append('Authorization', 'Bearer ' + token);
 
       const options = new RequestOptions({ headers: headers });
+     
       const url = that.BASE_URL_LEAVE_GROUP + '/api/' + appId + '/groups/' + uidGroup + '/members/' + uidUser;
       console.log('url: ', url);
       console.log('token: ', token);

@@ -17,6 +17,8 @@ export class AppConfigProvider {
       .toPromise()
       .then(data => {
         this.appConfig.firebaseConfig = data;
+        console.log('firebaseConfig:');
+        console.log(this.appConfig.firebaseConfig);
       }).catch(err => {
         console.log('error loadAppConfig' + err);
       });

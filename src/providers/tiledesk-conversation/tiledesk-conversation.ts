@@ -47,8 +47,8 @@ export class TiledeskConversationProvider {
 
   private init() {
     //this.BASE_URL = "https://us-central1-chat-v2-dev.cloudfunctions.net";
-    this.BASE_URL = this.appConfig.getConfig().chat21ApiUrl;
-    // console.log("TiledeskConversationProvider::init::BASE_URL::url", this.BASE_URL);
+    this.BASE_URL = this.appConfig.getConfig().firebaseConfig.chat21ApiUrl;
+    console.log("TiledeskConversationProvider::init::BASE_URL::url", this.BASE_URL);
 
     // retrieve the appId from the chat21 sdk
     this.appId = this.chatManager.getTenant();
@@ -80,7 +80,10 @@ export class TiledeskConversationProvider {
       headers.append('Accept', 'application/json');
       headers.append('Content-Type', 'application/json');
       headers.append('Authorization', 'Bearer ' + token);
+
       const url = that.BASE_URL + '/api/' + appId + '/conversations/' + recipientId;
+      console.log('deleteConversation. URL:', url);
+
       const options = new RequestOptions({ headers: headers });
       that.http
         .delete(url, options)
