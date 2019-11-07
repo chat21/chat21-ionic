@@ -3,7 +3,7 @@
 export const environment = {
     production: false,
     remoteConfig: true,
-    remoteConfigUrl: './assets/firebase-config.json',
+    remoteConfigUrl: '/firebase-config.json',
     firebaseConfig : {
         apiKey: 'CHANGEIT',
         authDomain: 'CHANGEIT',
