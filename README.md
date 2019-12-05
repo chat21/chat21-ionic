@@ -80,9 +80,6 @@ https://firebase.google.com/docs/auth/
 ## Run App on Browser ##
 * Now you will need to serve the app. Run: `ionic serve` in the terminal. (Update the plugins if required)
 
-## Deploy Chat21 Firebase Cloud Functions  ##
-* Readme: https://github.com/chat21/chat21-cloud-functions
-
 ## Create build browser ##
 * Run: `cordova platform add browser@latest`
 * Run: `ionic cordova build browser`
