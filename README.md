@@ -39,6 +39,7 @@ In progress
 # Firebase Configuration #
 * Create account Firebase
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
+* Deploy Chat21 Firebase Cloud Functions as described here: https://github.com/chat21/chat21-cloud-functions
 
 ## Firebase DB Configuration ## 
 * in the Firebase console click 'Add Firebase to your web app' and copy 
