@@ -73,6 +73,7 @@ https://firebase.google.com/docs/auth/
 * For Push Notification update firebase-messaging-sw.js: 
     * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: "..." with < your messagingSenderId >
     More info here :  https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
+    * firebase-messaging-sw.js must be accessible without context for example (https://support.tiledesk.com/firebase-messaging-sw.js) 
 * Update manifest.json: 
     * open `/src/manifest.json` and replace "name": "chat21-ionic" and "short_name": "chat21-ionic" with the name of your project (optional)
 * Update app constants in `src/utils/constants.ts`
