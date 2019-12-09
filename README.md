@@ -58,18 +58,23 @@ In progress
         chat21ApiUrl: 'CHANGEIT'
     }
   };```
+  
+
+* (optional) Update app.module.ts: 
+    * open `/src/app/app.module.ts` and change tenant name
+* Update app constants in `src/utils/constants.ts`
+
+## Push notification
+* open `/src/firebase-messaging-sw.js` and replace messagingSenderId: "..." with < your messagingSenderId >
+More info here :  https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
+* firebase-messaging-sw.js must be accessible without context for example (https://support.tiledesk.com/firebase-messaging-sw.js)
+* After the build process check the property gcm_sender_id of the manifest.json file. The correct value for firebase is:
+`"gcm_sender_id": "103953800507"`
+    
+## (Optional) Authenticate with email password  
 * Config Firebase auth
 In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
 https://firebase.google.com/docs/auth/
-* Update app.module.ts: 
-    * open `/src/app/app.module.ts` and change tenant name (optional)
-* For Push Notification update firebase-messaging-sw.js: 
-    * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: "..." with < your messagingSenderId >
-    More info here :  https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
-    * firebase-messaging-sw.js must be accessible without context for example (https://support.tiledesk.com/firebase-messaging-sw.js) 
-* Update manifest.json: 
-    * open `/src/manifest.json` and replace "name": "chat21-ionic" and "short_name": "chat21-ionic" with the name of your project (optional)
-* Update app constants in `src/utils/constants.ts`
 
 ## Run App on Browser ##
 * Now you will need to serve the app. Run: `ionic serve` in the terminal. (Update the plugins if required)
