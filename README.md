@@ -64,14 +64,14 @@ In progress
     * open `/src/app/app.module.ts` and change tenant name
 * Update app constants in `src/utils/constants.ts`
 
-## Push notification
+### Push notification
 * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: "..." with < your messagingSenderId >
 More info here :  https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
 * firebase-messaging-sw.js must be accessible without context for example (https://support.tiledesk.com/firebase-messaging-sw.js)
 * After the build process check the property gcm_sender_id of the manifest.json file. The correct value for firebase is:
 `"gcm_sender_id": "103953800507"`
     
-## (Optional) Authenticate with email password  
+### (Optional) Authenticate with email password  
 * Config Firebase auth
 In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
 https://firebase.google.com/docs/auth/
@@ -83,7 +83,11 @@ https://firebase.google.com/docs/auth/
 * Run: `cordova platform add browser@latest`
 * Run: `ionic cordova build browser`
 
-## Upload project on firebase hosting ##
+# Deploy
+## Deploy on a WebServer (Apache or Nginx)
+Copy the content of the directory platforms/browser/www to your WebServer public dir.
+
+## Deploy on firebase hosting ##
 https://firebase.google.com/docs/hosting/quickstart?authuser=0
 * Install the Firebase CLI. run: `npm install -g firebase-tools`
 * Run: `firebase login`
