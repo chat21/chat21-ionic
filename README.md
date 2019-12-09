@@ -65,9 +65,9 @@ In progress
 * Update app constants in `src/utils/constants.ts`
 
 ### Push notification
-* open `/src/firebase-messaging-sw.js` and replace messagingSenderId: "..." with < your messagingSenderId >
+* open `/src/firebase-messaging-sw.js` and replace messagingSenderId: with < your messagingSenderId >
 More info here :  https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
-* firebase-messaging-sw.js must be accessible without context for example (https://support.tiledesk.com/firebase-messaging-sw.js)
+* firebase-messaging-sw.js must be accessible in the root of your  without context for example (https://support.tiledesk.com/firebase-messaging-sw.js)
 * After the build process check the property gcm_sender_id of the manifest.json file. The correct value for firebase is:
 `"gcm_sender_id": "103953800507"`
     
