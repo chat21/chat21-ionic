@@ -36,35 +36,28 @@ In progress
 * Clone this repository. Run: `git clone https://github.com/frontiere21/chat21-ionic.git` in the folder in which you'd like to contain the project.
 * Next you will need to get all your node_modules back into your application. All these modules are based on your package.json file. In the project folder “chat21-ionic” run: `npm install`
 
-# Firebase Configuration #
+# Firebase 
 * Create account Firebase
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
 * Deploy Chat21 Firebase Cloud Functions as described here: https://github.com/chat21/chat21-cloud-functions
 
-## Firebase DB Configuration ## 
-* in the Firebase console click 'Add Firebase to your web app' and copy 
-```
-var config = { 
-   apiKey: "<your api key>",
-   authDomain: "<your authDomain>",
-   databaseURL: "<your databaseURL>",
-   projectId: "<your projectId>",
-   storageBucket: "<your storageBucket>",
-   messagingSenderId: "< your messagingSenderId >" 
-};
-```
-* Update app.module.ts: 
-    * go to the root of your project
-    * open /src/app/app.module.ts and replace `firebaseConfig : {...}` whit 
+## Configuration ## 
+* Configure the file environment.ts in src/environments folder:     
     ```
-    firebaseConfig : {
-       apiKey: "<your api key>",
-       authDomain: "<your authDomain>",
-       databaseURL: "<your databaseURL>",
-       projectId: "<your projectId>",
-       storageBucket: "<your storageBucket>",
-       messagingSenderId: "< your messagingSenderId >"
-    };```
+    export const environment = {
+     production: false,
+     remoteConfig: false,
+     remoteConfigUrl: '/firebase-config.json',
+     firebaseConfig : {
+        apiKey: 'CHANGEIT',
+        authDomain: 'CHANGEIT',
+        databaseURL: 'CHANGEIT',
+        projectId: 'CHANGEIT',
+        storageBucket: 'CHANGEIT',
+        messagingSenderId: 'CHANGEIT',
+        chat21ApiUrl: 'CHANGEIT'
+    }
+  };```
 * Config Firebase auth
 In the Firebase Console open the Authentication section > SIGN IN METHOD tab you need to enable the Email/password Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Email
 https://firebase.google.com/docs/auth/
