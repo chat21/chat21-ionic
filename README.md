@@ -34,7 +34,7 @@ In progress
 
 # Installation #
 * Clone this repository. Run: `git clone https://github.com/frontiere21/chat21-ionic.git` in the folder in which you'd like to contain the project.
-* Next you will need to get all your node_modules back into your application. All these modules are based on your package.json file. In the project folder “chat21-ionic” run: `npm install`
+* Build running: `npm install`
 
 # Firebase 
 * Create account Firebase
