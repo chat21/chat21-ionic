@@ -37,7 +37,7 @@ In progress
 * Build running: `npm install`
 
 # Firebase 
-* Create account Firebase
+* Create a Firebase account
 * Create a Firebase project in the Firebase console, if you don't already have one. https://console.firebase.google.com/
 * Deploy Chat21 Firebase Cloud Functions as described here: https://github.com/chat21/chat21-cloud-functions
 
@@ -59,16 +59,15 @@ In progress
     }
   };```
   
-
-* (optional) Update app.module.ts: 
+* (optional) Update app.module.ts file: 
     * open `/src/app/app.module.ts` and change tenant name
 * Update app constants in `src/utils/constants.ts`
 
 ### Push notification
 * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: with < your messagingSenderId >
 More info here :  https://angularfirebase.com/lessons/send-push-notifications-in-angular-with-firebase-cloud-messaging/
-* firebase-messaging-sw.js must be accessible in the root of your  without context for example (https://support.tiledesk.com/firebase-messaging-sw.js)
-* After the build process check the property gcm_sender_id of the manifest.json file. The correct value for firebase is:
+* firebase-messaging-sw.js must be accessible in the root of the webapp, for example (https://support.tiledesk.com/firebase-messaging-sw.js)
+* After the build process, check the property gcm_sender_id of the manifest.json file. The correct value for firebase is:
 `"gcm_sender_id": "103953800507"`
     
 ### (Optional) Authenticate with email password  
@@ -77,18 +76,19 @@ In the Firebase Console open the Authentication section > SIGN IN METHOD tab you
 https://firebase.google.com/docs/auth/
 
 ## Run App on Browser ##
-* Now you will need to serve the app. Run: `ionic serve` in the terminal. (Update the plugins if required)
+* Now you will need to serve the app. Run: `ionic serve` in the terminal. 
 
-## Create build browser ##
+## Add browser platform and build it ##
 * Run: `cordova platform add browser@latest`
 * Run: `ionic cordova build browser`
 
 # Deploy
-## Deploy on a WebServer (Apache or Nginx)
+
+## Deploy on a Web Server (Apache or Nginx)
 Copy the content of the directory platforms/browser/www to your WebServer public dir.
 
-## Deploy on firebase hosting ##
-https://firebase.google.com/docs/hosting/quickstart?authuser=0
+## Deploy on Firebase hosting ##
+
 * Install the Firebase CLI. run: `npm install -g firebase-tools`
 * Run: `firebase login`
 (these steps can be avoided if you have already done before)
@@ -101,10 +101,12 @@ https://firebase.google.com/docs/hosting/quickstart?authuser=0
         * "file www/index.html alredy exists. Overwrite?" N and press return
 * Run: `firebase deploy`
 * In your firebase consol click hosting and click on link your project
+More info here https://firebase.google.com/docs/hosting/quickstart?authuser=0
 
-## Run on Android and iOS
+## Run on Android 
 * Run on simulator : `ionic cordova run android`
 * Run on device : `ionic cordova run android --device`
 
+## Run on iOS
 * Run on simulator : `ionic cordova run ios`
 * Run on device : `ionic cordova run ios --device`
