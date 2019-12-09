@@ -6,8 +6,9 @@ import { RegisterPage } from '../../authentication/register/register';
 import { ResetpwdPage } from '../../authentication/resetpwd/resetpwd';
 // services
 import { AuthService } from '../../../providers/auth-service';
-import { URL_DASHBOARD, BASE_URL_HOSTNAME } from '../../../utils/constants';
-import { isHostname } from '../../../utils/utils';
+// import { URL_DASHBOARD, BASE_URL_HOSTNAME } from '../../../utils/constants';
+// import { isHostname } from '../../../utils/utils';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'page-login',
@@ -22,8 +23,9 @@ export class LoginPage {
   private tenant: string;
   private hostname: string;
   
-  isHostname = isHostname;
+  // isHostname = isHostname;
 
+ supportMode = environment.supportMode
   constructor(
     private modalCtrl: ModalController,
     public navParams: NavParams,
@@ -102,7 +104,10 @@ export class LoginPage {
    * 
    */
   tiledeskLogin(){
-    window.open(URL_DASHBOARD, "_blank");
+    console.log('environment.URL_DASHBOARD ', environment.URL_DASHBOARD) 
+    window.open(environment.URL_DASHBOARD, "_blank");
+
+
   }
   
   // isHostname(){

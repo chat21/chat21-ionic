@@ -7,8 +7,8 @@ import { TYPE_POPUP_LIST_CONVERSATIONS, TYPE_POPUP_DETAIL_MESSAGE } from '../../
 import { ArchivedConversationsPage } from '../archived-conversations/archived-conversations';
 import { AlertController } from 'ionic-angular';
 import * as PACKAGE from '../../../package.json';
-
-import { isHostname } from '../../utils/utils';
+import { environment } from '../../environments/environment';
+// import { isHostname } from '../../utils/utils';
 
 @IonicPage()
 @Component({
@@ -26,7 +26,8 @@ export class PopoverPage {
   TYPE_POPUP_LIST_CONVERSATIONS = TYPE_POPUP_LIST_CONVERSATIONS;
   TYPE_POPUP_DETAIL_MESSAGE = TYPE_POPUP_DETAIL_MESSAGE;
 
-  isHostname = isHostname;
+  // isHostname = isHostname;
+  supportMode = environment.supportMode
 
   constructor(
     public viewCtrl: ViewController,

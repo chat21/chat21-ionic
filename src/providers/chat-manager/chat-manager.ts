@@ -10,9 +10,9 @@ import { ChatConversationHandler } from '../chat-conversation-handler';
 import { ChatConversationsHandler } from '../chat-conversations-handler';
 import { ChatArchivedConversationsHandler } from '../chat-archived-conversations-handler';
 import { ChatContactsSynchronizer } from '../chat-contacts-synchronizer';
-
+import { environment } from '../../environments/environment';
 // utils
-import { isHostname } from '../../utils/utils';
+// import { isHostname } from '../../utils/utils';
 
 
 /*
@@ -33,7 +33,7 @@ export class ChatManager {
   public contactsSynchronizer: ChatContactsSynchronizer;
   public openInfoConversation: boolean;
 
-
+  supportMode = environment.supportMode
   constructor(
     public events: Events,
     public chatContactsSynchronizer: ChatContactsSynchronizer
@@ -123,8 +123,9 @@ export class ChatManager {
     // //this.msgService.getToken(user);
     //console.log(" 3 - PUBBLICO STATO LOGGEDUSER: LOGIN");
     //this.conversationsHandler = this.chatConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
-    if(isHostname() === false) {
-      console.log(" goOnLine: isHostname", isHostname());
+    // if(isHostname() === false) {
+    if(this.supportMode === false) {
+      
       this.initContactsSynchronizer();
     }
     this.events.publish('loggedUser:login', this.loggedUser);

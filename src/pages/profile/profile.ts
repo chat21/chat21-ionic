@@ -10,8 +10,8 @@ import { ChatManager } from '../../providers/chat-manager/chat-manager';
 // pages
 import { PopoverProfilePage } from '../popover-profile/popover-profile';
 // utils
-import { isHostname } from '../../utils/utils';
-
+// import { isHostname } from '../../utils/utils';
+import { environment } from '../../environments/environment';
 /**
  * Generated class for the ProfilePage page.
  */
@@ -26,7 +26,9 @@ export class ProfilePage {
   public uidUser: string;
 
   public profileYourself: boolean;
-  isHostname = isHostname;
+  // isHostname = isHostname;
+
+  supportMode = environment.supportMode
   //public selectedFiles: FileList;
   //public currentUpload: UploadModel;
   
@@ -49,6 +51,12 @@ export class ProfilePage {
   ngOnInit() {
     this.initialize();
   }
+
+
+
+    
+    
+  // }
   /**
    * imposto subsribe dettaglio utente
    * controllo se sono nel profilo currentuser oppure usercon cui converso
@@ -60,6 +68,7 @@ export class ProfilePage {
     });
     if (!this.uidUser){ // || this.userDetail.uid == this.uidUser
       this.profileYourself = true;
+
       this.currentUserDetail = this.chatManager.getLoggedUser();
     }
     else {
@@ -68,6 +77,8 @@ export class ProfilePage {
       this.userDetail = new UserModel(this.uidUser, '', '', this.uidUser, '', '');
       this.userService.loadUserDetail(this.uidUser);
     }
+
+    
   }
 
   /**

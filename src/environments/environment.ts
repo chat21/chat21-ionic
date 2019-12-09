@@ -1,10 +1,18 @@
 // import { firebaseConfig } from '../environments/firebase-config'; // please comment on this line when changing the values ​​of firebase {}
 
 export const environment = {
+    supportMode: true,
+    URL_SEND_BY_EMAIL: 'CHANGEIT',
+    URL_VIDEO_CHAT: 'CHANGEIT',
+    URL_TICKET_CHAT: 'CHANGEIT',
+    FIREBASESTORAGE_BASE_URL_IMAGE: 'CHANGEIT',
+    BASE_URL_HOSTNAME: 'CHANGEIT',
+    URL_DASHBOARD: 'CHANGEIT',
+    URL_PROJECT_ID: 'CHANGEIT',
     production: false,
     remoteConfig: true,
     remoteConfigUrl: '/firebase-config.json',
-    firebaseConfig : {
+    firebaseConfig: {
         apiKey: 'CHANGEIT',
         authDomain: 'CHANGEIT',
         databaseURL: 'CHANGEIT',
@@ -12,5 +20,6 @@ export const environment = {
         storageBucket: 'CHANGEIT',
         messagingSenderId: 'CHANGEIT',
         chat21ApiUrl: 'CHANGEIT'
+
     }
-  }
+}

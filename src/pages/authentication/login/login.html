@@ -7,13 +7,16 @@
 
   <ion-content padding class="sample-modal-page" *ngIf="showPage">
     <!-- <span *ngIf="isHostname(); then contentMine else contentOther"></span> -->
-    <div *ngIf="isHostname()" #contentPage class="content-page">
+    <!-- <div *ngIf="isHostname()" #contentPage class="content-page"> -->
+    <div *ngIf="supportMode" #contentPage class="content-page">
+        
         <div class="c21-start-msg">{{ 'LABEL_MSG_LOGIN_TILEDESK' | translate }}</div>
         <button ion-button block class="full" type="submit" (click)="tiledeskLogin()">
           {{ 'LABEL_LOGIN' | translate }}
         </button>
     </div>
-    <div *ngIf="!isHostname()" #contentOther class="content-page">
+    <!-- <div *ngIf="!isHostname()" #contentOther class="content-page"> -->
+    <div *ngIf="!supportMode" #contentOther class="content-page">
       <form [formGroup]="loginForm" (submit)="loginUserFirebase()" novalidate>
         <ion-item>
           <ion-label stacked>{{ 'LABEL_EMAIL' | translate }}</ion-label>

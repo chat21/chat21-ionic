@@ -13,7 +13,7 @@ import { _MasterPage } from '../_MasterPage';
 import { PopoverPage } from '../popover/popover';
 import { ProfilePage } from '../profile/profile';
 // utils
-import { getParameterByName, convertMessage, windowsMatchMedia, isHostname } from '../../utils/utils';
+import { getParameterByName, convertMessage, windowsMatchMedia } from '../../utils/utils';
 import { TYPE_POPUP_LIST_CONVERSATIONS } from '../../utils/constants';
 import * as PACKAGE from '../../../package.json';
 // services
@@ -32,7 +32,7 @@ import { ArchivedConversationsPage } from '../archived-conversations/archived-co
 import { ChatArchivedConversationsHandler } from '../../providers/chat-archived-conversations-handler';
 import { isGeneratedFile } from '@angular/compiler/src/aot/util';
 import { User } from 'firebase';
-
+import { environment } from '../../environments/environment';
 
 @IonicPage()
 @Component({
@@ -53,11 +53,11 @@ export class ListaConversazioniPage extends _MasterPage {
   private uidConvSelected: string;
   private profileModal: Modal;
   private BUILD_VERSION: string;
-  private isHostname: boolean;
+  // private isHostname: boolean;
   private timerIdOpenConversation: NodeJS.Timer;
 
   convertMessage = convertMessage;
-  
+  supportMode = environment.supportMode
   constructor(
     public popoverCtrl: PopoverController,
     public modalCtrl: ModalController,
@@ -78,7 +78,8 @@ export class ListaConversazioniPage extends _MasterPage {
   ) {
     super();
     var that = this;
-    this.isHostname = isHostname();
+    // this.isHostname = isHostname();
+
     this.BUILD_VERSION = 'v.' + PACKAGE.version; // 'b.0.5';
 
     /** RECUPERO ID CONVERSAZIONE

@@ -12,7 +12,9 @@
   <button ion-item (click)="goToProfilePage()">{{ 'LABEL_PROFILE' | translate }}</button>
   <button ion-item (click)="openArchivedConversationsPage()">{{ 'LABEL_CLOSED' | translate }}</button>
   <button ion-item (click)="openInfo()">{{ 'LABEL_INFO' | translate }}</button>
-  <button *ngIf="!isHostname()" ion-item (click)="logOut()">{{ 'LABEL_DISCONNECT' | translate }}</button>
+  <!-- <button *ngIf="!isHostname()" ion-item (click)="logOut()">{{ 'LABEL_DISCONNECT' | translate }}</button> -->
+  <button *ngIf="!supportMode" ion-item (click)="logOut()">{{ 'LABEL_DISCONNECT' | translate }}</button>
+  
 </ion-list>
 
 <ion-list *ngIf="type===TYPE_POPUP_DETAIL_MESSAGE">

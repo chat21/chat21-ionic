@@ -1,4 +1,8 @@
 # chat21-ionic ver 1.0
+
+### 1.0.19
+- moves urls in environment
+
 ### 1.0.18B
 - load firebase-config in assets
 

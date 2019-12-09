@@ -1,6 +1,6 @@
 import { Component, NgZone, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { environment } from '../../environments/environment';
 /**
  * Generated class for the InfoAdvancedPage page.
  *
@@ -31,9 +31,9 @@ export class InfoAdvancedPage {
   }
 
 
-  openProjectHome(){
-    var url = "https://support.tiledesk.com/dashboard/#/project/"+this.attributes.projectId+"/home/";
+  openProjectHome() {
+    var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/home/";
     console.log('openProjectHome:', url);
-    window.open(url,'_blank');
+    window.open(url, '_blank');
   }
 }

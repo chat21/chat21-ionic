@@ -10,7 +10,8 @@ import { ConversationModel } from '../models/conversation';
 // services
 import { ChatManager } from './chat-manager/chat-manager';
 // utils
-import { FIREBASESTORAGE_BASE_URL_IMAGE, TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
+// FIREBASESTORAGE_BASE_URL_IMAGE, 
+import { TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
 import { compareValues, getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
 import { TiledeskConversationProvider } from './tiledesk-conversation/tiledesk-conversation';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,6 +21,7 @@ import { UploadService } from '../providers/upload-service/upload-service';
 
 import { DatabaseProvider } from '../providers/database/database';
 import { AppConfigProvider } from '../providers/app-config/app-config';
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class ChatConversationsHandler {
@@ -248,7 +250,8 @@ export class ChatConversationsHandler {
     }
 
     getImageUrlThumb(uid: string){
-        let imageurl = FIREBASESTORAGE_BASE_URL_IMAGE+'profiles%2F'+uid+'%2Fthumb_photo.jpg?alt=media';
+        // let imageurl = FIREBASESTORAGE_BASE_URL_IMAGE+'profiles%2F'+uid+'%2Fthumb_photo.jpg?alt=media';
+        let imageurl = environment.FIREBASESTORAGE_BASE_URL_IMAGE + environment.firebaseConfig.storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
         return imageurl;
     }
     

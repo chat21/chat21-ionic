@@ -13,8 +13,16 @@ import { GroupService } from '../../providers/group/group';
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 
+import { environment } from '../../environments/environment';
+
+// FIREBASESTORAGE_BASE_URL_IMAGE
+// URL_PROJECT_ID
+// URL_TICKET_CHAT
+// URL_SEND_BY_EMAIL
+// URL_VIDEO_CHAT,
+
 // utils
-import { FIREBASESTORAGE_BASE_URL_IMAGE, URL_PROJECT_ID, URL_TICKET_CHAT, URL_SEND_BY_EMAIL, URL_VIDEO_CHAT, TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { TYPE_SUPPORT_GROUP, TYPE_GROUP, SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
 import { jsonToArray, avatarPlaceholder, getColorBck, searchIndexInArrayForUid, getFormatData, createConfirm, urlify, isExistInArray, createLoading } from '../../utils/utils';
 import { PlaceholderPage } from '../placeholder/placeholder';
 
@@ -64,8 +72,8 @@ export class InfoConversationPage {
   public conversationEnabled: boolean;
 
   public TYPE_GROUP = TYPE_GROUP;
-  public URL_SEND_BY_EMAIL = URL_SEND_BY_EMAIL;
-  public URL_VIDEO_CHAT = URL_VIDEO_CHAT;
+  // public URL_SEND_BY_EMAIL = URL_SEND_BY_EMAIL;
+  // public URL_VIDEO_CHAT = URL_VIDEO_CHAT;
 
   private loadingDialog: any;
   private confirmDialog: any;
@@ -104,16 +112,16 @@ export class InfoConversationPage {
 
   ngOnInit() {
     console.log('ngOnInit:InfoConversationPage');
-    
+
   }
-  
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad:InfoConversationPage');
   }
 
   ionViewWillEnter() {
     console.log('ionViewWillEnter');
-    
+
   }
 
   ionViewWillLeave() {
@@ -140,10 +148,10 @@ export class InfoConversationPage {
     this.userDetail = new UserModel('', '', '', '', '', '', '', '', false, false, '');
     this.groupDetail = new GroupModel('', 0, '', [], [], '', '');
     this.conversationSelected = this.conversationsHandler.getConversationByUid(this.conversationWith);
-    if(!this.conversationSelected){
+    if (!this.conversationSelected) {
       this.conversationSelected = this.chatArchivedConversationsHandler.getConversationByUid(this.conversationWith);
     }
-    console.log('conversationSelected::',this.conversationSelected);
+    console.log('conversationSelected::', this.conversationSelected);
     this.populateDetail();
     this.setSubscriptions();
   }
@@ -155,69 +163,69 @@ export class InfoConversationPage {
    * 2 - dettaglio gruppo
    * 3 - dettaglio user
   */
- populateDetail() {
-  console.log('InfoConversationPage::populateDetail');
-  // if(!this.conversationSelected.image || this.conversationSelected.image === undefined ) {
-  //   this.conversationSelected.image = '';
-  // }
-  if (!this.conversationWith) {
-    console.log('CASO 1');
-    return;
-  } else if (this.conversationWith === this.currentUserDetail.uid) {
-    console.log('MYSELF');
-    this.profileYourself = true;
-    this.userDetail = this.currentUserDetail;
-  }
-  else if (this.channelType === TYPE_GROUP) {
-    console.log('GRUPPO');
-    this.profileYourself = false;
-    this.loadGroupDetail();
-    this.events.subscribe(this.conversationWith + '-listener', this.subscribeConversationListener);
-    this.conversationsHandler.addConversationListener(this.currentUserDetail.uid, this.conversationWith);
-  } else {
-    console.log('CONVERSATION');
-    this.profileYourself = false;
-    // status user conversation with
-    this.userIsOnline(this.conversationWith);
-    this.loadUserDetail();
-  }
-}
-
-
-// ========= begin:: set User Detail ============//
-/** */
-loadUserDetail(){
-  const that = this;
-  this.userService.loadUserDetail(this.conversationWith)
-  .then(function (snapshot) {
-    if (snapshot.val()) {
-      that.setDetailUser(snapshot);
+  populateDetail() {
+    console.log('InfoConversationPage::populateDetail');
+    // if(!this.conversationSelected.image || this.conversationSelected.image === undefined ) {
+    //   this.conversationSelected.image = '';
+    // }
+    if (!this.conversationWith) {
+      console.log('CASO 1');
+      return;
+    } else if (this.conversationWith === this.currentUserDetail.uid) {
+      console.log('MYSELF');
+      this.profileYourself = true;
+      this.userDetail = this.currentUserDetail;
     }
-  })
-  .catch(function (err) {
-    console.error('Unable to get permission to notify.', err);
-  });
-}
+    else if (this.channelType === TYPE_GROUP) {
+      console.log('GRUPPO');
+      this.profileYourself = false;
+      this.loadGroupDetail();
+      this.events.subscribe(this.conversationWith + '-listener', this.subscribeConversationListener);
+      this.conversationsHandler.addConversationListener(this.currentUserDetail.uid, this.conversationWith);
+    } else {
+      console.log('CONVERSATION');
+      this.profileYourself = false;
+      // status user conversation with
+      this.userIsOnline(this.conversationWith);
+      this.loadUserDetail();
+    }
+  }
 
-/** */
-setDetailUser(snapshot) {      
-  const user = snapshot.val();
-  const fullname = user.firstname + " " + user.lastname;
-  this.userDetail = new UserModel(
-    snapshot.key,
-    user.email,
-    user.firstname,
-    user.lastname,
-    fullname.trim(),
-    user.imageurl,
-    '',
-    '',
-    false,
-    false,
-    ''
-  );
-}
-// ========= end:: set User Detail ============//
+
+  // ========= begin:: set User Detail ============//
+  /** */
+  loadUserDetail() {
+    const that = this;
+    this.userService.loadUserDetail(this.conversationWith)
+      .then(function (snapshot) {
+        if (snapshot.val()) {
+          that.setDetailUser(snapshot);
+        }
+      })
+      .catch(function (err) {
+        console.error('Unable to get permission to notify.', err);
+      });
+  }
+
+  /** */
+  setDetailUser(snapshot) {
+    const user = snapshot.val();
+    const fullname = user.firstname + " " + user.lastname;
+    this.userDetail = new UserModel(
+      snapshot.key,
+      user.email,
+      user.firstname,
+      user.lastname,
+      fullname.trim(),
+      user.imageurl,
+      '',
+      '',
+      false,
+      false,
+      ''
+    );
+  }
+  // ========= end:: set User Detail ============//
 
 
   /** SUBSCRIPTIONS */
@@ -235,7 +243,7 @@ setDetailUser(snapshot) {
    */
   loadGroupDetail() {
     const keySubscription = 'groupDetails';
-    if(this.addSubscription(keySubscription)){
+    if (this.addSubscription(keySubscription)) {
       this.events.subscribe(keySubscription, this.returnLoadGroupDetail);
       this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.conversationWith);
     }
@@ -266,7 +274,7 @@ setDetailUser(snapshot) {
       }
 
       this.getListMembers(this.groupDetail.members);
-      console.log('ListMembers: ',this.groupDetail.members, this.uidUserAuthenticated);
+      console.log('ListMembers: ', this.groupDetail.members, this.uidUserAuthenticated);
 
       if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.groupDetail.members.length <= 1) {
         this.isLoggedUserGroupMember = false;
@@ -284,7 +292,7 @@ setDetailUser(snapshot) {
       this.attributesClient = (attributes.client) ? attributes.client : '';
       this.attributesSourcePage = (attributes.sourcePage) ? attributes.sourcePage : '';
       //this.attributesSourcePage = (attributes.sourcePage) ? urlify(attributes.sourcePage) : '';
-      this.attributesDepartments = (attributes.departments)?this.arrayDepartments(attributes.departments).join(", "):'';
+      this.attributesDepartments = (attributes.departments) ? this.arrayDepartments(attributes.departments).join(", ") : '';
       this.createCustomAttributesMap(attributes);
     }
   }
@@ -295,142 +303,142 @@ setDetailUser(snapshot) {
    * 3 - mi sottoscrivo al nodo del dettaglio utente per recuperare le informazioni
    * 4 - creo un new userDetail lo aggiungo all'array utenti, mi sottoscrivo allo stato (online/offline)
   */
- private getListMembers(members) {
-  let that = this;
-  // autenticazione
-  // let uidUserAuthenticated;
-  this.uidUserAuthenticated = '';
-  let emailUserAuthenticated;
-  let fullnameUserAuthenticated;
-  this.signInProvider = 'anonymous';
-  let decoded;
-  let projectId;
-  if(this.attributes){
-    if (this.attributes.projectId) {
-      projectId = this.attributes.projectId;
-    }
-    if (this.attributes.userFullname) {
-      fullnameUserAuthenticated = this.attributes.userFullname;
-    }
-    if (this.attributes.userEmail) {
-      emailUserAuthenticated = this.attributes.userEmail;
-    }
-    if (this.attributes.senderAuthInfo) {
-      if (this.attributes.senderAuthInfo.authVar) {
-        if (this.attributes.senderAuthInfo.authVar.uid) {
-          this.uidUserAuthenticated = this.attributes.senderAuthInfo.authVar.uid;
-        }
-        if (this.attributes.senderAuthInfo.authVar.token) {
-          if (this.attributes.senderAuthInfo.authVar.token.decoded) {
-            decoded = this.attributes.senderAuthInfo.authVar.token.decoded;
-            //decoded = this.completeDecoded(this.attributes.senderAuthInfo.authVar.token.decoded);
+  private getListMembers(members) {
+    let that = this;
+    // autenticazione
+    // let uidUserAuthenticated;
+    this.uidUserAuthenticated = '';
+    let emailUserAuthenticated;
+    let fullnameUserAuthenticated;
+    this.signInProvider = 'anonymous';
+    let decoded;
+    let projectId;
+    if (this.attributes) {
+      if (this.attributes.projectId) {
+        projectId = this.attributes.projectId;
+      }
+      if (this.attributes.userFullname) {
+        fullnameUserAuthenticated = this.attributes.userFullname;
+      }
+      if (this.attributes.userEmail) {
+        emailUserAuthenticated = this.attributes.userEmail;
+      }
+      if (this.attributes.senderAuthInfo) {
+        if (this.attributes.senderAuthInfo.authVar) {
+          if (this.attributes.senderAuthInfo.authVar.uid) {
+            this.uidUserAuthenticated = this.attributes.senderAuthInfo.authVar.uid;
           }
-          if (this.attributes.senderAuthInfo.authVar.token.firebase) {
-            if (this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider) {
-              this.signInProvider = this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider;
+          if (this.attributes.senderAuthInfo.authVar.token) {
+            if (this.attributes.senderAuthInfo.authVar.token.decoded) {
+              decoded = this.attributes.senderAuthInfo.authVar.token.decoded;
+              //decoded = this.completeDecoded(this.attributes.senderAuthInfo.authVar.token.decoded);
+            }
+            if (this.attributes.senderAuthInfo.authVar.token.firebase) {
+              if (this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider) {
+                this.signInProvider = this.attributes.senderAuthInfo.authVar.token.firebase.sign_in_provider;
+              }
             }
           }
         }
       }
-    } 
-  } 
-  console.log(' this.uidUserAuthenticated: ',  this.uidUserAuthenticated, this.attributes);
-  this.listMembers = [];
-  members.forEach(member => {
-    let userDetail;
-    if (member.trim() !== '' && member.trim() !== SYSTEM) {
-      this.userService.getUserDetail(member)
-        .then(function (snapshot) {
-          if (snapshot.val()) {
-            const user = snapshot.val();
-            const fullname = user.firstname + " " + user.lastname;
-            let avatar;
-            let color;
-            let decodedUid;
-            if (snapshot.key === that.uidUserAuthenticated) { 
-              decodedUid = decoded;
-            } 
-            let imageurl = that.getImageUrlThumb(snapshot.key);
-            userDetail = new UserModel(
-              snapshot.key,
-              user.email,
-              user.firstname,
-              user.lastname,
-              fullname.trim(),
-              imageurl,
-              avatar,
-              color,
-              false,
-              false,
-              decodedUid
-            );
-
-          } else {
-            userDetail = new UserModel(
-              snapshot.key,
-              '',
-              '',
-              '',
-              '',
-              '',
-              '',
-              '',
-              false,
-              false, 
-              ''
-            );
-          }
-          
-          // set fullname
-          if(!userDetail.fullname || userDetail.fullname === ''){
-            userDetail.fullname = that.translate.get('LABEL_GUEST')['value'];
-            console.log('0 - userDetail.fullname------------->', userDetail.fullname);
-          } 
-          if( that.uidUserAuthenticated === snapshot.key && fullnameUserAuthenticated && fullnameUserAuthenticated !== 'undefined'){
-            console.log('1 - fullnameUserAuthenticated------------->', fullnameUserAuthenticated);
-            userDetail.fullname = fullnameUserAuthenticated;
-          }
-          if(userDetail.firstname || userDetail.lastname){
-            userDetail.fullname = userDetail.firstname+' '+userDetail.lastname; 
-            console.log('2 - userDetail.fullname------------->', userDetail.fullname);
-          } 
-
-          userDetail.checked = false;
-          if( that.signInProvider === 'custom' && that.uidUserAuthenticated === snapshot.key ){
-            console.log('2.5 - uidUserAuthenticated------------->', that.uidUserAuthenticated, snapshot.key);
-            userDetail.checked = true;
-            userDetail.email = emailUserAuthenticated;
-            userDetail.decoded = decoded;
-            if(fullnameUserAuthenticated) {
-              userDetail.fullname = fullnameUserAuthenticated;
-              console.log('3 - userDetail.fullname------------->', userDetail.fullname);
-            }
-            if( that.signInProvider === 'custom' && userDetail.decoded && userDetail.decoded.name) {
-              userDetail.fullname = userDetail.decoded.name;
-              console.log('4 - userDetail.fullname------------->', userDetail.fullname);
-            }
-          } 
-          userDetail.avatar = avatarPlaceholder(userDetail.fullname);
-          userDetail.color = getColorBck(userDetail.fullname);
-          console.log('userDetail------------->', userDetail);
-          // ADD MEMBER TO ARRAY
-          that.listMembers.push(userDetail);
-          // ONLINE/OFFLINE
-          that.userIsOnline(userDetail.uid);
-          // MEMBER CHECKED!!
-          // that.checkVerifiedMembers(userDetail.uid);
-        });
     }
-  });
-}
+    console.log(' this.uidUserAuthenticated: ', this.uidUserAuthenticated, this.attributes);
+    this.listMembers = [];
+    members.forEach(member => {
+      let userDetail;
+      if (member.trim() !== '' && member.trim() !== SYSTEM) {
+        this.userService.getUserDetail(member)
+          .then(function (snapshot) {
+            if (snapshot.val()) {
+              const user = snapshot.val();
+              const fullname = user.firstname + " " + user.lastname;
+              let avatar;
+              let color;
+              let decodedUid;
+              if (snapshot.key === that.uidUserAuthenticated) {
+                decodedUid = decoded;
+              }
+              let imageurl = that.getImageUrlThumb(snapshot.key);
+              userDetail = new UserModel(
+                snapshot.key,
+                user.email,
+                user.firstname,
+                user.lastname,
+                fullname.trim(),
+                imageurl,
+                avatar,
+                color,
+                false,
+                false,
+                decodedUid
+              );
 
-getImageUrlThumb(uid: string){
-  let imageurl = FIREBASESTORAGE_BASE_URL_IMAGE+'profiles%2F'+uid+'%2Fthumb_photo.jpg?alt=media';
-  return imageurl;
-}
-    /**
-     * carico url immagine profilo passando id utente
-     */
+            } else {
+              userDetail = new UserModel(
+                snapshot.key,
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                false,
+                false,
+                ''
+              );
+            }
+
+            // set fullname
+            if (!userDetail.fullname || userDetail.fullname === '') {
+              userDetail.fullname = that.translate.get('LABEL_GUEST')['value'];
+              console.log('0 - userDetail.fullname------------->', userDetail.fullname);
+            }
+            if (that.uidUserAuthenticated === snapshot.key && fullnameUserAuthenticated && fullnameUserAuthenticated !== 'undefined') {
+              console.log('1 - fullnameUserAuthenticated------------->', fullnameUserAuthenticated);
+              userDetail.fullname = fullnameUserAuthenticated;
+            }
+            if (userDetail.firstname || userDetail.lastname) {
+              userDetail.fullname = userDetail.firstname + ' ' + userDetail.lastname;
+              console.log('2 - userDetail.fullname------------->', userDetail.fullname);
+            }
+
+            userDetail.checked = false;
+            if (that.signInProvider === 'custom' && that.uidUserAuthenticated === snapshot.key) {
+              console.log('2.5 - uidUserAuthenticated------------->', that.uidUserAuthenticated, snapshot.key);
+              userDetail.checked = true;
+              userDetail.email = emailUserAuthenticated;
+              userDetail.decoded = decoded;
+              if (fullnameUserAuthenticated) {
+                userDetail.fullname = fullnameUserAuthenticated;
+                console.log('3 - userDetail.fullname------------->', userDetail.fullname);
+              }
+              if (that.signInProvider === 'custom' && userDetail.decoded && userDetail.decoded.name) {
+                userDetail.fullname = userDetail.decoded.name;
+                console.log('4 - userDetail.fullname------------->', userDetail.fullname);
+              }
+            }
+            userDetail.avatar = avatarPlaceholder(userDetail.fullname);
+            userDetail.color = getColorBck(userDetail.fullname);
+            console.log('userDetail------------->', userDetail);
+            // ADD MEMBER TO ARRAY
+            that.listMembers.push(userDetail);
+            // ONLINE/OFFLINE
+            that.userIsOnline(userDetail.uid);
+            // MEMBER CHECKED!!
+            // that.checkVerifiedMembers(userDetail.uid);
+          });
+      }
+    });
+  }
+
+  getImageUrlThumb(uid: string) {
+    let imageurl = environment.FIREBASESTORAGE_BASE_URL_IMAGE + environment.firebaseConfig.storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
+    return imageurl;
+  }
+  /**
+   * carico url immagine profilo passando id utente
+   */
   //   setImageUser(userDetail){
   //     const that = this;
   //     if(userDetail.uid){
@@ -477,7 +485,7 @@ getImageUrlThumb(uid: string){
   }
 
 
-  
+
 
   // subcribeOnOpenInfoConversation: any = (openInfoConversation, uidUserSelected, channel_type, attributes)  => {
   //   console.log('InfoConversationPage::subcribeOnOpenInfoConversation');
@@ -563,7 +571,7 @@ getImageUrlThumb(uid: string){
     if (temp && temp['userFullname']) delete temp['userFullname'];
 
     if (temp && temp['senderAuthInfo']) delete temp['senderAuthInfo'];
-    
+
     // add the remaining keys to the customAttributes array
     for (var key in temp) {
       if (temp.hasOwnProperty(key)) {
@@ -573,7 +581,7 @@ getImageUrlThumb(uid: string){
           "key": key,
           "value": val
         }
-        
+
         // add the item to the custom attributes array
         tempMap.push(item);
       }
@@ -581,12 +589,12 @@ getImageUrlThumb(uid: string){
     this.customAttributes = tempMap;
   }
 
-  
 
 
-  
 
-  
+
+
+
 
   // subscriptio on conversation changes
   subscribeConversationListener: any = (snapshot) => {
@@ -610,9 +618,9 @@ getImageUrlThumb(uid: string){
 
 
 
-  
 
-  
+
+
 
   /** 
    * 
@@ -621,7 +629,7 @@ getImageUrlThumb(uid: string){
     const keySubscription = 'statusUser:online-' + uid;
     this.events.subscribe(keySubscription, this.callbackUserIsOnline);
     let isNewSubscription = this.addSubscription(keySubscription);
-    if( isNewSubscription ){
+    if (isNewSubscription) {
       this.chatPresenceHandler.userIsOnline(uid);
     }
   }
@@ -640,27 +648,27 @@ getImageUrlThumb(uid: string){
       }
     } else {
       this.online = status;
-      if ( status == false ) {
+      if (status == false) {
         this.lastOnlineForUser(this.conversationWith);
       }
     }
   }
 
-  lastOnlineForUser(uid){
+  lastOnlineForUser(uid) {
     const keySubscription = 'lastConnectionDate-' + uid;
     this.events.subscribe(keySubscription, this.callbackLastOnlineForUser);
     let isNewSubscription = this.addSubscription(keySubscription);
-    if( isNewSubscription ){
+    if (isNewSubscription) {
       console.log("subscribe::lastConnectionDate");
       this.chatPresenceHandler.lastOnlineForUser(uid);
     }
   }
 
-  callbackLastOnlineForUser:any = (uid, lastConnectionDate) => {
-    console.log("callbackLastOnlineForUser::",lastConnectionDate);
+  callbackLastOnlineForUser: any = (uid, lastConnectionDate) => {
+    console.log("callbackLastOnlineForUser::", lastConnectionDate);
     this.lastConnectionDate = lastConnectionDate;
   }
-    
+
 
 
 
@@ -672,8 +680,8 @@ getImageUrlThumb(uid: string){
   checkVerifiedMembers(uid) {
     // DISTRUGGILA ALL'USCITA!!!!!
     console.log("checkVerifiedMembers");
-    const keySubscription = 'callbackCheckVerifiedMembers-'+uid;
-    if(this.addSubscription(keySubscription)){
+    const keySubscription = 'callbackCheckVerifiedMembers-' + uid;
+    if (this.addSubscription(keySubscription)) {
       this.events.subscribe(keySubscription, this.callbackCheckVerifiedMembers);
       this.groupService.loadMembersInfo(this.conversationWith, this.tenant, uid);
     }
@@ -687,7 +695,7 @@ getImageUrlThumb(uid: string){
   callbackCheckVerifiedMembers: any = (snapshot) => {
     console.log("callbackCheckVerifiedMembers", snapshot);
     this.listMembers.forEach(member => {
-      if ( snapshot.hasChild(member.uid) ) {
+      if (snapshot.hasChild(member.uid)) {
         console.log("CHECKED", member.uid);
         member.checked = true;
       } else {
@@ -800,14 +808,14 @@ getImageUrlThumb(uid: string){
   /** */
   setVideoChat() {
     // setto url 
-    const url = this.URL_VIDEO_CHAT + '?groupId=' + this.groupDetail.uid + '&popup=true';
+    const url = environment.URL_VIDEO_CHAT + '?groupId=' + this.groupDetail.uid + '&popup=true';
     // this.events.publish('openVideoChat', url);
     this.openPopupConfirmation('video-chat');
   }
 
   getUrlCreaTicket() {
     // setto url 
-    return URL_TICKET_CHAT;
+    return environment.URL_TICKET_CHAT;
     //const url = URL_TICKET_CHAT + '&popup=true';
     //this.events.publish('openVideoChat', url);
   }
@@ -1049,52 +1057,56 @@ getImageUrlThumb(uid: string){
     this.unsubscribeAll();
   }
 
-  sendMail(){
-    const url = this.URL_SEND_BY_EMAIL+this.conversationSelected.uid+'/messages.html';
+  sendMail() {
+    const url = environment.URL_SEND_BY_EMAIL + this.conversationSelected.uid + '/messages.html';
     window.open(url, '_blank', 'location=yes');
   }
 
-  openInfoUser(member){
+  openInfoUser(member) {
     console.log("openInfoUser", member);
     this.eventOpenInfoUser.emit(member);
   }
 
 
-  openUserRequest(){
+  openUserRequest() {
     // this.projectId = '5b55e806c93dde00143163dd';
     // "https://support.tiledesk.com/dashboard/#/project/5af02d8f705ac600147f0cbb/request/support-group-LEOsofmVWYtljdxTf3c/messages";
-    var url = "https://support.tiledesk.com/dashboard/#/project/"+this.attributes.projectId+"/request/"+this.conversationWith+"/messages";
+    // var url = "https://support.tiledesk.com/dashboard/#/project/" + this.attributes.projectId + "/request/" + this.conversationWith + "/messages";
+    var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/request/" + this.conversationWith + "/messages";
+    
     console.log('openUserDetail:', url);
-    window.open(url,'_blank');
+    window.open(url, '_blank');
     //https://support.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/contact/5bf6705275a5a40015327b91
   }
 
-  openProjectHome(){
+  openProjectHome() {
     // this.projectId = '5b55e806c93dde00143163dd';
     // "https://support.tiledesk.com/dashboard/#/project/5af02d8f705ac600147f0cbb/request/support-group-LEOsofmVWYtljdxTf3c/messages";
-    var url = "https://support.tiledesk.com/dashboard/#/project/"+this.attributes.projectId+"/home/";
+    // var url = "https://support.tiledesk.com/dashboard/#/project/" + this.attributes.projectId + "/home/";
+    var url =  environment.URL_PROJECT_ID + this.attributes.projectId + "/home/";
+   
     console.log('openProjectHome:', url);
-    window.open(url,'_blank');
+    window.open(url, '_blank');
     //https://support.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/contact/5bf6705275a5a40015327b91
   }
 
-  openInfoAdvancedPage(){
+  openInfoAdvancedPage() {
     var advancedAttributes = []
     var item: any = {}
-    if(this.channelType == TYPE_GROUP){
-      item = {"key":"ID_CONVERSATION", "value": this.groupDetail.uid}
+    if (this.channelType == TYPE_GROUP) {
+      item = { "key": "ID_CONVERSATION", "value": this.groupDetail.uid }
       advancedAttributes.push(item)
-      item = {"key":"LABEL_CREATED_THE", "value": this.groupDetail.createdOn}
+      item = { "key": "LABEL_CREATED_THE", "value": this.groupDetail.createdOn }
       advancedAttributes.push(item)
     } else {
-      item = {"key":"ID_CONVERSATION", "value": this.userDetail.uid}
+      item = { "key": "ID_CONVERSATION", "value": this.userDetail.uid }
       advancedAttributes.push(item)
     }
-    
+
     // advancedAttributes['createdOn'] = this.groupDetail.createdOn
     this.customAttributes.forEach(attr => {
       //advancedAttributes[attr.key] = attr.value
-      item = {"key":attr.key, "value": attr.value}
+      item = { "key": attr.key, "value": attr.value }
       advancedAttributes.push(item)
     });
     console.log("advancedAttributes", advancedAttributes);
@@ -1103,13 +1115,13 @@ getImageUrlThumb(uid: string){
   /**
    * 
    */
-  addSubscription(key){
-    console.log("addSubscription--->",key, this.subscriptions);
-    if (!isExistInArray(this.subscriptions, key)){
+  addSubscription(key) {
+    console.log("addSubscription--->", key, this.subscriptions);
+    if (!isExistInArray(this.subscriptions, key)) {
       console.log("addSubscription: TRUE");
       this.subscriptions.push(key);
       return true;
-    } 
+    }
     console.log("addSubscription: FALSE");
     return false;
   }
@@ -1119,7 +1131,7 @@ getImageUrlThumb(uid: string){
    */
   unsubscribeAll() {
     this.subscriptions.forEach((key) => {
-      console.log("unsubscribe:",key);
+      console.log("unsubscribe:", key);
       this.events.unsubscribe(key, null);
     });
     this.groupService.onDisconnectMembersInfo();
@@ -1127,13 +1139,13 @@ getImageUrlThumb(uid: string){
   }
   // ----------------------------------------- //
 
-  isExistUidUserAuthenticatedInMembers(){
-    if(this.signInProvider === 'custom' && this.uidUserAuthenticated && this.groupDetail){
+  isExistUidUserAuthenticatedInMembers() {
+    if (this.signInProvider === 'custom' && this.uidUserAuthenticated && this.groupDetail) {
       //console.log('uidUserAuthenticated',this.uidUserAuthenticated);
       return isExistInArray(this.groupDetail.members, this.uidUserAuthenticated);
     }
     return false;
   }
-  
+
 
 }
