@@ -806,19 +806,19 @@ export class InfoConversationPage {
   }
 
   /** */
-  setVideoChat() {
-    // setto url 
-    const url = environment.URL_VIDEO_CHAT + '?groupId=' + this.groupDetail.uid + '&popup=true';
-    // this.events.publish('openVideoChat', url);
-    this.openPopupConfirmation('video-chat');
-  }
+  // setVideoChat() {
+  //   // setto url 
+  //   const url = environment.URL_VIDEO_CHAT + '?groupId=' + this.groupDetail.uid + '&popup=true';
+  //   // this.events.publish('openVideoChat', url);
+  //   this.openPopupConfirmation('video-chat');
+  // }
 
-  getUrlCreaTicket() {
-    // setto url 
-    return environment.URL_TICKET_CHAT;
-    //const url = URL_TICKET_CHAT + '&popup=true';
-    //this.events.publish('openVideoChat', url);
-  }
+  // getUrlCreaTicket() {
+  //   // setto url 
+  //   return environment.URL_TICKET_CHAT;
+  //   //const url = URL_TICKET_CHAT + '&popup=true';
+  //   //this.events.publish('openVideoChat', url);
+  // }
 
 
   /**
@@ -1072,6 +1072,8 @@ export class InfoConversationPage {
     // this.projectId = '5b55e806c93dde00143163dd';
     // "https://support.tiledesk.com/dashboard/#/project/5af02d8f705ac600147f0cbb/request/support-group-LEOsofmVWYtljdxTf3c/messages";
     // var url = "https://support.tiledesk.com/dashboard/#/project/" + this.attributes.projectId + "/request/" + this.conversationWith + "/messages";
+    console.log('openUserDetail this.attributes :', this.attributes);
+
     var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/request/" + this.conversationWith + "/messages";
     
     console.log('openUserDetail:', url);

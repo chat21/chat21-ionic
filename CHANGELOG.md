@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 1.0.20
+- minor improvements
+
 ### 1.0.19
 - moves urls in environment
 
