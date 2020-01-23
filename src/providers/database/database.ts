@@ -32,10 +32,10 @@ export class DatabaseProvider {
   initialize(loggedUser:UserModel, tenant: string){
     this.loggedUser = loggedUser;
     this.tenant = tenant;
-    console.log("loggedUser::", loggedUser.uid);
-    console.log("this.storageSettings::", this.storageSettings);
-    console.log("this.storageContacts::", this.storageContacts);
-    console.log("this.storageConversations::", this.storageConversations);
+    console.log("DatabaseProvider - loggedUser::", loggedUser.uid);
+    console.log("DatabaseProvider - this.storageSettings::", this.storageSettings);
+    console.log("DatabaseProvider - this.storageContacts::", this.storageContacts);
+    console.log("DatabaseProvider - this.storageConversations::", this.storageConversations);
     if(!this.storageSettings || !this.storageContacts || !this.storageConversations){
       this.storageSettings = this.configStorage('settings-'+loggedUser.uid);
       this.storageContacts = this.configStorage('contacts-'+loggedUser.uid);

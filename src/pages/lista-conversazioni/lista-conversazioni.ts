@@ -88,8 +88,8 @@ export class ListaConversazioniPage extends _MasterPage {
       */
     this.uidConvSelected = navParams.get('conversationWith');
     this.tenant = chatManager.getTenant();
-    
-    
+
+
     /** OPEN CONVERSATION DETAIL (controllo ogni 3 sec) */
     //this.getUidReciverFromUrl();
     this.openConversationInPageDetail();
@@ -104,34 +104,37 @@ export class ListaConversazioniPage extends _MasterPage {
      * 3 - visualizzo la pg di login
      * 4 - resetto conversationWith
     */
-    this.profileModal = this.modalCtrl.create(LoginPage, {tenant: this.tenant}, { enableBackdropDismiss: false });
+    this.profileModal = this.modalCtrl.create(LoginPage, { tenant: this.tenant }, { enableBackdropDismiss: false });
+
     this.initSubscriptions();
+
     this.checkLoadingIsActive(5000);
+
     if (windowsMatchMedia()) {
       this.navProxy.pushDetail(PlaceholderPage, {});
     }
     //this.openDetailConversation();
-  }
+  } // ./end constructor 
 
   /** RECUPERO IL RECIPIENTID 
     * nel caso in cui viene pasato nell'url della pagina
     * per aprire una conversazione
     * USARE getParameterByName(name) del widget
     */
-    // getUidReciverFromUrl(){
-    //   try{
-    //     let TEMP = getParameterByName('recipient');
-    //     if (TEMP) { 
-    //       this.uidReciverFromUrl = TEMP; 
-    //     }
-    //     TEMP = getParameterByName('recipientFullname');
-    //     if (TEMP) { 
-    //       this.uidReciverFromUrl = TEMP; 
-    //     }
-    //   } catch (err) {
-    //     console.error("-> error:", err)
-    //   }
-    // }
+  // getUidReciverFromUrl(){
+  //   try{
+  //     let TEMP = getParameterByName('recipient');
+  //     if (TEMP) { 
+  //       this.uidReciverFromUrl = TEMP; 
+  //     }
+  //     TEMP = getParameterByName('recipientFullname');
+  //     if (TEMP) { 
+  //       this.uidReciverFromUrl = TEMP; 
+  //     }
+  //   } catch (err) {
+  //     console.error("-> error:", err)
+  //   }
+  // }
 
   // openDetailConversation(){
   //   const that = this;
@@ -166,37 +169,58 @@ export class ListaConversazioniPage extends _MasterPage {
    * cancello intervallo;
    * NOTA: da spostare nella classe di service delle conversazioni e utilizzare con una sottoscrizione
    */
-  openConversationInPageDetail(){
+  openConversationInPageDetail() {
     var that = this;
-    this.timerIdOpenConversation = setInterval(function() {
-      if(that.conversations.length > that.numberTotConv){
-        that.numberTotConv = that.conversations.length;
-      } else {
-        let uidReciverFromUrlTEMP = getParameterByName('recipient');
-        if (uidReciverFromUrlTEMP) { 
-          that.uidReciverFromUrl = uidReciverFromUrlTEMP; 
-        }
-        let recipientFullnameTEMP = getParameterByName('recipientFullname');
-        if(!recipientFullnameTEMP){
-          recipientFullnameTEMP = uidReciverFromUrlTEMP;
-        }
-        if (that.uidReciverFromUrl && windowsMatchMedia()) {
-          console.log('************** conversationsChanged: '+that.conversations.length);
-          const conversationSelected = that.conversations.find(item => item.uid === that.uidReciverFromUrl);
-          if (conversationSelected) {
-            that.setUidConvSelected(conversationSelected.uid);
-            that.openMessageList();
-          } else {
-            that.goToChat(uidReciverFromUrlTEMP, recipientFullnameTEMP);
-          }
-          that.uidReciverFromUrl = null;
-        } else if (that.uidConvSelected && windowsMatchMedia()) {
-          that.setUidConvSelected(that.uidConvSelected);
-          that.openMessageList();
-        }
-        clearInterval(that.timerIdOpenConversation);
-      }
-    }, 2000);
+    // this.timerIdOpenConversation = setInterval(function () {
+    //   console.log('LISTA CONVERSAZIONI »»»»»»»»» openConversationInPageDetail - CONVERSATION LENGHT: ', that.conversations.length);
+    //   console.log('LISTA CONVERSAZIONI »»»»»»»»» openConversationInPageDetail - NUMBER OF CONVERSATION: ', that.numberTotConv);
+    //   if (that.conversations.length > that.numberTotConv) {
+    //     that.numberTotConv = that.conversations.length;
+    //   }  else {
+    let uidReciverFromUrlTEMP = getParameterByName('recipient');
+    if (uidReciverFromUrlTEMP) {
+      that.uidReciverFromUrl = uidReciverFromUrlTEMP;
+      console.log('LISTA CONVERSAZIONI »»»»»»»»» openConversationInPageDetail - uidReciverFromUrl: ', that.uidReciverFromUrl);
+
+    }
+    let recipientFullnameTEMP = getParameterByName('recipientFullname');
+    if (!recipientFullnameTEMP) {
+      recipientFullnameTEMP = uidReciverFromUrlTEMP;
+    }
+    if (that.uidReciverFromUrl && windowsMatchMedia()) {
+
+      // console.log('LISTA CONVERSAZIONI »»»»»»»»» openConversationInPageDetail - CONVERSATION LENGHT: ', that.conversations.length);
+      // console.log('LISTA CONVERSAZIONI »»»»»»»»» openConversationInPageDetail - CONVERSATIONS: ', that.conversations);
+      // const conversationSelected = that.conversations.find(item => item.uid === that.uidReciverFromUrl);
+      // if (conversationSelected) {
+      //   that.setUidConvSelected(conversationSelected.uid);
+      //   that.openMessageList();
+      // } else {
+
+      this.events.subscribe('loggedUser:login', (user) => {
+        // user and time are the same arguments passed in `events.publish(user, time)`
+        console.log('LISTA CONVERSAZIONI Welcome user: ', user );
+
+        that.goToChat(uidReciverFromUrlTEMP, recipientFullnameTEMP);
+      });
+
+      // that.uidReciverFromUrl = null;
+
+      
+
+      // }
+     
+
+      // } else if (that.uidConvSelected && windowsMatchMedia()) {
+
+      //   that.setUidConvSelected(that.uidConvSelected);
+
+      //   that.openMessageList();
+
+    }
+    // clearInterval(that.timerIdOpenConversation);
+      // }
+    // }, 2000);
   }
 
 
@@ -229,8 +253,10 @@ export class ListaConversazioniPage extends _MasterPage {
   conversationsChanged = (conversations: ConversationModel[]) => {
     var that = this;
     this.conversations = conversations;
+
+    console.log('LISTA CONVERSAZIONI »»»»»»»»» conversationsChanged - CONVERSATIONS: ', this.conversations);
     this.numberOpenConv = this.conversationsHandler.countIsNew();
-  
+
     // setTimeout(function () {
     //     // controllo se la conv è aperta 
     //     if (that.uidReciverFromUrl && windowsMatchMedia()) {
@@ -240,7 +266,6 @@ export class ListaConversazioniPage extends _MasterPage {
     //       that.uidReciverFromUrl = null;
     //     } 
     // }, 1000);
-    
 
   }
 
@@ -251,12 +276,12 @@ export class ListaConversazioniPage extends _MasterPage {
    * @param conversationWith 
    */
   goToChat(conversationWith: string, conversationWithFullname: string) {
-    console.log('**************** goToChat conversationWith:: ',conversationWith);
+    console.log('**************** goToChat conversationWith:: ', conversationWith);
     //pubblico id conv attiva e chiudo pagina 
     this.events.publish('uidConvSelected:changed', conversationWith, 'new');
-    this.navProxy.pushDetail(DettaglioConversazionePage,{ 
-      conversationWith:conversationWith,
-      conversationWithFullname:conversationWithFullname 
+    this.navProxy.pushDetail(DettaglioConversazionePage, {
+      conversationWith: conversationWith,
+      conversationWithFullname: conversationWithFullname
     });
   }
 
@@ -304,7 +329,7 @@ export class ListaConversazioniPage extends _MasterPage {
 
 
   ionViewDidLeave() {
-    clearTimeout(this.timerIdOpenConversation);  
+    clearTimeout(this.timerIdOpenConversation);
   }
 
 
@@ -318,23 +343,23 @@ export class ListaConversazioniPage extends _MasterPage {
   loadListConversations() {
     const that = this;
     this.databaseProvider.initialize(this.loggedUser, this.tenant);
-    console.log('loadListConversations:: ' + this.uidReciverFromUrl);
+    console.log('LISTA CONVERSAZIONI »»»»»»» loadListConversations uidReciverFromUrl: ' + this.uidReciverFromUrl);
     if (this.uidReciverFromUrl) {
       this.setUidConvSelected(this.uidReciverFromUrl);
       this.initConversationsHandler();
-      //this.uidReciverFromUrl = null;
+      this.uidReciverFromUrl = null;
     } else {
       this.databaseProvider.getUidLastOpenConversation()
-      .then(function (uid: string) {
-        console.log('getUidLastOpenConversation:: ' + uid);
-        that.setUidConvSelected(uid);
-        that.initConversationsHandler();
-      })
-      .catch((error) => {
-        that.setUidConvSelected();
-        that.initConversationsHandler();
-        console.log("error::: ", error);
-      });
+        .then(function (uid: string) {
+          console.log('getUidLastOpenConversation:: ' + uid);
+          that.setUidConvSelected(uid);
+          that.initConversationsHandler();
+        })
+        .catch((error) => {
+          that.setUidConvSelected();
+          that.initConversationsHandler();
+          console.log("error::: ", error);
+        });
     }
   }
 
@@ -342,7 +367,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * 
    * @param uidConvSelected 
    */
-  setUidConvSelected(uidConvSelected?: string){
+  setUidConvSelected(uidConvSelected?: string) {
     this.uidConvSelected = uidConvSelected;
     this.chatConversationsHandler.uidConvSelected = uidConvSelected;
   }
@@ -363,7 +388,7 @@ export class ListaConversazioniPage extends _MasterPage {
     setTimeout(function () {
       const conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
       if (conversationSelected) {
-        console.log('openMessageList::', conversationSelected);
+        console.log('openMessageList:: >>>> conversationSelected ', conversationSelected);
         conversationSelected.is_new = false;
         conversationSelected.status = '0';
         conversationSelected.selected = true;
@@ -375,19 +400,19 @@ export class ListaConversazioniPage extends _MasterPage {
         });
         that.conversationsHandler.setConversationRead(conversationSelected.uid);
         that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
-      } else if(!type) {
+      } else if (!type) {
         if (windowsMatchMedia()) {
           that.navProxy.pushDetail(PlaceholderPage, {});
         }
       }
     }, 200);
-    
+
     // if the conversation from the isConversationClosingMap is waiting to be closed 
     // deny the click on the conversation
     if (this.tiledeskConversationProvider.getClosingConversation(this.uidConvSelected)) return;
   }
 
-  
+
 
   /**
    * 
@@ -413,37 +438,37 @@ export class ListaConversazioniPage extends _MasterPage {
    * inizializzo la pagina
    */
   initConversationsHandler() {
-    console.log('-------------> initConversationsHandler');
+    console.log('initConversationsHandler -------------> initConversationsHandler');
     const tenant = this.chatManager.getTenant();
     const loggedUser = this.chatManager.getLoggedUser();
     // let conversationHandler = this.chatManager.conversationsHandler;
     // let archviedConversationsHandler = this.chatManager.archivedConversationsHandler;
 
     // if (!this.conversationsHandler) {
-      // 1 - init chatConversationsHandler and  archviedConversationsHandler
-      this.conversationsHandler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
-      this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(tenant, loggedUser);
-      
-      this.chatConversationsHandler.getConversationsFromStorage();
-      // 2 - bind conversations to conversationHandler.conversations
-      //this.conversations = conversationHandler.conversations;
-      //this.archivedConversations = archviedConversationsHandler.conversations;
-      // 3 - set uidConvSelected in conversationHandler
-      this.conversationsHandler.uidConvSelected = this.uidConvSelected
-      this.chatArchivedConversationsHandler.uidConvSelected = this.uidConvSelected
-      // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-      this.conversationsHandler.connect();
-      this.chatArchivedConversationsHandler.connect();
-      // 6 - imposto i conversationsHandler globali
-      // this.conversationsHandler = conversationHandler;
-      // this.chatArchivedConversationsHandler = archviedConversationsHandler;
-      // 4 - save conversationHandler in chatManager
-      this.chatManager.setConversationsHandler(this.conversationsHandler);
+    // 1 - init chatConversationsHandler and  archviedConversationsHandler
+    this.conversationsHandler = this.chatConversationsHandler.initWithTenant(tenant, loggedUser);
+    this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(tenant, loggedUser);
+
+    this.chatConversationsHandler.getConversationsFromStorage();
+    // 2 - bind conversations to conversationHandler.conversations
+    //this.conversations = conversationHandler.conversations;
+    //this.archivedConversations = archviedConversationsHandler.conversations;
+    // 3 - set uidConvSelected in conversationHandler
+    this.conversationsHandler.uidConvSelected = this.uidConvSelected
+    this.chatArchivedConversationsHandler.uidConvSelected = this.uidConvSelected
+    // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
+    this.conversationsHandler.connect();
+    this.chatArchivedConversationsHandler.connect();
+    // 6 - imposto i conversationsHandler globali
+    // this.conversationsHandler = conversationHandler;
+    // this.chatArchivedConversationsHandler = archviedConversationsHandler;
+    // 4 - save conversationHandler in chatManager
+    this.chatManager.setConversationsHandler(this.conversationsHandler);
     // }
     // else {
     //   console.log('handler ESISTE ::', this.conversationsHandler);
     // }
-  
+
   }
 
 
@@ -497,12 +522,12 @@ export class ListaConversazioniPage extends _MasterPage {
    * (metodo richiamato da html) 
    */
   private openArchivedConversationsPage() {
-   
+
     this.navCtrl.push(ArchivedConversationsPage, {
-      'archivedConversations' :  this.archivedConversations,
+      'archivedConversations': this.archivedConversations,
       'tenant': this.tenant,
       'loggedUser': this.loggedUser
-     });
+    });
   }
 
   /**
@@ -546,7 +571,7 @@ export class ListaConversazioniPage extends _MasterPage {
    * dallo storage locale o da remoto
    * (metodo richiamato da html) 
    */
-  private checkLoadingIsActive(time:number) {
+  private checkLoadingIsActive(time: number) {
     const that = this;
     setTimeout(function () {
       that.loadingIsActive = false;
@@ -595,11 +620,11 @@ export class ListaConversazioniPage extends _MasterPage {
     // BEGIN -  REMOVE FROM LOCAL MEMORY 
     this.conversationsHandler.removeByUid(groupId); // remove the item 
     // END -  REMOVE FROM LOCAL MEMORY 
-    
+
     // BEGIN - REMOVE FROM REMOTE 
     //set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(groupId, true);
-    this.groupService.closeGroup(groupId, function(response, error) {
+    this.groupService.closeGroup(groupId, function (response, error) {
       if (error) {
         // the conversation closing failed: restore the conversation with 
         // conversationId status to false within the isConversationClosingMap
@@ -628,7 +653,7 @@ export class ListaConversazioniPage extends _MasterPage {
     // BEGIN - REMOVE FROM REMOTE 
     // set the conversation from the isConversationClosingMap that is waiting to be closed
     this.tiledeskConversationProvider.setClosingConversation(conversationId, true);
-    this.tiledeskConversationProvider.deleteConversation(conversationId, function(response, error) {
+    this.tiledeskConversationProvider.deleteConversation(conversationId, function (response, error) {
       if (error) {
         that.tiledeskConversationProvider.setClosingConversation(conversationId, false);
         callback('error', error);

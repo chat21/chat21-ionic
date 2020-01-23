@@ -1074,19 +1074,30 @@ export class InfoConversationPage {
     // var url = "https://support.tiledesk.com/dashboard/#/project/" + this.attributes.projectId + "/request/" + this.conversationWith + "/messages";
     console.log('openUserDetail this.attributes :', this.attributes);
 
-    var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/request/" + this.conversationWith + "/messages";
-    
+
+    // -------------------------------------------------------------------------------------------
+    // @ PROD v1
+    // -------------------------------------------------------------------------------------------
+    // var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/request/" + this.conversationWith + "/messages";
+
+    // -------------------------------------------------------------------------------------------
+    // @ PRE
+    // -------------------------------------------------------------------------------------------
+    var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/wsrequest/" + this.conversationWith + "/messages";
+
     console.log('openUserDetail:', url);
     window.open(url, '_blank');
     //https://support.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/contact/5bf6705275a5a40015327b91
   }
 
+
+
   openProjectHome() {
     // this.projectId = '5b55e806c93dde00143163dd';
     // "https://support.tiledesk.com/dashboard/#/project/5af02d8f705ac600147f0cbb/request/support-group-LEOsofmVWYtljdxTf3c/messages";
     // var url = "https://support.tiledesk.com/dashboard/#/project/" + this.attributes.projectId + "/home/";
-    var url =  environment.URL_PROJECT_ID + this.attributes.projectId + "/home/";
-   
+    var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/home/";
+
     console.log('openProjectHome:', url);
     window.open(url, '_blank');
     //https://support.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/contact/5bf6705275a5a40015327b91

@@ -24,7 +24,7 @@ Visit https://web.chat21.org/ to see a live demo of chat21-ionic.
 
 # Documentation #
 In progress
-
+git
 # Prerequisites #
 * Install nodejs: `https://nodejs.org/en/download/`
 * Install git: `https://git-scm.com/book/id/v2/Getting-Started-Installing-Git`
@@ -35,6 +35,7 @@ In progress
 # Installation #
 * Install the latest stable release. Check on Github page the last release under the Releases tab and then run 
 - `git clone https://github.com/frontiere21/chat21-ionic.git --branch <LATEST-RELEASE-VERSION>`
+- `cd chat21-ionic`
 * Build running: `npm install`
 
 # Firebase 
