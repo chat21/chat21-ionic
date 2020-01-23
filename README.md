@@ -33,7 +33,8 @@ In progress
 * "Chat21 Firebase cloud functions" installed. Instructions:`https://github.com/chat21/chat21-cloud-functions`
 
 # Installation #
-* Clone this repository. Run: `git clone https://github.com/frontiere21/chat21-ionic.git` in the folder in which you'd like to contain the project.
+* Install the latest stable release. Check on Github page the last release under the Releases tab and then run 
+- `git clone https://github.com/frontiere21/chat21-ionic.git --branch <LATEST-RELEASE-VERSION>`
 * Build running: `npm install`
 
 # Firebase 
@@ -45,19 +46,26 @@ In progress
 * Configure the file environment.ts in src/environments folder:     
     ```
     export const environment = {
-     production: false,
-     remoteConfig: false,
-     remoteConfigUrl: '/firebase-config.json',
-     firebaseConfig : {
-        apiKey: 'CHANGEIT',
-        authDomain: 'CHANGEIT',
-        databaseURL: 'CHANGEIT',
-        projectId: 'CHANGEIT',
-        storageBucket: 'CHANGEIT',
-        messagingSenderId: 'CHANGEIT',
-        chat21ApiUrl: 'CHANGEIT'
+        supportMode: true,
+        URL_SEND_BY_EMAIL: '<CHAT-TRANSCRIPT-URL>',
+        FIREBASESTORAGE_BASE_URL_IMAGE: 'https://firebasestorage.googleapis.com/v0/b/',
+        URL_DASHBOARD: '<YOUR-DASHBOARD-URL>/',
+        URL_PROJECT_ID: '<YOUR-DASHBOARD-URL>/#/project/',
+        production: false,
+        remoteConfig: true,
+        remoteConfigUrl: '/firebase-config.json',
+        firebaseConfig: {
+            apiKey: '123ABC..',
+            authDomain: 'XYZ.firebaseapp.com',
+            databaseURL: 'https://XYZ.firebaseio.com',
+            projectId: 'XYZ',
+            storageBucket: 'XYZ.appspot.com',
+            messagingSenderId: '123456',
+            chat21ApiUrl: '<YOUR_CHAT21_CLOUD_FUNCTION_FIREBASE_ENDPOINT>'
+        }
     }
-  };```
+  };
+  ```
   
 * (optional) Update app.module.ts file: 
     * open `/src/app/app.module.ts` and change tenant name
