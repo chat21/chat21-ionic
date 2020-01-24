@@ -23,12 +23,12 @@ Visit https://web.chat21.org/ to see a live demo of chat21-ionic.
 <img src="https://user-images.githubusercontent.com/9556761/57692765-e3e98b80-7647-11e9-8afe-b21e6085d7ca.png" alt="A screenshot of chat21-ionic demo" style="max-width:100%;">
 
 # Documentation #
-In progress
-git
+In progress git
+
 # Prerequisites #
 * Install nodejs: `https://nodejs.org/en/download/`
-* Install git: `https://git-scm.com/book/id/v2/Getting-Started-Installing-Git`
-* Install Ionic CLI and Cordova : `https://ionicframework.com/docs/intro/installation/`
+* Install Ionic CLI: `npm install -g ionic`
+* Install Cordova : `npm install -g cordova@7.0.1`
 * A Firebase project. Create one free on `https://firebase.google.com`
 * "Chat21 Firebase cloud functions" installed. Instructions:`https://github.com/chat21/chat21-cloud-functions`
 
