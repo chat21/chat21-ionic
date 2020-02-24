@@ -1,0 +1,1458 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@chat21/chat21-ionic documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">@chat21/chat21-ionic documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>GroupService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/providers/group/group.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#appConfig">appConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#arrayMembers">arrayMembers</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#BASE_URL_LEAVE_GROUP">BASE_URL_LEAVE_GROUP</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#chatManager">chatManager</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#events">events</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#groupDetail">groupDetail</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#http">http</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#listRefMembersInfo">listRefMembersInfo</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#msgService">msgService</a>
+                            </li>
+                            <li>
+                                <a href="#observable">observable</a>
+                            </li>
+                            <li>
+                                <a href="#refLoadGroupDetail">refLoadGroupDetail</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#userService">userService</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#closeGroup">closeGroup</a>
+                            </li>
+                            <li>
+                                <a href="#getUidMembers">getUidMembers</a>
+                            </li>
+                            <li>
+                                <a href="#isSupportGroup">isSupportGroup</a>
+                            </li>
+                            <li>
+                                <a href="#leaveAGroup">leaveAGroup</a>
+                            </li>
+                            <li>
+                                <a href="#loadGroupDetail">loadGroupDetail</a>
+                            </li>
+                            <li>
+                                <a href="#loadMembersInfo">loadMembersInfo</a>
+                            </li>
+                            <li>
+                                <a href="#onDisconnectLoadGroupDetail">onDisconnectLoadGroupDetail</a>
+                            </li>
+                            <li>
+                                <a href="#onDisconnectMembersInfo">onDisconnectMembersInfo</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(http: Http, events: Events, msgService: <a href="../injectables/MessagingService.html">MessagingService</a>, appConfig: <a href="../injectables/AppConfigProvider.html">AppConfigProvider</a>, chatManager: <a href="../injectables/ChatManager.html">ChatManager</a>, userService: <a href="../injectables/UserService.html">UserService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/providers/group/group.ts:37</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>http</td>
+                                                  
+                                                        <td>
+                                                                    <code>Http</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>events</td>
+                                                  
+                                                        <td>
+                                                                    <code>Events</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>msgService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/MessagingService.html" target="_self" >MessagingService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>appConfig</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AppConfigProvider.html" target="_self" >AppConfigProvider</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>chatManager</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ChatManager.html" target="_self" >ChatManager</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UserService.html" target="_self" >UserService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="closeGroup"></a>
+                    <span class="name">
+                        <b>
+                            closeGroup
+                        </b>
+                        <a href="#closeGroup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>closeGroup(uidGroup, callback)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="127"
+                            class="link-to-prism">src/providers/group/group.ts:127</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uidGroup</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>callback</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getUidMembers"></a>
+                    <span class="name">
+                        <b>
+                            getUidMembers
+                        </b>
+                        <a href="#getUidMembers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getUidMembers(members)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="158"
+                            class="link-to-prism">src/providers/group/group.ts:158</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>members</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>string[]</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isSupportGroup"></a>
+                    <span class="name">
+                        <b>
+                            isSupportGroup
+                        </b>
+                        <a href="#isSupportGroup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isSupportGroup(uid)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="168"
+                            class="link-to-prism">src/providers/group/group.ts:168</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uid</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="leaveAGroup"></a>
+                    <span class="name">
+                        <b>
+                            leaveAGroup
+                        </b>
+                        <a href="#leaveAGroup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>leaveAGroup(uidGroup, uidUser, callback)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="89"
+                            class="link-to-prism">src/providers/group/group.ts:89</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uidGroup</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>uidUser</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>callback</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadGroupDetail"></a>
+                    <span class="name">
+                        <b>
+                            loadGroupDetail
+                        </b>
+                        <a href="#loadGroupDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadGroupDetail(uidUser, uidGroup)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">src/providers/group/group.ts:74</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uidUser</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>uidGroup</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadMembersInfo"></a>
+                    <span class="name">
+                        <b>
+                            loadMembersInfo
+                        </b>
+                        <a href="#loadMembersInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadMembersInfo(uidGroup, tenant, uidUser)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="200"
+                            class="link-to-prism">src/providers/group/group.ts:200</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uidGroup</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>tenant</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>uidUser</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onDisconnectLoadGroupDetail"></a>
+                    <span class="name">
+                        <b>
+                            onDisconnectLoadGroupDetail
+                        </b>
+                        <a href="#onDisconnectLoadGroupDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onDisconnectLoadGroupDetail()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="231"
+                            class="link-to-prism">src/providers/group/group.ts:231</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onDisconnectMembersInfo"></a>
+                    <span class="name">
+                        <b>
+                            onDisconnectMembersInfo
+                        </b>
+                        <a href="#onDisconnectMembersInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onDisconnectMembersInfo()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="222"
+                            class="link-to-prism">src/providers/group/group.ts:222</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="appConfig"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            appConfig</b>
+                            <a href="#appConfig"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../injectables/AppConfigProvider.html" target="_self" >AppConfigProvider</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/providers/group/group.ts:43</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="arrayMembers"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            arrayMembers</b>
+                            <a href="#arrayMembers"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/providers/group/group.ts:35</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="BASE_URL_LEAVE_GROUP"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            BASE_URL_LEAVE_GROUP</b>
+                            <a href="#BASE_URL_LEAVE_GROUP"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/providers/group/group.ts:32</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="chatManager"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            chatManager</b>
+                            <a href="#chatManager"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../injectables/ChatManager.html" target="_self" >ChatManager</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/providers/group/group.ts:44</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="events"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            events</b>
+                            <a href="#events"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>Events</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/providers/group/group.ts:41</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="groupDetail"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            groupDetail</b>
+                            <a href="#groupDetail"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../classes/GroupModel.html" target="_self" >GroupModel</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/providers/group/group.ts:33</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="http"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            http</b>
+                            <a href="#http"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>Http</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/providers/group/group.ts:40</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="listRefMembersInfo"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            listRefMembersInfo</b>
+                            <a href="#listRefMembersInfo"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/providers/group/group.ts:36</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="msgService"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            msgService</b>
+                            <a href="#msgService"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../injectables/MessagingService.html" target="_self" >MessagingService</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/providers/group/group.ts:42</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="observable"></a>
+                        <span class="name">
+                            <b>
+                            observable</b>
+                            <a href="#observable"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/providers/group/group.ts:34</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="refLoadGroupDetail"></a>
+                        <span class="name">
+                            <b>
+                            refLoadGroupDetail</b>
+                            <a href="#refLoadGroupDetail"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/providers/group/group.ts:37</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="userService"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            userService</b>
+                            <a href="#userService"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../injectables/UserService.html" target="_self" >UserService</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/providers/group/group.ts:45</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import &#x27;rxjs/add/operator/map&#x27;;
+import { Events } from &#x27;ionic-angular&#x27;;
+import { Http, Headers, RequestOptions } from &#x27;@angular/http&#x27;;
+// import { Observable } from &#x27;rxjs/Observable&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+
+// import &#x27;rxjs/add/observable/fromPromise&#x27;;
+// import { BehaviorSubject } from &#x27;rxjs/BehaviorSubject&#x27;;
+import { BehaviorSubject } from &#x27;rxjs&#x27;;
+
+
+// models
+import { GroupModel } from &#x27;../../models/group&#x27;;
+// firebase
+import * as firebase from &#x27;firebase/app&#x27;;
+// utils
+import { isExistInArray, getFormatData, searchIndexInArrayForUid } from &#x27;../../utils/utils&#x27;;
+import { TYPE_SUPPORT_GROUP } from &#x27;../../utils/constants&#x27;;
+// services
+import { ChatManager } from &#x27;../../providers/chat-manager/chat-manager&#x27;;
+import { UserService } from &#x27;../../providers/user/user&#x27;;
+import { MessagingService } from &#x27;../../providers/messaging-service&#x27;;
+
+import { AppConfigProvider } from &#x27;../../providers/app-config/app-config&#x27;;
+
+
+
+@Injectable()
+export class GroupService {
+
+  private BASE_URL_LEAVE_GROUP: string;
+  public groupDetail: GroupModel;
+  observable: any;
+  public arrayMembers;
+  public listRefMembersInfo &#x3D; [];
+  refLoadGroupDetail;
+
+  constructor(
+    public http: Http,
+    public events: Events,
+    public msgService: MessagingService,
+    public appConfig: AppConfigProvider,
+    public chatManager: ChatManager,
+    public userService: UserService
+  ) {
+    //this.BASE_URL_LEAVE_GROUP &#x3D; &#x27;https://us-central1-chat-v2-dev.cloudfunctions.net/&#x27;;
+    this.BASE_URL_LEAVE_GROUP &#x3D; this.appConfig.getConfig().firebaseConfig.chat21ApiUrl;
+    this.observable &#x3D; new BehaviorSubject&lt;boolean&gt;(null);
+    console.log(&#x27;Hello GroupProvider Provider&#x27;);
+  }
+
+  // /** */
+  // initGroupDetails(uidUser, uidGroup) {
+  //   const tenant &#x3D; this.chatManager.getTenant();
+  //   const urlNodeContacts &#x3D; &#x27;/apps/&#x27; + tenant + &#x27;/users/&#x27; + uidUser + &#x27;/groups/&#x27; + uidGroup;
+  //   console.log(&quot;urlNodeContacts&quot;, urlNodeContacts);
+  //   return firebase.database().ref(urlNodeContacts);
+  // }
+
+  // /** */
+  // loadGroupDetail(uidUser, uidGroup) {
+  //   console.log(&quot;GroupService::loadGroudDetail::uidUser:&quot;, uidUser, &quot;uidGroup:&quot;, uidGroup);
+  //   var that &#x3D; this;
+  //   const reference &#x3D; this.initGroupDetails(uidUser, uidGroup);
+  //   // console.log(&quot;GroupService::loadGroudDetail::reference:&quot;, reference.toString());
+  //   reference.on(&#x27;value&#x27;, function (snapshot) {
+  //     console.log(&quot;GroupService::loadGroudDetail::snapshot:&quot;, snapshot.val());
+  //     that.events.publish(uidGroup + &#x27;-details&#x27;, snapshot);
+  //   });
+  // }
+
+
+  loadGroupDetail(uidUser, uidGroup) {
+    const that &#x3D; this;
+    const tenant &#x3D; this.chatManager.getTenant();
+    const urlNode &#x3D; &#x27;/apps/&#x27; + tenant + &#x27;/users/&#x27; + uidUser + &#x27;/groups/&#x27; + uidGroup;
+    console.log(&quot;url groups: &quot;, urlNode);
+    this.refLoadGroupDetail &#x3D; firebase.database().ref(urlNode);
+    this.refLoadGroupDetail.on(&#x27;value&#x27;, function (snapshot) {
+      console.log(&quot;on value: &quot;, snapshot);
+      that.events.publish(&#x27;groupDetails&#x27;, snapshot);
+    });
+  }
+
+  /**
+   * 
+   */
+  leaveAGroup(uidGroup, uidUser, callback) {
+    const appId &#x3D; this.chatManager.getTenant();
+    // const token &#x3D; this.userService.returnToken();
+    var that &#x3D; this;
+    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+    .then(function (token) {
+      console.log(&#x27;token: &#x27;, token);
+      const headers &#x3D; new Headers();
+      headers.append(&#x27;Accept&#x27;, &#x27;application/json&#x27;);
+      headers.append(&#x27;Content-Type&#x27;, &#x27;application/json&#x27;);
+      headers.append(&#x27;Authorization&#x27;, &#x27;Bearer &#x27; + token);
+
+      const options &#x3D; new RequestOptions({ headers: headers });
+     
+      const url &#x3D; that.BASE_URL_LEAVE_GROUP + &#x27;/api/&#x27; + appId + &#x27;/groups/&#x27; + uidGroup + &#x27;/members/&#x27; + uidUser;
+      console.log(&#x27;url: &#x27;, url);
+      console.log(&#x27;token: &#x27;, token);
+      const body &#x3D; {
+        &#x27;app_id&#x27;: appId
+      };
+      console.log(&#x27;------------------&gt; options: &#x27;, options);
+      console.log(&#x27;------------------&gt; body: &#x27;, JSON.stringify(body));
+      that.http
+        .delete(url, options)
+        .map((res) &#x3D;&gt; {
+          callback(res, null);
+        }).subscribe();
+    }).catch(function (error) {
+      // Handle error
+      console.log(&#x27;idToken error: &#x27;, error);
+      callback(null, error);
+    });
+       
+  }
+
+
+
+
+  closeGroup(uidGroup, callback) {
+    const appId &#x3D; this.chatManager.getTenant();
+    // const token &#x3D; this.userService.returnToken();
+    var that &#x3D; this;
+    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+      .then(function (token) {
+        console.log(&#x27;idToken.&#x27;, token);
+        const headers &#x3D; new Headers();
+        headers.append(&#x27;Accept&#x27;, &#x27;application/json&#x27;);
+        headers.append(&#x27;Content-Type&#x27;, &#x27;application/json&#x27;);
+        headers.append(&#x27;Authorization&#x27;, &#x27;Bearer &#x27; + token);
+
+        const options &#x3D; new RequestOptions({ headers: headers });
+        const url &#x3D; that.BASE_URL_LEAVE_GROUP + &#x27;/supportapi/&#x27; + appId + &#x27;/groups/&#x27; + uidGroup;
+        const body &#x3D; {};
+        console.log(&#x27;---------------&gt; 1 - url: &#x27;, url);
+        console.log(&#x27;---------------&gt; 2 - options: &#x27;, options);
+        console.log(&#x27;------------------&gt; that.http: &#x27;, that.http);
+        that.http
+          .put(url, body, options)
+          .map((res) &#x3D;&gt; {
+            callback(res, null);
+          }).subscribe();
+      }).catch(function (error) {
+        // Handle error
+        console.log(&#x27;idToken error: &#x27;, error);
+        callback(null, error);
+      });
+  }
+
+
+  getUidMembers(members): string[] {
+    this.arrayMembers &#x3D; [];
+    const memberStr &#x3D; JSON.stringify(members);
+    JSON.parse(memberStr, (key, value) &#x3D;&gt; {
+      this.arrayMembers.push(key);
+    });
+    return this.arrayMembers;
+  }
+
+
+  isSupportGroup(uid) {
+    if (uid.indexOf(TYPE_SUPPORT_GROUP) &#x3D;&#x3D;&#x3D; 0) {
+      return true;
+    }
+    return false;
+  }
+
+
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; begin:: subscribe MembersInfo &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;//
+  /** */
+
+  // getMembersInfo(uidGroup, tenant, uidUser, uidMember){
+  //   const urlNodeContacts &#x3D; &#x27;/apps/&#x27;+tenant+&#x27;/users/&#x27;+uidUser+&#x27;/groups/&#x27;+uidGroup+&#x27;/membersinfo/&#x27;+uidMember;
+  //   console.log(&quot;getMembersInfo: &quot;,urlNodeContacts);
+  //   var ref &#x3D;  firebase.database().ref(urlNodeContacts).once(&#x27;value&#x27;);
+  //   return ref;
+  // }
+
+  /** */
+  // loadMembersInfo(uidGroup, tenant, uidUser) {
+  //   const that &#x3D; this;
+  //   const urlNodeContacts &#x3D; &#x27;/apps/&#x27; + tenant + &#x27;/users/&#x27; + uidUser + &#x27;/groups/&#x27; + uidGroup + &#x27;/membersinfo&#x27;;
+  //   console.log(&quot;initMembersInfo: &quot;, urlNodeContacts);
+  //   var ref &#x3D; firebase.database().ref(urlNodeContacts);
+  //   ref.on(&#x27;value&#x27;, function (snapshot) {
+  //     console.log(&quot;VALUE: &quot;, snapshot.val());
+  //     that.events.publish(&#x27;callbackCheckVerifiedMembers-&#x27;+uidUser, snapshot);
+  //   });
+  //   this.listRefMembersInfo.push(ref);
+  // }
+
+  loadMembersInfo(uidGroup, tenant, uidUser) {
+    const that &#x3D; this;
+    //const urlNodeContacts &#x3D; &#x27;/apps/tilechat/groups/support-group-LRmSLsFn5aI3E_5IkiQ/attributes&#x27;;
+    const urlNodeContacts &#x3D; &#x27;/apps/&#x27; + tenant +  &#x27;/users/&#x27; + uidUser + &#x27;/groups/&#x27; + uidGroup +&#x27;/attributes&#x27;;
+    console.log(&quot;initMembersInfo1: &quot;, urlNodeContacts);
+    var ref &#x3D; firebase.database().ref(urlNodeContacts);
+    ref.on(&#x27;value&#x27;, function (snapshot) {
+      console.log(&quot;VALUE1: &quot;, snapshot.val());
+      that.events.publish(&#x27;callbackCheckVerifiedMembers-&#x27;+uidUser, snapshot);
+    });
+    this.listRefMembersInfo.push(ref);
+  }
+  // reference.on(&quot;child_changed&quot;, function(childSnapshot) {
+  //   that.onChangedMembersInfo(childSnapshot);
+  // });
+  // reference.on(&quot;child_removed&quot;, function(childSnapshot) {
+  //   that.onRemovedMembersInfo(childSnapshot);
+  // });
+  // reference.on(&quot;child_added&quot;, function(childSnapshot) {
+  //   that.onAddedMembersInfo(childSnapshot);
+  // })
+
+  onDisconnectMembersInfo() {
+    this.listRefMembersInfo.forEach(ref &#x3D;&gt; {
+      console.log(&quot;onDisconnectMembersInfo: &quot;, ref);
+      ref.off();
+    });
+    this.listRefMembersInfo &#x3D; [];
+  }
+
+  /** */
+  onDisconnectLoadGroupDetail() {
+    if(this.refLoadGroupDetail){
+      this.refLoadGroupDetail.off();
+    }
+  }
+  
+
+
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; end:: subscribe MembersInfo &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;//
+
+}</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'GroupService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

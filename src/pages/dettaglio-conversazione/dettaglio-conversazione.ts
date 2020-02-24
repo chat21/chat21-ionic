@@ -81,6 +81,8 @@ export class DettaglioConversazionePage extends _DetailPage {
   private advancedAttributes: any = [];
   private openInfoAdvanced: boolean = false;
 
+  public TYPE_GROUP = TYPE_GROUP;
+  public TYPE_DIRECT = TYPE_DIRECT;
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
   MSG_STATUS_RETURN_RECEIPT = MSG_STATUS_RETURN_RECEIPT;

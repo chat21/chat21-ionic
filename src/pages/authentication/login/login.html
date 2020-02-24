@@ -9,7 +9,6 @@
     <!-- <span *ngIf="isHostname(); then contentMine else contentOther"></span> -->
     <!-- <div *ngIf="isHostname()" #contentPage class="content-page"> -->
     <div *ngIf="supportMode" #contentPage class="content-page">
-        
         <div class="c21-start-msg">{{ 'LABEL_MSG_LOGIN_TILEDESK' | translate }}</div>
         <button ion-button block class="full" type="submit" (click)="tiledeskLogin()">
           {{ 'LABEL_LOGIN' | translate }}

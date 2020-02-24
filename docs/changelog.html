@@ -1,0 +1,227 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@chat21/chat21-ionic documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	      <link rel="stylesheet" href="./styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="./" class="navbar-brand">@chat21/chat21-ionic documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content getting-started">
+                   <div class="content-data">
+
+<h1 id="chat21-ionic-ver-10">chat21-ionic ver 1.0</h1>
+<h3 id="1020">1.0.20</h3>
+<ul>
+<li>minor improvements</li>
+</ul>
+<h3 id="1019">1.0.19</h3>
+<ul>
+<li>moves urls in environment</li>
+</ul>
+<h3 id="1018b">1.0.18B</h3>
+<ul>
+<li>load firebase-config in assets</li>
+</ul>
+<h3 id="1018">1.0.18</h3>
+<ul>
+<li>change BASE_URL (get it from remote)</li>
+<li>add chat21ApiUrl in firebaseConfig</li>
+</ul>
+<h3 id="1017">1.0.17</h3>
+<ul>
+<li>new - change font size .messageFirst from 1.4em to 1.2em</li>
+<li>new - change font size .content_message_wellcome from 1.4em to 1.2em</li>
+<li>new - open detail conversation from url parameters &#39;recipient&#39; and &#39;recipientFullname&#39;</li>
+<li>new - manage photo disabled on support.tiledesk.com</li>
+</ul>
+<h3 id="1016">1.0.16</h3>
+<ul>
+<li>fixes bug contacts in chat-manager</li>
+<li>fixes bug new user registration</li>
+</ul>
+<h3 id="1015">1.0.15</h3>
+<ul>
+<li>change css modal PopoverPage</li>
+<li>fixes bug splash-screen on browser platform</li>
+</ul>
+<h3 id="1014">1.0.14</h3>
+<ul>
+<li>change css footer conversation detail</li>
+<li>change css ballons conversation detail</li>
+<li>change css info conversation</li>
+<li>enabled send message with html tags </li>
+<li>enabled send all image type</li>
+<li>enabled send files pdf, zip</li>
+<li>fixes bug send second image</li>
+<li>open detail image in new tab browser</li>
+<li>disabled cache conversations</li>
+<li>fixes bug send image</li>
+<li>hidden users list on &quot;tiledesk&quot; domain</li>
+<li>disabled sync users on &quot;tiledesk&quot; domain</li>
+</ul>
+<h3 id="1013">1.0.13</h3>
+<ul>
+<li>add tab info advanced</li>
+<li>add angular-linky</li>
+<li>fixes bug status online/offline</li>
+</ul>
+<h3 id="1011">1.0.11</h3>
+<ul>
+<li>enables authentication outside of tiledesk domains</li>
+</ul>
+<h3 id="108">1.0.8</h3>
+<ul>
+<li>fixes bug on new conversation (detail conversation hidden)</li>
+</ul>
+<h3 id="107">1.0.7</h3>
+<ul>
+<li>fixes bug on change user (logout/login)</li>
+<li>fixes bug on change conversation selected and conversation archived selected</li>
+</ul>
+<h3 id="106">1.0.6</h3>
+<ul>
+<li>fixes bug leave group and close group</li>
+</ul>
+<h3 id="105">1.0.5</h3>
+<ul>
+<li>add button login on tiledesk (if hostname is tiledesk)</li>
+</ul>
+<h3 id="103">1.0.3</h3>
+<ul>
+<li>change color css conversation selected</li>
+<li>change position blue point on new message</li>
+<li>fixes bug css archived conversations (image, point, header, icon)</li>
+<li>fixes bug link in message</li>
+<li>fixes bug button &#39;Request detail&#39; only support-group</li>
+<li>fixes bug truncate message in list conversations</li>
+<li>load image profile from firestore url in conv. list, info conv., Participants </li>
+<li>fixes bug user info: load image profilo</li>
+<li>fixes bug info conversation on first load</li>
+<li>change get &#39;date last access&#39; for id in support-group (sostituito senderAuthInfo.authVar.uid con requester_id)</li>
+<li>fixes bug conversation selected for first open (blank page)</li>
+<li>fixes bug open page &#39;message info&#39; (message selected = null) </li>
+</ul>
+<h3 id="102">1.0.2</h3>
+<ul>
+<li>added timestamp =  firebase.database.ServerValue.TIMESTAMP in send message</li>
+<li>fixes bug spinner il list conversations</li>
+<li>fixes bug load image profile</li>
+<li>deleted IonicImageLoader</li>
+<li>fixes bug info conversation (load image) in archived conversations</li>
+<li>change css in the header of list conversation</li>
+<li>added number of conversations with new messages</li>
+<li>fixes bug image conversation in info conversation</li>
+<li>change css in the conversation list (new message, close message)</li>
+<li>fixes bug load image on firebase storage</li>
+<li>added IonicImageLoader for load and cache images</li>
+<li>fixes bug cache for user (conversation list, contacts and settings)</li>
+<li>add IonicStorageModule</li>
+<li>add popup on videochat</li>
+<li>fixes bug format date last access</li>
+<li>fixed bug local time in send</li>
+<li>add num version in package</li>
+<li>add npm publish</li>
+</ul>
+<h3 id="0934">0.934</h3>
+<ul>
+<li>link projectId open in _blank</li>
+<li>change the color of the text message to in the selected conversation</li>
+<li>fixes bug on metadata conversation</li>
+<li>fixes bug multiple sound on changed / added message</li>
+</ul>
+<h3 id="0933">0.933</h3>
+<ul>
+<li>add user status in header detail conversation</li>
+<li>modified css detail conversation</li>
+<li>adds CHANGELOG.md</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'getting-started';
+            var COMPODOC_CURRENT_PAGE_URL = 'changelog.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="./js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="./js/menu-wc.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+       <script src="./js/libs/zepto.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -98,13 +98,13 @@ export class ChatConversationHandler {
     const that = this;
     this.urlNodeFirebase = conversationMessagesRef(this.tenant, this.loggedUser.uid);
     this.urlNodeFirebase = this.urlNodeFirebase+this.conversationWith;
+    console.log("urlNodeFirebase *****", this.urlNodeFirebase);
     const firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
     this.messagesRef = firebaseMessages.orderByChild('timestamp').limitToLast(100);
     console.log("this.translate *****", this.translate);
 
     //// AGGIUNTA MESSAGGIO ////
     this.messagesRef.on("child_added", function (childSnapshot) {
-      
       const itemMsg = childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l'header data
       console.log("that.translate *****", that.translate);

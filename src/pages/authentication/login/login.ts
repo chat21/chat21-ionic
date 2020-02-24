@@ -106,8 +106,7 @@ export class LoginPage {
   tiledeskLogin(){
     console.log('environment.URL_DASHBOARD ', environment.URL_DASHBOARD) 
     window.open(environment.URL_DASHBOARD, "_blank");
-
-
+    //this.loginUserFirebase();
   }
   
   // isHostname(){
@@ -115,6 +114,68 @@ export class LoginPage {
   //   if(this.hostname === BASE_URL_HOSTNAME){return true}
   //   return false
   // }
+
+
+signInWithCustomToken(email, psw) {
+    let json = JSON.stringify({
+        "email": email,
+        "password": psw
+    });
+    var urlCustomToken = 'https://tiledesk-server-pre.herokuapp.com/firebase/auth/signin';
+    var httpRequest = this.createCORSRequest('POST', urlCustomToken,true); //set async to false because loadParams must return when the get is complete
+    if (!httpRequest) {
+        throw new Error('CORS not supported');
+    }
+    httpRequest.setRequestHeader('Content-type', 'application/json');
+    httpRequest.send(json);
+    httpRequest.onload = function() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                try {
+                    var response = JSON.parse(httpRequest.responseText);
+                    //window.tiledesk.signInWithCustomToken(response);
+                }
+                catch(err) {
+                    console.error(err.message);
+                }
+                return true;
+            } else {
+                alert('There was a problem with the request.');
+            }
+        }         
+    };
+    httpRequest.onerror = function() {
+        console.error('There was an error!');
+        return false;
+    };
+}
+
+createCORSRequest(method, url, async) {
+  console.log("createCORSRequest");
+    var xhr = new XMLHttpRequest();
+    if ("withCredentials" in xhr) {
+        // Check if the XMLHttpRequest object has a "withCredentials" property.
+        // "withCredentials" only exists on XMLHTTPRequest2 objects.
+        xhr.open(method, url, async);
+        console.log("xhr12");
+    } 
+//     else if (typeof XDomainRequest != "undefined") {
+//          // Otherwise, check if XDomainRequest.
+//          // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+//          xhr = new XDomainRequest();
+//          xhr.open(method, url);
+//          console.log("xhr111");
+//     } 
+    else {
+         // Otherwise, CORS is not supported by the browser.
+         xhr = null;
+         console.log("xhrnull");
+    }
+    return xhr;
+}
+
+
+
 
   /**
    * quando premo sul pulsante login richiamo questa func che:

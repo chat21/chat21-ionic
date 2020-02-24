@@ -11,10 +11,10 @@ th[role=columnheader]:not(.no-sort):after {
 	border-color: #404040 transparent;
 	visibility: visible;
 	opacity: 1;
-	-webkit-user-select: text;
-	-moz-user-select: text;
-	-ms-user-select: text;
-	user-select: text;
+	-ms-user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
 }
 
 th[aria-sort=ascending]:not(.no-sort):after {

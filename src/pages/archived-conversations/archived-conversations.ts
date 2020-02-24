@@ -36,9 +36,8 @@ export class ArchivedConversationsPage {
     this.areArchivedConversationsAvailable = false;
     this.tenant = navParams.get('tenant');
     this.loggedUser = navParams.get('loggedUser');
-
-    const that = this;
     this.databaseProvider.initialize(this.loggedUser, this.tenant);
+    const that = this;
     this.databaseProvider.getUidLastOpenConversation()
     .then(function (uid: string) {
       that.uidConvSelected = uid;
@@ -49,12 +48,19 @@ export class ArchivedConversationsPage {
     });
   }
 
+  ionViewDidEnter(){
+    console.log('ArchivedConversationsPage ionViewDidEnter');
+    if(this.uidConvSelected){
+      this.inizialize();
+    }
+  }
 
   ionViewWillUnload() {
     this.archivedConversations = []; // clear the archived conversations list
   }
 
   inizialize(){
+    console.log('ArchivedConversationsPage this.uidConvSelected::', this.uidConvSelected);
     // get the list of archived conversations from the navigation and preload the archived conversations list
     this.archivedConversations = this.navParams.get('archivedConversations');
     // update the archvied conversations availability

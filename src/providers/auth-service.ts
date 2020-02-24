@@ -67,13 +67,33 @@ export class AuthService {
 
   // Login with Email
   doLoginFirebase(email: string, password: string): any {
-    return this.fireAuth.signInWithEmailAndPassword(email, password)
-    // .then(res => {
-    //   console.log("signInWithEmailAndPassword::: ",res);
-    // });
+    return this.fireAuth.signInWithEmailAndPassword(email, password);
+    //var token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTU4MjMwNTc5MSwiZXhwIjoxNTgyMzA5MzkxLCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1hMHIxNkBjaGF0MjEtcHJlLTAxLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstYTByMTZAY2hhdDIxLXByZS0wMS5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6IjVhYjBmM2ZhNTcwNjZlMDAxNGJmZDcxZSJ9.NowEGGsDG1SiWXMjVQiu44Hi2vZJASrFm-rIe5bRjwskNYuQtJqV2N4LCjYvBn5Ie_jRCNGABIFj-L6YNl8wz1ZJ6ZNIiBGgKSzc6P-slwMNvYUMA7i1Jopn-git8qPg1li_36FXO-TAedMcwwGCD-BPFzqbIgEbemex1U_Bb11AqvlospSeh7zHT5misg7AflQGIG0z60v5iR6O0vz0qhaZYpPSkFAI-YibvMZAnXqs6HFKAi7o-f7O9lZ6TG8tU1xddbgVCosst8zIU4_2yNKQCJlNGSiCkWfR5uaY8exYwWImEOl1RCsldsdWmRFkjC3SjJGYB_kGepbGlzrXqg';
+    //return this.fireAuth.signInWithCustomToken(token)
   }
 
 
+  authenticateFirebaseCustomToken(token1) {
+    var token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTU4MjExMjg5MSwiZXhwIjoxNTgyMTE2NDkxLCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1hMHIxNkBjaGF0MjEtcHJlLTAxLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstYTByMTZAY2hhdDIxLXByZS0wMS5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6IjVhYjBmM2ZhNTcwNjZlMDAxNGJmZDcxZSJ9.Llje-vrKd2j4wPnZP6pRccPj04Fq5YFGa_tkWb6WO2lwcu4-OWkI0f8hfHk39jUKkWHTFDSAJWRJQo4VnuojplkB8ZKBloynD1OgMl4aM7Ou6W0z5mvKwiOLTmeVzErNgPMv5C-AoZeucLQN8PahuP_W8SD-7q8lxHnHAQrI-4R_8fdW4njAKuskPYkIxa5n0GpJk0J5-3hwPTNjsZTfwP0J7c9tVFI4_2XhqbjhKloa5W2LsH6X3YXTQ9SXBRt7vJ6ujsOggrcvpKWNql33XG2yy9d1zCd1OOaxHgtc6f-1hWmlga-WPKkDvPLPJ4ZdF4QHqKTnSLeNQhmC-xiDDA';
+    const that = this;
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function() {
+      // Sign-out successful.
+      return this.fireAuth.signInWithCustomToken(token)
+      .then(function(response) {
+        this.g.wdLog(['obsLoggedUser - authService.authenticateFirebaseCustomToken']);
+        // that.getToken();????
+        return response;
+      })
+      .catch(function(error) {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+      });
+    })
+    .catch(function(error) {
+      console.error('Error setting firebase auth persistence', error);
+    });
+  }
+  
   // Signin with Facebook
   // signInWithFacebook(): any {
   //   return this.afAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider())

@@ -3,954 +3,513 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>ionic-hello-world documentation</title>
+        <title>@chat21/chat21-ionic documentation</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-	    <link rel="stylesheet" href="../styles/style.css">
+	      <link rel="stylesheet" href="../styles/style.css">
     </head>
     <body>
 
         <div class="navbar navbar-default navbar-fixed-top visible-xs">
-            <a href="../" class="navbar-brand">ionic-hello-world documentation</a>
-            <button type="button" class="btn btn-default btn-menu fa fa-bars" id="btn-menu"></button>
+            <a href="../" class="navbar-brand">@chat21/chat21-ionic documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-            <div id="book-search-input" role="search">
-                <input type="text" placeholder="Type to search">
-            </div>
-            <nav>
-            
-                <ul class="list">
-            
-                    <li class="title">
-                        <a href="../index.html">ionic-hello-world documentation</a>
-                    </li>
-            
-                    <li class="divider"></li>
-            
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="../index.html"><span class="fa fa-home"></span>Getting started</a>
-                        <ul class="links">
-                                <li class="link">
-                                    <a 
-                                        
-                                         href="../overview.html" 
-                                         href="../overview.html" 
-                                        >
-                                        <span class="fa fa-th"></span>Overview
-                                    </a>
-                                </li>
-                                <li class="link">
-                                  <a href="../index.html" ><span class="fa fa-file-text-o"></span>README</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="../modules.html" >
-                            <div class="menu-toggler linked" data-toggle="collapse"
-                                    data-target="#xs-modules-links"
-                            >
-                                <span class="fa fa-archive"></span>
-                                <span class="link-name">Modules</span>
-                                <span class="fa fa-angle-down"></span>
-                            </div>
-                        </a>
-                        <ul class="links collapse "
-                                id="xs-modules-links"
-                            >
-                                <li class="link">
-                                    <a href="../modules/AppModule.html"  data-type="entity-link" class="active" >AppModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/DettaglioConversazionePageModule.html" >DettaglioConversazionePageModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/ListaConversazioniPageModule.html" >ListaConversazioniPageModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/LoginModule.html" >LoginModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/PlaceholderPageModule.html" >PlaceholderPageModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/PopoverPageModule.html" >PopoverPageModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/PopoverProfilePageModule.html" >PopoverProfilePageModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/ProfilePageModule.html" >ProfilePageModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/RegisterModule.html" >RegisterModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/ResetpwdModule.html" >ResetpwdModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/UpdateImageProfilePageModule.html" >UpdateImageProfilePageModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/UsersModule.html" >UsersModule</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple menu-toggler" data-toggle="collapse"
-                                data-target="#xs-components-links"
-                            >
-                            <span class="fa fa-cogs"></span>
-                            <span>Components</span>
-                            <span class="fa fa-angle-down"></span>
-                        </div>
-                        <ul class="links collapse "
-                                id="xs-components-links"
-                            >
-                                <li class="link">
-                                    <a href="../components/ChatBubble.html" >ChatBubble</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/DettaglioConversazionePage.html" >DettaglioConversazionePage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/ElasticTextarea.html" >ElasticTextarea</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/ListaConversazioniPage.html" >ListaConversazioniPage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/LoginPage.html" >LoginPage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/MyApp.html" >MyApp</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/PlaceholderPage.html" >PlaceholderPage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/PopoverPage.html" >PopoverPage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/PopoverProfilePage.html" >PopoverProfilePage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/ProfilePage.html" >ProfilePage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/RegisterPage.html" >RegisterPage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/ResetpwdPage.html" >ResetpwdPage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/UpdateImageProfilePage.html" >UpdateImageProfilePage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/UsersPage.html" >UsersPage</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple menu-toggler" data-toggle="collapse"
-                                data-target="#xs-directives-links"
-                            >
-                            <span class="fa fa-code"></span>
-                            <span>Directives</span>
-                            <span class="fa fa-angle-down"></span>
-                        </div>
-                        <ul class="links collapse "
-                                id="xs-directives-links"
-                            >
-                                <li class="link">
-                                    <a href="../directives/AutosizeDirective.html" >AutosizeDirective</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple menu-toggler" data-toggle="collapse"
-                                data-target="#xs-classes-links"
-                            >
-                            <span class="fa fa-file-code-o"></span>
-                            <span>Classes</span>
-                            <span class="fa fa-angle-down"></span>
-                        </div>
-                        <ul class="links collapse "
-                                id="xs-classes-links"
-                            >
-                                <li class="link">
-                                    <a href="../classes/ConversationModel.html" >ConversationModel</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/MessageModel.html" >MessageModel</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/UploadModel.html" >UploadModel</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/UserModel.html" >UserModel</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/_DetailPage.html" >_DetailPage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/_MasterPage.html" >_MasterPage</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple menu-toggler" data-toggle="collapse"
-                                data-target="#xs-injectables-links"
-                            >
-                            <span class="fa fa-long-arrow-down"></span>
-                            <span>Injectables</span>
-                            <span class="fa fa-angle-down"></span>
-                        </div>
-                        <ul class="links collapse "
-                                id="xs-injectables-links"
-                            >
-                                <li class="link">
-                                    <a href="../injectables/AuthService.html" >AuthService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/ChatContactsSynchronizer.html" >ChatContactsSynchronizer</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/ChatConversationHandler.html" >ChatConversationHandler</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/ChatConversationsHandler.html" >ChatConversationsHandler</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/ChatManager.html" >ChatManager</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/ChatPresenceHandler.html" >ChatPresenceHandler</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/DatabaseProvider.html" >DatabaseProvider</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/MessagingService.html" >MessagingService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/NavProxyService.html" >NavProxyService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/UploadService.html" >UploadService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/UserService.html" >UserService</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-            
-            
-            
-                    <li class="chapter">
-                        <div class="simple menu-toggler" data-toggle="collapse"
-                                data-target="#xs-miscellaneous-links"
-                            >
-                            <span class="fa fa-cubes"></span>
-                            <span>Miscellaneous</span>
-                            <span class="fa fa-angle-down"></span>
-                        </div>
-                        <ul class="links collapse "
-                                id="xs-miscellaneous-links"
-                            >
-                                <li class="link">
-                                  <a href="../miscellaneous/functions.html" data-type="entity-link" >Functions</a>
-                                </li>
-                                <li class="link">
-                                  <a href="../miscellaneous/variables.html" data-type="entity-link" >Variables</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="../coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
-                    </li>
-            
-                    <li class="divider"></li>
-                    <li class="copyright">
-                            Documentation generated using <a href="https://compodoc.github.io/website/" target="_blank">
-                                        <img src="..//images/compodoc-vectorise.svg" class="img-responsive">
-                            </a>
-                    </li>
-            
-                </ul>
-            
-            </nav>
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
            <div class="row main">
                <div class="hidden-xs menu">
-                   <nav>
-                   
-                       <ul class="list">
-                   
-                           <li class="title">
-                               <a href="../index.html">ionic-hello-world documentation</a>
-                           </li>
-                   
-                           <li class="divider"></li>
-                   
-                               <div id="book-search-input" role="search">
-                                   <input type="text" placeholder="Type to search">
-                               </div>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="../index.html"><span class="fa fa-home"></span>Getting started</a>
-                               <ul class="links">
-                                       <li class="link">
-                                           <a 
-                                               
-                                                href="../overview.html" 
-                                                href="../overview.html" 
-                                               >
-                                               <span class="fa fa-th"></span>Overview
-                                           </a>
-                                       </li>
-                                       <li class="link">
-                                         <a href="../index.html" ><span class="fa fa-file-text-o"></span>README</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="../modules.html" >
-                                   <div class="menu-toggler linked" data-toggle="collapse"
-                                           data-target="#modules-links"
-                                   >
-                                       <span class="fa fa-archive"></span>
-                                       <span class="link-name">Modules</span>
-                                       <span class="fa fa-angle-down"></span>
-                                   </div>
-                               </a>
-                               <ul class="links collapse "
-                                       id="modules-links"
-                   >
-                                       <li class="link">
-                                           <a href="../modules/AppModule.html"  data-type="entity-link" class="active" >AppModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/DettaglioConversazionePageModule.html" >DettaglioConversazionePageModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/ListaConversazioniPageModule.html" >ListaConversazioniPageModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/LoginModule.html" >LoginModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/PlaceholderPageModule.html" >PlaceholderPageModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/PopoverPageModule.html" >PopoverPageModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/PopoverProfilePageModule.html" >PopoverProfilePageModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/ProfilePageModule.html" >ProfilePageModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/RegisterModule.html" >RegisterModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/ResetpwdModule.html" >ResetpwdModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/UpdateImageProfilePageModule.html" >UpdateImageProfilePageModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/UsersModule.html" >UsersModule</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple menu-toggler" data-toggle="collapse"
-                                       data-target="#components-links"
-                   >
-                                   <span class="fa fa-cogs"></span>
-                                   <span>Components</span>
-                                   <span class="fa fa-angle-down"></span>
-                               </div>
-                               <ul class="links collapse "
-                                       id="components-links"
-                   >
-                                       <li class="link">
-                                           <a href="../components/ChatBubble.html" >ChatBubble</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/DettaglioConversazionePage.html" >DettaglioConversazionePage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/ElasticTextarea.html" >ElasticTextarea</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/ListaConversazioniPage.html" >ListaConversazioniPage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/LoginPage.html" >LoginPage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/MyApp.html" >MyApp</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/PlaceholderPage.html" >PlaceholderPage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/PopoverPage.html" >PopoverPage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/PopoverProfilePage.html" >PopoverProfilePage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/ProfilePage.html" >ProfilePage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/RegisterPage.html" >RegisterPage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/ResetpwdPage.html" >ResetpwdPage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/UpdateImageProfilePage.html" >UpdateImageProfilePage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/UsersPage.html" >UsersPage</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple menu-toggler" data-toggle="collapse"
-                                       data-target="#directives-links"
-                   >
-                                   <span class="fa fa-code"></span>
-                                   <span>Directives</span>
-                                   <span class="fa fa-angle-down"></span>
-                               </div>
-                               <ul class="links collapse "
-                                       id="directives-links"
-                   >
-                                       <li class="link">
-                                           <a href="../directives/AutosizeDirective.html" >AutosizeDirective</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple menu-toggler" data-toggle="collapse"
-                                       data-target="#classes-links"
-                   >
-                                   <span class="fa fa-file-code-o"></span>
-                                   <span>Classes</span>
-                                   <span class="fa fa-angle-down"></span>
-                               </div>
-                               <ul class="links collapse "
-                                       id="classes-links"
-                   >
-                                       <li class="link">
-                                           <a href="../classes/ConversationModel.html" >ConversationModel</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/MessageModel.html" >MessageModel</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/UploadModel.html" >UploadModel</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/UserModel.html" >UserModel</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/_DetailPage.html" >_DetailPage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/_MasterPage.html" >_MasterPage</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple menu-toggler" data-toggle="collapse"
-                                       data-target="#injectables-links"
-                   >
-                                   <span class="fa fa-long-arrow-down"></span>
-                                   <span>Injectables</span>
-                                   <span class="fa fa-angle-down"></span>
-                               </div>
-                               <ul class="links collapse "
-                                       id="injectables-links"
-                   >
-                                       <li class="link">
-                                           <a href="../injectables/AuthService.html" >AuthService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/ChatContactsSynchronizer.html" >ChatContactsSynchronizer</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/ChatConversationHandler.html" >ChatConversationHandler</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/ChatConversationsHandler.html" >ChatConversationsHandler</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/ChatManager.html" >ChatManager</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/ChatPresenceHandler.html" >ChatPresenceHandler</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/DatabaseProvider.html" >DatabaseProvider</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/MessagingService.html" >MessagingService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/NavProxyService.html" >NavProxyService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/UploadService.html" >UploadService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/UserService.html" >UserService</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                   
-                   
-                   
-                           <li class="chapter">
-                               <div class="simple menu-toggler" data-toggle="collapse"
-                                       data-target="#miscellaneous-links"
-                   >
-                                   <span class="fa fa-cubes"></span>
-                                   <span>Miscellaneous</span>
-                                   <span class="fa fa-angle-down"></span>
-                               </div>
-                               <ul class="links collapse "
-                                       id="miscellaneous-links"
-                   >
-                                       <li class="link">
-                                         <a href="../miscellaneous/functions.html" data-type="entity-link" >Functions</a>
-                                       </li>
-                                       <li class="link">
-                                         <a href="../miscellaneous/variables.html" data-type="entity-link" >Variables</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="../coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
-                           </li>
-                   
-                           <li class="divider"></li>
-                           <li class="copyright">
-                                   Documentation generated using <a href="https://compodoc.github.io/website/" target="_blank">
-                                               <img src="..//images/compodoc-vectorise.svg" class="img-responsive">
-                                   </a>
-                           </li>
-                   
-                       </ul>
-                   
-                   </nav>
+                   <compodoc-menu mode="normal"></compodoc-menu>
                </div>
+               <!-- START CONTENT -->
                <div class="content module">
                    <div class="content-data">
 
 
 
 <ol class="breadcrumb">
-  <li>Modules</li>
-  <li>AppModule</li>
+    <li>Modules</li>
+    <li>AppModule</li>
 </ol>
 
-      <div class="text-center module-graph-container">
-          <div id="module-graph-svg">
-              <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div class="text-center module-graph-container">
+    <div id="module-graph-svg">
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: dependencies Pages: 1 -->
-<svg width="3743pt" height="284pt"
- viewBox="0.00 0.00 3743.00 284.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="5418pt" height="284pt"
+ viewBox="0.00 0.00 5418.00 284.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 280)">
 <title>dependencies</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-280 3739,-280 3739,4 -4,4"/>
-<text text-anchor="start" x="1846.5091" y="-42.4" font-family="sans-serif" font-weight="bold" font-size="14.00" fill="#000000">Legend</text>
-<polygon fill="#ffffb3" stroke="transparent" points="1633.5,-10 1633.5,-30 1653.5,-30 1653.5,-10 1633.5,-10"/>
-<text text-anchor="start" x="1657.129" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Declarations</text>
-<polygon fill="#8dd3c7" stroke="transparent" points="1746.5,-10 1746.5,-30 1766.5,-30 1766.5,-10 1746.5,-10"/>
-<text text-anchor="start" x="1770.2251" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Module</text>
-<polygon fill="#80b1d3" stroke="transparent" points="1832.5,-10 1832.5,-30 1852.5,-30 1852.5,-10 1832.5,-10"/>
-<text text-anchor="start" x="1856.2812" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Bootstrap</text>
-<polygon fill="#fdb462" stroke="transparent" points="1929.5,-10 1929.5,-30 1949.5,-30 1949.5,-10 1929.5,-10"/>
-<text text-anchor="start" x="1953.1732" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Providers</text>
-<polygon fill="#fb8072" stroke="transparent" points="2025.5,-10 2025.5,-30 2045.5,-30 2045.5,-10 2025.5,-10"/>
-<text text-anchor="start" x="2049.2258" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Exports</text>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-280 5414,-280 5414,4 -4,4"/>
+<text text-anchor="start" x="2684.0091" y="-42.4" font-family="sans-serif" font-weight="bold" font-size="14.00" fill="#000000">Legend</text>
+<polygon fill="#ffffb3" stroke="transparent" points="2471,-10 2471,-30 2491,-30 2491,-10 2471,-10"/>
+<text text-anchor="start" x="2494.629" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Declarations</text>
+<polygon fill="#8dd3c7" stroke="transparent" points="2584,-10 2584,-30 2604,-30 2604,-10 2584,-10"/>
+<text text-anchor="start" x="2607.7251" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Module</text>
+<polygon fill="#80b1d3" stroke="transparent" points="2670,-10 2670,-30 2690,-30 2690,-10 2670,-10"/>
+<text text-anchor="start" x="2693.7812" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Bootstrap</text>
+<polygon fill="#fdb462" stroke="transparent" points="2767,-10 2767,-30 2787,-30 2787,-10 2767,-10"/>
+<text text-anchor="start" x="2790.6732" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Providers</text>
+<polygon fill="#fb8072" stroke="transparent" points="2863,-10 2863,-30 2883,-30 2883,-10 2863,-10"/>
+<text text-anchor="start" x="2886.7258" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Exports</text>
 <g id="clust1" class="cluster">
 <title>cluster_AppModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="8,-70 8,-268 3727,-268 3727,-70 8,-70"/>
+<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="8,-70 8,-268 5402,-268 5402,-70 8,-70"/>
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_AppModule_declarations</title>
-<polygon fill="none" stroke="#000000" points="2074,-78 2074,-130 3719,-130 3719,-78 2074,-78"/>
+<polygon fill="none" stroke="#000000" points="3009,-78 3009,-130 5394,-130 5394,-78 3009,-78"/>
 </g>
-<g id="clust18" class="cluster">
+<g id="clust23" class="cluster">
 <title>cluster_AppModule_bootstrap</title>
-<polygon fill="none" stroke="#000000" points="2174,-208 2174,-260 2262,-260 2262,-208 2174,-208"/>
+<polygon fill="none" stroke="#000000" points="3145,-208 3145,-260 3233,-260 3233,-208 3145,-208"/>
 </g>
-<g id="clust19" class="cluster">
+<g id="clust24" class="cluster">
 <title>cluster_AppModule_providers</title>
-<polygon fill="none" stroke="#000000" points="16,-78 16,-130 2066,-130 2066,-78 16,-78"/>
+<polygon fill="none" stroke="#000000" points="16,-78 16,-130 3001,-130 3001,-78 16,-78"/>
 </g>
-<!-- MyApp -->
+<!-- ArchivedConversationsPage -->
 <g id="node1" class="node">
-<title>MyApp</title>
-<polygon fill="#ffffb3" stroke="#000000" points="3710.5529,-122 3651.4471,-122 3651.4471,-86 3710.5529,-86 3710.5529,-122"/>
-<text text-anchor="middle" x="3681" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">MyApp</text>
+<title>ArchivedConversationsPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="5385.896,-122 5210.104,-122 5210.104,-86 5385.896,-86 5385.896,-122"/>
+<text text-anchor="middle" x="5298" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ArchivedConversationsPage</text>
 </g>
 <!-- AppModule -->
-<g id="node14" class="node">
+<g id="node19" class="node">
 <title>AppModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="2259.6571,-187 2256.6571,-191 2235.6571,-191 2232.6571,-187 2176.3429,-187 2176.3429,-151 2259.6571,-151 2259.6571,-187"/>
-<text text-anchor="middle" x="2218" y="-164.8" font-family="Times,serif" font-size="14.00" fill="#000000">AppModule</text>
+<polygon fill="#8dd3c7" stroke="#000000" points="3230.6571,-187 3227.6571,-191 3206.6571,-191 3203.6571,-187 3147.3429,-187 3147.3429,-151 3230.6571,-151 3230.6571,-187"/>
+<text text-anchor="middle" x="3189" y="-164.8" font-family="Times,serif" font-size="14.00" fill="#000000">AppModule</text>
 </g>
-<!-- MyApp&#45;&gt;AppModule -->
+<!-- ArchivedConversationsPage&#45;&gt;AppModule -->
 <g id="edge1" class="edge">
-<title>MyApp&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M3681,-122.1532C3681,-145.7566 3681,-184 3681,-184 3681,-184 2269.8167,-184 2269.8167,-184"/>
-<polygon fill="#000000" stroke="#000000" points="2269.8167,-180.5001 2259.8167,-184 2269.8167,-187.5001 2269.8167,-180.5001"/>
-</g>
-<!-- UsersPage -->
-<g id="node2" class="node">
-<title>UsersPage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="3633.5828,-122 3558.4172,-122 3558.4172,-86 3633.5828,-86 3633.5828,-122"/>
-<text text-anchor="middle" x="3596" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">UsersPage</text>
-</g>
-<!-- UsersPage&#45;&gt;AppModule -->
-<g id="edge2" class="edge">
-<title>UsersPage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M3596,-122.2479C3596,-145.0179 3596,-181 3596,-181 3596,-181 2269.9932,-181 2269.9932,-181"/>
-<polygon fill="#000000" stroke="#000000" points="2269.9933,-177.5001 2259.9932,-181 2269.9932,-184.5001 2269.9933,-177.5001"/>
-</g>
-<!-- LoginPage -->
-<g id="node3" class="node">
-<title>LoginPage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="3540.1558,-122 3463.8442,-122 3463.8442,-86 3540.1558,-86 3540.1558,-122"/>
-<text text-anchor="middle" x="3502" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">LoginPage</text>
-</g>
-<!-- LoginPage&#45;&gt;AppModule -->
-<g id="edge3" class="edge">
-<title>LoginPage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M3502,-122.2921C3502,-144.2057 3502,-178 3502,-178 3502,-178 2269.991,-178 2269.991,-178"/>
-<polygon fill="#000000" stroke="#000000" points="2269.991,-174.5001 2259.991,-178 2269.9909,-181.5001 2269.991,-174.5001"/>
-</g>
-<!-- RegisterPage -->
-<g id="node4" class="node">
-<title>RegisterPage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="3445.8641,-122 3356.1359,-122 3356.1359,-86 3445.8641,-86 3445.8641,-122"/>
-<text text-anchor="middle" x="3401" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">RegisterPage</text>
-</g>
-<!-- RegisterPage&#45;&gt;AppModule -->
-<g id="edge4" class="edge">
-<title>RegisterPage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M3401,-122.2843C3401,-143.3211 3401,-175 3401,-175 3401,-175 2269.7561,-175 2269.7561,-175"/>
-<polygon fill="#000000" stroke="#000000" points="2269.7561,-171.5001 2259.7561,-175 2269.7561,-178.5001 2269.7561,-171.5001"/>
-</g>
-<!-- ResetpwdPage -->
-<g id="node5" class="node">
-<title>ResetpwdPage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="3338.4203,-122 3239.5797,-122 3239.5797,-86 3338.4203,-86 3338.4203,-122"/>
-<text text-anchor="middle" x="3289" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ResetpwdPage</text>
-</g>
-<!-- ResetpwdPage&#45;&gt;AppModule -->
-<g id="edge5" class="edge">
-<title>ResetpwdPage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M3289,-122.2228C3289,-142.3652 3289,-172 3289,-172 3289,-172 2269.9845,-172 2269.9845,-172"/>
-<polygon fill="#000000" stroke="#000000" points="2269.9845,-168.5001 2259.9845,-172 2269.9844,-175.5001 2269.9845,-168.5001"/>
-</g>
-<!-- ProfilePage -->
-<g id="node6" class="node">
-<title>ProfilePage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="3221.812,-122 3140.188,-122 3140.188,-86 3221.812,-86 3221.812,-122"/>
-<text text-anchor="middle" x="3181" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ProfilePage</text>
-</g>
-<!-- ProfilePage&#45;&gt;AppModule -->
-<g id="edge6" class="edge">
-<title>ProfilePage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M3181,-122.1061C3181,-141.3391 3181,-169 3181,-169 3181,-169 2269.688,-169 2269.688,-169"/>
-<polygon fill="#000000" stroke="#000000" points="2269.688,-165.5001 2259.688,-169 2269.688,-172.5001 2269.688,-165.5001"/>
-</g>
-<!-- ListaConversazioniPage -->
-<g id="node7" class="node">
-<title>ListaConversazioniPage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="3122.0716,-122 2969.9284,-122 2969.9284,-86 3122.0716,-86 3122.0716,-122"/>
-<text text-anchor="middle" x="3046" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ListaConversazioniPage</text>
-</g>
-<!-- ListaConversazioniPage&#45;&gt;AppModule -->
-<g id="edge7" class="edge">
-<title>ListaConversazioniPage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M3046,-122.2667C3046,-140.5552 3046,-166 3046,-166 3046,-166 2269.9131,-166 2269.9131,-166"/>
-<polygon fill="#000000" stroke="#000000" points="2269.9131,-162.5001 2259.9131,-166 2269.9131,-169.5001 2269.9131,-162.5001"/>
-</g>
-<!-- DettaglioConversazionePage -->
-<g id="node8" class="node">
-<title>DettaglioConversazionePage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="2952.0015,-122 2773.9985,-122 2773.9985,-86 2952.0015,-86 2952.0015,-122"/>
-<text text-anchor="middle" x="2863" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">DettaglioConversazionePage</text>
-</g>
-<!-- DettaglioConversazionePage&#45;&gt;AppModule -->
-<g id="edge8" class="edge">
-<title>DettaglioConversazionePage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M2863,-122.0225C2863,-139.3734 2863,-163 2863,-163 2863,-163 2269.8233,-163 2269.8233,-163"/>
-<polygon fill="#000000" stroke="#000000" points="2269.8233,-159.5001 2259.8233,-163 2269.8232,-166.5001 2269.8233,-159.5001"/>
-</g>
-<!-- PlaceholderPage -->
-<g id="node9" class="node">
-<title>PlaceholderPage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="2755.795,-122 2646.205,-122 2646.205,-86 2755.795,-86 2755.795,-122"/>
-<text text-anchor="middle" x="2701" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">PlaceholderPage</text>
-</g>
-<!-- PlaceholderPage&#45;&gt;AppModule -->
-<g id="edge9" class="edge">
-<title>PlaceholderPage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M2701,-122.027C2701,-138.3976 2701,-160 2701,-160 2701,-160 2270.0181,-160 2270.0181,-160"/>
-<polygon fill="#000000" stroke="#000000" points="2270.0182,-156.5001 2260.0181,-160 2270.0181,-163.5001 2270.0182,-156.5001"/>
-</g>
-<!-- PopoverPage -->
-<g id="node10" class="node">
-<title>PopoverPage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="2627.8697,-122 2538.1303,-122 2538.1303,-86 2627.8697,-86 2627.8697,-122"/>
-<text text-anchor="middle" x="2583" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">PopoverPage</text>
-</g>
-<!-- PopoverPage&#45;&gt;AppModule -->
-<g id="edge10" class="edge">
-<title>PopoverPage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M2583,-122.2396C2583,-137.5706 2583,-157 2583,-157 2583,-157 2269.8701,-157 2269.8701,-157"/>
-<polygon fill="#000000" stroke="#000000" points="2269.8702,-153.5001 2259.8701,-157 2269.8701,-160.5001 2269.8702,-153.5001"/>
-</g>
-<!-- PopoverProfilePage -->
-<g id="node11" class="node">
-<title>PopoverProfilePage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="2519.9692,-122 2392.0308,-122 2392.0308,-86 2519.9692,-86 2519.9692,-122"/>
-<text text-anchor="middle" x="2456" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">PopoverProfilePage</text>
-</g>
-<!-- PopoverProfilePage&#45;&gt;AppModule -->
-<g id="edge11" class="edge">
-<title>PopoverProfilePage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M2456,-122.0511C2456,-136.373 2456,-154 2456,-154 2456,-154 2269.7288,-154 2269.7288,-154"/>
-<polygon fill="#000000" stroke="#000000" points="2269.7288,-150.5001 2259.7288,-154 2269.7287,-157.5001 2269.7288,-150.5001"/>
-</g>
-<!-- UpdateImageProfilePage -->
-<g id="node12" class="node">
-<title>UpdateImageProfilePage</title>
-<polygon fill="#ffffb3" stroke="#000000" points="2374.2185,-122 2217.7815,-122 2217.7815,-86 2374.2185,-86 2374.2185,-122"/>
-<text text-anchor="middle" x="2296" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">UpdateImageProfilePage</text>
-</g>
-<!-- UpdateImageProfilePage&#45;&gt;AppModule -->
-<g id="edge12" class="edge">
-<title>UpdateImageProfilePage&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M2238.7346,-122.1061C2238.7346,-122.1061 2238.7346,-140.991 2238.7346,-140.991"/>
-<polygon fill="#000000" stroke="#000000" points="2235.2346,-140.9909 2238.7346,-150.991 2242.2346,-140.991 2235.2346,-140.9909"/>
+<title>ArchivedConversationsPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M5298,-122.3802C5298,-146.2785 5298,-185 5298,-185 5298,-185 3241.1281,-185 3241.1281,-185"/>
+<polygon fill="#000000" stroke="#000000" points="3241.1281,-181.5001 3231.1281,-185 3241.128,-188.5001 3241.1281,-181.5001"/>
 </g>
 <!-- AutosizeDirective -->
-<g id="node13" class="node">
+<g id="node2" class="node">
 <title>AutosizeDirective</title>
-<polygon fill="#ffffb3" stroke="#000000" points="2199.8445,-122 2082.1555,-122 2082.1555,-86 2199.8445,-86 2199.8445,-122"/>
-<text text-anchor="middle" x="2141" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">AutosizeDirective</text>
+<polygon fill="#ffffb3" stroke="#000000" points="5191.8445,-122 5074.1555,-122 5074.1555,-86 5191.8445,-86 5191.8445,-122"/>
+<text text-anchor="middle" x="5133" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">AutosizeDirective</text>
 </g>
 <!-- AutosizeDirective&#45;&gt;AppModule -->
-<g id="edge13" class="edge">
+<g id="edge2" class="edge">
 <title>AutosizeDirective&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M2188.047,-122.1061C2188.047,-122.1061 2188.047,-140.991 2188.047,-140.991"/>
-<polygon fill="#000000" stroke="#000000" points="2184.5471,-140.9909 2188.047,-150.991 2191.5471,-140.991 2184.5471,-140.9909"/>
+<path fill="none" stroke="#000000" d="M5133,-122.3228C5133,-145.6602 5133,-183 5133,-183 5133,-183 3240.9557,-183 3240.9557,-183"/>
+<polygon fill="#000000" stroke="#000000" points="3240.9557,-179.5001 3230.9557,-183 3240.9557,-186.5001 3240.9557,-179.5001"/>
+</g>
+<!-- DettaglioConversazionePage -->
+<g id="node3" class="node">
+<title>DettaglioConversazionePage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="5056.0015,-122 4877.9985,-122 4877.9985,-86 5056.0015,-86 5056.0015,-122"/>
+<text text-anchor="middle" x="4967" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">DettaglioConversazionePage</text>
+</g>
+<!-- DettaglioConversazionePage&#45;&gt;AppModule -->
+<g id="edge3" class="edge">
+<title>DettaglioConversazionePage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M4967,-122.2479C4967,-145.0179 4967,-181 4967,-181 4967,-181 3240.7639,-181 3240.7639,-181"/>
+<polygon fill="#000000" stroke="#000000" points="3240.7639,-177.5001 3230.7639,-181 3240.7639,-184.5001 3240.7639,-177.5001"/>
+</g>
+<!-- InfoAdvancedPage -->
+<g id="node4" class="node">
+<title>InfoAdvancedPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="4859.7837,-122 4736.2163,-122 4736.2163,-86 4859.7837,-86 4859.7837,-122"/>
+<text text-anchor="middle" x="4798" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">InfoAdvancedPage</text>
+</g>
+<!-- InfoAdvancedPage&#45;&gt;AppModule -->
+<g id="edge4" class="edge">
+<title>InfoAdvancedPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M4798,-122.1554C4798,-144.3519 4798,-179 4798,-179 4798,-179 3240.7991,-179 3240.7991,-179"/>
+<polygon fill="#000000" stroke="#000000" points="3240.7991,-175.5001 3230.7991,-179 3240.799,-182.5001 3240.7991,-175.5001"/>
+</g>
+<!-- InfoConversationPage -->
+<g id="node5" class="node">
+<title>InfoConversationPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="4718.6853,-122 4577.3147,-122 4577.3147,-86 4718.6853,-86 4718.6853,-122"/>
+<text text-anchor="middle" x="4648" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">InfoConversationPage</text>
+</g>
+<!-- InfoConversationPage&#45;&gt;AppModule -->
+<g id="edge5" class="edge">
+<title>InfoConversationPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M4648,-122.0449C4648,-143.6623 4648,-177 4648,-177 4648,-177 3240.7024,-177 3240.7024,-177"/>
+<polygon fill="#000000" stroke="#000000" points="3240.7024,-173.5001 3230.7024,-177 3240.7023,-180.5001 3240.7024,-173.5001"/>
+</g>
+<!-- InfoMessagePage -->
+<g id="node6" class="node">
+<title>InfoMessagePage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="4559.5116,-122 4444.4884,-122 4444.4884,-86 4559.5116,-86 4559.5116,-122"/>
+<text text-anchor="middle" x="4502" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">InfoMessagePage</text>
+</g>
+<!-- InfoMessagePage&#45;&gt;AppModule -->
+<g id="edge6" class="edge">
+<title>InfoMessagePage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M4502,-122.2843C4502,-143.3211 4502,-175 4502,-175 4502,-175 3240.8307,-175 3240.8307,-175"/>
+<polygon fill="#000000" stroke="#000000" points="3240.8307,-171.5001 3230.8307,-175 3240.8306,-178.5001 3240.8307,-171.5001"/>
+</g>
+<!-- InfoUserPage -->
+<g id="node7" class="node">
+<title>InfoUserPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="4426.4594,-122 4333.5406,-122 4333.5406,-86 4426.4594,-86 4426.4594,-122"/>
+<text text-anchor="middle" x="4380" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">InfoUserPage</text>
+</g>
+<!-- InfoUserPage&#45;&gt;AppModule -->
+<g id="edge7" class="edge">
+<title>InfoUserPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M4380,-122.1289C4380,-142.5724 4380,-173 4380,-173 4380,-173 3240.69,-173 3240.69,-173"/>
+<polygon fill="#000000" stroke="#000000" points="3240.69,-169.5001 3230.69,-173 3240.6899,-176.5001 3240.69,-169.5001"/>
+</g>
+<!-- ListaConversazioniPage -->
+<g id="node8" class="node">
+<title>ListaConversazioniPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="4315.0716,-122 4162.9284,-122 4162.9284,-86 4315.0716,-86 4315.0716,-122"/>
+<text text-anchor="middle" x="4239" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ListaConversazioniPage</text>
+</g>
+<!-- ListaConversazioniPage&#45;&gt;AppModule -->
+<g id="edge8" class="edge">
+<title>ListaConversazioniPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M4239,-122.308C4239,-142.1455 4239,-171 4239,-171 4239,-171 3240.8092,-171 3240.8092,-171"/>
+<polygon fill="#000000" stroke="#000000" points="3240.8092,-167.5001 3230.8092,-171 3240.8092,-174.5001 3240.8092,-167.5001"/>
+</g>
+<!-- LoginPage -->
+<g id="node9" class="node">
+<title>LoginPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="4145.1558,-122 4068.8442,-122 4068.8442,-86 4145.1558,-86 4145.1558,-122"/>
+<text text-anchor="middle" x="4107" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">LoginPage</text>
+</g>
+<!-- LoginPage&#45;&gt;AppModule -->
+<g id="edge9" class="edge">
+<title>LoginPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M4107,-122.1686C4107,-141.0898 4107,-168 4107,-168 4107,-168 3240.83,-168 3240.83,-168"/>
+<polygon fill="#000000" stroke="#000000" points="3240.83,-164.5001 3230.83,-168 3240.83,-171.5001 3240.83,-164.5001"/>
+</g>
+<!-- MyApp -->
+<g id="node10" class="node">
+<title>MyApp</title>
+<polygon fill="#ffffb3" stroke="#000000" points="4050.5529,-122 3991.4471,-122 3991.4471,-86 4050.5529,-86 4050.5529,-122"/>
+<text text-anchor="middle" x="4021" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">MyApp</text>
+</g>
+<!-- MyApp&#45;&gt;AppModule -->
+<g id="edge10" class="edge">
+<title>MyApp&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M4021,-122.2667C4021,-140.5552 4021,-166 4021,-166 4021,-166 3240.8292,-166 3240.8292,-166"/>
+<polygon fill="#000000" stroke="#000000" points="3240.8292,-162.5001 3230.8292,-166 3240.8292,-169.5001 3240.8292,-162.5001"/>
+</g>
+<!-- PlaceholderPage -->
+<g id="node11" class="node">
+<title>PlaceholderPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="3973.795,-122 3864.205,-122 3864.205,-86 3973.795,-86 3973.795,-122"/>
+<text text-anchor="middle" x="3919" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">PlaceholderPage</text>
+</g>
+<!-- PlaceholderPage&#45;&gt;AppModule -->
+<g id="edge11" class="edge">
+<title>PlaceholderPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M3919,-122.002C3919,-139.6754 3919,-164 3919,-164 3919,-164 3240.8699,-164 3240.8699,-164"/>
+<polygon fill="#000000" stroke="#000000" points="3240.8699,-160.5001 3230.8699,-164 3240.8699,-167.5001 3240.8699,-160.5001"/>
+</g>
+<!-- PopoverPage -->
+<g id="node12" class="node">
+<title>PopoverPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="3845.8697,-122 3756.1303,-122 3756.1303,-86 3845.8697,-86 3845.8697,-122"/>
+<text text-anchor="middle" x="3801" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">PopoverPage</text>
+</g>
+<!-- PopoverPage&#45;&gt;AppModule -->
+<g id="edge12" class="edge">
+<title>PopoverPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M3801,-122.0336C3801,-139.0597 3801,-162 3801,-162 3801,-162 3241.0652,-162 3241.0652,-162"/>
+<polygon fill="#000000" stroke="#000000" points="3241.0653,-158.5001 3231.0652,-162 3241.0652,-165.5001 3241.0653,-158.5001"/>
+</g>
+<!-- PopoverProfilePage -->
+<g id="node13" class="node">
+<title>PopoverProfilePage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="3737.9692,-122 3610.0308,-122 3610.0308,-86 3737.9692,-86 3737.9692,-122"/>
+<text text-anchor="middle" x="3674" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">PopoverProfilePage</text>
+</g>
+<!-- PopoverProfilePage&#45;&gt;AppModule -->
+<g id="edge13" class="edge">
+<title>PopoverProfilePage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M3674,-122.027C3674,-138.3976 3674,-160 3674,-160 3674,-160 3240.7706,-160 3240.7706,-160"/>
+<polygon fill="#000000" stroke="#000000" points="3240.7706,-156.5001 3230.7706,-160 3240.7706,-163.5001 3240.7706,-156.5001"/>
+</g>
+<!-- ProfilePage -->
+<g id="node14" class="node">
+<title>ProfilePage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="3591.812,-122 3510.188,-122 3510.188,-86 3591.812,-86 3591.812,-122"/>
+<text text-anchor="middle" x="3551" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ProfilePage</text>
+</g>
+<!-- ProfilePage&#45;&gt;AppModule -->
+<g id="edge14" class="edge">
+<title>ProfilePage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M3551,-122.2819C3551,-137.9478 3551,-158 3551,-158 3551,-158 3240.8796,-158 3240.8796,-158"/>
+<polygon fill="#000000" stroke="#000000" points="3240.8797,-154.5001 3230.8796,-158 3240.8796,-161.5001 3240.8797,-154.5001"/>
+</g>
+<!-- RegisterPage -->
+<g id="node15" class="node">
+<title>RegisterPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="3491.8641,-122 3402.1359,-122 3402.1359,-86 3491.8641,-86 3491.8641,-122"/>
+<text text-anchor="middle" x="3447" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">RegisterPage</text>
+</g>
+<!-- RegisterPage&#45;&gt;AppModule -->
+<g id="edge15" class="edge">
+<title>RegisterPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M3447,-122.1871C3447,-137.1824 3447,-156 3447,-156 3447,-156 3240.7389,-156 3240.7389,-156"/>
+<polygon fill="#000000" stroke="#000000" points="3240.7389,-152.5001 3230.7389,-156 3240.7389,-159.5001 3240.7389,-152.5001"/>
+</g>
+<!-- ResetpwdPage -->
+<g id="node16" class="node">
+<title>ResetpwdPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="3384.4203,-122 3285.5797,-122 3285.5797,-86 3384.4203,-86 3384.4203,-122"/>
+<text text-anchor="middle" x="3335" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ResetpwdPage</text>
+</g>
+<!-- ResetpwdPage&#45;&gt;AppModule -->
+<g id="edge16" class="edge">
+<title>ResetpwdPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M3335,-122.0511C3335,-136.373 3335,-154 3335,-154 3335,-154 3240.8377,-154 3240.8377,-154"/>
+<polygon fill="#000000" stroke="#000000" points="3240.8378,-150.5001 3230.8377,-154 3240.8377,-157.5001 3240.8378,-150.5001"/>
+</g>
+<!-- UpdateImageProfilePage -->
+<g id="node17" class="node">
+<title>UpdateImageProfilePage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="3267.2185,-122 3110.7815,-122 3110.7815,-86 3267.2185,-86 3267.2185,-122"/>
+<text text-anchor="middle" x="3189" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">UpdateImageProfilePage</text>
+</g>
+<!-- UpdateImageProfilePage&#45;&gt;AppModule -->
+<g id="edge17" class="edge">
+<title>UpdateImageProfilePage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M3189,-122.1061C3189,-122.1061 3189,-140.991 3189,-140.991"/>
+<polygon fill="#000000" stroke="#000000" points="3185.5001,-140.9909 3189,-150.991 3192.5001,-140.991 3185.5001,-140.9909"/>
+</g>
+<!-- UsersPage -->
+<g id="node18" class="node">
+<title>UsersPage</title>
+<polygon fill="#ffffb3" stroke="#000000" points="3092.5828,-122 3017.4172,-122 3017.4172,-86 3092.5828,-86 3092.5828,-122"/>
+<text text-anchor="middle" x="3055" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">UsersPage</text>
+</g>
+<!-- UsersPage&#45;&gt;AppModule -->
+<g id="edge18" class="edge">
+<title>UsersPage&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M3055,-122.0511C3055,-136.373 3055,-154 3055,-154 3055,-154 3137.3361,-154 3137.3361,-154"/>
+<polygon fill="#000000" stroke="#000000" points="3137.3361,-157.5001 3147.3361,-154 3137.3361,-150.5001 3137.3361,-157.5001"/>
 </g>
 <!-- IonicApp  -->
-<g id="node15" class="node">
+<g id="node20" class="node">
 <title>IonicApp </title>
-<polygon fill="#80b1d3" stroke="#000000" points="2254.3734,-252 2181.6266,-252 2181.6266,-216 2254.3734,-216 2254.3734,-252"/>
-<text text-anchor="middle" x="2218" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#000000">IonicApp </text>
+<polygon fill="#80b1d3" stroke="#000000" points="3225.3734,-252 3152.6266,-252 3152.6266,-216 3225.3734,-216 3225.3734,-252"/>
+<text text-anchor="middle" x="3189" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#000000">IonicApp </text>
 </g>
 <!-- AppModule&#45;&gt;IonicApp  -->
-<g id="edge14" class="edge">
+<g id="edge19" class="edge">
 <title>AppModule&#45;&gt;IonicApp </title>
-<path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M2218,-187.1061C2218,-187.1061 2218,-205.991 2218,-205.991"/>
-<polygon fill="#000000" stroke="#000000" points="2214.5001,-205.9909 2218,-215.991 2221.5001,-205.991 2214.5001,-205.9909"/>
+<path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M3189,-187.1061C3189,-187.1061 3189,-205.991 3189,-205.991"/>
+<polygon fill="#000000" stroke="#000000" points="3185.5001,-205.9909 3189,-215.991 3192.5001,-205.991 3185.5001,-205.9909"/>
 </g>
-<!-- DatabaseProvider -->
-<g id="node16" class="node">
-<title>DatabaseProvider</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1978" cy="-104" rx="79.8527" ry="18"/>
-<text text-anchor="middle" x="1978" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">DatabaseProvider</text>
+<!-- AppConfigProvider -->
+<g id="node21" class="node">
+<title>AppConfigProvider</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="2905" cy="-104" rx="87.9858" ry="18"/>
+<text text-anchor="middle" x="2905" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">AppConfigProvider</text>
 </g>
-<!-- DatabaseProvider&#45;&gt;AppModule -->
-<g id="edge15" class="edge">
-<title>DatabaseProvider&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1978,-122.0511C1978,-136.373 1978,-154 1978,-154 1978,-154 2166.1952,-154 2166.1952,-154"/>
-<polygon fill="#000000" stroke="#000000" points="2166.1952,-157.5001 2176.1952,-154 2166.1952,-150.5001 2166.1952,-157.5001"/>
+<!-- AppConfigProvider&#45;&gt;AppModule -->
+<g id="edge20" class="edge">
+<title>AppConfigProvider&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M2905,-122.1871C2905,-137.1824 2905,-156 2905,-156 2905,-156 3137.0948,-156 3137.0948,-156"/>
+<polygon fill="#000000" stroke="#000000" points="3137.0949,-159.5001 3147.0948,-156 3137.0948,-152.5001 3137.0949,-159.5001"/>
 </g>
 <!-- AuthService -->
-<g id="node17" class="node">
+<g id="node22" class="node">
 <title>AuthService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1821" cy="-104" rx="59.1083" ry="18"/>
-<text text-anchor="middle" x="1821" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">AuthService</text>
+<ellipse fill="#fdb462" stroke="#000000" cx="2740" cy="-104" rx="59.1083" ry="18"/>
+<text text-anchor="middle" x="2740" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">AuthService</text>
 </g>
 <!-- AuthService&#45;&gt;AppModule -->
-<g id="edge16" class="edge">
-<title>AuthService&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1821,-122.2396C1821,-137.5706 1821,-157 1821,-157 1821,-157 2166.2644,-157 2166.2644,-157"/>
-<polygon fill="#000000" stroke="#000000" points="2166.2644,-160.5001 2176.2644,-157 2166.2644,-153.5001 2166.2644,-160.5001"/>
-</g>
-<!-- ChatPresenceHandler -->
-<g id="node18" class="node">
-<title>ChatPresenceHandler</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1649" cy="-104" rx="94.88" ry="18"/>
-<text text-anchor="middle" x="1649" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatPresenceHandler</text>
-</g>
-<!-- ChatPresenceHandler&#45;&gt;AppModule -->
-<g id="edge17" class="edge">
-<title>ChatPresenceHandler&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1649,-122.027C1649,-138.3976 1649,-160 1649,-160 1649,-160 2166.1601,-160 2166.1601,-160"/>
-<polygon fill="#000000" stroke="#000000" points="2166.1601,-163.5001 2176.1601,-160 2166.16,-156.5001 2166.1601,-163.5001"/>
-</g>
-<!-- NavProxyService -->
-<g id="node19" class="node">
-<title>NavProxyService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1457" cy="-104" rx="79.2942" ry="18"/>
-<text text-anchor="middle" x="1457" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">NavProxyService</text>
-</g>
-<!-- NavProxyService&#45;&gt;AppModule -->
-<g id="edge18" class="edge">
-<title>NavProxyService&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1457,-122.0225C1457,-139.3734 1457,-163 1457,-163 1457,-163 2166.2735,-163 2166.2735,-163"/>
-<polygon fill="#000000" stroke="#000000" points="2166.2736,-166.5001 2176.2735,-163 2166.2735,-159.5001 2166.2736,-166.5001"/>
-</g>
-<!-- MessagingService -->
-<g id="node20" class="node">
-<title>MessagingService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1278" cy="-104" rx="81.6596" ry="18"/>
-<text text-anchor="middle" x="1278" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">MessagingService</text>
-</g>
-<!-- MessagingService&#45;&gt;AppModule -->
-<g id="edge19" class="edge">
-<title>MessagingService&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1278,-122.2667C1278,-140.5552 1278,-166 1278,-166 1278,-166 2166.0908,-166 2166.0908,-166"/>
-<polygon fill="#000000" stroke="#000000" points="2166.0908,-169.5001 2176.0908,-166 2166.0907,-162.5001 2166.0908,-169.5001"/>
-</g>
-<!-- UserService -->
-<g id="node21" class="node">
-<title>UserService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1120" cy="-104" rx="58.4415" ry="18"/>
-<text text-anchor="middle" x="1120" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">UserService</text>
-</g>
-<!-- UserService&#45;&gt;AppModule -->
-<g id="edge20" class="edge">
-<title>UserService&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1120,-122.1061C1120,-141.3391 1120,-169 1120,-169 1120,-169 2166.2979,-169 2166.2979,-169"/>
-<polygon fill="#000000" stroke="#000000" points="2166.2979,-172.5001 2176.2979,-169 2166.2978,-165.5001 2166.2979,-172.5001"/>
-</g>
-<!-- UploadService -->
-<g id="node22" class="node">
-<title>UploadService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="975" cy="-104" rx="68.3382" ry="18"/>
-<text text-anchor="middle" x="975" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">UploadService</text>
-</g>
-<!-- UploadService&#45;&gt;AppModule -->
 <g id="edge21" class="edge">
-<title>UploadService&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M975,-122.2228C975,-142.3652 975,-172 975,-172 975,-172 2166.2877,-172 2166.2877,-172"/>
-<polygon fill="#000000" stroke="#000000" points="2166.2878,-175.5001 2176.2877,-172 2166.2877,-168.5001 2166.2878,-175.5001"/>
+<title>AuthService&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M2740,-122.2819C2740,-137.9478 2740,-158 2740,-158 2740,-158 3137.1624,-158 3137.1624,-158"/>
+<polygon fill="#000000" stroke="#000000" points="3137.1624,-161.5001 3147.1624,-158 3137.1623,-154.5001 3137.1624,-161.5001"/>
 </g>
-<!-- ChatManager -->
+<!-- ChatArchivedConversationsHandler -->
 <g id="node23" class="node">
-<title>ChatManager</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="825" cy="-104" rx="63.6832" ry="18"/>
-<text text-anchor="middle" x="825" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatManager</text>
+<title>ChatArchivedConversationsHandler</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="2511" cy="-104" rx="151.6075" ry="18"/>
+<text text-anchor="middle" x="2511" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatArchivedConversationsHandler</text>
 </g>
-<!-- ChatManager&#45;&gt;AppModule -->
+<!-- ChatArchivedConversationsHandler&#45;&gt;AppModule -->
 <g id="edge22" class="edge">
-<title>ChatManager&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M825,-122.2843C825,-143.3211 825,-175 825,-175 825,-175 2166.3103,-175 2166.3103,-175"/>
-<polygon fill="#000000" stroke="#000000" points="2166.3103,-178.5001 2176.3103,-175 2166.3102,-171.5001 2166.3103,-178.5001"/>
+<title>ChatArchivedConversationsHandler&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M2511,-122.027C2511,-138.3976 2511,-160 2511,-160 2511,-160 3137.0997,-160 3137.0997,-160"/>
+<polygon fill="#000000" stroke="#000000" points="3137.0998,-163.5001 3147.0997,-160 3137.0997,-156.5001 3137.0998,-163.5001"/>
 </g>
-<!-- ChatConversationsHandler -->
+<!-- ChatContactsSynchronizer -->
 <g id="node24" class="node">
-<title>ChatConversationsHandler</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="628" cy="-104" rx="115.7503" ry="18"/>
-<text text-anchor="middle" x="628" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatConversationsHandler</text>
+<title>ChatContactsSynchronizer</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="2227" cy="-104" rx="114.6063" ry="18"/>
+<text text-anchor="middle" x="2227" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatContactsSynchronizer</text>
 </g>
-<!-- ChatConversationsHandler&#45;&gt;AppModule -->
+<!-- ChatContactsSynchronizer&#45;&gt;AppModule -->
 <g id="edge23" class="edge">
-<title>ChatConversationsHandler&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M628,-122.2921C628,-144.2057 628,-178 628,-178 628,-178 2166.2886,-178 2166.2886,-178"/>
-<polygon fill="#000000" stroke="#000000" points="2166.2887,-181.5001 2176.2886,-178 2166.2886,-174.5001 2166.2887,-181.5001"/>
+<title>ChatContactsSynchronizer&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M2227,-122.0336C2227,-139.0597 2227,-162 2227,-162 2227,-162 3137.0455,-162 3137.0455,-162"/>
+<polygon fill="#000000" stroke="#000000" points="3137.0455,-165.5001 3147.0455,-162 3137.0454,-158.5001 3137.0455,-165.5001"/>
 </g>
 <!-- ChatConversationHandler -->
 <g id="node25" class="node">
 <title>ChatConversationHandler</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="383" cy="-104" rx="111.7391" ry="18"/>
-<text text-anchor="middle" x="383" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatConversationHandler</text>
+<ellipse fill="#fdb462" stroke="#000000" cx="1983" cy="-104" rx="111.7391" ry="18"/>
+<text text-anchor="middle" x="1983" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatConversationHandler</text>
 </g>
 <!-- ChatConversationHandler&#45;&gt;AppModule -->
 <g id="edge24" class="edge">
 <title>ChatConversationHandler&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M383,-122.2479C383,-145.0179 383,-181 383,-181 383,-181 2166.2257,-181 2166.2257,-181"/>
-<polygon fill="#000000" stroke="#000000" points="2166.2257,-184.5001 2176.2257,-181 2166.2257,-177.5001 2166.2257,-184.5001"/>
+<path fill="none" stroke="#000000" d="M1983,-122.002C1983,-139.6754 1983,-164 1983,-164 1983,-164 3137.1365,-164 3137.1365,-164"/>
+<polygon fill="#000000" stroke="#000000" points="3137.1366,-167.5001 3147.1365,-164 3137.1365,-160.5001 3137.1366,-167.5001"/>
 </g>
-<!-- ChatContactsSynchronizer -->
+<!-- ChatConversationsHandler -->
 <g id="node26" class="node">
-<title>ChatContactsSynchronizer</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="139" cy="-104" rx="114.6063" ry="18"/>
-<text text-anchor="middle" x="139" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatContactsSynchronizer</text>
+<title>ChatConversationsHandler</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="1738" cy="-104" rx="115.7503" ry="18"/>
+<text text-anchor="middle" x="1738" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatConversationsHandler</text>
 </g>
-<!-- ChatContactsSynchronizer&#45;&gt;AppModule -->
+<!-- ChatConversationsHandler&#45;&gt;AppModule -->
 <g id="edge25" class="edge">
-<title>ChatContactsSynchronizer&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M139,-122.1532C139,-145.7566 139,-184 139,-184 139,-184 2166.0014,-184 2166.0014,-184"/>
-<polygon fill="#000000" stroke="#000000" points="2166.0014,-187.5001 2176.0014,-184 2166.0013,-180.5001 2166.0014,-187.5001"/>
+<title>ChatConversationsHandler&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M1738,-122.2667C1738,-140.5552 1738,-166 1738,-166 1738,-166 3137.1392,-166 3137.1392,-166"/>
+<polygon fill="#000000" stroke="#000000" points="3137.1393,-169.5001 3147.1392,-166 3137.1392,-162.5001 3137.1393,-169.5001"/>
+</g>
+<!-- ChatManager -->
+<g id="node27" class="node">
+<title>ChatManager</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="1541" cy="-104" rx="63.6832" ry="18"/>
+<text text-anchor="middle" x="1541" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatManager</text>
+</g>
+<!-- ChatManager&#45;&gt;AppModule -->
+<g id="edge26" class="edge">
+<title>ChatManager&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M1541,-122.1686C1541,-141.0898 1541,-168 1541,-168 1541,-168 3137.0235,-168 3137.0235,-168"/>
+<polygon fill="#000000" stroke="#000000" points="3137.0235,-171.5001 3147.0235,-168 3137.0234,-164.5001 3137.0235,-171.5001"/>
+</g>
+<!-- ChatPresenceHandler -->
+<g id="node28" class="node">
+<title>ChatPresenceHandler</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="1365" cy="-104" rx="94.88" ry="18"/>
+<text text-anchor="middle" x="1365" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">ChatPresenceHandler</text>
+</g>
+<!-- ChatPresenceHandler&#45;&gt;AppModule -->
+<g id="edge27" class="edge">
+<title>ChatPresenceHandler&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M1365,-122.308C1365,-142.1455 1365,-171 1365,-171 1365,-171 3137.0381,-171 3137.0381,-171"/>
+<polygon fill="#000000" stroke="#000000" points="3137.0381,-174.5001 3147.0381,-171 3137.0381,-167.5001 3137.0381,-174.5001"/>
+</g>
+<!-- DatabaseProvider -->
+<g id="node29" class="node">
+<title>DatabaseProvider</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="1173" cy="-104" rx="79.8527" ry="18"/>
+<text text-anchor="middle" x="1173" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">DatabaseProvider</text>
+</g>
+<!-- DatabaseProvider&#45;&gt;AppModule -->
+<g id="edge28" class="edge">
+<title>DatabaseProvider&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M1173,-122.1289C1173,-142.5724 1173,-173 1173,-173 1173,-173 3136.893,-173 3136.893,-173"/>
+<polygon fill="#000000" stroke="#000000" points="3136.893,-176.5001 3146.893,-173 3136.8929,-169.5001 3136.893,-176.5001"/>
+</g>
+<!-- GroupService -->
+<g id="node30" class="node">
+<title>GroupService</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="1011" cy="-104" rx="64.8273" ry="18"/>
+<text text-anchor="middle" x="1011" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">GroupService</text>
+</g>
+<!-- GroupService&#45;&gt;AppModule -->
+<g id="edge29" class="edge">
+<title>GroupService&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M1011,-122.2843C1011,-143.3211 1011,-175 1011,-175 1011,-175 3136.9546,-175 3136.9546,-175"/>
+<polygon fill="#000000" stroke="#000000" points="3136.9546,-178.5001 3146.9546,-175 3136.9546,-171.5001 3136.9546,-178.5001"/>
+</g>
+<!-- MessagingService -->
+<g id="node31" class="node">
+<title>MessagingService</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="847" cy="-104" rx="81.6596" ry="18"/>
+<text text-anchor="middle" x="847" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">MessagingService</text>
+</g>
+<!-- MessagingService&#45;&gt;AppModule -->
+<g id="edge30" class="edge">
+<title>MessagingService&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M847,-122.0449C847,-143.6623 847,-177 847,-177 847,-177 3137.106,-177 3137.106,-177"/>
+<polygon fill="#000000" stroke="#000000" points="3137.106,-180.5001 3147.106,-177 3137.1059,-173.5001 3137.106,-180.5001"/>
+</g>
+<!-- NavProxyService -->
+<g id="node32" class="node">
+<title>NavProxyService</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="668" cy="-104" rx="79.2942" ry="18"/>
+<text text-anchor="middle" x="668" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">NavProxyService</text>
+</g>
+<!-- NavProxyService&#45;&gt;AppModule -->
+<g id="edge31" class="edge">
+<title>NavProxyService&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M668,-122.1554C668,-144.3519 668,-179 668,-179 668,-179 3137.0864,-179 3137.0864,-179"/>
+<polygon fill="#000000" stroke="#000000" points="3137.0865,-182.5001 3147.0864,-179 3137.0864,-175.5001 3137.0865,-182.5001"/>
+</g>
+<!-- TiledeskConversationProvider -->
+<g id="node33" class="node">
+<title>TiledeskConversationProvider</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="442" cy="-104" rx="129.0733" ry="18"/>
+<text text-anchor="middle" x="442" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">TiledeskConversationProvider</text>
+</g>
+<!-- TiledeskConversationProvider&#45;&gt;AppModule -->
+<g id="edge32" class="edge">
+<title>TiledeskConversationProvider&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M442,-122.2479C442,-145.0179 442,-181 442,-181 442,-181 3137.2231,-181 3137.2231,-181"/>
+<polygon fill="#000000" stroke="#000000" points="3137.2232,-184.5001 3147.2231,-181 3137.2231,-177.5001 3137.2232,-184.5001"/>
+</g>
+<!-- UploadService -->
+<g id="node34" class="node">
+<title>UploadService</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="227" cy="-104" rx="68.3382" ry="18"/>
+<text text-anchor="middle" x="227" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">UploadService</text>
+</g>
+<!-- UploadService&#45;&gt;AppModule -->
+<g id="edge33" class="edge">
+<title>UploadService&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M227,-122.3228C227,-145.6602 227,-183 227,-183 227,-183 3137.1282,-183 3137.1282,-183"/>
+<polygon fill="#000000" stroke="#000000" points="3137.1283,-186.5001 3147.1282,-183 3137.1282,-179.5001 3137.1283,-186.5001"/>
+</g>
+<!-- UserService -->
+<g id="node35" class="node">
+<title>UserService</title>
+<ellipse fill="#fdb462" stroke="#000000" cx="82" cy="-104" rx="58.4415" ry="18"/>
+<text text-anchor="middle" x="82" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">UserService</text>
+</g>
+<!-- UserService&#45;&gt;AppModule -->
+<g id="edge34" class="edge">
+<title>UserService&#45;&gt;AppModule</title>
+<path fill="none" stroke="#000000" d="M82,-122.3802C82,-146.2785 82,-185 82,-185 82,-185 3137.1376,-185 3137.1376,-185"/>
+<polygon fill="#000000" stroke="#000000" points="3137.1377,-188.5001 3147.1376,-185 3137.1376,-181.5001 3137.1377,-188.5001"/>
 </g>
 </g>
 </svg>
 
-          </div>
-          <i id="fullscreen" class="fa fa-expand module-graph-fullscreen-btn" aria-hidden="true"></i>
-          <div class="btn-group">
-              <button id="zoom-in" class="btn btn-default btn-sm">Zoom in</button>
-              <button id="reset" class="btn btn-default btn-sm">Reset</button>
-              <button id="zoom-out" class="btn btn-default btn-sm">Zoom out</button>
-          </div>
-      </div>
-      <script src="../js/libs/svg-pan-zoom.min.js"></script>
-      <script src="../js/svg-pan-zoom.controls.js"></script>
+    </div>
+    <i id="fullscreen" class="icon ion-ios-resize module-graph-fullscreen-btn" aria-hidden="true"></i>
+    <div class="btn-group">
+        <button id="zoom-in" class="btn btn-default btn-sm">Zoom in</button>
+        <button id="reset" class="btn btn-default btn-sm">Reset</button>
+        <button id="zoom-out" class="btn btn-default btn-sm">Zoom out</button>
+    </div>
+</div>
+<script src="../js/libs/svg-pan-zoom.min.js"></script>
+<script src="../js/svg-pan-zoom.controls.js"></script>
 
 <ul class="nav nav-tabs" role="tablist">
-    <li class="active">
-        <a href="#info" id="info-tab" role="tab" data-toggle="tab" data-link="info">Info</a>
+    <li  class="active" >
+        <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
     </li>
-
-
-    <li>
+    <li >
         <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
     </li>
 </ul>
@@ -966,152 +525,206 @@
         </p>
 
 
+
+
         <div class="container-fluid module">
             <div class="row">
                 <div class="col-sm-3">
-                    <h3>Declarations<a href="https://angular.io/api/core/NgModule#declarations" target="_blank" title="Official documentation about module declarations"><span class="fa fa-info-circle"></span></a></h3>
+                    <h3>Declarations<a href="https://angular.io/api/core/NgModule#declarations" target="_blank"
+                            title="Official documentation about module declarations"><span class="icon ion-ios-information-circle-outline"></span></a></h3>
                     <ul class="list-group">
-                            <li class="list-group-item">
-                                <a href="../components/MyApp.html">MyApp</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/UsersPage.html">UsersPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/LoginPage.html">LoginPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/RegisterPage.html">RegisterPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/ResetpwdPage.html">ResetpwdPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/ProfilePage.html">ProfilePage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/ListaConversazioniPage.html">ListaConversazioniPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/DettaglioConversazionePage.html">DettaglioConversazionePage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/PlaceholderPage.html">PlaceholderPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/PopoverPage.html">PopoverPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/PopoverProfilePage.html">PopoverProfilePage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/UpdateImageProfilePage.html">UpdateImageProfilePage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../directives/AutosizeDirective.html">AutosizeDirective</a>
-                            </li>
+                        <li class="list-group-item">
+                            <a href="../components/ArchivedConversationsPage.html">ArchivedConversationsPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../directives/AutosizeDirective.html">AutosizeDirective</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/DettaglioConversazionePage.html">DettaglioConversazionePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/InfoAdvancedPage.html">InfoAdvancedPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/InfoConversationPage.html">InfoConversationPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/InfoMessagePage.html">InfoMessagePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/InfoUserPage.html">InfoUserPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/ListaConversazioniPage.html">ListaConversazioniPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/LoginPage.html">LoginPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/MyApp.html">MyApp</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/PlaceholderPage.html">PlaceholderPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/PopoverPage.html">PopoverPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/PopoverProfilePage.html">PopoverProfilePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/ProfilePage.html">ProfilePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/RegisterPage.html">RegisterPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/ResetpwdPage.html">ResetpwdPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/UpdateImageProfilePage.html">UpdateImageProfilePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/UsersPage.html">UsersPage</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-sm-3">
-                    <h3>EntryComponents<a href="https://angular.io/api/core/NgModule#entryComponents" target="_blank" title="Official documentation about module entryComponents"><span class="fa fa-info-circle"></span></a></h3>
+                    <h3>EntryComponents<a href="https://angular.io/api/core/NgModule#entryComponents" target="_blank"
+                            title="Official documentation about module entryComponents"><span class="icon ion-ios-information-circle-outline"></span></a></h3>
                     <ul class="list-group">
-                            <li class="list-group-item">
-                                <a href="../components/MyApp.html">MyApp</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/UsersPage.html">UsersPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/LoginPage.html">LoginPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/RegisterPage.html">RegisterPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/ResetpwdPage.html">ResetpwdPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/ProfilePage.html">ProfilePage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/ListaConversazioniPage.html">ListaConversazioniPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/DettaglioConversazionePage.html">DettaglioConversazionePage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/PlaceholderPage.html">PlaceholderPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/PopoverPage.html">PopoverPage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/PopoverProfilePage.html">PopoverProfilePage</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="../components/UpdateImageProfilePage.html">UpdateImageProfilePage</a>
-                            </li>
+                        <li class="list-group-item">
+                            <a href="../components/ArchivedConversationsPage.html">ArchivedConversationsPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/DettaglioConversazionePage.html">DettaglioConversazionePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/InfoAdvancedPage.html">InfoAdvancedPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/InfoConversationPage.html">InfoConversationPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/InfoMessagePage.html">InfoMessagePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/InfoUserPage.html">InfoUserPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/ListaConversazioniPage.html">ListaConversazioniPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/LoginPage.html">LoginPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/MyApp.html">MyApp</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/PlaceholderPage.html">PlaceholderPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/PopoverPage.html">PopoverPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/PopoverProfilePage.html">PopoverProfilePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/ProfilePage.html">ProfilePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/RegisterPage.html">RegisterPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/ResetpwdPage.html">ResetpwdPage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/UpdateImageProfilePage.html">UpdateImageProfilePage</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../components/UsersPage.html">UsersPage</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-sm-3">
-                    <h3>Providers<a href="https://angular.io/api/core/NgModule#providers" target="_blank" title="Official documentation about module providers"><span class="fa fa-info-circle"></a></h3>
+                    <h3>Providers<a href="https://angular.io/api/core/NgModule#providers" target="_blank"
+                            title="Official documentation about module providers"><span class="icon ion-ios-information-circle-outline"></a></h3>
                     <ul class="list-group">
-                            <li class="list-group-item">
-                                     <a href="../injectables/DatabaseProvider.html" >DatabaseProvider</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/AuthService.html" >AuthService</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/ChatPresenceHandler.html" >ChatPresenceHandler</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/NavProxyService.html" >NavProxyService</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/MessagingService.html" >MessagingService</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/UserService.html" >UserService</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/UploadService.html" >UploadService</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/ChatManager.html" >ChatManager</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/ChatConversationsHandler.html" >ChatConversationsHandler</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/ChatConversationHandler.html" >ChatConversationHandler</a>
-                            </li>
-                            <li class="list-group-item">
-                                     <a href="../injectables/ChatContactsSynchronizer.html" >ChatContactsSynchronizer</a>
-                            </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/AppConfigProvider.html">AppConfigProvider</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/AuthService.html">AuthService</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/ChatArchivedConversationsHandler.html">ChatArchivedConversationsHandler</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/ChatContactsSynchronizer.html">ChatContactsSynchronizer</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/ChatConversationHandler.html">ChatConversationHandler</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/ChatConversationsHandler.html">ChatConversationsHandler</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/ChatManager.html">ChatManager</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/ChatPresenceHandler.html">ChatPresenceHandler</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/DatabaseProvider.html">DatabaseProvider</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/GroupService.html">GroupService</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/MessagingService.html">MessagingService</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/NavProxyService.html">NavProxyService</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/TiledeskConversationProvider.html">TiledeskConversationProvider</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/UploadService.html">UploadService</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/UserService.html">UserService</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-sm-3">
-                    <h3>Bootstrap<a href="https://angular.io/api/core/NgModule#bootstrap" target="_blank" title="Official documentation about module bootstrap"><span class="fa fa-info-circle"></a></h3>
+                    <h3>Bootstrap<a href="https://angular.io/api/core/NgModule#bootstrap" target="_blank"
+                            title="Official documentation about module bootstrap"><span class="icon ion-ios-information-circle-outline"></a></h3>
                     <ul class="list-group">
-                            <li class="list-group-item">
-                                <a href="../s/IonicApp.html" >IonicApp</a>
-                            </li>
+                        <li class="list-group-item">
+                            <a href="../s/IonicApp.html">IonicApp</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
+
+
     </div>
 
 
-    <div class="tab-pane fade tab-source-code" id="c-source">
-        <pre class="line-numbers"><code class="language-typescript">import { BrowserModule } from &#x27;@angular/platform-browser&#x27;;
-import { NgModule, ErrorHandler } from &#x27;@angular/core&#x27;;
-import { HttpModule } from &#x27;@angular/http&#x27;;
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BrowserModule } from &#x27;@angular/platform-browser&#x27;;
+import { NgModule, ErrorHandler, APP_INITIALIZER } from &#x27;@angular/core&#x27;;
+
+import { HttpModule, Http } from &#x27;@angular/http&#x27;;
 import { IonicStorageModule } from &#x27;@ionic/storage&#x27;;
+import { LinkyModule } from &#x27;angular-linky&#x27;;
 
 import { IonicApp, IonicModule, IonicErrorHandler } from &#x27;ionic-angular&#x27;;
 import { MyApp } from &#x27;./app.component&#x27;;
+import { environment } from &#x27;../environments/environment&#x27;;
+
 
 //import { HelloIonicPage } from &#x27;../pages/hello-ionic/hello-ionic&#x27;;
 import { UsersPage } from &#x27;../pages/users/users&#x27;;
@@ -1121,9 +734,13 @@ import { ResetpwdPage } from &#x27;../pages/authentication/resetpwd/resetpwd&#x2
 import { ListaConversazioniPage } from &#x27;../pages/lista-conversazioni/lista-conversazioni&#x27;;
 import { DettaglioConversazionePage } from &#x27;../pages/dettaglio-conversazione/dettaglio-conversazione&#x27;;
 import { ProfilePage } from &#x27;../pages/profile/profile&#x27;;
+import { InfoConversationPage } from &#x27;../pages/info-conversation/info-conversation&#x27;;
+import { InfoUserPage } from &#x27;../pages/info-user/info-user&#x27;;
+import { InfoMessagePage } from &#x27;../pages/info-message/info-message&#x27;;
+import { InfoAdvancedPage } from &#x27;../pages/info-advanced/info-advanced&#x27;;
 
-import { AngularFireModule } from &#x27;angularfire2&#x27;;
-//import * as firebase from &quot;firebase&quot;;
+// import { AngularFireModule } from &#x27;angularfire2&#x27;;
+import * as firebase from &quot;firebase&quot;;
 // import { AngularFireDatabaseModule } from &#x27;angularfire2/database&#x27;;
 // import { AngularFireAuthModule } from &#x27;angularfire2/auth&#x27;;
 
@@ -1131,32 +748,54 @@ import { AuthService } from &#x27;../providers/auth-service&#x27;;
 import { ChatPresenceHandler } from &#x27;../providers/chat-presence-handler&#x27;;
 import { UploadService } from &#x27;../providers/upload-service/upload-service&#x27;;
 
-
-import { StatusBar } from &#x27;@ionic-native/status-bar&#x27;;
-import { SplashScreen } from &#x27;@ionic-native/splash-screen&#x27;;
 import { NavProxyService } from &#x27;../providers/nav-proxy&#x27;;
 import { PlaceholderPage } from &#x27;../pages/placeholder/placeholder&#x27;;
 import { PopoverPage } from &#x27;../pages/popover/popover&#x27;;
 import { PopoverProfilePage } from &#x27;../pages/popover-profile/popover-profile&#x27;;
 import { UpdateImageProfilePage } from &#x27;../pages/update-image-profile/update-image-profile&#x27;;
-
-
+import { ArchivedConversationsPage } from &#x27;../pages/archived-conversations/archived-conversations&#x27;;
 //import { FirebaseProvider } from &#x27;../providers/firebase-provider&#x27;;
 
-// SQLite
+// @ionic
+// import { StatusBar } from &#x27;@ionic-native/status-bar&#x27;;
+// import { SplashScreen } from &#x27;@ionic-native/splash-screen&#x27;;
+import { StatusBar } from &#x27;@ionic-native/status-bar/ngx&#x27;;
+import { SplashScreen } from &#x27;@ionic-native/splash-screen/ngx&#x27;;
 
-import { SQLitePorter } from &#x27;@ionic-native/sqlite-porter&#x27;;
-import { SQLite } from &#x27;@ionic-native/sqlite&#x27;;
+
+import { SQLitePorter } from &#x27;@ionic-native/sqlite-porter/ngx&#x27;;
+import { SQLite } from &#x27;@ionic-native/sqlite/ngx&#x27;;
+
 import { MessagingService } from &#x27;../providers/messaging-service&#x27;;
 import { UserService } from &#x27;../providers/user/user&#x27;;
+import { GroupService } from &#x27;../providers/group/group&#x27;;
 import { AutosizeDirective } from &#x27;../directives/autosize/autosize&#x27;;
 import { DatabaseProvider } from &#x27;../providers/database/database&#x27;;
 import { ChatConversationsHandler } from &#x27;../providers/chat-conversations-handler&#x27;;
+import { ChatArchivedConversationsHandler } from &#x27;../providers/chat-archived-conversations-handler&#x27;;
 import { ChatConversationHandler } from &#x27;../providers/chat-conversation-handler&#x27;;
 import { ChatManager } from &#x27;../providers/chat-manager/chat-manager&#x27;;
 import { ChatContactsSynchronizer } from &#x27;../providers/chat-contacts-synchronizer&#x27;;
 
 
+import { TranslateModule, TranslateLoader } from &#x27;@ngx-translate/core&#x27;;
+import { TranslateHttpLoader } from &#x27;@ngx-translate/http-loader&#x27;;
+import { HttpClientModule, HttpClient } from &#x27;@angular/common/http&#x27;;
+import { TiledeskConversationProvider } from &#x27;../providers/tiledesk-conversation/tiledesk-conversation&#x27;;
+import { AppConfigProvider } from &#x27;../providers/app-config/app-config&#x27;;
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, &#x27;./assets/i18n/&#x27;, &#x27;.json&#x27;);
+}
+
+
+const appInitializerFn &#x3D; (appConfig: AppConfigProvider) &#x3D;&gt; {
+  return () &#x3D;&gt; {
+    if (environment.remoteConfig) {
+      return appConfig.loadAppConfig();
+    }
+  };
+};
 
 
 @NgModule({
@@ -1174,40 +813,36 @@ import { ChatContactsSynchronizer } from &#x27;../providers/chat-contacts-synchr
     PopoverPage,
     PopoverProfilePage,
     UpdateImageProfilePage,
-    AutosizeDirective
+    AutosizeDirective,
+    InfoConversationPage,
+    InfoUserPage,
+    InfoMessagePage,
+    InfoAdvancedPage,
+    ArchivedConversationsPage,
   ],
   imports: [
     BrowserModule,
     HttpModule,
-    IonicStorageModule.forRoot(),
-      
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
+    LinkyModule,
     IonicModule.forRoot(MyApp,{
-
-      firebaseConfig : {
-        // apiKey: &quot;AIzaSyCXckPF4UCyewDbOt_zMl4D893Kv2NUQ7Q&quot;,
-        // authDomain: &quot;chat21demo.firebaseapp.com&quot;,
-        // databaseURL: &quot;https://chat21demo.firebaseio.com&quot;,
-        // projectId: &quot;chat21demo&quot;,
-        // storageBucket: &quot;chat21demo.appspot.com&quot;,
-        // messagingSenderId: &quot;769986182759&quot;
-        apiKey: &#x27;AIzaSyDWMsqHBKmWVT7mWiSqBfRpS5U8YwTl7H0&#x27;,
-        authDomain: &#x27;chat-v2-dev.firebaseapp.com&#x27;,
-        databaseURL: &#x27;https://chat-v2-dev.firebaseio.com&#x27;,
-        projectId: &#x27;chat-v2-dev&#x27;,
-        storageBucket: &#x27;chat-v2-dev.appspot.com&#x27;,
-        messagingSenderId: &#x27;77360455507&#x27;
-      },
       appConfig: {
         tenant:&quot;tilechat&quot;
       }
     }),
     IonicStorageModule.forRoot({
       name: &quot;tilechat&quot;,
-      storeName: &#x27;contacts&#x27;,
+      storeName: &#x27;settings&#x27;,
       driverOrder: [&#x27;indexeddb&#x27;,&#x27;sqlite&#x27;, &#x27;websql&#x27;, &#x27;indexeddb&#x27;, &#x27;localstorage&#x27;]
-    }),
-
-    AngularFireModule.initializeApp(this.firebaseConfig)
+    })
+    // AngularFireModule.initializeApp(this.firebaseConfig)
     // AngularFireDatabaseModule,
     // AngularFireAuthModule
   ],
@@ -1224,9 +859,21 @@ import { ChatContactsSynchronizer } from &#x27;../providers/chat-contacts-synchr
     PlaceholderPage,
     PopoverPage,
     PopoverProfilePage,
-    UpdateImageProfilePage
+    UpdateImageProfilePage,
+    InfoConversationPage,
+    InfoUserPage,
+    InfoMessagePage,
+    InfoAdvancedPage,
+    ArchivedConversationsPage
   ],
   providers: [
+    AppConfigProvider, // https://juristr.com/blog/2018/01/ng-app-runtime-config/
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFn,
+      multi: true,
+      deps: [AppConfigProvider]
+    },
     //ApplicationContext,
     StatusBar,
     SplashScreen,
@@ -1242,8 +889,11 @@ import { ChatContactsSynchronizer } from &#x27;../providers/chat-contacts-synchr
     UploadService,
     ChatManager,
     ChatConversationsHandler,
+    ChatArchivedConversationsHandler,
     ChatConversationHandler,
-    ChatContactsSynchronizer
+    ChatContactsSynchronizer,
+    GroupService,
+    TiledeskConversationProvider
   ]
 })
 export class AppModule {}
@@ -1260,10 +910,14 @@ export class AppModule {}
 
 
 
+                   
+
+
+
 
                    </div><div class="search-results">
     <div class="has-results">
-        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
         <ul class="search-results-list"></ul>
     </div>
     <div class="no-results">
@@ -1271,8 +925,22 @@ export class AppModule {}
     </div>
 </div>
 </div>
+               <!-- END CONTENT -->
            </div>
        </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'module';
+            var COMPODOC_CURRENT_PAGE_URL = 'AppModule.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 
@@ -1283,17 +951,17 @@ export class AppModule {}
 
        <script src="../js/compodoc.js"></script>
 
-       <script>var COMPODOC_CURRENT_PAGE_DEPTH = 1;</script>
-
-       <script src="../js/search/search.js"></script>
-       <script src="../js/search/lunr.min.js"></script>
-       <script src="../js/search/search-lunr.js"></script>
-
        <script src="../js/tabs.js"></script>
        <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
        <script src="../js/libs/prism.js"></script>
        <script src="../js/sourceCode.js"></script>
-       <script src="../js/search/search_index.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
 
     </body>
 </html>

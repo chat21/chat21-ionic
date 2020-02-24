@@ -1,0 +1,1832 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@chat21/chat21-ionic documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">@chat21/chat21-ionic documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>ChatArchivedConversationsHandler</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/providers/chat-archived-conversations-handler.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#chatManager">chatManager</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#conversations">conversations</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#events">events</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loggedUser">loggedUser</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#ref">ref</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#tenant">tenant</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#translate">translate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#uidConvSelected">uidConvSelected</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#upSvc">upSvc</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#userId">userId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#zone">zone</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#completeConversation">completeConversation</a>
+                            </li>
+                            <li>
+                                <a href="#connect">connect</a>
+                            </li>
+                            <li>
+                                <a href="#dispose">dispose</a>
+                            </li>
+                            <li>
+                                <a href="#getConversationByUid">getConversationByUid</a>
+                            </li>
+                            <li>
+                                <a href="#getInstance">getInstance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getTimeLastMessage">getTimeLastMessage</a>
+                            </li>
+                            <li>
+                                <a href="#initWithTenant">initWithTenant</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isValidConversation">isValidConversation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isValidField">isValidField</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#onSnapshotAdded">onSnapshotAdded</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#onSnapshotChanged">onSnapshotChanged</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#onSnapshotRemoved">onSnapshotRemoved</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setStatusConversation">setStatusConversation</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(events: Events, chatManager: <a href="../injectables/ChatManager.html">ChatManager</a>, translate: TranslateService, upSvc: <a href="../injectables/UploadService.html">UploadService</a>, zone: <a href="https://angular.io/api/core/NgZone" target="_blank">NgZone</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:22</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>events</td>
+                                                  
+                                                        <td>
+                                                                    <code>Events</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>chatManager</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ChatManager.html" target="_self" >ChatManager</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>translate</td>
+                                                  
+                                                        <td>
+                                                                    <code>TranslateService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>upSvc</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UploadService.html" target="_self" >UploadService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>zone</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/core/NgZone" target="_blank" >NgZone</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completeConversation"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            completeConversation
+                        </b>
+                        <a href="#completeConversation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>completeConversation(conv)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="144"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:144</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Completo conversazione aggiungendo:
+1 - imposto selected == true se è la conversazione selezionata
+2 - imposto fullname del sender concatenando nome e cognome e</p>
+<ul>
+<li>aggiungo &#39;tu:&#39; se il sender coincide con il loggedUser
+3 - imposto il tempo trascorso dell&#39;invio dell&#39;ultimo messaggio</li>
+</ul>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>conv</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ConversationModel.html" target="_self" >ConversationModel</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="connect"></a>
+                    <span class="name">
+                        <b>
+                            connect
+                        </b>
+                        <a href="#connect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>connect()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="57"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:57</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>mi connetto al nodo conversations
+creo la reference
+mi sottoscrivo a change, removed, added</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dispose"></a>
+                    <span class="name">
+                        <b>
+                            dispose
+                        </b>
+                        <a href="#dispose"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>dispose()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="208"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:208</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>dispose reference di conversations</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getConversationByUid"></a>
+                    <span class="name">
+                        <b>
+                            getConversationByUid
+                        </b>
+                        <a href="#getConversationByUid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getConversationByUid(conversationUid)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="279"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:279</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>conversationUid</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getInstance"></a>
+                    <span class="name">
+                        <b>
+                            getInstance
+                        </b>
+                        <a href="#getInstance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getInstance()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="36"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:36</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>ritorno istanza di conversations handler</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>this</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTimeLastMessage"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            getTimeLastMessage
+                        </b>
+                        <a href="#getTimeLastMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getTimeLastMessage(timestamp: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="199"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:199</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>calcolo il tempo trascorso da ora al timestamp passato</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>timestamp</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initWithTenant"></a>
+                    <span class="name">
+                        <b>
+                            initWithTenant
+                        </b>
+                        <a href="#initWithTenant"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>initWithTenant(tenant, loggedUser)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="45"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:45</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>inizializzo conversations handler</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>tenant</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>loggedUser</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../injectables/ChatArchivedConversationsHandler.html" target="_self" >ChatArchivedConversationsHandler</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isValidConversation"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            isValidConversation
+                        </b>
+                        <a href="#isValidConversation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isValidConversation(convToCheckId, convToCheck: <a href="../classes/ConversationModel.html">ConversationModel</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="213"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:213</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>convToCheckId</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>convToCheck</td>
+                                    <td>
+                                                <code><a href="../classes/ConversationModel.html" target="_self" >ConversationModel</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isValidField"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            isValidField
+                        </b>
+                        <a href="#isValidField"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isValidField(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="274"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:274</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSnapshotAdded"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            onSnapshotAdded
+                        </b>
+                        <a href="#onSnapshotAdded"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onSnapshotAdded(snapshot)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="79"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:79</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>1 - aggiungo alla pos 0 la nuova conversazione all&#39;array di conversazioni 
+2 - pubblico conversations:update</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>snapshot</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSnapshotChanged"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            onSnapshotChanged
+                        </b>
+                        <a href="#onSnapshotChanged"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onSnapshotChanged(snapshot)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="103"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:103</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>1 - cerco indice conversazione nell&#39;array conversation
+2 - sostituisco conversazione
+3 - pubblico conversations:update</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>snapshot</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSnapshotRemoved"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            onSnapshotRemoved
+                        </b>
+                        <a href="#onSnapshotRemoved"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onSnapshotRemoved(childSnapshot)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="125"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:125</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>1 - cerco indice conversazione da eliminare
+2 - elimino conversazione da array conversations
+3 - pubblico conversations:update</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>childSnapshot</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setStatusConversation"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            setStatusConversation
+                        </b>
+                        <a href="#setStatusConversation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setStatusConversation(sender, uid)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="185"
+                            class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:185</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>sender</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>uid</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="chatManager"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            chatManager</b>
+                            <a href="#chatManager"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../injectables/ChatManager.html" target="_self" >ChatManager</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:26</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="conversations"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            conversations</b>
+                            <a href="#conversations"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../classes/ConversationModel.html" target="_self" >ConversationModel[]</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:21</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="events"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            events</b>
+                            <a href="#events"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>Events</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:25</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="loggedUser"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            loggedUser</b>
+                            <a href="#loggedUser"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../classes/UserModel.html" target="_self" >UserModel</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:18</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ref"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            ref</b>
+                            <a href="#ref"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>firebase.database.Query</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:20</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="tenant"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            tenant</b>
+                            <a href="#tenant"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:17</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="translate"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            translate</b>
+                            <a href="#translate"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>TranslateService</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:27</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="uidConvSelected"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            uidConvSelected</b>
+                            <a href="#uidConvSelected"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank" >String</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:22</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="upSvc"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            upSvc</b>
+                            <a href="#upSvc"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../injectables/UploadService.html" target="_self" >UploadService</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:28</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="userId"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            userId</b>
+                            <a href="#userId"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:19</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="zone"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                            zone</b>
+                            <a href="#zone"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://angular.io/api/core/NgZone" target="_blank" >NgZone</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/providers/chat-archived-conversations-handler.ts:29</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, NgZone } from &#x27;@angular/core&#x27;;
+import { Events } from &#x27;ionic-angular&#x27;;
+import &#x27;rxjs/add/operator/map&#x27;;
+import * as firebase from &#x27;firebase/app&#x27;;
+import { UserModel } from &#x27;../models/user&#x27;;
+import { ConversationModel } from &#x27;../models/conversation&#x27;;
+import { ChatManager } from &#x27;./chat-manager/chat-manager&#x27;;
+import { TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from &#x27;../utils/constants&#x27;;
+import { avatarPlaceholder, getColorBck, compareValues, getFromNow, contactsRef, searchIndexInArrayForUid } from &#x27;../utils/utils&#x27;;
+import { TranslateService } from &#x27;@ngx-translate/core&#x27;;
+
+import { UploadService } from &#x27;../providers/upload-service/upload-service&#x27;;
+
+@Injectable()
+export class ChatArchivedConversationsHandler {
+
+    private tenant: string;
+    private loggedUser: UserModel;
+    private userId: string;
+    private ref: firebase.database.Query;
+    public conversations: ConversationModel[] &#x3D; [];
+    public uidConvSelected: String &#x3D; &#x27;&#x27;;
+
+    constructor(
+        public events: Events,
+        public chatManager: ChatManager,
+        public translate: TranslateService,
+        public upSvc: UploadService,
+        public zone: NgZone
+    ) {
+    }
+
+    /**
+     * ritorno istanza di conversations handler
+     */
+    getInstance() {
+        return this;
+    }
+
+    /**
+     * inizializzo conversations handler
+     * @param tenant 
+     * @param user 
+     */
+    initWithTenant(tenant, loggedUser): ChatArchivedConversationsHandler {
+        this.tenant &#x3D; tenant;
+        this.loggedUser &#x3D; loggedUser;
+        this.userId &#x3D; loggedUser.uid;
+        return this;
+    }
+
+    /**
+     * mi connetto al nodo conversations
+     * creo la reference
+     * mi sottoscrivo a change, removed, added
+     */
+    connect() {
+        const that &#x3D; this;
+        const urlNodeFirebase &#x3D; &#x27;/apps/&#x27; + this.tenant + &#x27;/users/&#x27; + this.loggedUser.uid + &#x27;/archived_conversations&#x27;;
+        console.log(&#x27;url conversations: &#x27;, urlNodeFirebase);
+        this.ref &#x3D; firebase.database().ref(urlNodeFirebase).orderByChild(&#x27;timestamp&#x27;).limitToLast(400);
+        this.ref.on(&quot;child_added&quot;, function (childSnapshot) {
+            that.onSnapshotAdded(childSnapshot);
+        })
+        this.ref.on(&quot;child_changed&quot;, function (childSnapshot) {
+            that.onSnapshotChanged(childSnapshot);
+        });
+        this.ref.on(&quot;child_removed&quot;, function (childSnapshot) {
+            that.onSnapshotRemoved(childSnapshot);
+        });
+    }
+
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+    /**
+     * 1 - aggiungo alla pos 0 la nuova conversazione all&#x27;array di conversazioni 
+     * 2 - pubblico conversations:update
+     * @param snapshot
+     */
+    private onSnapshotAdded(snapshot) {
+        const childData: ConversationModel &#x3D; snapshot.val();
+        childData.uid &#x3D; snapshot.key;
+        const conversation &#x3D; this.completeConversation(childData);
+        if (this.isValidConversation(snapshot.key, conversation)) {
+            const index &#x3D; searchIndexInArrayForUid(this.conversations, conversation.uid);
+            if(index &gt; -1){
+                this.conversations.splice(index, 1, conversation);
+            } else {
+                this.conversations.splice(0, 0, conversation);
+            }
+            this.conversations.sort(compareValues(&#x27;timestamp&#x27;, &#x27;desc&#x27;));
+            this.events.publish(&#x27;archivedConversationsChanged&#x27;, this.conversations);
+        } else {
+            console.error(&quot;ChatArchivedConversationsHandler::added::conversations with conversationId: &quot;, snapshot.key, &quot;is not valid&quot;);
+        }
+    }
+
+    /**
+     * 1 - cerco indice conversazione nell&#x27;array conversation
+     * 2 - sostituisco conversazione
+     * 3 - pubblico conversations:update
+     * @param snapshot
+     */
+    private onSnapshotChanged(snapshot) {
+        // console.log(&quot;ChatArchivedConversationsHandler::onSnapshotChanged::snapshot:&quot;, snapshot)
+        const childData: ConversationModel &#x3D; snapshot.val();
+        childData.uid &#x3D; snapshot.key;
+        let conversation &#x3D; this.completeConversation(childData);
+        if (this.isValidConversation(snapshot.key, conversation)) {
+            //conversation &#x3D; this.isConversationSelected(conversation, &#x27;1&#x27;);
+            const index &#x3D; searchIndexInArrayForUid(this.conversations, conversation.uid);
+            this.conversations.splice(index, 1, conversation);
+            this.conversations.sort(compareValues(&#x27;timestamp&#x27;, &#x27;desc&#x27;));
+            this.events.publish(&#x27;archivedConversationsChanged&#x27;, this.conversations);
+        } else {
+            console.error(&quot;ChatArchivedConversationsHandler::changed::conversations with conversationId: &quot;, snapshot.key, &quot;is not valid&quot;);
+        }
+    }
+
+    /**
+     * 1 - cerco indice conversazione da eliminare
+     * 2 - elimino conversazione da array conversations
+     * 3 - pubblico conversations:update
+     * @param childSnapshot 
+     */
+    private onSnapshotRemoved(childSnapshot) {
+        // console.log(&quot;ChatArchivedConversationsHandler::onSnapshotRemoved::childSnapshot:&quot;, childSnapshot)
+        console.log(&quot;ChatArchivedConversationsHandler::onSnapshotRemoved::conversation:&quot;, childSnapshot.key);
+        const index &#x3D; searchIndexInArrayForUid(this.conversations, childSnapshot.key);
+        if(index&gt;-1){
+            this.conversations.splice(index, 1);
+            this.conversations.sort(compareValues(&#x27;timestamp&#x27;, &#x27;desc&#x27;));
+            this.events.publish(&#x27;archivedConversationsChanged&#x27;, this.conversations);
+        }
+    }
+
+    /**
+     * Completo conversazione aggiungendo:
+     * 1 - imposto selected &#x3D;&#x3D; true se è la conversazione selezionata
+     * 2 - imposto fullname del sender concatenando nome e cognome e
+     *   - aggiungo &#x27;tu:&#x27; se il sender coincide con il loggedUser
+     * 3 - imposto il tempo trascorso dell&#x27;invio dell&#x27;ultimo messaggio
+     * @param conv 
+     */
+    private completeConversation(conv): ConversationModel {
+        //debugger;
+        var LABEL_TU &#x3D; this.translate.get(&#x27;LABEL_TU&#x27;)[&#x27;value&#x27;];
+        conv.selected &#x3D; false;
+        if (!conv.sender_fullname || conv.sender_fullname &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27; || conv.sender_fullname.trim() &#x3D;&#x3D;&#x3D; &#x27;&#x27;) {
+            conv.sender_fullname &#x3D; conv.sender;
+        }
+        if (!conv.recipient_fullname || conv.recipient_fullname &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27; || conv.recipient_fullname.trim() &#x3D;&#x3D;&#x3D; &#x27;&#x27;) {
+            conv.recipient_fullname &#x3D; conv.recipient;
+        }
+
+        let conversation_with_fullname &#x3D; conv.sender_fullname;
+        let conversation_with &#x3D; conv.sender;
+        if (conv.sender &#x3D;&#x3D;&#x3D; this.loggedUser.uid) {
+            conversation_with &#x3D; conv.recipient;
+            conversation_with_fullname &#x3D; conv.recipient_fullname;
+            conv.last_message_text &#x3D; LABEL_TU + conv.last_message_text;
+        }
+        else if (conv.channel_type &#x3D;&#x3D;&#x3D; TYPE_GROUP) {
+            conversation_with &#x3D; conv.recipient;
+            conversation_with_fullname &#x3D; conv.recipient_fullname;
+            conv.last_message_text &#x3D; conv.last_message_text;
+        }
+        conv.conversation_with_fullname &#x3D; conversation_with_fullname;
+
+        conv.status &#x3D; this.setStatusConversation(conv.sender, conv.uid);
+        // NOTA: le immagini le devo ricaricare solo quando entro nel dettaglio di una conversazione!!!!!
+        if(conv.image &#x3D;&#x3D;&#x3D; &#x27;no-image&#x27;){
+            console.log(&#x27;no-image&#x27;, conv);
+            var conversationRef &#x3D; this.ref.ref.child(conv.uid);
+            conversationRef.child(&#x27;image&#x27;).remove();
+            console.log(&#x27;no-image conversationRef&#x27;, conversationRef);
+        }
+        const time_last_message &#x3D; this.getTimeLastMessage(conv.timestamp);
+        conv.time_last_message &#x3D; time_last_message;
+        conv.avatar &#x3D; avatarPlaceholder(conversation_with_fullname);
+        conv.color &#x3D; getColorBck(conversation_with_fullname);
+
+        return conv;
+    }
+
+    private setStatusConversation(sender, uid): string {
+        let status &#x3D; &#x27;0&#x27;; //letto
+        if (sender &#x3D;&#x3D;&#x3D; this.loggedUser.uid || uid &#x3D;&#x3D;&#x3D; this.uidConvSelected) {
+            status &#x3D; &#x27;0&#x27;;
+        } else {
+            status &#x3D; &#x27;1&#x27;; // non letto
+        }
+        return status;
+    }
+
+    /**
+     * calcolo il tempo trascorso da ora al timestamp passato
+     * @param timestamp 
+     */
+    private getTimeLastMessage(timestamp: string) {
+        let timestampNumber &#x3D; parseInt(timestamp) / 1000;
+        let time &#x3D; getFromNow(timestampNumber);
+        return time;
+    }
+
+    /**
+     * dispose reference di conversations
+     */
+    dispose() {
+        this.ref.off();
+    }
+
+    // check if the conversations is valid or not
+    private isValidConversation(convToCheckId, convToCheck: ConversationModel): boolean {
+
+        //console.log(&quot;[BEGIN] ChatConversationsHandler:: convToCheck with uid: &quot;, convToCheckId);
+
+        if (!this.isValidField(convToCheck.uid)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;uid is not valid&#x27; &quot;);
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.is_new)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;is_new is not valid&#x27; &quot;);
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.last_message_text)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;last_message_text is not valid&#x27; &quot;);
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.recipient)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;recipient is not valid&#x27; &quot;);
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.recipient_fullname)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;recipient_fullname is not valid&#x27; &quot;);
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.sender)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;sender is not valid&#x27; &quot;);
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.sender_fullname)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;sender_fullname is not valid&#x27; &quot;);
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.status)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;status is not valid&#x27; &quot;);
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.timestamp)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;timestamp is not valid&#x27; &quot;);
+            return false;
+        }
+
+        if (!this.isValidField(convToCheck.channel_type)) {
+            //console.error(&quot;ChatConversationsHandler::isValidConversation:: &#x27;channel_type is not valid&#x27; &quot;);
+            return false;
+        }
+
+        //console.log(&quot;[END] ChatConversationsHandler:: convToCheck with uid: &quot;, convToCheckId);
+
+        // any other case
+        return true;
+    }
+
+    // checks if a conversation&#x27;s field is valid or not
+    private isValidField(field): boolean {
+        return (field &#x3D;&#x3D;&#x3D; null || field &#x3D;&#x3D;&#x3D; undefined) ? false : true;
+    }
+
+
+    getConversationByUid(conversationUid) {
+        const index &#x3D; searchIndexInArrayForUid(this.conversations, conversationUid);
+        return this.conversations[index];
+    }
+}</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'ChatArchivedConversationsHandler.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

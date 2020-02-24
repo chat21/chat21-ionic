@@ -91,6 +91,7 @@ export class ChatConversationsHandler {
     connect() {
         const that = this;
         const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.userId);
+        console.log('connect ------->', urlNodeFirebase);
         //const urlNodeFirebase = '/apps/'+tenant+'/users/'+this.loggedUser.uid+'/conversations';
         this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
         this.ref.on("child_changed", function(childSnapshot) {
@@ -379,7 +380,7 @@ export class ChatConversationsHandler {
         const tenant = this.chatManager.getTenant();
         const url = '/apps/' + tenant + '/users/' + uidUser + '/conversations/' + conversationId;
         const reference = firebase.database().ref(url);
-        console.log("ChatConversationsHandler::addConversationListener::reference:", reference.toString());
+        console.log("ChatConversationsHandler::addConversationListener::reference:",url, reference.toString());
         reference.on('value', function (snapshot) {
             setTimeout(function () {
                 that.events.publish(conversationId + '-listener', snapshot);

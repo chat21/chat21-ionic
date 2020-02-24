@@ -169,14 +169,13 @@ export class InfoConversationPage {
     //   this.conversationSelected.image = '';
     // }
     if (!this.conversationWith) {
-      console.log('CASO 1');
+      console.log('NO CONVERSATION');
       return;
     } else if (this.conversationWith === this.currentUserDetail.uid) {
       console.log('MYSELF');
       this.profileYourself = true;
       this.userDetail = this.currentUserDetail;
-    }
-    else if (this.channelType === TYPE_GROUP) {
+    } else if (this.channelType === TYPE_GROUP) {
       console.log('GRUPPO');
       this.profileYourself = false;
       this.loadGroupDetail();
@@ -254,36 +253,36 @@ export class InfoConversationPage {
    */
   returnLoadGroupDetail = (snapshot) => {
     console.log('InfoConversationPage::subscribeGroupDetails', snapshot.val());
-    if (snapshot.val()) {
-      this.group = snapshot.val();
-      if (this.group.attributes) {
-        this.attributes = this.group.attributes;
-        this.updateAttributes(this.group.attributes);
+    var that = this;
+    setTimeout(function () {
+      if (snapshot.val()) {
+        that.group = snapshot.val();
+        if (that.group.attributes) {
+          that.attributes = that.group.attributes;
+          that.updateAttributes(that.group.attributes);
+        }
+        that.groupDetail = new GroupModel(
+          snapshot.key,
+          getFormatData(that.group.createdOn),
+          that.group.iconURL,
+          that.groupService.getUidMembers(that.group.members),
+          that.group.memberinfo,
+          that.group.name,
+          that.group.owner
+        );
+        if (!that.groupDetail.iconURL || that.groupDetail.iconURL === LABEL_NOICON) {
+          that.groupDetail.iconURL = URL_NO_IMAGE;
+        }
+        that.getListMembers(that.groupDetail.members);
+        console.log('groupDetail: ', that.groupDetail, that.uidUserAuthenticated);
+        if (!isExistInArray(that.groupDetail.members, that.currentUserDetail.uid) || that.groupDetail.members.length <= 1) {
+          that.isLoggedUserGroupMember = false;
+        } else if (isExistInArray(that.groupDetail.members, that.currentUserDetail.uid)) {
+          that.isLoggedUserGroupMember = true;
+        }
+  
       }
-      this.groupDetail = new GroupModel(
-        snapshot.key,
-        getFormatData(this.group.createdOn),
-        this.group.iconURL,
-        this.groupService.getUidMembers(this.group.members),
-        this.group.memberinfo,
-        this.group.name,
-        this.group.owner
-      );
-      if (!this.groupDetail.iconURL || this.groupDetail.iconURL === LABEL_NOICON) {
-        this.groupDetail.iconURL = URL_NO_IMAGE;
-      }
-
-      this.getListMembers(this.groupDetail.members);
-      console.log('ListMembers: ', this.groupDetail.members, this.uidUserAuthenticated);
-
-      if (!isExistInArray(this.groupDetail.members, this.currentUserDetail.uid) || this.groupDetail.members.length <= 1) {
-        this.isLoggedUserGroupMember = false;
-      } else {
-        this.isLoggedUserGroupMember = true;
-      }
-
-    }
-
+    }, 0);
   }
 
   private updateAttributes(attributes) {
@@ -424,7 +423,12 @@ export class InfoConversationPage {
             // ADD MEMBER TO ARRAY
             that.listMembers.push(userDetail);
             // ONLINE/OFFLINE
-            that.userIsOnline(userDetail.uid);
+
+            if(userDetail.uid.startsWith('bot_') || userDetail.uid == that.currentUserDetail.uid){
+              userDetail.online = true;
+            } else {
+              that.userIsOnline(userDetail.uid);
+            }
             // MEMBER CHECKED!!
             // that.checkVerifiedMembers(userDetail.uid);
           });
@@ -596,7 +600,7 @@ export class InfoConversationPage {
 
 
 
-  // subscriptio on conversation changes
+  // subscription on conversation changes
   subscribeConversationListener: any = (snapshot) => {
     console.log('InfoConversationPage::subscribeConversationListener');
     var that = this;
@@ -637,20 +641,27 @@ export class InfoConversationPage {
    * on subscribe stato utente con cui si conversa ONLINE
    */
   callbackUserIsOnline: any = (uid, status) => {
+    // Update status member
+
     if (this.channelType === TYPE_GROUP) {
       for (var i = 0; i < this.listMembers.length; i++) {
         const member = this.listMembers[i];
-        if (member.uid === uid) {
+        if(uid == this.currentUserDetail.uid) {
+          member.online = true;
+          break;
+        } else if (member.uid === uid) {
           member.online = status;
           console.log("----->ONLINE: ", member.uid, uid, member.online);
           break;
         }
       }
     } else {
-      this.online = status;
-      if (status == false) {
-        this.lastOnlineForUser(this.conversationWith);
-      }
+      if(uid !== this.currentUserDetail.uid) {
+        this.online = status;
+        if (status == false) {
+          this.lastOnlineForUser(this.conversationWith);
+        }
+      } 
     }
   }
 
