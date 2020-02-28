@@ -119,3 +119,19 @@ More info here https://firebase.google.com/docs/hosting/quickstart?authuser=0
 ## Run on iOS
 * Run on simulator : `ionic cordova run ios`
 * Run on device : `ionic cordova run ios --device`
+
+
+# Run with docker
+
+  
+To run Chat21-ionic on port 8080 run:
+
+```
+
+curl https://raw.githubusercontent.com/chat21/chat21-ionic/master/.env.sample --output .env
+
+nano .env #configure .env file properly
+
+docker run -p 8080:80 --env-file .env chat21/chat21-ionic
+
+```
