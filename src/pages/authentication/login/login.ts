@@ -6,9 +6,10 @@ import { RegisterPage } from '../../authentication/register/register';
 import { ResetpwdPage } from '../../authentication/resetpwd/resetpwd';
 // services
 import { AuthService } from '../../../providers/auth-service';
-// import { URL_DASHBOARD, BASE_URL_HOSTNAME } from '../../../utils/constants';
+// import { DASHBOARD_URL, BASE_URL_HOSTNAME } from '../../../utils/constants';
 // import { isHostname } from '../../../utils/utils';
 import { environment } from '../../../environments/environment';
+import { AppConfigProvider } from '../../../providers/app-config/app-config';
 
 @Component({
   selector: 'page-login',
@@ -32,7 +33,8 @@ export class LoginPage {
     private authService: AuthService, 
     private formBuilder: FormBuilder,
     private alertCtrl: AlertController, 
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    public appConfig: AppConfigProvider
     //private userService: UserService
   ) {
     //console.log("LOGIN PAGE");
@@ -104,8 +106,8 @@ export class LoginPage {
    * 
    */
   tiledeskLogin(){
-    console.log('environment.URL_DASHBOARD ', environment.URL_DASHBOARD) 
-    window.open(environment.URL_DASHBOARD, "_blank");
+    console.log('this.appConfig.getConfig().DASHBOARD_URL ', this.appConfig.getConfig().DASHBOARD_URL) 
+    window.open(this.appConfig.getConfig().DASHBOARD_URL, "_blank");
     //this.loginUserFirebase();
   }
   

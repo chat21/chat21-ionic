@@ -50,7 +50,7 @@
         "cordova-android": "^8.1.0",
         "cordova-browser": "^6.0.0",
         "cordova-ios": "^5.1.1",
-        "cordova-osx": "4.0.2",
+        "cordova-osx": "^4.0.2",
         "cordova-plugin-console": "^1.1.0",
         "cordova-plugin-device": "^1.1.7",
         "cordova-plugin-splashscreen": "^4.1.0",

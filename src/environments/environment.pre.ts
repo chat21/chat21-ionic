@@ -1,10 +1,13 @@
 export const environment = {
     supportMode: true,
+    CHAT_SEND_BY_EMAIL_LINK: "CHANGEIT",
+    FIREBASESTORAGE_BASE_URL_IMAGE: 'CHANGEIT',
+    DASHBOARD_URL: 'CHANGEIT', 
     production: false,
     remoteConfig: true,
     remoteConfigUrl: './chat-config.json',
     firebaseConfig: {
-        apiKey: 'CHANGEIT',
+        apiKey: 'pre-CHANGEIT',
         authDomain: 'CHANGEIT',
         databaseURL: 'CHANGEIT',
         projectId: 'CHANGEIT',
@@ -13,3 +16,4 @@ export const environment = {
         chat21ApiUrl: 'CHANGEIT'
     }
 }
+

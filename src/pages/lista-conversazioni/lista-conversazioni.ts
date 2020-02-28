@@ -214,7 +214,7 @@ export class ListaConversazioniPage extends _MasterPage {
   }
 
   //------------------------------------------------------------------//
-  // CALLBACKS SOTTOSCRIZIONI
+  // SUBSCRIPTIONS
   //------------------------------------------------------------------//
   /** 
    * evento richiamato quando ho finito di caricare le conversazioni dallo storage
@@ -327,8 +327,8 @@ export class ListaConversazioniPage extends _MasterPage {
    * 3 - mostro modale login
    * 4 - resetto conversationWith
   */
-  subscribeLoggedUserLogout = (user: any) => {
-    console.log('************** subscribeLoggedUserLogout', user);
+  subscribeLoggedUserLogout = () => {
+    console.log('************** subscribeLoggedUserLogout');
     this.conversations = [];
     this.profileModal.present();
     this.uidConvSelected = null;

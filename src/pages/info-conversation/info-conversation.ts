@@ -18,7 +18,7 @@ import { environment } from '../../environments/environment';
 // FIREBASESTORAGE_BASE_URL_IMAGE
 // URL_PROJECT_ID
 // URL_TICKET_CHAT
-// URL_SEND_BY_EMAIL
+// CHAT_SEND_BY_EMAIL_LINK
 // URL_VIDEO_CHAT,
 
 // utils
@@ -72,7 +72,7 @@ export class InfoConversationPage {
   public conversationEnabled: boolean;
 
   public TYPE_GROUP = TYPE_GROUP;
-  // public URL_SEND_BY_EMAIL = URL_SEND_BY_EMAIL;
+  // public CHAT_SEND_BY_EMAIL_LINK = CHAT_SEND_BY_EMAIL_LINK;
   // public URL_VIDEO_CHAT = URL_VIDEO_CHAT;
 
   private loadingDialog: any;
@@ -437,7 +437,7 @@ export class InfoConversationPage {
   }
 
   getImageUrlThumb(uid: string) {
-    let imageurl = environment.FIREBASESTORAGE_BASE_URL_IMAGE + environment.firebaseConfig.storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
+    let imageurl = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE + environment.firebaseConfig.storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
     return imageurl;
   }
   /**
@@ -1069,7 +1069,7 @@ export class InfoConversationPage {
   }
 
   sendMail() {
-    const url = environment.URL_SEND_BY_EMAIL + this.conversationSelected.uid + '/messages.html';
+    const url = this.appConfig.getConfig().CHAT_SEND_BY_EMAIL_LINK + this.conversationSelected.uid + '/messages.html';
     window.open(url, '_blank', 'location=yes');
   }
 
@@ -1094,7 +1094,8 @@ export class InfoConversationPage {
     // -------------------------------------------------------------------------------------------
     // @ PRE
     // -------------------------------------------------------------------------------------------
-    var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/wsrequest/" + this.conversationWith + "/messages";
+    
+    var url = this.appConfig.getConfig().DASHBOARD_URL + "#/project/" + this.attributes.projectId + "/wsrequest/" + this.conversationWith + "/messages";
 
     console.log('openUserDetail:', url);
     window.open(url, '_blank');
@@ -1107,7 +1108,7 @@ export class InfoConversationPage {
     // this.projectId = '5b55e806c93dde00143163dd';
     // "https://support.tiledesk.com/dashboard/#/project/5af02d8f705ac600147f0cbb/request/support-group-LEOsofmVWYtljdxTf3c/messages";
     // var url = "https://support.tiledesk.com/dashboard/#/project/" + this.attributes.projectId + "/home/";
-    var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/home/";
+    var url = this.appConfig.getConfig().DASHBOARD_URL + "#/project/" + this.attributes.projectId + "/home/";
 
     console.log('openProjectHome:', url);
     window.open(url, '_blank');

@@ -48,9 +48,9 @@ In progress git
     ```
     export const environment = {
         supportMode: true,
-        URL_SEND_BY_EMAIL: '<CHAT-TRANSCRIPT-URL>',
+        CHAT_SEND_BY_EMAIL_LINK: '<CHAT-TRANSCRIPT-URL>',
         FIREBASESTORAGE_BASE_URL_IMAGE: 'https://firebasestorage.googleapis.com/v0/b/',
-        URL_DASHBOARD: '<YOUR-DASHBOARD-URL>/',
+        DASHBOARD_URL: '<YOUR-DASHBOARD-URL>/',
         URL_PROJECT_ID: '<YOUR-DASHBOARD-URL>/#/project/',
         production: false,
         remoteConfig: true,

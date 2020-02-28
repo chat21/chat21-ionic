@@ -76,6 +76,7 @@ export function createTranslateLoader(http: HttpClient) {
 const appInitializerFn = (appConfig: AppConfigProvider) => {
   return () => {
     if (environment.remoteConfig) {
+      console.log('environment.remoteConfig: ', environment.remoteConfig);
       return appConfig.loadAppConfig();
     }
   };
@@ -150,6 +151,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     InfoAdvancedPage,
     ArchivedConversationsPage
   ],
+
   providers: [
     AppConfigProvider, // https://juristr.com/blog/2018/01/ng-app-runtime-config/
     {

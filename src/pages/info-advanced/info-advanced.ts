@@ -1,6 +1,7 @@
 import { Component, NgZone, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { environment } from '../../environments/environment';
+import { AppConfigProvider } from '../../providers/app-config/app-config';
 /**
  * Generated class for the InfoAdvancedPage page.
  *
@@ -19,7 +20,10 @@ export class InfoAdvancedPage {
   @Input() attributes: any = {};
   // ========= end:: Input/Output values ============//
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public appConfig: AppConfigProvider) {
   }
 
   ionViewDidLoad() {
@@ -32,7 +36,8 @@ export class InfoAdvancedPage {
 
 
   openProjectHome() {
-    var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/home/";
+    var url = this.appConfig.getConfig().DASHBOARD_URL + "#/project/" + this.attributes.projectId + "/home/";
+    //var url = environment.URL_PROJECT_ID + this.attributes.projectId + "/home/";
     console.log('openProjectHome:', url);
     window.open(url, '_blank');
   }
