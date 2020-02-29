@@ -128,7 +128,7 @@ To run Chat21-ionic on port 8080 run:
 
 ```
 
-curl https://raw.githubusercontent.com/chat21/chat21-ionic/master/.env.sample --output .env
+curl https://raw.githubusercontent.com/chat21/chat21-ionic/master/env.sample --output .env
 
 nano .env #configure .env file properly
 
