@@ -102,7 +102,7 @@ export class InfoConversationPage {
     public appConfig: AppConfigProvider
   ) {
     //this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
-    console.log('constructor');
+    console.log('**** constructor InfoConversationPage *****');
     const that = this;
     // this.FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().storageBucket;
     setTimeout(function () {
@@ -244,7 +244,7 @@ export class InfoConversationPage {
     const keySubscription = 'groupDetails';
     if (this.addSubscription(keySubscription)) {
       this.events.subscribe(keySubscription, this.returnLoadGroupDetail);
-      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.conversationWith);
+      this.groupService.loadGroupDetail(this.currentUserDetail.uid, this.conversationWith, keySubscription);
     }
   }
 
@@ -254,7 +254,7 @@ export class InfoConversationPage {
   returnLoadGroupDetail = (snapshot) => {
     console.log('InfoConversationPage::subscribeGroupDetails', snapshot.val());
     var that = this;
-    setTimeout(function () {
+    //setTimeout(function () {
       if (snapshot.val()) {
         that.group = snapshot.val();
         if (that.group.attributes) {
@@ -282,7 +282,7 @@ export class InfoConversationPage {
         }
   
       }
-    }, 0);
+    //}, 0);
   }
 
   private updateAttributes(attributes) {
@@ -343,6 +343,7 @@ export class InfoConversationPage {
     }
     console.log(' this.uidUserAuthenticated: ', this.uidUserAuthenticated, this.attributes);
     this.listMembers = [];
+    console.log(' <----- members -----> ', members, this.listMembers);
     members.forEach(member => {
       let userDetail;
       if (member.trim() !== '' && member.trim() !== SYSTEM) {
@@ -421,7 +422,10 @@ export class InfoConversationPage {
             userDetail.color = getColorBck(userDetail.fullname);
             console.log('userDetail------------->', userDetail);
             // ADD MEMBER TO ARRAY
-            that.listMembers.push(userDetail);
+            let position = that.listMembers.findIndex(i => i.uid === userDetail.uid);
+            if (position == -1 ) {            
+              that.listMembers.push(userDetail);
+            }
             // ONLINE/OFFLINE
 
             if(userDetail.uid.startsWith('bot_') || userDetail.uid == that.currentUserDetail.uid){

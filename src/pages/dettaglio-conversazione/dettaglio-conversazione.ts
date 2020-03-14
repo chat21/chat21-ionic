@@ -4,6 +4,8 @@ import { PopoverController, Platform, ActionSheetController, IonicPage, NavParam
 import { UserModel } from '../../models/user';
 import { MessageModel } from '../../models/message';
 import { UploadModel } from '../../models/upload';
+import { GroupModel } from '../../models/group';
+
 // providers services 
 import { UserService } from '../../providers/user/user';
 import { NavProxyService } from '../../providers/nav-proxy';
@@ -11,6 +13,10 @@ import { ChatPresenceHandler } from '../../providers/chat-presence-handler';
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { UploadService } from '../../providers/upload-service/upload-service';
 import { ChatConversationHandler } from '../../providers/chat-conversation-handler';
+import { AppConfigProvider } from '../../providers/app-config/app-config';
+import { DatabaseProvider } from '../../providers/database/database';
+import { CannedResponsesServiceProvider } from '../../providers/canned-responses-service/canned-responses-service';
+import { GroupService } from '../../providers/group/group';
 // pages
 import { _DetailPage } from '../_DetailPage';
 import { ProfilePage } from '../profile/profile';
@@ -18,11 +24,14 @@ import { InfoUserPage } from '../info-user/info-user';
 // import { InfoMessagePage } from '../info-message/info-message';
 import { PopoverPage } from '../popover/popover';
 // utils
-import { TYPE_SUPPORT_GROUP, TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA, MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, TYPE_GROUP } from '../../utils/constants';
-import { htmlEntities, isURL, isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify } from '../../utils/utils';
+import { TYPE_SUPPORT_GROUP, TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA, MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, TYPE_GROUP, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { compareValues, htmlEntities, isURL, isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify, getFormatData } from '../../utils/utils';
+
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
 import { ConversationModel } from '../../models/conversation';
+import { timer } from 'rxjs';
+
 
 
 
@@ -52,7 +61,8 @@ export class DettaglioConversazionePage extends _DetailPage {
 
   //aggiunta 
   private conversationSelected: ConversationModel;
-
+  private groupDetailAttributes: any;
+  
 
   private currentUserDetail: UserModel;
   private memberSelected: UserModel;
@@ -81,6 +91,10 @@ export class DettaglioConversazionePage extends _DetailPage {
   private advancedAttributes: any = [];
   private openInfoAdvanced: boolean = false;
 
+
+  private tagsCanned: any = [];
+  private tagsCannedFilter: any = [];
+
   public TYPE_GROUP = TYPE_GROUP;
   public TYPE_DIRECT = TYPE_DIRECT;
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
@@ -104,9 +118,15 @@ export class DettaglioConversazionePage extends _DetailPage {
     public actionSheetCtrl: ActionSheetController,
     public platform: Platform,
     private upSvc: UploadService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    public appConfig: AppConfigProvider, 
+    private databaseProvider: DatabaseProvider,
+    public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
+    public groupService: GroupService
   ) {
     super();
+    console.log('**** constructor DettaglioConversazionePage *****');
+    this.tagsCanned = [];
     this.subscriptions = [];
     // passo oggetto conversazione
     this.conversationSelected = navParams.get('conversationSelected');
@@ -147,6 +167,7 @@ export class DettaglioConversazionePage extends _DetailPage {
    * subscriptions list 
   */
   initSubscriptions() {
+    console.log('initSubscriptions');
     // subscribe elenco messaggi
     let key = 'doScroll';
     if (!isInArray(key, this.subscriptions)) {
@@ -165,9 +186,35 @@ export class DettaglioConversazionePage extends _DetailPage {
       this.subscriptions.push(key);
       this.events.subscribe('openVideoChat', this.onOpenVideoChat);
     }
-
   }
 
+
+
+  /** 
+   * init group details subscription
+   */
+  loadGroupDetail() {
+    console.log('-------------------------->  Dettaglio conersazione ::loadGroupDetail');
+    const keySubscription = 'conversationGroupDetails';
+    if (!isInArray(keySubscription, this.subscriptions)) {
+      console.log(' subscribe ::groupDetails');
+      this.events.subscribe(keySubscription, this.returnLoadGroupDetail);
+      // carico il gruppo in info dettaglio
+      //this.groupService.conversationLoadGroupDetail(this.currentUserDetail.uid, this.conversationWith, keySubscription);
+    }
+  }
+
+  /**
+   * information detail group called of groupService.loadGroupDetail
+   */
+  returnLoadGroupDetail = (snapshot) => {
+    console.log('<<<<<<<<<<< returnLoadGroupDetail >>>>>>>>>>>>>>>>>>', snapshot.val());
+    if (snapshot.val()) {
+      console.log('Dettaglio conersazione ::subscribeGroupDetails', snapshot.val());
+      const groupDetails = snapshot.val();
+      this.groupDetailAttributes = groupDetails.attributes;
+    }
+  }
 
 
   /**
@@ -177,6 +224,8 @@ export class DettaglioConversazionePage extends _DetailPage {
    */
   setConversationWith() {
     console.log('DETTAGLIO CONV - conversationSelected »»»»»»» : ', this.conversationSelected);
+    this.loadGroupDetail();
+    this.loadTagsCanned();
     if (this.conversationSelected) {
       // GROUP CONVERSATION 
       this.conversationType = TYPE_GROUP;
@@ -234,6 +283,9 @@ export class DettaglioConversazionePage extends _DetailPage {
       }
     }
 
+
+
+   
   }
 
   /**
@@ -241,6 +293,7 @@ export class DettaglioConversazionePage extends _DetailPage {
     */
   // LISTEN TO SCROLL POSITION
   onScroll(event: any): void {
+    console.log('onScroll');
     if (this.scrollMe) {
       const divScrollMe = this.scrollMe.nativeElement;
       const checkContentScrollPosition = this.isContentScrollEnd(divScrollMe);
@@ -255,6 +308,7 @@ export class DettaglioConversazionePage extends _DetailPage {
   }
 
   private isContentScrollEnd(divScrollMe): boolean {
+    console.log('isContentScrollEnd');
     if (divScrollMe.scrollTop === (divScrollMe.scrollHeight - divScrollMe.offsetHeight)) {
       return true;
     } else {
@@ -269,6 +323,7 @@ export class DettaglioConversazionePage extends _DetailPage {
   }
 
   onOpenVideoChat: any = (message) => {
+    console.log('onOpenVideoChat');
     this.messageString = message;
     const text_area = this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0];
     text_area.value = message; //<HTMLInputElement>document.getElementById('chat21-main-message-context');
@@ -279,6 +334,7 @@ export class DettaglioConversazionePage extends _DetailPage {
    * apre il box di dx del info messaggio
    */
   onOpenInfoMessage: any = (message) => {
+    console.log('onOpenInfoMessage');
     this.openInfoMessage = true;
     this.openInfoConversation = false;
     this.messageSelected = message;
@@ -519,6 +575,7 @@ export class DettaglioConversazionePage extends _DetailPage {
    * Scroll to bottom of page after a short delay.
    */
   scrollBottom() {
+    console.log('scrollBottom');
     var scrollDiv = document.getElementById("scroll-me");
     if (scrollDiv) {
       scrollDiv.scrollTop = scrollDiv.scrollHeight;
@@ -528,6 +585,7 @@ export class DettaglioConversazionePage extends _DetailPage {
    * Scroll to top of the page after a short delay.
    */
   scrollTop() {
+    console.log('scrollTop');
     let that = this;
     setTimeout(function () {
       that.content.scrollToTop();
@@ -538,6 +596,7 @@ export class DettaglioConversazionePage extends _DetailPage {
    * Scroll depending on the direction.
    */
   doScroll() {
+    console.log('doScroll');
     if (this.scrollDirection == 'bottom') {
       this.scrollBottom();
     } else if (this.scrollDirection == 'top') {
@@ -560,9 +619,11 @@ export class DettaglioConversazionePage extends _DetailPage {
   // }
 
   returnCloseInfoMessage() {
+    console.log('returnCloseInfoMessage');
     this.openInfoMessage = false;
   }
   returnCloseInfoConversation() {
+    console.log('returnCloseInfoConversation');
     this.openInfoConversation = false;
   }
   returnOpenInfoUser(member) {
@@ -602,6 +663,7 @@ export class DettaglioConversazionePage extends _DetailPage {
     // ordino array x tempo decrescente
     // cerco messaggi non miei
     // prendo il primo
+    console.log('onInfoConversation');
     let msgRicevuti: any;
     let attributes: any[] = [];
     try {
@@ -624,6 +686,7 @@ export class DettaglioConversazionePage extends _DetailPage {
    * @param message 
    */
   isSender(message) {
+    //console.log('isSender');
     const currentUser = this.chatManager.getLoggedUser();
     return this.conversationHandler.isSender(message, currentUser);
   }
@@ -678,7 +741,7 @@ export class DettaglioConversazionePage extends _DetailPage {
    * @param messageString 
    */
   pressedOnKeyboard(event, messageString) {
-    console.log('pressedOnKeyboard ************** event:: ', event.code);
+    console.log('pressedOnKeyboard ************** event:: ', event);  
     if (event.inputType == "insertLineBreak" && event.data == null) {
       this.messageString = "";
       return
@@ -733,6 +796,7 @@ export class DettaglioConversazionePage extends _DetailPage {
   * alla chiusura controllo su quale opzione ho premuto e attivo l'azione corrispondete
   */
   presentPopover(event, msg) {
+    console.log('presentPopover');
     let popover = this.popoverCtrl.create(PopoverPage, { typePopup: TYPE_POPUP_DETAIL_MESSAGE, message: msg });
     popover.present({
       ev: event
@@ -765,6 +829,7 @@ export class DettaglioConversazionePage extends _DetailPage {
    * @param event 
    */
   detectFiles(event) {
+    console.log('detectFiles');
     if (event && event.target && event.target.files) {
       this.selectedFiles = event.target.files;
       this.fileChange(event);
@@ -773,6 +838,7 @@ export class DettaglioConversazionePage extends _DetailPage {
   }
 
   fileChange(event) {
+    console.log('fileChange');
     const that = this;
     if (event.target.files && event.target.files[0]) {
       const nameImg = event.target.files[0].name;
@@ -856,7 +922,8 @@ export class DettaglioConversazionePage extends _DetailPage {
       '', // headerDate
       type_msg, //TYPE_MSG_IMAGE,
       '', //attributes
-      '' // channel_type
+      '', // channel_type
+      true
     );
 
     // if(type_msg == 'file'){
@@ -959,6 +1026,216 @@ export class DettaglioConversazionePage extends _DetailPage {
     }
     return false;
   }
+
+  /**
+   * messageChange
+   * 
+   * @param event 
+   */
+  public messageChange(event) { 
+    const that = this;
+    console.log("event:::",event);
+    try {
+      if (event) {
+        console.log("event.value:: ", event);
+        setTimeout(function () {
+          var str = event.value;
+          var pos = str.lastIndexOf("/");
+          console.log("str:: ", str);
+          console.log("pos:: ", pos);
+          if(pos >= 0 && that.tagsCanned.length > 0) {
+            var strSearch = str.substr(pos+1);
+            that.showTagsCanned(strSearch);
+            //that.loadTagsCanned(strSearch);
+          } else {
+            that.tagsCannedFilter = [];
+          }
+        }, 300);
+        that.resizeTextArea();
+      }
+    } catch (err) {
+      console.log("error: ", err)
+    }    
+  }
+  
+
+  resizeTextArea(){
+    const that = this;
+    setTimeout(function () {
+      try {
+        var text_area = that.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0];
+        if(text_area.value.length <= 0){
+          text_area.style.height = 'auto';
+        } else {
+          text_area.style.height = text_area.scrollHeight + 'px';
+          console.log("text_area.scrollHeight ",text_area.scrollHeight);
+        }
+        //var footerHeight = that.messageTextArea['_elementRef'].nativeElement.offsetHeight+28;
+        //var footerHeight = text_area.offsetHeight;
+        console.log("text_area.nativeElement ",text_area.offsetHeight);
+        
+        var footerMessage = document.getElementById("footerMessage");
+        var footerHeight = footerMessage.offsetHeight;
+        console.log("footerMessage.height ", footerHeight);
+        
+        console.log('msgRicevuti::::: ', footerHeight);
+        var scrollDiv = document.getElementById("scroll-me");
+        if (scrollDiv) {
+          scrollDiv.parentElement.style.marginBottom = footerHeight+"px";
+        }
+      } catch (err) {
+        console.log("error: ", err)
+      }    
+    }, 0);
+  }
+
+
+  loadTagsCanned(){
+    // recupero tagsCanned dalla memoria 
+    const that = this;
+    console.log('projectId--->XXXX--->> ', this.conversationSelected.attributes.projectId);//attributes.projectId);
+    var projectId = this.conversationSelected.attributes.projectId;
+    var SERVER_BASE_URL = this.appConfig.getConfig().SERVER_BASE_URL;
+    console.log('SERVER_BASE_URL---> ', SERVER_BASE_URL);//attributes.projectId);
+    // this.contactsService.getLeads(this.queryString, this.pageNo).subscribe((leads_object: any) => {
+    console.log('this.tagsCanned.length---> ', this.tagsCanned.length);//attributes.projectId);
+    //if(this.tagsCanned.length <= 0 ){
+      this.cannedResponsesServiceProvider.getCannedResponses(SERVER_BASE_URL, projectId)
+      .toPromise()
+      .then(data => {
+        console.log('----------------------------------> getCannedResponses:');
+        console.log(data);
+        that.tagsCanned = data;
+        //that.showTagsCanned(strSearch);
+      }).catch(err => {
+        console.log('error', err);
+      });
+    // } else {
+    //   that.showTagsCanned(strSearch);
+    // }
+  }
+
+  /** */
+  showTagsCanned(strSearch){
+    const that = this;
+      that.tagsCannedFilter = [];
+      var tagsCannedClone = JSON.parse(JSON.stringify(that.tagsCanned));
+      //console.log("that.contacts lenght:: ", strSearch);
+      that.tagsCannedFilter = that.filterItems(tagsCannedClone, strSearch);
+      that.tagsCannedFilter.sort(compareValues('title', 'asc'));
+      var strReplace = strSearch;
+      if(strSearch.length > 0){
+        strReplace = "<b>"+strSearch+"</b>";
+      }
+      for(var i=0; i < that.tagsCannedFilter.length; i++) {
+        const textCanned = "<div class='cannedText'>"+that.replacePlaceholderInCanned(that.tagsCannedFilter[i].text)+"</div>";
+        that.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>"+that.tagsCannedFilter[i].title.toString().replace(strSearch,strReplace.trim())+"</div>"+textCanned+'</div>';
+      }
+      
+  }
+
+
+
+  /**
+   * filtro array contatti per parola passata 
+   * filtro sul campo fullname
+   * @param items 
+   * @param searchTerm 
+   */
+  filterItems(items,searchTerm){
+    //console.log("filterItems::: ",searchTerm);
+    return items.filter((item) => {
+      //console.log("filterItems::: ", item.title.toString().toLowerCase());
+      return item.title.toString().toLowerCase().indexOf(searchTerm.toString().toLowerCase()) > -1;
+    });     
+  }
+
+  /**
+   * 
+   */
+  replaceTagInMessage(canned){
+    const that = this;
+    this.tagsCannedFilter = [];
+    console.log("canned::: ",canned.text);
+    // // prendo val input
+    var text_area = this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0];
+    console.log("messageTextArea::: ",text_area.value);
+    
+    // replace text
+    var pos = text_area.value.lastIndexOf("/");
+    var strSearch = text_area.value.substr(pos);
+    var strTEMP = text_area.value.replace(strSearch,canned.text);
+    console.log("strSearch::: ",strSearch);
+    console.log("this.conversationSelected.attributes:::::: ",this.conversationSelected.attributes);
+    strTEMP = this.replacePlaceholderInCanned(strTEMP);
+    console.log("strSearch::: ",strSearch);
+    text_area.value = '';
+    that.messageString = strTEMP;
+    //text_area.value = strTEMP;
+    setTimeout(() => {
+      text_area.focus();
+      that.resizeTextArea();
+    },200);
+  }
+
+  replacePlaceholderInCanned(str){
+    if (this.groupDetailAttributes && this.groupDetailAttributes.userEmail) {
+      str = str.replace('$email',this.groupDetailAttributes.userEmail);
+    }
+    if (this.groupDetailAttributes && this.groupDetailAttributes.website) {
+      str = str.replace('$website',this.groupDetailAttributes.website);
+    }
+    if (this.groupDetailAttributes && this.groupDetailAttributes.userFullname) {
+      str = str.replace('$recipient_name',this.groupDetailAttributes.userFullname);
+    }
+    if (this.currentUserDetail && this.currentUserDetail.fullname) {
+      str = str.replace('$agent_name',this.currentUserDetail.fullname);
+    }
+    return str;
+  }
+
+
+  
+  insertAtCursor(myField, myValue) {
+    console.log('CANNED-RES-CREATE.COMP - insertAtCursor - myValue ', myValue );
+     
+    // if (this.addWhiteSpaceBefore === true) {
+    //   myValue = ' ' + myValue;
+    //   console.log('CANNED-RES-CREATE.COMP - GET TEXT AREA - QUI ENTRO myValue ', myValue );
+    // }
+   
+    //IE support
+    if (myField.selection) {
+      myField.focus();
+      let sel = myField.selection.createRange();
+      sel.text = myValue;
+      // this.cannedResponseMessage = sel.text;
+    }
+    //MOZILLA and others
+    else if (myField.selectionStart || myField.selectionStart == '0') {
+      var startPos = myField.selectionStart;
+      console.log('CANNED-RES-CREATE.COMP - insertAtCursor - startPos ', startPos);
+      
+      var endPos = myField.selectionEnd;
+      console.log('CANNED-RES-CREATE.COMP - insertAtCursor - endPos ', endPos);
+      
+      myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+  
+      // place cursor at end of text in text input element
+      //myField.focus();
+      var val = myField.value; //store the value of the element
+      myField.value = ''; //clear the value of the element
+      myField.value = val + ' '; //set that value back. 
+  
+      //this.cannedResponseMessage = myField.value;
+      //this.texareaIsEmpty = false;
+      /// myField.select();
+    } else {
+      myField.value += myValue;
+      //this.cannedResponseMessage = myField.value;
+    }
+  }
+  
 
 }
 

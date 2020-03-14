@@ -10,6 +10,7 @@ import * as firebase from 'firebase/app';
 import { ChatManager } from '../../providers/chat-manager/chat-manager';
 import { UserService } from '../../providers/user/user';
 import { AppConfigProvider } from '../../providers/app-config/app-config';
+
 // ====== [END chat21]
 
 

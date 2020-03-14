@@ -59,7 +59,8 @@
             </div>
 
             <ion-item class="itemMessage" text-wrap>
-              <span *ngIf="isSender(message); then contentMine else contentOther"></span>
+              <!--<span *ngIf="isSender(message); then contentMine else contentOther"></span>-->
+              <span *ngIf="message.isSender; then contentMine else contentOther"></span>
               
               <ng-template #contentMine>
                 <div class="statusMessage">
@@ -145,10 +146,17 @@
       {{ 'LABEL_NO_MSG_HERE' | translate }}
     </div>
   </ng-template>
+
+  <div id="canned" *ngIf="tagsCannedFilter.length > 0;">
+    <ion-list class="canned-list">
+        <ion-item class="canned-item" *ngFor="let canned of tagsCannedFilter" [innerHtml]="canned.title" (click)="replaceTagInMessage(canned)">
+        </ion-item>
+    </ion-list>
+  </div>
 </ion-content>
 
 
-<ion-footer [class.halfscreen]="openInfoConversation || openInfoMessage">
+<ion-footer id="footerMessage" [class.halfscreen]="openInfoConversation || openInfoMessage">
   <ion-toolbar>
     <ion-grid>
       <ion-row #messagesPageFooter id="messages-page-footer">
@@ -171,10 +179,9 @@
         </ion-col>
         <ion-col col-auto>
           <div class="text_message">
-            <ion-textarea [disabled]="!conversationEnabled" autosize #messageTextArea id="messageTextArea" [(ngModel)]="messageString"
-              placeholder="{{ 'LABEL_ENTER_MSG' | translate }}" rows="1" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString);"
-              autofocus></ion-textarea>
-            <!-- <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->
+            <ion-textarea #messageTextArea id="messageTextArea" [(ngModel)]="messageString" (ionChange)="messageChange($event)" [disabled]="!conversationEnabled"  
+            rows="1" placeholder="{{ 'LABEL_ENTER_MSG' | translate }}" (keyup.enter)="pressedOnKeyboard($event, messageString);" autofocus autosize></ion-textarea>
+            <!--   ng-bind-html="messageString" rows="1"  <ion-textarea autosize [(ngModel)]="messageString" placeholder="Enter a message" ng-bind-html="messageString" (keyup.enter)="pressedOnKeyboard($event, messageString)"></ion-textarea> (keyup)="resize()" -->
           </div>
 
           <div class="button_send">

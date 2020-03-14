@@ -71,15 +71,16 @@ export class GroupService {
   // }
 
 
-  loadGroupDetail(uidUser, uidGroup) {
+  loadGroupDetail(uidUser, uidGroup, key) {
     const that = this;
     const tenant = this.chatManager.getTenant();
     const urlNode = '/apps/' + tenant + '/users/' + uidUser + '/groups/' + uidGroup;
     console.log("url groups: ", urlNode);
     this.refLoadGroupDetail = firebase.database().ref(urlNode);
     this.refLoadGroupDetail.on('value', function (snapshot) {
-      console.log("on value: ", snapshot);
-      that.events.publish('groupDetails', snapshot);
+      console.log("on value: ", key, snapshot);
+      that.events.publish(key, snapshot);
+      that.events.publish('conversationGroupDetails', snapshot);
     });
   }
 

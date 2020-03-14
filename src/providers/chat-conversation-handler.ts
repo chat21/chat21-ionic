@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Events } from 'ionic-angular';
+//import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+//import { Observable } from 'rxjs/Observable';
+//import { Http, Headers, RequestOptions, Response } from '@angular/http';
+
 // firebase
 import * as firebase from 'firebase/app';
 // models
@@ -13,6 +17,9 @@ import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER } from '../utils/co
 import { htmlEntities, replaceBr, compareValues, urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from '../../node_modules/rxjs/BehaviorSubject';
+import { projectionDef } from '@angular/core/src/render3';
+
+import { UserService } from '../providers/user/user';
 
 
 //import { TranslateModule } from '@ngx-translate/core';
@@ -35,7 +42,7 @@ export class ChatConversationHandler {
   public attributes: any;
   public CLIENT_BROWSER: string;
   //public events: Events;
-
+  //http: HttpClient;
   obsAdded: BehaviorSubject<MessageModel>;
 
 
@@ -43,13 +50,17 @@ export class ChatConversationHandler {
 
   constructor(
     public events: Events,
-    public translate: TranslateService
+    public translate: TranslateService,
+    //private userService: UserService
+    //http: HttpClient
   ) {
     // console.log("CONSTRUCTOR ChatConversationHandlerProvider");
     console.log("CONSTRUCTOR ChatConversationHandlerProvider", translate);
     //this.tenant = this.chatManager.getTenant();
     //this.loggedUser = this.chatManager.getLoggedUser();
     //this.events = new Events();
+    //this.http = http;
+    //console.log("-------------------------------------->>>>>", this.http);
     this.listSubsriptions = [];
     this.CLIENT_BROWSER = navigator.userAgent;
     this.obsAdded = new BehaviorSubject<MessageModel>(null);
@@ -131,9 +142,9 @@ export class ChatConversationHandler {
 
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
       
-      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type']);
+      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type'], false);
       //console.log("child_added *****", itemMsg['timestamp'], that.messages, msg);
-      
+      that.isSender(msg, that.loggedUser);
       if (msg.attributes && msg.attributes.subtype && (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support')) {
         that.translateInfoSupportMessages(msg);
       }
@@ -174,7 +185,7 @@ export class ChatConversationHandler {
         messageText = htmlEntities(itemMsg['text']);
       }
       // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type']);
+      const msg = new MessageModel(childSnapshot.key, itemMsg['language'], itemMsg['recipient'], itemMsg['recipient_fullname'], itemMsg['sender'], itemMsg['sender_fullname'], itemMsg['status'], itemMsg['metadata'], messageText, itemMsg['timestamp'], calcolaData, itemMsg['type'], itemMsg['attributes'], itemMsg['channel_type'], false);
       const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
 
       if (msg.attributes && msg.attributes.subtype && (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support')) {
@@ -296,16 +307,20 @@ export class ChatConversationHandler {
    */
   isSender(message, currentUser) {
     //const currentUser = this.loggedUser;//this.chatManager.getLoggedUser();
-    //console.log("isSender::::: ", message.sender, currentUser.uid);
+    console.log("isSender::::: ", message.sender, currentUser.uid);
     if (currentUser){
       if (message.sender == currentUser.uid) {
+        message.isSender = true;
         return true;
       } else {
+        message.isSender = false;
         return false;
       }
     } else {
+      message.isSender = false;
       return false;
     }
+    
   }
 
   /**
@@ -349,7 +364,8 @@ export class ChatConversationHandler {
       dateSendingMessage,
       type,
       this.attributes,
-      channel_type
+      channel_type,
+      false
     ); 
 
     console.log('messaggio **************',message);
@@ -411,12 +427,9 @@ export class ChatConversationHandler {
         sub.unsubscribe(key, null);
         return;
       }
-      
     });
     
   }
-
-
 
   // ========= begin:: subscribe MembersInfo ============//
   /** */

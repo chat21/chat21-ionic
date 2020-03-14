@@ -67,6 +67,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TiledeskConversationProvider } from '../providers/tiledesk-conversation/tiledesk-conversation';
 import { AppConfigProvider } from '../providers/app-config/app-config';
+import { CannedResponsesServiceProvider } from '../providers/canned-responses-service/canned-responses-service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -179,7 +180,8 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     ChatConversationHandler,
     ChatContactsSynchronizer,
     GroupService,
-    TiledeskConversationProvider
+    TiledeskConversationProvider,
+    CannedResponsesServiceProvider
   ]
 })
 export class AppModule {}
