@@ -1,4 +1,35 @@
 page-dettaglio-conversazione {
+
+    ion-header {
+        &.transparent {
+            .toolbar-background {
+                background-color: transparent!important;
+                box-shadow: none;
+            }
+        }
+    }
+    
+
+    .wellcome_page{
+        // width: 100vw;
+        // height: 100vh; 
+        top: 0; 
+        left: 0;
+        background: url('../assets/splash_white.jpg');
+         //no-repeat center center; 
+        // position: fixed; 
+        position: relative;
+        background-repeat: no-repeat;
+        background-position-x: center;
+        background-position-y: center;
+        background-size: cover;
+        z-index: 0;
+        //-webkit-background-size: auto;
+        //-moz-background-size: auto;
+        //-o-background-size: auto;
+        //background-size: auto; //cover
+    }
+
     .halfscreen {
         width: calc(100% - 320px);
     }
@@ -31,6 +62,7 @@ page-dettaglio-conversazione {
                 color: #999999;
                 text-align: center;
             }
+
         }    
         
         .label-md {

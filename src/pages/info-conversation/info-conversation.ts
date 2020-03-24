@@ -2,6 +2,8 @@ import { Component, NgZone, OnInit, Input, Output, EventEmitter } from '@angular
 import { AlertController, Events, LoadingController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 
+import { DomSanitizer} from '@angular/platform-browser';
+
 // models
 import { UserModel } from '../../models/user';
 import { GroupModel } from '../../models/group';
@@ -82,6 +84,10 @@ export class InfoConversationPage {
   private subscriptions = [];
   // private FIREBASESTORAGE_BASE_URL_IMAGE: string;
 
+  private supportMode = environment.supportMode;
+  private urlInfoConversation;
+  private urlListProjects;
+  private urlConversation;
 
   constructor(
     public events: Events,
@@ -99,7 +105,8 @@ export class InfoConversationPage {
     private loadingCtrl: LoadingController,
     private navProxy: NavProxyService,
     public chatPresenceHandler: ChatPresenceHandler,
-    public appConfig: AppConfigProvider
+    public appConfig: AppConfigProvider,
+    private sanitizer: DomSanitizer
   ) {
     //this.events.subscribe('closeDetailConversation', this.closeDetailConversation);
     console.log('**** constructor InfoConversationPage *****');
@@ -108,6 +115,9 @@ export class InfoConversationPage {
     setTimeout(function () {
       that.initialize();
     }, 100);
+    this.urlInfoConversation = this.sanitizer.bypassSecurityTrustResourceUrl("https://support-pre.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/wsrequest/support-group-M24Uj559ZApHOA0fkD7/messages");
+    this.urlListProjects = this.sanitizer.bypassSecurityTrustResourceUrl("https://support-pre.tiledesk.com/dashboard");
+    this.urlConversation = this.urlListProjects;
   }
 
   ngOnInit() {
@@ -151,9 +161,13 @@ export class InfoConversationPage {
     if (!this.conversationSelected) {
       this.conversationSelected = this.chatArchivedConversationsHandler.getConversationByUid(this.conversationWith);
     }
-    console.log('conversationSelected::', this.conversationSelected);
-    this.populateDetail();
-    this.setSubscriptions();
+    if (this.conversationSelected) {
+      this.urlConversation = this.urlInfoConversation;
+      console.log('conversationSelected::', this.conversationSelected);
+      this.populateDetail();
+      this.setSubscriptions();
+    }
+    
   }
 
 

@@ -143,12 +143,13 @@ export class DettaglioConversazionePage extends _DetailPage {
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
     this.openInfoMessage = false; // indica se è aperto il box info message
     //// init variables
-
+     
     //this.initSubscriptions();
     // DESTROY INFO CONVERSATION 
     console.log('1 - DESTROY INFO CONVERSATION', this.events);
     this.events.publish('closeDetailConversation', true);
-    // console.log(">>>>>>>>>>>> ", this.navProxy.onSplitPaneChanged);
+
+  
   }
 
   @HostListener('window:resize', ['$event'])
@@ -407,9 +408,14 @@ export class DettaglioConversazionePage extends _DetailPage {
   }
 
   ionViewWillEnter() {
-    console.log('------------> ionViewWillEnter');
-    this.initSubscriptions();
-    this.initialize();
+    console.log('------------> ionViewWillEnter', this.conversationSelected);
+    if(this.conversationSelected){
+      this.initSubscriptions();
+      this.initialize();
+      // console.log(">>>>>>>>>>>> ", this.navProxy.onSplitPaneChanged);
+    } else {
+      this.openInfoConversation = true;
+    }
   }
   /**
    * quando ho renderizzato la pagina richiamo il metodo di inizialize
@@ -1045,6 +1051,7 @@ export class DettaglioConversazionePage extends _DetailPage {
           console.log("pos:: ", pos);
           if(pos >= 0 && that.tagsCanned.length > 0) {
             var strSearch = str.substr(pos+1);
+            that.loadTagsCanned();
             that.showTagsCanned(strSearch);
             //that.loadTagsCanned(strSearch);
           } else {
@@ -1093,20 +1100,22 @@ export class DettaglioConversazionePage extends _DetailPage {
   loadTagsCanned(){
     // recupero tagsCanned dalla memoria 
     const that = this;
-    console.log('projectId--->XXXX--->> ', this.conversationSelected.attributes.projectId);//attributes.projectId);
+    //console.log('projectId--->XXXX--->> ', this.conversationSelected.attributes.projectId);//attributes.projectId);
+    if(!this.conversationSelected || !this.conversationSelected.attributes || !this.conversationSelected.attributes.projectId || !this.appConfig.getConfig().SERVER_BASE_URL){
+      return;
+    }
     var projectId = this.conversationSelected.attributes.projectId;
     var SERVER_BASE_URL = this.appConfig.getConfig().SERVER_BASE_URL;
-    console.log('SERVER_BASE_URL---> ', SERVER_BASE_URL);//attributes.projectId);
+    //console.log('SERVER_BASE_URL---> ', SERVER_BASE_URL);//attributes.projectId);
     // this.contactsService.getLeads(this.queryString, this.pageNo).subscribe((leads_object: any) => {
     console.log('this.tagsCanned.length---> ', this.tagsCanned.length);//attributes.projectId);
     //if(this.tagsCanned.length <= 0 ){
-      this.cannedResponsesServiceProvider.getCannedResponses(SERVER_BASE_URL, projectId)
+    this.cannedResponsesServiceProvider.getCannedResponses(SERVER_BASE_URL, projectId)
       .toPromise()
       .then(data => {
         console.log('----------------------------------> getCannedResponses:');
         console.log(data);
         that.tagsCanned = data;
-        //that.showTagsCanned(strSearch);
       }).catch(err => {
         console.log('error', err);
       });

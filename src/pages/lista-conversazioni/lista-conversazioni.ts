@@ -274,8 +274,13 @@ export class ListaConversazioniPage extends _MasterPage {
           that.setUidConvSelected(that.uidConvSelected);
           that.openMessageList();
           that.showPlaceholder = false;
+        } else {
+          that.navProxy.pushDetail(DettaglioConversazionePage, {
+            conversationWith: null
+          });
         }
       }
+      
     }
   }
 

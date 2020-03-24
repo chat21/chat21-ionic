@@ -198,11 +198,17 @@ ion-navbar {
         /* height: 55px; */
         box-shadow: inset 0px -1px 0px #f7f7f7;
     }
+
 }
 
 ion-toolbar {
     .toolbar-background {
         background-color: #ffffff;
+    }
+    .transparent{
+        .toolbar-background {
+            background-color: transparent;
+        }
     }
 }
 
