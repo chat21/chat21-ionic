@@ -115,7 +115,7 @@ export class InfoConversationPage {
     setTimeout(function () {
       that.initialize();
     }, 100);
-    this.urlInfoConversation = this.sanitizer.bypassSecurityTrustResourceUrl("https://support-pre.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/wsrequest/support-group-M24Uj559ZApHOA0fkD7/messages");
+    this.urlInfoConversation = this.sanitizer.bypassSecurityTrustResourceUrl("https://support-pre.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/request-for-panel/support-group-M24Uj559ZApHOA0fkD7");
     this.urlListProjects = this.sanitizer.bypassSecurityTrustResourceUrl("https://support-pre.tiledesk.com/dashboard");
     this.urlConversation = this.urlListProjects;
   }
