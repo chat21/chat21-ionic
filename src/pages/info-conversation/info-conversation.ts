@@ -85,9 +85,8 @@ export class InfoConversationPage {
   // private FIREBASESTORAGE_BASE_URL_IMAGE: string;
 
   private supportMode = environment.supportMode;
-  private urlInfoConversation;
-  private urlListProjects;
   private urlConversation;
+  private DASHBOARD_URL;
 
   constructor(
     public events: Events,
@@ -115,9 +114,9 @@ export class InfoConversationPage {
     setTimeout(function () {
       that.initialize();
     }, 100);
-    this.urlInfoConversation = this.sanitizer.bypassSecurityTrustResourceUrl("https://support-pre.tiledesk.com/dashboard/#/project/5b55e806c93dde00143163dd/request-for-panel/support-group-M24Uj559ZApHOA0fkD7");
-    this.urlListProjects = this.sanitizer.bypassSecurityTrustResourceUrl("https://support-pre.tiledesk.com/dashboard");
-    this.urlConversation = this.urlListProjects;
+
+    this.DASHBOARD_URL = this.appConfig.getConfig().DASHBOARD_URL;
+    this.urlConversation = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL);
   }
 
   ngOnInit() {
@@ -148,6 +147,8 @@ export class InfoConversationPage {
    */
   initialize() {
     console.log('InfoConversationPage::initialize', this.conversationWith);
+    
+
     this.profileYourself = false;
     this.online = false;
     this.isLoggedUserGroupMember = false;
@@ -162,8 +163,14 @@ export class InfoConversationPage {
       this.conversationSelected = this.chatArchivedConversationsHandler.getConversationByUid(this.conversationWith);
     }
     if (this.conversationSelected) {
-      this.urlConversation = this.urlInfoConversation;
-      console.log('conversationSelected::', this.conversationSelected);
+      if (this.conversationSelected.attributes && this.conversationSelected.attributes.projectId){
+        var projectId = this.conversationSelected.attributes.projectId;
+        console.log('conversationWith::', this.conversationWith);
+        console.log('projectId::', projectId);
+        var urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL+"#/project/"+projectId+"/request-for-panel/"+this.conversationWith);
+        this.urlConversation = urlConversationTEMP;
+      }
+      console.log('urlConversation::', this.urlConversation);
       this.populateDetail();
       this.setSubscriptions();
     }

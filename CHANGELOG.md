@@ -1,5 +1,16 @@
 # chat21-ionic ver 1.0
 
+### 1.0.21 branch - sidebar
+- add iframe sidebar info conversation
+- canned loaded on /
+
+### 1.0.20-beta.13 
+- bug fix tooltip
+
+### 1.0.20-beta.12 
+- add SERVER_BASE_URL in config
+- add canned 
+
 ### 1.0.20
 - minor improvements
 

@@ -151,7 +151,7 @@ export class ListaConversazioniPage extends _MasterPage {
     });
     // console.log('::::BUILD_VERSION:::: ',this.BUILD_VERSION);
     // console.log('::::uidConvSelected:::: ',this.uidConvSelected);
-    // console.log('::::tenant:::: ',this.tenant);
+    console.log('::::tenant:::: ',this.tenant);
     console.log('::::uidReciverFromUrl:::: ',this.uidReciverFromUrl);
   }
 
@@ -242,7 +242,7 @@ export class ListaConversazioniPage extends _MasterPage {
    *    (operazione da fare una sola volta al caricamento delle conversazioni)
   */
   conversationsChanged = (conversations: ConversationModel[]) => {
-    //console.log('LISTA CONVERSAZIONI »»»»»»»»» conversationsChanged - CONVERSATIONS: ', this.conversations);
+    console.log('LISTA CONVERSAZIONI »»»»»»»»» conversationsChanged - CONVERSATIONS: ', this.conversations);
     var that = this;
     this.conversations = conversations;
     this.numberOpenConv = this.conversationsHandler.countIsNew();
