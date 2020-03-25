@@ -87,6 +87,7 @@ export class InfoConversationPage {
   private supportMode = environment.supportMode;
   private urlConversation;
   private DASHBOARD_URL;
+  private projectID;
 
   constructor(
     public events: Events,
@@ -116,7 +117,6 @@ export class InfoConversationPage {
     }, 100);
 
     this.DASHBOARD_URL = this.appConfig.getConfig().DASHBOARD_URL;
-    this.urlConversation = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL);
   }
 
   ngOnInit() {
@@ -162,20 +162,43 @@ export class InfoConversationPage {
     if (!this.conversationSelected) {
       this.conversationSelected = this.chatArchivedConversationsHandler.getConversationByUid(this.conversationWith);
     }
-    if (this.conversationSelected) {
-      if (this.conversationSelected.attributes && this.conversationSelected.attributes.projectId){
-        var projectId = this.conversationSelected.attributes.projectId;
-        console.log('conversationWith::', this.conversationWith);
-        console.log('projectId::', projectId);
-        var urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL+"#/project/"+projectId+"/request-for-panel/"+this.conversationWith);
-        this.urlConversation = urlConversationTEMP;
-      }
-      console.log('urlConversation::', this.urlConversation);
+
+
+    if (this.conversationSelected && this.supportMode == true){
+      this.openIframe();
+    } else if(this.supportMode == true) {
+      this.urlConversation = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL);
+    } else {
       this.populateDetail();
       this.setSubscriptions();
     }
-    
   }
+
+
+  openIframe() {
+    if (this.conversationSelected.attributes && this.conversationSelected.attributes.projectId){
+      this.projectID = this.conversationSelected.attributes.projectId;
+    }
+    if (this.channelType === TYPE_GROUP) {
+      console.log('GRUPPO');
+      this.profileYourself = false;
+      this.loadGroupDetail();
+    } else {
+      this.setUrlIframe();
+    }
+  }
+
+  setUrlIframe(){
+    if(this.projectID && this.conversationWith) {
+      console.log('conversationWith::', this.conversationWith);
+      console.log('projectId::', this.projectID);
+      var urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL+"#/project/"+this.projectID+"/request-for-panel/"+this.conversationWith);
+      this.urlConversation = urlConversationTEMP;
+    } else {
+      this.urlConversation = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL);
+    }
+  }
+
 
 
   /** selectUserDetail
@@ -281,6 +304,10 @@ export class InfoConversationPage {
         if (that.group.attributes) {
           that.attributes = that.group.attributes;
           that.updateAttributes(that.group.attributes);
+          if (that.attributes.projectId){
+            that.projectID = that.attributes.projectId;
+          }
+          that.setUrlIframe();
         }
         that.groupDetail = new GroupModel(
           snapshot.key,

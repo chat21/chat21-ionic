@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 1.0.21.beta.1 branch - sidebar
+- bug fix: projectID get on group attributes
+
 ### 1.0.21 branch - sidebar
 - add iframe sidebar info conversation
 - canned loaded on /
