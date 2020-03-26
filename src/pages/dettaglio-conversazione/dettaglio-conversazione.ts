@@ -226,7 +226,7 @@ export class DettaglioConversazionePage extends _DetailPage {
   setConversationWith() {
     console.log('DETTAGLIO CONV - conversationSelected »»»»»»» : ', this.conversationSelected);
     this.loadGroupDetail();
-    this.loadTagsCanned();
+    //this.loadTagsCanned();
     if (this.conversationSelected) {
       // GROUP CONVERSATION 
       this.conversationType = TYPE_GROUP;
@@ -1049,10 +1049,11 @@ export class DettaglioConversazionePage extends _DetailPage {
           var pos = str.lastIndexOf("/");
           console.log("str:: ", str);
           console.log("pos:: ", pos);
-          if(pos >= 0 && that.tagsCanned.length > 0) {
+          if(pos >= 0 ) {
+            // && that.tagsCanned.length > 0
             var strSearch = str.substr(pos+1);
-            that.loadTagsCanned();
-            that.showTagsCanned(strSearch);
+            that.loadTagsCanned(strSearch);
+            //that.showTagsCanned(strSearch);
             //that.loadTagsCanned(strSearch);
           } else {
             that.tagsCannedFilter = [];
@@ -1097,7 +1098,7 @@ export class DettaglioConversazionePage extends _DetailPage {
   }
 
 
-  loadTagsCanned(){
+  loadTagsCanned(strSearch){
     // recupero tagsCanned dalla memoria 
     const that = this;
     //console.log('projectId--->XXXX--->> ', this.conversationSelected.attributes.projectId);//attributes.projectId);
@@ -1110,12 +1111,14 @@ export class DettaglioConversazionePage extends _DetailPage {
     // this.contactsService.getLeads(this.queryString, this.pageNo).subscribe((leads_object: any) => {
     console.log('this.tagsCanned.length---> ', this.tagsCanned.length);//attributes.projectId);
     //if(this.tagsCanned.length <= 0 ){
+    this.tagsCanned = [];
     this.cannedResponsesServiceProvider.getCannedResponses(SERVER_BASE_URL, projectId)
       .toPromise()
       .then(data => {
         console.log('----------------------------------> getCannedResponses:');
         console.log(data);
         that.tagsCanned = data;
+        that.showTagsCanned(strSearch);
       }).catch(err => {
         console.log('error', err);
       });
