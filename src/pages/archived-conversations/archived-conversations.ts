@@ -94,17 +94,22 @@ export class ArchivedConversationsPage {
   openMessageList(archivedConversation) {
     const that = this;
     setTimeout(function () {
+        console.log('that.uidConvSelected: ', that.uidConvSelected);
+        console.log('that.archivedConversations: ', that.archivedConversations);
       const archivedConversation = that.archivedConversations.find(item => item.uid === that.uidConvSelected);
       if (archivedConversation) {
       //if (archivedConversation) {
+        console.log('open: ', that.uidConvSelected);
         archivedConversation.is_new = false;
         archivedConversation.status = '0';
         archivedConversation.selected = true;
         that.navProxy.pushDetail(DettaglioConversazionePage, {
+          conversationSelected: archivedConversation,
           conversationWith: archivedConversation.uid,
           conversationWithFullname: archivedConversation.conversation_with_fullname,
           channel_type: archivedConversation.channel_type
         });
+
         that.databaseProvider.setUidLastOpenConversation(archivedConversation.uid);
         that.events.publish('uidConvSelected:changed', archivedConversation.uid, 'archived');
         that.conversationSelected = archivedConversation;

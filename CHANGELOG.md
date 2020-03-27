@@ -1,8 +1,12 @@
 # chat21-ionic ver 1.0
+### 1.0.21.beta.4 branch - sidebar
+- bug fix: detail archived conversations
+
+### 1.0.21.beta.3 branch - sidebar
+- bug fix: preload list conversation
 
 ### 1.0.21.beta.2 branch - sidebar
 - bug fix: load canned
-
 
 ### 1.0.21.beta.1 branch - sidebar
 - bug fix: projectID get on group attributes
