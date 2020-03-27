@@ -47,6 +47,15 @@ export function contactsRef(tenant) {
   return urlNodeContacts;
 }
 
+/**
+ * chiamata da ChatConversationsHandler
+ * restituisce url '/conversations'
+ * @param tenant 
+ */
+export function conversationPathForWritingMessages(tenant, conversationWith, userId) {
+  const urlNodeConversations = '/apps/' + tenant + '/typings/' + conversationWith + '/' + userId;
+  return urlNodeConversations;
+}
 
 /**
  * restituiso indice item nell'array con uid == key 

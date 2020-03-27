@@ -1,5 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { Events, PopoverController, IonicPage, NavController, NavParams, ModalController, Modal, AlertController } from 'ionic-angular';
+import { interval, Subscription} from 'rxjs';
 // models
 import { ConversationModel } from '../../models/conversation';
 import { UserModel } from '../../models/user';
@@ -55,6 +56,7 @@ export class ListaConversazioniPage extends _MasterPage {
   private BUILD_VERSION: string;
   // private isHostname: boolean;
   private timerIdOpenConversation: NodeJS.Timer;
+  private loadingList: Subscription;
 
 
   private convertMessage = convertMessage;
@@ -207,10 +209,16 @@ export class ListaConversazioniPage extends _MasterPage {
    * 
   */
   initSubscriptions() {
+    const that = this;
     //this.events.subscribe('loadedConversationsStorage', this.loadedConversationsStorage);
     this.events.subscribe('conversationsChanged', this.conversationsChanged);
     this.events.subscribe('archivedConversationsChanged', this.archivedConversationsChanged);
     this.events.subscribe('uidConvSelected:changed', this.subscribeUidConvSelectedChanged);
+
+    this.loadingList = interval(2000).subscribe((val) => { 
+      console.log('called'); 
+      that.checkLoadingIsActive(2000);
+    });
   }
 
   //------------------------------------------------------------------//
@@ -497,6 +505,7 @@ export class ListaConversazioniPage extends _MasterPage {
     const that = this;
     setTimeout(function () {
       that.loadingIsActive = false;
+      that.loadingList.unsubscribe();
     }, time);
   }
 

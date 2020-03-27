@@ -289,6 +289,8 @@ export class DettaglioConversazionePage extends _DetailPage {
    
   }
 
+
+
   /**
     *
     */
@@ -533,6 +535,7 @@ export class DettaglioConversazionePage extends _DetailPage {
       if (this.conversationWith) {
         //handler.connect();
         this.conversationHandler.connect();
+        //this.conversationHandler.checkWritingMessages();
         console.log('PRIMA ***', this.chatManager.handlers);
         this.chatManager.addConversationHandler(this.conversationHandler);
         console.log('DOPO ***', this.chatManager.handlers);
