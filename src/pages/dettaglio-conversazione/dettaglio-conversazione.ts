@@ -24,7 +24,7 @@ import { InfoUserPage } from '../info-user/info-user';
 // import { InfoMessagePage } from '../info-message/info-message';
 import { PopoverPage } from '../popover/popover';
 // utils
-import { TYPE_SUPPORT_GROUP, TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA, MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, TYPE_GROUP, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
+import { SYSTEM, TYPE_SUPPORT_GROUP, TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA, MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, TYPE_GROUP, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
 import { compareValues, htmlEntities, isURL, isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify, getFormatData } from '../../utils/utils';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -91,15 +91,21 @@ export class DettaglioConversazionePage extends _DetailPage {
   private advancedAttributes: any = [];
   private openInfoAdvanced: boolean = false;
 
-
   private tagsCanned: any = [];
   private tagsCannedFilter: any = [];
+  public isTypings = false;
+  public nameUserTypingNow: string;
+  private setTimeoutWritingMessages;
+  private conversationMembers: any = [];
+
+
 
   public TYPE_GROUP = TYPE_GROUP;
   public TYPE_DIRECT = TYPE_DIRECT;
   MSG_STATUS_SENDING = MSG_STATUS_SENDING;
   MSG_STATUS_SENT = MSG_STATUS_SENT;
   MSG_STATUS_RETURN_RECEIPT = MSG_STATUS_RETURN_RECEIPT;
+
   urlify = urlify;
   isPopupUrl = isPopupUrl;
   popupUrl = popupUrl;
@@ -148,10 +154,9 @@ export class DettaglioConversazionePage extends _DetailPage {
     // DESTROY INFO CONVERSATION 
     console.log('1 - DESTROY INFO CONVERSATION', this.events);
     this.events.publish('closeDetailConversation', true);
-
-  
   }
 
+  
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     const newInnerWidth = event.target.innerWidth;
@@ -185,10 +190,15 @@ export class DettaglioConversazionePage extends _DetailPage {
     key = 'openVideoChat';
     if (!isInArray(key, this.subscriptions)) {
       this.subscriptions.push(key);
-      this.events.subscribe('openVideoChat', this.onOpenVideoChat);
+      this.events.subscribe(key, this.onOpenVideoChat);
+    }
+    // subscribe isTypings
+    key = 'isTypings';
+    if (!isInArray(key, this.subscriptions)) {
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.subscribeTypings);
     }
   }
-
 
 
   /** 
@@ -386,6 +396,21 @@ export class DettaglioConversazionePage extends _DetailPage {
     console.log('*********** goToBottom');
   }
 
+  /**
+   * on subscribe Typings
+   */
+  subscribeTypings: any = (childSnapshot) => {
+    console.log('child_changed key', childSnapshot.key);
+    console.log('child_changed val', childSnapshot.val());
+    console.log('*********** subscribeTypings');
+    const that = this;
+    this.getFullNameUserForId(childSnapshot.key);
+    this.isTypings = true;
+    clearTimeout(this.setTimeoutWritingMessages);
+    this.setTimeoutWritingMessages = setTimeout(function () {
+        that.isTypings = false;
+    }, 2000);
+  }
 
   //// UNSUBSCRIPTIONS ////
   /**
@@ -535,7 +560,8 @@ export class DettaglioConversazionePage extends _DetailPage {
       if (this.conversationWith) {
         //handler.connect();
         this.conversationHandler.connect();
-        //this.conversationHandler.checkWritingMessages();
+        this.conversationHandler.initWritingMessages();
+        this.conversationHandler.getWritingMessages();
         console.log('PRIMA ***', this.chatManager.handlers);
         this.chatManager.addConversationHandler(this.conversationHandler);
         console.log('DOPO ***', this.chatManager.handlers);
@@ -578,6 +604,42 @@ export class DettaglioConversazionePage extends _DetailPage {
     // }
     // this.updatingMessageList = true;
   }
+
+
+  /**
+   * 
+   * @param memberID 
+   */
+  getFullNameUserForId(memberID){
+    const that = this;
+    console.log('getFullNameUserForId', this.conversationMembers);
+    const member = this.conversationMembers.find(item => item.uid === memberID);
+    if (!member) {
+      if ( memberID.trim() !== ''
+            && memberID.trim() !== SYSTEM
+            && memberID.trim() !== this.currentUserDetail.uid
+        ) {
+        this.userService.getUserDetail(memberID)
+        .then(function (snapshot) {
+          if (snapshot.val()) {
+            const user = snapshot.val();
+            const fullname = user.firstname + " " + user.lastname;
+            that.nameUserTypingNow = fullname;
+            let position = that.conversationMembers.findIndex(i => i.uid === memberID);
+            if (position == -1 ) {            
+              var member = { 'uid': memberID, 'fullname': fullname};
+              that.conversationMembers.push(member);
+            }
+          }
+        });
+      }
+    } else {
+      this.nameUserTypingNow = member.fullname;
+    }
+  }
+
+
+
 
   //// START Scroll managemant functions ////
   /**
@@ -770,6 +832,7 @@ export class DettaglioConversazionePage extends _DetailPage {
       uidUser: uidReciver
     });
   }
+  
   /**
    * 
    * @param message 
@@ -1047,8 +1110,9 @@ export class DettaglioConversazionePage extends _DetailPage {
     try {
       if (event) {
         console.log("event.value:: ", event);
+        var str = event.value;
+        that.setWritingMessages(str);
         setTimeout(function () {
-          var str = event.value;
           var pos = str.lastIndexOf("/");
           console.log("str:: ", str);
           console.log("pos:: ", pos);
@@ -1069,6 +1133,13 @@ export class DettaglioConversazionePage extends _DetailPage {
     }    
   }
   
+  /**
+   * 
+   * @param str 
+   */
+  setWritingMessages(str){
+    this.conversationHandler.setWritingMessages(str);
+  }
 
   resizeTextArea(){
     const that = this;

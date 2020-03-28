@@ -4,16 +4,37 @@
       <ion-title>
         <div class="headerUserName" [class.infoOpen]="openInfoConversation || openInfoMessage" *ngIf="conversationWith">
           <span *ngIf="conversationType == TYPE_DIRECT" class="c21-point" [ngStyle]="{ 'background-color':(online)?'#24d066':'#db4437' }">&nbsp;</span>
+          
           <span>{{conversationWithFullname?conversationWithFullname:''}}</span>
-          <span *ngIf="conversationType == TYPE_DIRECT">
-              <span *ngIf="online; then userActive else userInactive"></span>
-              <ng-template #userActive>
-                <div class="headerLastActivity">{{ 'LABEL_ACTIVE_NOW' | translate }}</div>
-              </ng-template>
-              <ng-template #userInactive>
-                <div class="headerLastActivity">{{lastConnectionDate}}</div>
-              </ng-template>
-          </span>
+          
+          <span *ngIf="isTypings; then yesTypings else noTypings"></span>
+            
+            <ng-template #yesTypings>
+              
+              <div class="headerLastActivity">
+                <span class="chat21-spinner active" id="chat21-spinner">
+                  <div class="chat21-bounce1"></div>
+                  <div class="chat21-bounce2"></div>
+                  <div class="chat21-bounce3"></div>
+                  <span></span>
+                </span>
+                <span class="typingNow">{{nameUserTypingNow}} sta scrivendo</span>
+              </div>
+
+            </ng-template>
+
+            <ng-template #noTypings>
+              <span *ngIf="conversationType == TYPE_DIRECT">
+                  <span *ngIf="online; then userActive else userInactive"></span>
+                  <ng-template #userActive>
+                    <div class="headerLastActivity">{{ 'LABEL_ACTIVE_NOW' | translate }}</div>
+                  </ng-template>
+                  <ng-template #userInactive>
+                    <div class="headerLastActivity">{{lastConnectionDate}}</div>
+                  </ng-template>
+              </span>
+            </ng-template>
+
         </div>
       </ion-title>
 

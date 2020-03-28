@@ -52,8 +52,8 @@ export function contactsRef(tenant) {
  * restituisce url '/conversations'
  * @param tenant 
  */
-export function conversationPathForWritingMessages(tenant, conversationWith, userId) {
-  const urlNodeConversations = '/apps/' + tenant + '/typings/' + conversationWith + '/' + userId;
+export function nodeTypingsPath(tenant, conversationWith) {
+  const urlNodeConversations = '/apps/' + tenant + '/typings/' + conversationWith;
   return urlNodeConversations;
 }
 

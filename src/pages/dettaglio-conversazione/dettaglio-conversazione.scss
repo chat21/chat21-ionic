@@ -7,6 +7,20 @@ page-dettaglio-conversazione {
                 box-shadow: none;
             }
         }
+        #chat21-spinner {
+            margin: 0;
+            &.active {
+                display: inline-block;
+                width: 30px;
+            }
+        }
+        #chat21-spinner > div {
+            width: 6px;
+            height: 6px;
+        }
+        .typingNow {
+            color:#2a69c1;
+        }
     }
     
 
@@ -54,6 +68,7 @@ page-dettaglio-conversazione {
                 &.infoOpen{
                     width: calc(100% - 250px);
                     margin-left: -35px;
+                    min-height: 34px;
                 }
             }
             

@@ -14,7 +14,7 @@ import { UserModel } from '../models/user';
 //import { ChatManager } from './chat-manager/chat-manager';
 // utils
 import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER } from '../utils/constants';
-import { htmlEntities, replaceBr, compareValues, urlify, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
+import { htmlEntities, replaceBr, compareValues, urlify, nodeTypingsPath, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from '../../node_modules/rxjs/BehaviorSubject';
 import { projectionDef } from '@angular/core/src/render3';
@@ -30,6 +30,8 @@ import { UserService } from '../providers/user/user';
 @Injectable()
 export class ChatConversationHandler {
   private urlNodeFirebase: string;
+  private urlNodeTypings: string;
+
   private recipientId: string;
   private recipientFullname: string;
   private tenant: string;
@@ -44,9 +46,9 @@ export class ChatConversationHandler {
   //public events: Events;
   //http: HttpClient;
   obsAdded: BehaviorSubject<MessageModel>;
-
-
   public listMembersInfo: any[];
+  private setTimeoutWritingMessages;
+
 
   constructor(
     public events: Events,
@@ -399,6 +401,55 @@ export class ChatConversationHandler {
     let firebaseMessages = firebase.database().ref(this.urlNodeFirebase+uid);
     firebaseMessages.set(message);
   }
+
+
+
+  /**
+   * 
+   */
+  initWritingMessages() {
+    this.urlNodeTypings = nodeTypingsPath(this.tenant, this.conversationWith);
+    console.log('checkWritingMessages', this.urlNodeTypings);
+  }
+
+  /**
+   * check if agent writing
+   */
+  getWritingMessages() {
+    const that = this;
+    const ref = firebase.database().ref(this.urlNodeTypings).orderByChild('timestamp').limitToLast(1);
+    ref.on("child_changed", function(childSnapshot) {
+        //that.changedTypings(childSnapshot);
+        //console.log('child_changed key', childSnapshot.key);
+        //console.log('child_changed val', childSnapshot.val());
+        that.events.publish('isTypings', childSnapshot);
+    });
+  }
+
+  /**
+   * 
+   */
+  setWritingMessages(str) {
+    const that = this;
+    //clearTimeout(this.setTimeoutWritingMessages);
+    this.setTimeoutWritingMessages = setTimeout(function () {
+      console.log('update:', str);
+      const readUrlNodeTypings = that.urlNodeTypings + '/' + that.loggedUser.uid;
+      const timestamp =  firebase.database.ServerValue.TIMESTAMP;
+      const precence = {
+        'timestamp': timestamp, 
+        'message': str
+      }
+      firebase.database().ref(readUrlNodeTypings).set(precence, function( error ) {
+        if (error) {
+          console.log('ERRORE', error);
+        } else {
+          console.log('OK update typing');
+        }
+      });
+    }, 500);
+  }
+  
 
 
   // // se è una immagine e la ha inviata l'utente corrente

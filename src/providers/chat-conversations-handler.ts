@@ -12,7 +12,7 @@ import { ChatManager } from './chat-manager/chat-manager';
 // utils
 // FIREBASESTORAGE_BASE_URL_IMAGE, 
 import { TYPE_GROUP, URL_NO_IMAGE, TYPE_DIRECT } from '../utils/constants';
-import { compareValues, getFromNow, contactsRef, conversationPathForWritingMessages, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
+import { compareValues, getFromNow, contactsRef, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
 import { TiledeskConversationProvider } from './tiledesk-conversation/tiledesk-conversation';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -277,21 +277,6 @@ export class ChatConversationsHandler {
             status = '1'; // non letto
         }
         return status;
-    }
-
-    /**
-     * check if agent writing
-     */
-    checkWritingMessages() {
-        //tenant, conversationWith
-        // const that = this;
-        // const urlNodeFirebase = conversationPathForWritingMessages(this.tenant, conversationWith, this.userId);
-        // console.log('checkWritingMessages', urlNodeFirebase);
-
-        // this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(1);
-        // this.ref.on("child_changed", function(childSnapshot) {
-        //     that.changedTypings(childSnapshot);
-        // });
     }
 
      /**
