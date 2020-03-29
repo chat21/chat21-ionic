@@ -405,7 +405,7 @@ export class DettaglioConversazionePage extends _DetailPage {
     console.log('*********** subscribeTypings');
     const that = this;
     this.getFullNameUserForId(childSnapshot.key);
-    this.isTypings = true;
+    
     clearTimeout(this.setTimeoutWritingMessages);
     this.setTimeoutWritingMessages = setTimeout(function () {
         that.isTypings = false;
@@ -624,6 +624,7 @@ export class DettaglioConversazionePage extends _DetailPage {
           if (snapshot.val()) {
             const user = snapshot.val();
             const fullname = user.firstname + " " + user.lastname;
+            that.isTypings = true;
             that.nameUserTypingNow = fullname;
             let position = that.conversationMembers.findIndex(i => i.uid === memberID);
             if (position == -1 ) {            
@@ -634,6 +635,7 @@ export class DettaglioConversazionePage extends _DetailPage {
         });
       }
     } else {
+      this.isTypings = true;
       this.nameUserTypingNow = member.fullname;
     }
   }

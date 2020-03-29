@@ -1,5 +1,9 @@
 # chat21-ionic ver 1.0
 
+
+### 1.0.21.beta.6 branch - sidebar
+- bug fix: typing me
+
 ### 1.0.21.beta.5 branch - sidebar
 - new - typings
 - disabled list projects in info conversation
