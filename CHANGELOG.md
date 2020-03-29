@@ -1,4 +1,9 @@
 # chat21-ionic ver 1.0
+
+### 1.0.21.beta.5 branch - sidebar
+- new - typings
+- disabled list projects in info conversation
+
 ### 1.0.21.beta.4 branch - sidebar
 - bug fix: detail archived conversations
 

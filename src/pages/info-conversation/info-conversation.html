@@ -10,7 +10,7 @@
         </ion-navbar>
     </ion-header>
 
-    <ion-content style="height: 100vh;" *ngIf="supportMode; else sidebar_content" >
+    <ion-content style="height: 100vh;" *ngIf="supportMode && this.conversationSelected; else sidebar_content" >
         <iframe *ngIf="urlConversation" width="100%"
                 height="100%"
                 [src]="urlConversation"

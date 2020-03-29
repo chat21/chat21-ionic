@@ -441,7 +441,7 @@ export class DettaglioConversazionePage extends _DetailPage {
       this.initialize();
       // console.log(">>>>>>>>>>>> ", this.navProxy.onSplitPaneChanged);
     } else {
-      this.openInfoConversation = true;
+      this.openInfoConversation = false;
     }
   }
   /**

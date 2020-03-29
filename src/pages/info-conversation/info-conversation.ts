@@ -166,8 +166,8 @@ export class InfoConversationPage {
 
     if (this.conversationSelected && this.supportMode == true){
       this.openIframe();
-    } else if(this.supportMode == true) {
-      this.urlConversation = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL);
+    // } else if(this.supportMode == true) {
+    //   this.urlConversation = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL);
     } else {
       this.populateDetail();
       this.setSubscriptions();
