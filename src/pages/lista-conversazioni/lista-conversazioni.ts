@@ -275,20 +275,19 @@ export class ListaConversazioniPage extends _MasterPage {
         });
         that.showPlaceholder = false;
       }
-    } else {
+    } else {      
       if (that.uidConvSelected && that.showPlaceholder === true) {
         const conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
         if (conversationSelected) {
           that.setUidConvSelected(that.uidConvSelected);
           that.openMessageList();
           that.showPlaceholder = false;
-        } else {
-          that.navProxy.pushDetail(DettaglioConversazionePage, {
-            conversationWith: null
-          });
+        // } else {
+        //   that.navProxy.pushDetail(DettaglioConversazionePage, {
+        //     conversationWith: null
+        //   });
         }
       }
-      
     }
   }
 

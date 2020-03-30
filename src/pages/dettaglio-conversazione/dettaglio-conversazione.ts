@@ -436,13 +436,15 @@ export class DettaglioConversazionePage extends _DetailPage {
 
   ionViewWillEnter() {
     console.log('------------> ionViewWillEnter', this.conversationSelected);
-    if(this.conversationSelected){
-      this.initSubscriptions();
-      this.initialize();
-      // console.log(">>>>>>>>>>>> ", this.navProxy.onSplitPaneChanged);
-    } else {
-      this.openInfoConversation = false;
-    }
+    this.initSubscriptions();
+    this.initialize();
+    // if(this.conversationSelected){
+    //   this.initSubscriptions();
+    //   this.initialize();
+    //   // console.log(">>>>>>>>>>>> ", this.navProxy.onSplitPaneChanged);
+    // } else {
+    //   this.openInfoConversation = false;
+    // }
   }
   /**
    * quando ho renderizzato la pagina richiamo il metodo di inizialize
@@ -527,7 +529,7 @@ export class DettaglioConversazionePage extends _DetailPage {
       });
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
     this.openInfoMessage = false; // indica se è aperto il box info message
-    this.openInfoConversation = true;
+    //this.openInfoConversation = true;
   }
   /**
    * recupero da chatManager l'handler

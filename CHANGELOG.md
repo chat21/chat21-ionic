@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 1.0.21.beta.8 branch - sidebar
+- bug fix: new convrsation
+
 ### 1.0.21.beta.7 branch - sidebar
 - bug fix: translate typing
 
