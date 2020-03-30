@@ -101,5 +101,7 @@
  "LABEL_ARCHIVED": "Archived",
 
  "LABEL_INFO_CONVERSATION": "Info conversation",
- "LABEL_INFO_USER": "Info user"
+ "LABEL_INFO_USER": "Info user",
+
+ "LABEL_IS_WRITING": "typing"
 }

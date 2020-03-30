@@ -101,6 +101,8 @@
     "LABEL_ARCHIVED": "Archiviate",
 
     "LABEL_INFO_CONVERSATION": "Info conversazione",
-    "LABEL_INFO_USER": "Info utente"
+    "LABEL_INFO_USER": "Info utente",
+
+    "LABEL_IS_WRITING": "sta scrivendo"
 
 }

@@ -1,5 +1,7 @@
 # chat21-ionic ver 1.0
 
+### 1.0.21.beta.7 branch - sidebar
+- bug fix: translate typing
 
 ### 1.0.21.beta.6 branch - sidebar
 - bug fix: typing me
