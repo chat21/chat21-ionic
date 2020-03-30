@@ -1142,7 +1142,7 @@ export class DettaglioConversazionePage extends _DetailPage {
    * @param str 
    */
   setWritingMessages(str){
-    this.conversationHandler.setWritingMessages(str);
+    this.conversationHandler.setWritingMessages(str, this.channel_type);
   }
 
   resizeTextArea(){

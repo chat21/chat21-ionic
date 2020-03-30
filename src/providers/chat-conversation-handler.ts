@@ -13,7 +13,7 @@ import { UserModel } from '../models/user';
 // services
 //import { ChatManager } from './chat-manager/chat-manager';
 // utils
-import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER } from '../utils/constants';
+import { TYPE_MSG_IMAGE, MSG_STATUS_RECEIVED, CLIENT_BROWSER, TYPE_GROUP } from '../utils/constants';
 import { htmlEntities, replaceBr, compareValues, urlify, nodeTypingsPath, searchIndexInArrayForUid, setHeaderDate, conversationMessagesRef } from '../utils/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from '../../node_modules/rxjs/BehaviorSubject';
@@ -429,12 +429,17 @@ export class ChatConversationHandler {
   /**
    * 
    */
-  setWritingMessages(str) {
+  setWritingMessages(str, channel_type?) {
     const that = this;
     //clearTimeout(this.setTimeoutWritingMessages);
     this.setTimeoutWritingMessages = setTimeout(function () {
-      console.log('update:', str);
-      const readUrlNodeTypings = that.urlNodeTypings + '/' + that.loggedUser.uid;
+      let readUrlNodeTypings = that.urlNodeTypings;
+      if (channel_type === TYPE_GROUP) {
+        console.log('GRUPPO');
+        readUrlNodeTypings = that.urlNodeTypings + '/' + that.loggedUser.uid;
+      }
+      
+      console.log('setWritingMessages:', readUrlNodeTypings);
       const timestamp =  firebase.database.ServerValue.TIMESTAMP;
       const precence = {
         'timestamp': timestamp, 
