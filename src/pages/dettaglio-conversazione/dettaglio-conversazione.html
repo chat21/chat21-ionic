@@ -18,7 +18,7 @@
                   <div class="chat21-bounce3"></div>
                   <span></span>
                 </span>
-                <span class="typingNow">{{nameUserTypingNow}} {{ 'LABEL_IS_WRITING' | translate }}</span>
+                <span class="typingNow"><span *ngIf="conversationType !== TYPE_DIRECT">{{nameUserTypingNow}} </span>{{ 'LABEL_IS_WRITING' | translate }}</span>
               </div>
 
             </ng-template>

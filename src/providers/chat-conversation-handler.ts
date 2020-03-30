@@ -433,7 +433,8 @@ export class ChatConversationHandler {
     const that = this;
     //clearTimeout(this.setTimeoutWritingMessages);
     this.setTimeoutWritingMessages = setTimeout(function () {
-      let readUrlNodeTypings = that.urlNodeTypings;
+      let readUrlNodeTypings = nodeTypingsPath(that.tenant, that.loggedUser.uid);
+      //let readUrlNodeTypings = that.urlNodeTypings;
       if (channel_type === TYPE_GROUP) {
         console.log('GRUPPO');
         readUrlNodeTypings = that.urlNodeTypings + '/' + that.loggedUser.uid;

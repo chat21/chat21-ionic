@@ -216,7 +216,7 @@ export class ListaConversazioniPage extends _MasterPage {
     this.events.subscribe('uidConvSelected:changed', this.subscribeUidConvSelectedChanged);
 
     this.loadingList = interval(2000).subscribe((val) => { 
-      console.log('called'); 
+      // console.log('called'); 
       that.checkLoadingIsActive(2000);
     });
   }

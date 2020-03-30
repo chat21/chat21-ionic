@@ -400,12 +400,17 @@ export class DettaglioConversazionePage extends _DetailPage {
    * on subscribe Typings
    */
   subscribeTypings: any = (childSnapshot) => {
-    console.log('child_changed key', childSnapshot.key);
-    console.log('child_changed val', childSnapshot.val());
-    console.log('*********** subscribeTypings');
+    if(this.channel_type === TYPE_DIRECT) {
+      this.isTypings = true;
+      this.nameUserTypingNow = this.fullnameConversationWith;
+    } else {
+      console.log('child_changed key', childSnapshot.key);
+      console.log('child_changed val', childSnapshot.val());
+      this.getFullNameUserForId(childSnapshot.key);
+    }
+
+    console.log('*********** subscribeTypings', this.nameUserTypingNow);
     const that = this;
-    this.getFullNameUserForId(childSnapshot.key);
-    
     clearTimeout(this.setTimeoutWritingMessages);
     this.setTimeoutWritingMessages = setTimeout(function () {
         that.isTypings = false;
