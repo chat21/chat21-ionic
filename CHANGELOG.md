@@ -1,4 +1,11 @@
 # chat21-ionic ver 1.0
+
+### 1.0.21.beta.12 branch - sidebar
+- bug-fix: content sidebar and auto open
+
+### 1.0.21.beta.11 branch - sidebar
+- bug-fix: sound message only one on changed
+
 ### 1.0.21.beta.10 branch - sidebar
 - bug fix: typing in direct conversation
 

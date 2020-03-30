@@ -534,7 +534,7 @@ export class DettaglioConversazionePage extends _DetailPage {
       });
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
     this.openInfoMessage = false; // indica se è aperto il box info message
-    //this.openInfoConversation = true;
+    this.openInfoConversation = true;
   }
   /**
    * recupero da chatManager l'handler

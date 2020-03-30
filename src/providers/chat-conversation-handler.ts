@@ -403,7 +403,7 @@ export class ChatConversationHandler {
   }
 
 
-
+  // BEGIN TYPING FUNCTIONS
   /**
    * 
    */
@@ -455,7 +455,7 @@ export class ChatConversationHandler {
       });
     }, 500);
   }
-  
+  // END TYPING FUNCTIONS
 
 
   // // se è una immagine e la ha inviata l'utente corrente

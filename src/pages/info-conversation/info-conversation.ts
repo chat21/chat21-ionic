@@ -162,8 +162,8 @@ export class InfoConversationPage {
     if (!this.conversationSelected) {
       this.conversationSelected = this.chatArchivedConversationsHandler.getConversationByUid(this.conversationWith);
     }
-
-
+    console.log('conversationSelected::', this.conversationSelected);
+    console.log('supportMode::', this.supportMode);
     if (this.conversationSelected && this.supportMode == true){
       this.openIframe();
     // } else if(this.supportMode == true) {
@@ -176,9 +176,6 @@ export class InfoConversationPage {
 
 
   openIframe() {
-    if (this.conversationSelected.attributes && this.conversationSelected.attributes.projectId){
-      this.projectID = this.conversationSelected.attributes.projectId;
-    }
     if (this.channelType === TYPE_GROUP) {
       console.log('GRUPPO');
       this.profileYourself = false;
@@ -189,6 +186,9 @@ export class InfoConversationPage {
   }
 
   setUrlIframe(){
+    if (this.conversationSelected.attributes && this.conversationSelected.attributes.projectId){
+      this.projectID = this.conversationSelected.attributes.projectId;
+    }
     if(this.projectID && this.conversationWith) {
       console.log('conversationWith::', this.conversationWith);
       console.log('projectId::', this.projectID);

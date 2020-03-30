@@ -34,6 +34,7 @@ export class ChatConversationsHandler {
     private userId: string;
     private ref: firebase.database.Query;
     public audio: any;
+    private setTimeoutSound: any;
     //private FIREBASESTORAGE_BASE_URL_IMAGE: string;
 
     //public LABEL_TU: string;
@@ -138,7 +139,7 @@ export class ChatConversationsHandler {
             console.error("ChatConversationsHandler::added::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
         if(conversation.is_new){
-            this.soundMessage();
+            //this.soundMessage();
         }
     }
 
@@ -497,7 +498,10 @@ export class ChatConversationsHandler {
         // this.audio.load();
         this.audio.pause();
         this.audio.currentTime = 0;
-        setTimeout(function() {
+
+        clearTimeout(this.setTimeoutSound);
+        this.setTimeoutSound = setTimeout(function () {
+        //setTimeout(function() {
             that.audio.play()
             .then(function() {
                 // console.log('****** then *****');
@@ -505,7 +509,7 @@ export class ChatConversationsHandler {
             .catch(function() {
                 // console.log('***//tiledesk-dashboard/chat*');
             });
-        }, 0);       
+        }, 1000);       
         
     }
 
