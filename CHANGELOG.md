@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 1.0.21.beta.13 branch - sidebar
+- bug fix: start with support-group open iframe in sidebar
+
 ### 1.0.21.beta.12 branch - sidebar
 - bug-fix: content sidebar and auto open
 

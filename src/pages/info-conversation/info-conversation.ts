@@ -88,6 +88,7 @@ export class InfoConversationPage {
   private urlConversation;
   private DASHBOARD_URL;
   private projectID;
+  public startWithSupportGroup = false;
 
   constructor(
     public events: Events,
@@ -163,8 +164,11 @@ export class InfoConversationPage {
       this.conversationSelected = this.chatArchivedConversationsHandler.getConversationByUid(this.conversationWith);
     }
     console.log('conversationSelected::', this.conversationSelected);
-    console.log('supportMode::', this.supportMode);
-    if (this.conversationSelected && this.supportMode == true){
+    console.log('conversationWith::', this.conversationWith);
+    if(this.conversationWith.startsWith("support-group")){
+      this.startWithSupportGroup = true;
+    }
+    if (this.conversationSelected && this.startWithSupportGroup){
       this.openIframe();
     // } else if(this.supportMode == true) {
     //   this.urlConversation = this.sanitizer.bypassSecurityTrustResourceUrl(this.DASHBOARD_URL);
