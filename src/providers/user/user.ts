@@ -132,6 +132,14 @@ export class UserService {
       return ref;
     }
 
+    // getSenderDetail(conversationWith): any {
+    //   const tenant = this.chatManager.getTenant();
+    //   const urlNodeAttributes = '/apps/' + tenant + '/groups/' + conversationWith;
+    //   var ref =  firebase.database().ref(urlNodeAttributes).once('value');
+    //   console.log("urlNodeAttributes::getSenderDetail::ref:", urlNodeAttributes);
+    //   return ref;
+    // }
+
     getListMembers(members): UserModel[]{ 
       let arrayMembers = [];
       members.forEach(member => {

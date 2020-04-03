@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 2.0.1
+- bug fix: typing conversation with widget
+
 ### 2.0.0
 - stable version
 

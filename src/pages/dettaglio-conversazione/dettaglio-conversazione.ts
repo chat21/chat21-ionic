@@ -403,13 +403,12 @@ export class DettaglioConversazionePage extends _DetailPage {
     if(this.channel_type === TYPE_DIRECT) {
       this.isTypings = true;
       this.nameUserTypingNow = this.fullnameConversationWith;
+      console.log('*********** subscribeTypings', this.nameUserTypingNow);
     } else {
       console.log('child_changed key', childSnapshot.key);
       console.log('child_changed val', childSnapshot.val());
       this.getFullNameUserForId(childSnapshot.key);
     }
-
-    console.log('*********** subscribeTypings', this.nameUserTypingNow);
     const that = this;
     clearTimeout(this.setTimeoutWritingMessages);
     this.setTimeoutWritingMessages = setTimeout(function () {
@@ -531,6 +530,7 @@ export class DettaglioConversazionePage extends _DetailPage {
             that.NUM_BADGES++;
           }
         }
+        that.isTypings = null;
       });
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
     this.openInfoMessage = false; // indica se è aperto il box info message
@@ -628,18 +628,32 @@ export class DettaglioConversazionePage extends _DetailPage {
         ) {
         this.userService.getUserDetail(memberID)
         .then(function (snapshot) {
+          if(that.isTypings == false){
+            that.isTypings = true;
+          }
+          
+          console.log('getUserDetail snapshot: ', snapshot.val());
           if (snapshot.val()) {
             const user = snapshot.val();
             const fullname = user.firstname + " " + user.lastname;
-            that.isTypings = true;
             that.nameUserTypingNow = fullname;
             let position = that.conversationMembers.findIndex(i => i.uid === memberID);
             if (position == -1 ) {            
               var member = { 'uid': memberID, 'fullname': fullname};
               that.conversationMembers.push(member);
             }
+            console.log('getUserDetail: nameUserTypingNow', that.nameUserTypingNow);
           }
+        }).catch(function(error) {
+          console.log('getUserDetail error: ', error);
         });
+        
+        // this.userService.getSenderDetail(this.conversationWith)
+        // .then(function (snapshot) {
+        //   if (snapshot.val()) {
+        //     console.log('::::getSenderDetail::::',snapshot.val() );
+        //   }
+        // });
       }
     } else {
       this.isTypings = true;
@@ -1184,7 +1198,8 @@ export class DettaglioConversazionePage extends _DetailPage {
   loadTagsCanned(strSearch){
     // recupero tagsCanned dalla memoria 
     const that = this;
-    //console.log('projectId--->XXXX--->> ', this.conversationSelected.attributes.projectId);//attributes.projectId);
+    console.log('projectId--->XXXX--->> ', this.conversationSelected);//attributes.projectId);
+    console.log('this.appConfig.getConfig().SERVER_BASE_URL--->> ', this.appConfig.getConfig().SERVER_BASE_URL);
     if(!this.conversationSelected || !this.conversationSelected.attributes || !this.conversationSelected.attributes.projectId || !this.appConfig.getConfig().SERVER_BASE_URL){
       return;
     }
