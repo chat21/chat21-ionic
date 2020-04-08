@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 2.0.4
+- bug fix: deploy_.sh
+
 ### 2.0.3
 - bug fix: typing in/out conversation
 
