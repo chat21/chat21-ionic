@@ -63,7 +63,7 @@ export class MessagingService {
         console.log('initMessage:::: ', this.messaging);
       }
       catch(err) {
-        console.log('error initializing firebase messaging system');
+        console.log('error initializing firebase messaging system', err);
       }
       
         
@@ -83,8 +83,7 @@ export class MessagingService {
      * 
      */
     getPermission() {
-       try {
-        
+      try {
         console.log('Notification getPermission.');
         const that = this;
         // Request permission and get token.....
@@ -105,7 +104,7 @@ export class MessagingService {
          
       }
       catch(err) {
-        console.log('error getPermission firebase messaging system');
+        console.log('error getPermission firebase messaging system', err);
       }
       
         
@@ -185,7 +184,7 @@ export class MessagingService {
         });
       }
       catch(err) {
-        console.log('error gettting token firebase messaging system');
+        console.log('error gettting token firebase messaging system', err);
       }
       
        
@@ -257,7 +256,7 @@ export class MessagingService {
         });
       }
       catch(err) {
-        console.log('error receviving message');
+        console.log('error receviving message', err);
       }
     }
 

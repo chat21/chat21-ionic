@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 2.0.5
+- bug fix: show error in catch
+
 ### 2.0.4
 - bug fix: deploy_.sh
 
