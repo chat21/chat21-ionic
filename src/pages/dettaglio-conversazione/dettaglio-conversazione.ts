@@ -193,7 +193,7 @@ export class DettaglioConversazionePage extends _DetailPage {
       this.events.subscribe(key, this.onOpenVideoChat);
     }
     // subscribe isTypings
-    key = 'isTypings';
+    key = 'isTypings-'+this.conversationWith;
     if (!isInArray(key, this.subscriptions)) {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.subscribeTypings);
@@ -399,11 +399,14 @@ export class DettaglioConversazionePage extends _DetailPage {
   /**
    * on subscribe Typings
    */
-  subscribeTypings: any = (childSnapshot) => {
+  subscribeTypings: any = (childSnapshot, conversationId) => {
+    console.log('*********** subscribeTypings', conversationId, this.conversationWith);
+    if(conversationId !== this.conversationWith){
+      return;
+    }
     if(this.channel_type === TYPE_DIRECT) {
       this.isTypings = true;
       this.nameUserTypingNow = this.fullnameConversationWith;
-      console.log('*********** subscribeTypings', this.nameUserTypingNow);
     } else {
       console.log('child_changed key', childSnapshot.key);
       console.log('child_changed val', childSnapshot.val());
@@ -430,6 +433,7 @@ export class DettaglioConversazionePage extends _DetailPage {
     // this.events.unsubscribe('statusUser:online-'+this.conversationWith, null);
     // this.events.unsubscribe('lastConnectionDate-'+this.conversationWith, null);
     // this.events.unsubscribe('conversationEnabled', null);
+    // this.conversationHandler.dispose();
   }
 
   //// SYSTEM FUNCTIONS ////
@@ -623,7 +627,7 @@ export class DettaglioConversazionePage extends _DetailPage {
     const member = this.conversationMembers.find(item => item.uid === memberID);
     if (!member) {
       if ( memberID.trim() !== ''
-            && memberID.trim() !== SYSTEM
+            //&& memberID.trim() !== SYSTEM
             && memberID.trim() !== this.currentUserDetail.uid
         ) {
         this.userService.getUserDetail(memberID)
@@ -631,7 +635,6 @@ export class DettaglioConversazionePage extends _DetailPage {
           if(that.isTypings == false){
             that.isTypings = true;
           }
-          
           console.log('getUserDetail snapshot: ', snapshot.val());
           if (snapshot.val()) {
             const user = snapshot.val();
@@ -643,9 +646,12 @@ export class DettaglioConversazionePage extends _DetailPage {
               that.conversationMembers.push(member);
             }
             console.log('getUserDetail: nameUserTypingNow', that.nameUserTypingNow);
+          } else {
+            that.nameUserTypingNow = that.conversationWithFullname;
           }
         }).catch(function(error) {
           console.log('getUserDetail error: ', error);
+          that.nameUserTypingNow = that.conversationWithFullname;
         });
         
         // this.userService.getSenderDetail(this.conversationWith)

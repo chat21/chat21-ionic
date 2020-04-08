@@ -1,5 +1,13 @@
 # chat21-ionic ver 1.0
 
+### 2.0.3
+- bug fix: typing in/out conversation
+
+### 2.0.2
+- bug fix: show fullname typing in support conversation 
+- bug fix: enabled typing for system
+- bug fix: duplicate subscription in conversations
+
 ### 2.0.1
 - bug fix: typing conversation with widget
 

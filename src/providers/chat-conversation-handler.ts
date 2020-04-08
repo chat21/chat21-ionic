@@ -40,6 +40,7 @@ export class ChatConversationHandler {
   public conversationWith: string;
   public messages: any[];
   public messagesRef: firebase.database.Query;
+  public messagesRefTyping: firebase.database.Query;
   public listSubsriptions: any[];
   public attributes: any;
   public CLIENT_BROWSER: string;
@@ -89,10 +90,10 @@ export class ChatConversationHandler {
     let attributes: any = JSON.parse(sessionStorage.getItem('attributes'));
     if (!attributes || attributes === 'undefined') {
         attributes = {
-            client: this.CLIENT_BROWSER,
-            sourcePage: location.href,
-            userEmail: this.loggedUser.email,
-            userFullname: this.loggedUser.fullname
+            client: '',//this.CLIENT_BROWSER,
+            sourcePage: '',//location.href,
+            userEmail: '',//this.loggedUser.email,
+            userFullname: '',//this.loggedUser.fullname
         };
         console.log('>>>>>>>>>>>>>> setAttributes: ', JSON.stringify(attributes));
         sessionStorage.setItem('attributes', JSON.stringify(attributes));
@@ -417,12 +418,13 @@ export class ChatConversationHandler {
    */
   getWritingMessages() {
     const that = this;
-    const ref = firebase.database().ref(this.urlNodeTypings).orderByChild('timestamp').limitToLast(1);
-    ref.on("child_changed", function(childSnapshot) {
+    this.messagesRefTyping = firebase.database().ref(this.urlNodeTypings).orderByChild('timestamp').limitToLast(1);
+    this.messagesRefTyping.on("child_changed", function(childSnapshot) {
         //that.changedTypings(childSnapshot);
         //console.log('child_changed key', childSnapshot.key);
         //console.log('child_changed val', childSnapshot.val());
-        that.events.publish('isTypings', childSnapshot);
+        
+        that.events.publish('isTypings-'+that.conversationWith, childSnapshot, that.conversationWith);
     });
   }
 
@@ -471,7 +473,9 @@ export class ChatConversationHandler {
    * dispose reference della conversazione
    */
   dispose() {
+    console.log('dispose');
     this.messagesRef.off();
+    this.messagesRefTyping.off();
   }
 
 

@@ -38,16 +38,17 @@ fi
 # sed -i -e "s/$start$ver.$build/$start$NEW_VER.$NEW_BUILD/g" src/utils/constants.ts
 sed -i -e "s/$URL_VER/g" src/utils/constants.ts
 ionic cordova platform add browser --save
-ionic cordova build browser
+ionic cordova build --env=prod browser 
 cp -p src/firebase-messaging-sw.js platforms/browser/www/
 cp -p src/manifest.json platforms/browser/www/
 cp -p src/firebase-config.json platforms/browser/www/
 
 cd platforms/browser/www
-aws s3 sync . s3://tiledesk-dashboard/chat/
+#aws s3 sync . s3://tiledesk-dashboard/chat/
+aws s3 sync . s3://tiledesk-console/v2/chat/
 cd ../../../
 aws cloudfront create-invalidation --distribution-id E2DTAKWHWQ7C3J --paths "/*"
 
 # echo new version deployed on s3://tiledesk-dashboard/chat/$NEW_BUILD/
-echo new version deployed on s3://tiledesk-dashboard/chat/$URL_VER/
-echo available on https://s3.eu-west-1.amazonaws.com/tiledesk-dashboard/chat/index.html
+echo new version deployed on s3://tiledesk-console/v2/chat/$URL_VER/
+echo available on https://console.tiledesk.com/v2/chat/index.html
