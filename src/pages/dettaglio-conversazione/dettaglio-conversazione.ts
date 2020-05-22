@@ -25,7 +25,7 @@ import { InfoUserPage } from '../info-user/info-user';
 import { PopoverPage } from '../popover/popover';
 // utils
 import { SYSTEM, TYPE_SUPPORT_GROUP, TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA, MSG_STATUS_SENDING, MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, TYPE_GROUP, URL_NO_IMAGE, LABEL_NOICON } from '../../utils/constants';
-import { compareValues, htmlEntities, isURL, isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify, getFormatData } from '../../utils/utils';
+import { isExistInArray, compareValues, htmlEntities, isURL, isInArray, replaceBr, isPopupUrl, popupUrl, strip_tags, getSizeImg, urlify, convertMessageAndUrlify, getFormatData } from '../../utils/utils';
 
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
@@ -136,7 +136,7 @@ export class DettaglioConversazionePage extends _DetailPage {
     this.subscriptions = [];
     // passo oggetto conversazione
     this.conversationSelected = navParams.get('conversationSelected');
-
+    console.log('**** this.conversationSelected *****', this.conversationSelected);
     //// recupero id utente e fullname con cui si conversa
     //// uid utente con cui si conversa
     this.conversationWith = navParams.get('conversationWith');
@@ -198,6 +198,18 @@ export class DettaglioConversazionePage extends _DetailPage {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.subscribeTypings);
     }
+
+    key = 'changeStatus:closed';
+    if (!isInArray(key, this.subscriptions)) {
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.onConversationDisabled);
+    }
+    key = 'changeStatus:reopen';
+    if (!isInArray(key, this.subscriptions)) {
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.onConversationEnabled);
+    }
+
   }
 
 
@@ -221,9 +233,17 @@ export class DettaglioConversazionePage extends _DetailPage {
   returnLoadGroupDetail = (snapshot) => {
     console.log('<<<<<<<<<<< returnLoadGroupDetail >>>>>>>>>>>>>>>>>>', snapshot.val());
     if (snapshot.val()) {
-      console.log('Dettaglio conersazione ::subscribeGroupDetails', snapshot.val());
       const groupDetails = snapshot.val();
       this.groupDetailAttributes = groupDetails.attributes;
+      console.log('members::: ', groupDetails.members);
+      if(groupDetails && groupDetails.members){
+        const members = this.groupService.getUidMembers(groupDetails.members);
+        if (!isExistInArray(members, this.currentUserDetail.uid) || members.length <= 1) {
+          this.conversationEnabled = false;
+        } else {
+          this.conversationEnabled = true;
+        }
+      }
     }
   }
 
@@ -291,6 +311,7 @@ export class DettaglioConversazionePage extends _DetailPage {
           this.subscriptions.push(key);
           this.events.subscribe(key, this.statusUserOnline);
         }
+
       }
     }
 
@@ -330,10 +351,7 @@ export class DettaglioConversazionePage extends _DetailPage {
   }
 
   //// CALLBACK SUBSCRIBTIONS ////
-  onConversationEnabled: any = (status) => {
-    console.log('onConversationEnabled');
-    this.conversationEnabled = status;
-  }
+  
 
   onOpenVideoChat: any = (message) => {
     console.log('onOpenVideoChat');
@@ -419,6 +437,21 @@ export class DettaglioConversazionePage extends _DetailPage {
     }, 2000);
   }
 
+  /** */
+  onConversationDisabled = () => {
+    console.log('onConversationDisabled - idConversation: ');
+    this.conversationEnabled = false;
+  }
+
+
+  onConversationEnabled = () => {
+    console.log('onConversationEnabled - idConversation: ');
+    this.conversationEnabled = true;
+  }
+  // onConversationEnabled: any = (status) => {
+  //   console.log('onConversationEnabled');
+  //   this.conversationEnabled = status;
+  // }
   //// UNSUBSCRIPTIONS ////
   /**
    * unsubscribe all subscribe events
@@ -460,6 +493,7 @@ export class DettaglioConversazionePage extends _DetailPage {
 
   ionViewDidEnter() {
     console.log('------------> ionViewDidEnter');
+    this.groupService.loadMembersInfo(this.conversationWith, this.tenant, this.currentUserDetail.uid);
     // this.initialize();
   }
 

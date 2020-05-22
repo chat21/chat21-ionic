@@ -69,10 +69,14 @@ export class TiledeskConversationProvider {
   //       https://us-central1-<FIREBASE_PROJECT_ID>.cloudfunctions.net/api/<APP_ID>/conversations/<RECIPIENT_ID>
 
   public deleteConversation(recipientId, callback) {
-
-    // const token = this.userService.returnToken(); // retrieve the user auth token
-    const appId = this.chatManager.getTenant();
+    //const appId = this.chatManager.getTenant();
+    // const token = this.userService.returnToken();
     var that = this;
+    // const token = this.userService.returnToken(); // retrieve the user auth token
+    
+    // console.log('appId: ', appId);
+    console.log('appId2: ', this.appId);
+
     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
     .then(function(token) {
       console.log('idToken.', token);
@@ -82,7 +86,7 @@ export class TiledeskConversationProvider {
       headers.append('Content-Type', 'application/json');
       headers.append('Authorization', 'Bearer ' + token);
 
-      const url = that.BASE_URL + '/api/' + appId + '/conversations/' + recipientId;
+      const url = that.BASE_URL + '/api/' + that.appId + '/conversations/' + recipientId;
       console.log('deleteConversation. URL:', url);
 
       const options = new RequestOptions({ headers: headers });

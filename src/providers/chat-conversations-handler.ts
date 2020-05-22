@@ -134,7 +134,7 @@ export class ChatConversationsHandler {
                 this.databaseProvider.setConversation(conversation);
             }
             this.conversations.sort(compareValues('timestamp', 'desc'));
-            this.events.publish('conversationsChanged', this.conversations);
+            this.events.publish('conversationsChanged', this.conversations, childSnapshot.key);
         } else {
             console.error("ChatConversationsHandler::added::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
@@ -159,7 +159,7 @@ export class ChatConversationsHandler {
             this.conversations.splice(index, 1, conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
             this.databaseProvider.setConversation(conversation);
-            this.events.publish('conversationsChanged', this.conversations);
+            this.events.publish('conversationsChanged', this.conversations, childSnapshot.key);
         } else {
             console.error("ChatConversationsHandler::changed::conversations with conversationId: ", childSnapshot.key, "is not valid");
         }
@@ -180,7 +180,7 @@ export class ChatConversationsHandler {
             this.conversations.splice(index, 1);
             this.conversations.sort(compareValues('timestamp', 'desc'));
             this.databaseProvider.removeConversation(childSnapshot.key);
-            this.events.publish('conversationsChanged', this.conversations);
+            this.events.publish('conversationsChanged', this.conversations, childSnapshot.key);
         }
 
         // remove the conversation from the isConversationClosingMap

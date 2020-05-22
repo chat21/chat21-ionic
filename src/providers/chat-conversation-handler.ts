@@ -20,6 +20,7 @@ import { BehaviorSubject } from '../../node_modules/rxjs/BehaviorSubject';
 import { projectionDef } from '@angular/core/src/render3';
 
 import { UserService } from '../providers/user/user';
+import { copyInputAttributes } from 'ionic-angular/umd/util/dom';
 
 
 //import { TranslateModule } from '@ngx-translate/core';
@@ -122,6 +123,7 @@ export class ChatConversationHandler {
       const itemMsg = childSnapshot.val();
       // imposto il giorno del messaggio per visualizzare o nascondere l'header data
       console.log("that.translate *****", that.translate);
+      console.log("new message *****", itemMsg);
       let calcolaData = setHeaderDate(that.translate, itemMsg['timestamp'], lastDate);
       if (calcolaData != null) {
         lastDate = calcolaData;
@@ -163,7 +165,6 @@ export class ChatConversationHandler {
       if (msg.sender === that.loggedUser.uid) {
         that.events.publish('doScroll');
       }
-
       that.obsAdded.next(msg);
       // pubblico messaggio - sottoscritto in dettaglio conversazione
       //console.log("publish:: ", 'listMessages:added-'+that.conversationWith, that.events);
@@ -270,12 +271,15 @@ export class ChatConversationHandler {
       // [END CHAT_REOPENED]
       else if ((message.attributes.messagelabel && message.attributes.messagelabel.key === 'CHAT_REOPENED')) {
         message.text = this.translate.get('INFO_SUPPORT_CHAT_REOPENED')['value'];
+        this.events.publish('changeStatus:reopen');
       }
       // [END CHAT_REOPENED]
 
       // [END CHAT_CLOSED]
       else if ((message.attributes.messagelabel && message.attributes.messagelabel.key === 'CHAT_CLOSED')) {
         message.text = this.translate.get('INFO_SUPPORT_CHAT_CLOSED')['value'];
+        console.log('CHAT-CLOSED!!!');
+        this.events.publish('changeStatus:closed');
       }
       // [END CHAT_CLOSED]
     }
@@ -343,7 +347,6 @@ export class ChatConversationHandler {
     console.log("SEND MESSAGE: ", msg, channel_type);
     const now: Date = new Date();
     // const timestamp = now.valueOf();
-    
     const timestamp =  firebase.database.ServerValue.TIMESTAMP;
     console.log('timestamp: ',timestamp);
     console.log('timestamp: ',firebase.database['ServerValue']['TIMESTAMP']);

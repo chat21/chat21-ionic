@@ -1,4 +1,9 @@
 # chat21-ionic ver 1.0
+### 2.0.7
+- bug fix: disable textarea when currentUser is not member 
+
+### 2.0.6
+- bug fix: close conversatione
 
 ### 2.0.5
 - bug fix: show error in catch

@@ -125,7 +125,6 @@ export class ChatManager {
     //this.conversationsHandler = this.chatConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
     // if(isHostname() === false) {
     if (this.supportMode === false) {
-
       this.initContactsSynchronizer();
     }
     this.events.publish('loggedUser:login', this.loggedUser);
