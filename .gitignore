@@ -8,3 +8,6 @@ platforms
 firebase-config.ts
 environment.old.ts
 src/environments_dati_reali
+docs.zip
+firebase-messaging-sw.js
+env.pre
