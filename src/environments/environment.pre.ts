@@ -7,6 +7,7 @@ export const environment = {
     production: false,
     remoteConfig: true,
     remoteConfigUrl: './chat-config.json',
+    remoteContactsUrl: '',
     firebaseConfig: {
         apiKey: 'pre-CHANGEIT',
         authDomain: 'CHANGEIT',
