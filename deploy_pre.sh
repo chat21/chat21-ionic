@@ -14,8 +14,8 @@ URL_VER=${version//[.]//}
 echo 'URL_VER: ---->'$URL_VER
 
 if [ "$version" != "" ]; then
-    git tag -a "v$version" -m "`git log -1 --format=%s`"
-    echo "Created a new tag, v$version"
+    git tag -a "$version" -m "`git log -1 --format=%s`"
+    echo "Created a new tag, $version"
     git push --tags
     npm publish
 fi
@@ -30,7 +30,7 @@ ionic cordova build browser
 
 cp -p src/firebase-messaging-sw.js platforms/browser/www/
 cp -p src/manifest.json platforms/browser/www/
-cp -p src/firebase-config.json platforms/browser/www/
+# cp -p src/chat-config.json platforms/browser/www/
 
 cd platforms/browser/www
 aws s3 sync . s3://tiledesk-dashboard-pre/chat/

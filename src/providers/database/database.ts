@@ -173,6 +173,12 @@ export class DatabaseProvider {
     // });
   }
 
+  /** */
+  removeAllContact(){
+    this.storageContacts.clear();
+  }
+
+
 
   /**
    * 

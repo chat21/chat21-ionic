@@ -62,6 +62,7 @@ export class ListaConversazioniPage extends _MasterPage {
   private convertMessage = convertMessage;
   private supportMode = environment.supportMode;
   private showPlaceholder = true;
+  private showButtonNewChat = true;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -155,6 +156,15 @@ export class ListaConversazioniPage extends _MasterPage {
     // console.log('::::uidConvSelected:::: ',this.uidConvSelected);
     console.log('::::tenant:::: ',this.tenant);
     console.log('::::uidReciverFromUrl:::: ',this.uidReciverFromUrl);
+    // this.setShowButtonNewChat();
+  }
+
+  setShowButtonNewChat(){
+    if (this.supportMode == true) {
+      this.showButtonNewChat = false;
+    } else {
+      this.showButtonNewChat = true;
+    }
   }
 
   /**
@@ -364,6 +374,8 @@ export class ListaConversazioniPage extends _MasterPage {
       this.openMessageList(type);
     }
   }
+
+
 
   /**
    * ::: setUidConvSelected :::

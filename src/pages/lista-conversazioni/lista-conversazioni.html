@@ -10,8 +10,7 @@
     <ion-buttons end>
 
       <!-- <button *ngIf="!isHostname" ion-button icon-only (click)="openUsersList($event)"> -->
-      <button *ngIf="!supportMode" ion-button icon-only (click)="openUsersList($event)">
-          
+      <button *ngIf="showButtonNewChat" ion-button icon-only (click)="openUsersList($event)">
         <ion-icon name="create"></ion-icon>
       </button>
 

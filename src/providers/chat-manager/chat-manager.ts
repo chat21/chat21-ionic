@@ -228,7 +228,6 @@ export class ChatManager {
     console.log(" initContactsSynchronizer:: ", this.contactsSynchronizer, this.tenant, this.loggedUser);
     if (!this.contactsSynchronizer) {
       this.contactsSynchronizer = this.chatContactsSynchronizer.initWithTenant(this.tenant, this.loggedUser);
-      //this.contactsSynchronizer = this.createContactsSynchronizerForUser();
       this.contactsSynchronizer.startSynchro();
     } else {
       this.contactsSynchronizer.startSynchro();

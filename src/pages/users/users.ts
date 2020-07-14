@@ -13,6 +13,9 @@ import { NavProxyService } from '../../providers/nav-proxy';
 import { compareValues } from '../../utils/utils';
 import { UserModel } from '../../models/user';
 
+import { environment } from '../../environments/environment';
+import { ChatContactsSynchronizer } from '../../providers/chat-contacts-synchronizer';
+
 
 @IonicPage()
 @Component({
@@ -37,6 +40,8 @@ export class UsersPage {
 
   private loggedUser: UserModel;
   private tenant: string;
+  private remoteContactsUrl = environment.remoteContactsUrl;
+  private SERVER_BASE_URL = environment.SERVER_BASE_URL;
 
   constructor(
     public navCtrl: NavController,
@@ -44,7 +49,8 @@ export class UsersPage {
     public navParams: NavParams,
     public events: Events,
     public navProxy: NavProxyService,
-    public databaseProvider: DatabaseProvider
+    public databaseProvider: DatabaseProvider,
+    public contactsSynchronizer: ChatContactsSynchronizer
   ) 
   {
     this.tenant = navParams.get('tenant');
@@ -73,8 +79,71 @@ export class UsersPage {
    * se cambia il contenuto del campo input, fitro e ordino array 
    */
   initialize(){
-    var that = this;
+    let urlContacts = this.remoteContactsUrl;
+    if(!this.remoteContactsUrl){
+      this.loadContactFromStorage();
+    } else if(this.remoteContactsUrl.startsWith('http')){
+      this.loadContacts(urlContacts);
+    } else if(this.remoteContactsUrl != ''){
+      urlContacts = this.SERVER_BASE_URL + this.remoteContactsUrl
+      this.loadContacts(urlContacts);
+    }
+
     this.searchControl = new FormControl();
+    this.searchControl.valueChanges.debounceTime(2).subscribe(search => {
+      if (this.contacts){
+        console.log("this.contacts lenght:: ", this.contacts.length);
+        this.contactsOfSearch = this.filterItems(this.contacts, this.searchTerm);
+        this.contactsOfSearch.sort(compareValues('fullname', 'asc'));
+        this.searching = false;
+      }
+    });
+  }
+
+  /** */
+  loadContacts(urlContacts){
+    var that = this;
+    console.log('this.contactsSynchronizer', this.contactsSynchronizer);
+    this.contactsSynchronizer.loadContacts(urlContacts)
+    .toPromise()
+      .then(data => {
+        console.log('----------------------------------> loadContactsResponse:');
+        console.log(data);
+        that.setContacts(data);
+      }).catch(err => {
+        console.log('error', err);
+      });
+  }
+
+  
+  /** */
+  setContacts(data){
+    this.contacts = [];
+    var listOfContacts = JSON.parse(JSON.stringify(data));
+    listOfContacts.sort(compareValues('firstname', 'asc'));      
+    console.log("listOfContacts:: ", listOfContacts);
+    console.log("contacts:", data); 
+    for(var i=0; i < listOfContacts.length; i++) {
+      let user:UserModel = listOfContacts[i];
+      let fullname = '';
+      if(user['firstname'] && user['firstname'] != undefined){
+          fullname += user['firstname']+' '
+      }
+      if(user['lastname'] && user['lastname'] != undefined){
+          fullname += user['lastname']
+      }
+      user.fullname = fullname;
+      this.contacts.push(user);
+    }
+    this.contacts.sort(compareValues('fullname', 'asc'));
+    this.contactsOfSearch = this.contacts;
+}
+
+
+  /** */
+  loadContactFromStorage(){
+    var that = this;
+    // this.searchControl = new FormControl();
     console.log("UsersPage:: this.contacts", this.contacts);
     if (!this.contacts || this.contacts.lenght == 0){
       // console.log('ngOnInit contacts', this.contacts);
@@ -88,15 +157,16 @@ export class UsersPage {
         that.contactsOfSearch = that.contacts;
       });
     }
-    this.searchControl.valueChanges.debounceTime(2).subscribe(search => {
-      if (that.contacts){
-        console.log("this.contacts lenght:: ", that.contacts.length);
-        that.contactsOfSearch = that.filterItems(that.contacts, that.searchTerm);
-        that.contactsOfSearch.sort(compareValues('fullname', 'asc'));
-        that.searching = false;
-      }
-    });
+    // this.searchControl.valueChanges.debounceTime(2).subscribe(search => {
+    //   if (that.contacts){
+    //     console.log("this.contacts lenght:: ", that.contacts.length);
+    //     that.contactsOfSearch = that.filterItems(that.contacts, that.searchTerm);
+    //     that.contactsOfSearch.sort(compareValues('fullname', 'asc'));
+    //     that.searching = false;
+    //   }
+    // });
   }
+
   /**
    * metodo invocato dalla pagina html alla selezione dell'utente
    * imposta conversazione attiva nella pagina elenco conversazioni

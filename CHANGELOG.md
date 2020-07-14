@@ -1,4 +1,8 @@
 # chat21-ionic ver 1.0
+
+### 2.0.8
+- new: added remoteContactsUrl in environment
+
 ### 2.0.7
 - bug fix: disable textarea when currentUser is not member 
 

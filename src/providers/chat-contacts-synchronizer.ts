@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Config } from 'ionic-angular';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 // providers
 import { DatabaseProvider } from './database/database';
 // models
@@ -7,17 +9,21 @@ import { UserModel } from '../models/user';
 // firebase
 import * as firebase from 'firebase/app';
 // utils
-import { contactsRef } from '../utils/utils';
+import { contactsRef, compareValues } from '../utils/utils';
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class ChatContactsSynchronizer {
     private tenant: string;
     private loggeduser: UserModel;
     private ref: firebase.database.Query;
+    private remoteContactsUrl = environment.remoteContactsUrl;
+    private SERVER_BASE_URL = environment.SERVER_BASE_URL;
 
     constructor(
         private config: Config,
-        private databaseProvider: DatabaseProvider
+        private databaseProvider: DatabaseProvider,
+        public http: HttpClient
     ) { 
     }
     /**
@@ -42,6 +48,16 @@ export class ChatContactsSynchronizer {
         .then(function(lastUpdate) { 
             console.log("lastUpdate: ", lastUpdate);
             that.loadFirebaseContactsData(lastUpdate);
+            // let urlContacts = that.remoteContactsUrl;
+            // console.log('urlContacts', urlContacts);
+            // if(!that.remoteContactsUrl){
+            //     that.loadFirebaseContactsData(lastUpdate);
+            // } else if(that.remoteContactsUrl.startsWith('http')){
+            //     that.loadContacts(urlContacts);
+            // } else if(that.remoteContactsUrl != ''){
+            //     urlContacts = that.SERVER_BASE_URL + that.remoteContactsUrl
+            //     that.loadContacts(urlContacts);
+            // }
         });
     }
     /**
@@ -71,6 +87,53 @@ export class ChatContactsSynchronizer {
             that.addContact(childData);
         })
     }
+
+    loadContacts(url){
+        let that = this;
+        // console.log('LOAD CONTACTS URL', url);
+        const token = this.getTokenFromLocalStorage();
+        // console.log('Token', token);
+        return this.http.get(url, {
+            headers: new HttpHeaders().set('Authorization', token),
+        })
+        // .toPromise()
+        // .then(data => {
+        //   console.log('----------------------------------> loadContactsResponse:');
+        //   console.log(data);
+        //   //that.tagsCanned = data;
+        //   that.setContacts(data);
+        // }).catch(err => {
+        //   console.log('error', err);
+        // });
+    }
+
+    /** GET JWT TOKEN FROM LOCAL STORAGE */
+    getTokenFromLocalStorage() {
+        var token = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWIwZjNmYTU3MDY2ZTAwMTRiZmQ3MWUiLCJlbWFpbCI6ImRhcmlvZGVwYTc1QGdtYWlsLmNvbSIsImZpcnN0bmFtZSI6IkRhcmlvIiwibGFzdG5hbWUiOiJEZSBQYXNjYWxpcyIsImlhdCI6MTU4MzM5OTM0NCwiYXVkIjoiaHR0cHM6Ly90aWxlZGVzay5jb20iLCJpc3MiOiJodHRwczovL3RpbGVkZXNrLmNvbSIsInN1YiI6InVzZXIiLCJqdGkiOiJkNmNmODAzZC1iOGUyLTQ3OGYtYTZkMy1mNDgwNzRhOGEyNGQifQ.7yfH6CNPJFv72Q2IS56T_7FSzyUGorTQHFlkR_-dEKg";
+        var user = JSON.parse(localStorage.getItem('user'));
+        if(user){
+          console.log('user: ', user);
+          if(user.token){
+              token = user.token;
+              console.log('token: ', user.token);
+          } 
+        }
+        return token;
+    }
+
+    /** */
+    setContacts(data){
+        this.databaseProvider.removeAllContact();
+        const that = this;
+        var listOfContacts = JSON.parse(JSON.stringify(data));
+        listOfContacts.sort(compareValues('firstname', 'asc'));      
+        console.log("listOfContacts:: ", listOfContacts);
+        for(var i=0; i < listOfContacts.length; i++) {
+            that.addContact(listOfContacts[i]);
+        }
+    }
+    
+
     /**
      * completo profilo user con fullname
      * salvo data ultimo aggiornamento nel DB
