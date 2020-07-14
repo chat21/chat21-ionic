@@ -476,9 +476,13 @@ export class DettaglioConversazionePage extends _DetailPage {
   }
 
   ionViewWillEnter() {
-    console.log('------------> ionViewWillEnter', this.conversationSelected);
+    console.log('------------> ionViewWillEnter XX', this.conversationSelected);
+    console.log('DETTAGLIO:::', this.conversationSelected, this.conversationWith);
     this.initSubscriptions();
     this.initialize();
+
+   
+
     // if(this.conversationSelected){
     //   this.initSubscriptions();
     //   this.initialize();

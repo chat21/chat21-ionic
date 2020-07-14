@@ -86,10 +86,10 @@ export class ListaConversazioniPage extends _MasterPage {
     this.BUILD_VERSION = 'v.' + PACKAGE.version;
     this.tenant = this.chatManager.getTenant();
     this.profileModal = this.modalCtrl.create(LoginPage, { tenant: this.tenant }, { enableBackdropDismiss: false });
+    this.initInterface();
   }
 
   ionViewDidEnter(){
-    this.initInterface();
     this.events.subscribe('loggedUser:login', this.subscribeLoggedUserLogin);
     this.events.subscribe('loggedUser:logout', this.subscribeLoggedUserLogout);
   }
@@ -173,6 +173,7 @@ export class ListaConversazioniPage extends _MasterPage {
    */
   initInterface(){
     if (windowsMatchMedia()) {
+      console.log('PlaceholderPage 1');
       this.navProxy.pushDetail(PlaceholderPage, {});
     }
   }
@@ -416,6 +417,7 @@ export class ListaConversazioniPage extends _MasterPage {
         that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
       } else if (!type) {
         if (windowsMatchMedia()) {
+          console.log('PlaceholderPage 2');
           that.navProxy.pushDetail(PlaceholderPage, {});
         }
       }
@@ -585,6 +587,7 @@ export class ListaConversazioniPage extends _MasterPage {
     });
     // when a conversations is closed shows a placeholder background
     if (groupId === that.uidConvSelected) {
+      console.log('PlaceholderPage 3');
       that.navProxy.pushDetail(PlaceholderPage, {});
     }
   }
@@ -620,6 +623,7 @@ export class ListaConversazioniPage extends _MasterPage {
     });
     // when a conversations is closed shows a placeholder background
     if (conversationId === this.uidConvSelected) {
+      console.log('PlaceholderPage 4');
       that.navProxy.pushDetail(PlaceholderPage, {});
     }
   }

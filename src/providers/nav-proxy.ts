@@ -87,6 +87,7 @@ export class NavProxyService {
         if(!detailView){
             return;
         }
+        console.log('PlaceholderPage 5');
         this.detailNav.setRoot(PlaceholderPage);
         if (detailView.component.prototype instanceof _DetailPage) {
             // if the current detail view is a 'Detail' page...

@@ -1052,6 +1052,7 @@ export class InfoConversationPage {
 
     // when a conversations is closed shows a placeholder background
     if (groupId === that.conversationWith) {
+      console.log('PlaceholderPage 5');
       that.navProxy.pushDetail(PlaceholderPage, {});
     }
   }
@@ -1100,6 +1101,7 @@ export class InfoConversationPage {
 
     // when a conversations is closed shows a placeholder background
     if (conversationId === that.conversationWith) {
+      console.log('PlaceholderPage 6');
       that.navProxy.pushDetail(PlaceholderPage, {});
     }
   }

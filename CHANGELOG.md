@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 2.0.8A
+- bug fix: remove pushDetail PlaceholderPage on new conversation
+
 ### 2.0.8
 - new: added remoteContactsUrl in environment
 
