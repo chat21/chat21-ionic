@@ -88,7 +88,6 @@ export class UsersPage {
       urlContacts = this.SERVER_BASE_URL + this.remoteContactsUrl
       this.loadContacts(urlContacts);
     }
-
     this.searchControl = new FormControl();
     this.searchControl.valueChanges.debounceTime(2).subscribe(search => {
       if (this.contacts){

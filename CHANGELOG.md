@@ -1,5 +1,9 @@
 # chat21-ionic ver 1.0
 
+### 2.0.8B
+- bug fix: TypeError: Cannot read property 'uid' of undefined
+    at DatabaseProvider.webpackJsonp.57.DatabaseProvider.initialize (database.ts:35)
+
 ### 2.0.8A
 - bug fix: remove pushDetail PlaceholderPage on new conversation
 

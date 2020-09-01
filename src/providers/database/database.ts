@@ -30,16 +30,18 @@ export class DatabaseProvider {
   }
 
   initialize(loggedUser:UserModel, tenant: string){
-    this.loggedUser = loggedUser;
-    this.tenant = tenant;
-    console.log("DatabaseProvider - loggedUser::", loggedUser.uid);
-    console.log("DatabaseProvider - this.storageSettings::", this.storageSettings);
-    console.log("DatabaseProvider - this.storageContacts::", this.storageContacts);
-    console.log("DatabaseProvider - this.storageConversations::", this.storageConversations);
-    if(!this.storageSettings || !this.storageContacts || !this.storageConversations){
-      this.storageSettings = this.configStorage('settings-'+loggedUser.uid);
-      this.storageContacts = this.configStorage('contacts-'+loggedUser.uid);
-      this.storageConversations = this.configStorage('conversations-'+loggedUser.uid);
+    if(loggedUser && tenant){
+      this.loggedUser = loggedUser;
+      this.tenant = tenant;
+      // console.log("DatabaseProvider - loggedUser::", loggedUser.uid);
+      // console.log("DatabaseProvider - this.storageSettings::", this.storageSettings);
+      // console.log("DatabaseProvider - this.storageContacts::", this.storageContacts);
+      // console.log("DatabaseProvider - this.storageConversations::", this.storageConversations);
+      if(!this.storageSettings || !this.storageContacts || !this.storageConversations){
+        this.storageSettings = this.configStorage('settings-'+loggedUser.uid);
+        this.storageContacts = this.configStorage('contacts-'+loggedUser.uid);
+        this.storageConversations = this.configStorage('conversations-'+loggedUser.uid);
+      }
     }
   }
   /**
