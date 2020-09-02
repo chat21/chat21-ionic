@@ -26,7 +26,7 @@ export class LoginPage {
   
   // isHostname = isHostname;
 
- supportMode = environment.supportMode
+  supportMode = environment.supportMode
   constructor(
     private modalCtrl: ModalController,
     public navParams: NavParams,
@@ -35,7 +35,6 @@ export class LoginPage {
     private alertCtrl: AlertController, 
     private loadingCtrl: LoadingController,
     public appConfig: AppConfigProvider
-    //private userService: UserService
   ) {
     //console.log("LOGIN PAGE");
     this.tenant = navParams.get('tenant');
@@ -106,8 +105,9 @@ export class LoginPage {
    * 
    */
   tiledeskLogin(){
-    console.log('this.appConfig.getConfig().DASHBOARD_URL ', this.appConfig.getConfig().DASHBOARD_URL) 
-    window.open(this.appConfig.getConfig().DASHBOARD_URL, "_blank");
+    let DASHBOARD_URL = this.appConfig.getConfig().DASHBOARD_URL;
+    console.log('this.appConfig.getConfig().DASHBOARD_URL ', DASHBOARD_URL) 
+    window.open(DASHBOARD_URL, "_blank");
     //this.loginUserFirebase();
   }
   

@@ -116,7 +116,6 @@ export class InfoConversationPage {
     setTimeout(function () {
       that.initialize();
     }, 100);
-
     this.DASHBOARD_URL = this.appConfig.getConfig().DASHBOARD_URL;
   }
 
@@ -493,7 +492,7 @@ export class InfoConversationPage {
   }
 
   getImageUrlThumb(uid: string) {
-    let imageurl = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE + environment.firebaseConfig.storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
+    let imageurl = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE + this.appConfig.getConfig().firebaseConfig.storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
     return imageurl;
   }
   /**

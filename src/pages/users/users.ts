@@ -11,11 +11,13 @@ import { DatabaseProvider } from './../../providers/database/database';
 import { NavProxyService } from '../../providers/nav-proxy';
 // utils
 import { compareValues } from '../../utils/utils';
+import { REMOTE_CONTACTS_URL } from '../../utils/constants';
+
 import { UserModel } from '../../models/user';
 
 import { environment } from '../../environments/environment';
 import { ChatContactsSynchronizer } from '../../providers/chat-contacts-synchronizer';
-
+import { AppConfigProvider } from '../../providers/app-config/app-config';
 
 @IonicPage()
 @Component({
@@ -50,11 +52,14 @@ export class UsersPage {
     public events: Events,
     public navProxy: NavProxyService,
     public databaseProvider: DatabaseProvider,
-    public contactsSynchronizer: ChatContactsSynchronizer
+    public contactsSynchronizer: ChatContactsSynchronizer,
+    public appConfig: AppConfigProvider
   ) 
   {
     this.tenant = navParams.get('tenant');
     this.loggedUser = navParams.get('loggedUser');
+    this.remoteContactsUrl = appConfig.getConfig().remoteContactsUrl;
+    this.SERVER_BASE_URL = appConfig.getConfig().SERVER_BASE_URL;
   }
   /**
    * 
@@ -79,10 +84,17 @@ export class UsersPage {
    * se cambia il contenuto del campo input, fitro e ordino array 
    */
   initialize(){
+    //this.loadContactFromStorage();
+    this.loadContactsFromUrl();
+  }
+
+  /** */
+  loadContactsFromUrl(){
+    if(!this.remoteContactsUrl || this.remoteContactsUrl == ''){
+      this.remoteContactsUrl = REMOTE_CONTACTS_URL;
+    } 
     let urlContacts = this.remoteContactsUrl;
-    if(!this.remoteContactsUrl){
-      this.loadContactFromStorage();
-    } else if(this.remoteContactsUrl.startsWith('http')){
+    if(this.remoteContactsUrl.startsWith('http')){
       this.loadContacts(urlContacts);
     } else if(this.remoteContactsUrl != ''){
       urlContacts = this.SERVER_BASE_URL + this.remoteContactsUrl
@@ -154,6 +166,7 @@ export class UsersPage {
         that.contacts = data;
         that.contacts.sort(compareValues('fullname', 'asc'));
         that.contactsOfSearch = that.contacts;
+        //that.loadContactsFromUrl();
       });
     }
     // this.searchControl.valueChanges.debounceTime(2).subscribe(search => {

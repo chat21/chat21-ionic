@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 2.0.10
+- bug fix: added remoteContactsUrl in "chat-config-template.json"
+
 ### 2.0.8B
 - bug fix: TypeError: Cannot read property 'uid' of undefined
     at DatabaseProvider.webpackJsonp.57.DatabaseProvider.initialize (database.ts:35)

@@ -58,6 +58,7 @@ export const TYPE_POPUP_LIST_CONVERSATIONS: string = 'LIST_CONVERSATIONS';
 export const TYPE_POPUP_DETAIL_MESSAGE: string = 'DETAIL_MESSAGE';
 
 // URLS
+export const REMOTE_CONTACTS_URL: string = 'chat21/contacts';
 // export const CHAT_SEND_BY_EMAIL_LINK: string = "mailto:?subject=Transcript Chat Conversation&body=Salve,%0D%0A%0D%0Adi seguito potrà scaricare il transcript della conversazione intercorsa con il nostro servizio di Supporto:%0D%0A%0D%0Ahttps://api.tiledesk.com/v1/public/requests/";
 // export const URL_VIDEO_CHAT: string = 'https://videochat.tiledesk.com/add-user-group.html';
 // export const URL_TICKET_CHAT: string = 'https://chat21sdk.atlassian.net/secure/CreateIssue!default.jspa';

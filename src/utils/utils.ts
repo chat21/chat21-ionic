@@ -462,7 +462,9 @@ export function avatarPlaceholder(conversation_with_fullname) {
 }
 
 export function getImageUrlThumb(uid: string) {
-  let imageurl = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE  + environment.firebaseConfig.storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
+  let FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE;
+  let storageBucket = this.appConfig.getConfig().firebaseConfig.storageBucket
+  let imageurl = FIREBASESTORAGE_BASE_URL_IMAGE + storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
   return imageurl;
 }
 

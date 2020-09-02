@@ -11,6 +11,7 @@ import * as firebase from 'firebase/app';
 // utils
 import { contactsRef, compareValues } from '../utils/utils';
 import { environment } from '../environments/environment';
+import { AppConfigProvider } from '../providers/app-config/app-config';
 
 @Injectable()
 export class ChatContactsSynchronizer {
@@ -23,8 +24,11 @@ export class ChatContactsSynchronizer {
     constructor(
         private config: Config,
         private databaseProvider: DatabaseProvider,
-        public http: HttpClient
+        public http: HttpClient,
+        public appConfig: AppConfigProvider
     ) { 
+        this.remoteContactsUrl = appConfig.getConfig().remoteContactsUrl;
+        this.SERVER_BASE_URL = appConfig.getConfig().SERVER_BASE_URL;
     }
     /**
      * inizializzo contacts synchronizer
