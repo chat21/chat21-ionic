@@ -15,6 +15,7 @@ export const environment = {
         projectId: 'CHANGEIT',
         storageBucket: 'CHANGEIT',
         messagingSenderId: 'CHANGEIT',
+        appId: 'CHANGEIT',
         chat21ApiUrl: 'CHANGEIT'
     }
 }
