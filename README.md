@@ -62,6 +62,7 @@ In progress git
             projectId: 'XYZ',
             storageBucket: 'XYZ.appspot.com',
             messagingSenderId: '123456',
+            appId: 'CHANGEIT',
             chat21ApiUrl: '<YOUR_CHAT21_CLOUD_FUNCTION_FIREBASE_ENDPOINT>'
         }
     }
