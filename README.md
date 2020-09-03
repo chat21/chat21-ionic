@@ -51,7 +51,7 @@ In progress git
         CHAT_SEND_BY_EMAIL_LINK: '<CHAT-TRANSCRIPT-URL>',
         FIREBASESTORAGE_BASE_URL_IMAGE: 'https://firebasestorage.googleapis.com/v0/b/',
         DASHBOARD_URL: '<YOUR-DASHBOARD-URL>/',
-        URL_PROJECT_ID: '<YOUR-DASHBOARD-URL>/#/project/',
+        SERVER_BASE_URL: '<YOUR-TILEDESK-SERVER-URL>',
         production: false,
         remoteConfig: true,
         remoteConfigUrl: '/firebase-config.json',
