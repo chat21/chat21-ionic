@@ -29,6 +29,8 @@ RUN rm -rf /usr/share/nginx/html/*
 
 COPY --from=builder /app/platforms/browser/www/ /usr/share/nginx/html
 COPY --from=builder /app/src/chat-config-template.json /usr/share/nginx/html
+COPY --from=builder /app/src/firebase-messaging-sw.js /usr/share/nginx/html
+
 
 
 WORKDIR /usr/share/nginx/html
