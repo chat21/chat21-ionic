@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 2.0.11
+- bug fix: added appId in "firebaseConfig"
+
 ### 2.0.10
 - bug fix: added remoteContactsUrl in "chat-config-template.json"
 
