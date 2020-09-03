@@ -70,7 +70,6 @@ In progress git
   
 * (optional) Update app.module.ts file: 
     * open `/src/app/app.module.ts` and change tenant name
-* Update app constants in `src/utils/constants.ts`
 
 ### Push notification
 * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: with < your messagingSenderId >
