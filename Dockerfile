@@ -29,7 +29,7 @@ RUN rm -rf /usr/share/nginx/html/*
 
 COPY --from=builder /app/platforms/browser/www/ /usr/share/nginx/html
 COPY --from=builder /app/src/chat-config-template.json /usr/share/nginx/html
-COPY --from=builder /app/src/firebase-messaging-sw.js /usr/share/nginx/html
+COPY --from=builder /app/src/firebase-messaging-sw-template.js /usr/share/nginx/html
 
 
 
@@ -37,8 +37,7 @@ WORKDIR /usr/share/nginx/html
 
 RUN echo "Chat21 Ionic Started!!"
 
-##CMD ["nginx", "-g", "daemon off;"]
-CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/chat-config-template.json > /usr/share/nginx/html/chat-config.json && exec nginx -g 'daemon off;'"]
+CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/chat-config-template.json > /usr/share/nginx/html/chat-config.json && envsubst < /usr/share/nginx/html/firebase-messaging-sw-template.js > /usr/share/nginx/html/firebase-messaging-sw.js && exec nginx -g 'daemon off;'"]
 
 
 
