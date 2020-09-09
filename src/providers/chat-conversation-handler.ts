@@ -421,7 +421,7 @@ export class ChatConversationHandler {
    */
   getWritingMessages() {
     const that = this;
-    this.messagesRefTyping = firebase.database().ref(this.urlNodeTypings).orderByChild('timestamp').limitToLast(1);
+    this.messagesRefTyping = firebase.database().ref(this.urlNodeTypings).orderByChild('timestamp').limitToLast(100);
     this.messagesRefTyping.on("child_changed", function(childSnapshot) {
         //that.changedTypings(childSnapshot);
         //console.log('child_changed key', childSnapshot.key);

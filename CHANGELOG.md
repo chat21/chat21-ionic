@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 2.0.12
+- bug-fix: typing not work
+
 ### 2.0.11
 - bug fix: added appId in "firebaseConfig"
 
