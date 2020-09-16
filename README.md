@@ -135,3 +135,12 @@ nano .env #configure .env file properly
 docker run -p 8080:80 --env-file .env chat21/chat21-ionic
 
 ```
+
+## Branding with Docker
+If you want to customize logos and assets you can mount a docker volume and attach it to the assets folder. After that you can override the assets files into the docker volume.
+
+Example:
+```
+docker run -p 8080:80 --env-file .env --mount source=chat21-ionic-assets-vol,destination=/usr/share/nginx/html/assets  chat21/chat21-ionic
+```
+
