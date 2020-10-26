@@ -21,6 +21,7 @@ import { AppConfigProvider } from '../providers/app-config/app-config';
   templateUrl: 'app.html'
 })
 export class MyApp {
+  // new branch v2.0
   // Grab References to our 2 NavControllers...
   @ViewChild('detailNav') detailNav: Nav;
   @ViewChild('masterNav') masterNav: Nav;
