@@ -1,0 +1,60 @@
+<ion-content class="main-content">
+  <div class="right-logo" style="text-align: center; margin: 20px 0 0 0;">
+    <a [href]="company_site_url" target="_blank">
+      <img [src]="companyLogoBlackUrl" class="img-fluid" style="max-width: 150px; height: auto;" />
+    </a>
+  </div>
+  <div class="centered">
+
+    <div class="signin-title" style="text-align:center">
+      <h2 style="font-family: 'Montserrat', sans-serif; font-weight: 400;">
+        {{ translationMap.get('LABEL_SIGNIN_TO') }}
+        {{companyName}}
+      </h2>
+    </div>
+    <div class="login-container">
+      <form [formGroup]="userForm" (ngSubmit)="signInWithEmailAndPassword()" novalidate>
+
+        <ion-label stacked for="email">{{ translationMap.get('LABEL_EMAIL') }}</ion-label>
+        <ion-input #email formControlName="email" type="email" id="email" required autocapitalize="off" spellcheck="false"
+        placeholder="{{ translationMap.get('LABEL_PLACEHOLDER_EMAIL') }}"
+        [class.invalid]="!userForm.controls.email.valid"
+        (change)="emailChanged(email)"
+        ></ion-input>
+       
+        <ion-label stacked for="password">{{ translationMap.get('LABEL_PASSWORD') }}</ion-label>
+        <ion-input #password formControlName="password" type="password" id="password" required
+        placeholder="{{ translationMap.get('LABEL_PLACEHOLDER_PASSWORD') }}"
+        [class.invalid]="!userForm.controls.password.valid"
+        (change)="passwordChanged(password)"
+        ></ion-input>
+
+        
+        <button type="submit" class="btn signin-button" [disabled]="!userForm.valid">
+          <span *ngIf="!showSpinnerInLoginBtn">
+             {{ translationMap.get('LABEL_SIGNIN') }}
+          </span>
+          <ion-spinner *ngIf="showSpinnerInLoginBtn" name="bubbles" color="white"></ion-spinner>
+        </button>
+
+        <p style="color: #666666; font-size: 1.1em; text-align: center; margin-top: 16px;">
+          {{ translationMap.get('LABEL_DONT_HAVE_AN_ACCOUNT_YET') }}
+          <span style="color: #03a5e8; cursor:pointer" (click)="goToResetPsw()">
+              {{ translationMap.get('LABEL_SIGNUP') }}
+          </span>
+        </p>
+
+        <p style="color: #666666; font-size: 1.1em; text-align: center; margin-top: 16px;">
+           {{ translationMap.get('LABEL_FORGOT_YOUR_PASSWORD') }}
+          <span style="color: #03a5e8; cursor:pointer" (click)="goToResetPsw()">
+             {{ translationMap.get('LABEL_CLICK_HERE') }} 
+          </span>
+        </p>
+
+      </form>
+    </div>
+
+
+  </div>
+
+</ion-content>

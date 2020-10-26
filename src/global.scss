@@ -1,0 +1,399 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+@import '~material-design-icons/iconfont/material-icons.css';
+@import 'variables.scss';
+
+// http://ionicframework.com/docs/v2/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+
+body {
+    user-select: text;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
+    overflow: auto;
+    text-rendering: optimizeLegibility;
+}
+
+
+// Ionic 'Split Pane' styles need to be tweaked to
+// get this 'master-detail' example to work!
+// .split-pane-side:not(ion-menu) {
+//     display: initial;
+// }
+
+// .split-pane-main {
+//     display: none;
+//     // position: absolute!important;
+// }
+
+// .split-pane-visible {
+//     .split-pane-main {
+//         display: block;
+//     }
+// }
+
+// ion-content {
+//     --overflow: hidden;
+// }
+
+
+
+
+#sidebar {
+    min-width: 256px;
+    width: 33%;
+    max-width: 320px;
+}
+
+
+app-conversations-list {
+    width: 100%;
+    height: 100%;
+}
+.truncate {
+    width: 100%!important;
+    white-space: nowrap!important;
+    overflow: hidden!important;
+    text-overflow: ellipsis!important;
+}
+
+
+// .popover-md .popover-content{
+//     width: auto!important;
+// }
+
+// ion-backdrop{  
+//     display: block;
+//     background-color: #000000!important;
+//     width: 100%;
+//     height: 100%;
+//     opacity: 0.0!important;
+// }
+
+// ion-app, ion-nav, ion-tab, ion-tabs, .app-root, .ion-page {
+//     contain: none!important;
+// }
+
+// .avatar-profile {
+//     position: absolute;
+//     top: 0px;
+//     left: 0px;
+//     display: inline-block;
+//     width: 50px;
+//     height: 50px;
+//     background-color: transparent;
+//     background-size: cover;
+//     background-position: top center;
+//     border-radius: 50%;
+//     border-color: #c3c3c3;
+//     border-style: solid;
+//     border-width: 0px;
+// }
+// .chat21-avatar.big{
+//     width: 200px;
+//     height: 200px;
+// }
+
+// /* LOADING */
+// /*http://tobiasahlin.com/spinkit/*/
+// #chat21-spinner {
+//     min-height: 20px;
+//     display: none;
+//     margin: 20px auto 0;
+//     width: 70px;
+//     text-align: center;
+// }
+// #chat21-spinner.active {
+//     display: block;
+// }
+// #chat21-spinner > div {
+//     width: 12px;
+//     height: 12px;
+//     background-color: #2a69c1;
+//     border-radius: 100%;
+//     display: inline-block;
+//     -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+//     animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+// }
+// #chat21-spinner .chat21-bounce1 {
+//     -webkit-animation-delay: -0.32s;
+//     animation-delay: -0.32s;
+// }
+// #chat21-spinner .chat21-bounce2 {
+//     -webkit-animation-delay: -0.16s;
+//     animation-delay: -0.16s;
+// }
+// #chat21-spinner span {
+//     display: block;
+//     margin: 0.5em 0 0 0;
+//     color: #2a6ac1;
+//     /* text-transform: uppercase; */
+//     font-family: 'Roboto', sans-serif;
+//     -webkit-animation: pulse 2000ms linear infinite;
+//     -moz-animation: pulse 2000ms linear infinite;
+//     animation: pulse 2000ms linear infinite;
+//     text-align: center;
+//   }
+
+// @-webkit-keyframes sk-bouncedelay {
+//     0%, 80%, 100% { -webkit-transform: scale(0) }
+//     40% { -webkit-transform: scale(1.0) }
+// }
+
+// @keyframes sk-bouncedelay {
+//     0%, 80%, 100% { 
+//     -webkit-transform: scale(0);
+//     transform: scale(0);
+//     } 40% { 
+//     -webkit-transform: scale(1.0);
+//     transform: scale(1.0);
+//     }
+// }
+
+
+// .c21-right{
+//     float: right;
+// }
+// .c21-left{
+//     float: left;
+// }
+// .clearfix:after {
+//     display: block;
+//     clear: both;
+//     content: '';
+// }
+// .clear{
+//     clear: both;
+// }
+
+// /* END LOADIN */
+
+// .c21-alert {
+//     &.c21-alert-notification {
+//         display: inline-block;
+//         margin: 0 auto;
+//         position: fixed;
+//         -webkit-transition: all .5s ease-in-out 0s;
+//         transition: all .5s ease-in-out 0s;
+//         z-index: 1031;
+//         top: -100px;
+//         left: 0px;
+//         right: 0px;
+//         max-width: 450px;
+//         width: 80%;
+//         padding: 10px;
+//         cursor: pointer;
+//         display: block;
+//     }
+//     &.alert-danger {
+//         background-color: #f55a4e;
+//         color: #fff;
+//         border-radius: 3px;
+//         -webkit-box-shadow: 0 12px 20px -10px rgba(244,67,54,.28), 0 4px 20px 0 rgba(0,0,0,.12), 0 7px 8px -5px rgba(244,67,54,.2);
+//         box-shadow: 0 12px 20px -10px rgba(244,67,54,.28), 0 4px 20px 0 rgba(0,0,0,.12), 0 7px 8px -5px rgba(244,67,54,.2);
+//     }
+//     &.animated {
+//         top: 10px;
+//         -webkit-animation-duration: 1s;
+//         animation-duration: 1s;
+//         -webkit-animation-fill-mode: both;
+//         animation-fill-mode: both;
+//     }
+    
+// }
+
+// ion-navbar {
+//     .toolbar-background{
+//         /* height: 55px; */
+//         box-shadow: inset 0px -1px 0px #f7f7f7;
+//     }
+
+// }
+
+// ion-toolbar {
+//     .toolbar-background {
+//         background-color: #ffffff;
+//     }
+//     .transparent{
+//         .toolbar-background {
+//             background-color: transparent;
+//         }
+//     }
+// }
+
+// .footer:before {
+//     height: 1px;
+// }
+// // .modal-page {
+// //     z-index: 1;
+// //     background-color: transparent;
+// //     opacity: 0;
+// //     transition: all 0.2s;
+// //     right: -100%;
+// //     &.open {
+// //         // background-color: $trasp-black;
+// //         opacity: 1;
+// //         transition: all 0.3s;
+// //         right: 0px;
+// //     }
+// // }
+
+// .split-pane-side {
+//     border-right: 1px solid rgba(169, 169, 169, 0.1)!important;
+// }
+
+
+// START GESTIONE SIDEBAR ESTERNA CON IFRAME //
+    #tld-sidebar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 60px;
+        background-color: black;
+        &.open{
+            width: 300px;
+            .btn-close {
+                display: block;
+                width: 100%;
+            }
+            .btn-open {
+                display: none;
+            }
+        }
+    }
+  
+    .tld-button {
+        width: 100%;
+        height: 56px;
+        .btn {
+            background-color: DodgerBlue;
+            border: none;
+            color: white;
+            padding: 20px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: RoyalBlue;
+        }
+        .btn-close {
+            display: none;
+        }
+        .btn-open {
+            display: block;
+            width: 100%;
+            font-size: 28px;
+            padding: 14px 14px;
+        }
+    }
+    .tld-iframe {
+        height: 100%;
+        width: 100%;
+    }
+    app-root {
+        position: absolute;
+        top: 0;
+        left: 0px;
+        height: 100%;
+        width: 100%;
+        float: right;
+        z-index: 2;
+        &.open {
+            left: 300px;
+            width: calc(100% - 300px);
+        }
+        &.close{
+            left: 60px;
+            width: calc(100% - 60px);
+        }
+    }
+    // END GESTIONE SIDEBAR ESTERNA CON IFRAME //
+
+
+    app-message-text-area {
+        width: 100%;
+    }
+    app-bubble-day-message {
+        width: 100%;
+    }
+    app-bubble-system-message {
+        max-width: 80%;
+        margin: 0 auto;
+    }
+    app-bubble-my-message {
+        width: 100%;
+    }
+    app-bubble-others-message {
+        width: 100%;
+    }
+    app-conversation-info {
+        height: calc(100% - 60px);
+    }
+    app-avatar-profile {
+        width: 100%;
+        height: 100%;
+    }
+
+    app-info-support-group {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow-y: hidden;
+    }
+
+    /* Change Autocomplete styles in Chrome*/
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+    // border: 0px solid green;
+    // -webkit-text-fill-color: green;
+    -webkit-box-shadow: 0 0 0px 0px #000 inset;
+    transition: background-color 1000s ease-in-out 0s;
+    }

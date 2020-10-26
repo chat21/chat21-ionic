@@ -1,0 +1,31 @@
+
+<ion-toolbar>
+  
+  <ion-buttons slot="start">
+    <ion-button ion-button icon-only fill="clear" (click)="onOpenProfileInfo($event)">
+      <ion-icon slot="icon-only" name="reorder-three-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+
+  <ion-title>
+    <img src="assets/chat21-logo.svg" alt="">
+    <div *ngIf="numberOpenConv > 0" class="number-open-conv">({{numberOpenConv}})</div>
+  </ion-title>
+
+  <ion-buttons slot="end">
+
+    <ion-button *ngIf="!supportMode" ion-button fill="clear" (click)="onOpenContactsDirectory($event)">
+      <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+    </ion-button>
+
+    <!-- <button ion-button icon-only (click)="onOpenArchivedConversationsPage()">
+      <span class="material-icons">history</span>
+    </button>
+
+    <button ion-button icon-only > 
+      <span class="material-icons">more_vert</span>
+    </button> -->
+
+  </ion-buttons>
+
+</ion-toolbar>

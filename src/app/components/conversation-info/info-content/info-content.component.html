@@ -1,0 +1,18 @@
+<ion-content [ngSwitch]="channelType" [style.display]="openInfoConversation ? 'block' : 'none'">
+
+  <app-info-direct 
+    *ngSwitchCase="'direct'"
+    [member] = member
+    [translationMap] = translationMap
+  ></app-info-direct>
+
+  <app-info-group 
+    *ngSwitchCase="'group'"
+  ></app-info-group>
+
+  <app-info-support-group 
+    *ngSwitchDefault
+    [urlConversationSupportGroup] = urlConversationSupportGroup
+  ></app-info-support-group>
+
+</ion-content>

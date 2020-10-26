@@ -1,0 +1,23 @@
+ion-header {
+    border-bottom-style: solid;
+    border-color: var(--light-gray);
+    border-bottom-width: thin;
+}
+ion-grid {
+    height: 100%; 
+    background-color: gainsboro;
+}
+.content {
+    height: 100%;
+}
+.chat{
+    height: calc(100% - 40px);
+}
+.insert{
+    height: 40px;
+    background-color: red;
+}
+.info {
+    max-width: 250px;
+    background-color: yellow;
+}

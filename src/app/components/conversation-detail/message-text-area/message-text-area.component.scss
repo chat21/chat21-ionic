@@ -1,0 +1,64 @@
+#message-text-area {
+    min-height: 40px;
+    max-height: 200px;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    .buttons-left {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 30px;
+        height: 100%;
+        .attach-button {
+            font-size: 12px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            margin: 2px 0;
+            --padding-top: 0;
+            --padding-bottom: 0;
+            --padding-start: 0;
+            --padding-end: 0;
+        }
+    }
+    .buttons-right {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 30px;
+        height: 100%;
+        .send-button {
+            font-size: 12px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            margin: 2px 0;
+            --padding-top: 0;
+            --padding-bottom: 0;
+            --padding-start: 0;
+            --padding-end: 0;
+        }
+    }
+    .text-message {
+        position: relative;
+        margin: 0 35px;
+        width: calc(100% - 70px);
+        ion-textarea {
+            border-radius: 4px;
+            padding: 0;
+            margin: 0;
+            height: auto;
+            overflow: auto;
+            min-height: 30px;
+            max-height: 184px;
+            background-color: rgba(0, 0, 0, .05);
+            --padding-top: 5px;
+            --padding-bottom: 5px;
+            --padding-end: 5px;
+            --padding-start: 5px;
+            line-height: 1.34;
+            font-size: 15px;
+        }
+    }
+}

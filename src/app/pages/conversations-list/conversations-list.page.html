@@ -1,0 +1,73 @@
+
+<!-- <span *ngIf="isShowMenuPage;then contentShowMenu else contentConversations">here is ignored</span>
+<ng-template #contentShowMenu>
+  <app-menu-home
+  (closeInfoPage) = returnCloseInfoPage()
+  ></app-menu-home>
+</ng-template> -->
+
+<!-- <ng-template #contentConversations> -->
+  <ion-header no-border class="ion-no-border">
+    <app-ddp-header
+    [numberOpenConv] = numberOpenConv
+    [supportMode] = supportMode
+    (openArchivedConversationsPage) = openArchivedConversationsPage()
+    (openContactsDirectory) = openContactsDirectory($event)
+    (openProfileInfo) = openProfileInfo($event)
+    ></app-ddp-header>
+  </ion-header>
+  
+  <ion-content class="list-avatar-page" appScrollbarTheme>
+    <div id="scrollbar2">
+    <ion-list>
+      
+      <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
+      
+      <ng-template #contentConversations>
+        <ion-item lines="none" class="ion-no-padding" *ngFor="let conversation of conversations"
+          (mousedown)="setUidConvSelected(conversation.uid)" (mouseup)="openMessageList()">
+          <div [class.selected]="conversation.uid === uidConvSelected"></div>
+          <ion-avatar item-start>
+            <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
+            <div *ngIf="conversation.image" #avatarImage class="avatar-profile" [style.background-image]="'url(' + conversation.image + ')'"></div>
+          </ion-avatar>
+          <ion-label>
+            <div class="conversation_with truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
+            <div class="conversation_message">
+              <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
+            </div>
+          </ion-label>
+          <ion-note class="conversation_time">{{conversation.time_last_message}}</ion-note>
+          <ion-buttons slot="end">
+            <ion-button id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
+              <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="close" item-end></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <div item-end class="notification_point" *ngIf="conversation.is_new">&nbsp;</div>
+        </ion-item>
+      </ng-template>
+  
+      <ng-template #contentMessageWelcome>
+        <div [class.active]="loadingIsActive" class="chat21-spinner" id="chat21-spinner">
+          <div class="chat21-bounce1"></div>
+          <div class="chat21-bounce2"></div>
+          <div class="chat21-bounce3"></div>
+          <span>loading</span>
+        </div>
+        <div *ngIf="!loadingIsActive && conversations.length == 0" id="content_message_wellcome">
+          <div class="messaggio">{{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}</div>
+        </div>
+      </ng-template>
+    
+    
+   
+    </ion-list>
+    </div>
+  </ion-content>
+<!-- </ng-template> -->
+
+
+
+
+
+

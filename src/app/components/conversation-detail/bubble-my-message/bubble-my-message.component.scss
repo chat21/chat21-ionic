@@ -1,0 +1,66 @@
+.message {
+    .bobble-message {
+        position: relative;
+        border-radius: 15px;
+        font-size: 15px;
+        padding: 5px 10px 10px 10px;
+        display: block;
+        width: auto;
+        max-width: 80%;
+        line-height: 1.34;
+        direction: ltr;
+    }
+    .message-content:after {
+        content: "\00a0\00a0\00a0\00a0\00a0\00a0";
+    }
+    .timestamp-message {
+        font-size: 10px;
+        padding: 0px;
+        position: absolute;
+        bottom: 0px;
+        right: 6px;
+        line-height: 15px;
+    }
+}
+.message-my {
+    width: 100%;
+    margin-top: 4px;
+    .bobble-message {
+        background-color: var(--bobble-blue);
+        color: white;
+        margin-right: 24px;
+        float: right;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
+    &.first-message {
+        margin-top: 10px;
+        .bobble-message {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 0px;
+        }
+    }
+    .timestamp-message {
+        color: var(--white);
+    }
+    .attribute-message {
+        position: absolute;
+        width: 100%;
+        background-color: transparent;
+        bottom: 0;
+        right: 0;
+        .status-message {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 15px;
+            .material-icons {
+                font-size: 15px;
+                color: var(--basic-blue);
+                position: absolute;
+                bottom: 4px;
+                right: 2px;
+            }
+        }
+    }
+}

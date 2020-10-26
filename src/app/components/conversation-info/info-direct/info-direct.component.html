@@ -1,0 +1,106 @@
+              
+        <ion-content *ngIf="member" class="member-profile">
+                <ion-card class="first-card">
+                  <div class="chat21-box-profile chat21-box">
+                    
+                    <div class="chat21-content">
+
+                      <div class="image-profile">
+                        <app-avatar-profile
+                          [itemAvatar] = member
+                        ></app-avatar-profile>
+                      </div>
+
+                      <div class="user-presence">
+                        <app-user-presence
+                          [idUser] = member.uid
+                          [translationMap] = translationMap
+                          [borderColor] = borderColor
+                          [fontColor] = fontColor
+                        ></app-user-presence>
+                      </div>
+
+                      <div class="info-profile">
+                        <div class="name">
+                          <span class="read">{{member.fullname}}</span>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </ion-card>
+
+                <ion-card>
+                    <div class="chat21-box-info chat21-box" >
+                        <div class="chat21-content" >
+                            <!-- <div class="chat21-conf">
+                                <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
+                                    <ion-icon name="create"></ion-icon>
+                                </button>
+                            </div> -->
+                            <div class="chat21-email" class="chat21-row">
+                              <a [href]="'mailto:' + member.email + '?Subject='">
+                                  {{member.email}}
+                              </a>
+                            </div>
+                        </div>
+                    </div>
+                </ion-card>
+
+
+                <ion-card>
+                  
+
+                  <ion-row class="chat21-box-buttons chat21-box" style="padding: 0px 0px 0px 10px;" (click)="openInfoAdvancedPage()">
+                      
+                      <ion-col size="10" class="c21-link" class="col-xs-10">
+                          <span class="c21-button-label" style="line-height: 24px;">Avanzate</span>
+                          <ion-icon class="ios-arrow-forward" name="ios-arrow-forward"></ion-icon> 
+                      </ion-col>
+
+                      <ion-col size="2" style="text-align: right;">
+                        <i class="material-icons rotate up" id="request_id_arrow_down" style="cursor: pointer; color: #039be5; font-size:18px;position:relative; top:2px">
+                          keyboard_arrow_down
+                        </i>
+                      </ion-col>
+
+                      
+                  </ion-row>
+
+
+                  
+
+
+              </ion-card>
+
+                <!-- <div _ngcontent-c6="" class="row" style="margin-top:5px">
+                  <div _ngcontent-c6="" class="col-sm-12">
+                    <p _ngcontent-c6="" style="margin-bottom:0px">
+                      <span _ngcontent-c6="" style="position: relative;top: 1px;">
+                        <div _ngcontent-c6="" class="row">
+                          <div _ngcontent-c6="" class="col-xs-10" style="padding-right:10px">
+                            
+
+                            <img _ngcontent-c6="" class="request_details___ua_browser_icon" src="assets/img/user_agent/source_page.svg">
+                            <span _ngcontent-c6="" style="font-size: 12px; color: #394f5a; font-weight: 500;font-family: 'Google Sans', sans-serif !important;">
+                              Origine</span>
+                            <span _ngcontent-c6="" style=" font-weight: 500; font-size: 12px;">
+                              <span _ngcontent-c6="">
+                                <a _ngcontent-c6="" target="_blank" href="https://widget-pre.tiledesk.com/v2/assets/test_widget_page/index.html?tiledesk_projectid=5f4d01fb5ef9fa0045f10564&amp;project_name=test%2031%20ago%202020&amp;isOpen=true">https://wi...</a>
+                              </span>
+                            </span>
+                          </div>
+
+                          <div _ngcontent-c6="" class="col-xs-2" style="text-align: right;">
+                            <i _ngcontent-c6="" class="material-icons rotate " id="source_page_arrow_down" style="cursor: pointer; color: #039be5; font-size:18px;position:relative; top:2px">
+                              keyboard_arrow_down
+                            </i>
+                          </div>
+                        </div>
+                      </span>
+                    </p>
+                  </div>
+                </div> -->
+
+        </ion-content>

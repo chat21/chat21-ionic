@@ -1,0 +1,4 @@
+<div *ngIf="itemAvatar" class="avatar-circle" [style.width]="itemAvatar.width" [style.height]="itemAvatar.height">
+  <div class="avatar avatar-placeholder" [style.background-color]="itemAvatar.color" [innerHTML]="itemAvatar.avatar" ></div>
+  <div class="avatar avatar-image" [style.background-image]="'url(' + itemAvatar.imageurl + ')'" ></div>    
+</div>

@@ -1,0 +1,38 @@
+<ion-grid>
+  <ion-row id="message-text-area">
+    
+    <ion-col col-auto>
+      
+      <div class="buttons-left">
+        <ion-button class="attach-button" ion-button fill="clear" (click)="controlOfMessage(messageString)">
+          <ion-icon slot="icon-only" name="attach"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="text-message">
+        <ion-textarea 
+          #messageTextArea
+          rows="1" 
+          placeholder="{{ 'LABEL_ENTER_MSG' | translate }}"
+          autofocus 
+          autosize = "false"
+          auto-grow = "true"
+          [value] = ""
+          [(ngModel)]="messageString"
+          (ionChange)="onChange($event);"
+          (keyup.enter)="pressedOnKeyboard($event, messageString);" 
+          >
+        </ion-textarea>
+      </div>
+
+      <div class="buttons-right">
+        <ion-button [disabled]="!conversationEnabled"  class="send-button right active" ion-button fill="clear" (click)="sendMessage(messageString)">
+          <ion-icon slot="icon-only" name="send"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-col>
+
+    
+  </ion-row>
+
+</ion-grid>

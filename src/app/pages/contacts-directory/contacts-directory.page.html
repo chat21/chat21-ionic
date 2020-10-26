@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ 'LABEL_NEW_CHAT' | translate }}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button ion-button fill="clear" (click)="onClose()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <component-contacts-directory 
+    [contacts] = contacts
+    (eventOpenNewChat) = openNewChat($event)
+  ></component-contacts-directory>
+</ion-content>

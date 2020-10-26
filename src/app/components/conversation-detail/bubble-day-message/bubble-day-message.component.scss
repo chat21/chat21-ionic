@@ -1,0 +1,21 @@
+.row-day {
+    padding: 0 10px;
+    text-align: center;
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+.header-day {
+    background-color: var(--transparent);
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 12px;
+    padding-right: 12px;
+    vertical-align: middle;
+    border-radius: 13px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--basic-gray);
+    display: inline-block;
+}
+

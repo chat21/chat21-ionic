@@ -3,6 +3,8 @@
   "LABEL_MSG_PUSH_START_CHAT": "No conversation yet",
   "LABEL_MSG_START_CHAT": "Start chatting",
   "LABEL_ACTIVE_NOW": "active now",
+  "LABEL_AVAILABLE": "available",
+  "LABEL_NOT_AVAILABLE": "not available",
   "LABEL_NO_MSG_HERE": "Still no message here...",
   "LABEL_TODAY": "today",
   "LABEL_TOMORROW": "yesterday",
@@ -71,13 +73,22 @@
 
   "LABEL_NEW_CHAT": "New chat",
 
-  "LABEL_LOGIN_TO": "Login to",
+  "LABEL_FORGOT_PASSWORD": "Did you forget your password?",
+
+  "LABEL_SIGNIN": "Sign in",
+  "LABEL_SIGNIN_TO": "Signin to",
   "LABEL_PASSWORD": "Password",
   "LABEL_ERROR_EMAIL": "Enter a valid email address.",
   "LABEL_ERROR_PASSWORD": "The password must be at least 6 characters.",
   "LABEL_LOGIN": "Login",
-  "LABEL_SIGIN": "Sign up",
-  "LABEL_FORGOT_PASSWORD": "Did you forget your password?",
+
+  "LABEL_WELCOME_TO": "Welcome to",
+  "LABEL_SIGNUP": "Sign up",
+  "LABEL_ALREDY_HAVE_AN_ACCOUNT": "Already have an account?",
+  "LABEL_DONT_HAVE_AN_ACCOUNT_YET": "Don't have an account yet?",
+  "LABEL_FORGOT_YOUR_PASSWORD": "Forgot your password?",
+  "LABEL_CLICK_HERE": "Click here",
+
 
   "LABEL_REGISTRATION": "Registration",
   "LABEL_PLACEHOLDER_EMAIL": "Your email",
@@ -103,5 +114,7 @@
  "LABEL_INFO_CONVERSATION": "Info conversation",
  "LABEL_INFO_USER": "Info user",
 
- "LABEL_IS_WRITING": "typing"
+ "LABEL_IS_WRITING": "typing",
+ "LABEL_VERSION": "version",
+ "LABEL_CONTACTS": "contacts"
 }

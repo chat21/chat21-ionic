@@ -1,0 +1,76 @@
+<ion-content class="current-user-profile">
+  
+  <div class="buttons-header">
+    <ion-buttons slot="end">
+      <ion-button ion-button fill="clear" (click)="onClose()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </div>
+
+  <div *ngIf="loggedUser" class="content-user-profile">
+    <div class="user">
+      <div class="username">
+        {{loggedUser.fullname}}
+      </div>
+      <div class="email">
+        {{loggedUser.email}}
+      </div>
+
+      <div class="avatar-container">
+        <app-avatar-profile
+          [itemAvatar] = itemAvatar
+        ></app-avatar-profile>
+      </div>
+      <div class="user-presence">
+        <app-user-presence
+          [idUser] = loggedUser.uid
+          [translationMap] = translationMap
+          [borderColor] = borderColor
+          [fontColor] = fontColor
+        ></app-user-presence>
+      </div>
+
+
+        <!-- 
+        <div class="avatar-container">
+          <div class="avatar avatar-placeholder" [style.background-color]="loggedUser.color" [innerHTML]="loggedUser.avatar" ></div>
+          <div class="avatar avatar-image" [style.background-image]="'url(' + loggedUser.imageurl + ')'" ></div>
+          
+          <div class="status-icon" [class.online]="loggedUser.online">
+            <span class="online-point">
+              {{ 'LABEL_AVAILABLE' | translate }}
+            </span>
+          </div>
+  
+        </div> 
+        -->
+    </div>
+  </div>
+
+  <ion-list *ngIf="loggedUser" >
+    <ion-item lines="none" class="sidebar-items">
+        <ion-icon name="archive-outline" class="sidebar-icons" ></ion-icon>
+        <ion-label class="sidebar-labels">
+          <h3>{{ 'LABEL_ARCHIVED' | translate }}</h3>
+        </ion-label>
+    </ion-item>
+    <ion-item lines="none" class="sidebar-items">
+      <ion-icon name="albums-outline" class="sidebar-icons" ></ion-icon>
+      <ion-label class="sidebar-labels">
+        <h3>{{ 'LABEL_CONTACTS' | translate }}</h3>
+      </ion-label>
+  </ion-item>
+  </ion-list>
+
+</ion-content>
+
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <div class="content-chat-version">
+      <!-- <p class="chat-title">Tiledesk Chat</p> -->
+      <p class="chat-version">{{ 'LABEL_VERSION' | translate }} {{version}}</p>
+    </div>
+  </ion-toolbar>
+</ion-footer>

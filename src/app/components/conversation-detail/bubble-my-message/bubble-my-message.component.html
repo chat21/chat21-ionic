@@ -1,0 +1,44 @@
+<div class="message message-my" [class.first-message]="isFirstMessage">
+ 
+  <div class="bobble-message" (mouseover)="showButtonInfo()">
+    <span class="buttonInfo" (click)="presentPopover($event, message)"> </span>
+    
+    <div *ngIf="message.type == 'image';" (click)="popupUrl(message.metadata.src,'windowName')">
+        <img class="message-content message-content-image" 
+        [src]="message.metadata.src" 
+        [width]="getSizeImg(message).width"
+        [height]="getSizeImg(message).height" />
+    </div>
+    
+    <div *ngIf="message.type == 'file';" class="message-content message-content-text" 
+    [innerHTML]="urlify(message.metadata.src, message.metadata.name)"
+    ></div>
+    
+    <div *ngIf="message.type == 'text';">
+      <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
+      <ng-template #contentPopup>
+        <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{stripTags(message.text)}}</div>
+      </ng-template>
+      <ng-template #contentNewTab>
+        <div class="message-content message-content-text" [innerHTML]="message.text"></div>
+      </ng-template>
+    </div>
+
+    <div class="timestamp-message right">{{message.timestamp | date: 'H:mm'}}</div>
+  </div>
+
+  <div class="attribute-message">
+    <div class="status-message">
+      <span *ngIf="!message.status" class="material-icons">
+        <ion-icon name="time-outline"></ion-icon>
+      </span>
+      <span *ngIf="message.status==MSG_STATUS_SENT" class="material-icons">
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </span>
+      <span *ngIf="message.status==MSG_STATUS_RETURN_RECEIPT" class="material-icons">
+        <ion-icon name="checkmark-done-outline"></ion-icon>
+      </span>
+    </div>
+  </div>
+  
+</div>

@@ -1,0 +1,62 @@
+<ion-header no-border class="ion-no-border">
+  <ion-toolbar>
+    
+    <ion-buttons slot="start">
+      <ion-back-button *ngIf="!isMobile"
+          defaultHref="conversations-list"
+          (click)="pushPage('conversations-list')">
+      </ion-back-button> 
+    </ion-buttons>
+
+    <ion-title [class.info-open]="openInfoConversation || openInfoMessage">
+
+      <div *ngIf="conversationAvatar" class="">
+        
+        <div *ngIf="conversationAvatar" class="avatar-container">
+          <app-avatar-profile
+            [itemAvatar] = conversationAvatar
+          ></app-avatar-profile>
+        </div>
+
+        <div *ngIf="isDirect" class="user-presence">
+          <app-user-presence
+            [idUser] = conversationAvatar.conversation_with
+            [translationMap] = translationMap
+            [borderColor] = borderColor
+            [fontColor] = fontColor
+          ></app-user-presence>
+        </div>
+
+        <div *ngIf="conversationAvatar" class="user-typing">
+          <app-user-typing 
+            [idConversation] = conversationAvatar.uid
+            [idUser] = conversationAvatar.conversation_with
+            [translationMap] = translationMap
+            [color] = fontColor
+            [membersConversation] = membersConversation
+          ></app-user-typing>
+        </div>
+
+      </div>
+
+      
+      
+      <div *ngIf="conversationAvatar" class="tile-info-with" >        
+        <span class="tile-username">{{ conversationAvatar.conversation_with_fullname }}</span>
+      </div>
+
+    </ion-title>
+
+    <ion-buttons slot="end">
+
+          <ion-button  *ngIf="!openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
+            <ion-icon slot="icon-only" name="alert-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-button  *ngIf="openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
+            <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+          </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>

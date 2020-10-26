@@ -1,0 +1,29 @@
+.avatar {
+    position: relative;
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    left: 50%;
+    display: block;
+    margin: 0px;
+}
+
+.avatar-circle {
+    height: 100%;
+    width: 100%;
+}
+
+.avatar-placeholder {
+    text-align: center;
+    font-size: 80%;
+    font-weight: 500;
+}
+.avatar-image {
+    margin-top: -100%;
+    background-color: transparent;
+    background-size: cover;
+    background-position: top center;
+}

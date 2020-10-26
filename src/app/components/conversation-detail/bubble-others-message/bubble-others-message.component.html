@@ -1,0 +1,27 @@
+<div class="message message-other" [class.first-message]="isFirstMessage">
+                          
+  <span class="button-info" [ngClass]="message.uid" (click)="presentPopover($event, message)"></span>
+  
+  <div class="bobble-message" (mouseover)="showButtonInfo()">
+
+    <div *ngIf="isChannelTypeGroup(channelType)" class="message-sender-fullname" [style.color]="getColorBck(message.sender_fullname)">{{message.sender_fullname}}</div>
+    
+    <div *ngIf="isImage(message);" (click)="popupUrl(message.metadata.src,'windowName')">
+      <img class="message-content message-content-image" [src]="message.metadata.src" [width]="getSizeImg(message).width" [height]="getSizeImg(message).height" />
+    </div>
+    
+    <div *ngIf="isFile(message);" class="message-content message-content-text" [innerHTML]="urlify(message.metadata.src, message.metadata.name)"></div>  
+    
+    <div *ngIf="message.type == 'text'">
+      <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
+      <ng-template #contentPopup>
+        <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{stripTags(message.text)}}contentOther</div>
+      </ng-template>
+      <ng-template #contentNewTab>
+        <div class="message-content message-content-text" [innerHTML]="message.text"></div>
+      </ng-template>
+    </div>
+    <div class="timestamp-message right">{{message.timestamp | date: 'H:mm'}}</div>
+  </div>
+
+</div>

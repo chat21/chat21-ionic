@@ -3,6 +3,8 @@
     "LABEL_MSG_PUSH_START_CHAT": "Ancora nessuna conversazione",
     "LABEL_MSG_START_CHAT": "inizia a chattare",
     "LABEL_ACTIVE_NOW": "attivo/a ora",
+    "LABEL_AVAILABLE": "disponibile",
+    "LABEL_NOT_AVAILABLE": "non disponibile",
     "LABEL_NO_MSG_HERE": "Ancora nessun messaggio qui...",
     "LABEL_TODAY": "oggi",
     "LABEL_TOMORROW": "ieri",
@@ -70,14 +72,19 @@
 
     "LABEL_NEW_CHAT": "Nuova chat",
 
-    
-    "LABEL_LOGIN_TO": "Accedi a",
+    "LABEL_SIGNIN": "Accedi",
+    "LABEL_SIGNIN_TO": "Accedi a",
     "LABEL_PASSWORD": "Password",
     "LABEL_ERROR_EMAIL": "Inserisci un indirizzo email valido.",
     "LABEL_ERROR_PASSWORD": "La password deve essere di almeno 6 caratteri.",
     "LABEL_LOGIN": "Login",
-    "LABEL_SIGIN": "Registrati",
-    "LABEL_FORGOT_PASSWORD": "Password dimenticata?",
+
+    "LABEL_WELCOME_TO": "Benvenuto in",
+    "LABEL_SIGNUP": "Registrati",
+    "LABEL_ALREDY_HAVE_AN_ACCOUNT": "Hai già un account?",
+    "LABEL_DONT_HAVE_AN_ACCOUNT_YET": "Non hai ancora un account?",
+    "LABEL_FORGOT_YOUR_PASSWORD": "Hai dimenticato la password?",
+    "LABEL_CLICK_HERE": "Clicca qui",
 
     "LABEL_REGISTRATION": "Registrazione",
     "LABEL_PLACEHOLDER_EMAIL": "Il tuo indirizzo email",
@@ -86,9 +93,8 @@
     "LABEL_PLACEHOLDER_LAST_NAME": "Il tuo Cognome",
     "LABEL_LAST_NAME": "Cognome",
     "LABEL_FIELD_NOT_EMPTY": "Il campo non può essere vuoto.",
-
     "LABEL_NEW_PASSWORD": "Rigenera Password",
-  
+
     "LABEL_CLOSED": "Chiuse",
     "LABEL_INFO": "Informazioni",
     "ALERT_NOTIFICATION": "Attenzione: l'invio di notifiche è disabilitato, modifica le impostazioni del browser per consentire l'invio di notifiche.",
@@ -103,6 +109,11 @@
     "LABEL_INFO_CONVERSATION": "Info conversazione",
     "LABEL_INFO_USER": "Info utente",
 
-    "LABEL_IS_WRITING": "sta scrivendo"
+    "LABEL_IS_WRITING": "sta scrivendo...",
+    "LABEL_VERSION": "versione",
+    "LABEL_CONTACTS": "contatti"
+
+
+  
 
 }

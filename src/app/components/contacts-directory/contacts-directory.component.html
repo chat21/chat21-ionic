@@ -1,0 +1,16 @@
+<ion-content padding>
+  <ion-searchbar debounce="500" (ionInput)="onSearchInput($event)"></ion-searchbar>
+  <ion-list>
+    
+    <ion-item ion-item *ngFor="let user of contacts" (click)="goToChat(user)">
+      <ion-avatar slot="start">
+        <img src = {{user.image}} onError="this.src='assets/images/no_image.png';" >
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ user.fullname }}</h2>
+        <p>{{ user.uid }}</p>
+      </ion-label>
+    </ion-item>
+
+  </ion-list>
+</ion-content>
