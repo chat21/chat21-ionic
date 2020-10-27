@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
-
+import { environment } from 'src/environments/environment';
 
 // firebase
 import * as firebase from 'firebase/app';
@@ -33,10 +33,11 @@ export class FirebaseAuthService extends AuthService {
     public http: HttpClient
   ) {
     super();
+
     // tslint:disable-next-line: max-line-length
     this.TOKEN = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTYwMTg3ODUxMCwiZXhwIjoxNjAxODgyMTEwLCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1hMHIxNkBjaGF0MjEtcHJlLTAxLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstYTByMTZAY2hhdDIxLXByZS0wMS5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6IjVhYjBmM2ZhNTcwNjZlMDAxNGJmZDcxZSJ9.ZqFzLD34XWCLTgsw-3g--VC2RQQ0Zcd2-0OBc5XiHZpksjg-Z0IHDz6Ovpauh284pJDLfnZexlB3obXD3I_GbjWQjmKA4jlMgMNWjCJbRiWrmOLWOS90aP6RwFtJYmcV4Vqu2q8MayFUUQteW4EOB1aAC6BX8_-JuA9uF7PZ1goPNXLRpyTgBs5LkaHcolFi2t8KFbSCZdD1xCLhBRBHzETarIj5f2CaccpAd1nflOEndviFkX2CChVJ4slFFDNiEUEjtjc7QxkJ1tAXTS9NVOGMxsIP1aiGQ0sFA9h7LebHSk0qAed_zpuEokM4yY2jVTrtTsT3YalKADm8kOT5lQ';
-    this.URL_TILEDESK_SIGNIN = 'https://tiledesk-server-pre.herokuapp.com/auth/signin';
-    this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = 'https://tiledesk-server-pre.herokuapp.com/chat21/firebase/auth/createCustomToken';
+    this.URL_TILEDESK_SIGNIN = environment.SERVER_BASE_URL + 'auth/signin';
+    this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = environment.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
   }
 
   /**

@@ -5,7 +5,9 @@ import { retry, catchError } from 'rxjs/operators';
 import { UserModel } from 'src/app/models/user';
 import { ContactsDirectoryService } from '../contacts-directory.service';
 
-export const CONTACTS_URL = 'https://tiledesk-server-pre.herokuapp.com/chat21/contacts';
+import { environment } from 'src/environments/environment';
+
+export const CONTACTS_URL = environment.SERVER_BASE_URL + 'chat21/contacts';
 
 @Injectable({
   providedIn: 'root'

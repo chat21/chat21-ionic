@@ -131,7 +131,7 @@ export class ConversationDetailPage implements OnInit {
   private isFileSelected: boolean;
   public openInfoConversation = false;
   private openInfoUser = false;                 /** check is open info conversation */
-  public openInfoMessage: boolean;                         /** check is open info message */
+  public openInfoMessage: boolean;              /** check is open info message */
   private conversationEnabled = true;
   public isMobile = false;
 
@@ -185,7 +185,7 @@ export class ConversationDetailPage implements OnInit {
   membersConversation: any;
   public member: UserModel;
   public urlConversationSupportGroup: any;
-  
+
 
   constructor(
     private route: ActivatedRoute,
@@ -528,7 +528,7 @@ export class ConversationDetailPage implements OnInit {
       }
     })
     .catch((err) => {
-      console.log('Error:', err);
+      console.log('connectConversation Error:', err);
     });
   }
 

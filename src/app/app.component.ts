@@ -177,7 +177,7 @@ export class AppComponent implements OnInit {
     if (checkPlatformIsMobile()) {
       this.platformIs = PLATFORM_MOBILE;
       console.log('PLATFORM_MOBILE2', PLATFORM_MOBILE);
-      // this.router.navigateByUrl('conversations-list');
+      this.router.navigateByUrl('conversations-list');
     } else {
       console.log('PLATFORM_DESKTOP', this.navService);
       this.platformIs = PLATFORM_DESKTOP;
@@ -188,11 +188,12 @@ export class AppComponent implements OnInit {
       this.route.snapshot.firstChild.url.forEach(element => {
         pageUrl += '/' + element.path;
       });
+      if (!pageUrl || pageUrl === '') {
+        pageUrl = 'conversation-detail/';
+      }
       console.log('pathPage: ', pageUrl);
       this.router.navigateByUrl(pageUrl);
-      // if ( pathPage === 'conversations-list') {
-      //   this.router.navigateByUrl('conversation-detail');
-      // }
+
       const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
       createExternalSidebar(this.renderer, DASHBOARD_URL);
     }

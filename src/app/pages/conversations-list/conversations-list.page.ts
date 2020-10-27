@@ -373,11 +373,20 @@ export class ConversationListPage implements OnInit {
     if (this.uidConvSelected) {
       const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
       if (conversationSelected) {
-        console.log('aaaaa', this.conversationSelected, this.uidConvSelected );
+        console.log('uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
         this.conversationSelected = conversationSelected;
       }
     }
     console.log('setUidConvSelected: ', this.uidConvSelected);
+    if (checkPlatformIsMobile()) {
+      console.log('PLATFORM_MOBILE', this.navService);
+      // this.router.navigateByUrl('conversations-list');
+    } else {
+      console.log('PLATFORM_DESKTOP', this.navService);
+      const pageUrl = 'conversation-detail/' + this.uidConvSelected;
+      console.log('pathPage: ', pageUrl);
+      this.router.navigateByUrl(pageUrl);
+    }
   }
 
   /**

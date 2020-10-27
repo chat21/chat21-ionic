@@ -69,6 +69,7 @@ export class ChatConversationHandler {
    * inizializzo conversation handler
    */
   initWithRecipient(recipientId, recipientFullName, loggedUser, tenant) {
+    console.log('initWithRecipient:::', tenant);
     this.loggedUser = loggedUser;
     this.tenant = tenant;
     this.recipientId = recipientId;

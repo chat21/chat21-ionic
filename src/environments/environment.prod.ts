@@ -1,8 +1,9 @@
 export const environment = {
+    tenant: 'CHANGEIT',
     supportMode: true,
     CHAT_SEND_BY_EMAIL_LINK: 'PRO-CHANGEIT',
     FIREBASESTORAGE_BASE_URL_IMAGE: 'CHANGEIT',
-    DASHBOARD_URL: 'CHANGEIT', 
+    DASHBOARD_URL: 'CHANGEIT',
     SERVER_BASE_URL: 'CHANGEIT',
     production: false,
     remoteConfig: true,
@@ -18,4 +19,4 @@ export const environment = {
         appId: 'CHANGEIT',
         chat21ApiUrl: 'CHANGEIT'
     }
-}
+};

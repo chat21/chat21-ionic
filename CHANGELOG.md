@@ -1,5 +1,9 @@
 # chat21-ionic ver 1.0
 
+### 3.0.10
+- bug-fix: url navigation
+- bug-fix: CONTACTS_URL from environment
+
 ### 3.0.9
 - bug-fix: info conversation right sidebar
 
