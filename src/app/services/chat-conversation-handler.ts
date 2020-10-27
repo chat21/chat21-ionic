@@ -240,8 +240,9 @@ export class ChatConversationHandler {
       // } 
       //that.obsAdded.next(msg);
       that.events.publish('newMessage', msg);
+      that.events.publish('messages_child_added', msg);
       // pubblico messaggio - sottoscritto in dettaglio conversazione
-    })
+    });
 
     //// SUBSRIBE CHANGE ////
     this.ref.on("child_changed", function(childSnapshot) {
@@ -301,9 +302,10 @@ export class ChatConversationHandler {
       // if (isSender) {
       //   that.events.publish('doScroll');
       // }
+      that.events.publish('messages_child_changed', msg);
     });
 
-    this.ref.on("child_removed", function(childSnapshot) {
+    this.ref.on('child_removed', function(childSnapshot) {
       // al momento non previsto!!!
       const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
       // controllo superfluo sarà sempre maggiore
@@ -315,9 +317,11 @@ export class ChatConversationHandler {
       // if(!this.isSender(msg)){
       //   that.events.publish('doScroll');
       // }
+      that.events.publish('messages_child_removed', childSnapshot.key);
     });
-  } 
-   
+  }
+
+
   private translateInfoSupportMessages(message: MessageModel) {
     // console.log("ChatConversationHandler::translateInfoSupportMessages::message:", message);
 

@@ -42,8 +42,8 @@ export function conversationsPathForUserId(tenant, userId) {
  * restituisce url '/messages'
  */
 export function conversationMessagesRef(tenant, userId) {
-  const urlNodeMessages = '/apps/' + tenant + '/users/' + userId + '/messages/';
-  return urlNodeMessages;
+  const urlNode = '/apps/' + tenant + '/users/' + userId + '/messages/';
+  return urlNode;
 }
 /**
  * chiamata da ChatContactsSynchronizer

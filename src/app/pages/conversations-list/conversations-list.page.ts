@@ -368,25 +368,25 @@ export class ConversationListPage implements OnInit {
    * ::: setUidConvSelected :::
    */
   setUidConvSelected(uidConvSelected?: string) {
-    this.uidConvSelected = uidConvSelected;
-    this.chatConversationsHandler.uidConvSelected = uidConvSelected;
-    if (this.uidConvSelected) {
+    if (uidConvSelected) {
+      this.uidConvSelected = uidConvSelected;
+      this.chatConversationsHandler.uidConvSelected = uidConvSelected;
       const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
       if (conversationSelected) {
         console.log('uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
         this.conversationSelected = conversationSelected;
       }
+      if (checkPlatformIsMobile()) {
+        console.log('PLATFORM_MOBILE', this.navService);
+        // this.router.navigateByUrl('conversations-list');
+      } else {
+        console.log('PLATFORM_DESKTOP', this.navService);
+        const pageUrl = 'conversation-detail/' + this.uidConvSelected;
+        console.log('pathPage: ', pageUrl);
+        this.router.navigateByUrl(pageUrl);
+      }
     }
     console.log('setUidConvSelected: ', this.uidConvSelected);
-    if (checkPlatformIsMobile()) {
-      console.log('PLATFORM_MOBILE', this.navService);
-      // this.router.navigateByUrl('conversations-list');
-    } else {
-      console.log('PLATFORM_DESKTOP', this.navService);
-      const pageUrl = 'conversation-detail/' + this.uidConvSelected;
-      console.log('pathPage: ', pageUrl);
-      this.router.navigateByUrl(pageUrl);
-    }
   }
 
   /**

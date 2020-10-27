@@ -103,11 +103,15 @@ export class AppComponent implements OnInit {
       if (checkPlatformIsMobile()) {
         platformIsNow = PLATFORM_MOBILE;
       }
-      console.log('onResize width:::: platformIsNow this.platformIs', window.innerWidth, platformIsNow, this.platformIs);
+      if (!this.platformIs || this.platformIs === '') {
+        this.platformIs = platformIsNow;
+      }
+      console.log('onResize width::::', window.innerWidth);
+      console.log('onResize width:::: platformIsNow', platformIsNow);
+      console.log('onResize width:::: platformIsNow this.platformIs', this.platformIs);
       if ( platformIsNow !== this.platformIs ) {
         window.location.reload();
       }
-
     }, 500);
   }
   // END RESIZE FUNCTIONS //
@@ -177,7 +181,8 @@ export class AppComponent implements OnInit {
     if (checkPlatformIsMobile()) {
       this.platformIs = PLATFORM_MOBILE;
       console.log('PLATFORM_MOBILE2', PLATFORM_MOBILE);
-      this.router.navigateByUrl('conversations-list');
+      // this.router.navigateByUrl('conversations-list');
+      this.navService.setRoot(ConversationListPage, {});
     } else {
       console.log('PLATFORM_DESKTOP', this.navService);
       this.platformIs = PLATFORM_DESKTOP;
