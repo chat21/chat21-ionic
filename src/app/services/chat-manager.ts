@@ -145,12 +145,14 @@ export class ChatManager {
    * 3 - pubblico stato loggedUser come login
    */
   goOnLine(user) {
-    const uid = user.uid;
-    this.loggedUser = new UserModel(uid);
-    console.log('goOnLine::: ', this.loggedUser);
-    this.loadCurrentUserDetail();
-    if (this.supportMode === false) {
-      //this.initContactsSynchronizer();
+    if (user) {
+      const uid = user.uid;
+      this.loggedUser = new UserModel(uid);
+      console.log('goOnLine::: ', this.loggedUser);
+      this.loadCurrentUserDetail();
+      if (this.supportMode === false) {
+        //this.initContactsSynchronizer();
+      }
     }
   }
 

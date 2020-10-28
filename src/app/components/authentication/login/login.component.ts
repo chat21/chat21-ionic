@@ -1,5 +1,6 @@
 import { Injectable, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastController } from '@ionic/angular';
 
 @Injectable()
 @Component({
@@ -16,10 +17,11 @@ export class LoginComponent implements OnInit {
 
   // (eventSignInWithEmailAndPassword)="returnSignInWithEmailAndPassword($event)"
   userForm: FormGroup;
-  company_site_url: string;
+  companySiteUrl: string;
 
   constructor(
-    public formBuilder: FormBuilder
+    public formBuilder: FormBuilder,
+    public toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -36,8 +38,6 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
     });
   }
-
-
 
   goToSignupPage() {}
   goToTiledekV1() {}
@@ -57,10 +57,42 @@ export class LoginComponent implements OnInit {
     this.eventSignInWithEmailAndPassword.emit({email: emailValue, password: pswValue});
   }
 
-  test() {
-    console.log('okkkkkk');
+  /** */
+  showErrorSignIn(error: string) {
+    console.log('showErrorSignIn');
+    // const error =  this.translationMap.get('LABEL_SIGNIN_ERROR');
     this.showSpinnerInLoginBtn = false;
+    this.presentToast(error);
 
   }
+
+  /** */
+  /** */
+  async presentToast(error: string) {
+    const toast = await this.toastController.create({
+      message: error,
+      duration: 2000,
+      header: 'Attenzione',
+      position: 'top',
+      buttons: null
+    });
+    this.toastController.dismiss().then((obj) => {
+      console.log('dismesso');
+    }).catch(() => {
+      console.log('catch');
+    }).finally(() => {
+
+      this.showSpinnerInLoginBtn = false;
+      console.log('finally', this.showSpinnerInLoginBtn);
+    });
+
+    toast.present();
+
+  }
+
+
+
+
+
 
 }

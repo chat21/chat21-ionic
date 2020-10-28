@@ -434,7 +434,6 @@ export class ConversationDetailPage implements OnInit {
 
     // this.chatPresenceHandler.userIsOnline(this.conversationWith);
     // this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
-    
     this.setConversationAvatar();
     this.detectBottom();
     this.initSubscriptions();

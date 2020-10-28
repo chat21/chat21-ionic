@@ -1,6 +1,6 @@
 <ion-content class="main-content">
   <div class="right-logo" style="text-align: center; margin: 20px 0 0 0;">
-    <a [href]="company_site_url" target="_blank">
+    <a [href]="companySiteUrl" target="_blank">
       <img [src]="companyLogoBlackUrl" class="img-fluid" style="max-width: 150px; height: auto;" />
     </a>
   </div>
@@ -31,10 +31,10 @@
 
         
         <button type="submit" class="btn signin-button" [disabled]="!userForm.valid">
-          <span *ngIf="!showSpinnerInLoginBtn">
-             {{ translationMap.get('LABEL_SIGNIN') }}
+          <span class="signin-button-label" [class.active]="!showSpinnerInLoginBtn">
+            {{ translationMap.get('LABEL_SIGNIN') }}
           </span>
-          <ion-spinner *ngIf="showSpinnerInLoginBtn" name="bubbles" color="white"></ion-spinner>
+          <!-- <ion-spinner [class.active]="showSpinnerInLoginBtn" name="bubbles" color="white" duration="2" ></ion-spinner> -->
         </button>
 
         <p style="color: #666666; font-size: 1.1em; text-align: center; margin-top: 16px;">

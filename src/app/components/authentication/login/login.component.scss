@@ -26,7 +26,7 @@
         border: 1px solid #d9d9d9!important;
         border-top: 1px solid silver;
         border-radius: 5px;
-  
+        color: #000;
         -webkit-appearance: none;
         box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -50,7 +50,22 @@
       &:focus,
       &:hover {
         outline: -webkit-focus-ring-color auto 0px;
-        
+      }
+    }
+
+
+    .signin-button-spinner {
+      margin: auto;
+      display: none;
+      &.active {
+        display: block;
+      }
+    }
+
+    .signin-button-label {
+      display: block;
+      &.active {
+        display: block;
       }
     }
   

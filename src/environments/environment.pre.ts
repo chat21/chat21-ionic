@@ -18,5 +18,6 @@ export const environment = {
         messagingSenderId: 'CHANGEIT',
         appId: 'CHANGEIT',
         chat21ApiUrl: 'CHANGEIT'
-    }
+    },
+    authPersistence: 'LOCAL'
 };

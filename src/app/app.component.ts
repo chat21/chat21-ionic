@@ -1,6 +1,7 @@
 import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2,  } from '@angular/core';
 import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import * as firebase from 'firebase/app';
 // import { ListaConversazioniPage } from './pages/lista-conversazioni/lista-conversazioni';
@@ -35,6 +36,7 @@ import { PLATFORM_MOBILE, PLATFORM_DESKTOP } from './utils/constants';
 import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 
 import { environment } from '../environments/environment';
+import { timeout } from 'rxjs/operators';
 // type NewType = IonRouterOutlet;
 
 // import { Component } from '@angular/core';
@@ -53,6 +55,8 @@ export class AppComponent implements OnInit {
   @ViewChild('sidebarNav', {static: false}) sidebarNav: IonNav;
   @ViewChild('detailNav', {static: false}) detailNav: IonRouterOutlet;
 
+  private subscription: Subscription;
+
   sidebarPage: any;
   public notificationsEnabled: boolean;
   public zone: NgZone;
@@ -61,6 +65,7 @@ export class AppComponent implements OnInit {
   private platformIs: string;
   private doitResize: any;
   public tenant: string;
+
 
   constructor(
     private platform: Platform,
@@ -87,8 +92,10 @@ export class AppComponent implements OnInit {
   ) {
     console.log('AppComponent');
     this.tenant = environment.tenant;
+
     this.initFirebase();
     this.initializeApp();
+
     // this.nav.initialize();
   }
 
@@ -119,13 +126,14 @@ export class AppComponent implements OnInit {
   /**
    */
   ngOnInit() {
-    // if (!checkPlatformIsMobile()) {
-    //   const pathPage = this.route.snapshot.firstChild.params;
-    //   console.log('ConversationListPage .conversationWith: ', pathPage);
-    //   // if (pathPage === 'conversations-list') {
-    //   //   //this.router.navigateByUrl('conversation-detail');
-    //   // }
-    // }
+    console.log('ngOnInit -->', this.route.snapshot.params);
+    this.route.queryParams.subscribe(params => {
+      console.log('queryParams -->', params );
+      if (params['tiledeskToken']) {
+        const tiledeskToken = params['tiledeskToken'];
+        localStorage.setItem('tiledeskToken', tiledeskToken);
+      }
+    });
   }
 
 
@@ -153,23 +161,24 @@ export class AppComponent implements OnInit {
   // }
   /** */
   initializeApp() {
+    console.log('initializeApp');
     this.notificationsEnabled = true;
     this.zone = new NgZone({});
 
     this.platform.ready().then(() => {
+
       this.setLanguage();
       // this.showNavbar();
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
       // init
-     
       this.msgService.initialize();
-      this.authService.initialize(this.tenant);
+      //this.authService.initialize(this.tenant, this.tokenParameter);
       this.userService.initialize(this.tenant);
       this.presenceService.initialize(this.tenant);
       this.typingService.initialize(this.tenant);
-
+      this.authService.initialize(this.tenant);
       this.navService.init(this.sidebarNav, this.detailNav);
       this.chatManager.initialize();
       this.initSubscriptions();
@@ -254,6 +263,15 @@ export class AppComponent implements OnInit {
   // BEGIN SUBSCRIPTIONS //
   /** */
   initSubscriptions() {
+    const that = this;
+    // this.authService.authStateChanged.subscribe((data: any) => {
+    //     console.log('***** authStateChanged *****', data);
+    //     if (data && data.uid) {
+    //       that.goOnLine(data);
+    //     } else {
+    //       that.goOffLine();
+    //     }
+    // });
     // this.events.subscribe('requestPermission', this.callbackRequestPermission);
     // this.events.subscribe('requestPermission', (permission) => {
     //   this.notificationsEnabled = permission;
@@ -323,7 +341,9 @@ export class AppComponent implements OnInit {
   goOffLine = () => {
     console.log('************** goOffLine');
     this.chatManager.goOffLine();
-    presentModal(this.modalController, LoginPage, { tenant: 'tilechat', enableBackdropDismiss: false });
+    setTimeout( () => {
+      presentModal(this.modalController, LoginPage, { tenant: 'tilechat', enableBackdropDismiss: false });
+    }, 0);
   }
 
   /**
@@ -335,7 +355,12 @@ export class AppComponent implements OnInit {
     this.chatManager.goOnLine(user);
     this.chatPresenceHandler.setupMyPresence(user.uid);
     try {
-      closeModal(this.modalController);
+      console.log('************** closeModal', this.modalController);
+
+      setTimeout( () => {
+        closeModal(this.modalController);
+      }, 0);
+
       this.checkPlatform();
     } catch (err) {
       console.error('-> error:', err);
@@ -345,6 +370,9 @@ export class AppComponent implements OnInit {
   /** */
   signIn = (user: any, error: any) => {
     console.log('************** signIn:: user:' + user + '  - error: ' + error);
+    if (error) {
+      localStorage.removeItem('tiledeskToken');
+    }
   }
 
 
@@ -355,6 +383,12 @@ export class AppComponent implements OnInit {
    */
   firebaseSignInWithCustomToken = (response: any, error) => {
     console.log('************** firebaseSignInWithCustomToken: ' + response + ' error: ' + error);
+    try {
+      closeModal(this.modalController);
+      this.checkPlatform();
+    } catch (err) {
+      console.error('-> error:', err);
+    }
   }
 
 

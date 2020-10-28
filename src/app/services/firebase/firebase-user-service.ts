@@ -72,21 +72,31 @@ export class FirebaseUserService extends UserService {
      */
     loadCurrentUserDetail() {
       const that = this;
-      const currentUser = firebase.auth().currentUser;
-      const urlNode = this.urlNodeContacts + currentUser.uid;
-      const refUser = firebase.database().ref(urlNode);
-      console.log('loadCurrentUserDetail::: ', urlNode, currentUser);
-      return refUser.once('value');
-      refUser.once('value')
-      .then((snapshot: any) => {
-        if (snapshot.val()) {
-          console.log('loadUserDetail::: ', snapshot.val());
-          that.events.publish('loaded-current-user', snapshot.val());
-        }
-      })
-      .catch((err: Error) => {
-        console.log('Unable to get permission to notify.', err);
-      });
+      try {
+        const currentUser = firebase.auth().currentUser;
+        const urlNode = this.urlNodeContacts + currentUser.uid;
+        const refUser = firebase.database().ref(urlNode);
+        console.log('loadCurrentUserDetail::: ', urlNode, currentUser);
+        return refUser.once('value');
+      } catch (error) {
+        console.log('error');
+        return null;
+      }
+      // const currentUser = firebase.auth().currentUser;
+      // const urlNode = this.urlNodeContacts + currentUser.uid;
+      // const refUser = firebase.database().ref(urlNode);
+      // console.log('loadCurrentUserDetail::: ', urlNode, currentUser);
+      // return refUser.once('value');
+      // refUser.once('value')
+      // .then((snapshot: any) => {
+      //   if (snapshot.val()) {
+      //     console.log('loadUserDetail::: ', snapshot.val());
+      //     that.events.publish('loaded-current-user', snapshot.val());
+      //   }
+      // })
+      // .catch((err: Error) => {
+      //   console.log('Unable to get permission to notify.', err);
+      // });
     }
 
 

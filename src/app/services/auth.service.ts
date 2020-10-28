@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export abstract class AuthService {
+
+  abstract authStateChanged: BehaviorSubject<any> = new BehaviorSubject<any>([]);
+
+  abstract persistence = environment.authPersistence;
+  abstract SERVER_BASE_URL = environment.SERVER_BASE_URL;
 
   abstract initialize(tenant: string): void;
 

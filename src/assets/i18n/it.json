@@ -74,6 +74,7 @@
 
     "LABEL_SIGNIN": "Accedi",
     "LABEL_SIGNIN_TO": "Accedi a",
+    "LABEL_SIGNIN_ERROR": "Errore di autenticazione",
     "LABEL_PASSWORD": "Password",
     "LABEL_ERROR_EMAIL": "Inserisci un indirizzo email valido.",
     "LABEL_ERROR_PASSWORD": "La password deve essere di almeno 6 caratteri.",

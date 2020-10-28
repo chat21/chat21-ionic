@@ -77,6 +77,7 @@
 
   "LABEL_SIGNIN": "Sign in",
   "LABEL_SIGNIN_TO": "Signin to",
+  "LABEL_SIGNIN_ERROR": "Sign in error",
   "LABEL_PASSWORD": "Password",
   "LABEL_ERROR_EMAIL": "Enter a valid email address.",
   "LABEL_ERROR_PASSWORD": "The password must be at least 6 characters.",
