@@ -15,6 +15,7 @@ import { MessageModel } from '../../models/message';
 import { ConversationModel } from '../../models/conversation';
 
 // services
+import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 // import { NavProxyService } from '../../services/nav-proxy';
 // import { ChatPresenceHandler } from '../../services/chat-presence-handler';
@@ -210,6 +211,7 @@ export class ConversationDetailPage implements OnInit {
     public modalController: ModalController,
     public typingService: TypingService,
     private sanitizer: DomSanitizer,
+    public authService: AuthService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
   ) {
@@ -223,29 +225,35 @@ export class ConversationDetailPage implements OnInit {
 
     this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
     console.log('this.conversationSelected: ', this.conversationWith);
+
+    const that = this;
+    this.authService.authStateChanged.subscribe((data: any) => {
+        console.log('***** authStateChanged *****', data);
+        if (data && data.uid) {
+          that.initialize();
+        }
+    });
+
   }
 
   /** */
-  isUserLoggedIn() {
-    if (this.loggedUser) {
-      this.initialize();
-    } else {
-      const key = 'go-on-line';
-      if (!isInArray(key, this.subscriptions)) {
-        this.subscriptions.push(key);
-        this.events.subscribe(key, this.subscribeLoggedUserLogin);
-      }
-    }
-  }
+  // isUserLoggedIn() {
+  //   if (this.loggedUser) {
+  //     that.initialize();
+  //   } else {
+  //     const key = 'go-on-line';
+  //     if (!isInArray(key, this.subscriptions)) {
+  //       this.subscriptions.push(key);
+  //       this.events.subscribe(key, this.subscribeLoggedUserLogin);
+  //     }
+  //   }
+  // }
 
   // -------------- SYSTEM FUNCTIONS -------------- //
   /** */
   ngOnInit() {
-    console.log('------------>  ');
-    this.subscriptions = [];
-    this.loggedUser = this.chatManager.getLoggedUser();
-    this.tenant = this.chatManager.getTenant();
-    this.isUserLoggedIn();
+    console.log('ngOnInit ConversationDetailPage: ');
+    // this.isUserLoggedIn();
   }
 
   /** */
@@ -284,6 +292,10 @@ export class ConversationDetailPage implements OnInit {
    * carico messaggi
    */
   initialize() {
+    console.log('initialize ConversationDetailPage: ');
+    this.subscriptions = [];
+    this.tenant = this.chatManager.getTenant();
+    this.loggedUser = this.chatManager.getLoggedUser();
     this.translations();
     this.setHeightTextArea();
     this.tagsCanned = []; // list of canned
@@ -297,7 +309,6 @@ export class ConversationDetailPage implements OnInit {
       this.isMobile = false;
       this.openInfoConversation = true;
     }
-
     this.online = false;
     this.lastConnectionDate = '';
     this.initConversationHandler();

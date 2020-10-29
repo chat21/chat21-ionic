@@ -71,21 +71,30 @@ export class ConversationListPage implements OnInit {
     public chatConversationsHandler: ChatConversationsHandler,
     public chatManager: ChatManager,
     public authService: AuthService
-  ) { }
-
-
-  isUserLoggedIn() {
-    console.log('isUserLoggedIn', this.loggedUser );
-    if (this.loggedUser) {
-      this.initialize();
-    } else {
-      const key = 'loggedUser:login';
-      if (!isInArray(key, this.subscriptions)) {
-        this.subscriptions.push(key);
-        this.events.subscribe(key, this.subscribeLoggedUserLogin);
-      }
-    }
+  ) {
+    console.log('constructor ConversationListPage');
+    const that = this;
+    this.authService.authStateChanged.subscribe((data: any) => {
+        console.log('***** authStateChanged *****', data);
+        if (data && data.uid) {
+          that.initialize();
+        }
+    });
   }
+
+
+  // isUserLoggedIn() {
+  //   console.log('isUserLoggedIn', this.loggedUser );
+  //   if (this.loggedUser) {
+  //     this.initialize();
+  //   } else {
+  //     const key = 'loggedUser:login';
+  //     if (!isInArray(key, this.subscriptions)) {
+  //       this.subscriptions.push(key);
+  //       this.events.subscribe(key, this.subscribeLoggedUserLogin);
+  //     }
+  //   }
+  // }
 
   /**
    * 1 - set interface
@@ -93,13 +102,7 @@ export class ConversationListPage implements OnInit {
    * 3 - subscibe login/logout
    */
   ngOnInit() {
-    console.log('ngOnInit ConversationListPage', this.chatManager);
-    this.tenant = environment.tenant;
-    // this.tenant = this.chatManager.getTenant();
-    this.loggedUser = this.chatManager.getLoggedUser();
-    this.subscriptions = [];
-    this.isUserLoggedIn();
-    // this.initSubscriptions();
+    console.log('ngOnInit ConversationListPage', this.loggedUser);
   }
 
   ionViewDidEnter() {
@@ -272,13 +275,16 @@ export class ConversationListPage implements OnInit {
 
 
 
-  //------------------------------------------------------------------//
+  // ------------------------------------------------------------------//
   // BEGIN FUNCTIONS
-  //------------------------------------------------------------------//
+  // ------------------------------------------------------------------//
   /**
    * ::: initialize :::
    */
   initialize() {
+    this.tenant = environment.tenant;
+    this.loggedUser = this.chatManager.getLoggedUser();
+    this.subscriptions = [];
     this.initVariables();
     this.initConversationsHandler();
     this.initSubscriptions();
@@ -377,12 +383,12 @@ export class ConversationListPage implements OnInit {
         this.conversationSelected = conversationSelected;
       }
       if (checkPlatformIsMobile()) {
-        console.log('PLATFORM_MOBILE', this.navService);
+        console.log('PLATFORM_MOBILE 2', this.navService);
         // this.router.navigateByUrl('conversations-list');
       } else {
-        console.log('PLATFORM_DESKTOP', this.navService);
+        console.log('PLATFORM_DESKTOP 2', this.navService);
         const pageUrl = 'conversation-detail/' + this.uidConvSelected;
-        console.log('pathPage: ', pageUrl);
+        console.log('pathPage--->: ', pageUrl);
         this.router.navigateByUrl(pageUrl);
       }
     }

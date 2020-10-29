@@ -1,7 +1,17 @@
 <span *ngIf="conversationSelected; then showConversation else showPlaceholder"></span>
 <ng-template #showPlaceholder>
-  showPlaceholder
-  <!-- <div padding class="tile-splash-page">&nbsp;</div> -->
+  <!-- <app-header-conversation-detail      
+    [isMobile] = checkPlatformIsMobile() 
+    [idLoggedUser] = loggedUser.uid  
+    [conversationAvatar] = conversationAvatar
+    [translationMap] = translationMap
+    (eventOpenCloseInfoConversation)="returnOpenCloseInfoConversation($event)"
+  >
+  </app-header-conversation-detail> -->
+  <ion-content>
+    mostro lo splash screen e il pulsante indietro se sono su mobile
+    <div padding class="tile-splash-page">&nbsp;</div>
+  </ion-content>
 </ng-template>
 
 <ng-template #showConversation>

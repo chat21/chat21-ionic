@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,33 +8,17 @@ import { BehaviorSubject } from 'rxjs';
 
 export abstract class AuthService {
 
+  // BehaviorSubject
   abstract authStateChanged: BehaviorSubject<any> = new BehaviorSubject<any>([]);
 
+  // params
   abstract persistence = environment.authPersistence;
   abstract SERVER_BASE_URL = environment.SERVER_BASE_URL;
 
+  // functions
   abstract initialize(tenant: string): void;
-
-  abstract getUser();
-
-  abstract getToken();
-
-  // abstract onAuthStateChanged();
-
-  // abstract updateTokenOnAuthStateIsLogin(userUid);
-
-  // abstract doLoginFirebase(email: string, password: string);
-
-  // abstract signInWithCustomToken(token);
-
+  abstract getUser(): void;
+  abstract getToken(): void;
   abstract signInWithEmailAndPassword(email: string, password: string): void;
-
-  // abstract createUserWithEmailAndPassword(email: string, password: string);
-
-  // abstract delete();
-
-  // abstract sendPasswordResetEmail(email: string);
-
-  // abstract signOut();
 
 }

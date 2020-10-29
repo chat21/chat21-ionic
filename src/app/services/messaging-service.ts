@@ -33,9 +33,7 @@ export class MessagingService {
         public config: Config,
         private events: EventsService,
         private appConfigProvider: AppConfigProvider
-    ) { 
-     
-    }
+    ) {}
 
 
     initialize() {
@@ -64,8 +62,7 @@ export class MessagingService {
       try {
         this.messaging = firebase.messaging();
         console.log('initMessage:::: ', this.messaging);
-      }
-      catch(err) {
+      } catch (err) {
         console.log('error initializing firebase messaging system');
       }
     }

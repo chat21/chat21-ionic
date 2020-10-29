@@ -111,7 +111,7 @@ export class DatabaseProvider {
   /**
    * ritorno contatti salvati nel DB locale
    * da verificare!!!
-   * @param limit 
+   * @param limit
    */
   getContactsLimit(limit?) {
     let idCurrentUser = firebase.auth().currentUser.uid;

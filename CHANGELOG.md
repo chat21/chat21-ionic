@@ -1,5 +1,15 @@
 # chat21-ionic ver 1.0
 
+### 3.0.13
+- bug-fix: open/close modal login
+- new: added alert on error login
+- bug-fix: auth with JWT token from url queryParams
+- bug-fix: routing list detail
+- new: added BehaviourSubject on authChange
+- new: load chat components after login
+- bug-fix: contact list: load contacts
+
+
 ### 3.0.11
 - new: set persistence firebase from environment 
 - new: get JWT token from url queryParams and signin with token 

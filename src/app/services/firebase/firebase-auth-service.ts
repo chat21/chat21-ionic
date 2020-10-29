@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-// import { Observable, throwError } from 'rxjs';
-
-// import { retry, catchError } from 'rxjs/operators';
-// import { environment } from 'src/environments/environment';
 
 // firebase
 import * as firebase from 'firebase/app';
@@ -91,11 +87,11 @@ export class FirebaseAuthService extends AuthService {
       if (!user) {
         console.log(' 1 - PASSO OFFLINE AL CHAT MANAGER');
         taht.authStateChanged.next(null);
-        taht.events.publish('go-off-line');
+        // taht.events.publish('go-off-line');
       } else {
         console.log(' 2 - PASSO ONLINE AL CHAT MANAGER');
         taht.authStateChanged.next(user);
-        taht.events.publish('go-on-line', user);
+        // taht.events.publish('go-on-line', user);
       }
     });
   }

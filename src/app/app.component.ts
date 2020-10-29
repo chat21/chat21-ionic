@@ -2,70 +2,52 @@ import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Rendere
 import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ModalController } from '@ionic/angular';
 
 import * as firebase from 'firebase/app';
-// import { ListaConversazioniPage } from './pages/lista-conversazioni/lista-conversazioni';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-// import {NavProxyService} from './services/nav-proxy';
-import { MessagingService } from './services/messaging-service';
-import { ChatManager } from './services/chat-manager';
 import { TranslateService } from '@ngx-translate/core';
 
+// services
 import { AppConfigProvider } from './services/app-config';
 import { UserService } from './services/user.service';
 import { EventsService } from './services/events-service';
 import { AuthService } from './services/auth.service';
 import { PresenceService } from './services/presence.service';
 import { TypingService } from './services/typing.service';
-
-
 import { ChatPresenceHandler} from './services/chat-presence-handler';
-
 import { NavProxyService } from './services/nav-proxy.service';
+import { MessagingService } from './services/messaging-service';
+import { ChatManager } from './services/chat-manager';
 
-import { ModalController } from '@ionic/angular';
 // pages
 import { LoginPage } from './pages/authentication/login/login.page';
+import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 
-// import { LoginModal } from './modals/authentication/login/login.modal';
-// import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 // utils
 import { presentModal, closeModal, createExternalSidebar, checkPlatformIsMobile } from './utils/utils';
 import { PLATFORM_MOBILE, PLATFORM_DESKTOP } from './utils/constants';
-import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
-
 import { environment } from '../environments/environment';
-import { timeout } from 'rxjs/operators';
-// type NewType = IonRouterOutlet;
-
-// import { Component } from '@angular/core';
-// import { Platform } from '@ionic/angular';
-// import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-// import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
+
 export class AppComponent implements OnInit {
-  // @ViewChild('masterNav', {static: false}) masterNav: ElementRef;
-  // @ViewChild('nav', {static: false}) nav: IonNav;
   @ViewChild('sidebarNav', {static: false}) sidebarNav: IonNav;
   @ViewChild('detailNav', {static: false}) detailNav: IonRouterOutlet;
 
   private subscription: Subscription;
-
-  sidebarPage: any;
+  public sidebarPage: any;
   public notificationsEnabled: boolean;
   public zone: NgZone;
-  // public isNavBar: string;
-
   private platformIs: string;
   private doitResize: any;
+  private timeModalLogin: any;
   public tenant: string;
-
 
   constructor(
     private platform: Platform,
@@ -92,36 +74,25 @@ export class AppComponent implements OnInit {
   ) {
     console.log('AppComponent');
     this.tenant = environment.tenant;
-
+    this.splashScreen.show();
     this.initFirebase();
     this.initializeApp();
+    this.initSubscriptions();
 
-    // this.nav.initialize();
-  }
-
-
-  // BEGIN RESIZE FUNCTIONS //
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
     const that = this;
-    clearTimeout(this.doitResize);
-    this.doitResize = setTimeout( () => {
-      let platformIsNow = PLATFORM_DESKTOP;
-      if (checkPlatformIsMobile()) {
-        platformIsNow = PLATFORM_MOBILE;
-      }
-      if (!this.platformIs || this.platformIs === '') {
-        this.platformIs = platformIsNow;
-      }
-      console.log('onResize width::::', window.innerWidth);
-      console.log('onResize width:::: platformIsNow', platformIsNow);
-      console.log('onResize width:::: platformIsNow this.platformIs', this.platformIs);
-      if ( platformIsNow !== this.platformIs ) {
-        window.location.reload();
-      }
-    }, 500);
+    this.authService.authStateChanged.subscribe((data: any) => {
+        console.log('***** authStateChanged *****', data);
+        that.splashScreen.hide();
+        if (data && data.uid) {
+          that.goOnLine(data);
+        } else {
+          that.goOffLine();
+        }
+    });
+
   }
-  // END RESIZE FUNCTIONS //
+
+
 
   /**
    */
@@ -136,102 +107,35 @@ export class AppComponent implements OnInit {
     });
   }
 
-
-  /** */
-  // onRouterActivate(): void {
-  //   this.masterNav.pop().then(() => {
-  //     //this hasn't finish to pop, so it goes to the below route... and then pops it
-  //     this.navCtrl.navigateRoot(["", { outlets: { detailNav: "path/to/thing"}}]);
-  //   });
-  // }
-
-  // checkPlatformIsMobile_old() {
-  //   const platformList = this.platform.platforms();
-  //   console.log('platforms -----------> ', platformList);
-  //   if (this.platform.is('desktop')) {
-  //     return false;
-  //   } else if (this.platform.is('tablet')) {
-  //     return false;
-  //   } else if (this.platform.is('ios')) {
-  //     return true;
-  //   } else if (this.platform.is('android')) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
-  /** */
-  initializeApp() {
-    console.log('initializeApp');
-    this.notificationsEnabled = true;
-    this.zone = new NgZone({});
-
-    this.platform.ready().then(() => {
-
-      this.setLanguage();
-      // this.showNavbar();
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-
-      // init
-      this.msgService.initialize();
-      //this.authService.initialize(this.tenant, this.tokenParameter);
-      this.userService.initialize(this.tenant);
-      this.presenceService.initialize(this.tenant);
-      this.typingService.initialize(this.tenant);
-      this.authService.initialize(this.tenant);
-      this.navService.init(this.sidebarNav, this.detailNav);
-      this.chatManager.initialize();
-      this.initSubscriptions();
-    });
-  }
-
-  checkPlatform() {
-    console.log('checkPlatform');
-    if (checkPlatformIsMobile()) {
-      this.platformIs = PLATFORM_MOBILE;
-      console.log('PLATFORM_MOBILE2', PLATFORM_MOBILE);
-      // this.router.navigateByUrl('conversations-list');
-      this.navService.setRoot(ConversationListPage, {});
-    } else {
-      console.log('PLATFORM_DESKTOP', this.navService);
-      this.platformIs = PLATFORM_DESKTOP;
-      this.navService.setRoot(ConversationListPage, {});
-      const pathPage = this.route.snapshot.firstChild.routeConfig.path;
-      console.log('pathPage: ', pathPage);
-      let pageUrl = '';
-      this.route.snapshot.firstChild.url.forEach(element => {
-        pageUrl += '/' + element.path;
-      });
-      if (!pageUrl || pageUrl === '') {
-        pageUrl = 'conversation-detail/';
-      }
-      console.log('pathPage: ', pageUrl);
-      this.router.navigateByUrl(pageUrl);
-
-      const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
-      createExternalSidebar(this.renderer, DASHBOARD_URL);
-    }
-  }
-
-
-
-
-  // BEGIN MY FUNCTIONS //
-
   /** */
   initFirebase() {
-    console.log('AAA', this.appConfigProvider.getConfig());
+    console.log('initFirebase', this.appConfigProvider.getConfig());
     if (!this.appConfigProvider.getConfig().firebaseConfig || this.appConfigProvider.getConfig().firebaseConfig.apiKey === 'CHANGEIT') {
+      // tslint:disable-next-line: max-line-length
       throw new Error('firebase config is not defined. Please create your firebase-config.json. See the Chat21-Web_widget Installation Page');
     }
     firebase.initializeApp(this.appConfigProvider.getConfig().firebaseConfig);
   }
 
   /** */
-  // showNavbar() {
-  //   let TEMP = location.search.split('navBar=')[1];
-  //   if (TEMP) { this.isNavBar = TEMP.split('&')[0]; }
-  // }
+  initializeApp() {
+    console.log('initializeApp');
+    this.notificationsEnabled = true;
+    this.zone = new NgZone({});
+    this.platform.ready().then(() => {
+      this.setLanguage();
+      this.statusBar.styleDefault();
+      
+      // init
+      this.authService.initialize(this.tenant);
+      this.msgService.initialize();
+      this.userService.initialize(this.tenant);
+      this.presenceService.initialize(this.tenant);
+      this.typingService.initialize(this.tenant);
+      this.navService.init(this.sidebarNav, this.detailNav);
+      this.chatManager.initialize();
+    });
+  }
 
   /** */
   setLanguage() {
@@ -250,6 +154,55 @@ export class AppComponent implements OnInit {
     console.log('language: ', language);
   }
 
+  checkPlatform() {
+    console.log('checkPlatform');
+    let pageUrl = '';
+    try {
+      const pathPage = this.route.snapshot.firstChild.routeConfig.path;
+      this.route.snapshot.firstChild.url.forEach(element => {
+        pageUrl += '/' + element.path;
+      });
+    } catch (error) {
+      console.log('error', error);
+    }
+    console.log('checkPlatform pathPage: ', pageUrl);
+    if (!pageUrl || pageUrl === '') {
+      pageUrl = '/conversations-list';
+    }
+
+    if (checkPlatformIsMobile()) {
+      this.platformIs = PLATFORM_MOBILE;
+      console.log('PLATFORM_MOBILE2', PLATFORM_MOBILE);
+      this.router.navigateByUrl(pageUrl);
+      // this.navService.setRoot(ConversationListPage, {});
+    } else {
+      console.log('PLATFORM_DESKTOP', this.navService, pageUrl);
+      this.platformIs = PLATFORM_DESKTOP;
+      this.navService.setRoot(ConversationListPage, {});
+
+      console.log('pageUrl', pageUrl);
+      this.router.navigateByUrl(pageUrl);
+
+      const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
+      createExternalSidebar(this.renderer, DASHBOARD_URL);
+    }
+  }
+
+
+
+
+  // BEGIN MY FUNCTIONS //
+
+  
+
+  /** */
+  // showNavbar() {
+  //   let TEMP = location.search.split('navBar=')[1];
+  //   if (TEMP) { this.isNavBar = TEMP.split('&')[0]; }
+  // }
+
+  
+
   /** */
   hideAlert() {
     console.log('hideAlert');
@@ -263,32 +216,12 @@ export class AppComponent implements OnInit {
   // BEGIN SUBSCRIPTIONS //
   /** */
   initSubscriptions() {
-    const that = this;
-    // this.authService.authStateChanged.subscribe((data: any) => {
-    //     console.log('***** authStateChanged *****', data);
-    //     if (data && data.uid) {
-    //       that.goOnLine(data);
-    //     } else {
-    //       that.goOffLine();
-    //     }
-    // });
-    // this.events.subscribe('requestPermission', this.callbackRequestPermission);
-    // this.events.subscribe('requestPermission', (permission) => {
-    //   this.notificationsEnabled = permission;
-      //  this.msgService.getToken();
-    // });
-
-    // this.events.subscribe('loggedUser:login', this.subscribeLoggedUserLogin);
-    // this.events.subscribe('loggedUser:logout', this.subscribeLoggedUserLogout);
-
-    this.events.subscribe('go-off-line', this.goOffLine);
-    this.events.subscribe('go-on-line', this.goOnLine);
-    this.events.subscribe('sign-in', this.signIn);
-
+    // this.events.subscribe('go-off-line', this.goOffLine);
+    // this.events.subscribe('go-on-line', this.goOnLine);
+    // this.events.subscribe('sign-in', this.signIn);
     // dopo il login quando ho completato il profilo utente corrente
     // this.events.subscribe('loaded-current-user', null);
-
-    this.events.subscribe('firebase-sign-in-with-custom-token', this.firebaseSignInWithCustomToken);
+    // this.events.subscribe('firebase-sign-in-with-custom-token', this.firebaseSignInWithCustomToken);
     // this.events.subscribe('firebase-create-user-with-email-and-password', this.firebaseCreateUserWithEmailAndPassword);
     // this.events.subscribe('firebase-current-user-delete', this.firebaseCurrentUserDelete);
     // this.events.subscribe('firebase-send-password-reset-email', this.firebaseSendPasswordResetEmail);
@@ -304,7 +237,6 @@ export class AppComponent implements OnInit {
    */
   subscribeChangedConversationSelected = (uidConvSelected: string, type: string) => {
     console.log('************** subscribeUidConvSelectedChanged', uidConvSelected, type);
-    // this.checkMessageListIsOpen(uidConvSelected, type);
     this.router.navigateByUrl('conversation-detail/' + uidConvSelected);
   }
 
@@ -341,9 +273,10 @@ export class AppComponent implements OnInit {
   goOffLine = () => {
     console.log('************** goOffLine');
     this.chatManager.goOffLine();
-    setTimeout( () => {
+    clearTimeout(this.timeModalLogin);
+    this.timeModalLogin = setTimeout( () => {
       presentModal(this.modalController, LoginPage, { tenant: 'tilechat', enableBackdropDismiss: false });
-    }, 0);
+    }, 1000);
   }
 
   /**
@@ -352,15 +285,12 @@ export class AppComponent implements OnInit {
    */
   goOnLine = (user: any) => {
     console.log('************** goOnLine', user);
+    clearTimeout(this.timeModalLogin);
     this.chatManager.goOnLine(user);
     this.chatPresenceHandler.setupMyPresence(user.uid);
     try {
       console.log('************** closeModal', this.modalController);
-
-      setTimeout( () => {
-        closeModal(this.modalController);
-      }, 0);
-
+      closeModal(this.modalController);
       this.checkPlatform();
     } catch (err) {
       console.error('-> error:', err);
@@ -394,6 +324,27 @@ export class AppComponent implements OnInit {
 
   // END SUBSCRIPTIONS //
 
-
+// BEGIN RESIZE FUNCTIONS //
+@HostListener('window:resize', ['$event'])
+onResize(event: any) {
+  const that = this;
+  clearTimeout(this.doitResize);
+  this.doitResize = setTimeout( () => {
+    let platformIsNow = PLATFORM_DESKTOP;
+    if (checkPlatformIsMobile()) {
+      platformIsNow = PLATFORM_MOBILE;
+    }
+    if (!this.platformIs || this.platformIs === '') {
+      this.platformIs = platformIsNow;
+    }
+    console.log('onResize width::::', window.innerWidth);
+    console.log('onResize width:::: platformIsNow', platformIsNow);
+    console.log('onResize width:::: platformIsNow this.platformIs', this.platformIs);
+    if ( platformIsNow !== this.platformIs ) {
+      window.location.reload();
+    }
+  }, 500);
+}
+// END RESIZE FUNCTIONS //
 
 }
