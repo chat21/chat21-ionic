@@ -165,6 +165,11 @@ export class ConversationListPage implements OnInit {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.readAllMessages);
     }
+    key = 'uidConvSelected:changed';
+    if (!isInArray(key, this.subscriptions)) {
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.subscribeChangedConversationSelected);
+    }
   }
   // CALLBACKS //
 
@@ -268,6 +273,24 @@ export class ConversationListPage implements OnInit {
       }
     }
     // }
+  }
+
+
+  /**
+   * ::: subscribeChangedConversationSelected :::
+   * evento richiamato quando si seleziona un utente nell'elenco degli user
+   * apro dettaglio conversazione
+   */
+  subscribeChangedConversationSelected = (user: UserModel, type: string) => {
+    console.log('************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
+    this.uidConvSelected = user.uid;
+    this.chatConversationsHandler.uidConvSelected = user.uid;
+    const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+    if (conversationSelected) {
+      console.log('uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
+      this.conversationSelected = conversationSelected;
+    }
+    // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
   }
   // ------------------------------------------------------------------//
   // END SUBSCRIPTIONS
@@ -387,8 +410,11 @@ export class ConversationListPage implements OnInit {
         // this.router.navigateByUrl('conversations-list');
       } else {
         console.log('PLATFORM_DESKTOP 2', this.navService);
-        const pageUrl = 'conversation-detail/' + this.uidConvSelected;
-        console.log('pathPage--->: ', pageUrl);
+        let pageUrl = 'conversation-detail/' + this.uidConvSelected;
+        if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
+          pageUrl += '?conversationWithFullname=' + this.conversationSelected.conversation_with_fullname;
+        }
+        console.log('setUidConvSelected navigateByUrl--->: ', pageUrl);
         this.router.navigateByUrl(pageUrl);
       }
     }
@@ -469,7 +495,9 @@ export class ConversationListPage implements OnInit {
         // that.conversationsHandler.setConversationRead(conversationSelected.uid);
         that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
         // that.openDetailsWithState(conversationSelected);
+        // tslint:disable-next-line: max-line-length
         const urlPage = 'conversation-detail/' + that.uidConvSelected;
+
         const navigationExtras: NavigationExtras = {
           state: {
             conversationSelected: that.conversationSelected

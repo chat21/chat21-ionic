@@ -1,5 +1,9 @@
 # chat21-ionic ver 1.0
 
+### 3.0.14
+- new: create new conversation
+- new: added conversations cache
+
 ### 3.0.13
 - bug-fix: open/close modal login
 - new: added alert on error login

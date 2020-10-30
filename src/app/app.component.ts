@@ -29,6 +29,7 @@ import { ConversationListPage } from './pages/conversations-list/conversations-l
 import { presentModal, closeModal, createExternalSidebar, checkPlatformIsMobile } from './utils/utils';
 import { PLATFORM_MOBILE, PLATFORM_DESKTOP } from './utils/constants';
 import { environment } from '../environments/environment';
+import { UserModel } from './models/user';
 
 @Component({
   selector: 'app-root',
@@ -172,7 +173,7 @@ export class AppComponent implements OnInit {
 
     if (checkPlatformIsMobile()) {
       this.platformIs = PLATFORM_MOBILE;
-      console.log('PLATFORM_MOBILE2', PLATFORM_MOBILE);
+      console.log('PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE);
       this.router.navigateByUrl(pageUrl);
       // this.navService.setRoot(ConversationListPage, {});
     } else {
@@ -180,7 +181,7 @@ export class AppComponent implements OnInit {
       this.platformIs = PLATFORM_DESKTOP;
       this.navService.setRoot(ConversationListPage, {});
 
-      console.log('pageUrl', pageUrl);
+      console.log('checkPlatform navigateByUrl', pageUrl);
       this.router.navigateByUrl(pageUrl);
 
       const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
@@ -235,9 +236,9 @@ export class AppComponent implements OnInit {
    * evento richiamato quando si seleziona un utente nell'elenco degli user
    * apro dettaglio conversazione
    */
-  subscribeChangedConversationSelected = (uidConvSelected: string, type: string) => {
-    console.log('************** subscribeUidConvSelectedChanged', uidConvSelected, type);
-    this.router.navigateByUrl('conversation-detail/' + uidConvSelected);
+  subscribeChangedConversationSelected = (user: UserModel, type: string) => {
+    console.log('************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
+    this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
   }
 
   /**

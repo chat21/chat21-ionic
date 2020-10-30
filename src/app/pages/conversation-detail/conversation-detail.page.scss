@@ -1,20 +1,36 @@
-// .tile-splash-page {
-//     width: auto;
-//     height: 100vh; 
-//     background: url('../../../assets/splash_white.jpg');
-//     position: relative;
-//     background-repeat: no-repeat;
-//     background-position-x: center;
-//     background-position-y: center;
-//     background-size: cover;
-//     z-index: 0;
-// }
+
+.splash-page {
+ width: 100%;
+ height: 100%;
+ display: block; 
+}
+
+.image-splash-page {
+    background: url('../../../assets/images/no_conversation.jpg');
+    width: 50%;
+    height: 50%;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+    background-size: contain;
+    margin: 25% auto;
+}
+.title-splash-page{
+    position: absolute;
+    margin: 10% auto;
+    padding: 30px;
+    top: 0;
+    text-align: center;
+    width: 100%;
+    font-size: 24px;
+}
 // ion-back-button{
 //     display: none!important;
 // }
 // @media (max-width: 767px) {
 //     /* Styles */
-//     ion-back-button{
+//     ion-back-button{ 
 //         display: block!important;
 //     }
 // }

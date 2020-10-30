@@ -50,7 +50,6 @@ export class ChatConversationHandler {
   // obsAdded: BehaviorSubject<MessageModel>;
   public listMembersInfo: any[];
   private setTimeoutWritingMessages;
-
   private lastDate = '';
 
 

@@ -100,8 +100,8 @@ export class ContactsDirectoryPage implements OnInit {
    */
   openNewChat(user: UserModel) {
     console.log('openNewChat', user);
+    this.events.publish('uidConvSelected:changed', user, 'new');
     this.onClose();
-    this.events.publish('uidConvSelected:changed', user.uid, 'new');
   }
 
 }

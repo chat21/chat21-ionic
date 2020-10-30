@@ -212,7 +212,7 @@ export class ChatManager {
    * @param conversationId
    */
   getConversationHandlerByConversationId(conversationId): any {
-    const resultArray = this.handlers.filter(function (handler) {
+    const resultArray = this.handlers.filter((handler) => {
       console.log('FILTRO::: ***', conversationId, handler.conversationWith);
       return handler.conversationWith === conversationId;
     });
