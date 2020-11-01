@@ -20,6 +20,8 @@ import { ChatPresenceHandler} from './services/chat-presence-handler';
 import { NavProxyService } from './services/nav-proxy.service';
 import { MessagingService } from './services/messaging-service';
 import { ChatManager } from './services/chat-manager';
+import { ChatConversationsHandler } from './services/chat-conversations-handler';
+import { CustomTranslateService } from './services/custom-translate.service';
 
 // pages
 import { LoginPage } from './pages/authentication/login/login.page';
@@ -71,7 +73,9 @@ export class AppComponent implements OnInit {
     private renderer: Renderer2,
     private navService: NavProxyService,
     public chatPresenceHandler: ChatPresenceHandler,
-    public typingService: TypingService
+    public typingService: TypingService,
+    public chatConversationsHandler: ChatConversationsHandler,
+    private translateService: CustomTranslateService
   ) {
     console.log('AppComponent');
     this.tenant = environment.tenant;
@@ -126,7 +130,7 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.setLanguage();
       this.statusBar.styleDefault();
-      
+
       // init
       this.authService.initialize(this.tenant);
       this.msgService.initialize();
@@ -136,6 +140,31 @@ export class AppComponent implements OnInit {
       this.navService.init(this.sidebarNav, this.detailNav);
       this.chatManager.initialize();
     });
+  }
+
+  /**
+   * ::: initConversationsHandler :::
+   * inizializzo chatConversationsHandler e archviedConversationsHandler
+   * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
+   * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
+   * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
+   * salvo conversationHandler in chatManager
+   */
+  initConversationsHandler(tenant: string, userId: string) {
+    const keys = [
+      'LABEL_TU'
+    ];
+    const translationMap = this.translateService.translateLanguage(keys);
+
+    console.log('initConversationsHandler ------------->', tenant, userId);
+    // 1 - init chatConversationsHandler and  archviedConversationsHandler
+    this.chatConversationsHandler = this.chatConversationsHandler.initialize(tenant, userId, translationMap);
+    // 2 - get conversations from storage
+    this.chatConversationsHandler.getConversationsFromStorage();
+    // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
+    this.chatConversationsHandler.connect();
+    // 6 - save conversationHandler in chatManager
+    this.chatManager.setConversationsHandler(this.chatConversationsHandler);
   }
 
   /** */
@@ -289,6 +318,7 @@ export class AppComponent implements OnInit {
     clearTimeout(this.timeModalLogin);
     this.chatManager.goOnLine(user);
     this.chatPresenceHandler.setupMyPresence(user.uid);
+    this.initConversationsHandler(this.tenant, user.uid);
     try {
       console.log('************** closeModal', this.modalController);
       closeModal(this.modalController);

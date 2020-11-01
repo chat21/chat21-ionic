@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer} from '@angular/platform-browser';
 import { 
   ModalController, 
   PopoverController, 
@@ -28,7 +29,8 @@ import { DatabaseProvider } from '../../services/database';
 import { CustomTranslateService } from 'src/app/services/custom-translate.service';
 
 import { TypingService } from 'src/app/services/typing.service';
-import { DomSanitizer} from '@angular/platform-browser';
+
+import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
 // import { GroupService } from '../../services/group';
 
@@ -108,7 +110,6 @@ export class ConversationDetailPage implements OnInit {
   private subscriptions: Array<string>;
   private tenant: string;
   public loggedUser: UserModel;
-  private conversationHandler: ChatConversationHandler;
 
   public messages: Array<MessageModel> = [];
   private arrayLocalImmages: Array<any> = [];
@@ -212,6 +213,8 @@ export class ConversationDetailPage implements OnInit {
     public typingService: TypingService,
     private sanitizer: DomSanitizer,
     public authService: AuthService,
+    public chatConversationsHandler: ChatConversationsHandler,
+    public conversationHandler: ChatConversationHandler
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
   ) {
@@ -462,14 +465,13 @@ export class ConversationDetailPage implements OnInit {
     console.log('DETTAGLIO CONV - initConversationHandler **************', this.chatManager, handler, this.conversationWith);
     // SE NN C'è LO CREA CON IL conversationWith -> LO CONNETTE -> LO MEMORIZZA NEL CHATMANAGER
     if (!handler) {
-      console.log('DETTAGLIO CONV - ENTRO ***', this.conversationHandler);
       console.log(
       ' DETTAGLIO CONV - CONVERSATION WITH ', this.conversationWith,
       ' CONVERSATION F-NAME ', this.conversationWithFullname,
       ' CONVERSATION C U DETAILS ', this.loggedUser);
 
-      this.conversationHandler = new ChatConversationHandler(this.events, this.translateService, this.appConfigProvider);
-      this.conversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname, this.loggedUser, this.tenant);
+      // this.conversationHandler = new ChatConversationHandler(this.translateService, this.appConfigProvider);
+      this.conversationHandler.initialize(this.conversationWith, this.conversationWithFullname, this.loggedUser, this.tenant);
       if (this.conversationWith) {
         this.conversationHandler.connect();
         this.conversationHandler.initWritingMessages();
@@ -604,6 +606,22 @@ export class ConversationDetailPage implements OnInit {
       this.subscriptions.push(key);
       // this.events.subscribe(key, this.onOpenVideoChat);
     }
+
+    const that = this;
+    this.chatConversationsHandler.conversationsChanged.subscribe((conversations: any) => {
+      console.log('***** DATAIL conversationsChanged *****', conversations);
+    });
+
+    this.conversationHandler.messageAdded.subscribe((conversations: any) => {
+      console.log('***** DATAIL messageAdded *****', conversations);
+    });
+    this.conversationHandler.messageChanged.subscribe((conversations: any) => {
+      console.log('***** DATAIL messageChanged *****', conversations);
+    });
+    this.conversationHandler.messageRemoved.subscribe((conversations: any) => {
+      console.log('***** DATAIL messageRemoved *****', conversations);
+    });
+
   }
 
 

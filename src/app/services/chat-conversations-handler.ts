@@ -1,51 +1,49 @@
-import { Injectable, NgZone } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { environment } from '../../environments/environment';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 // firebase
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
 import 'firebase/database';
 import 'firebase/auth';
-import 'firebase/storage'
+import 'firebase/storage';
+
 // models
-import { UserModel } from '../models/user';
 import { ConversationModel } from '../models/conversation';
+
 // services
-import { ChatManager } from './chat-manager';
-import { EventsService } from './events-service';
 import { DatabaseProvider } from './database';
-import { AppConfigProvider } from './app-config';
 import { TiledeskConversationProvider } from './tiledesk-conversation';
+
 // utils
 import { TYPE_GROUP, URL_SOUND } from '../utils/constants';
-import { avatarPlaceholder, getColorBck, getImageUrlThumb } from '../utils/utils';
+import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from '../utils/utils';
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
 
 
 @Injectable({ providedIn: 'root' })
+
 export class ChatConversationsHandler {
-    public conversations: ConversationModel[] = [];
-    public uidConvSelected = '';
+
+    // BehaviorSubject
+    conversationsChanged: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);
+    loadedConversationsStorage: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);
+
+    public conversations: Array<ConversationModel> = [];
+    public uidConvSelected: string;
+
     private tenant: string;
-    private loggedUser: UserModel;
-    private userId: string;
+    private loggedUserId: string;
+    private translationMap: Map<string, string>;
+
     private ref: firebase.database.Query;
-    public audio: any;
+    private audio: any;
     private setTimeoutSound: any;
 
     constructor(
-        private events: EventsService,
-        public chatManager: ChatManager,
-        public translate: TranslateService,
         private tiledeskConversationsProvider: TiledeskConversationProvider,
-        // public upSvc: UploadService,
-        public zone: NgZone,
-        public databaseProvider: DatabaseProvider,
-        public appConfig: AppConfigProvider
-    ) {
-        //this.FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().storageBucket;
-    }
+        public databaseProvider: DatabaseProvider
+    ) {}
 
     /**
      * ritorno istanza di conversations handler
@@ -53,15 +51,20 @@ export class ChatConversationsHandler {
     getInstance() {
         return this;
     }
+
     /**
      * inizializzo conversations handler
      */
-    initWithTenant(tenant: string, loggedUser: UserModel): ChatConversationsHandler {
+    initialize(
+        tenant: string,
+        userId: string,
+        translationMap: Map<string, string>
+        ): ChatConversationsHandler {
         this.tenant = tenant;
-        this.loggedUser = loggedUser;
-        this.userId = loggedUser.uid;
+        this.loggedUserId = userId;
+        this.translationMap = translationMap;
         this.conversations = [];
-        this.databaseProvider.initialize(this.loggedUser, this.tenant);
+        this.databaseProvider.initialize(userId, this.tenant);
         return this;
     }
 
@@ -71,8 +74,9 @@ export class ChatConversationsHandler {
     getConversationsFromStorage() {
         const that = this;
         this.databaseProvider.getConversations()
-        .then((conversations) => {
-            that.events.publish('loadedConversationsStorage', conversations);
+        .then((conversations: [ConversationModel]) => {
+            that.loadedConversationsStorage.next(conversations);
+            // that.events.publish('loadedConversationsStorage', conversations);
         })
         .catch((e) => {
             console.log('error: ', e);
@@ -86,7 +90,7 @@ export class ChatConversationsHandler {
      */
     connect() {
         const that = this;
-        const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.userId);
+        const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUserId);
         console.log('connect -------> conversations', urlNodeFirebase);
         this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
         this.ref.on('child_changed', (childSnapshot) => {
@@ -105,8 +109,7 @@ export class ChatConversationsHandler {
     }
 
 
-   
-    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
     /**
      * 1 -  completo la conversazione con i parametri mancanti
      * 2 -  verifico che sia una conversazione valida
@@ -131,7 +134,8 @@ export class ChatConversationsHandler {
                 this.databaseProvider.setConversation(conversation);
             }
             this.conversations.sort(compareValues('timestamp', 'desc'));
-            this.events.publish('conversationsChanged', this.conversations);
+            this.conversationsChanged.next(this.conversations);
+            // this.events.publish('conversationsChanged', this.conversations);
         } else {
             console.error('ChatConversationsHandler::added::conversations with conversationId: ', childSnapshot.key, 'is not valid');
         }
@@ -158,7 +162,8 @@ export class ChatConversationsHandler {
             }
             this.databaseProvider.setConversation(conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
-            this.events.publish('conversationsChanged', this.conversations);
+            this.conversationsChanged.next(this.conversations);
+            // this.events.publish('conversationsChanged', this.conversations);
         } else {
             console.error('ChatConversationsHandler::changed::conversations with conversationId: ', childSnapshot.key, 'is not valid');
         }
@@ -184,7 +189,8 @@ export class ChatConversationsHandler {
             // 3
             this.databaseProvider.removeConversation(childSnapshot.key);
             // 4
-            this.events.publish('conversationsChanged', this.conversations);
+            this.conversationsChanged.next(this.conversations);
+            // this.events.publish('conversationsChanged', this.conversations);
         }
         // remove the conversation from the isConversationClosingMap
         // 5 not understand
@@ -274,10 +280,7 @@ export class ChatConversationsHandler {
 
     completeConversation(conv): ConversationModel {
         console.log('completeConversation', conv);
-        let LABEL_TU: string;
-        this.translate.get('LABEL_TU').subscribe((res: string) => {
-            LABEL_TU = res;
-        });
+        const LABEL_TU = this.translationMap.get('LABEL_TU');
         conv.selected = false;
         if (!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === '') {
             conv.sender_fullname = conv.sender;
@@ -287,7 +290,7 @@ export class ChatConversationsHandler {
         }
         let conversation_with_fullname = conv.sender_fullname;
         let conversation_with = conv.sender;
-        if (conv.sender === this.loggedUser.uid) {
+        if (conv.sender === this.loggedUserId) {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.last_message_text = LABEL_TU + conv.last_message_text;
@@ -302,20 +305,20 @@ export class ChatConversationsHandler {
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
-        conv.image = this.getImageUrlThumbFromFirebasestorage(conversation_with);
+        conv.image = getImageUrlThumbFromFirebasestorage(conversation_with);
         return conv;
     }
 
-    /**
-     *
-     * @param uid
-     */
-    private getImageUrlThumbFromFirebasestorage(uid: string) {
-        const FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE;
-        const urlStorageBucket = this.appConfig.getConfig().firebaseConfig.storageBucket + '/o/profiles%2F';
-        const imageurl = FIREBASESTORAGE_BASE_URL_IMAGE + urlStorageBucket + uid + '%2Fthumb_photo.jpg?alt=media';
-        return imageurl;
-    }
+    // /**
+    //  *
+    //  * @param uid
+    //  */
+    // private getImageUrlThumbFromFirebasestorage(uid: string) {
+    //     const FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE;
+    //     const urlStorageBucket = this.appConfig.getConfig().firebaseConfig.storageBucket + '/o/profiles%2F';
+    //     const imageurl = FIREBASESTORAGE_BASE_URL_IMAGE + urlStorageBucket + uid + '%2Fthumb_photo.jpg?alt=media';
+    //     return imageurl;
+    // }
 
     /** */
     // set the remote conversation as read
@@ -332,9 +335,9 @@ export class ChatConversationsHandler {
 
     /** */
     setStatusConversation(sender, uid): string {
-        let status = '0'; //letto
-        if(sender === this.loggedUser.uid || uid === this.uidConvSelected) {
-            status = '0'; 
+        let status = '0'; // letto
+        if (sender === this.loggedUserId || uid === this.uidConvSelected) {
+            status = '0';
         } else {
             status = '1'; // non letto
         }
@@ -346,8 +349,8 @@ export class ChatConversationsHandler {
      * @param timestamp 
      */
     getTimeLastMessage(timestamp: string) {
-        let timestampNumber = parseInt(timestamp) / 1000;
-        let time = getFromNow(timestampNumber);
+        const timestampNumber = parseInt(timestamp) / 1000;
+        const time = getFromNow(timestampNumber);
         return time;
     }
 
@@ -355,23 +358,24 @@ export class ChatConversationsHandler {
         const index = searchIndexInArrayForUid(this.conversations, uid);
         if (index > -1) {
             this.conversations.splice(index, 1);
-            this.events.publish('conversationsChanged', this.conversations);
+            // this.events.publish('conversationsChanged', this.conversations);
+            this.conversationsChanged.next(this.conversations);
         }
     }
 
-    addConversationListener(uidUser, conversationId) {
-        var that = this;
-        this.tenant = environment.tenant;
-        // const tenant = this.chatManager.getTenant();
-        const url = '/apps/' + this.tenant + '/users/' + uidUser + '/conversations/' + conversationId;
-        const reference = firebase.database().ref(url);
-        console.log("ChatConversationsHandler::addConversationListener::reference:",url, reference.toString());
-        reference.on('value', function (snapshot) {
-            setTimeout(function () {
-                that.events.publish(conversationId + '-listener', snapshot);
-            }, 100);
-        });
-    }
+    // addConversationListener(uidUser, conversationId) {
+    //     var that = this;
+    //     this.tenant = environment.tenant;
+    //     // const tenant = this.chatManager.getTenant();
+    //     const url = '/apps/' + this.tenant + '/users/' + uidUser + '/conversations/' + conversationId;
+    //     const reference = firebase.database().ref(url);
+    //     console.log("ChatConversationsHandler::addConversationListener::reference:",url, reference.toString());
+    //     reference.on('value', function (snapshot) {
+    //         setTimeout(function () {
+    //             // that.events.publish(conversationId + '-listener', snapshot);
+    //         }, 100);
+    //     });
+    // }
 
     /**
      * restituisce il numero di conversazioni nuove
@@ -392,11 +396,10 @@ export class ChatConversationsHandler {
     // END FUNCTIONS 
     // ---------------------------------------------------------- //
 
-    
-    /** 
+    /**
      * attivo sound se è un msg nuovo
-    */
-    private soundMessage(){
+     */
+    private soundMessage() {
         console.log('****** soundMessage *****', this.audio);
         const that = this;
         // this.audio = new Audio();
@@ -472,6 +475,4 @@ export class ChatConversationsHandler {
         return (field === null || field === undefined) ? false : true;
     }
 
-    
-      
 }

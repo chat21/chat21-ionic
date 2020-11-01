@@ -155,11 +155,11 @@ export class ConversationListPage implements OnInit {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.subscribeLoggedUserLogout);
     }
-    key = 'conversationsChanged';
-    if (!isInArray(key, this.subscriptions)) {
-      this.subscriptions.push(key);
-      this.events.subscribe(key, this.conversationsChanged);
-    }
+    // key = 'conversationsChanged';
+    // if (!isInArray(key, this.subscriptions)) {
+    //   this.subscriptions.push(key);
+    //   this.events.subscribe(key, this.conversationsChanged);
+    // }
     key = 'readAllMessages';
     if (!isInArray(key, this.subscriptions)) {
       this.subscriptions.push(key);
@@ -170,6 +170,13 @@ export class ConversationListPage implements OnInit {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.subscribeChangedConversationSelected);
     }
+
+    const that = this;
+    this.chatConversationsHandler.conversationsChanged.subscribe((conversations: any) => {
+      console.log('***** conversationsChanged *****', conversations);
+      that.conversationsChanged(conversations);
+    });
+
   }
   // CALLBACKS //
 
@@ -309,7 +316,7 @@ export class ConversationListPage implements OnInit {
     this.loggedUser = this.chatManager.getLoggedUser();
     this.subscriptions = [];
     this.initVariables();
-    this.initConversationsHandler();
+    // this.initConversationsHandler();
     this.initSubscriptions();
   }
 
@@ -343,7 +350,7 @@ export class ConversationListPage implements OnInit {
       console.log('22222');
       that.setUidConvSelected(IDConv);
     } else {
-      this.databaseProvider.initialize(this.loggedUser, this.tenant);
+      this.databaseProvider.initialize(this.loggedUser.uid, this.tenant);
       this.databaseProvider.getUidLastOpenConversation()
       .then((uid: string) => {
         console.log('getUidLastOpenConversation:: ' + uid);
@@ -361,37 +368,37 @@ export class ConversationListPage implements OnInit {
   }
 
 
-  /**
-   * ::: initConversationsHandler :::
-   * inizializzo chatConversationsHandler e archviedConversationsHandler
-   * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
-   * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
-   * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
-   * salvo conversationHandler in chatManager
-   */
-  initConversationsHandler() {
-    console.log('initConversationsHandler -------------> initConversationsHandler');
-    /// const tenant = this.chatManager.getTenant();
-    /// const loggedUser = this.chatManager.getLoggedUser();
+  // /**
+  //  * ::: initConversationsHandler :::
+  //  * inizializzo chatConversationsHandler e archviedConversationsHandler
+  //  * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
+  //  * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
+  //  * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
+  //  * salvo conversationHandler in chatManager
+  //  */
+  // initConversationsHandler() {
+  //   console.log('initConversationsHandler -------------> initConversationsHandler');
+  //   /// const tenant = this.chatManager.getTenant();
+  //   /// const loggedUser = this.chatManager.getLoggedUser();
 
-    // 1 - init chatConversationsHandler and  archviedConversationsHandler
-    this.chatConversationsHandler = this.chatConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
-    // this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
+  //   // 1 - init chatConversationsHandler and  archviedConversationsHandler
+  //   this.chatConversationsHandler = this.chatConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
+  //   // this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
 
-    // 2 - get conversations from storage
-    this.chatConversationsHandler.getConversationsFromStorage();
+  //   // 2 - get conversations from storage
+  //   this.chatConversationsHandler.getConversationsFromStorage();
 
-    // 3 - set uidConvSelected in conversationHandler
-    this.chatConversationsHandler.uidConvSelected = this.uidConvSelected;
-    // this.chatArchivedConversationsHandler.uidConvSelected = this.uidConvSelected
+  //   // 3 - set uidConvSelected in conversationHandler
+  //   this.chatConversationsHandler.uidConvSelected = this.uidConvSelected;
+  //   // this.chatArchivedConversationsHandler.uidConvSelected = this.uidConvSelected
 
-    // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-    this.chatConversationsHandler.connect();
-    // this.chatArchivedConversationsHandler.connect();
+  //   // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
+  //   this.chatConversationsHandler.connect();
+  //   // this.chatArchivedConversationsHandler.connect();
 
-    // 6 - save conversationHandler in chatManager
-    this.chatManager.setConversationsHandler(this.chatConversationsHandler);
-  }
+  //   // 6 - save conversationHandler in chatManager
+  //   this.chatManager.setConversationsHandler(this.chatConversationsHandler);
+  // }
 
   /**
    * ::: setUidConvSelected :::

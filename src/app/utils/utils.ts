@@ -151,8 +151,8 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
 }
 
 export function setHeaderDate(translate, timestamp, lastDate?): string {
-  var LABEL_TODAY;// = translate.get('LABEL_TODAY')['value'];
-  var LABEL_TOMORROW;// = translate.get('LABEL_TOMORROW')['value'];
+  let LABEL_TODAY; // = translate.get('LABEL_TODAY')['value'];
+  let LABEL_TOMORROW; // = translate.get('LABEL_TOMORROW')['value'];
   translate.get('LABEL_TODAY').subscribe((res: string) => {      
     LABEL_TODAY = res;
   });
@@ -183,10 +183,10 @@ export function setHeaderDate(translate, timestamp, lastDate?): string {
   // se le date sono diverse o la data di riferimento non è impostata
   // ritorna la data calcolata
   // altrimenti torna null
-  if (lastDate != labelDays || lastDate == null || lastDate == '' || lastDate == undefined) {
+  if (lastDate !== labelDays || lastDate == null || lastDate === '' || lastDate === undefined) {
     return labelDays;
   } else {
-    return null;
+    return;
   }
 }
 

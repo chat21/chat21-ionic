@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-// import 'rxjs/add/operator/map';
+import { BehaviorSubject } from 'rxjs';
 // firebase
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
@@ -33,6 +33,12 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class ChatConversationHandler {
+
+  // BehaviorSubject
+  messageAdded: BehaviorSubject<MessageModel> = new BehaviorSubject<MessageModel>(null);
+  messageChanged: BehaviorSubject<MessageModel> = new BehaviorSubject<MessageModel>(null);
+  messageRemoved: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+
   private urlNodeFirebase: string;
   private urlNodeTypings: string;
   private recipientId: string;
@@ -54,21 +60,22 @@ export class ChatConversationHandler {
 
 
   constructor(
-    private events: EventsService,
     public translate: TranslateService,
     public appConfig: AppConfigProvider
-  ) {
-    console.log('CONSTRUCTOR ChatConversationHandlerProvider', translate);
-    this.listSubsriptions = [];
-    this.CLIENT_BROWSER = navigator.userAgent;
-    // this.obsAdded = new BehaviorSubject<MessageModel>(null);
-  }
+  ) { }
 
   /**
    * inizializzo conversation handler
    */
-  initWithRecipient(recipientId, recipientFullName, loggedUser, tenant) {
+  initialize(
+    recipientId: string,
+    recipientFullName: string,
+    loggedUser: UserModel,
+    tenant: string
+  ) {
     console.log('initWithRecipient:::', tenant);
+    this.listSubsriptions = [];
+    this.CLIENT_BROWSER = navigator.userAgent;
     this.loggedUser = loggedUser;
     this.tenant = tenant;
     this.recipientId = recipientId;
@@ -81,6 +88,7 @@ export class ChatConversationHandler {
     this.attributes = this.setAttributes();
   }
 
+  /** */
   setAttributes(): any {
     let attributes: any = JSON.parse(sessionStorage.getItem('attributes'));
     if (!attributes || attributes === 'undefined') {
@@ -97,8 +105,8 @@ export class ChatConversationHandler {
   }
 
 
+  /** */
   connectConversation(conversationId: string) {
-    const that = this;
     const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUser.uid) + '/' + conversationId;
     console.log('connect -------> conversation', urlNodeFirebase);
     const ref =  firebase.database().ref(urlNodeFirebase).once('value');
@@ -169,232 +177,157 @@ export class ChatConversationHandler {
     const that = this;
     this.urlNodeFirebase = conversationMessagesRef(this.tenant, this.loggedUser.uid);
     this.urlNodeFirebase = this.urlNodeFirebase + this.conversationWith;
-    console.log("urlNodeFirebase *****", this.urlNodeFirebase);
+    console.log('urlNodeFirebase *****', this.urlNodeFirebase);
     const firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
     this.ref = firebaseMessages.orderByChild('timestamp').limitToLast(100);
-    console.log("this.translate *****", this.translate);
-
-    //// AGGIUNTA MESSAGGIO ////
-    this.ref.on("child_added", function (childSnapshot) {
-      const itemMsg = childSnapshot.val();
-      // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-      // console.log("that.translate *****", that.translate);
-      let calcolaData = setHeaderDate(that.translate, itemMsg['timestamp'], that.lastDate);
-      if (calcolaData != null) {
-        that.lastDate = calcolaData;
-      }
-      console.log("calcolaData *****", calcolaData);
-      // controllo fatto per i gruppi da rifattorizzare
-      // tslint:disable-next-line: max-line-length
-      (!itemMsg.senderFullname || itemMsg.senderFullname === 'undefined') ? itemMsg.senderFullname = itemMsg.sender : itemMsg.senderFullname;
-      // bonifico messaggio da url
-      //let messageText = replaceBr(itemMsg['text']);
-      let messageText = itemMsg['text'];
-      if (itemMsg['type'] == 'text') {
-        //messageText = urlify(itemMsg['text']);
-        messageText = htmlEntities(itemMsg['text']);
-      }
-
-      if (itemMsg['metadata']) {
-        const index = searchIndexInArrayForUid(that.messages, itemMsg['metadata'].uid);
-        if (index > -1) {
-          that.messages.splice(index, 1);
-        }
-      }
-
-      let isSender = that.isSender(itemMsg['sender'], that.loggedUser);
-
-      // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(
-        childSnapshot.key,
-        itemMsg['language'],
-        itemMsg['recipient'],
-        itemMsg['recipient_fullname'],
-        itemMsg['sender'],
-        itemMsg['sender_fullname'],
-        itemMsg['status'], 
-        itemMsg['metadata'], 
-        messageText, 
-        itemMsg['timestamp'], 
-        calcolaData, 
-        itemMsg['type'], 
-        itemMsg['attributes'], 
-        itemMsg['channel_type'], 
-        isSender
-      );
-      if (msg.attributes && msg.attributes.subtype && (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support')) {
-        that.translateInfoSupportMessages(msg);
-      }
-      console.log("child_added *****", msg);
-      that.messages.push(msg);
-      that.messages.sort(compareValues('timestamp', 'asc'));
-
-      // aggiorno stato messaggio
-      // questo stato indica che è stato consegnato al client e NON che è stato letto
-      that.setStatusMessage(childSnapshot, that.conversationWith);
-
-      console.log("msg.sender ***** " + msg.sender + " that.loggedUser.uid:::" + that.loggedUser.uid);
-      // if (isSender) {
-      //   that.events.publish('doScroll');
-      // } 
-      //that.obsAdded.next(msg);
-      that.events.publish('newMessage', msg);
-      that.events.publish('messages_child_added', msg);
-      // pubblico messaggio - sottoscritto in dettaglio conversazione
+    this.ref.on('child_added', (childSnapshot) => {
+      that.added(childSnapshot);
     });
-
-    //// SUBSRIBE CHANGE ////
-    this.ref.on("child_changed", function(childSnapshot) {
-      const itemMsg = childSnapshot.val();
-      // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-      // const calcolaData = setHeaderDate(that.translate, itemMsg['timestamp'], this.lastDate);
-      // if (calcolaData != null) {
-      //   this.lastDate = calcolaData;
-      // }
-      // controllo fatto per i gruppi da rifattorizzare
-      // tslint:disable-next-line: max-line-length
-      (!itemMsg.senderFullname || itemMsg.senderFullname === 'undefined') ? itemMsg.senderFullname = itemMsg.sender : itemMsg.senderFullname;
-      // bonifico messaggio da url
-      //let messageText = replaceBr(itemMsg['text']);
-      let messageText = itemMsg['text'];
-      if (itemMsg['type'] == 'text') {
-        //messageText = urlify(itemMsg['text']);
-        messageText = htmlEntities(itemMsg['text']);
-      }
-      let isSender = that.isSender(itemMsg['sender'], that.loggedUser);
-      // creo oggetto messaggio e lo aggiungo all'array dei messaggi
-      const msg = new MessageModel(
-        childSnapshot.key, 
-        itemMsg['language'], 
-        itemMsg['recipient'], 
-        itemMsg['recipient_fullname'], 
-        itemMsg['sender'], 
-        itemMsg['sender_fullname'], 
-        itemMsg['status'], 
-        itemMsg['metadata'], 
-        messageText, 
-        itemMsg['timestamp'], 
-        null, 
-        itemMsg['type'], 
-        itemMsg['attributes'], 
-        itemMsg['channel_type'], 
-        isSender
-      );
-      const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
-
-      if (msg.attributes && msg.attributes.subtype && (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support')) {
-        that.translateInfoSupportMessages(msg);
-      }
-
-     
-  
-      that.messages.splice(index, 1, msg);
-      // aggiorno stato messaggio
-      // questo stato indica che è stato consegnato al client e NON che è stato letto
-      that.setStatusMessage(childSnapshot, that.conversationWith);
-      
-      
-      // pubblico messaggio - sottoscritto in dettaglio conversazione
-      //that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, that.messages);
-      //that.events.publish('listMessages:changed-'+that.conversationWith, that.conversationWith, msg);
-
-      // if (isSender) {
-      //   that.events.publish('doScroll');
-      // }
-      that.events.publish('messages_child_changed', msg);
+    this.ref.on('child_changed', (childSnapshot) => {
+      that.changed(childSnapshot);
     });
-
-    this.ref.on('child_removed', function(childSnapshot) {
-      // al momento non previsto!!!
-      const index = searchIndexInArrayForUid(that.messages, childSnapshot.key);
-      // controllo superfluo sarà sempre maggiore
-      if (index > -1) {
-        that.messages.splice(index, 1);
-        //this.events.publish('conversations:update-'+that.conversationWith, that.messages);
-      }
-
-      // if(!this.isSender(msg)){
-      //   that.events.publish('doScroll');
-      // }
-      that.events.publish('messages_child_removed', childSnapshot.key);
+    this.ref.on('child_removed', (childSnapshot) => {
+      that.removed(childSnapshot);
     });
   }
 
+  //// SUBSRIBE CHANGE ////
+  /** */
+  private added(childSnapshot: any) {
+    const msg = this.messageGenerate(childSnapshot);
+    // imposto il giorno del messaggio per visualizzare o nascondere l'header data
+    const headerDate = setHeaderDate(this.translate, msg.timestamp, this.lastDate);
+    if (headerDate) {
+      this.lastDate = headerDate;
+      msg.headerDate = headerDate;
+    }
+    // elimino eventuali messaggi duplicati
+    if (msg.metadata) {
+      const index = searchIndexInArrayForUid(this.messages, msg.metadata.uid);
+      if (index > -1) {
+        this.messages.splice(index, 1);
+      }
+    }
+    // aggiungo msg all'array e ordino l'array
+    this.messages.push(msg);
+    this.messages.sort(compareValues('timestamp', 'asc'));
+    // aggiorno stato messaggio
+    // questo stato indica che è stato consegnato al client e NON che è stato letto
+    this.setStatusMessage(msg, this.conversationWith);
+    // sollevo l'evento
+    this.messageAdded.next(msg);
+  }
+
+  /** */
+  private changed(childSnapshot: any) {
+    const msg = this.messageGenerate(childSnapshot);
+    // imposto il giorno del messaggio per visualizzare o nascondere l'header data
+    msg.headerDate = null;
+    // sostituisco messaggio nuovo con quello nell'array
+    const index = searchIndexInArrayForUid(this.messages, childSnapshot.key);
+    this.messages.splice(index, 1, msg);
+    // aggiorno stato messaggio
+    // questo stato indica che è stato consegnato al client e NON che è stato letto
+    this.setStatusMessage(msg, this.conversationWith);
+    // sollevo l'evento
+    // this.events.publish('messages_child_changed', msg);
+    this.messageChanged.next(msg);
+  }
+
+  /** */
+  private removed(childSnapshot: any) {
+    const index = searchIndexInArrayForUid(this.messages, childSnapshot.key);
+    // controllo superfluo sarà sempre maggiore
+    if (index > -1) {
+      this.messages.splice(index, 1);
+      this.messageRemoved.next(childSnapshot.key);
+     // this.events.publish('messages_child_removed', childSnapshot.key);
+    }
+  }
+
+
+  private messageGenerate(childSnapshot: any) {
+    const msg: MessageModel = childSnapshot.val();
+    msg.uid = childSnapshot.key;
+    // controllo fatto per i gruppi da rifattorizzare
+    if (!msg.sender_fullname || msg.sender_fullname === 'undefined') {
+      msg.sender_fullname = msg.sender;
+    }
+    // bonifico messaggio da url
+    if (msg.type === 'text') {
+      msg.text = htmlEntities(msg.text);
+    }
+    // verifico che il sender è il logged user
+    msg.isSender = this.isSender(msg.sender, this.loggedUser.uid);
+    // traduco messaggi se sono del server
+    if (msg.attributes && msg.attributes.subtype) {
+      if (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support') {
+        this.translateInfoSupportMessages(msg);
+      }
+    }
+    return msg;
+  }
+
+
 
   private translateInfoSupportMessages(message: MessageModel) {
-    // console.log("ChatConversationHandler::translateInfoSupportMessages::message:", message);
-
-    // check if the message has attributes, attributes.subtype and these values
-    if (message.attributes && message.attributes.subtype && (message.attributes.subtype === 'info' || message.attributes.subtype === 'info/support')) {
-      
-      // check if the message attributes has parameters and it is of the "MEMBER_JOINED_GROUP" type
-      // [BEGIN MEMBER_JOINED_GROUP]
-      if ((message.attributes.messagelabel && message.attributes.messagelabel.parameters && message.attributes.messagelabel.key === 'MEMBER_JOINED_GROUP')) {
-        
-        var subject:string;
-        var verb:string;
-        var complement:string;
-        if (message.attributes.messagelabel.parameters.member_id === this.loggedUser.uid) {
-          this.translate.get('INFO_SUPPORT_USER_ADDED_SUBJECT').subscribe((res: string) => {      
-            subject = res;
-          });
-          this.translate.get('INFO_SUPPORT_USER_ADDED_YOU_VERB').subscribe((res: string) => {      
+    // check if the message attributes has parameters and it is of the "MEMBER_JOINED_GROUP" type
+    // [BEGIN MEMBER_JOINED_GROUP]
+    if (message.attributes.messagelabel
+      && message.attributes.messagelabel.parameters
+      && message.attributes.messagelabel.key === 'MEMBER_JOINED_GROUP'
+    ) {
+      let subject: string;
+      let verb: string;
+      let complement: string;
+      if (message.attributes.messagelabel.parameters.member_id === this.loggedUser.uid) {
+        this.translate.get('INFO_SUPPORT_USER_ADDED_SUBJECT').subscribe((res: string) => {
+          subject = res;
+        });
+        this.translate.get('INFO_SUPPORT_USER_ADDED_YOU_VERB').subscribe((res: string) => {
+          verb = res;
+        });
+        this.translate.get('INFO_SUPPORT_USER_ADDED_COMPLEMENT').subscribe((res: string) => {
+          complement = res;
+        });
+      } else {
+        if (message.attributes.messagelabel.parameters.fullname) {
+          // other user has been added to the group (and he has a fullname)
+          subject = message.attributes.messagelabel.parameters.fullname;
+          this.translate.get('INFO_SUPPORT_USER_ADDED_VERB').subscribe((res: string) => {
             verb = res;
           });
-          this.translate.get('INFO_SUPPORT_USER_ADDED_COMPLEMENT').subscribe((res: string) => {      
+          this.translate.get('INFO_SUPPORT_USER_ADDED_COMPLEMENT').subscribe((res: string) => {
             complement = res;
           });
         } else {
-          if (message.attributes.messagelabel.parameters.fullname) {
-            // other user has been added to the group (and he has a fullname)
-            subject = message.attributes.messagelabel.parameters.fullname;
-            this.translate.get('INFO_SUPPORT_USER_ADDED_VERB').subscribe((res: string) => {      
-              verb = res;
-            });
-            this.translate.get('INFO_SUPPORT_USER_ADDED_COMPLEMENT').subscribe((res: string) => {      
-              complement = res;
-            });
-          } else {
-            // other user has been added to the group (and he has not a fullname, so use hes useruid)
-            subject = message.attributes.messagelabel.parameters.member_id;
-            this.translate.get('INFO_SUPPORT_USER_ADDED_VERB').subscribe((res: string) => {      
-              verb = res;
-            });
-            this.translate.get('INFO_SUPPORT_USER_ADDED_COMPLEMENT').subscribe((res: string) => {      
-              complement = res;
-            });
-          }
+          // other user has been added to the group (and he has not a fullname, so use hes useruid)
+          subject = message.attributes.messagelabel.parameters.member_id;
+          this.translate.get('INFO_SUPPORT_USER_ADDED_VERB').subscribe((res: string) => {
+            verb = res;
+          });
+          this.translate.get('INFO_SUPPORT_USER_ADDED_COMPLEMENT').subscribe((res: string) => {
+            complement = res;
+          });
         }
-
-        // perform translation
-        this.translate.get('INFO_SUPPORT_USER_ADDED_MESSAGE', {
-          'subject': subject,
-          'verb': verb,
-          'complement': complement
-        }).subscribe((res: string) => {
-          message.text = res;
-        });
-
-      } // [END MEMBER_JOINED_GROUP]
-
-      // [END CHAT_REOPENED]
-      else if ((message.attributes.messagelabel && message.attributes.messagelabel.key === 'CHAT_REOPENED')) {
-        this.translate.get('INFO_SUPPORT_CHAT_REOPENED').subscribe((res: string) => {      
-          message.text = res;
-        });
       }
-      // [END CHAT_REOPENED]
-
-      // [END CHAT_CLOSED]
-      else if ((message.attributes.messagelabel && message.attributes.messagelabel.key === 'CHAT_CLOSED')) {
-        this.translate.get('INFO_SUPPORT_CHAT_CLOSED').subscribe((res: string) => {      
-          message.text = res;
-        });
-      }
-      // [END CHAT_CLOSED]
+      // perform translation
+      this.translate.get('INFO_SUPPORT_USER_ADDED_MESSAGE', {
+        'subject': subject,
+        'verb': verb,
+        'complement': complement
+      }).subscribe((res: string) => {
+        message.text = res;
+      });
+    } else if ((message.attributes.messagelabel && message.attributes.messagelabel.key === 'CHAT_REOPENED')) {
+      this.translate.get('INFO_SUPPORT_CHAT_REOPENED').subscribe((res: string) => {
+        message.text = res;
+      });
+    } else if ((message.attributes.messagelabel && message.attributes.messagelabel.key === 'CHAT_CLOSED')) {
+      this.translate.get('INFO_SUPPORT_CHAT_CLOSED').subscribe((res: string) => {
+        message.text = res;
+      });
     }
-   
-
   }
 
 
@@ -402,38 +335,33 @@ export class ChatConversationHandler {
    * arriorno lo stato del messaggio
    * questo stato indica che è stato consegnato al client e NON che è stato letto
    * se il messaggio NON è stato inviato da loggedUser AGGIORNO stato a 200
-   * @param item 
-   * @param conversationWith 
+   * @param item
+   * @param conversationWith
    */
-  setStatusMessage(item,conversationWith){
-    if(item.val()['status'] < MSG_STATUS_RECEIVED){
-      //const tenant = this.chatManager.getTenant();
-      //const loggedUser = this.chatManager.getLoggedUser();
-      let msg = item.val();
-      if (msg.sender != this.loggedUser.uid && msg.status < MSG_STATUS_RECEIVED){
-        const urlNodeMessagesUpdate  = '/apps/'+this.tenant+'/users/'+this.loggedUser.uid+'/messages/'+conversationWith+"/"+item.key;
-        console.log("AGGIORNO STATO MESSAGGIO", urlNodeMessagesUpdate);
+  setStatusMessage(msg: MessageModel, conversationWith: string) {
+    if (msg.status < MSG_STATUS_RECEIVED) {
+      if (msg.sender !== this.loggedUser.uid && msg.status < MSG_STATUS_RECEIVED) {
+        // tslint:disable-next-line: max-line-length
+        const urlNodeMessagesUpdate  = '/apps/' + this.tenant + '/users/' + this.loggedUser.uid + '/messages/' + conversationWith + '/' + msg.uid;
+        console.log('AGGIORNO STATO MESSAGGIO', urlNodeMessagesUpdate);
         firebase.database().ref(urlNodeMessagesUpdate).update({ status: MSG_STATUS_RECEIVED });
       }
     }
   }
+
   /**
    * controllo se il messaggio è stato inviato da loggerUser
    * richiamato dalla pagina elenco messaggi della conversazione
    */
-  isSender(sender, currentUser) {
-    //const currentUser = this.loggedUser;//this.chatManager.getLoggedUser();
-    console.log("isSender::::: ", sender, currentUser.uid);
-    if (currentUser) {
-      if (sender === currentUser.uid) {
-        //message.isSender = true;
+  isSender(sender: string, currentUserId: string) {
+    console.log('isSender::::: ', sender, currentUserId);
+    if (currentUserId) {
+      if (sender === currentUserId) {
         return true;
       } else {
-        //message.isSender = false;
         return false;
       }
     } else {
-      //message.isSender = false;
       return false;
     }
   }
