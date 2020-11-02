@@ -30,7 +30,7 @@ export class ChatContactsSynchronizer {
     initWithTenant(tenant, user) {
         this.tenant = tenant;
         this.loggeduser = user;
-        this.databaseProvider.initialize(this.loggeduser, this.tenant);
+        this.databaseProvider.initialize(this.loggeduser.uid, this.tenant);
         return this;
     }
     /**

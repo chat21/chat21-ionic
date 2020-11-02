@@ -29,7 +29,8 @@ import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootst
 
 // services
 import { DatabaseProvider } from '../../services/database';
-import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
+// import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
+import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
 import { ChatManager } from '../../services/chat-manager';
 import { NavProxyService } from '../../services/nav-proxy.service';
 
@@ -68,7 +69,8 @@ export class ConversationListPage implements OnInit {
     public events: EventsService,
     public modalController: ModalController,
     public databaseProvider: DatabaseProvider,
-    public chatConversationsHandler: ChatConversationsHandler,
+    // public chatConversationsHandler: ChatConversationsHandler,
+    public conversationsHandlerService: ConversationsHandlerService,
     public chatManager: ChatManager,
     public authService: AuthService
   ) {
@@ -172,7 +174,7 @@ export class ConversationListPage implements OnInit {
     }
 
     const that = this;
-    this.chatConversationsHandler.conversationsChanged.subscribe((conversations: any) => {
+    this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
       console.log('***** conversationsChanged *****', conversations);
       that.conversationsChanged(conversations);
     });
@@ -247,7 +249,7 @@ export class ConversationListPage implements OnInit {
     console.log('LISTA CONVERSAZIONI »»»»»»»»» conversationsChanged - CONVERSATIONS: ', this.conversations);
     const that = this;
     this.conversations = conversations;
-    this.numberOpenConv = this.chatConversationsHandler.countIsNew();
+    this.numberOpenConv = this.conversationsHandlerService.countIsNew();
     // if (that.uidReciverFromUrl) {
     //   console.log('LISTA CONVERSAZIONI »»»»»»»»» uidReciverFromUrl');
     //   that.setUidConvSelected(that.uidReciverFromUrl);
@@ -291,7 +293,7 @@ export class ConversationListPage implements OnInit {
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
     console.log('************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
     this.uidConvSelected = user.uid;
-    this.chatConversationsHandler.uidConvSelected = user.uid;
+    this.conversationsHandlerService.uidConvSelected = user.uid;
     const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
     if (conversationSelected) {
       console.log('uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
@@ -406,7 +408,7 @@ export class ConversationListPage implements OnInit {
   setUidConvSelected(uidConvSelected?: string) {
     if (uidConvSelected) {
       this.uidConvSelected = uidConvSelected;
-      this.chatConversationsHandler.uidConvSelected = uidConvSelected;
+      this.conversationsHandlerService.uidConvSelected = uidConvSelected;
       const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
       if (conversationSelected) {
         console.log('uidConvSelected: ', this.conversationSelected, this.uidConvSelected );

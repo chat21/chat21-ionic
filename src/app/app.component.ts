@@ -20,7 +20,8 @@ import { ChatPresenceHandler} from './services/chat-presence-handler';
 import { NavProxyService } from './services/nav-proxy.service';
 import { MessagingService } from './services/messaging-service';
 import { ChatManager } from './services/chat-manager';
-import { ChatConversationsHandler } from './services/chat-conversations-handler';
+// import { ChatConversationsHandler } from './services/chat-conversations-handler';
+import { ConversationsHandlerService } from './services/conversations-handler.service';
 import { CustomTranslateService } from './services/custom-translate.service';
 
 // pages
@@ -74,7 +75,8 @@ export class AppComponent implements OnInit {
     private navService: NavProxyService,
     public chatPresenceHandler: ChatPresenceHandler,
     public typingService: TypingService,
-    public chatConversationsHandler: ChatConversationsHandler,
+    // public chatConversationsHandler: ChatConversationsHandler,
+    public conversationsHandlerService: ConversationsHandlerService,
     private translateService: CustomTranslateService
   ) {
     console.log('AppComponent');
@@ -158,13 +160,13 @@ export class AppComponent implements OnInit {
 
     console.log('initConversationsHandler ------------->', tenant, userId);
     // 1 - init chatConversationsHandler and  archviedConversationsHandler
-    this.chatConversationsHandler = this.chatConversationsHandler.initialize(tenant, userId, translationMap);
+    this.conversationsHandlerService.initialize(tenant, userId, translationMap);
     // 2 - get conversations from storage
-    this.chatConversationsHandler.getConversationsFromStorage();
+    // this.chatConversationsHandler.getConversationsFromStorage();
     // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-    this.chatConversationsHandler.connect();
+    this.conversationsHandlerService.connect();
     // 6 - save conversationHandler in chatManager
-    this.chatManager.setConversationsHandler(this.chatConversationsHandler);
+    this.chatManager.setConversationsHandler(this.conversationsHandlerService);
   }
 
   /** */

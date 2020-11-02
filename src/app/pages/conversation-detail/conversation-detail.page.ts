@@ -30,7 +30,8 @@ import { CustomTranslateService } from 'src/app/services/custom-translate.servic
 
 import { TypingService } from 'src/app/services/typing.service';
 
-import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
+// import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
+import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
 // import { GroupService } from '../../services/group';
 
@@ -213,7 +214,8 @@ export class ConversationDetailPage implements OnInit {
     public typingService: TypingService,
     private sanitizer: DomSanitizer,
     public authService: AuthService,
-    public chatConversationsHandler: ChatConversationsHandler,
+    // public chatConversationsHandler: ChatConversationsHandler,
+    public conversationsHandlerService: ConversationsHandlerService,
     public conversationHandler: ChatConversationHandler
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
@@ -566,7 +568,7 @@ export class ConversationDetailPage implements OnInit {
         fullname,
         this.channelType
       );
-      this.chatManager.conversationsHandler.uidConvSelected = this.conversationWith;
+      this.chatManager.conversationsHandlerService.uidConvSelected = this.conversationWith;
     }
   }
 
@@ -608,7 +610,7 @@ export class ConversationDetailPage implements OnInit {
     }
 
     const that = this;
-    this.chatConversationsHandler.conversationsChanged.subscribe((conversations: any) => {
+    this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
       console.log('***** DATAIL conversationsChanged *****', conversations);
     });
 

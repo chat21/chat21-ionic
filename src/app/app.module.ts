@@ -89,7 +89,9 @@ import { PresenceService } from './services/presence.service';
 import { FirebasePresenceService } from './services/firebase/firebase-presence.service';
 import { TypingService } from './services/typing.service';
 import { FirebaseTypingService } from './services/firebase/firebase-typing.service';
-
+import { ConversationsHandlerService } from './services/conversations-handler.service';
+import { FirebaseConversationsHandler } from './services/firebase/firebase-conversations-handler';
+import { DatabaseProvider } from './services/database';
 
 // import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -106,13 +108,13 @@ import {LoginPageModule} from './pages/authentication/login/login.module';
 // import { UserService } from '../providers/user/user';
 // import { GroupService } from '../providers/group/group';
 // import { AutosizeDirective } from '../directives/autosize/autosize';
-// import { DatabaseProvider } from '../providers/database/database';
+// 
 // import { ChatConversationsHandler } from '../providers/chat-conversations-handler';
 // import { ChatArchivedConversationsHandler } from '../providers/chat-archived-conversations-handler';
 // import { ChatConversationHandler } from '../providers/chat-conversation-handler';
 // import { ChatManager } from '../providers/chat-manager/chat-manager';
 // import { ChatContactsSynchronizer } from '../providers/chat-contacts-synchronizer';
-// import { TiledeskConversationProvider } from '../providers/tiledesk-conversation/tiledesk-conversation';
+// 
 
 // import { CannedResponsesServiceProvider } from '../providers/canned-responses-service/canned-responses-service';
 
@@ -159,6 +161,12 @@ export function presenceFactory(events: EventsService) {
 export function typingFactory(events: EventsService) {
   console.log('typingFactory: ');
   return new FirebaseTypingService(events);
+}
+
+export function conversationsHandlerFactory(
+  databaseProvider: DatabaseProvider) {
+  console.log('conversationsHandlerFactory: ');
+  return new FirebaseConversationsHandler(databaseProvider);
 }
 
 
@@ -229,6 +237,12 @@ export function typingFactory(events: EventsService) {
       useFactory: typingFactory,
       deps: [EventsService, HttpClient]
     },
+    {
+      provide: ConversationsHandlerService,
+      useFactory: conversationsHandlerFactory,
+      deps: [DatabaseProvider]
+    },
+
     StatusBar,
     SplashScreen,
     Keyboard,
@@ -236,6 +250,7 @@ export function typingFactory(events: EventsService) {
     // { provide: LocationStrategy, useClass: HashLocationStrategy },
     MessagingService,
     EventsService,
+    DatabaseProvider
   ]
 })
 export class AppModule {}

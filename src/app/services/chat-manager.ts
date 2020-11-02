@@ -6,7 +6,8 @@ import { UserModel } from '../models/user';
 
 // handlers
 import { ChatConversationHandler } from './chat-conversation-handler';
-import { ChatConversationsHandler } from './chat-conversations-handler';
+// import { ChatConversationsHandler } from './chat-conversations-handler';
+import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
 import { ChatArchivedConversationsHandler } from './chat-archived-conversations-handler';
 import { ChatContactsSynchronizer } from './chat-contacts-synchronizer';
 import { environment } from '../../environments/environment';
@@ -26,7 +27,7 @@ export class ChatManager {
   private tenant: string;
   public handlers: ChatConversationHandler[];
   private loggedUser: UserModel;
-  public conversationsHandler: ChatConversationsHandler;
+  // public conversationsHandler: ChatConversationsHandler;
   public archivedConversationsHandler: ChatArchivedConversationsHandler;
   public contactsSynchronizer: ChatContactsSynchronizer;
   public openInfoConversation: boolean;
@@ -35,7 +36,8 @@ export class ChatManager {
   constructor(
     public chatContactsSynchronizer: ChatContactsSynchronizer,
     private events: EventsService,
-    public userService: UserService
+    public userService: UserService,
+    public conversationsHandlerService: ConversationsHandlerService
   ) { }
   /**
    * inizializza chatmanager
@@ -127,13 +129,13 @@ export class ChatManager {
     console.log(' 1 - setOffAllReferences');
     if(this.handlers) { this.setOffAllReferences(); }
     console.log(' 2 - disposeConversationsHandler');
-    if (this.conversationsHandler) { this.disposeConversationsHandler(); }
+    if (this.conversationsHandlerService) { this.disposeConversationsHandler(); }
     console.log(' 3 - disposeArchivedConversationsHandler');
     if (this.archivedConversationsHandler) { this.disposeConversationsHandler(); }
     console.log(' 4 - disposeContactsSynchronizer');
     if (this.contactsSynchronizer) { this.disposeContactsSynchronizer(); }
     console.log(' OKK ');
-    this.conversationsHandler = null;
+    this.conversationsHandlerService = null;
     this.contactsSynchronizer = null;
   }
 
@@ -241,15 +243,15 @@ export class ChatManager {
    * Salvo il CONVERSATIONS handler dopo averlo creato nella lista conversazioni
    */
   setConversationsHandler(handler) {
-    this.conversationsHandler = handler;
+    this.conversationsHandlerService = handler;
   }
 
   /**
    * elimino la reference dell'handler delle conversazioni
    */
   disposeConversationsHandler() {
-    console.log(' 2 - this.conversationsHandler:: ', this.conversationsHandler);
-    this.conversationsHandler.dispose();
+    console.log(' 2 - this.conversationsHandler:: ', this.conversationsHandlerService);
+    this.conversationsHandlerService.dispose();
   }
   /// END metodi gestione conversazioni ////
 

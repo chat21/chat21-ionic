@@ -115,7 +115,6 @@ export class ChatConversationHandler {
 
   /** */
   completeConversation(conv: any): ConversationModel {
-    console.log('ALT ********************************************************** completeConversation', conv);
     const conversation: ConversationModel = conv;
     if (!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === '') {
       conversation.sender_fullname = conv.sender;
@@ -191,7 +190,7 @@ export class ChatConversationHandler {
     });
   }
 
-  //// SUBSRIBE CHANGE ////
+  //// SUBSRIBTIONS ////
   /** */
   private added(childSnapshot: any) {
     const msg = this.messageGenerate(childSnapshot);
@@ -245,7 +244,7 @@ export class ChatConversationHandler {
     }
   }
 
-
+  /** */
   private messageGenerate(childSnapshot: any) {
     const msg: MessageModel = childSnapshot.val();
     msg.uid = childSnapshot.key;
@@ -268,8 +267,7 @@ export class ChatConversationHandler {
     return msg;
   }
 
-
-
+  /** */
   private translateInfoSupportMessages(message: MessageModel) {
     // check if the message attributes has parameters and it is of the "MEMBER_JOINED_GROUP" type
     // [BEGIN MEMBER_JOINED_GROUP]
@@ -332,7 +330,7 @@ export class ChatConversationHandler {
 
 
   /**
-   * arriorno lo stato del messaggio
+   * aggiorno lo stato del messaggio
    * questo stato indica che è stato consegnato al client e NON che è stato letto
    * se il messaggio NON è stato inviato da loggedUser AGGIORNO stato a 200
    * @param item
@@ -470,7 +468,8 @@ export class ChatConversationHandler {
         // that.changedTypings(childSnapshot);
         // console.log('child_changed key', childSnapshot.key);
         // console.log('child_changed val', childSnapshot.val());
-        that.events.publish('isTypings', childSnapshot);
+
+        //that.events.publish('isTypings', childSnapshot);
     });
   }
 
