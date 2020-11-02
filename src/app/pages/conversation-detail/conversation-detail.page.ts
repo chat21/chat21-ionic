@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer} from '@angular/platform-browser';
 import { 
   ModalController, 
   PopoverController, 
@@ -15,6 +16,7 @@ import { MessageModel } from '../../models/message';
 import { ConversationModel } from '../../models/conversation';
 
 // services
+import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 // import { NavProxyService } from '../../services/nav-proxy';
 // import { ChatPresenceHandler } from '../../services/chat-presence-handler';
@@ -27,7 +29,9 @@ import { DatabaseProvider } from '../../services/database';
 import { CustomTranslateService } from 'src/app/services/custom-translate.service';
 
 import { TypingService } from 'src/app/services/typing.service';
-import { DomSanitizer} from '@angular/platform-browser';
+
+// import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
+import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
 // import { GroupService } from '../../services/group';
 
@@ -107,7 +111,6 @@ export class ConversationDetailPage implements OnInit {
   private subscriptions: Array<string>;
   private tenant: string;
   public loggedUser: UserModel;
-  private conversationHandler: ChatConversationHandler;
 
   public messages: Array<MessageModel> = [];
   private arrayLocalImmages: Array<any> = [];
@@ -175,7 +178,7 @@ export class ConversationDetailPage implements OnInit {
   messageType = messageType;
 
   // IDConv = null;
-  conversationSelected: ConversationModel;
+  // conversationSelected: ConversationModel;
   heightMessageTextArea = '';
 
   isStatusScrollerBottom = false;
@@ -210,47 +213,46 @@ export class ConversationDetailPage implements OnInit {
     public modalController: ModalController,
     public typingService: TypingService,
     private sanitizer: DomSanitizer,
+    public authService: AuthService,
+    // public chatConversationsHandler: ChatConversationsHandler,
+    public conversationsHandlerService: ConversationsHandlerService,
+    public conversationHandler: ChatConversationHandler
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
   ) {
-
-    // this.route.queryParams.subscribe(params => {
-    //   if (this.router.getCurrentNavigation().extras.state) {
-    //     this.conversationSelected = this.router.getCurrentNavigation().extras.state.conversationSelected;
-    //     console.log('this.conversationSelected: ', this.conversationSelected);
-    //   }
-    // });
-
     this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
-    console.log('this.conversationSelected: ', this.conversationWith);
-  }
-
-  /** */
-  isUserLoggedIn() {
-    if (this.loggedUser) {
-      this.initialize();
-    } else {
-      const key = 'go-on-line';
-      if (!isInArray(key, this.subscriptions)) {
-        this.subscriptions.push(key);
-        this.events.subscribe(key, this.subscribeLoggedUserLogin);
+    console.log('this.conversationWith: ', this.conversationWith);
+    this.route.queryParams.subscribe(params => {
+      if (params && params.conversationWithFullname) {
+        this.conversationWithFullname = params.conversationWithFullname;
+        this.setConversationAvatar();
       }
-    }
+      console.log('route.queryParams ---> ', this.conversationWithFullname);
+    });
+
+    const that = this;
+    this.authService.authStateChanged.subscribe((data: any) => {
+        console.log('***** authStateChanged *****', data);
+        if (data && data.uid) {
+          that.initialize();
+        }
+    });
   }
 
   // -------------- SYSTEM FUNCTIONS -------------- //
   /** */
   ngOnInit() {
-    console.log('------------>  ');
-    this.subscriptions = [];
-    this.loggedUser = this.chatManager.getLoggedUser();
-    this.tenant = this.chatManager.getTenant();
-    this.isUserLoggedIn();
+    console.log('ngOnInit ConversationDetailPage: ');
+    this.showMessageWelcome = false;
   }
+
+  // ngOnDestroy() {
+  //   this.sub.unsubscribe();
+  // }
 
   /** */
   ionViewWillEnter() {
-    console.log('------------> ionViewWillEnter', this.conversationSelected);
+    console.log('------------> ionViewWillEnter', this.conversationWith);
     // this.initialize();
   }
 
@@ -284,6 +286,10 @@ export class ConversationDetailPage implements OnInit {
    * carico messaggi
    */
   initialize() {
+    console.log('initialize ConversationDetailPage: ');
+    this.subscriptions = [];
+    this.tenant = this.chatManager.getTenant();
+    this.loggedUser = this.chatManager.getLoggedUser();
     this.translations();
     this.setHeightTextArea();
     this.tagsCanned = []; // list of canned
@@ -297,18 +303,17 @@ export class ConversationDetailPage implements OnInit {
       this.isMobile = false;
       this.openInfoConversation = true;
     }
-
     this.online = false;
     this.lastConnectionDate = '';
     this.initConversationHandler();
+    console.log('initialize conversationHandler: ', this.conversationHandler);
+    this.startConversation();
 
-    console.log('initialize conversationWith: ', this.conversationWith, this.conversationSelected);
-
-    if (this.conversationWith && !this.conversationSelected) {
-      this.connectConversation(this.conversationWith);
-    } else if (this.conversationWith) {
-      this.startConversation();
-    }
+    // if (this.conversationWith && !this.conversationSelected) {
+    //   this.connectConversation(this.conversationWith);
+    // } else if (this.conversationWith) {
+    //   this.startConversation();
+    // }
   }
 
 
@@ -399,8 +404,8 @@ export class ConversationDetailPage implements OnInit {
   setInfoSupportGroup() {
     let projectID = '';
     const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
-    if (this.conversationSelected.attributes && this.conversationSelected.attributes.projectId) {
-      projectID = this.conversationSelected.attributes.projectId;
+    if (this.conversationHandler.attributes && this.conversationHandler.attributes.projectId) {
+      projectID = this.conversationHandler.attributes.projectId;
     }
     if (projectID && this.conversationWith) {
       const urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
@@ -420,20 +425,12 @@ export class ConversationDetailPage implements OnInit {
    *
    */
   startConversation() {
-    console.log('startConversation: ', this.conversationSelected);
-    if (this.conversationSelected) {
-      this.conversationWith = this.conversationSelected.uid;
-      this.conversationWithFullname = this.conversationSelected.conversation_with_fullname;
-      this.channelType = this.conversationSelected.channel_type;
-    }
-    if (this.conversationSelected.uid.startsWith('support-group')) {
+    console.log('startConversation: ', this.conversationHandler);
+    if (this.conversationWith.startsWith('support-group')) {
       this.channelType = TYPE_SUPPORT_GROUP;
     } else if (!this.channelType || this.channelType === 'undefined') {
       this.channelType = TYPE_DIRECT;
     }
-
-    // this.chatPresenceHandler.userIsOnline(this.conversationWith);
-    // this.chatPresenceHandler.lastOnlineForUser(this.conversationWith);
     this.setConversationAvatar();
     this.detectBottom();
     this.initSubscriptions();
@@ -443,13 +440,13 @@ export class ConversationDetailPage implements OnInit {
    /** */
    private setConversationAvatar() {
     this.conversationAvatar = {
-      uid: this.conversationSelected.uid,
+      uid: this.conversationWith,
       conversation_with_fullname: this.conversationWithFullname,
       conversation_with: this.conversationWith,
       channelType: this.channelType,
-      avatar: this.conversationSelected.avatar,
-      color: this.conversationSelected.color,
-      imageurl: this.conversationSelected.image,
+      avatar: avatarPlaceholder(this.conversationWithFullname),
+      color: getColorBck(this.conversationWithFullname),
+      imageurl: getImageUrlThumbFromFirebasestorage(this.conversationWith),
       width: '40px',
       height: '40px'
     };
@@ -470,14 +467,13 @@ export class ConversationDetailPage implements OnInit {
     console.log('DETTAGLIO CONV - initConversationHandler **************', this.chatManager, handler, this.conversationWith);
     // SE NN C'è LO CREA CON IL conversationWith -> LO CONNETTE -> LO MEMORIZZA NEL CHATMANAGER
     if (!handler) {
-      console.log('DETTAGLIO CONV - ENTRO ***', this.conversationHandler);
       console.log(
       ' DETTAGLIO CONV - CONVERSATION WITH ', this.conversationWith,
       ' CONVERSATION F-NAME ', this.conversationWithFullname,
       ' CONVERSATION C U DETAILS ', this.loggedUser);
 
-      this.conversationHandler = new ChatConversationHandler(this.events, this.translateService, this.appConfigProvider);
-      this.conversationHandler.initWithRecipient(this.conversationWith, this.conversationWithFullname, this.loggedUser, this.tenant);
+      // this.conversationHandler = new ChatConversationHandler(this.translateService, this.appConfigProvider);
+      this.conversationHandler.initialize(this.conversationWith, this.conversationWithFullname, this.loggedUser, this.tenant);
       if (this.conversationWith) {
         this.conversationHandler.connect();
         this.conversationHandler.initWritingMessages();
@@ -495,41 +491,45 @@ export class ConversationDetailPage implements OnInit {
     }
 
     // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
-    // setTimeout( () => {
-    //   console.log('setTimeout ***', that.messages);
-    //   if (!that.messages || that.messages.length === 0) {
-    //     that.showMessageWelcome = true;
-    //     console.log('setTimeout ***', that.showMessageWelcome);
-    //   } else {
-    //     that.doScroll();
-    //   }
-    // }, 0);
+    setTimeout( () => {
+      console.log('setTimeout ***', that.messages);
+      if (!that.messages || that.messages.length === 0) {
+        that.showMessageWelcome = true;
+        console.log('setTimeout ***', that.showMessageWelcome);
+      } else {
+        // that.doScroll();
+      }
+    }, 1000);
   }
 
   /**
    *
    */
-  connectConversation(conversationId: string) {
-    const that = this;
-    console.log('-----> connectConversation: ', conversationId);
-    this.conversationHandler.connectConversation(conversationId)
-    .then((snapshot) => {
-      if (snapshot.val()) {
-        console.log('-----> conversation snapshot.val(): ', snapshot.val());
-        const childData: ConversationModel = snapshot.val();
-        console.log('-----> conversation childData: ', childData);
-        childData.uid = snapshot.key;
-        const conversation = that.conversationHandler.completeConversation(childData);
-        console.log('-----> conversation conversation: ', conversation);
-        that.conversationSelected = conversation; // childData;
-        console.log('-----> conversation: ', that.conversationSelected);
-        that.startConversation();
-      }
-    })
-    .catch((err) => {
-      console.log('connectConversation Error:', err);
-    });
-  }
+  // connectConversation(conversationId: string) {
+  //   const that = this;
+  //   console.log('-----> connectConversation: ', conversationId);
+  //   this.conversationHandler.connectConversation(conversationId)
+  //   .then((snapshot) => {
+  //     console.log('-----> conversation snapshot: ', snapshot.val());
+  //     if (snapshot.val()) {
+  //       console.log('-----> conversation snapshot.val(): ', snapshot.val());
+  //       const childData: ConversationModel = snapshot.val();
+  //       console.log('-----> conversation childData: ', childData);
+  //       childData.uid = snapshot.key;
+  //       const conversation = that.conversationHandler.completeConversation(childData);
+  //       console.log('-----> conversation conversation: ', conversation);
+  //       that.conversationSelected = conversation; // childData;
+  //       console.log('-----> conversation: ', that.conversationSelected);
+  //       that.startConversation();
+  //     } else {
+  //       // è una nuova conversazione
+  //       console.log('-----> conversation childData: NEW');
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log('connectConversation Error:', err);
+  //   });
+  // }
 
   /**
    * se il messaggio non è vuoto
@@ -538,18 +538,20 @@ export class ConversationDetailPage implements OnInit {
    * 3 - se l'invio è andato a buon fine mi posiziono sull'ultimo messaggio
    */
   sendMessage(msg: string, type: string, metadata?: any) {
-
-
-    const sender = this.loggedUser.uid;
-    let senderFullname = this.conversationSelected.sender_fullname;
-    if (this.conversationSelected.recipient === this.loggedUser.uid) {
-      senderFullname = this.conversationSelected.recipient_fullname;
+    console.log('sendMessage: ');
+    
+    let fullname = this.loggedUser.uid;
+    if (this.loggedUser.fullname) {
+      fullname = this.loggedUser.fullname;
     }
+    // const sender = this.loggedUser.uid;
+    // let senderFullname = this.loggedUser.fullname; // this.conversationSelected.sender_fullname;
+    // if (this.conversationSelected.recipient === this.loggedUser.uid) {
+    //   senderFullname = this.conversationSelected.recipient_fullname;
+    // }
 
     console.log('loggedUserID: ', this.loggedUser.uid);
-    console.log('conv selected recipient: ', this.conversationSelected.recipient);
-    console.log('conv selected sender: ', this.conversationSelected.sender);
-    console.log('conv selected senderFullname: ', this.conversationSelected.sender_fullname);
+
     console.log('conversationWith: ', this.conversationWith);
     console.log('conversationWithFullname: ', this.conversationWithFullname);
 
@@ -562,11 +564,11 @@ export class ConversationDetailPage implements OnInit {
         metadata,
         this.conversationWith,
         this.conversationWithFullname,
-        sender,
-        senderFullname,
+        this.loggedUser.uid,
+        fullname,
         this.channelType
       );
-      this.chatManager.conversationsHandler.uidConvSelected = this.conversationWith;
+      this.chatManager.conversationsHandlerService.uidConvSelected = this.conversationWith;
     }
   }
 
@@ -606,6 +608,22 @@ export class ConversationDetailPage implements OnInit {
       this.subscriptions.push(key);
       // this.events.subscribe(key, this.onOpenVideoChat);
     }
+
+    const that = this;
+    this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
+      console.log('***** DATAIL conversationsChanged *****', conversations);
+    });
+
+    this.conversationHandler.messageAdded.subscribe((conversations: any) => {
+      console.log('***** DATAIL messageAdded *****', conversations);
+    });
+    this.conversationHandler.messageChanged.subscribe((conversations: any) => {
+      console.log('***** DATAIL messageChanged *****', conversations);
+    });
+    this.conversationHandler.messageRemoved.subscribe((conversations: any) => {
+      console.log('***** DATAIL messageRemoved *****', conversations);
+    });
+
   }
 
 
@@ -715,7 +733,7 @@ export class ConversationDetailPage implements OnInit {
       this.isStatusScrollerBottom = true;
       this.showButtonToBottom = false;
       this.NUM_BADGES = 0;
-      this.events.publish('readAllMessages', this.conversationSelected.uid);
+      this.events.publish('readAllMessages', this.conversationWith);
     } else {
       this.isStatusScrollerBottom = false;
       this.showButtonToBottom = true;

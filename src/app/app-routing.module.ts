@@ -7,7 +7,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
 
-  { path: '', redirectTo: '', pathMatch: 'full' },
+  { path: '', redirectTo: 'conversation-detail', pathMatch: 'full' },
   {
     path: 'conversations-list',
     loadChildren: './pages/conversations-list/conversations-list.module#ConversationListPageModule'

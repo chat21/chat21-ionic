@@ -29,7 +29,8 @@ import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootst
 
 // services
 import { DatabaseProvider } from '../../services/database';
-import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
+// import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
+import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
 import { ChatManager } from '../../services/chat-manager';
 import { NavProxyService } from '../../services/nav-proxy.service';
 
@@ -68,24 +69,34 @@ export class ConversationListPage implements OnInit {
     public events: EventsService,
     public modalController: ModalController,
     public databaseProvider: DatabaseProvider,
-    public chatConversationsHandler: ChatConversationsHandler,
+    // public chatConversationsHandler: ChatConversationsHandler,
+    public conversationsHandlerService: ConversationsHandlerService,
     public chatManager: ChatManager,
     public authService: AuthService
-  ) { }
-
-
-  isUserLoggedIn() {
-    console.log('isUserLoggedIn', this.loggedUser );
-    if (this.loggedUser) {
-      this.initialize();
-    } else {
-      const key = 'loggedUser:login';
-      if (!isInArray(key, this.subscriptions)) {
-        this.subscriptions.push(key);
-        this.events.subscribe(key, this.subscribeLoggedUserLogin);
-      }
-    }
+  ) {
+    console.log('constructor ConversationListPage');
+    const that = this;
+    this.authService.authStateChanged.subscribe((data: any) => {
+        console.log('***** authStateChanged *****', data);
+        if (data && data.uid) {
+          that.initialize();
+        }
+    });
   }
+
+
+  // isUserLoggedIn() {
+  //   console.log('isUserLoggedIn', this.loggedUser );
+  //   if (this.loggedUser) {
+  //     this.initialize();
+  //   } else {
+  //     const key = 'loggedUser:login';
+  //     if (!isInArray(key, this.subscriptions)) {
+  //       this.subscriptions.push(key);
+  //       this.events.subscribe(key, this.subscribeLoggedUserLogin);
+  //     }
+  //   }
+  // }
 
   /**
    * 1 - set interface
@@ -93,13 +104,7 @@ export class ConversationListPage implements OnInit {
    * 3 - subscibe login/logout
    */
   ngOnInit() {
-    console.log('ngOnInit ConversationListPage', this.chatManager);
-    this.tenant = environment.tenant;
-    // this.tenant = this.chatManager.getTenant();
-    this.loggedUser = this.chatManager.getLoggedUser();
-    this.subscriptions = [];
-    this.isUserLoggedIn();
-    // this.initSubscriptions();
+    console.log('ngOnInit ConversationListPage', this.loggedUser);
   }
 
   ionViewDidEnter() {
@@ -152,16 +157,28 @@ export class ConversationListPage implements OnInit {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.subscribeLoggedUserLogout);
     }
-    key = 'conversationsChanged';
-    if (!isInArray(key, this.subscriptions)) {
-      this.subscriptions.push(key);
-      this.events.subscribe(key, this.conversationsChanged);
-    }
+    // key = 'conversationsChanged';
+    // if (!isInArray(key, this.subscriptions)) {
+    //   this.subscriptions.push(key);
+    //   this.events.subscribe(key, this.conversationsChanged);
+    // }
     key = 'readAllMessages';
     if (!isInArray(key, this.subscriptions)) {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.readAllMessages);
     }
+    key = 'uidConvSelected:changed';
+    if (!isInArray(key, this.subscriptions)) {
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.subscribeChangedConversationSelected);
+    }
+
+    const that = this;
+    this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
+      console.log('***** conversationsChanged *****', conversations);
+      that.conversationsChanged(conversations);
+    });
+
   }
   // CALLBACKS //
 
@@ -232,7 +249,7 @@ export class ConversationListPage implements OnInit {
     console.log('LISTA CONVERSAZIONI »»»»»»»»» conversationsChanged - CONVERSATIONS: ', this.conversations);
     const that = this;
     this.conversations = conversations;
-    this.numberOpenConv = this.chatConversationsHandler.countIsNew();
+    this.numberOpenConv = this.conversationsHandlerService.countIsNew();
     // if (that.uidReciverFromUrl) {
     //   console.log('LISTA CONVERSAZIONI »»»»»»»»» uidReciverFromUrl');
     //   that.setUidConvSelected(that.uidReciverFromUrl);
@@ -266,21 +283,42 @@ export class ConversationListPage implements OnInit {
     }
     // }
   }
+
+
+  /**
+   * ::: subscribeChangedConversationSelected :::
+   * evento richiamato quando si seleziona un utente nell'elenco degli user
+   * apro dettaglio conversazione
+   */
+  subscribeChangedConversationSelected = (user: UserModel, type: string) => {
+    console.log('************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
+    this.uidConvSelected = user.uid;
+    this.conversationsHandlerService.uidConvSelected = user.uid;
+    const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+    if (conversationSelected) {
+      console.log('uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
+      this.conversationSelected = conversationSelected;
+    }
+    // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
+  }
   // ------------------------------------------------------------------//
   // END SUBSCRIPTIONS
   // ------------------------------------------------------------------//
 
 
 
-  //------------------------------------------------------------------//
+  // ------------------------------------------------------------------//
   // BEGIN FUNCTIONS
-  //------------------------------------------------------------------//
+  // ------------------------------------------------------------------//
   /**
    * ::: initialize :::
    */
   initialize() {
+    this.tenant = environment.tenant;
+    this.loggedUser = this.chatManager.getLoggedUser();
+    this.subscriptions = [];
     this.initVariables();
-    this.initConversationsHandler();
+    // this.initConversationsHandler();
     this.initSubscriptions();
   }
 
@@ -314,7 +352,7 @@ export class ConversationListPage implements OnInit {
       console.log('22222');
       that.setUidConvSelected(IDConv);
     } else {
-      this.databaseProvider.initialize(this.loggedUser, this.tenant);
+      this.databaseProvider.initialize(this.loggedUser.uid, this.tenant);
       this.databaseProvider.getUidLastOpenConversation()
       .then((uid: string) => {
         console.log('getUidLastOpenConversation:: ' + uid);
@@ -332,37 +370,37 @@ export class ConversationListPage implements OnInit {
   }
 
 
-  /**
-   * ::: initConversationsHandler :::
-   * inizializzo chatConversationsHandler e archviedConversationsHandler
-   * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
-   * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
-   * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
-   * salvo conversationHandler in chatManager
-   */
-  initConversationsHandler() {
-    console.log('initConversationsHandler -------------> initConversationsHandler');
-    /// const tenant = this.chatManager.getTenant();
-    /// const loggedUser = this.chatManager.getLoggedUser();
+  // /**
+  //  * ::: initConversationsHandler :::
+  //  * inizializzo chatConversationsHandler e archviedConversationsHandler
+  //  * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
+  //  * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
+  //  * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
+  //  * salvo conversationHandler in chatManager
+  //  */
+  // initConversationsHandler() {
+  //   console.log('initConversationsHandler -------------> initConversationsHandler');
+  //   /// const tenant = this.chatManager.getTenant();
+  //   /// const loggedUser = this.chatManager.getLoggedUser();
 
-    // 1 - init chatConversationsHandler and  archviedConversationsHandler
-    this.chatConversationsHandler = this.chatConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
-    // this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
+  //   // 1 - init chatConversationsHandler and  archviedConversationsHandler
+  //   this.chatConversationsHandler = this.chatConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
+  //   // this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
 
-    // 2 - get conversations from storage
-    this.chatConversationsHandler.getConversationsFromStorage();
+  //   // 2 - get conversations from storage
+  //   this.chatConversationsHandler.getConversationsFromStorage();
 
-    // 3 - set uidConvSelected in conversationHandler
-    this.chatConversationsHandler.uidConvSelected = this.uidConvSelected;
-    // this.chatArchivedConversationsHandler.uidConvSelected = this.uidConvSelected
+  //   // 3 - set uidConvSelected in conversationHandler
+  //   this.chatConversationsHandler.uidConvSelected = this.uidConvSelected;
+  //   // this.chatArchivedConversationsHandler.uidConvSelected = this.uidConvSelected
 
-    // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-    this.chatConversationsHandler.connect();
-    // this.chatArchivedConversationsHandler.connect();
+  //   // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
+  //   this.chatConversationsHandler.connect();
+  //   // this.chatArchivedConversationsHandler.connect();
 
-    // 6 - save conversationHandler in chatManager
-    this.chatManager.setConversationsHandler(this.chatConversationsHandler);
-  }
+  //   // 6 - save conversationHandler in chatManager
+  //   this.chatManager.setConversationsHandler(this.chatConversationsHandler);
+  // }
 
   /**
    * ::: setUidConvSelected :::
@@ -370,19 +408,22 @@ export class ConversationListPage implements OnInit {
   setUidConvSelected(uidConvSelected?: string) {
     if (uidConvSelected) {
       this.uidConvSelected = uidConvSelected;
-      this.chatConversationsHandler.uidConvSelected = uidConvSelected;
+      this.conversationsHandlerService.uidConvSelected = uidConvSelected;
       const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
       if (conversationSelected) {
         console.log('uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
         this.conversationSelected = conversationSelected;
       }
       if (checkPlatformIsMobile()) {
-        console.log('PLATFORM_MOBILE', this.navService);
+        console.log('PLATFORM_MOBILE 2', this.navService);
         // this.router.navigateByUrl('conversations-list');
       } else {
-        console.log('PLATFORM_DESKTOP', this.navService);
-        const pageUrl = 'conversation-detail/' + this.uidConvSelected;
-        console.log('pathPage: ', pageUrl);
+        console.log('PLATFORM_DESKTOP 2', this.navService);
+        let pageUrl = 'conversation-detail/' + this.uidConvSelected;
+        if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
+          pageUrl += '?conversationWithFullname=' + this.conversationSelected.conversation_with_fullname;
+        }
+        console.log('setUidConvSelected navigateByUrl--->: ', pageUrl);
         this.router.navigateByUrl(pageUrl);
       }
     }
@@ -463,7 +504,9 @@ export class ConversationListPage implements OnInit {
         // that.conversationsHandler.setConversationRead(conversationSelected.uid);
         that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
         // that.openDetailsWithState(conversationSelected);
+        // tslint:disable-next-line: max-line-length
         const urlPage = 'conversation-detail/' + that.uidConvSelected;
+
         const navigationExtras: NavigationExtras = {
           state: {
             conversationSelected: that.conversationSelected

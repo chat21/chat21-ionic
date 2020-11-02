@@ -1,10 +1,15 @@
-<span *ngIf="conversationSelected; then showConversation else showPlaceholder"></span>
+<span *ngIf="conversationWith && loggedUser; then showConversation else showPlaceholder"></span>
 <ng-template #showPlaceholder>
-  showPlaceholder
-  <!-- <div padding class="tile-splash-page">&nbsp;</div> -->
+  <ion-content class="splash-page">
+    <div padding class="image-splash-page"></div>
+    <div padding class="title-splash-page">
+      text new conversation + button
+    </div>
+  </ion-content>
 </ng-template>
 
 <ng-template #showConversation>
+
   <app-header-conversation-detail      
     [isMobile] = checkPlatformIsMobile() 
     [idLoggedUser] = loggedUser.uid  
@@ -13,80 +18,14 @@
     (eventOpenCloseInfoConversation)="returnOpenCloseInfoConversation($event)"
   >
   </app-header-conversation-detail>
-  <!-- <ion-header no-border class="ion-no-border">
-    <ion-toolbar>
-      
-      <ion-buttons slot="start">
-        <ion-back-button *ngIf="checkPlatformIsMobile()"
-            defaultHref="conversations-list"
-            (click)="pushPage('conversations-list')">
-        </ion-back-button> 
-      </ion-buttons>
-
-      <ion-title [class.info-open]="openInfoConversation || openInfoMessage">
-        <ion-avatar>
-          <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversationSelected.color" [innerHTML]="conversationSelected.avatar"></div>
-          <div #avatarImage *ngIf="conversationSelected.image" class="avatar-profile" [style.background-image]="'url(' + conversationSelected.image + ')'"></div>
-        </ion-avatar>
-        <div *ngIf="conversationWith" class="tile-info-with">   
-          <span *ngIf="conversationSelected.channelType == TYPE_DIRECT" class="tile-point" [ngStyle]="{ 'background-color':online?COLOR_GREEN:COLOR_RED }">&nbsp;</span>      
-          <span class="tile-username">{{conversationWithFullname?conversationWithFullname:''}}</span>
- 
-          <span *ngIf="isTypings; then yesTypings else noTypings"></span>
-            
-            <ng-template #yesTypings>
-              <div class="tile-last-activity">
-                <span class="spinner active" id="tile-spinner">
-                  <div class="bounce1"></div>
-                  <div class="bounce2"></div>
-                  <div class="bounce3"></div>
-                  <span></span>
-                </span>
-                <span class="tile-typing-now">{{nameUserTypingNow}} {{ 'LABEL_IS_WRITING' | translate }}</span>
-              </div>
-            </ng-template>
-  
-            <ng-template #noTypings>
-              <div class="tile-last-activity">
-                <span *ngIf="conversationSelected.channelType == TYPE_DIRECT">
-                    <span *ngIf="online; then userActive else userInactive"></span>
-                    <ng-template #userActive>
-                      <div>{{ 'LABEL_ACTIVE_NOW' | translate }}</div>
-                    </ng-template>
-                    <ng-template #userInactive>
-                      <div>{{lastConnectionDate}}</div>
-                    </ng-template>
-                </span>
-              </div>
-            </ng-template>
-  
-        </div>
-      </ion-title>
-
-      <ion-buttons slot="end">
-
-            <ion-button  *ngIf="!openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
-              <ion-icon slot="icon-only" name="alert-circle-outline"></ion-icon>
-            </ion-button>
-            <ion-button  *ngIf="openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
-              <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
-            </ion-button>
-
-      </ion-buttons>
-  
-    </ion-toolbar>
-  </ion-header> -->
-
 
   <ion-content>
     <ion-grid class="grid_content">
-
       <ion-row class="row_content">
-
         <ion-col id="chatArea" [class.mobile]="isMobile" [class.open]="openInfoConversation">
           <ion-row class="row_chat_area" [style.height]="'calc(100% - '+heightMessageTextArea+'px)'">
-            <span *ngIf="showMessageWelcome; then content_welcome else content_messages">here is ignored</span>
-            
+            <span *ngIf="showMessageWelcome && messages.length == 0; then content_welcome else content_messages">here is ignored</span>
+      
             <ng-template #content_welcome>
               <div class="messageFirst">
                 {{ 'LABEL_NO_MSG_HERE' | translate }}
@@ -135,11 +74,7 @@
                 </div>
               </ion-list>
 
-              
-
             </ion-content>
-
-            
             </ng-template>
             
           </ion-row>
@@ -162,7 +97,6 @@
           id="chat21-info-conversation"
           [class.mobile]="isMobile"
           [class.open]="openInfoConversation">
-
             <app-info-content 
               [channelType] = channelType
               [openInfoConversation] = openInfoConversation

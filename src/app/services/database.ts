@@ -30,17 +30,16 @@ export class DatabaseProvider {
   ) {
   }
 
-  initialize(loggedUser: UserModel, tenant: string) {
-    this.loggedUser = loggedUser;
+  initialize(userId: string, tenant: string) {
     this.tenant = tenant;
     // console.log("DatabaseProvider - loggedUser::", loggedUser.uid);
     // console.log("DatabaseProvider - this.storageSettings::", this.storageSettings);
     // console.log("DatabaseProvider - this.storageContacts::", this.storageContacts);
     // console.log("DatabaseProvider - this.storageConversations::", this.storageConversations);
     if (!this.storageSettings || !this.storageContacts || !this.storageConversations) {
-      this.storageSettings = this.configStorage('settings-' + loggedUser.uid);
-      this.storageContacts = this.configStorage('contacts-' + loggedUser.uid);
-      this.storageConversations = this.configStorage('conversations-' + loggedUser.uid);
+      this.storageSettings = this.configStorage('settings-' + userId);
+      this.storageContacts = this.configStorage('contacts-' + userId);
+      this.storageConversations = this.configStorage('conversations-' + userId);
     }
   }
   /**
@@ -111,7 +110,7 @@ export class DatabaseProvider {
   /**
    * ritorno contatti salvati nel DB locale
    * da verificare!!!
-   * @param limit 
+   * @param limit
    */
   getContactsLimit(limit?) {
     let idCurrentUser = firebase.auth().currentUser.uid;
@@ -177,16 +176,15 @@ export class DatabaseProvider {
 
 
   /**
-   * 
+   *
    */
   getConversations() {
-    console.log("getConversations ::");
-    let conversations = [];
-    //const storageSettings = this.configStorage('conversations');
+    console.log('getConversations ::');
+    const conversations = [];
     return this.storageConversations.forEach( (data, key, index) => {
       conversations.push(data);
     })
-    .then(function() { 
+    .then(() => {
       conversations.sort(compareValues('timestamp', 'desc'));
       return conversations;
     });

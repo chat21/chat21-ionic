@@ -9,29 +9,32 @@ import 'firebase/auth';
 import 'firebase/storage';
 
 // models
-import { ConversationModel } from '../models/conversation';
+import { ConversationModel } from 'src/app/models/conversation';
 
 // services
-import { DatabaseProvider } from './database';
-import { TiledeskConversationProvider } from './tiledesk-conversation';
+import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
+import { DatabaseProvider } from 'src/app/services/database';
+import { TiledeskConversationProvider } from 'src/app/services/tiledesk-conversation';
 
 // utils
-import { TYPE_GROUP, URL_SOUND } from '../utils/constants';
-import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from '../utils/utils';
-import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from '../utils/utils';
+import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
+import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from 'src/app/utils/utils';
+import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from 'src/app/utils/utils';
 
 
 @Injectable({ providedIn: 'root' })
 
-export class ChatConversationsHandler {
+export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
     // BehaviorSubject
-    conversationsChanged: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);
-    loadedConversationsStorage: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);
+    conversationsChanged: BehaviorSubject<ConversationModel[]>;
+    loadedConversationsStorage: BehaviorSubject<ConversationModel[]>;
 
-    public conversations: Array<ConversationModel> = [];
-    public uidConvSelected: string;
+    // public variables
+    conversations: Array<ConversationModel> = [];
+    uidConvSelected: string;
 
+    // private variables
     private tenant: string;
     private loggedUserId: string;
     private translationMap: Map<string, string>;
@@ -41,16 +44,18 @@ export class ChatConversationsHandler {
     private setTimeoutSound: any;
 
     constructor(
-        private tiledeskConversationsProvider: TiledeskConversationProvider,
+        // private tiledeskConversationsProvider: TiledeskConversationProvider,
         public databaseProvider: DatabaseProvider
-    ) {}
+    ) {
+        super();
+    }
 
     /**
      * ritorno istanza di conversations handler
      */
-    getInstance() {
-        return this;
-    }
+    // getInstance() {
+    //     return this;
+    // }
 
     /**
      * inizializzo conversations handler
@@ -126,6 +131,7 @@ export class ChatConversationsHandler {
         childData.uid = childSnapshot.key;
         const conversation = this.completeConversation(childData);
         if (this.isValidConversation(childSnapshot.key, conversation)) {
+            // da verificare l'utilità e spostare in questa classe
             //this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
             const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
             if (index > -1) {
@@ -195,7 +201,8 @@ export class ChatConversationsHandler {
         }
         // remove the conversation from the isConversationClosingMap
         // 5 not understand
-        this.tiledeskConversationsProvider.deleteClosingConversation(childSnapshot.key);
+        // da verificare l'utilità e spostare in questa classe
+        // this.tiledeskConversationsProvider.deleteClosingConversation(childSnapshot.key);
     }
 
     /**
@@ -204,10 +211,10 @@ export class ChatConversationsHandler {
     dispose() {
         this.conversations = [];
         this.uidConvSelected = '';
-        this.ref.off();
-        this.ref.off('child_changed');
-        this.ref.off('child_removed');
-        this.ref.off('child_added');
+        //this.ref.off();
+        // this.ref.off("child_changed");
+        // this.ref.off("child_removed");
+        // this.ref.off("child_added");
         console.log('DISPOSE::: ', this.ref);
     }
 
@@ -347,7 +354,7 @@ export class ChatConversationsHandler {
 
     /**
      * calcolo il tempo trascorso da ora al timestamp passato
-     * @param timestamp
+     * @param timestamp 
      */
     private getTimeLastMessage(timestamp: string) {
         const timestampNumber = parseInt(timestamp) / 1000;
@@ -381,7 +388,7 @@ export class ChatConversationsHandler {
     /**
      * restituisce il numero di conversazioni nuove
      */
-    countIsNew() {
+    countIsNew(): number {
         let num = 0;
         this.conversations.forEach((element) => {
             if (element.is_new === true) {
@@ -421,7 +428,7 @@ export class ChatConversationsHandler {
 
     /**
      *  check if the conversations is valid or not
-     */
+    */
     private isValidConversation(convToCheckId, convToCheck: ConversationModel) : boolean {
         //console.log("[BEGIN] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
         if (!this.isValidField(convToCheck.uid)) {

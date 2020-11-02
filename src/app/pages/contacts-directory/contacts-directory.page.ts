@@ -42,7 +42,7 @@ export class ContactsDirectoryPage implements OnInit {
     console.log('initialize');
     const url = this.contactsUrl ? this.contactsUrl : this.DEFAULT_CONTACTS_URL;
     const token = this.token ? this.token : this.DEFAULT_TOKEN;
-    console.log('url', url, '  token: ', token);
+    console.log('this.contactsDirectoryService', this.contactsDirectoryService, '  token: ', token);
     this.contacts = [];
     this.contactsDirectoryService.loadContactsFromUrl(url, token).subscribe((response) => {
       console.log('ContactsDirectoryPage ------------->', response);
@@ -69,9 +69,10 @@ export class ContactsDirectoryPage implements OnInit {
 
   /** */
   getTokenFromLocalStorage() {
-    let token = '';
+    let token = localStorage.getItem('tiledeskToken');
     console.log('getTokenFromLocalStorage: ');
-    // "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWIwZjNmYTU3MDY2ZTAwMTRiZmQ3MWUiLCJlbWFpbCI6ImRhcmlvZGVwYTc1QGdtYWlsLmNvbSIsImZpcnN0bmFtZSI6IkRhcmlvIiwibGFzdG5hbWUiOiJEZSBQYXNjYWxpcyIsImlhdCI6MTU4MzM5OTM0NCwiYXVkIjoiaHR0cHM6Ly90aWxlZGVzay5jb20iLCJpc3MiOiJodHRwczovL3RpbGVkZXNrLmNvbSIsInN1YiI6InVzZXIiLCJqdGkiOiJkNmNmODAzZC1iOGUyLTQ3OGYtYTZkMy1mNDgwNzRhOGEyNGQifQ.7yfH6CNPJFv72Q2IS56T_7FSzyUGorTQHFlkR_-dEKg";
+
+    // let token = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWIwZjNmYTU3MDY2ZTAwMTRiZmQ3MWUiLCJlbWFpbCI6ImRhcmlvZGVwYTc1QGdtYWlsLmNvbSIsImZpcnN0bmFtZSI6IkRhcmlvIiwibGFzdG5hbWUiOiJEZSBQYXNjYWxpcyIsImlhdCI6MTYwMTg3ODUwOSwiYXVkIjoiaHR0cHM6Ly90aWxlZGVzay5jb20iLCJpc3MiOiJodHRwczovL3RpbGVkZXNrLmNvbSIsInN1YiI6InVzZXIiLCJqdGkiOiI1NWU2YzQ3MC0wZmVlLTQ5ZDktYmFlZi0wZjNkYmUwMDgyZjUifQ.ltUurOpBiokkpcnckfc1hA2Z_O_VuDoCpQrS5T8U10k";
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       console.log('user: ', user);
@@ -99,8 +100,8 @@ export class ContactsDirectoryPage implements OnInit {
    */
   openNewChat(user: UserModel) {
     console.log('openNewChat', user);
+    this.events.publish('uidConvSelected:changed', user, 'new');
     this.onClose();
-    this.events.publish('uidConvSelected:changed', user.uid, 'new');
   }
 
 }

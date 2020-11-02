@@ -21,7 +21,8 @@ export class TiledeskContactsDirectoryService extends ContactsDirectoryService {
     public http: HttpClient
   ) {
     super();
-    this.customToken = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWIwZjNmYTU3MDY2ZTAwMTRiZmQ3MWUiLCJlbWFpbCI6ImRhcmlvZGVwYTc1QGdtYWlsLmNvbSIsImZpcnN0bmFtZSI6IkRhcmlvIiwibGFzdG5hbWUiOiJEZSBQYXNjYWxpcyIsImlhdCI6MTYwMTg3ODUwOSwiYXVkIjoiaHR0cHM6Ly90aWxlZGVzay5jb20iLCJpc3MiOiJodHRwczovL3RpbGVkZXNrLmNvbSIsInN1YiI6InVzZXIiLCJqdGkiOiI1NWU2YzQ3MC0wZmVlLTQ5ZDktYmFlZi0wZjNkYmUwMDgyZjUifQ.ltUurOpBiokkpcnckfc1hA2Z_O_VuDoCpQrS5T8U10k';
+    console.log('TiledeskContactsDirectoryService');
+    // this.customToken = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWIwZjNmYTU3MDY2ZTAwMTRiZmQ3MWUiLCJlbWFpbCI6ImRhcmlvZGVwYTc1QGdtYWlsLmNvbSIsImZpcnN0bmFtZSI6IkRhcmlvIiwibGFzdG5hbWUiOiJEZSBQYXNjYWxpcyIsImlhdCI6MTYwMTg3ODUwOSwiYXVkIjoiaHR0cHM6Ly90aWxlZGVzay5jb20iLCJpc3MiOiJodHRwczovL3RpbGVkZXNrLmNvbSIsInN1YiI6InVzZXIiLCJqdGkiOiI1NWU2YzQ3MC0wZmVlLTQ5ZDktYmFlZi0wZjNkYmUwMDgyZjUifQ.ltUurOpBiokkpcnckfc1hA2Z_O_VuDoCpQrS5T8U10k';
   }
 
   /**
@@ -55,6 +56,7 @@ export class TiledeskContactsDirectoryService extends ContactsDirectoryService {
    * https://www.freakyjolly.com/ionic-httpclient-crud-service-tutorial-to-consume-restful-server-api/#.X3bPCpMzY3g
    */
   loadContactsFromUrl(remoteContactsUrl: string, token: string): Observable<UserModel> {
+    console.log('loadContactsFromUrl', remoteContactsUrl, token);
     if (remoteContactsUrl.startsWith('http') && token !== '') {
       return this.loadContacts(remoteContactsUrl, token);
     }
@@ -65,7 +67,7 @@ export class TiledeskContactsDirectoryService extends ContactsDirectoryService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: this.customToken
+        Authorization: token
       })
     };
     return this.http
