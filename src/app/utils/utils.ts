@@ -45,6 +45,7 @@ export function conversationMessagesRef(tenant, userId) {
   const urlNode = '/apps/' + tenant + '/users/' + userId + '/messages/';
   return urlNode;
 }
+
 /**
  * chiamata da ChatContactsSynchronizer
  * restituisce url '/contacts'
@@ -151,14 +152,8 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
 }
 
 export function setHeaderDate(translate, timestamp, lastDate?): string {
-  let LABEL_TODAY; // = translate.get('LABEL_TODAY')['value'];
-  let LABEL_TOMORROW; // = translate.get('LABEL_TOMORROW')['value'];
-  translate.get('LABEL_TODAY').subscribe((res: string) => {      
-    LABEL_TODAY = res;
-  });
-  translate.get('LABEL_TOMORROW').subscribe((res: string) => {      
-    LABEL_TOMORROW = res;
-  });
+  const LABEL_TODAY = translate.get('LABEL_TODAY');
+  const LABEL_TOMORROW = translate.get('LABEL_TOMORROW');
   const date = new Date(timestamp);
   const now: Date = new Date();
   let labelDays = '';
@@ -183,6 +178,9 @@ export function setHeaderDate(translate, timestamp, lastDate?): string {
   // se le date sono diverse o la data di riferimento non è impostata
   // ritorna la data calcolata
   // altrimenti torna null
+
+  console.log('>>>>>>>>>>>>>> setHeaderDate: ', LABEL_TODAY, LABEL_TOMORROW, lastDate, labelDays);
+
   if (lastDate !== labelDays || lastDate == null || lastDate === '' || lastDate === undefined) {
     return labelDays;
   } else {

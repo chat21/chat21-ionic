@@ -174,8 +174,16 @@ export class ConversationListPage implements OnInit {
     }
 
     const that = this;
+    this.conversationsHandlerService.conversationsAdded.subscribe((conversations: any) => {
+      console.log('***** conversationsAdded *****', conversations);
+      that.conversationsChanged(conversations);
+    });
     this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
       console.log('***** conversationsChanged *****', conversations);
+      that.conversationsChanged(conversations);
+    });
+    this.conversationsHandlerService.conversationsRemoved.subscribe((conversations: any) => {
+      console.log('***** conversationsRemoved *****', conversations);
       that.conversationsChanged(conversations);
     });
 
@@ -485,6 +493,9 @@ export class ConversationListPage implements OnInit {
   openMessageList(type?: string) {
     const that = this;
     console.log('openMessageList:: >>>> conversationSelected ', that.uidConvSelected);
+     // if the conversation from the isConversationClosingMap is waiting to be closed
+    // deny the click on the conversation
+    if (this.conversationsHandlerService.getClosingConversation(this.uidConvSelected)) { return; }
 
     setTimeout(() => {
       const conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
@@ -520,9 +531,6 @@ export class ConversationListPage implements OnInit {
         }
       }
     }, 0);
-    // if the conversation from the isConversationClosingMap is waiting to be closed 
-    // deny the click on the conversation
-    // if (this.tiledeskConversationProvider.getClosingConversation(this.uidConvSelected)) return;
   }
 
   /**

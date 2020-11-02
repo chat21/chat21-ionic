@@ -22,7 +22,7 @@ import { UserService } from '../../services/user.service';
 // import { ChatPresenceHandler } from '../../services/chat-presence-handler';
 import { ChatManager } from '../../services/chat-manager';
 // import { UploadService } from '../../services/upload-service';
-import { ChatConversationHandler } from '../../services/chat-conversation-handler';
+// import { ChatConversationHandler } from '../../services/chat-conversation-handler';
 import { AppConfigProvider } from '../../services/app-config';
 import { DatabaseProvider } from '../../services/database';
 
@@ -32,6 +32,7 @@ import { TypingService } from 'src/app/services/typing.service';
 
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
+import { ConversationHandlerService } from 'src/app/services/conversation-handler.service';
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
 // import { GroupService } from '../../services/group';
 
@@ -216,7 +217,7 @@ export class ConversationDetailPage implements OnInit {
     public authService: AuthService,
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
-    public conversationHandler: ChatConversationHandler
+    public conversationHandlerService: ConversationHandlerService
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
   ) {
@@ -306,7 +307,7 @@ export class ConversationDetailPage implements OnInit {
     this.online = false;
     this.lastConnectionDate = '';
     this.initConversationHandler();
-    console.log('initialize conversationHandler: ', this.conversationHandler);
+    console.log('initialize conversationHandler: ', this.conversationHandlerService);
     this.startConversation();
 
     // if (this.conversationWith && !this.conversationSelected) {
@@ -404,8 +405,8 @@ export class ConversationDetailPage implements OnInit {
   setInfoSupportGroup() {
     let projectID = '';
     const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
-    if (this.conversationHandler.attributes && this.conversationHandler.attributes.projectId) {
-      projectID = this.conversationHandler.attributes.projectId;
+    if (this.conversationHandlerService.attributes && this.conversationHandlerService.attributes.projectId) {
+      projectID = this.conversationHandlerService.attributes.projectId;
     }
     if (projectID && this.conversationWith) {
       const urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
@@ -425,7 +426,7 @@ export class ConversationDetailPage implements OnInit {
    *
    */
   startConversation() {
-    console.log('startConversation: ', this.conversationHandler);
+    console.log('startConversation: ', this.conversationHandlerService);
     if (this.conversationWith.startsWith('support-group')) {
       this.channelType = TYPE_SUPPORT_GROUP;
     } else if (!this.channelType || this.channelType === 'undefined') {
@@ -461,9 +462,20 @@ export class ConversationDetailPage implements OnInit {
   initConversationHandler() {
     const that = this;
     console.log('loggedUser ***', this.loggedUser);
+    const keys = [
+      'INFO_SUPPORT_USER_ADDED_SUBJECT',
+      'INFO_SUPPORT_USER_ADDED_YOU_VERB',
+      'INFO_SUPPORT_USER_ADDED_COMPLEMENT',
+      'INFO_SUPPORT_USER_ADDED_VERB',
+      'INFO_SUPPORT_CHAT_REOPENED',
+      'INFO_SUPPORT_CHAT_CLOSED',
+      'LABEL_TODAY',
+      'LABEL_TOMORROW'
+    ];
+    const translationMap = this.customTranslateService.translateLanguage(keys);
+
     this.showMessageWelcome = false;
-    // CHIEDE ChatConversationHandler  AL CHATMANAGER
-    const handler: ChatConversationHandler = this.chatManager.getConversationHandlerByConversationId(this.conversationWith);
+    const handler: ConversationHandlerService = this.chatManager.getConversationHandlerByConversationId(this.conversationWith);
     console.log('DETTAGLIO CONV - initConversationHandler **************', this.chatManager, handler, this.conversationWith);
     // SE NN C'è LO CREA CON IL conversationWith -> LO CONNETTE -> LO MEMORIZZA NEL CHATMANAGER
     if (!handler) {
@@ -471,23 +483,27 @@ export class ConversationDetailPage implements OnInit {
       ' DETTAGLIO CONV - CONVERSATION WITH ', this.conversationWith,
       ' CONVERSATION F-NAME ', this.conversationWithFullname,
       ' CONVERSATION C U DETAILS ', this.loggedUser);
-
       // this.conversationHandler = new ChatConversationHandler(this.translateService, this.appConfigProvider);
-      this.conversationHandler.initialize(this.conversationWith, this.conversationWithFullname, this.loggedUser, this.tenant);
+      this.conversationHandlerService.initialize(
+        this.conversationWith,
+        this.conversationWithFullname,
+        this.loggedUser,
+        this.tenant,
+        translationMap);
       if (this.conversationWith) {
-        this.conversationHandler.connect();
-        this.conversationHandler.initWritingMessages();
-        this.conversationHandler.getWritingMessages();
+        this.conversationHandlerService.connect();
+        // this.conversationHandler.initWritingMessages();
+        // this.conversationHandler.getWritingMessages();
         console.log('PRIMA ***', this.chatManager.handlers);
-        this.chatManager.addConversationHandler(this.conversationHandler);
+        this.chatManager.addConversationHandler(this.conversationHandlerService);
         console.log('DOPO ***', this.chatManager.handlers);
-        this.messages = this.conversationHandler.messages;
+        this.messages = this.conversationHandlerService.messages;
         console.log('DETTAGLIO CONV - MESSAGES ***', this.messages);
       }
     } else {
-      console.log('NON ENTRO ***', this.conversationHandler, handler);
-      this.conversationHandler = handler;
-      this.messages = this.conversationHandler.messages;
+      console.log('NON ENTRO ***', this.conversationHandlerService, handler);
+      this.conversationHandlerService = handler;
+      this.messages = this.conversationHandlerService.messages;
     }
 
     // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
@@ -558,7 +574,7 @@ export class ConversationDetailPage implements OnInit {
     (metadata) ? metadata = metadata : metadata = '';
     console.log('SEND MESSAGE: ', msg, this.messages, this.loggedUser);
     if (msg && msg.trim() !== '' || type !== TYPE_MSG_TEXT) {
-      this.conversationHandler.sendMessage(
+      this.conversationHandlerService.sendMessage(
         msg,
         type,
         metadata,
@@ -614,13 +630,13 @@ export class ConversationDetailPage implements OnInit {
       console.log('***** DATAIL conversationsChanged *****', conversations);
     });
 
-    this.conversationHandler.messageAdded.subscribe((conversations: any) => {
+    this.conversationHandlerService.messageAdded.subscribe((conversations: any) => {
       console.log('***** DATAIL messageAdded *****', conversations);
     });
-    this.conversationHandler.messageChanged.subscribe((conversations: any) => {
+    this.conversationHandlerService.messageChanged.subscribe((conversations: any) => {
       console.log('***** DATAIL messageChanged *****', conversations);
     });
-    this.conversationHandler.messageRemoved.subscribe((conversations: any) => {
+    this.conversationHandlerService.messageRemoved.subscribe((conversations: any) => {
       console.log('***** DATAIL messageRemoved *****', conversations);
     });
 

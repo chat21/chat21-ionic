@@ -13,7 +13,7 @@ import { ConversationModel } from '../models/conversation';
 
 // services
 import { DatabaseProvider } from './database';
-import { TiledeskConversationProvider } from './tiledesk-conversation';
+// import { TiledeskConversationProvider } from './tiledesk-conversation';
 
 // utils
 import { TYPE_GROUP, URL_SOUND } from '../utils/constants';
@@ -41,7 +41,7 @@ export class ChatConversationsHandler {
     private setTimeoutSound: any;
 
     constructor(
-        private tiledeskConversationsProvider: TiledeskConversationProvider,
+        // private tiledeskConversationsProvider: TiledeskConversationProvider,
         public databaseProvider: DatabaseProvider
     ) {}
 
@@ -195,7 +195,7 @@ export class ChatConversationsHandler {
         }
         // remove the conversation from the isConversationClosingMap
         // 5 not understand
-        this.tiledeskConversationsProvider.deleteClosingConversation(childSnapshot.key);
+        // this.tiledeskConversationsProvider.deleteClosingConversation(childSnapshot.key);
     }
 
     /**

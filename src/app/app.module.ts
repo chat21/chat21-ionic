@@ -92,6 +92,8 @@ import { FirebaseTypingService } from './services/firebase/firebase-typing.servi
 import { ConversationsHandlerService } from './services/conversations-handler.service';
 import { FirebaseConversationsHandler } from './services/firebase/firebase-conversations-handler';
 import { DatabaseProvider } from './services/database';
+import { ConversationHandlerService } from './services/conversation-handler.service';
+import { FirebaseConversationHandler } from './services/firebase/firebase-conversation-handler';
 
 // import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -169,6 +171,11 @@ export function conversationsHandlerFactory(
   return new FirebaseConversationsHandler(databaseProvider);
 }
 
+export function conversationHandlerFactory() {
+  console.log('conversationHandlerFactory: ');
+  return new FirebaseConversationHandler();
+}
+
 
 @NgModule({
   declarations: [
@@ -242,7 +249,11 @@ export function conversationsHandlerFactory(
       useFactory: conversationsHandlerFactory,
       deps: [DatabaseProvider]
     },
-
+    {
+      provide: ConversationHandlerService,
+      useFactory: conversationHandlerFactory,
+      deps: [DatabaseProvider]
+    },
     StatusBar,
     SplashScreen,
     Keyboard,
