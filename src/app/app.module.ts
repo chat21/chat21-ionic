@@ -150,9 +150,9 @@ export function authenticationFactory(events: EventsService, http: HttpClient) {
   return new FirebaseAuthService(events, http);
 }
 
-export function userFactory(events: EventsService ) {
+export function userFactory() {
   console.log('userFactory: ');
-  return new FirebaseUserService(events);
+  return new FirebaseUserService();
 }
 
 export function presenceFactory(events: EventsService) {
@@ -232,7 +232,7 @@ export function conversationHandlerFactory() {
     {
       provide: UserService,
       useFactory: userFactory,
-      deps: [EventsService, HttpClient]
+      deps: []
     },
     {
       provide: PresenceService,

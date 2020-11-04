@@ -11,7 +11,7 @@
 <ng-template #showConversation>
 
   <app-header-conversation-detail      
-    [isMobile] = checkPlatformIsMobile() 
+    [isMobile] = isMobile 
     [idLoggedUser] = loggedUser.uid  
     [conversationAvatar] = conversationAvatar
     [translationMap] = translationMap
@@ -43,7 +43,8 @@
               <ion-list no-lines>
                 <div *ngFor="let message of messages; let i = index">
                   
-                  <ion-item *ngIf="messageType(MESSAGE_TYPE_DATE, message)" class="ion-no-padding" text-wrap lines="none">
+                  <!-- <ion-item *ngIf="messageType(MESSAGE_TYPE_DATE, message)" class="ion-no-padding" text-wrap lines="none"> -->
+                  <ion-item *ngIf="message.headerDate" class="ion-no-padding" text-wrap lines="none">
                     <app-bubble-day-message
                       messageDate = {{message.headerDate}}
                     ></app-bubble-day-message>
@@ -80,7 +81,7 @@
           </ion-row>
           
           <ion-row class="row_message_text_area" #rowMessageTextArea>
-            <div *ngIf="showButtonToBottom" id="buttonScrollToBottom" (click)="scrollBottom()">
+            <div *ngIf="showButtonToBottom" id="buttonScrollToBottom" (click)="actionScrollBottom()">
               <div *ngIf="NUM_BADGES>0" id="buttonScrollToBottomBudge">{{NUM_BADGES}}</div>
               <ion-icon name="chevron-down-outline"></ion-icon>
             </div>

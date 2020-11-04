@@ -10,6 +10,7 @@ import { ConversationModel } from '../models/conversation';
 export abstract class ConversationsHandlerService {
 
   // BehaviorSubject
+  abstract readAllMessages: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   abstract conversationsAdded: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);
   abstract conversationsChanged: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);
   abstract conversationsRemoved: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);

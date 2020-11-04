@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
 import 'firebase/database';
+import 'firebase/firestore';
 
 // models
 import { MessageModel } from 'src/app/models/message';
@@ -28,9 +29,9 @@ import {
 export class FirebaseConversationHandler extends ConversationHandlerService {
 
     // BehaviorSubject
-    messageAdded: BehaviorSubject<MessageModel> = new BehaviorSubject<MessageModel>(null);
-    messageChanged: BehaviorSubject<MessageModel> = new BehaviorSubject<MessageModel>(null);
-    messageRemoved: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+    messageAdded: BehaviorSubject<MessageModel>;
+    messageChanged: BehaviorSubject<MessageModel>;
+    messageRemoved: BehaviorSubject<string>;
     isTypings: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
     // public variables
@@ -99,13 +100,15 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         const firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
         this.ref = firebaseMessages.orderByChild('timestamp').limitToLast(100);
         this.ref.on('child_added', (childSnapshot) => {
-        that.added(childSnapshot);
+            console.log('>>>>>>>>>>>>>> child_added: ', childSnapshot.val());
+            that.added(childSnapshot);
         });
         this.ref.on('child_changed', (childSnapshot) => {
-        that.changed(childSnapshot);
+            console.log('>>>>>>>>>>>>>> child_changed: ', childSnapshot.val());
+            that.changed(childSnapshot);
         });
         this.ref.on('child_removed', (childSnapshot) => {
-        that.removed(childSnapshot);
+            that.removed(childSnapshot);
         });
     }
 
@@ -121,11 +124,11 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
      */
     sendMessage(
         msg: string,
-        type: string,
-        metadata: string,
+        typeMsg: string,
+        metadataMsg: string,
         conversationWith: string,
         conversationWithDetailFullname: string,
-        sender: string,
+        senderMsg: string,
         senderFullname: string,
         channelType: string
     ) {
@@ -134,46 +137,63 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
             channelType = TYPE_DIRECT;
         }
         const firebaseMessagesCustomUid = firebase.database().ref(this.urlNodeFirebase);
-        const messageRef = firebaseMessagesCustomUid.push();
-        const key = messageRef.key;
-        const language = document.documentElement.lang;
+
+        // const key = messageRef.key;
+        const lang = document.documentElement.lang;
         const recipientFullname = conversationWithDetailFullname;
-        const timestamp =  firebase.database.ServerValue.TIMESTAMP;
-        const dateSendingMessage = setHeaderDate(this.translationMap, timestamp);
-        const message = new MessageModel(
-            key,
-            language, // language
-            conversationWith, // recipient
-            recipientFullname, // recipient_full_name
-            sender, // sender
-            senderFullname, // sender_full_name
-            0, // status
-            metadata, // metadata
-            msg, // text
-            timestamp, // timestamp
-            dateSendingMessage, // headerDate
-            type, // type
-            this.attributes, // attributes
-            channelType, // channel_type
-            true // is_sender
-        );
+        const dateSendingMessage = setHeaderDate(this.translationMap, '');
+
+        const messageRef = firebaseMessagesCustomUid.push({
+            language: lang,
+            recipient: conversationWith,
+            recipient_fullname: recipientFullname,
+            sender: senderMsg,
+            sender_fullname: senderFullname,
+            status: 0,
+            metadata: metadataMsg,
+            text: msg,
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            type: typeMsg,
+            attributes: this.attributes,
+            channel_type: channelType
+            // isSender: true
+        });
+
+        // const message = new MessageModel(
+        //     key,
+        //     language, // language
+        //     conversationWith, // recipient
+        //     recipientFullname, // recipient_full_name
+        //     sender, // sender
+        //     senderFullname, // sender_full_name
+        //     0, // status
+        //     metadata, // metadata
+        //     msg, // text
+        //     0, // timestamp
+        //     dateSendingMessage, // headerDate
+        //     type, // type
+        //     this.attributes, // attributes
+        //     channelType, // channel_type
+        //     true // is_sender
+        // );
         console.log('messages: ',  this.messages);
         console.log('senderFullname: ',  senderFullname);
-        console.log('sender: ',  sender);
+        console.log('sender: ',  senderMsg);
         console.log('SEND MESSAGE: ', msg, channelType);
-        console.log('timestamp: ', timestamp);
-        console.log('timestamp: ', firebase.database['ServerValue']['TIMESTAMP']);
-        console.log('messaggio **************', message);
-        messageRef.set(message, ( error ) => {
-            if (error) {
-                message.status = -100;
-                console.log('ERRORE', error);
-            } else {
-                message.status = 150;
-                console.log('OK MSG INVIATO CON SUCCESSO AL SERVER', message);
-            }
-            console.log('****** changed *****', that.messages);
-        });
+        console.log('timestamp: ', );
+        console.log('messaggio **************', );
+        // messageRef.update({
+        //     uid: messageRef.key
+        // }, ( error ) => {
+        //     // if (error) {
+        //     //     message.status = -100;
+        //     //     console.log('ERRORE', error);
+        //     // } else {
+        //     //     message.status = 150;
+        //     //     console.log('OK MSG INVIATO CON SUCCESSO AL SERVER', message);
+        //     // }
+        //     // console.log('****** changed *****', that.messages);
+        // });
     }
 
     /**
@@ -208,14 +228,14 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         const msg = this.messageGenerate(childSnapshot);
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
         msg.headerDate = null;
-        const headerDate = setHeaderDate(this.translationMap, msg.timestamp, this.lastDate);
-        if (headerDate) {
+        const headerDate = setHeaderDate(this.translationMap, msg.timestamp);
+        if (headerDate !== this.lastDate) {
             this.lastDate = headerDate;
             msg.headerDate = headerDate;
         }
-        console.log('>>>>>>>>>>>>>> added headerDate: ', headerDate);
+        console.log('>>>>>>>>>>>>>> added headerDate: ', msg);
         this.addRepalceMessageInArray(childSnapshot.key, msg);
-        // sollevo l'evento
+        // this.messageAdded.next(msg);
         this.messageAdded.next(msg);
     }
 
@@ -223,9 +243,8 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private changed(childSnapshot: any) {
         const msg = this.messageGenerate(childSnapshot);
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        msg.headerDate = null;
+        console.log('>>>>>>>>>>>>>> changed headerDate: ', msg);
         this.addRepalceMessageInArray(childSnapshot.key, msg);
-        // sollevo l'evento
         this.messageChanged.next(msg);
     }
 
@@ -266,6 +285,8 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private addRepalceMessageInArray(key: string, msg: MessageModel) {
         const index = searchIndexInArrayForUid(this.messages, key);
         if (index > -1) {
+            const headerDate = this.messages[index].headerDate;
+            msg.headerDate = headerDate;
             this.messages.splice(index, 1, msg);
         } else {
             this.messages.splice(0, 0, msg);

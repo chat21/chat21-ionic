@@ -35,9 +35,9 @@ import { TranslateService } from '@ngx-translate/core';
 export class ChatConversationHandler {
 
   // BehaviorSubject
-  messageAdded: BehaviorSubject<MessageModel> = new BehaviorSubject<MessageModel>(null);
-  messageChanged: BehaviorSubject<MessageModel> = new BehaviorSubject<MessageModel>(null);
-  messageRemoved: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  // messageAdded: BehaviorSubject<MessageModel> = new BehaviorSubject<MessageModel>(null);
+  // messageChanged: BehaviorSubject<MessageModel> = new BehaviorSubject<MessageModel>(null);
+  // messageRemoved: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
   private urlNodeFirebase: string;
   private urlNodeTypings: string;
@@ -195,7 +195,7 @@ export class ChatConversationHandler {
   private added(childSnapshot: any) {
     const msg = this.messageGenerate(childSnapshot);
     // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-    const headerDate = setHeaderDate(this.translate, msg.timestamp, this.lastDate);
+    const headerDate = setHeaderDate(this.translate, msg.timestamp);
     if (headerDate) {
       this.lastDate = headerDate;
       msg.headerDate = headerDate;
@@ -214,14 +214,13 @@ export class ChatConversationHandler {
     // questo stato indica che è stato consegnato al client e NON che è stato letto
     this.setStatusMessage(msg, this.conversationWith);
     // sollevo l'evento
-    this.messageAdded.next(msg);
+    // this.messageAdded.next(msg);
   }
 
   /** */
   private changed(childSnapshot: any) {
     const msg = this.messageGenerate(childSnapshot);
     // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-    msg.headerDate = null;
     // sostituisco messaggio nuovo con quello nell'array
     const index = searchIndexInArrayForUid(this.messages, childSnapshot.key);
     this.messages.splice(index, 1, msg);
@@ -230,7 +229,7 @@ export class ChatConversationHandler {
     this.setStatusMessage(msg, this.conversationWith);
     // sollevo l'evento
     // this.events.publish('messages_child_changed', msg);
-    this.messageChanged.next(msg);
+    // this.messageChanged.next(msg);
   }
 
   /** */
@@ -239,7 +238,7 @@ export class ChatConversationHandler {
     // controllo superfluo sarà sempre maggiore
     if (index > -1) {
       this.messages.splice(index, 1);
-      this.messageRemoved.next(childSnapshot.key);
+      // this.messageRemoved.next(childSnapshot.key);
      // this.events.publish('messages_child_removed', childSnapshot.key);
     }
   }

@@ -1,109 +1,158 @@
 import { Injectable } from '@angular/core';
-import { Platform } from '@ionic/angular';
 // models
-// import { UserModel } from '../../models/user';
+import { UserModel } from 'src/app/models/user';
 // firebase
 import * as firebase from 'firebase/app';
-import 'firebase/messaging';
 import 'firebase/database';
 import 'firebase/auth';
-
-// utils
-// import { getNowTimestamp, contactsRef } from '../utils/utils';
-// import { SYSTEM, URL_NO_IMAGE, LABEL_NOICON } from '../utils/constants';
-
-
 // services
-// import { ChatManager } from '../chat-manager';
-// import { ChatPresenceHandler} from '../chat-presence-handler';
-// import { MessagingService } from '../messaging-service';
-
-// services
-import { EventsService } from '../events-service';
 import { UserService } from '../user.service';
-
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseUserService extends UserService {
-  // public currentUserDetails: UserModel;
-  // public urlNodeContacts: string;
-  // public uidLastOpenConversation: string;
-  // public token: string;
-  // public userUid: string;
+  FIREBASESTORAGE_BASE_URL_IMAGE: string;
+  urlStorageBucket: string;
 
   private tenant: string;
   private urlNodeContacts: string;
-  private refContacts: firebase.database.Reference;
 
   constructor(
-    private events: EventsService,
-    // public platform: Platform,
-    // private events: EventsService,
-    // public chatManager: ChatManager,
-    // public chatPresenceHandler: ChatPresenceHandler,
-    // public msgService: MessagingService
   ) {
     super();
   }
 
-    initialize(tenant: string) {
-      this.tenant = tenant;
-      this.urlNodeContacts = '/apps/' + this.tenant + '/contacts/';
+  /**
+   * 
+   * @param tenant
+   */
+  initialize(tenant: string) {
+    this.tenant = tenant;
+    this.urlNodeContacts = '/apps/' + this.tenant + '/contacts/';
+  }
+
+  /**
+   *
+   * @param userUID
+   */
+  public loadUserDetail(userUID: string): UserModel {
+    const that = this;
+    console.log('loadUserDetail: ', userUID);
+    return this.firebaseUserDetail(userUID)
+    .then((user: any) => {
+      console.log('loadUserDetail: then ', user.val());
+      return that.createCompleteUser(user.val());
+    })
+    .catch((err: Error) => {
+      console.log('error fullProfile', err);
+      return;
+    });
+  }
+
+  /**
+   * loadCurrentUserDetail
+   */
+  public loadCurrentUserDetail(): UserModel {
+    const currentUser = firebase.auth().currentUser;
+    console.log('currentUser: ', currentUser);
+    return this.loadUserDetail(currentUser.uid);
+  }
+
+  /**
+   *
+   * @param user
+   */
+  updateUserDetail(user: any) {
+    // updateUserDetail
+  }
+
+  /**
+   *
+   * @param userUID
+   */
+  private firebaseUserDetail(userUID: string): any {
+    const urlNode = this.urlNodeContacts + userUID;
+    console.log('loadUserDetail::: ', urlNode);
+    const firebaseRef = firebase.database().ref(urlNode);
+    return firebaseRef.once('value');
+  }
+
+  /**
+   * 
+   * @param user
+   */
+  private createCompleteUser(user: any) {
+    const member = new UserModel(user.uid);
+    try {
+      const firstname = user.firstname ? user.firstname : '';
+      const lastname = user.lastname ? user.lastname : '';
+      const email = user.email ? user.email : '';
+      const fullname = ( firstname + ' ' + lastname ).trim();
+      const avatar = this.avatarPlaceholder(fullname);
+      const color = this.getColorBck(fullname);
+      const imageurl = this.getImageUrlThumbFromFirebasestorage(user.uid);
+      member.email = email;
+      member.firstname = firstname;
+      member.lastname = lastname;
+      member.fullname = fullname;
+      member.imageurl = imageurl;
+      member.avatar = avatar;
+      member.color = color;
+      console.log('createCompleteUser: ', member);
+      return member;
+    } catch (err) {
+      console.log(err);
+      console.log('createCompleteUser: ', member);
+      return member;
     }
+  }
 
-    updateUserDetail(user: any) {
-      // sdlfjsdlkjfksdjkl
+
+
+  /**
+   *
+   * @param str
+   */
+  private getColorBck(str: string): string {
+    const arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
+    let num = 0;
+    if (str) {
+      const code = str.charCodeAt((str.length - 1));
+      num = Math.round(code % arrayBckColor.length);
     }
+    return arrayBckColor[num];
+  }
 
-
-    /**
-     *
-     * @param userUID
-     */
-    loadUserDetail(userUID: string) {
-      const urlNode = this.urlNodeContacts + userUID;
-      console.log('loadUserDetail::: ', urlNode);
-      const firebaseRef = firebase.database().ref(urlNode);
-      return firebaseRef.once('value');
+  /**
+   *
+   * @param name
+   */
+  private avatarPlaceholder(name: string) {
+    let initials = '';
+    if (name) {
+      const arrayName = name.split(' ');
+      arrayName.forEach(member => {
+        if (member.trim().length > 1 && initials.length < 3) {
+          initials += member.substring(0, 1).toUpperCase();
+        }
+      });
     }
+    return initials;
+  }
 
-    /**
-     *
-     */
-    loadCurrentUserDetail() {
-      const that = this;
-      try {
-        const currentUser = firebase.auth().currentUser;
-        const urlNode = this.urlNodeContacts + currentUser.uid;
-        const refUser = firebase.database().ref(urlNode);
-        console.log('loadCurrentUserDetail::: ', urlNode, currentUser);
-        return refUser.once('value');
-      } catch (error) {
-        console.log('error');
-        return null;
-      }
-      // const currentUser = firebase.auth().currentUser;
-      // const urlNode = this.urlNodeContacts + currentUser.uid;
-      // const refUser = firebase.database().ref(urlNode);
-      // console.log('loadCurrentUserDetail::: ', urlNode, currentUser);
-      // return refUser.once('value');
-      // refUser.once('value')
-      // .then((snapshot: any) => {
-      //   if (snapshot.val()) {
-      //     console.log('loadUserDetail::: ', snapshot.val());
-      //     that.events.publish('loaded-current-user', snapshot.val());
-      //   }
-      // })
-      // .catch((err: Error) => {
-      //   console.log('Unable to get permission to notify.', err);
-      // });
-    }
+  /**
+   *
+   * @param uid
+   */
+  private getImageUrlThumbFromFirebasestorage(uid: string) {
+    const imageurl = this.FIREBASESTORAGE_BASE_URL_IMAGE + this.urlStorageBucket + uid + '%2Fthumb_photo.jpg?alt=media';
+    return imageurl;
+  }
+
+}
 
 
-  // setCurrentUserDetail(uid, email?, firstname?, lastname?, fullname?, imageurl?){
-  //   this.currentUserDetails = new UserModel(uid, email, firstname, lastname, fullname, imageurl);
-  // }
-  
+
+
   // /** */
   // saveCurrentUserDetail(uid: string, email: string, firstname: string, lastname: string){
   //   let timestamp = getNowTimestamp();
@@ -111,8 +160,6 @@ export class FirebaseUserService extends UserService {
   //   return firebase.database().ref(this.urlNodeContacts)
   //   .child(uid).set({uid:uid, email:email, firstname:firstname, lastname:lastname, timestamp:timestamp, imageurl:''})
   // }
-
-
 
   // getUserDetail(uid): any {
   //   const tenant = this.chatManager.getTenant();
@@ -276,4 +323,3 @@ export class FirebaseUserService extends UserService {
   //     }
   //   });
   // }
-}

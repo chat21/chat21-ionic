@@ -140,9 +140,9 @@ export class ConversationListPage implements OnInit {
   //   this.router.navigate(['conversation-detail/' + this.uidConvSelected], navigationExtras);
   // }
 
-  //------------------------------------------------------------------//
+  // ------------------------------------------------------------------ //
   // BEGIN SUBSCRIPTIONS
-  //------------------------------------------------------------------//
+  // ------------------------------------------------------------------ //
 
   /** */
   initSubscriptions() {
@@ -167,6 +167,12 @@ export class ConversationListPage implements OnInit {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.readAllMessages);
     }
+
+    this.conversationsHandlerService.readAllMessages.subscribe((conversationId: string) => {
+      console.log('***** readAllMessages *****', conversationId);
+      this.readAllMessages(conversationId);
+    });
+
     key = 'uidConvSelected:changed';
     if (!isInArray(key, this.subscriptions)) {
       this.subscriptions.push(key);

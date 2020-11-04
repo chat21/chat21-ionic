@@ -26,6 +26,7 @@ import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArr
 export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
     // BehaviorSubject
+    readAllMessages: BehaviorSubject<string>;
     conversationsAdded: BehaviorSubject<ConversationModel[]>;
     conversationsChanged: BehaviorSubject<ConversationModel[]>;
     conversationsRemoved: BehaviorSubject<ConversationModel[]>;

@@ -10,7 +10,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularDelegate, ModalController } from '@ionic/angular';
 
 import {
-  MAX_WIDTH_IMAGES
+  MAX_WIDTH_IMAGES,
+  TYPE_DIRECT,
+  TYPE_SUPPORT_GROUP
 } from './constants';
 
 /**
@@ -151,7 +153,7 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
   }
 }
 
-export function setHeaderDate(translate, timestamp, lastDate?): string {
+export function setHeaderDate(translate, timestamp): string {
   const LABEL_TODAY = translate.get('LABEL_TODAY');
   const LABEL_TOMORROW = translate.get('LABEL_TOMORROW');
   const date = new Date(timestamp);
@@ -178,14 +180,8 @@ export function setHeaderDate(translate, timestamp, lastDate?): string {
   // se le date sono diverse o la data di riferimento non è impostata
   // ritorna la data calcolata
   // altrimenti torna null
-
-  console.log('>>>>>>>>>>>>>> setHeaderDate: ', LABEL_TODAY, LABEL_TOMORROW, lastDate, labelDays);
-
-  if (lastDate !== labelDays || lastDate == null || lastDate === '' || lastDate === undefined) {
-    return labelDays;
-  } else {
-    return;
-  }
+  console.log('>>>>>>>>>>>>>> setHeaderDate: ', date, now, timestamp, labelDays);
+  return labelDays;
 }
 
 
@@ -523,6 +519,46 @@ export function avatarPlaceholder(conversation_with_fullname) {
   }
   // console.log('avatarPlaceholder------------->', conversation_with_fullname, initials);
   return initials;
+}
+
+/**
+ * 
+ * @param conversationWith
+ * @param conversationWithFullname
+ * @param conversationChannelType
+ * @param width
+ * @param height
+ */
+export function setConversationAvatar(
+    conversationWith: string,
+    conversationWithFullname: string,
+    conversationChannelType: string,
+    width?: string,
+    height?: string
+): any {
+  const conversationWidth = (width) ? width : '40px';
+  const conversationHeight = (height) ? height : '40px';
+  const conversationAvatar = {
+    uid: conversationWith,
+    conversation_with_fullname: conversationWithFullname,
+    conversation_with: conversationWith,
+    channelType: conversationChannelType,
+    avatar: avatarPlaceholder(conversationWithFullname),
+    color: getColorBck(conversationWithFullname),
+    imageurl: getImageUrlThumbFromFirebasestorage(conversationWith),
+    width: conversationWidth,
+    height: conversationHeight
+  };
+  return conversationAvatar;
+}
+
+/** */
+export function setChannelType(conversationWith: string): string {
+  let channelType = TYPE_DIRECT;
+  if (conversationWith.startsWith(TYPE_SUPPORT_GROUP)) {
+    channelType = TYPE_SUPPORT_GROUP;
+  }
+  return channelType;
 }
 
 export function getImageUrlThumb(FIREBASESTORAGE_BASE_URL_IMAGE: string, uid: string) {

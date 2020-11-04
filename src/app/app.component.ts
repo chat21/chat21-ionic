@@ -80,6 +80,7 @@ export class AppComponent implements OnInit {
     private translateService: CustomTranslateService
   ) {
     console.log('AppComponent');
+    console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
     this.initFirebase();

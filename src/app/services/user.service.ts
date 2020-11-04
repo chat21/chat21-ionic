@@ -1,4 +1,8 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+
+// models
+import { UserModel } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -6,11 +10,12 @@ import { Injectable } from '@angular/core';
 
 export abstract class UserService {
 
-    abstract initialize(tenant: string): void;
+  // params
+  abstract FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
+  abstract urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
 
-    abstract loadUserDetail(userID: string): any;
-
-    abstract loadCurrentUserDetail(): any;
-
-    abstract updateUserDetail(user: any): void;
+  abstract initialize(tenant: string): void;
+  abstract loadUserDetail(userID: string): any;
+  abstract loadCurrentUserDetail(): any;
+  abstract updateUserDetail(user: any): void;
 }

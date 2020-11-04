@@ -27,14 +27,15 @@ sed -i -e "s/$URL_VER/g" src/utils/constants.ts
 
 ionic cordova platform add browser --save
 #ionic cordova build browser --prod --release
-ionic cordova build --env=pre browser --prod  --verbose
+ionic cordova build --env=pre browser #--prod  --verbose
 
 cp -p src/firebase-messaging-sw.js platforms/browser/www/
 cp -p src/manifest.json platforms/browser/www/
 cp -p src/chat-config.json platforms/browser/www/
 
 cd platforms/browser/www
-#aws s3 sync . s3://tiledesk-dashboard-pre/chat-ionic5/$version/
+aws s3 sync . s3://tiledesk-dashboard-pre/chat-ionic5/$version/
+aws s3 sync . s3://tiledesk-dashboard-pre/chat-ionic5/
 cd ../../../
 
 #aws cloudfront create-invalidation --distribution-id E2DTAKWHWQ7C3J --paths "/*"
