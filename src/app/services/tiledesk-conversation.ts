@@ -29,10 +29,10 @@ export class TiledeskConversationProvider {
     // public http: Http,
     private chatManager: ChatManager,
     public appConfig: AppConfigProvider
-    //private userService: UserService
+    // private userService: UserService
   ) {
     this.init();
-    this.isConversationClosingMap = new Map(); 
+    this.isConversationClosingMap = new Map();
   }
 
   private init() {

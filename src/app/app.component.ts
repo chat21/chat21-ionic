@@ -11,7 +11,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 // services
 import { AppConfigProvider } from './services/app-config';
-import { UserService } from './services/user.service';
+// import { UserService } from './services/user.service';
+import { CurrentUserService } from './services/current-user/current-user.service';
 import { EventsService } from './services/events-service';
 import { AuthService } from './services/auth.service';
 import { PresenceService } from './services/presence.service';
@@ -65,7 +66,8 @@ export class AppComponent implements OnInit {
     public translate: TranslateService,
     public alertController: AlertController,
     public navCtrl: NavController,
-    public userService: UserService,
+    // public userService: UserService,
+    public currentUserService: CurrentUserService,
     public modalController: ModalController,
     public authService: AuthService,
     public presenceService: PresenceService,
@@ -80,6 +82,7 @@ export class AppComponent implements OnInit {
     private translateService: CustomTranslateService
   ) {
     console.log('AppComponent');
+    console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
     this.initFirebase();
@@ -136,7 +139,7 @@ export class AppComponent implements OnInit {
       // init
       this.authService.initialize(this.tenant);
       this.msgService.initialize();
-      this.userService.initialize(this.tenant);
+      // this.userService.initialize(this.tenant);
       this.presenceService.initialize(this.tenant);
       this.typingService.initialize(this.tenant);
       this.navService.init(this.sidebarNav, this.detailNav);
@@ -317,6 +320,9 @@ export class AppComponent implements OnInit {
    */
   goOnLine = (user: any) => {
     console.log('************** goOnLine', user);
+    const tiledeskToken = this.authService.getTiledeskToken();
+    this.currentUserService.initialize(tiledeskToken);
+
     clearTimeout(this.timeModalLogin);
     this.chatManager.goOnLine(user);
     this.chatPresenceHandler.setupMyPresence(user.uid);

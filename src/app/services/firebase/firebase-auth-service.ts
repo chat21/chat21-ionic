@@ -22,6 +22,8 @@ export class FirebaseAuthService extends AuthService {
 
   private tenant: string;
   public token: any;
+  public tiledeskToken: string;
+  public firebaseToken: string;
   public user: any;
 
   private URL_TILEDESK_SIGNIN: string;
@@ -73,6 +75,11 @@ export class FirebaseAuthService extends AuthService {
   getToken(): string {
     console.log('UserService::getToken');
     return this.token;
+  }
+
+  getTiledeskToken(): string {
+    console.log('UserService::tiledeskToken');
+    return this.tiledeskToken;
   }
 
   // ********************* START FIREBASE AUTH ********************* //
@@ -252,9 +259,9 @@ export class FirebaseAuthService extends AuthService {
     this.http.post(url, postData, requestOptions)
       .subscribe(data => {
         if (data['success'] && data['token']) {
-          const tiledeskToken = data['token'];
-          localStorage.setItem('tiledeskToken', tiledeskToken);
-          that.createCustomToken(tiledeskToken);
+          that.tiledeskToken = data['token'];
+          localStorage.setItem('this.tiledeskToken', that.tiledeskToken);
+          that.createCustomToken(that.tiledeskToken);
         }
       }, error => {
         console.log(error);
@@ -276,6 +283,7 @@ export class FirebaseAuthService extends AuthService {
     const that = this;
     this.http.post(this.URL_TILEDESK_CREATE_CUSTOM_TOKEN, postData, { headers, responseType})
     .subscribe(data =>  {
+      that.firebaseToken = data;
       that.signInWithCustomToken(data);
     }, error => {
       console.log(error);

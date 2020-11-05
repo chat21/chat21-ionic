@@ -10,7 +10,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularDelegate, ModalController } from '@ionic/angular';
 
 import {
-  MAX_WIDTH_IMAGES
+  MAX_WIDTH_IMAGES,
+  TYPE_DIRECT,
+  TYPE_SUPPORT_GROUP
 } from './constants';
 
 /**
@@ -45,6 +47,7 @@ export function conversationMessagesRef(tenant, userId) {
   const urlNode = '/apps/' + tenant + '/users/' + userId + '/messages/';
   return urlNode;
 }
+
 /**
  * chiamata da ChatContactsSynchronizer
  * restituisce url '/contacts'
@@ -150,15 +153,10 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
   }
 }
 
-export function setHeaderDate(translate, timestamp, lastDate?): string {
-  let LABEL_TODAY; // = translate.get('LABEL_TODAY')['value'];
-  let LABEL_TOMORROW; // = translate.get('LABEL_TOMORROW')['value'];
-  translate.get('LABEL_TODAY').subscribe((res: string) => {      
-    LABEL_TODAY = res;
-  });
-  translate.get('LABEL_TOMORROW').subscribe((res: string) => {      
-    LABEL_TOMORROW = res;
-  });
+export function setHeaderDate(translate, timestamp): string {
+  const LABEL_TODAY = translate.get('LABEL_TODAY');
+  const LABEL_TOMORROW = translate.get('LABEL_TOMORROW');
+ 
   const date = new Date(timestamp);
   const now: Date = new Date();
   let labelDays = '';
@@ -183,11 +181,8 @@ export function setHeaderDate(translate, timestamp, lastDate?): string {
   // se le date sono diverse o la data di riferimento non è impostata
   // ritorna la data calcolata
   // altrimenti torna null
-  if (lastDate !== labelDays || lastDate == null || lastDate === '' || lastDate === undefined) {
-    return labelDays;
-  } else {
-    return;
-  }
+  console.log('>>>>>>>>>>>>>> setHeaderDate: ', date, now, timestamp, labelDays);
+  return labelDays;
 }
 
 
@@ -199,23 +194,11 @@ export function setHeaderDate(translate, timestamp, lastDate?): string {
  */
 export function setLastDate(translate, timestamp): string {
 
-  var LABEL_TODAY; // = translate.get('LABEL_TODAY')['value'];
-  var LABEL_TOMORROW; // = translate.get('LABEL_TOMORROW')['value'];
-  var LABEL_TO; // = translate.get('LABEL_TO')['value'];
-  var LABEL_LAST_ACCESS; // = translate.get('LABEL_LAST_ACCESS')['value'];
+  const LABEL_TODAY = translate.get('LABEL_TODAY');
+  const LABEL_TOMORROW = translate.get('LABEL_TOMORROW');
+  const LABEL_TO = translate.get('LABEL_TO');
+  const LABEL_LAST_ACCESS = translate.get('LABEL_LAST_ACCESS');
 
-  translate.get('LABEL_TODAY').subscribe((res: string) => {
-    LABEL_TODAY = res;
-  });
-  translate.get('LABEL_TOMORROW').subscribe((res: string) => {
-    LABEL_TOMORROW = res;
-  });
-  translate.get('LABEL_TO').subscribe((res: string) => {
-    LABEL_TO = res;
-  });
-  translate.get('LABEL_LAST_ACCESS').subscribe((res: string) => {
-    LABEL_LAST_ACCESS = res;
-  });
   var date = new Date(timestamp);
   let now: Date = new Date();
   var labelDays = '';
@@ -270,11 +253,7 @@ export function setLastDateWithLabels(translationMap: Map<string, string>, times
  * @param day 
  */
 export function convertDayToString(translate, day) {
-  //['Lunedì', 'Martedì', 'Mercoledì','Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
-  var ARRAY_DAYS; // = translate.get('ARRAY_DAYS')['value'];
-  translate.get('ARRAY_DAYS').subscribe((res: string) => {
-    ARRAY_DAYS = res;
-  });
+  const ARRAY_DAYS = translate.get('ARRAY_DAYS');
   return ARRAY_DAYS[day];
 }
 
@@ -525,6 +504,46 @@ export function avatarPlaceholder(conversation_with_fullname) {
   }
   // console.log('avatarPlaceholder------------->', conversation_with_fullname, initials);
   return initials;
+}
+
+/**
+ * 
+ * @param conversationWith
+ * @param conversationWithFullname
+ * @param conversationChannelType
+ * @param width
+ * @param height
+ */
+export function setConversationAvatar(
+    conversationWith: string,
+    conversationWithFullname: string,
+    conversationChannelType: string,
+    width?: string,
+    height?: string
+): any {
+  const conversationWidth = (width) ? width : '40px';
+  const conversationHeight = (height) ? height : '40px';
+  const conversationAvatar = {
+    uid: conversationWith,
+    conversation_with_fullname: conversationWithFullname,
+    conversation_with: conversationWith,
+    channelType: conversationChannelType,
+    avatar: avatarPlaceholder(conversationWithFullname),
+    color: getColorBck(conversationWithFullname),
+    imageurl: getImageUrlThumbFromFirebasestorage(conversationWith),
+    width: conversationWidth,
+    height: conversationHeight
+  };
+  return conversationAvatar;
+}
+
+/** */
+export function setChannelType(conversationWith: string): string {
+  let channelType = TYPE_DIRECT;
+  if (conversationWith.startsWith(TYPE_SUPPORT_GROUP)) {
+    channelType = TYPE_SUPPORT_GROUP;
+  }
+  return channelType;
 }
 
 export function getImageUrlThumb(FIREBASESTORAGE_BASE_URL_IMAGE: string, uid: string) {

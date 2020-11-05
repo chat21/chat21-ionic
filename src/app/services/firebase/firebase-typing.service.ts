@@ -38,8 +38,6 @@ export class FirebaseTypingService extends TypingService {
     super();
   }
 
- 
-
   /** */
   initialize(tenant: string) {
     console.log('FirebaseTypingService', tenant);

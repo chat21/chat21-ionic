@@ -45,6 +45,10 @@ export const MESSAGE_TYPE_INFO = 'INFO';
 export const MESSAGE_TYPE_MINE = 'MINE';
 export const MESSAGE_TYPE_OTHERS = 'OTHERS';
 export const MESSAGE_TYPE_DATE = 'DATE';
+
+export const CHAT_REOPENED  = 'CHAT_REOPENED';
+export const CHAT_CLOSED = 'CHAT_CLOSED';
+export const MEMBER_JOINED_GROUP = 'MEMBER_JOINED_GROUP';
 // URLS
 
 export const URL_SOUND = 'assets/pling.mp3';

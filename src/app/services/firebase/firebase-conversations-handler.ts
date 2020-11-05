@@ -14,7 +14,6 @@ import { ConversationModel } from 'src/app/models/conversation';
 // services
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
 import { DatabaseProvider } from 'src/app/services/database';
-import { TiledeskConversationProvider } from 'src/app/services/tiledesk-conversation';
 
 // utils
 import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
@@ -27,7 +26,10 @@ import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArr
 export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
     // BehaviorSubject
+    readAllMessages: BehaviorSubject<string>;
+    conversationsAdded: BehaviorSubject<ConversationModel[]>;
     conversationsChanged: BehaviorSubject<ConversationModel[]>;
+    conversationsRemoved: BehaviorSubject<ConversationModel[]>;
     loadedConversationsStorage: BehaviorSubject<ConversationModel[]>;
 
     // public variables
@@ -38,24 +40,17 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     private tenant: string;
     private loggedUserId: string;
     private translationMap: Map<string, string>;
+    private isConversationClosingMap: Map<string, boolean>;
 
     private ref: firebase.database.Query;
     private audio: any;
     private setTimeoutSound: any;
 
     constructor(
-        // private tiledeskConversationsProvider: TiledeskConversationProvider,
         public databaseProvider: DatabaseProvider
     ) {
         super();
     }
-
-    /**
-     * ritorno istanza di conversations handler
-     */
-    // getInstance() {
-    //     return this;
-    // }
 
     /**
      * inizializzo conversations handler
@@ -69,24 +64,9 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         this.loggedUserId = userId;
         this.translationMap = translationMap;
         this.conversations = [];
+        this.isConversationClosingMap = new Map();
         this.databaseProvider.initialize(userId, this.tenant);
         this.getConversationsFromStorage();
-        // return this;
-    }
-
-    /**
-     *
-     */
-    private getConversationsFromStorage() {
-        const that = this;
-        this.databaseProvider.getConversations()
-        .then((conversations: [ConversationModel]) => {
-            that.loadedConversationsStorage.next(conversations);
-            // that.events.publish('loadedConversationsStorage', conversations);
-        })
-        .catch((e) => {
-            console.log('error: ', e);
-        });
     }
 
     /**
@@ -114,96 +94,45 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         this.audio.load();
     }
 
-
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
     /**
-     * 1 -  completo la conversazione con i parametri mancanti
-     * 2 -  verifico che sia una conversazione valida
-     * 3 -  salvo stato conversazione (false) nell'array delle conversazioni chiuse
-     * 4 -  aggiungo alla pos 0 la nuova conversazione all'array di conversazioni 
-     *      o sostituisco la conversazione con quella preesistente
-     * 5 -  salvo la conversazione nello storage
-     * 6 -  ordino l'array per timestamp
-     * 7 -  pubblico conversations:update
+     * restituisce il numero di conversazioni nuove
      */
-    private added(childSnapshot: any) {
-        const childData: ConversationModel = childSnapshot.val();
-        childData.uid = childSnapshot.key;
-        const conversation = this.completeConversation(childData);
-        if (this.isValidConversation(childSnapshot.key, conversation)) {
-            // da verificare l'utilità e spostare in questa classe
-            //this.tiledeskConversationsProvider.setClosingConversation(childSnapshot.key, false);
-            const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
-            if (index > -1) {
-                this.conversations.splice(index, 1, conversation);
-            } else {
-                this.conversations.splice(0, 0, conversation);
-                this.databaseProvider.setConversation(conversation);
+    countIsNew(): number {
+        let num = 0;
+        this.conversations.forEach((element) => {
+            if (element.is_new === true) {
+                num++;
             }
-            this.conversations.sort(compareValues('timestamp', 'desc'));
-            this.conversationsChanged.next(this.conversations);
-            // this.events.publish('conversationsChanged', this.conversations);
-        } else {
-            console.error('ChatConversationsHandler::added::conversations with conversationId: ', childSnapshot.key, 'is not valid');
-        }
+        });
+        return num;
     }
 
     /**
-     * 1 -  completo la conversazione con i parametri mancanti
-     * 2 -  verifico che sia una conversazione valida
-     * 3 -  aggiungo alla pos 0 la nuova conversazione all'array di conversazioni 
-     * 4 -  salvo la conversazione nello storage
-     * 5 -  ordino l'array per timestamp
-     * 6 -  pubblico conversations:update
-     * 7 -  attivo sound se è un msg nuovo
+     * Returns the status of the conversations with conversationId from isConversationClosingMap
+     * @param conversationId the conversation id
+     * @returns true if the conversation is waiting to be closed, false otherwise
      */
-    private changed(childSnapshot: any) {
-        const childData: ConversationModel = childSnapshot.val();
-        childData.uid = childSnapshot.key;
-        console.log('changed conversation: ', childData);
-        const conversation = this.completeConversation(childData);
-        if (this.isValidConversation(childSnapshot.key, conversation)) {
-            const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
-            if (index > -1) {
-                this.conversations.splice(index, 1, conversation);
-            }
-            this.databaseProvider.setConversation(conversation);
-            this.conversations.sort(compareValues('timestamp', 'desc'));
-            this.conversationsChanged.next(this.conversations);
-            // this.events.publish('conversationsChanged', this.conversations);
-        } else {
-            console.error('ChatConversationsHandler::changed::conversations with conversationId: ', childSnapshot.key, 'is not valid');
-        }
-        if (conversation.is_new) {
-            this.soundMessage();
-        }
+    getClosingConversation(conversationId: string) {
+    return this.isConversationClosingMap[conversationId];
     }
 
     /**
-     * 1 -  cerco indice conversazione da eliminare
-     * 2 -  elimino conversazione da array conversations
-     * 3 -  elimino la conversazione dallo storage
-     * 4 -  pubblico conversations:update
-     * 5 -  elimino conversazione dall'array delle conversazioni chiuse
+     * Add the conversation with conversationId to the isConversationClosingMap
+     * @param conversationId the id of the conversation of which it wants to save the state
+     * @param status true if the conversation is waiting to be closed, false otherwise
      */
-    private removed(childSnapshot) {
-        // 1
-        const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
-        if(index > -1) {
-            // 2
-            this.conversations.splice(index, 1);
-            // this.conversations.sort(compareValues('timestamp', 'desc'));
-            // 3
-            this.databaseProvider.removeConversation(childSnapshot.key);
-            // 4
-            this.conversationsChanged.next(this.conversations);
-            // this.events.publish('conversationsChanged', this.conversations);
-        }
-        // remove the conversation from the isConversationClosingMap
-        // 5 not understand
-        // da verificare l'utilità e spostare in questa classe
-        // this.tiledeskConversationsProvider.deleteClosingConversation(childSnapshot.key);
+    setClosingConversation(conversationId: string, status: boolean) {
+        this.isConversationClosingMap[conversationId] = status;
     }
+
+    /**
+     * Delete the conversation with conversationId from the isConversationClosingMap
+     * @param conversationId the id of the conversation of which is wants to delete
+     */
+    deleteClosingConversation(conversationId: string) {
+    this.isConversationClosingMap.delete(conversationId);
+    }
+
 
     /**
      * dispose reference di conversations
@@ -219,10 +148,107 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     }
 
 
+    // ---------------------------------------------------------- //
+    // BEGIN PRIVATE FUNCTIONS
+    // ---------------------------------------------------------- //
+    /**
+     *
+     */
+    private getConversationsFromStorage() {
+        const that = this;
+        this.databaseProvider.getConversations()
+        .then((conversations: [ConversationModel]) => {
+            that.loadedConversationsStorage.next(conversations);
+        })
+        .catch((e) => {
+            console.log('error: ', e);
+        });
+    }
 
-    // ---------------------------------------------------------- //
-    // BEGIN FUNCTIONS 
-    // ---------------------------------------------------------- //
+
+    /**
+     *
+     * @param childSnapshot
+     */
+    private conversationGenerate(childSnapshot: any): boolean {
+        const childData: ConversationModel = childSnapshot.val();
+        childData.uid = childSnapshot.key;
+        const conversation = this.completeConversation(childData);
+        if (this.isValidConversation(conversation)) {
+            this.setClosingConversation(childSnapshot.key, false);
+            const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
+            if (index > -1) {
+                this.conversations.splice(index, 1, conversation);
+            } else {
+                this.conversations.splice(0, 0, conversation);
+            }
+            this.databaseProvider.setConversation(conversation);
+            this.conversations.sort(compareValues('timestamp', 'desc'));
+            if (conversation.is_new) {
+                this.soundMessage();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+    /**
+     * 1 -  completo la conversazione con i parametri mancanti
+     * 2 -  verifico che sia una conversazione valida
+     * 3 -  salvo stato conversazione (false) nell'array delle conversazioni chiuse
+     * 4 -  aggiungo alla pos 0 la nuova conversazione all'array di conversazioni 
+     *      o sostituisco la conversazione con quella preesistente
+     * 5 -  salvo la conversazione nello storage
+     * 6 -  ordino l'array per timestamp
+     * 7 -  pubblico conversations:update
+     */
+    private added(childSnapshot: any) {
+        if (this.conversationGenerate(childSnapshot)) {
+            this.conversationsAdded.next(this.conversations);
+        } else {
+            console.error('ChatConversationsHandler::ADDED::conversations with conversationId: ', childSnapshot.key, 'is not valid');
+        }
+    }
+
+    /**
+     * 1 -  completo la conversazione con i parametri mancanti
+     * 2 -  verifico che sia una conversazione valida
+     * 3 -  aggiungo alla pos 0 la nuova conversazione all'array di conversazioni 
+     * 4 -  salvo la conversazione nello storage
+     * 5 -  ordino l'array per timestamp
+     * 6 -  pubblico conversations:update
+     * 7 -  attivo sound se è un msg nuovo
+     */
+    private changed(childSnapshot: any) {
+        if (this.conversationGenerate(childSnapshot)) {
+            this.conversationsChanged.next(this.conversations);
+        } else {
+            console.error('ChatConversationsHandler::CHANGED::conversations with conversationId: ', childSnapshot.key, 'is not valid');
+        }
+    }
+
+    /**
+     * 1 -  cerco indice conversazione da eliminare
+     * 2 -  elimino conversazione da array conversations
+     * 3 -  elimino la conversazione dallo storage
+     * 4 -  pubblico conversations:update
+     * 5 -  elimino conversazione dall'array delle conversazioni chiuse
+     */
+    private removed(childSnapshot: any) {
+        const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
+        if (index > -1) {
+            this.conversations.splice(index, 1);
+            // this.conversations.sort(compareValues('timestamp', 'desc'));
+            this.databaseProvider.removeConversation(childSnapshot.key);
+            this.conversationsRemoved.next(this.conversations);
+        }
+        // remove the conversation from the isConversationClosingMap
+        this.deleteClosingConversation(childSnapshot.key);
+    }
+
+
     /**
      * Completo conversazione aggiungendo:
      * 1 -  nel caso in cui sender_fullname e recipient_fullname sono vuoti, imposto i rispettivi id come fullname,
@@ -236,56 +262,6 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * 5 -  imposto avatar, colore e immagine
      * @param conv
      */
-    // public completeConversation(conv: any): ConversationModel {
-    //     const conversation: ConversationModel = conv;
-    //     // console.log('completeConversation', conv);
-    //     if (!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === '') {
-    //         conversation.sender_fullname = conv.sender;
-    //     } else {
-    //         conversation.sender_fullname = conv.sender_fullname;
-    //     }
-    //     if (!conv.recipient_fullname || conv.recipient_fullname === 'undefined' || conv.recipient_fullname.trim() === ''){
-    //         conversation.recipient_fullname = conv.recipient;
-    //     } else {
-    //         conversation.recipient_fullname = conv.recipient_fullname;
-    //     }
-    //     let LABEL_TU: string;
-    //     this.translate.get('LABEL_TU').subscribe((res: string) => {
-    //         LABEL_TU = res;
-    //     });
-    //     let conversationWithFullname = conv.sender_fullname;
-    //     let conversationWith = conv.sender;
-    //     conversation.last_message_text = conv.last_message_text;
-    //     if (conv.sender === this.loggedUser.uid) {
-    //         conversationWith = conv.recipient;
-    //         conversationWithFullname = conv.recipient_fullname;
-    //         conversation.last_message_text = LABEL_TU + conv.last_message_text;
-    //     } else if (conv.channel_type === TYPE_GROUP) {
-    //         conversationWith = conv.recipient;
-    //         conversationWithFullname = conv.recipient_fullname;
-    //         conversation.last_message_text = conv.last_message_text;
-    //     }
-    //     conversation.conversation_with_fullname = conversationWithFullname;
-
-    //     conversation.selected = false;
-    //     console.log('conv.uid', conv.uid);
-    //     conversation.status = this.setStatusConversation(conv.sender, conv.uid);
-
-    //     conversation.time_last_message = this.getTimeLastMessage(conv.timestamp);
-
-    //     conversation.avatar = avatarPlaceholder(conversationWithFullname);
-    //     conversation.color = getColorBck(conversationWithFullname);
-    //     conversation.image = this.getImageUrlThumbFromFirebasestorage(conv.uid);
-    //     // try {
-    //     //     const FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE;
-    //     //     conversation.image = getImageUrlThumb(FIREBASESTORAGE_BASE_URL_IMAGE, conversationWith);
-    //     // } catch (err) {
-    //     //     console.log(err);
-    //     // }
-    //     // console.log('completeConversation fine', conversation);
-    //     return conversation;
-    // }
-
     private completeConversation(conv): ConversationModel {
         console.log('completeConversation', conv);
         const LABEL_TU = this.translationMap.get('LABEL_TU');
@@ -317,32 +293,8 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         return conv;
     }
 
-    // /**
-    //  *
-    //  * @param uid
-    //  */
-    // private getImageUrlThumbFromFirebasestorage(uid: string) {
-    //     const FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE;
-    //     const urlStorageBucket = this.appConfig.getConfig().firebaseConfig.storageBucket + '/o/profiles%2F';
-    //     const imageurl = FIREBASESTORAGE_BASE_URL_IMAGE + urlStorageBucket + uid + '%2Fthumb_photo.jpg?alt=media';
-    //     return imageurl;
-    // }
-
     /** */
-    // set the remote conversation as read
-    // setConversationRead(conversationUid) {
-    //     var conversationRef = this.ref.ref.child(conversationUid);
-    //     conversationRef.update ({"is_new" : false});
-    // }
-
-    /** */
-    // getConversationByUid(conversationUid) {
-    //     const index = searchIndexInArrayForUid(this.conversations, conversationUid);
-    //     return this.conversations[index];
-    // }
-
-    /** */
-    private setStatusConversation(sender, uid): string {
+    private setStatusConversation(sender: string, uid: string): string {
         let status = '0'; // letto
         if (sender === this.loggedUserId || uid === this.uidConvSelected) {
             status = '0';
@@ -354,53 +306,13 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
     /**
      * calcolo il tempo trascorso da ora al timestamp passato
-     * @param timestamp 
+     * @param timestamp
      */
     private getTimeLastMessage(timestamp: string) {
-        const timestampNumber = parseInt(timestamp) / 1000;
+        const timestampNumber = parseInt(timestamp, 10) / 1000;
         const time = getFromNow(timestampNumber);
         return time;
     }
-
-    // removeByUid(uid) {
-    //     const index = searchIndexInArrayForUid(this.conversations, uid);
-    //     if (index > -1) {
-    //         this.conversations.splice(index, 1);
-    //         // this.events.publish('conversationsChanged', this.conversations);
-    //         this.conversationsChanged.next(this.conversations);
-    //     }
-    // }
-
-    // addConversationListener(uidUser, conversationId) {
-    //     var that = this;
-    //     this.tenant = environment.tenant;
-    //     // const tenant = this.chatManager.getTenant();
-    //     const url = '/apps/' + this.tenant + '/users/' + uidUser + '/conversations/' + conversationId;
-    //     const reference = firebase.database().ref(url);
-    //     console.log("ChatConversationsHandler::addConversationListener::reference:",url, reference.toString());
-    //     reference.on('value', function (snapshot) {
-    //         setTimeout(function () {
-    //             // that.events.publish(conversationId + '-listener', snapshot);
-    //         }, 100);
-    //     });
-    // }
-
-    /**
-     * restituisce il numero di conversazioni nuove
-     */
-    countIsNew(): number {
-        let num = 0;
-        this.conversations.forEach((element) => {
-            if (element.is_new === true) {
-                num++;
-            }
-        });
-        return num;
-    }
-
-    // ---------------------------------------------------------- //
-    // END FUNCTIONS
-    // ---------------------------------------------------------- //
 
     /**
      * attivo sound se è un msg nuovo
@@ -408,77 +320,67 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     private soundMessage() {
         console.log('****** soundMessage *****', this.audio);
         const that = this;
-        // this.audio = new Audio();
-        // this.audio.src = 'assets/pling.mp3';
-        // this.audio.load();
         this.audio.pause();
         this.audio.currentTime = 0;
         clearTimeout(this.setTimeoutSound);
-        this.setTimeoutSound = setTimeout(function () {
-        //setTimeout(function() {
+        this.setTimeoutSound = setTimeout(() => {
             that.audio.play()
-            .then(function() {
-                // console.log('****** then *****');
+            .then(() => {
+                console.log('****** soundMessage played *****');
             })
-            .catch(function() {
-                // console.log('***//tiledesk-dashboard/chat*');
+            .catch((error: any) => {
+                console.log('***soundMessage error*', error);
             });
-        }, 1000);       
+        }, 1000);
     }
 
     /**
      *  check if the conversations is valid or not
-    */
-    private isValidConversation(convToCheckId, convToCheck: ConversationModel) : boolean {
-        //console.log("[BEGIN] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
+     */
+    private isValidConversation(convToCheck: ConversationModel): boolean {
         if (!this.isValidField(convToCheck.uid)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'uid is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.is_new)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'is_new is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.last_message_text)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'last_message_text is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.recipient)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'recipient is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.recipient_fullname)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'recipient_fullname is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.sender)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'sender is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.sender_fullname)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'sender_fullname is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.status)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'status is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.timestamp)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'timestamp is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.channel_type)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'channel_type is not valid' ");
             return false;
         }
-        //console.log("[END] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
-        // any other case
         return true;
     }
 
-    // checks if a conversation's field is valid or not
-    private isValidField(field) : boolean{
+    /**
+     *
+     * @param field
+     */
+    private isValidField(field: any): boolean {
         return (field === null || field === undefined) ? false : true;
     }
+
+    // ---------------------------------------------------------- //
+    // END PRIVATE FUNCTIONS
+    // ---------------------------------------------------------- //
 
 }
