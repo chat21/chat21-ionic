@@ -82,7 +82,7 @@ import { AppConfigProvider } from './services/app-config';
 import { MessagingService } from './services/messaging-service';
 import { EventsService } from './services/events-service';
 import { AuthService } from './services/auth.service';
-import { FirebaseAuthService } from './services/firebase/firebase-auth-service';
+import { MQTTAuthService } from './services/mqtt/mqtt-auth-service';
 import { UserService } from './services/user.service';
 import { FirebaseUserService } from './services/firebase/firebase-user-service';
 import { PresenceService } from './services/presence.service';
@@ -90,8 +90,10 @@ import { FirebasePresenceService } from './services/firebase/firebase-presence.s
 import { TypingService } from './services/typing.service';
 import { FirebaseTypingService } from './services/firebase/firebase-typing.service';
 import { ConversationsHandlerService } from './services/conversations-handler.service';
-import { FirebaseConversationsHandler } from './services/firebase/firebase-conversations-handler';
+import { MQTTConversationsHandler } from './services/mqtt/mqtt-conversations-handler';
 import { DatabaseProvider } from './services/database';
+
+import { Chat21Service } from './services/chat-service';
 
 // import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -143,9 +145,9 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
   };
 };
 
-export function authenticationFactory(events: EventsService, http: HttpClient) {
+export function authenticationFactory(http: HttpClient, chat21Service: Chat21Service) {
   console.log('authenticationFactory: ');
-  return new FirebaseAuthService(events, http);
+  return new MQTTAuthService(http, chat21Service);
 }
 
 export function userFactory(events: EventsService ) {
@@ -164,9 +166,9 @@ export function typingFactory(events: EventsService) {
 }
 
 export function conversationsHandlerFactory(
-  databaseProvider: DatabaseProvider) {
+  http: HttpClient, databaseProvider: DatabaseProvider, chat21Service: Chat21Service) {
   console.log('conversationsHandlerFactory: ');
-  return new FirebaseConversationsHandler(databaseProvider);
+  return new MQTTConversationsHandler(databaseProvider, chat21Service);
 }
 
 
@@ -220,7 +222,7 @@ export function conversationsHandlerFactory(
     {
       provide: AuthService,
       useFactory: authenticationFactory,
-      deps: [EventsService, HttpClient]
+      deps: [HttpClient, Chat21Service]
      },
     {
       provide: UserService,
@@ -240,7 +242,7 @@ export function conversationsHandlerFactory(
     {
       provide: ConversationsHandlerService,
       useFactory: conversationsHandlerFactory,
-      deps: [DatabaseProvider]
+      deps: [DatabaseProvider, Chat21Service]
     },
 
     StatusBar,
@@ -250,7 +252,8 @@ export function conversationsHandlerFactory(
     // { provide: LocationStrategy, useClass: HashLocationStrategy },
     MessagingService,
     EventsService,
-    DatabaseProvider
+    DatabaseProvider,
+    Chat21Service
   ]
 })
 export class AppModule {}

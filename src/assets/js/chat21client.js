@@ -501,10 +501,10 @@ class Chat21Client {
 
     connect(user_id, jwt, callback) {
         this.user_id = user_id;
-        // console.log("userid:", this.user_id)
+        console.log("userid:", this.user_id)
         this.jwt = jwt
         // console.log("connecting user_id:", user_id)
-        console.log("usgin jwt token:", jwt)
+        console.log("using jwt token:", jwt)
         
         if (this.client) {
             this.client.end()

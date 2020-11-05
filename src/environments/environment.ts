@@ -4,11 +4,21 @@ supportMode: true,
 CHAT_SEND_BY_EMAIL_LINK: "mailto:",
 DASHBOARD_URL: "https://console.tiledesk.com/v2/dashboard/",
 FIREBASESTORAGE_BASE_URL_IMAGE: "https://firebasestorage.googleapis.com/v0/b/",
-SERVER_BASE_URL: "https://api.tiledesk.com/v2/",
+//SERVER_BASE_URL: "https://api.tiledesk.com/v2/",
+// http://console-native.tiledesk.com/api/chat21/native/auth
+SERVER_BASE_URL: "http://console-native.tiledesk.com/api/",
 production: true,
 remoteConfig: false,
 remoteConfigUrl: './chat-config.json',
-remoteContactsUrl: 'https://api.tiledesk.com/v2/chat21/contacts',
+//remoteContactsUrl: 'https://api.tiledesk.com/v2/chat21/contacts',
+remoteContactsUrl: 'http://console-native.tiledesk.com/api/chat21/contacts',
+
+chat21Config: {
+    appId: "tilechat",
+    MQTTendpoint: 'mqtt://localhost:15675/ws', // MQTT endpoint
+    APIendpoint: 'http://localhost:8004/api',
+    loginServiceEndpoint: 'http://console-native.tiledesk.com/api/chat21/native/auth/createCustomToken'
+},
 firebaseConfig: {
     apiKey: "AIzaSyDKfdKrlD7AYcbQ-U-xxgV-b3FUQ4xt7NM",
     authDomain: "tiledesk-prod-v2.firebaseapp.com",
