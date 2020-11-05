@@ -156,6 +156,7 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
 export function setHeaderDate(translate, timestamp): string {
   const LABEL_TODAY = translate.get('LABEL_TODAY');
   const LABEL_TOMORROW = translate.get('LABEL_TOMORROW');
+ 
   const date = new Date(timestamp);
   const now: Date = new Date();
   let labelDays = '';
@@ -193,23 +194,11 @@ export function setHeaderDate(translate, timestamp): string {
  */
 export function setLastDate(translate, timestamp): string {
 
-  var LABEL_TODAY; // = translate.get('LABEL_TODAY')['value'];
-  var LABEL_TOMORROW; // = translate.get('LABEL_TOMORROW')['value'];
-  var LABEL_TO; // = translate.get('LABEL_TO')['value'];
-  var LABEL_LAST_ACCESS; // = translate.get('LABEL_LAST_ACCESS')['value'];
+  const LABEL_TODAY = translate.get('LABEL_TODAY');
+  const LABEL_TOMORROW = translate.get('LABEL_TOMORROW');
+  const LABEL_TO = translate.get('LABEL_TO');
+  const LABEL_LAST_ACCESS = translate.get('LABEL_LAST_ACCESS');
 
-  translate.get('LABEL_TODAY').subscribe((res: string) => {
-    LABEL_TODAY = res;
-  });
-  translate.get('LABEL_TOMORROW').subscribe((res: string) => {
-    LABEL_TOMORROW = res;
-  });
-  translate.get('LABEL_TO').subscribe((res: string) => {
-    LABEL_TO = res;
-  });
-  translate.get('LABEL_LAST_ACCESS').subscribe((res: string) => {
-    LABEL_LAST_ACCESS = res;
-  });
   var date = new Date(timestamp);
   let now: Date = new Date();
   var labelDays = '';
@@ -264,11 +253,7 @@ export function setLastDateWithLabels(translationMap: Map<string, string>, times
  * @param day 
  */
 export function convertDayToString(translate, day) {
-  //['Lunedì', 'Martedì', 'Mercoledì','Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
-  var ARRAY_DAYS; // = translate.get('ARRAY_DAYS')['value'];
-  translate.get('ARRAY_DAYS').subscribe((res: string) => {
-    ARRAY_DAYS = res;
-  });
+  const ARRAY_DAYS = translate.get('ARRAY_DAYS');
   return ARRAY_DAYS[day];
 }
 

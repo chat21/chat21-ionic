@@ -18,7 +18,7 @@ import { ConversationModel } from '../../models/conversation';
 
 // services
 import { AuthService } from '../../services/auth.service';
-import { UserService } from '../../services/user.service';
+// import { UserService } from '../../services/user.service';
 // import { NavProxyService } from '../../services/nav-proxy';
 // import { ChatPresenceHandler } from '../../services/chat-presence-handler';
 import { ChatManager } from '../../services/chat-manager';
@@ -89,6 +89,7 @@ import {
 // import { EventsService } from '../../services/events-service';
 // import { initializeApp } from 'firebase';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -107,7 +108,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   COLOR_GREEN = '#24d066'; // colore presence active da spostare nelle costanti
   COLOR_RED = '#db4437'; // colore presence none da spostare nelle costanti
 
-  private subscriptions: Array<string>;
+  private subscriptions: Array<Subscription>;
   private tenant: string;
   public loggedUser: UserModel;
   public conversationWith: string;
@@ -167,7 +168,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     // private el: ElementRef,
     // public popoverCtrl: PopoverController,
     // public navCtrl: NavController,
-    public userService: UserService,
+    // public userService: UserService,
     // public events: EventsService,
     public chatManager: ChatManager,
     public actionSheetCtrl: ActionSheetController,
@@ -225,15 +226,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('ngOnDestroy ConversationDetailPage: ');
-    // this.unsubescribeAll();
+    this.unsubescribeAll();
   }
 
   /** */
   ionViewWillEnter() {
-    console.log('ionViewWillEnter ConversationDetailPage: ');
-    this.NUM_BADGES = 0;
-    this.showButtonToBottom = false;
-    this.detectBottom();
+    this.loggedUser = this.chatManager.getLoggedUser();
+    console.log('ionViewWillEnter ConversationDetailPage: ', this.loggedUser);
+    // if (this.loggedUser) {
+    //   this.NUM_BADGES = 0;
+    //   this.showButtonToBottom = false;
+    //   this.initialize();
+    // }
   }
 
   /** */
@@ -317,7 +321,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       'INFO_SUPPORT_CHAT_REOPENED',
       'INFO_SUPPORT_CHAT_CLOSED',
       'LABEL_TODAY',
-      'LABEL_TOMORROW'
+      'LABEL_TOMORROW',
+      'LABEL_LAST_ACCESS',
+      'LABEL_TO',
+      'ARRAY_DAYS'
     ];
     const translationMap = this.customTranslateService.translateLanguage(keys);
     this.showMessageWelcome = false;
@@ -365,15 +372,17 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    */
   startConversation() {
     console.log('startConversation: ');
-    this.channelType = setChannelType(this.conversationWith);
-    this.selectInfoContentTypeComponent();
-    this.conversationAvatar =  setConversationAvatar(
-      this.conversationWith,
-      this.conversationWithFullname,
-      this.channelType
-    );
-    this.detectBottom();
-    this.initSubscriptions();
+    if (this.conversationWith) {
+      this.channelType = setChannelType(this.conversationWith);
+      this.selectInfoContentTypeComponent();
+      this.conversationAvatar =  setConversationAvatar(
+        this.conversationWith,
+        this.conversationWithFullname,
+        this.channelType
+      );
+      this.detectBottom();
+      this.initSubscriptions();
+    }
   }
 
   // -------------- START SET INFO COMPONENT -------------- //
@@ -397,13 +406,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   setInfoDirect() {
     this.member = null;
     const that = this;
-    this.userService.loadUserDetail(this.conversationWith)
-    .then((member: UserModel) => {
-      that.member = member;
-    })
-    .catch((err: Error) => {
-      console.log('error fullProfile', err);
-    });
+    // this.userService.loadUserDetail(this.conversationWith)
+    // .then((member: UserModel) => {
+    //   that.member = member;
+    // })
+    // .catch((err: Error) => {
+    //   console.log('error fullProfile', err);
+    // });
   }
 
   /**
@@ -474,7 +483,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    */
   sendMessage(msg: string, type: string, metadata?: any) {
     console.log('sendMessage: ');
-    
+
     let fullname = this.loggedUser.uid;
     if (this.loggedUser.fullname) {
       fullname = this.loggedUser.fullname;
@@ -520,103 +529,44 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * subscriptions list
    */
   initSubscriptions() {
-    this.addEventsKeyboard();
     console.log('initSubscriptions');
-    let key = '';
-
-    // subcribe new messages
-    // key = 'newMessage';
-    // if (!isInArray(key, this.subscriptions)) {
-    //   this.subscriptions.push(key);
-    //   this.events.subscribe(key, this.newMessage);
-    // }
-
-    // subscribe dettaglio messaggio
-    key = 'openInfoMessage';
-    if (!isInArray(key, this.subscriptions)) {
-      this.subscriptions.push(key);
-      // this.events.subscribe(key, this.onOpenInfoMessage);
-    }
-    // subscribe message videochat
-    key = 'openVideoChat';
-    if (!isInArray(key, this.subscriptions)) {
-      this.subscriptions.push(key);
-      // this.events.subscribe(key, this.onOpenVideoChat);
-    }
+    this.addEventsKeyboard();
 
     const that = this;
-    this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
+    const subscribeConversationsChanged = this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
       console.log('***** DATAIL conversationsChanged *****', conversations);
     });
+    if (this.subscriptions.indexOf(subscribeConversationsChanged) === -1 ) {
+      this.subscriptions.push(subscribeConversationsChanged);
+    }
 
-    // this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
-    //   console.log('***** DATAIL messageAdded *****', msg);
-    //   this.newMessageAdded();
-    // });
-    this.conversationHandlerService.messageChanged.subscribe((msg: any) => {
-      console.log('***** DATAIL messageChanged *****', msg);
-      // that.newMessageAdded();
-    });
-    this.conversationHandlerService.messageRemoved.subscribe((messageId: any) => {
-      console.log('***** DATAIL messageRemoved *****', messageId);
-    });
-
-    this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
+    const subscribeMessageAdded = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
       console.log('***** DATAIL messageAdded *****', msg);
       that.newMessageAdded(msg);
     });
-  }
+    if (this.subscriptions.indexOf(subscribeMessageAdded) === -1 ) {
+      this.subscriptions.push(subscribeMessageAdded);
+    }
 
+    const subscribeMessageChanged = this.conversationHandlerService.messageChanged.subscribe((msg: any) => {
+      console.log('***** DATAIL messageChanged *****', msg);
+    });
+    if (this.subscriptions.indexOf(subscribeMessageChanged) === -1 ) {
+      this.subscriptions.push(subscribeMessageChanged);
+    }
+
+    const subscribeMessageRemoved = this.conversationHandlerService.messageRemoved.subscribe((messageId: any) => {
+      console.log('***** DATAIL messageRemoved *****', messageId);
+    });
+    if (this.subscriptions.indexOf(subscribeMessageRemoved) === -1 ) {
+      this.subscriptions.push(subscribeMessageRemoved);
+    }
+
+  }
 
   /**
-   * ::: subscribeLoggedUserLogin :::
-   * effettuato il login:
-   * 1 - imposto loggedUser
-   * 2 - dismetto modale
-   * 3 - inizializzo elenco conversazioni
+   * addEventsKeyboard
    */
-  subscribeLoggedUserLogin = (user: any) => {
-    console.log('2 ************** subscribeLoggedUserLogin', user);
-    this.loggedUser = user;
-    try {
-      closeModal(this.modalController);
-    } catch (err) {
-      console.error('-> error:', err);
-    }
-    this.initialize();
-  }
-
-
-   /**
-   * on subcribe doScroll add message
-   * evento chiamato su add, change, remove msg se il msg è isSender true (cioè se è stato inviato dall'utenet )
-   */
-  // goToBottom: any = (data) => {
-  //   this.doScroll();
-  //   console.log('*********** goToBottom');
-  // }
-
-  // newMessage: any = (message) => {
-  //   // LISTEN TO SCROLL POSITION
-  //   console.log('------------ newMessage ---------- ', message);
-  //   console.log('------------ isSender ---------- ', message.isSender);
-  //   console.log('------------ isStatusScrollerBottom ---------- ', this.isStatusScrollerBottom);
-  //   console.log('------------ showButtonToBottom ---------- ', this.showButtonToBottom);
-  //   console.log('------------ NUM_BADGES ---------- ', this.NUM_BADGES);
-  //   if (message.isSender) {
-  //     // this.scrollBottom();
-  //   } else {
-  //     if (this.isStatusScrollerBottom) {
-  //       // this.scrollBottom();
-  //       this.showButtonToBottom = false;
-  //       this.NUM_BADGES = 0;
-  //     } else {
-  //       this.NUM_BADGES++;
-  //       this.showButtonToBottom = true;
-  //     }
-  //   }
-  // }
-
   addEventsKeyboard() {
     window.addEventListener('keyboardWillShow', () => {
       console.log('Keyboard will Show');
@@ -638,10 +588,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   unsubescribeAll() {
     console.log('unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach(subscription => {
-      console.log('unsubescribeAll: ', subscription);
-      // this.events.unsubscribe(subscription, null);
+      subscription.unsubscribe();
     });
     this.subscriptions = [];
+
+    // https://www.w3schools.com/jsref/met_element_removeeventlistener.asp
+    window.removeEventListener('keyboardWillShow', null);
+    window.removeEventListener('keyboardDidShow', null);
+    window.removeEventListener('keyboardWillHide', null);
+    window.removeEventListener('keyboardDidHide', null);
+
   }
   // -------------- END SUBSCRIBTIONS functions -------------- //
 

@@ -17,8 +17,9 @@ export abstract class AuthService {
 
   // functions
   abstract initialize(tenant: string): void;
-  abstract getUser(): void;
-  abstract getToken(): void;
+  abstract getUser(): any;
+  abstract getToken(): string;
+  abstract getTiledeskToken(): string;
   abstract signInWithEmailAndPassword(email: string, password: string): void;
 
 }

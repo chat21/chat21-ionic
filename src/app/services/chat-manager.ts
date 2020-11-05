@@ -16,7 +16,8 @@ import { environment } from '../../environments/environment';
 
 // services
 import { EventsService } from './events-service';
-import { UserService } from './user.service';
+// import { UserService } from './user.service';
+import { CurrentUserService } from './current-user/current-user.service';
 
 // utils
 import { avatarPlaceholder, getColorBck, getImageUrlThumbFromFirebasestorage } from '../utils/utils';
@@ -36,7 +37,8 @@ export class ChatManager {
   constructor(
     public chatContactsSynchronizer: ChatContactsSynchronizer,
     private events: EventsService,
-    public userService: UserService,
+    // public userService: UserService,
+    public currentUserService: CurrentUserService,
     public conversationsHandlerService: ConversationsHandlerService
   ) { }
   /**
@@ -158,21 +160,29 @@ export class ChatManager {
     }
   }
 
-  /** */
+
   loadCurrentUserDetail() {
     const that = this;
-    this.userService.loadCurrentUserDetail()
-    .then((snapshot: any) => {
-      if (snapshot.val()) {
-        console.log('loadCurrentUserDetail::: ', snapshot.val());
-        that.completeProfile(snapshot.val());
-        that.events.publish('loaded-current-user', snapshot.val());
-      }
-    })
-    .catch((err: Error) => {
-      console.log('Unable to get permission to notify.', err);
-    });
+    this.currentUserService.detailCurrentUser();
   }
+
+  
+
+  /** */
+  // loadCurrentUserDetail() {
+  //   const that = this;
+  //   this.userService.loadCurrentUserDetail()
+  //   .then((snapshot: any) => {
+  //     if (snapshot.val()) {
+  //       console.log('loadCurrentUserDetail::: ', snapshot.val());
+  //       that.completeProfile(snapshot.val());
+  //       that.events.publish('loaded-current-user', snapshot.val());
+  //     }
+  //   })
+  //   .catch((err: Error) => {
+  //     console.log('Unable to get permission to notify.', err);
+  //   });
+  // }
 
   /**
    * invocato da user.ts al LOGOUT:

@@ -83,8 +83,8 @@ import { MessagingService } from './services/messaging-service';
 import { EventsService } from './services/events-service';
 import { AuthService } from './services/auth.service';
 import { FirebaseAuthService } from './services/firebase/firebase-auth-service';
-import { UserService } from './services/user.service';
-import { FirebaseUserService } from './services/firebase/firebase-user-service';
+// import { UserService } from './services/user.service';
+// import { FirebaseUserService } from './services/firebase/firebase-user-service';
 import { PresenceService } from './services/presence.service';
 import { FirebasePresenceService } from './services/firebase/firebase-presence.service';
 import { TypingService } from './services/typing.service';
@@ -150,10 +150,10 @@ export function authenticationFactory(events: EventsService, http: HttpClient) {
   return new FirebaseAuthService(events, http);
 }
 
-export function userFactory() {
-  console.log('userFactory: ');
-  return new FirebaseUserService();
-}
+// export function userFactory() {
+//   console.log('userFactory: ');
+//   return new FirebaseUserService();
+// }
 
 export function presenceFactory(events: EventsService) {
   console.log('presenceFactory: ');
@@ -229,11 +229,11 @@ export function conversationHandlerFactory() {
       useFactory: authenticationFactory,
       deps: [EventsService, HttpClient]
      },
-    {
-      provide: UserService,
-      useFactory: userFactory,
-      deps: []
-    },
+    // {
+    //   provide: UserService,
+    //   useFactory: userFactory,
+    //   deps: []
+    // },
     {
       provide: PresenceService,
       useFactory: presenceFactory,
