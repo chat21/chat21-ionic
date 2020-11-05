@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+import { environment } from 'src/environments/environment';
+
 // models
 import { ConversationModel } from '../models/conversation';
 
@@ -19,9 +21,10 @@ export abstract class ConversationsHandlerService {
   // params
   abstract conversations: Array<ConversationModel> = [];
   abstract uidConvSelected: string;
+  abstract tenant = environment.tenant;
 
   // functions
-  abstract initialize(tenant: string, userId: string, translationMap: Map<string, string>): void;
+  abstract initialize(userId: string, translationMap: Map<string, string>): void;
   abstract connect(): void;
   abstract countIsNew(): number;
   abstract dispose(): void;

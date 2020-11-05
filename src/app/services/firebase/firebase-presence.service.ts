@@ -17,7 +17,7 @@ import { environment } from '../../../environments/environment';
 })
 export class FirebasePresenceService extends PresenceService {
 
-  private tenant: string;
+  tenant: string;
   private urlNodePresence: string;
 
   constructor(
@@ -26,9 +26,8 @@ export class FirebasePresenceService extends PresenceService {
     super();
   }
 
-  initialize(tenant: string) {
-    console.log('FirebasePresenceService', tenant);
-    this.tenant = tenant;
+  initialize() {
+    console.log('FirebasePresenceService', this.tenant);
     this.urlNodePresence = '/apps/' + this.tenant + '/presence/';
   }
 

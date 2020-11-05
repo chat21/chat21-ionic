@@ -47,7 +47,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class ConversationListPage implements OnInit {
   private subscriptions: Array<string>;
   public tenant: string;
-  public loggedUser: UserModel;
+  public loggedUserUid: string;
   public conversations: Array<ConversationModel> = [];
   public uidConvSelected: string;
   public conversationSelected: ConversationModel;
@@ -79,6 +79,7 @@ export class ConversationListPage implements OnInit {
     this.authService.authStateChanged.subscribe((data: any) => {
         console.log('***** authStateChanged *****', data);
         if (data && data.uid) {
+          that.loggedUserUid = data.uid;
           that.initialize();
         }
     });
@@ -104,7 +105,7 @@ export class ConversationListPage implements OnInit {
    * 3 - subscibe login/logout
    */
   ngOnInit() {
-    console.log('ngOnInit ConversationListPage', this.loggedUser);
+    console.log('ngOnInit ConversationListPage');
   }
 
   ionViewDidEnter() {
@@ -214,23 +215,23 @@ export class ConversationListPage implements OnInit {
   }
 
 
-  /**
-   * ::: subscribeLoggedUserLogin :::
-   * effettuato il login:
-   * 1 - imposto loggedUser
-   * 2 - dismetto modale
-   * 3 - inizializzo elenco conversazioni
-   */
-  subscribeLoggedUserLogin = (user: any) => {
-    console.log('3 ************** subscribeLoggedUserLogin', user);
-    this.loggedUser = user;
-    try {
-      closeModal(this.modalController);
-    } catch (err) {
-      console.error('-> error:', err);
-    }
-    this.initialize();
-  }
+  // /**
+  //  * ::: subscribeLoggedUserLogin :::
+  //  * effettuato il login:
+  //  * 1 - imposto loggedUser
+  //  * 2 - dismetto modale
+  //  * 3 - inizializzo elenco conversazioni
+  //  */
+  // subscribeLoggedUserLogin = (user: any) => {
+  //   console.log('3 ************** subscribeLoggedUserLogin', user);
+  //   this.loggedUser = user;
+  //   try {
+  //     closeModal(this.modalController);
+  //   } catch (err) {
+  //     console.error('-> error:', err);
+  //   }
+  //   this.initialize();
+  // }
 
   /**
    * ::: subscribeLoggedUserLogout :::
@@ -329,7 +330,7 @@ export class ConversationListPage implements OnInit {
    */
   initialize() {
     this.tenant = environment.tenant;
-    this.loggedUser = this.chatManager.getLoggedUser();
+    // this.loggedUser = this.chatManager.getCurrentUser();
     this.subscriptions = [];
     this.initVariables();
     // this.initConversationsHandler();
@@ -353,7 +354,7 @@ export class ConversationListPage implements OnInit {
       this.uidReciverFromUrl = TEMP;
     }
     console.log('uidReciverFromUrl:: ' + this.uidReciverFromUrl);
-    console.log('loggedUser:: ' + this.loggedUser);
+    console.log('loggedUserUid:: ' + this.loggedUserUid);
     console.log('tenant:: ' + this.tenant);
     let IDConv = null;
     try {
@@ -366,7 +367,7 @@ export class ConversationListPage implements OnInit {
       console.log('22222');
       that.setUidConvSelected(IDConv);
     } else {
-      this.databaseProvider.initialize(this.loggedUser.uid, this.tenant);
+      this.databaseProvider.initialize(this.loggedUserUid, this.tenant);
       this.databaseProvider.getUidLastOpenConversation()
       .then((uid: string) => {
         console.log('getUidLastOpenConversation:: ' + uid);
@@ -450,7 +451,7 @@ export class ConversationListPage implements OnInit {
    * (metodo richiamato da html)
    */
   openContactsDirectory(event: any) {
-    const TOKEN = this.authService.getToken();
+    const TOKEN = this.authService.getTiledeskToken();
     console.log('openContactsDirectory', TOKEN );
     if (checkPlatformIsMobile()) {
       presentModal(this.modalController, ContactsDirectoryPage, { token: TOKEN });

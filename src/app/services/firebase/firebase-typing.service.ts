@@ -28,7 +28,8 @@ export class TypingModel {
 
 export class FirebaseTypingService extends TypingService {
 
-  private tenant: string;
+  tenant: string;
+
   private urlNodeTypings: string;
   private setTimeoutWritingMessages: any;
 
@@ -39,10 +40,9 @@ export class FirebaseTypingService extends TypingService {
   }
 
   /** */
-  initialize(tenant: string) {
-    console.log('FirebaseTypingService', tenant);
-    this.tenant = tenant;
-    this.urlNodeTypings = '/apps/' + tenant + '/typings/';
+  initialize() {
+    console.log('FirebaseTypingService', this.tenant);
+    this.urlNodeTypings = '/apps/' + this.tenant + '/typings/';
   }
 
   /** */

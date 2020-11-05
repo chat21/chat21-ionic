@@ -34,6 +34,8 @@ import { TypingService } from 'src/app/services/typing.service';
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
 import { ConversationHandlerService } from 'src/app/services/conversation-handler.service';
+import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
+
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
 // import { GroupService } from '../../services/group';
 
@@ -90,6 +92,7 @@ import {
 // import { initializeApp } from 'firebase';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -185,10 +188,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     public authService: AuthService,
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
-    public conversationHandlerService: ConversationHandlerService
+    public conversationHandlerService: ConversationHandlerService,
+    public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
   ) {
+    this.tenant = environment.tenant;
+
     // get params from url (conversationWith, conversationWithFullname)
     this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
     console.log('this.conversationWith: ', this.conversationWith);
@@ -207,14 +213,25 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     });
 
     // subscribe is logged and start page
+    // const that = this;
+    // this.authService.authStateChanged.subscribe((user: any) => {
+    //     console.log('***** authStateChanged *****', user);
+    //     that.loggedUser = user;
+    //     if (user && user.uid) {
+    //       that.initialize();
+    //     }
+    // });
+
+
     const that = this;
-    this.authService.authStateChanged.subscribe((user: any) => {
-        console.log('***** authStateChanged *****', user);
-        that.loggedUser = user;
-        if (user && user.uid) {
-          that.initialize();
-        }
+    this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
+      console.log('***** BScurrentUser *****', currentUser);
+      if (currentUser) {
+        that.loggedUser = currentUser;
+        that.initialize();
+      }
     });
+
   }
 
   // -------------- SYSTEM FUNCTIONS -------------- //
@@ -231,8 +248,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
 
   /** */
   ionViewWillEnter() {
-    this.loggedUser = this.chatManager.getLoggedUser();
-    console.log('ionViewWillEnter ConversationDetailPage: ', this.loggedUser);
+    console.log('ionViewWillEnter ConversationDetailPage: ');
     // if (this.loggedUser) {
     //   this.NUM_BADGES = 0;
     //   this.showButtonToBottom = false;
@@ -261,10 +277,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * carico messaggi
    */
   initialize() {
-    console.log('initialize ConversationDetailPage: ');
+    console.log('initialize ConversationDetailPage: ', this.loggedUser );
     this.subscriptions = [];
-    this.tenant = this.chatManager.getTenant();
-    this.loggedUser = this.chatManager.getLoggedUser();
+    // this.loggedUser = this.chatManager.getCurrentUser();
     this.translations();
     this.setHeightTextArea();
     this.tagsCanned = []; // list of canned
@@ -371,9 +386,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * startConversation
    */
   startConversation() {
-    console.log('startConversation: ');
+    console.log('startConversation: ', this.conversationWith);
     if (this.conversationWith) {
       this.channelType = setChannelType(this.conversationWith);
+      console.log('setChannelType: ', this.channelType);
       this.selectInfoContentTypeComponent();
       this.conversationAvatar =  setConversationAvatar(
         this.conversationWith,

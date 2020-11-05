@@ -16,7 +16,7 @@ export abstract class AuthService {
   abstract SERVER_BASE_URL = environment.SERVER_BASE_URL;
 
   // functions
-  abstract initialize(tenant: string): void;
+  abstract initialize(): void;
   abstract getUser(): any;
   abstract getToken(): string;
   abstract getTiledeskToken(): string;

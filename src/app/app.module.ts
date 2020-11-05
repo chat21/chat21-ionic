@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { ActivatedRoute } from '@angular/router';
 // import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 
@@ -145,9 +146,9 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
   };
 };
 
-export function authenticationFactory(events: EventsService, http: HttpClient) {
+export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
   console.log('authenticationFactory: ');
-  return new FirebaseAuthService(events, http);
+  return new FirebaseAuthService(http, route);
 }
 
 // export function userFactory() {
@@ -227,7 +228,7 @@ export function conversationHandlerFactory() {
     {
       provide: AuthService,
       useFactory: authenticationFactory,
-      deps: [EventsService, HttpClient]
+      deps: [HttpClient, ActivatedRoute]
      },
     // {
     //   provide: UserService,

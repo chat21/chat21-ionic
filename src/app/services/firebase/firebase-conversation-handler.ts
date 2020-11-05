@@ -37,6 +37,8 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     // public variables
     public attributes: any;
     public messages: MessageModel[];
+    public conversationWith: string;
+    public ref: firebase.database.Query;
 
     // private variables
     private translationMap: Map<string, string>; // LABEL_TODAY, LABEL_TOMORROW
@@ -46,8 +48,6 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private tenant: string;
     private loggedUser: UserModel;
     private senderId: string;
-    private conversationWith: string;
-    private ref: firebase.database.Query;
     private listSubsriptions: any[];
     private CLIENT_BROWSER: string;
     private lastDate = '';

@@ -5,8 +5,10 @@ import { Injectable } from '@angular/core';
 import { UserModel } from '../models/user';
 
 // handlers
-import { ChatConversationHandler } from './chat-conversation-handler';
+// import { ChatConversationHandler } from './chat-conversation-handler';
 // import { ChatConversationsHandler } from './chat-conversations-handler';
+
+import { ConversationHandlerService } from 'src/app/services/conversation-handler.service';
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
 import { ChatArchivedConversationsHandler } from './chat-archived-conversations-handler';
 import { ChatContactsSynchronizer } from './chat-contacts-synchronizer';
@@ -15,9 +17,7 @@ import { environment } from '../../environments/environment';
 
 
 // services
-import { EventsService } from './events-service';
-// import { UserService } from './user.service';
-import { CurrentUserService } from './current-user/current-user.service';
+
 
 // utils
 import { avatarPlaceholder, getColorBck, getImageUrlThumbFromFirebasestorage } from '../utils/utils';
@@ -25,94 +25,59 @@ import { avatarPlaceholder, getColorBck, getImageUrlThumbFromFirebasestorage } f
 @Injectable({ providedIn: 'root' })
 
 export class ChatManager {
-  private tenant: string;
-  public handlers: ChatConversationHandler[];
-  private loggedUser: UserModel;
-  // public conversationsHandler: ChatConversationsHandler;
+  supportMode = environment.supportMode;
+  tenant = environment.tenant;
+
+  private currentUser: UserModel;
+  private tiledeskToken: string;
+
+  public handlers: ConversationHandlerService[];
   public archivedConversationsHandler: ChatArchivedConversationsHandler;
   public contactsSynchronizer: ChatContactsSynchronizer;
   public openInfoConversation: boolean;
-  supportMode = environment['supportMode'];
 
   constructor(
     public chatContactsSynchronizer: ChatContactsSynchronizer,
-    private events: EventsService,
-    // public userService: UserService,
-    public currentUserService: CurrentUserService,
     public conversationsHandlerService: ConversationsHandlerService
   ) { }
   /**
    * inizializza chatmanager
    */
   initialize() {
-    this.tenant = environment.tenant;
     this.handlers = [];
     this.openInfoConversation = true;
+    this.currentUser = null;
     console.log('************* init chat manager ***', this.handlers);
-    this.configureWithAppId();
-  }
-  /**
-   * ritorna istanza di chatmanager
-   */
-  getInstance() {
-    return this;
   }
 
   /**
-   * configura App: chiamato da app.component
-   * setto tenant
-   * setto loggedUser
+   * setTiledeskToken
    */
-  configureWithAppId() {
-    this.loggedUser = null;
-    this.handlers = [];
+  public setTiledeskToken(tiledeskToken: string) {
+    this.tiledeskToken = tiledeskToken;
   }
 
   /**
-   * return tenant
+   * return tiledeskToken
    */
-  getTenant(): string {
-    return this.tenant;
+  public getTiledeskToken(): string {
+    console.log('this.tiledeskToken: ', this.tiledeskToken );
+    return this.tiledeskToken;
+  }
+
+  /**
+   * setCurrentUser
+   */
+  public setCurrentUser(currentUser: UserModel) {
+    this.currentUser = currentUser;
   }
 
   /**
    * return current user detail
    */
-  getLoggedUser(): UserModel {
-    console.log('getLoggedUser: ', this.loggedUser );
-    return this.loggedUser;
-  }
-
-  /**
-   *
-   * @param user
-   */
-  completeProfile(user: any) {
-    if (!user || !user.uid) {
-      return;
-    }
-    try {
-      const uid = user.uid;
-      // this.loggedUser = new UserModel(uid);
-      const firstname = user.firstname ? user.firstname : '';
-      const lastname = user.lastname ? user.lastname : '';
-      const email = user.email ? user.email : '';
-      const fullname = ( firstname + ' ' + lastname ).trim();
-      const avatar = avatarPlaceholder(fullname);
-      const color = getColorBck(fullname);
-      const imageurl = getImageUrlThumbFromFirebasestorage(uid);
-      this.loggedUser.email = email;
-      this.loggedUser.firstname = firstname;
-      this.loggedUser.lastname = lastname;
-      this.loggedUser.fullname = fullname;
-      this.loggedUser.imageurl = imageurl;
-      this.loggedUser.avatar = avatar;
-      this.loggedUser.color = color;
-      this.loggedUser.online = true;
-      console.log('******************* setLoggedUser::: ', this.loggedUser);
-    } catch (err) {
-      console.log(err);
-    }
+  public getCurrentUser(): UserModel {
+    console.log('currentUser: ', this.currentUser );
+    return this.currentUser;
   }
 
   /**
@@ -148,23 +113,18 @@ export class ChatManager {
    * 2 - aggiungo il token
    * 3 - pubblico stato loggedUser come login
    */
-  goOnLine(user) {
-    if (user) {
-      const uid = user.uid;
-      this.loggedUser = new UserModel(uid);
-      console.log('goOnLine::: ', this.loggedUser);
-      this.loadCurrentUserDetail();
-      if (this.supportMode === false) {
-        //this.initContactsSynchronizer();
-      }
-    }
-  }
+  // goOnLine(user) {
+  //   if (user) {
+  //     const uid = user.uid;
+  //     this.loggedUser = new UserModel(uid);
+  //     console.log('goOnLine::: ', this.loggedUser);
+  //     this.loadCurrentUserDetail();
+  //     if (this.supportMode === false) {
+  //       //this.initContactsSynchronizer();
+  //     }
+  //   }
+  // }
 
-
-  loadCurrentUserDetail() {
-    const that = this;
-    this.currentUserService.detailCurrentUser();
-  }
 
   
 
@@ -190,7 +150,8 @@ export class ChatManager {
    * 2 - pubblico stato loggedUser come logout
    */
   goOffLine() {
-    this.loggedUser = null;
+    this.currentUser = null;
+    // cancello token e user dal localstorage!!!!!
     console.log(' 1 - CANCELLO TUTTE LE REFERENCES DI FIREBASE');
     this.dispose();
   }
@@ -271,9 +232,9 @@ export class ChatManager {
    * inizio la sincronizzazione
    */
   initContactsSynchronizer() {
-    console.log(' initContactsSynchronizer:: ', this.contactsSynchronizer, this.tenant, this.loggedUser);
+    console.log(' initContactsSynchronizer:: ', this.contactsSynchronizer, this.tenant, this.currentUser);
     if (!this.contactsSynchronizer) {
-      this.contactsSynchronizer = this.chatContactsSynchronizer.initWithTenant(this.tenant, this.loggedUser);
+      this.contactsSynchronizer = this.chatContactsSynchronizer.initWithTenant(this.tenant, this.currentUser);
       //this.contactsSynchronizer = this.createContactsSynchronizerForUser();
       this.contactsSynchronizer.startSynchro();
     } else {

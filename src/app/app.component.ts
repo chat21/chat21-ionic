@@ -86,20 +86,6 @@ export class AppComponent implements OnInit {
     this.tenant = environment.tenant;
     this.splashScreen.show();
     this.initFirebase();
-    this.initializeApp();
-    this.initSubscriptions();
-
-    const that = this;
-    this.authService.authStateChanged.subscribe((data: any) => {
-        console.log('***** authStateChanged *****', data);
-        that.splashScreen.hide();
-        if (data && data.uid) {
-          that.goOnLine(data);
-        } else {
-          that.goOffLine();
-        }
-    });
-
   }
 
 
@@ -108,16 +94,38 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     console.log('ngOnInit -->', this.route.snapshot.params);
-    this.route.queryParams.subscribe(params => {
-      console.log('queryParams -->', params );
-      if (params['tiledeskToken']) {
-        const tiledeskToken = params['tiledeskToken'];
-        localStorage.setItem('tiledeskToken', tiledeskToken);
-      }
+    
+    this.initializeApp();
+    this.initSubscriptions();
+  }
+
+
+  /** */
+  initializeApp() {
+    this.notificationsEnabled = true;
+    this.zone = new NgZone({});
+    this.platform.ready().then(() => {
+      this.splashScreen.hide();
+      this.setLanguage();
+      this.statusBar.styleDefault();
+     
+
+      this.authService.initialize();
+      this.currentUserService.initialize();
+      this.navService.init(this.sidebarNav, this.detailNav);
+
+      this.msgService.initialize();
+      this.presenceService.initialize();
+      this.typingService.initialize();
+      this.chatManager.initialize();
+      
+      console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
     });
   }
 
-  /** */
+  /**
+   * initFirebase
+   */
   initFirebase() {
     console.log('initFirebase', this.appConfigProvider.getConfig());
     if (!this.appConfigProvider.getConfig().firebaseConfig || this.appConfigProvider.getConfig().firebaseConfig.apiKey === 'CHANGEIT') {
@@ -125,26 +133,6 @@ export class AppComponent implements OnInit {
       throw new Error('firebase config is not defined. Please create your firebase-config.json. See the Chat21-Web_widget Installation Page');
     }
     firebase.initializeApp(this.appConfigProvider.getConfig().firebaseConfig);
-  }
-
-  /** */
-  initializeApp() {
-    console.log('initializeApp');
-    this.notificationsEnabled = true;
-    this.zone = new NgZone({});
-    this.platform.ready().then(() => {
-      this.setLanguage();
-      this.statusBar.styleDefault();
-
-      // init
-      this.authService.initialize(this.tenant);
-      this.msgService.initialize();
-      // this.userService.initialize(this.tenant);
-      this.presenceService.initialize(this.tenant);
-      this.typingService.initialize(this.tenant);
-      this.navService.init(this.sidebarNav, this.detailNav);
-      this.chatManager.initialize();
-    });
   }
 
   /**
@@ -155,15 +143,15 @@ export class AppComponent implements OnInit {
    * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
    * salvo conversationHandler in chatManager
    */
-  initConversationsHandler(tenant: string, userId: string) {
+  initConversationsHandler(userId: string) {
     const keys = [
       'LABEL_TU'
     ];
     const translationMap = this.translateService.translateLanguage(keys);
 
-    console.log('initConversationsHandler ------------->', tenant, userId);
+    console.log('initConversationsHandler ------------->', userId);
     // 1 - init chatConversationsHandler and  archviedConversationsHandler
-    this.conversationsHandlerService.initialize(tenant, userId, translationMap);
+    this.conversationsHandlerService.initialize(userId, translationMap);
     // 2 - get conversations from storage
     // this.chatConversationsHandler.getConversationsFromStorage();
     // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
@@ -251,6 +239,26 @@ export class AppComponent implements OnInit {
   // BEGIN SUBSCRIPTIONS //
   /** */
   initSubscriptions() {
+
+    const that = this;
+    this.authService.authStateChanged.subscribe((data: any) => {
+        console.log('***** authStateChanged *****', data);
+        if (data && data.uid) {
+          that.goOnLine(data);
+        } else {
+          that.goOffLine();
+        }
+    });
+
+    this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
+      console.log('***** BScurrentUser *****', currentUser);
+      if (currentUser) {
+        that.chatManager.setCurrentUser(currentUser);
+      }
+    });
+
+    
+
     // this.events.subscribe('go-off-line', this.goOffLine);
     // this.events.subscribe('go-on-line', this.goOnLine);
     // this.events.subscribe('sign-in', this.signIn);
@@ -276,33 +284,6 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * ::: subscribeLoggedUserLogin :::
-   * effettuato il login:
-   * dismetto modale
-   */
-  // subscribeLoggedUserLogin = (user: any) => {
-  //   console.log('1 ************** subscribeLoggedUserLogin', user);
-  //   try {
-  //     closeModal(this.modalController);
-  //   } catch (err) {
-  //     console.error('-> error:', err);
-  //   }
-  //   this.checkPlatform();
-  // }
-
-  /**
-   * ::: subscribeLoggedUserLogout :::
-   * effettuato il logout:
-   * mostro modale login
-   */
-  // subscribeLoggedUserLogout = () => {
-  //   console.log('************** subscribeLoggedUserLogout');
-  //   presentModal(this.modalController, LoginPage, { tenant: 'tilechat', enableBackdropDismiss: false });
-  //   // presentModal(this.modalController, LoginModal, { tenant: 'tilechat', enableBackdropDismiss: false });
-  // }
-
-
-  /**
    *
    */
   goOffLine = () => {
@@ -315,18 +296,20 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   *
+   * goOnLine:
+   * 1 - nascondo splashscreen
+   * 2 - recupero il tiledeskToken e lo salvo in chat manager
+   * 3 - carico in d
    * @param user
    */
   goOnLine = (user: any) => {
     console.log('************** goOnLine', user);
-    const tiledeskToken = this.authService.getTiledeskToken();
-    this.currentUserService.initialize(tiledeskToken);
-
     clearTimeout(this.timeModalLogin);
-    this.chatManager.goOnLine(user);
+    const tiledeskToken = this.authService.getTiledeskToken();
+    this.chatManager.setTiledeskToken(tiledeskToken);
+    this.currentUserService.detailCurrentUser(tiledeskToken);
     this.chatPresenceHandler.setupMyPresence(user.uid);
-    this.initConversationsHandler(this.tenant, user.uid);
+    this.initConversationsHandler(user.uid);
     try {
       console.log('************** closeModal', this.modalController);
       closeModal(this.modalController);
@@ -337,12 +320,12 @@ export class AppComponent implements OnInit {
   }
 
   /** */
-  signIn = (user: any, error: any) => {
-    console.log('************** signIn:: user:' + user + '  - error: ' + error);
-    if (error) {
-      localStorage.removeItem('tiledeskToken');
-    }
-  }
+  // signIn = (user: any, error: any) => {
+  //   console.log('************** signIn:: user:' + user + '  - error: ' + error);
+  //   if (error) {
+  //     localStorage.removeItem('tiledeskToken');
+  //   }
+  // }
 
 
 
@@ -350,15 +333,15 @@ export class AppComponent implements OnInit {
   /**
    *
    */
-  firebaseSignInWithCustomToken = (response: any, error) => {
-    console.log('************** firebaseSignInWithCustomToken: ' + response + ' error: ' + error);
-    try {
-      closeModal(this.modalController);
-      this.checkPlatform();
-    } catch (err) {
-      console.error('-> error:', err);
-    }
-  }
+  // firebaseSignInWithCustomToken = (response: any, error) => {
+  //   console.log('************** firebaseSignInWithCustomToken: ' + response + ' error: ' + error);
+  //   try {
+  //     closeModal(this.modalController);
+  //     this.checkPlatform();
+  //   } catch (err) {
+  //     console.error('-> error:', err);
+  //   }
+  // }
 
 
   // END SUBSCRIPTIONS //

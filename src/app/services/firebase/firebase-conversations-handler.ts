@@ -35,9 +35,9 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     // public variables
     conversations: Array<ConversationModel> = [];
     uidConvSelected: string;
+    tenant: string;
 
     // private variables
-    private tenant: string;
     private loggedUserId: string;
     private translationMap: Map<string, string>;
     private isConversationClosingMap: Map<string, boolean>;
@@ -56,11 +56,9 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * inizializzo conversations handler
      */
     initialize(
-        tenant: string,
         userId: string,
         translationMap: Map<string, string>
         ) {
-        this.tenant = tenant;
         this.loggedUserId = userId;
         this.translationMap = translationMap;
         this.conversations = [];

@@ -19,6 +19,9 @@ export abstract class ConversationHandlerService {
   // params
   abstract attributes: any;
   abstract messages: Array<MessageModel> = [];
+  abstract ref: any;
+  abstract conversationWith: string;
+
 
   // functions
   abstract initialize(
