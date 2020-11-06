@@ -8,24 +8,24 @@ import { ContactsDirectoryPageRoutingModule } from './contacts-directory-routing
 import { ContactsDirectoryComponent } from '../../components/contacts-directory/contacts-directory.component';
 
 import { ContactsDirectoryPage } from './contacts-directory.page';
-import { ContactsDirectoryService } from '../../services/contacts-directory.service';
-import { TiledeskContactsDirectoryService } from '../../services/tiledesk/tiledesk-contacts-directory.service';
+// import { ContactsDirectoryService } from '../../services/contacts-directory.service';
+// import { TiledeskContactsDirectoryService } from '../../services/tiledesk/tiledesk-contacts-directory.service';
 import { HttpClient } from '@angular/common/http';
 
 
-export function contactsFactory(http: HttpClient) {
-  console.log('contactsFactory: ');
-  return new TiledeskContactsDirectoryService(http);
-}
+// export function contactsFactory(http: HttpClient) {
+//   console.log('contactsFactory: ');
+//   return new TiledeskContactsDirectoryService(http);
+// }
 
 
 @NgModule({
   providers: [
-  {
-    provide: ContactsDirectoryService,
-    useFactory: contactsFactory,
-    deps: [HttpClient]
-   }
+  // {
+  //   provide: ContactsDirectoryService,
+  //   useFactory: contactsFactory,
+  //   deps: [HttpClient]
+  //  }
   ],
   imports: [
     CommonModule,
