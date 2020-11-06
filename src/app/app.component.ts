@@ -244,7 +244,7 @@ export class AppComponent implements OnInit {
         console.log('***** authStateChanged *****', data);
         if (data && data.uid) {
           that.goOnLine(data);
-        } else if (data === 'logout') {
+        } else if (data === null) {
           that.goOffLine();
         }
     });
@@ -293,7 +293,7 @@ export class AppComponent implements OnInit {
       if (!this.authModal) {
         this.authModal = this.presentModal();
       }
-    }, 0);
+    }, 2000);
   }
 
   private async presentModal(): Promise<any> {
