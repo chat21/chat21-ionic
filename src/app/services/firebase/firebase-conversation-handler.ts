@@ -233,7 +233,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
             this.lastDate = headerDate;
             msg.headerDate = headerDate;
         }
-        console.log('>>>>>>>>>>>>>> added headerDate: ', msg);
+        // console.log('>>>>>>>>>>>>>> added headerDate: ', msg);
         this.addRepalceMessageInArray(childSnapshot.key, msg);
         // this.messageAdded.next(msg);
         this.messageAdded.next(msg);
@@ -243,7 +243,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private changed(childSnapshot: any) {
         const msg = this.messageGenerate(childSnapshot);
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        console.log('>>>>>>>>>>>>>> changed headerDate: ', msg);
+        // con**** DATAIL messageAdded ***sole.log('>>>>>>>>>>>>>> changed headerDate: ', msg);
         this.addRepalceMessageInArray(childSnapshot.key, msg);
         this.messageChanged.next(msg);
     }

@@ -30,7 +30,7 @@ import { LoginPage } from './pages/authentication/login/login.page';
 import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 
 // utils
-import { presentModal, closeModal, createExternalSidebar, checkPlatformIsMobile } from './utils/utils';
+import { createExternalSidebar, checkPlatformIsMobile } from './utils/utils';
 import { PLATFORM_MOBILE, PLATFORM_DESKTOP } from './utils/constants';
 import { environment } from '../environments/environment';
 import { UserModel } from './models/user';
@@ -53,6 +53,7 @@ export class AppComponent implements OnInit {
   private doitResize: any;
   private timeModalLogin: any;
   public tenant: string;
+  public authModal: any;
 
   constructor(
     private platform: Platform,
@@ -86,6 +87,7 @@ export class AppComponent implements OnInit {
     this.tenant = environment.tenant;
     this.splashScreen.show();
     this.initFirebase();
+
   }
 
 
@@ -94,7 +96,6 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     console.log('ngOnInit -->', this.route.snapshot.params);
-    
     this.initializeApp();
     this.initSubscriptions();
   }
@@ -108,7 +109,6 @@ export class AppComponent implements OnInit {
       this.splashScreen.hide();
       this.setLanguage();
       this.statusBar.styleDefault();
-     
 
       this.authService.initialize();
       this.currentUserService.initialize();
@@ -118,7 +118,7 @@ export class AppComponent implements OnInit {
       this.presenceService.initialize();
       this.typingService.initialize();
       this.chatManager.initialize();
-      
+
       console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
     });
   }
@@ -202,12 +202,11 @@ export class AppComponent implements OnInit {
       console.log('PLATFORM_DESKTOP', this.navService, pageUrl);
       this.platformIs = PLATFORM_DESKTOP;
       this.navService.setRoot(ConversationListPage, {});
-
       console.log('checkPlatform navigateByUrl', pageUrl);
       this.router.navigateByUrl(pageUrl);
 
-      const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
-      createExternalSidebar(this.renderer, DASHBOARD_URL);
+      // const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
+      // createExternalSidebar(this.renderer, DASHBOARD_URL);
     }
   }
 
@@ -245,19 +244,18 @@ export class AppComponent implements OnInit {
         console.log('***** authStateChanged *****', data);
         if (data && data.uid) {
           that.goOnLine(data);
-        } else {
+        } else if (data === 'logout') {
           that.goOffLine();
         }
     });
 
     this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
-      console.log('***** BScurrentUser *****', currentUser);
+      console.log('***** app comp BScurrentUser *****', currentUser);
       if (currentUser) {
         that.chatManager.setCurrentUser(currentUser);
       }
     });
 
-    
 
     // this.events.subscribe('go-off-line', this.goOffLine);
     // this.events.subscribe('go-on-line', this.goOnLine);
@@ -287,12 +285,49 @@ export class AppComponent implements OnInit {
    *
    */
   goOffLine = () => {
-    console.log('************** goOffLine');
+    console.log('************** goOffLine:', this.authModal);
     this.chatManager.goOffLine();
+    const that = this;
     clearTimeout(this.timeModalLogin);
     this.timeModalLogin = setTimeout( () => {
-      presentModal(this.modalController, LoginPage, { tenant: 'tilechat', enableBackdropDismiss: false });
-    }, 1000);
+      if (!this.authModal) {
+        this.authModal = this.presentModal();
+      }
+    }, 0);
+  }
+
+  private async presentModal(): Promise<any> {
+    const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
+    console.log('presentModal');
+    const modal: HTMLIonModalElement =
+       await this.modalController.create({
+          component: LoginPage,
+          componentProps: attributes,
+          swipeToClose: false,
+          backdropDismiss: false
+    });
+    modal.onDidDismiss().then((detail: any) => {
+      console.log('The result: CHIUDI!!!!!', detail.data);
+      this.checkPlatform();
+      if (detail !== null) {
+       //  console.log('The result: CHIUDI!!!!!', detail.data);
+      }
+   });
+    // await modal.present();
+    // modal.onDidDismiss().then((detail: any) => {
+    //    console.log('The result: CHIUDI!!!!!', detail.data);
+    //   //  this.checkPlatform();
+    //    if (detail !== null) {
+    //     //  console.log('The result: CHIUDI!!!!!', detail.data);
+    //    }
+    // });
+    return await modal.present();
+  }
+
+  private async closeModal() {
+    console.log('closeModal', this.modalController);
+    await this.modalController.getTop();
+    this.modalController.dismiss({ confirmed: true });
   }
 
   /**
@@ -311,9 +346,12 @@ export class AppComponent implements OnInit {
     this.chatPresenceHandler.setupMyPresence(user.uid);
     this.initConversationsHandler(user.uid);
     try {
-      console.log('************** closeModal', this.modalController);
-      closeModal(this.modalController);
-      this.checkPlatform();
+      console.log('************** closeModal', this.authModal);
+      if (this.authModal) {
+        this.closeModal();
+      } else {
+        this.checkPlatform();
+      }
     } catch (err) {
       console.error('-> error:', err);
     }

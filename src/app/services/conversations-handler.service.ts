@@ -22,6 +22,8 @@ export abstract class ConversationsHandlerService {
   abstract conversations: Array<ConversationModel> = [];
   abstract uidConvSelected: string;
   abstract tenant = environment.tenant;
+  abstract FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
+  abstract urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
 
   // functions
   abstract initialize(userId: string, translationMap: Map<string, string>): void;

@@ -15,6 +15,11 @@ import {
   TYPE_SUPPORT_GROUP
 } from './constants';
 
+import {
+  avatarPlaceholder,
+  getColorBck,
+  getImageUrlThumbFromFirebasestorage
+ } from './utils-user';
 /**
  * Shortest description  for phone and tablet
  * Nota: eseguendo un test su desktop in realtà lo switch avviene a 921px 767px
@@ -482,29 +487,7 @@ export function replaceBr(text) {
   return newText;
 }
 
-export function getColorBck(str) {
-  var arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
-  var num = 0;
-  if (str) {
-    var code = str.charCodeAt((str.length - 1));
-    num = Math.round(code % arrayBckColor.length);
-  }
-  return arrayBckColor[num];
-}
 
-export function avatarPlaceholder(conversation_with_fullname) {
-  var initials = '';
-  if (conversation_with_fullname) {
-    var arrayName = conversation_with_fullname.split(" ");
-    arrayName.forEach(member => {
-      if (member.trim().length > 1 && initials.length < 3) {
-        initials += member.substring(0, 1).toUpperCase();
-      }
-    });
-  }
-  // console.log('avatarPlaceholder------------->', conversation_with_fullname, initials);
-  return initials;
-}
 
 /**
  * 
@@ -521,6 +504,8 @@ export function setConversationAvatar(
     width?: string,
     height?: string
 ): any {
+  const FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
+  const urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
   const conversationWidth = (width) ? width : '40px';
   const conversationHeight = (height) ? height : '40px';
   const conversationAvatar = {
@@ -530,7 +515,7 @@ export function setConversationAvatar(
     channelType: conversationChannelType,
     avatar: avatarPlaceholder(conversationWithFullname),
     color: getColorBck(conversationWithFullname),
-    imageurl: getImageUrlThumbFromFirebasestorage(conversationWith),
+    imageurl: getImageUrlThumbFromFirebasestorage(conversationWith, FIREBASESTORAGE_BASE_URL_IMAGE, urlStorageBucket),
     width: conversationWidth,
     height: conversationHeight
   };
@@ -552,13 +537,13 @@ export function getImageUrlThumb(FIREBASESTORAGE_BASE_URL_IMAGE: string, uid: st
 }
 
 
-/** */
-export function getImageUrlThumbFromFirebasestorage(uid: string) {
-  const FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
-  const urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
-  const imageurl = FIREBASESTORAGE_BASE_URL_IMAGE + urlStorageBucket + uid + '%2Fthumb_photo.jpg?alt=media';
-  return imageurl;
-}
+// /** */
+// export function getImageUrlThumbFromFirebasestorage(uid: string) {
+//   const FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
+//   const urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
+//   const imageurl = FIREBASESTORAGE_BASE_URL_IMAGE + urlStorageBucket + uid + '%2Fthumb_photo.jpg?alt=media';
+//   return imageurl;
+// }
 
 
 /** */
@@ -662,12 +647,13 @@ export async function presentModal(modalController, page, attributes) {
         swipeToClose: false,
         backdropDismiss: false
   });
+  await modal.present();
   modal.onDidDismiss().then((detail: any) => {
      if (detail !== null) {
        console.log('The result:', detail.data);
+       return 'CHIUDI!!!!!';
      }
   });
-  await modal.present();
 }
 
 

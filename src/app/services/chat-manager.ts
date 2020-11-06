@@ -10,17 +10,10 @@ import { UserModel } from '../models/user';
 
 import { ConversationHandlerService } from 'src/app/services/conversation-handler.service';
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
-import { ChatArchivedConversationsHandler } from './chat-archived-conversations-handler';
+// import { ChatArchivedConversationsHandler } from './chat-archived-conversations-handler';
 import { ChatContactsSynchronizer } from './chat-contacts-synchronizer';
 import { environment } from '../../environments/environment';
 
-
-
-// services
-
-
-// utils
-import { avatarPlaceholder, getColorBck, getImageUrlThumbFromFirebasestorage } from '../utils/utils';
 
 @Injectable({ providedIn: 'root' })
 
@@ -32,7 +25,7 @@ export class ChatManager {
   private tiledeskToken: string;
 
   public handlers: ConversationHandlerService[];
-  public archivedConversationsHandler: ChatArchivedConversationsHandler;
+  // public archivedConversationsHandler: ChatArchivedConversationsHandler;
   public contactsSynchronizer: ChatContactsSynchronizer;
   public openInfoConversation: boolean;
 
@@ -98,7 +91,7 @@ export class ChatManager {
     console.log(' 2 - disposeConversationsHandler');
     if (this.conversationsHandlerService) { this.disposeConversationsHandler(); }
     console.log(' 3 - disposeArchivedConversationsHandler');
-    if (this.archivedConversationsHandler) { this.disposeConversationsHandler(); }
+    // if (this.archivedConversationsHandler) { this.disposeConversationsHandler(); }
     console.log(' 4 - disposeContactsSynchronizer');
     if (this.contactsSynchronizer) { this.disposeContactsSynchronizer(); }
     console.log(' OKK ');
