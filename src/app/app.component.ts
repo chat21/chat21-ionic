@@ -17,7 +17,7 @@ import { EventsService } from './services/events-service';
 import { AuthService } from './services/auth.service';
 import { PresenceService } from './services/presence.service';
 import { TypingService } from './services/typing.service';
-import { ChatPresenceHandler} from './services/chat-presence-handler';
+// import { ChatPresenceHandler} from './services/chat-presence-handler';
 import { NavProxyService } from './services/nav-proxy.service';
 import { MessagingService } from './services/messaging-service';
 import { ChatManager } from './services/chat-manager';
@@ -75,7 +75,7 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private renderer: Renderer2,
     private navService: NavProxyService,
-    public chatPresenceHandler: ChatPresenceHandler,
+    // public chatPresenceHandler: ChatPresenceHandler,
     public typingService: TypingService,
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
     console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
-    this.initFirebase();
+    // this.initFirebase();
   }
 
 
@@ -206,8 +206,8 @@ export class AppComponent implements OnInit {
       console.log('checkPlatform navigateByUrl', pageUrl);
       this.router.navigateByUrl(pageUrl);
 
-      const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
-      createExternalSidebar(this.renderer, DASHBOARD_URL);
+      // const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
+      // createExternalSidebar(this.renderer, DASHBOARD_URL);
     }
   }
 
@@ -308,7 +308,7 @@ export class AppComponent implements OnInit {
     const tiledeskToken = this.authService.getTiledeskToken();
     this.chatManager.setTiledeskToken(tiledeskToken);
     this.currentUserService.detailCurrentUser(tiledeskToken);
-    this.chatPresenceHandler.setupMyPresence(user.uid);
+    // this.chatPresenceHandler.setupMyPresence(user.uid);
     this.initConversationsHandler(user.uid);
     try {
       console.log('************** closeModal', this.modalController);

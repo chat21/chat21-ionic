@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 // import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 
+
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -83,18 +84,18 @@ import { AppConfigProvider } from './services/app-config';
 import { MessagingService } from './services/messaging-service';
 import { EventsService } from './services/events-service';
 import { AuthService } from './services/auth.service';
-import { FirebaseAuthService } from './services/firebase/firebase-auth-service';
+// import { FirebaseAuthService } from './services/firebase/firebase-auth-service';
 // import { UserService } from './services/user.service';
 // import { FirebaseUserService } from './services/firebase/firebase-user-service';
 import { PresenceService } from './services/presence.service';
-import { FirebasePresenceService } from './services/firebase/firebase-presence.service';
+// import { FirebasePresenceService } from './services/firebase/firebase-presence.service';
 import { TypingService } from './services/typing.service';
-import { FirebaseTypingService } from './services/firebase/firebase-typing.service';
+// import { FirebaseTypingService } from './services/firebase/firebase-typing.service';
 import { ConversationsHandlerService } from './services/conversations-handler.service';
-import { FirebaseConversationsHandler } from './services/firebase/firebase-conversations-handler';
+// import { FirebaseConversationsHandler } from './services/firebase/firebase-conversations-handler';
 import { DatabaseProvider } from './services/database';
 import { ConversationHandlerService } from './services/conversation-handler.service';
-import { FirebaseConversationHandler } from './services/firebase/firebase-conversation-handler';
+// import { FirebaseConversationHandler } from './services/firebase/firebase-conversation-handler';
 
 // import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -131,7 +132,12 @@ import { SharedModule } from 'src/app/shared/shared.module';
 // import { SharedConversationInfoModule } from 'src/app/shared/shared-conversation-info.module';
 // import { DdpHeaderComponent } from 'src/app/components/ddp-header/ddp-header.component';
 
-
+import { Chat21Service } from './services/chat-service';
+import { MQTTAuthService } from './services/mqtt/mqtt-auth-service';
+import { MQTTConversationsHandler } from './services/mqtt/mqtt-conversations-handler';
+import { MQTTConversationHandler } from './services/mqtt/mqtt-conversation-handler';
+import { MQTTTypingService } from './services/mqtt/mqtt-typing.service';
+import { MQTTPresenceService } from './services/mqtt/mqtt-presence.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -146,9 +152,14 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
   };
 };
 
-export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
+// export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
+//   console.log('authenticationFactory: ');
+//   return new FirebaseAuthService(http, route);
+// }
+
+export function authenticationFactory(http: HttpClient, chat21Service: Chat21Service) {
   console.log('authenticationFactory: ');
-  return new FirebaseAuthService(http, route);
+  return new MQTTAuthService(http, chat21Service);
 }
 
 // export function userFactory() {
@@ -158,23 +169,29 @@ export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
 
 export function presenceFactory(events: EventsService) {
   console.log('presenceFactory: ');
-  return new FirebasePresenceService(events);
+  return new MQTTPresenceService(events);
 }
 
 export function typingFactory(events: EventsService) {
   console.log('typingFactory: ');
-  return new FirebaseTypingService(events);
+  return new MQTTTypingService(events);
 }
 
+// export function conversationsHandlerFactory(
+//   databaseProvider: DatabaseProvider) {
+//   console.log('conversationsHandlerFactory: ');
+//   return new FirebaseConversationsHandler(databaseProvider);
+// }
+
 export function conversationsHandlerFactory(
-  databaseProvider: DatabaseProvider) {
+  databaseProvider: DatabaseProvider, chat21Service: Chat21Service) {
   console.log('conversationsHandlerFactory: ');
-  return new FirebaseConversationsHandler(databaseProvider);
+  return new MQTTConversationsHandler(databaseProvider, chat21Service);
 }
 
 export function conversationHandlerFactory() {
   console.log('conversationHandlerFactory: ');
-  return new FirebaseConversationHandler();
+  return new MQTTConversationHandler();
 }
 
 
@@ -228,13 +245,13 @@ export function conversationHandlerFactory() {
     {
       provide: AuthService,
       useFactory: authenticationFactory,
-      deps: [HttpClient, ActivatedRoute]
+      deps: [HttpClient, Chat21Service]
      },
     // {
-    //   provide: UserService,
-    //   useFactory: userFactory,
-    //   deps: []
-    // },
+    //   provide: AuthService,
+    //   useFactory: authenticationFactory,
+    //   deps: [HttpClient, ActivatedRoute]
+    //  },
     {
       provide: PresenceService,
       useFactory: presenceFactory,
@@ -245,10 +262,15 @@ export function conversationHandlerFactory() {
       useFactory: typingFactory,
       deps: [EventsService, HttpClient]
     },
+    // {
+    //   provide: ConversationsHandlerService,
+    //   useFactory: conversationsHandlerFactory,
+    //   deps: [DatabaseProvider]
+    // },
     {
       provide: ConversationsHandlerService,
       useFactory: conversationsHandlerFactory,
-      deps: [DatabaseProvider]
+      deps: [DatabaseProvider, Chat21Service]
     },
     {
       provide: ConversationHandlerService,
@@ -262,7 +284,8 @@ export function conversationHandlerFactory() {
     // { provide: LocationStrategy, useClass: HashLocationStrategy },
     MessagingService,
     EventsService,
-    DatabaseProvider
+    DatabaseProvider,
+    Chat21Service
   ]
 })
 export class AppModule {}
