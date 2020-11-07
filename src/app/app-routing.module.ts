@@ -16,6 +16,9 @@ const routes: Routes = [
   { path: 'conversation-detail/:IDConv',
     loadChildren: './pages/conversation-detail/conversation-detail.module#ConversationDetailPageModule'
   },
+  { path: 'conversation-detail/:IDConv/:FullNameConv',
+    loadChildren: './pages/conversation-detail/conversation-detail.module#ConversationDetailPageModule'
+  },
   {
     path: 'conversation-detail',
     loadChildren: './pages/conversation-detail/conversation-detail.module#ConversationDetailPageModule'

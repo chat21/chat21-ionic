@@ -28,14 +28,14 @@ export class HeaderConversationDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('HeaderConversationDetailComponent');
+    console.log('HeaderConversationDetailComponent', this.idLoggedUser);
     console.log(this.conversationAvatar);
     this.initialize();
   }
 
   /** */
   initialize() {
-    if (this.conversationAvatar.channelType === this.DIRECT) {
+    if (this.conversationAvatar && this.conversationAvatar.channelType === this.DIRECT) {
       this.isDirect = true;
     } else if (this.idLoggedUser) {
       this.membersConversation.push(this.idLoggedUser);

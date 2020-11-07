@@ -124,7 +124,8 @@ export class ConversationListPage implements OnInit {
     console.log('navigatePage:: >>>> conversationSelected ', this.conversationSelected);
     let urlPage = 'detail/';
     if (this.conversationSelected) {
-      urlPage = 'conversation-detail/' + this.uidConvSelected;
+      // urlPage = 'conversation-detail/' + this.uidConvSelected;
+      urlPage = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
       // this.openDetailsWithState(this.conversationSelected);
     }
     // else {
@@ -440,10 +441,11 @@ export class ConversationListPage implements OnInit {
         // this.router.navigateByUrl('conversations-list');
       } else {
         console.log('PLATFORM_DESKTOP 2', this.navService);
-        let pageUrl = 'conversation-detail/' + this.uidConvSelected;
-        if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
-          pageUrl += '?conversationWithFullname=' + this.conversationSelected.conversation_with_fullname;
-        }
+        const pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
+        // let pageUrl = 'conversation-detail/' + this.uidConvSelected;
+        // if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
+        //   pageUrl += '?conversationWithFullname=' + this.conversationSelected.conversation_with_fullname;
+        // }
         console.log('setUidConvSelected navigateByUrl--->: ', pageUrl);
         this.router.navigateByUrl(pageUrl);
       }
@@ -525,8 +527,8 @@ export class ConversationListPage implements OnInit {
         // that.conversationsHandler.setConversationRead(conversationSelected.uid);
         that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
         // that.openDetailsWithState(conversationSelected);
-
-        const urlPage = 'conversation-detail/' + that.uidConvSelected;
+        // const urlPage = 'conversation-detail/' + that.uidConvSelected
+        const urlPage = 'conversation-detail/' + that.uidConvSelected + '/' + conversationSelected.conversation_with_fullname;
         const navigationExtras: NavigationExtras = {
           state: {
             conversationSelected: that.conversationSelected

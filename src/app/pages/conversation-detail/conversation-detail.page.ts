@@ -196,37 +196,29 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     this.translations();
     // get params from url (conversationWith, conversationWithFullname)
     this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+    this.setHeaderContent();
     console.log('this.conversationWith: ', this.conversationWith);
     // this.channelType = setChannelType(this.conversationWith);
 
-
-    this.route.queryParams.subscribe(params => {
-      if (params && params.conversationWithFullname) {
-        this.conversationWithFullname = params.conversationWithFullname;
-        this.conversationAvatar = setConversationAvatar(
-          this.conversationWith,
-          this.conversationWithFullname,
-          this.channelType
-        );
-      }
-      console.log('route.queryParams ---> ', this.conversationWithFullname);
-    });
-
-
-    // if (!this.loggedUser) {
-    //   // subscribe is logged and start page
-    //   const that = this;
-    //   this.authService.authStateChanged.subscribe((user: any) => {
-    //       console.log('***** authStateChanged *****', user);
-    //       that.loggedUser = user;
-    //       if (user && user.uid) {
-    //         that.initialize();
-    //       }
-    //   });
-    // }
-
     if (!this.loggedUser) {
       const that = this;
+
+      /** */
+      // this.route.queryParams.subscribe(params => {
+      //   if (params && params.conversationWithFullname) {
+      //     this.conversationWithFullname = params.conversationWithFullname;
+      //     this.conversationAvatar = setConversationAvatar(
+      //       this.conversationWith,
+      //       this.conversationWithFullname,
+      //       this.channelType
+      //     );
+      //     this.initialize();
+      //   }
+      //   console.log('route.queryParams ---> ', this.conversationWithFullname);
+      // });
+
+      /** */
       this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
         console.log('***** BScurrentUser *****', currentUser);
         if (currentUser) {
@@ -234,6 +226,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
           that.initialize();
         }
       });
+
     }
 
   }
@@ -379,7 +372,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
         that.showMessageWelcome = true;
         console.log('setTimeout ***', that.showMessageWelcome);
       }
-    }, 3000);
+    }, 0);
   }
 
   /**
@@ -388,17 +381,22 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   startConversation() {
     console.log('startConversation: ', this.conversationWith);
     if (this.conversationWith) {
-      this.channelType = setChannelType(this.conversationWith);
-      console.log('setChannelType: ', this.channelType);
-      this.selectInfoContentTypeComponent();
-      this.conversationAvatar =  setConversationAvatar(
-        this.conversationWith,
-        this.conversationWithFullname,
-        this.channelType
-      );
+      this.setHeaderContent();
       this.detectBottom();
       this.initSubscriptions();
     }
+  }
+
+  setHeaderContent() {
+    this.channelType = setChannelType(this.conversationWith);
+    console.log('setChannelType: ', this.channelType);
+    this.selectInfoContentTypeComponent();
+    this.conversationAvatar = setConversationAvatar(
+      this.conversationWith,
+      this.conversationWithFullname,
+      this.channelType
+    );
+    console.log('this.conversationAvatar: ', this.conversationAvatar);
   }
 
   // -------------- START SET INFO COMPONENT -------------- //
@@ -762,11 +760,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * @param time
    */
   private scrollBottom(time: number) {
-    console.log('scrollBottom', this.ionContentChatArea);
-    this.showButtonToBottom = false;
-    this.NUM_BADGES = 0;
-    this.ionContentChatArea.scrollToBottom(time);
-    this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+    if (this.ionContentChatArea) {
+      console.log('scrollBottom', this.ionContentChatArea);
+      this.showButtonToBottom = false;
+      this.NUM_BADGES = 0;
+      this.ionContentChatArea.scrollToBottom(time);
+      this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+    }
   }
 
   /**
