@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 
 // models
 import { UserModel } from 'src/app/models/user';
+
+// utils
+import {
+  avatarPlaceholder,
+  getColorBck,
+  getImageUrlThumbFromFirebasestorage
+} from 'src/app/utils/utils-user';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +23,16 @@ import { UserModel } from 'src/app/models/user';
 //
 
 export class CurrentUserService {
+
+  // BehaviorSubjects
   BScurrentUser: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(null);
 
+  // public
   SERVER_BASE_URL = environment.SERVER_BASE_URL;
   FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
   urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
 
+  // private
   private urlUpdateCurrentUser: string;
   private urlDetailCurrentUser: string;
   private currentUser: UserModel;
@@ -42,6 +52,10 @@ export class CurrentUserService {
     this.urlUpdateCurrentUser = this.SERVER_BASE_URL + 'users';
   }
 
+  /**
+   * detailCurrentUser
+   * @param token
+   */
   public detailCurrentUser(token: string) {
     const that = this;
     const httpOptions = {
@@ -64,7 +78,7 @@ export class CurrentUserService {
   }
 
   /**
-   *
+   * updateCurrentUser
    * @param user
    */
   public updateCurrentUser(user: any) {
@@ -72,7 +86,7 @@ export class CurrentUserService {
   }
 
   /**
-   *
+   * getCurrentUser
    * @param user
    */
   public getCurrentUser(user: any) {
@@ -92,9 +106,9 @@ export class CurrentUserService {
       const lastname = user.lastname ? user.lastname : '';
       const email = user.email ? user.email : '';
       const fullname = ( firstname + ' ' + lastname ).trim();
-      const avatar = this.avatarPlaceholder(fullname);
-      const color = this.getColorBck(fullname);
-      const imageurl = this.getImageUrlThumbFromFirebasestorage(user._id);
+      const avatar = avatarPlaceholder(fullname);
+      const color = getColorBck(fullname);
+      const imageurl = getImageUrlThumbFromFirebasestorage(user._id, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
       member.uid = uid;
       member.email = email;
       member.firstname = firstname;
@@ -112,48 +126,4 @@ export class CurrentUserService {
     localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     this.BScurrentUser.next(this.currentUser);
   }
-
-
-
-  /**
-   *
-   * @param str
-   */
-  private getColorBck(str: string): string {
-    const arrayBckColor = ['#fba76f', '#80d066', '#73cdd0', '#ecd074', '#6fb1e4', '#f98bae'];
-    let num = 0;
-    if (str) {
-      const code = str.charCodeAt((str.length - 1));
-      num = Math.round(code % arrayBckColor.length);
-    }
-    return arrayBckColor[num];
-  }
-
-  /**
-   *
-   * @param name
-   */
-  private avatarPlaceholder(name: string) {
-    let initials = '';
-    if (name) {
-      const arrayName = name.split(' ');
-      arrayName.forEach(member => {
-        if (member.trim().length > 1 && initials.length < 3) {
-          initials += member.substring(0, 1).toUpperCase();
-        }
-      });
-    }
-    return initials;
-  }
-
-  /**
-   *
-   * @param uid
-   */
-  private getImageUrlThumbFromFirebasestorage(uid: string) {
-    const imageurl = this.FIREBASESTORAGE_BASE_URL_IMAGE + this.urlStorageBucket + uid + '%2Fthumb_photo.jpg?alt=media';
-    return imageurl;
-  }
-
 }
-

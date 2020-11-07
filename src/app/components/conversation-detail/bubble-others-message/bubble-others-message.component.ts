@@ -5,9 +5,12 @@ import {
   popupUrl,
   urlify,
   isPopupUrl,
-  getColorBck,
   stripTags
 } from 'src/app/utils/utils';
+
+import {
+  getColorBck
+} from 'src/app/utils/utils-user';
 
 import {
   isImage,

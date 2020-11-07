@@ -75,14 +75,19 @@ export class ConversationListPage implements OnInit {
     public authService: AuthService
   ) {
     console.log('constructor ConversationListPage');
-    const that = this;
-    this.authService.authStateChanged.subscribe((data: any) => {
-        console.log('***** authStateChanged *****', data);
-        if (data && data.uid) {
-          that.loggedUserUid = data.uid;
-          that.initialize();
-        }
-    });
+    this.loggedUserUid = this.authService.getUser().uid;
+
+    if (!this.loggedUserUid) {
+      const that = this;
+      this.authService.authStateChanged.subscribe((data: any) => {
+          console.log('***** authStateChanged *****', data);
+          if (data && data.uid) {
+            that.loggedUserUid = data.uid;
+            that.initialize();
+          }
+      });
+    }
+
   }
 
 
@@ -106,6 +111,9 @@ export class ConversationListPage implements OnInit {
    */
   ngOnInit() {
     console.log('ngOnInit ConversationListPage');
+    if (this.loggedUserUid) {
+      this.initialize();
+    }
   }
 
   ionViewDidEnter() {
@@ -174,11 +182,11 @@ export class ConversationListPage implements OnInit {
       this.readAllMessages(conversationId);
     });
 
-    key = 'uidConvSelected:changed';
-    if (!isInArray(key, this.subscriptions)) {
-      this.subscriptions.push(key);
-      this.events.subscribe(key, this.subscribeChangedConversationSelected);
-    }
+    // key = 'uidConvSelected:changed';
+    // if (!isInArray(key, this.subscriptions)) {
+    //   this.subscriptions.push(key);
+    //   this.events.subscribe(key, this.subscribeChangedConversationSelected);
+    // }
 
     const that = this;
     this.conversationsHandlerService.conversationsAdded.subscribe((conversations: any) => {
@@ -311,7 +319,7 @@ export class ConversationListPage implements OnInit {
     this.conversationsHandlerService.uidConvSelected = user.uid;
     const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
     if (conversationSelected) {
-      console.log('uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
+      console.log('--> uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
       this.conversationSelected = conversationSelected;
     }
     // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
@@ -330,10 +338,8 @@ export class ConversationListPage implements OnInit {
    */
   initialize() {
     this.tenant = environment.tenant;
-    // this.loggedUser = this.chatManager.getCurrentUser();
     this.subscriptions = [];
     this.initVariables();
-    // this.initConversationsHandler();
     this.initSubscriptions();
   }
 
@@ -365,7 +371,7 @@ export class ConversationListPage implements OnInit {
     console.log('ConversationListPage .conversationWith: ', IDConv);
     if (IDConv) {
       console.log('22222');
-      that.setUidConvSelected(IDConv);
+      // that.setUidConvSelected(IDConv);
     } else {
       this.databaseProvider.initialize(this.loggedUserUid, this.tenant);
       this.databaseProvider.getUidLastOpenConversation()
@@ -430,7 +436,7 @@ export class ConversationListPage implements OnInit {
         this.conversationSelected = conversationSelected;
       }
       if (checkPlatformIsMobile()) {
-        console.log('PLATFORM_MOBILE 2', this.navService);
+        console.log('PLATFORM_MOBILE 1', this.navService);
         // this.router.navigateByUrl('conversations-list');
       } else {
         console.log('PLATFORM_DESKTOP 2', this.navService);
@@ -500,7 +506,7 @@ export class ConversationListPage implements OnInit {
   openMessageList(type?: string) {
     const that = this;
     console.log('openMessageList:: >>>> conversationSelected ', that.uidConvSelected);
-     // if the conversation from the isConversationClosingMap is waiting to be closed
+    // if the conversation from the isConversationClosingMap is waiting to be closed
     // deny the click on the conversation
     if (this.conversationsHandlerService.getClosingConversation(this.uidConvSelected)) { return; }
 
@@ -510,9 +516,6 @@ export class ConversationListPage implements OnInit {
         // conversationSelected.is_new = false;
         // conversationSelected.status = '0';
         // conversationSelected.selected = true;
-
-
-
         // that.navProxy.pushDetail(DettaglioConversazionePage, {
         //   conversationSelected: conversationSelected,
         //   conversationWith: that.uidConvSelected,
@@ -522,16 +525,16 @@ export class ConversationListPage implements OnInit {
         // that.conversationsHandler.setConversationRead(conversationSelected.uid);
         that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
         // that.openDetailsWithState(conversationSelected);
-        // tslint:disable-next-line: max-line-length
-        const urlPage = 'conversation-detail/' + that.uidConvSelected;
 
+        const urlPage = 'conversation-detail/' + that.uidConvSelected;
         const navigationExtras: NavigationExtras = {
           state: {
             conversationSelected: that.conversationSelected
           }
         };
         console.log('1 openPage', urlPage);
-        that.navService.openPage(urlPage, ConversationDetailPage, navigationExtras);
+        this.router.navigateByUrl(urlPage);
+        // that.navService.openPage(urlPage, ConversationDetailPage, navigationExtras);
       } else if (!type) {
         if (windowsMatchMedia()) {
           // that.navProxy.pushDetail(PlaceholderPage, {});
@@ -539,6 +542,24 @@ export class ConversationListPage implements OnInit {
       }
     }, 0);
   }
+
+  // if (checkPlatformIsMobile()) {
+  //   this.platformIs = PLATFORM_MOBILE;
+  //   console.log('PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE);
+  //   this.router.navigateByUrl(pageUrl);
+  //   // this.navService.setRoot(ConversationListPage, {});
+  // } else {
+  //   console.log('PLATFORM_DESKTOP', this.navService, pageUrl);
+  //   this.platformIs = PLATFORM_DESKTOP;
+  //   this.navService.setRoot(ConversationListPage, {});
+
+  //   console.log('checkPlatform navigateByUrl', pageUrl);
+  //   this.router.navigateByUrl(pageUrl);
+
+  //   const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
+  //   createExternalSidebar(this.renderer, DASHBOARD_URL);
+  // }
+
 
   /**
    * ::: closeConversation :::
@@ -590,6 +611,7 @@ export class ConversationListPage implements OnInit {
 
   // info page
   returnCloseInfoPage() {
+    console.log('returnCloseInfoPage');
     // this.isShowMenuPage = false;
     this.initialize();
 

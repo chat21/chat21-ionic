@@ -56,20 +56,21 @@ export class FirebaseAuthService extends AuthService {
   checkIsAuth() {
     console.log(' ---------------- AuthService checkIsAuth ---------------- ');
     this.tiledeskToken = localStorage.getItem('tiledeskToken');
+    if (this.tiledeskToken) {
+      console.log(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ');
+      this.createCustomToken();
+    } else {
+      console.log(' ---------------- NON sono loggato ---------------- ');
+    }
 
-    const that = this;
-    this.route.queryParams.subscribe(params => {
-      console.log('queryParams -->', params );
-      if (params.tiledeskToken) {
-        that.tiledeskToken = params.tiledeskToken;
-      }
-      if (that.tiledeskToken) {
-        console.log(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ');
-        that.createCustomToken();
-      } else {
-        console.log(' ---------------- NON sono loggato ---------------- ');
-      }
-    });
+    // da rifattorizzare il codice seguente!!!
+    // const that = this;
+    // this.route.queryParams.subscribe(params => {
+    //   console.log('queryParams -->', params );
+    //   if (params.tiledeskToken) {
+    //     that.tiledeskToken = params.tiledeskToken;
+    //   }
+    // });
   }
 
   /**

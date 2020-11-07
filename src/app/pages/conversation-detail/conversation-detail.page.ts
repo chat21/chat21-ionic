@@ -18,23 +18,17 @@ import { ConversationModel } from '../../models/conversation';
 
 // services
 import { AuthService } from '../../services/auth.service';
-// import { UserService } from '../../services/user.service';
-// import { NavProxyService } from '../../services/nav-proxy';
-// import { ChatPresenceHandler } from '../../services/chat-presence-handler';
 import { ChatManager } from '../../services/chat-manager';
-// import { UploadService } from '../../services/upload-service';
-// import { ChatConversationHandler } from '../../services/chat-conversation-handler';
 import { AppConfigProvider } from '../../services/app-config';
 import { DatabaseProvider } from '../../services/database';
-
 import { CustomTranslateService } from 'src/app/services/custom-translate.service';
-
 import { TypingService } from 'src/app/services/typing.service';
 
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
 import { ConversationHandlerService } from 'src/app/services/conversation-handler.service';
 import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
+import { ContactsService } from 'src/app/services/contacts/contacts.service';
 
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
 // import { GroupService } from '../../services/group';
@@ -69,15 +63,17 @@ import {
   stripTags,
   urlify,
   convertMessageAndUrlify,
-  getColorBck,
   checkPlatformIsMobile,
   closeModal,
-  avatarPlaceholder,
-  getImageUrlThumbFromFirebasestorage,
   setConversationAvatar,
   setChannelType
 } from '../../utils/utils';
 
+import {
+  getColorBck,
+  avatarPlaceholder,
+  getImageUrlThumbFromFirebasestorage,
+} from '../../utils/utils-user';
 
 import {
   isFirstMessage,
@@ -192,13 +188,17 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
+    public contactsService: ContactsService
   ) {
+    console.log('CONVERSATION DETAIL COSTRACTOR', this.loggedUser);
+    this.loggedUser = this.authService.getUser();
     this.tenant = environment.tenant;
-
+    this.translations();
     // get params from url (conversationWith, conversationWithFullname)
     this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
     console.log('this.conversationWith: ', this.conversationWith);
     // this.channelType = setChannelType(this.conversationWith);
+
 
     this.route.queryParams.subscribe(params => {
       if (params && params.conversationWithFullname) {
@@ -212,25 +212,29 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       console.log('route.queryParams ---> ', this.conversationWithFullname);
     });
 
-    // subscribe is logged and start page
-    // const that = this;
-    // this.authService.authStateChanged.subscribe((user: any) => {
-    //     console.log('***** authStateChanged *****', user);
-    //     that.loggedUser = user;
-    //     if (user && user.uid) {
-    //       that.initialize();
-    //     }
-    // });
 
+    // if (!this.loggedUser) {
+    //   // subscribe is logged and start page
+    //   const that = this;
+    //   this.authService.authStateChanged.subscribe((user: any) => {
+    //       console.log('***** authStateChanged *****', user);
+    //       that.loggedUser = user;
+    //       if (user && user.uid) {
+    //         that.initialize();
+    //       }
+    //   });
+    // }
 
-    const that = this;
-    this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
-      console.log('***** BScurrentUser *****', currentUser);
-      if (currentUser) {
-        that.loggedUser = currentUser;
-        that.initialize();
-      }
-    });
+    if (!this.loggedUser) {
+      const that = this;
+      this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
+        console.log('***** BScurrentUser *****', currentUser);
+        if (currentUser) {
+          that.loggedUser = currentUser;
+          that.initialize();
+        }
+      });
+    }
 
   }
 
@@ -248,12 +252,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
 
   /** */
   ionViewWillEnter() {
-    console.log('ionViewWillEnter ConversationDetailPage: ');
-    // if (this.loggedUser) {
-    //   this.NUM_BADGES = 0;
-    //   this.showButtonToBottom = false;
-    //   this.initialize();
-    // }
+    console.log('ionViewWillEnter ConversationDetailPage: ', this.loggedUser);
+    if (this.loggedUser) {
+      this.initialize();
+    }
   }
 
   /** */
@@ -279,8 +281,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   initialize() {
     console.log('initialize ConversationDetailPage: ', this.loggedUser );
     this.subscriptions = [];
-    // this.loggedUser = this.chatManager.getCurrentUser();
-    this.translations();
     this.setHeightTextArea();
     this.tagsCanned = []; // list of canned
     this.messages = []; // list messages of conversation
@@ -422,13 +422,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   setInfoDirect() {
     this.member = null;
     const that = this;
-    // this.userService.loadUserDetail(this.conversationWith)
-    // .then((member: UserModel) => {
-    //   that.member = member;
-    // })
-    // .catch((err: Error) => {
-    //   console.log('error fullProfile', err);
-    // });
+    const tiledeskToken = this.authService.getTiledeskToken();
+    this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith);
   }
 
   /**
@@ -550,14 +545,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
 
     const that = this;
     const subscribeConversationsChanged = this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
-      console.log('***** DATAIL conversationsChanged *****', conversations);
+      // console.log('***** DATAIL conversationsChanged *****', conversations);
     });
     if (this.subscriptions.indexOf(subscribeConversationsChanged) === -1 ) {
       this.subscriptions.push(subscribeConversationsChanged);
     }
 
     const subscribeMessageAdded = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
-      console.log('***** DATAIL messageAdded *****', msg);
+      // console.log('***** DATAIL messageAdded *****', msg);
       that.newMessageAdded(msg);
     });
     if (this.subscriptions.indexOf(subscribeMessageAdded) === -1 ) {
@@ -565,17 +560,25 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     }
 
     const subscribeMessageChanged = this.conversationHandlerService.messageChanged.subscribe((msg: any) => {
-      console.log('***** DATAIL messageChanged *****', msg);
+      // console.log('***** DATAIL messageChanged *****', msg);
     });
     if (this.subscriptions.indexOf(subscribeMessageChanged) === -1 ) {
       this.subscriptions.push(subscribeMessageChanged);
     }
 
     const subscribeMessageRemoved = this.conversationHandlerService.messageRemoved.subscribe((messageId: any) => {
-      console.log('***** DATAIL messageRemoved *****', messageId);
+      // console.log('***** DATAIL messageRemoved *****', messageId);
     });
     if (this.subscriptions.indexOf(subscribeMessageRemoved) === -1 ) {
       this.subscriptions.push(subscribeMessageRemoved);
+    }
+
+    const subscribeBScontactDetail = this.contactsService.BScontactDetail.subscribe((contact: UserModel) => {
+      // console.log('***** DATAIL subscribeBScontactDetail *****', contact);
+      that.member = contact;
+    });
+    if (this.subscriptions.indexOf(subscribeBScontactDetail) === -1 ) {
+      this.subscriptions.push(subscribeBScontactDetail);
     }
 
   }
@@ -744,7 +747,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       console.log('newMessageAdded', message);
       if (message && message.isSender) {
         this.scrollBottom(0);
-      } else if (message.status < 200 ) {
+      } else if (message && message.status && message.status < 200 ) {
         this.NUM_BADGES++;
         this.showButtonToBottom = true;
       } else {
