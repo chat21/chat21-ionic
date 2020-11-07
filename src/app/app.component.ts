@@ -278,7 +278,8 @@ export class AppComponent implements OnInit {
    */
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
     console.log('************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
-    this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
+    // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
+    this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname);
   }
 
   /**
