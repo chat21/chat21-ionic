@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 export abstract class AuthService {
 
   // BehaviorSubject
-  abstract authStateChanged: BehaviorSubject<any> = new BehaviorSubject<any>([]);
+  abstract authStateChanged: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   // params
   abstract persistence = environment.authPersistence;

@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
   public zone: NgZone;
   private platformIs: string;
   private doitResize: any;
-  private timeModalLogin: any;
+  // private timeModalLogin: any;
   public tenant: string;
   public authModal: any;
 
@@ -238,14 +238,15 @@ export class AppComponent implements OnInit {
   // BEGIN SUBSCRIPTIONS //
   /** */
   initSubscriptions() {
-
     const that = this;
     this.authService.authStateChanged.subscribe((data: any) => {
         console.log('***** authStateChanged *****', data);
         if (data && data.uid) {
           that.goOnLine(data);
-        } else if (data === null) {
+        } else if (data === 'offline') {
           that.goOffLine();
+        } else {
+          // sono nel primo caso null
         }
     });
 
@@ -289,12 +290,12 @@ export class AppComponent implements OnInit {
     console.log('************** goOffLine:', this.authModal);
     this.chatManager.goOffLine();
     const that = this;
-    clearTimeout(this.timeModalLogin);
-    this.timeModalLogin = setTimeout( () => {
-      if (!this.authModal) {
-        this.authModal = this.presentModal();
-      }
-    }, 2000);
+    // clearTimeout(this.timeModalLogin);
+    // this.timeModalLogin = setTimeout( () => {
+    if (!this.authModal) {
+      this.authModal = this.presentModal();
+    }
+    // }, 0);
   }
 
   private async presentModal(): Promise<any> {
@@ -340,7 +341,7 @@ export class AppComponent implements OnInit {
    */
   goOnLine = (user: any) => {
     console.log('************** goOnLine', user);
-    clearTimeout(this.timeModalLogin);
+    // clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.authService.getTiledeskToken();
     this.chatManager.setTiledeskToken(tiledeskToken);
     this.currentUserService.detailCurrentUser(tiledeskToken);

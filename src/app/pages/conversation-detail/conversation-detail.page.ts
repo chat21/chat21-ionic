@@ -388,14 +388,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   }
 
   setHeaderContent() {
-    this.channelType = setChannelType(this.conversationWith);
-    console.log('setChannelType: ', this.channelType);
-    this.selectInfoContentTypeComponent();
-    this.conversationAvatar = setConversationAvatar(
-      this.conversationWith,
-      this.conversationWithFullname,
-      this.channelType
-    );
+    if (this.conversationWith) {
+      this.channelType = setChannelType(this.conversationWith);
+      console.log('setChannelType: ', this.channelType);
+      this.selectInfoContentTypeComponent();
+      this.conversationAvatar = setConversationAvatar(
+        this.conversationWith,
+        this.conversationWithFullname,
+        this.channelType
+      );
+    }
     console.log('this.conversationAvatar: ', this.conversationAvatar);
   }
 
