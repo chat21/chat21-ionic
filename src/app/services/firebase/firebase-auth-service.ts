@@ -103,7 +103,7 @@ export class FirebaseAuthService extends AuthService {
       console.log(' onAuthStateChanged', user);
       if (!user) {
         console.log(' 1 - PASSO OFFLINE AL CHAT MANAGER');
-        that.authStateChanged.next(null);
+        that.authStateChanged.next('offline');
       } else {
         console.log(' 2 - PASSO ONLINE AL CHAT MANAGER');
         that.authStateChanged.next(user);
