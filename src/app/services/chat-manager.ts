@@ -24,7 +24,7 @@ export class ChatManager {
   private currentUser: UserModel;
   private tiledeskToken: string;
 
-  public handlers: ConversationHandlerService[];
+  private handlers: ConversationHandlerService[];
   // public archivedConversationsHandler: ChatArchivedConversationsHandler;
   public contactsSynchronizer: ChatContactsSynchronizer;
   public openInfoConversation: boolean;
@@ -155,15 +155,15 @@ export class ChatManager {
    * chiamato dall'inizialize di dettaglio-conversazione.ts
    * @param handler
    */
-  addConversationHandler(handler) {
-    console.log('CHAT MANAGER -----> addConversationHandler', handler);
+  addConversationHandler(handler: ConversationHandlerService) {
+    console.log('CHAT MANAGER -----> addConversationHandler', this.handlers, handler);
     this.handlers.push(handler);
   }
 
   /**
    * rimuovo dall'array degli handlers delle conversazioni una conversazione
    * al momento non è utilizzato!!!
-   * @param conversationId 
+   * @param conversationId
    */
   removeConversationHandler(conversationId) {
     console.log(' -----> removeConversationHandler: ', conversationId);
@@ -178,15 +178,26 @@ export class ChatManager {
    * @param conversationId
    */
   getConversationHandlerByConversationId(conversationId): any {
-    const resultArray = this.handlers.filter((handler) => {
-      console.log('FILTRO::: ***', conversationId, handler.conversationWith);
-      return handler.conversationWith === conversationId;
+    let handler = null;
+    this.handlers.forEach(conv => {
+      // console.log('forEach ***', conversationId, this.handlers, conv);
+      if (conv.conversationWith === conversationId) {
+        console.log('OKKKKKK', conversationId, conv.conversationWith);
+        handler = conv;
+        return;
+      }
     });
-    console.log('getConversationHandlerByConversationId ***', conversationId, resultArray, this.handlers);
-    if (resultArray.length === 0) {
-      return null;
-    }
-    return resultArray[0];
+    return handler;
+    // const resultArray = this.handlers.filter((handler) => {
+    //   console.log('FILTRO::: ***', conversationId, handler.conversationWith);
+    //   return handler.conversationWith === conversationId;
+    // });
+
+   
+    // if (resultArray.length === 0) {
+    //   return null;
+    // }
+    // return resultArray[0];
   }
 
   /**

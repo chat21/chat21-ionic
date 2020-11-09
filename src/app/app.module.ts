@@ -128,6 +128,9 @@ import {LoginPageModule} from './pages/authentication/login/login.module';
 
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
 import { SharedModule } from 'src/app/shared/shared.module';
+
+import { FirebaseImageRepoService } from './services/firebase/firebase-image-repo';
+import { ImageRepoService } from './services/image-repo.service';
 // import { SharedConversationInfoModule } from 'src/app/shared/shared-conversation-info.module';
 // import { DdpHeaderComponent } from 'src/app/components/ddp-header/ddp-header.component';
 
@@ -175,6 +178,11 @@ export function conversationsHandlerFactory(
 export function conversationHandlerFactory() {
   console.log('conversationHandlerFactory: ');
   return new FirebaseConversationHandler();
+}
+
+export function imageRepoFactory() {
+  console.log('imageRepoFactory: ');
+  return new FirebaseImageRepoService();
 }
 
 
@@ -254,6 +262,11 @@ export function conversationHandlerFactory() {
       provide: ConversationHandlerService,
       useFactory: conversationHandlerFactory,
       deps: [DatabaseProvider]
+    },
+    {
+      provide: ImageRepoService,
+      useFactory: imageRepoFactory,
+      deps: []
     },
     StatusBar,
     SplashScreen,

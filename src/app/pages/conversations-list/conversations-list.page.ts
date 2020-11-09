@@ -433,7 +433,7 @@ export class ConversationListPage implements OnInit {
       this.conversationsHandlerService.uidConvSelected = uidConvSelected;
       const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
       if (conversationSelected) {
-        console.log('uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
+        console.log('la conv ' + this.conversationSelected + ' è già stata caricata');
         this.conversationSelected = conversationSelected;
       }
       if (checkPlatformIsMobile()) {
@@ -441,16 +441,14 @@ export class ConversationListPage implements OnInit {
         // this.router.navigateByUrl('conversations-list');
       } else {
         console.log('PLATFORM_DESKTOP 2', this.navService);
-        const pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
-        // let pageUrl = 'conversation-detail/' + this.uidConvSelected;
-        // if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
-        //   pageUrl += '?conversationWithFullname=' + this.conversationSelected.conversation_with_fullname;
-        // }
+        let pageUrl = 'conversation-detail/' + this.uidConvSelected;
+        if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
+          pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
+        }
         console.log('setUidConvSelected navigateByUrl--->: ', pageUrl);
         this.router.navigateByUrl(pageUrl);
       }
     }
-    console.log('setUidConvSelected: ', this.uidConvSelected);
   }
 
   /**

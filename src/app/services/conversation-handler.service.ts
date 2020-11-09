@@ -22,6 +22,7 @@ export abstract class ConversationHandlerService {
   abstract ref: any;
   abstract conversationWith: string;
 
+  constructor() {}
 
   // functions
   abstract initialize(

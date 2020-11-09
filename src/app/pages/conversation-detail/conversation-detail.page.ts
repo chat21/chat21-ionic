@@ -89,6 +89,7 @@ import {
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { FirebaseConversationHandler } from 'src/app/services/firebase/firebase-conversation-handler';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -190,35 +191,26 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     // public groupService: GroupService
     public contactsService: ContactsService
   ) {
-    console.log('CONVERSATION DETAIL COSTRACTOR', this.loggedUser);
+    // this.unsubescribeAll();
     this.loggedUser = this.authService.getUser();
     this.tenant = environment.tenant;
     this.translations();
-    // get params from url (conversationWith, conversationWithFullname)
+
     this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
     this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+
+    console.log(
+      'CONVERSATION DETAIL COSTRACTOR' +
+      this.loggedUser +
+      this.tenant +
+      this.conversationWith +
+      this.conversationWithFullname
+    );
+
     this.setHeaderContent();
-    console.log('this.conversationWith: ', this.conversationWith);
-    // this.channelType = setChannelType(this.conversationWith);
 
     if (!this.loggedUser) {
       const that = this;
-
-      /** */
-      // this.route.queryParams.subscribe(params => {
-      //   if (params && params.conversationWithFullname) {
-      //     this.conversationWithFullname = params.conversationWithFullname;
-      //     this.conversationAvatar = setConversationAvatar(
-      //       this.conversationWith,
-      //       this.conversationWithFullname,
-      //       this.channelType
-      //     );
-      //     this.initialize();
-      //   }
-      //   console.log('route.queryParams ---> ', this.conversationWithFullname);
-      // });
-
-      /** */
       this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
         console.log('***** BScurrentUser *****', currentUser);
         if (currentUser) {
@@ -226,7 +218,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
           that.initialize();
         }
       });
-
     }
 
   }
@@ -238,10 +229,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     this.showMessageWelcome = false;
   }
 
-  ngOnDestroy() {
-    console.log('ngOnDestroy ConversationDetailPage: ');
-    this.unsubescribeAll();
-  }
+  // ngOnDestroy() {
+  //   console.log('ngOnDestroy ConversationDetailPage: ');
+  //   this.unsubescribeAll();
+  // }
 
   /** */
   ionViewWillEnter() {
@@ -258,7 +249,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * quando esco dalla pagina distruggo i subscribe
    * e chiudo la finestra di info
    */
-  ionViewWillLeave() {}
+  // ionViewWillLeave() {
+  //   console.log('ionViewWillLeave ConversationDetailPage: ');
+  //   this.unsubescribeAll();
+  // }
 
   // -------------- START MY functions -------------- //
   /**
@@ -336,15 +330,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     ];
     const translationMap = this.customTranslateService.translateLanguage(keys);
     this.showMessageWelcome = false;
-
+    console.log('DETTAGLIO CONV - chatManager **************', this.conversationWith);
     const handler: ConversationHandlerService = this.chatManager.getConversationHandlerByConversationId(this.conversationWith);
-    console.log('DETTAGLIO CONV - initConversationHandler **************', this.chatManager, handler, this.conversationWith);
+    console.log('DETTAGLIO CONV - handler **************', handler, this.conversationWith);
     if (!handler) {
       console.log(
       ' CONVERSATION WITH ', this.conversationWith,
       ' CONVERSATION FULLNAME ', this.conversationWithFullname,
       ' CONVERSATION LOGGED ', this.loggedUser,
       ' CONVERSATION TENANT ', this.tenant);
+      this.conversationHandlerService = new FirebaseConversationHandler();
       this.conversationHandlerService.initialize(
       this.conversationWith,
       this.conversationWithFullname,
@@ -353,10 +348,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       translationMap);
 
       this.conversationHandlerService.connect();
-
-      console.log('PRIMA ***', this.chatManager.handlers);
       this.chatManager.addConversationHandler(this.conversationHandlerService);
-      console.log('DOPO ***', this.chatManager.handlers);
     } else {
       console.log('NON ENTRO ***', this.conversationHandlerService, handler);
       this.conversationHandlerService = handler;
@@ -367,7 +359,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
     const that = this;
     setTimeout( () => {
-      console.log('setTimeout ***', that.messages);
       if (!that.messages || that.messages.length === 0) {
         that.showMessageWelcome = true;
         console.log('setTimeout ***', that.showMessageWelcome);
@@ -552,8 +543,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     }
 
     const subscribeMessageAdded = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
-      // console.log('***** DATAIL messageAdded *****', msg);
-      that.newMessageAdded(msg);
+      console.log('***** DATAIL messageAdded *****', msg);
+      if (msg) {
+        that.newMessageAdded(msg);
+      }
     });
     if (this.subscriptions.indexOf(subscribeMessageAdded) === -1 ) {
       this.subscriptions.push(subscribeMessageAdded);
@@ -616,7 +609,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     window.removeEventListener('keyboardDidShow', null);
     window.removeEventListener('keyboardWillHide', null);
     window.removeEventListener('keyboardDidHide', null);
-
+    this.conversationHandlerService.dispose();
   }
   // -------------- END SUBSCRIBTIONS functions -------------- //
 
@@ -650,6 +643,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     } else {
       this.showButtonToBottom = true;
     }
+  }
+
+  async controlloPos(): Promise<boolean> {
+    const scrollElement = await this.ionContentChatArea.getScrollElement();
+    console.log('SCROLL ELEMENT TO TOP:: ', scrollElement.scrollTop);
+    console.log('SCROLL ELEMENT TO HEIGHT:: ', scrollElement.scrollHeight);
+    console.log('SCROLL ELEMENT CLIENT HEIGHT: ', scrollElement.clientHeight);
+    if ( scrollElement.scrollTop === scrollElement.scrollHeight - scrollElement.clientHeight ) {
+      console.log(':::SONO ALLA FINE:::');
+      return true;
+    }
+    return false;
   }
 
 
@@ -744,15 +749,41 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    */
   newMessageAdded(message: MessageModel) {
     setTimeout( () => {
-      console.log('newMessageAdded', message);
-      if (message && message.isSender) {
-        this.scrollBottom(0);
-      } else if (message && message.status && message.status < 200 ) {
-        this.NUM_BADGES++;
-        this.showButtonToBottom = true;
-      } else {
-        this.showButtonToBottom = true;
+
+      if (message) {
+        console.log('newMessageAdded', message);
+        console.log('message.isSender', message.isSender);
+        if (message.isSender) {
+          if (message.status && message.status < 200) {
+            console.log('message.status < 200');
+            this.scrollBottom(0);
+          } else {
+            console.log('message.status >= 200');
+          }
+        } else {
+          if (message.status && message.status < 200 ) {
+            console.log('message.status < 200');
+            this.NUM_BADGES++;
+            this.showButtonToBottom = true;
+          } else {
+            console.log('message.status >= 200');
+            this.showButtonToBottom = true;
+          }
+        }
+
       }
+      // // const isBottom = this.controlloPos();
+      // if (message && message.isSender && message.status && message.status < 200) {
+      //   console.log('scrollo alla fine');
+      //   this.scrollBottom(0);
+      // } else if (message && message.status && message.status < 200 ) {
+      //   console.log('bbbbbb');
+      //   this.NUM_BADGES++;
+      //   this.showButtonToBottom = true;
+      // } else {
+      //   console.log('cccccc');
+      //   this.showButtonToBottom = true;
+      // }
     }, 0);
   }
 
@@ -796,6 +827,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   /** */
   setHeightTextArea() {
     try {
+      // tslint:disable-next-line: no-string-literal
       this.heightMessageTextArea = this.rowTextArea['el'].offsetHeight;
     } catch (e) {
       this.heightMessageTextArea = '50';

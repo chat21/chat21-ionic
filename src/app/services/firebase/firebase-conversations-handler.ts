@@ -17,8 +17,10 @@ import { DatabaseProvider } from 'src/app/services/database';
 
 // utils
 import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
-import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from 'src/app/utils/utils-user';
+import { avatarPlaceholder, getColorBck } from 'src/app/utils/utils-user';
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from 'src/app/utils/utils';
+import { ImageRepoService } from '../image-repo.service';
+import { FirebaseImageRepoService } from './firebase-image-repo';
 
 
 @Injectable({ providedIn: 'root' })
@@ -36,8 +38,9 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     conversations: Array<ConversationModel> = [];
     uidConvSelected: string;
     tenant: string;
-    FIREBASESTORAGE_BASE_URL_IMAGE: string;
-    urlStorageBucket: string;
+    imageRepo: ImageRepoService = new FirebaseImageRepoService();
+    // FIREBASESTORAGE_BASE_URL_IMAGE: string;
+    // urlStorageBucket: string;
 
     // private variables
     private loggedUserId: string;
@@ -289,7 +292,8 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
-        conv.image = getImageUrlThumbFromFirebasestorage(conversation_with, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
+        conv.image = this.imageRepo.getImageThumb(conversation_with);
+        // getImageUrlThumbFromFirebasestorage(conversation_with, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
         return conv;
     }
 
