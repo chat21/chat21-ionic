@@ -1,44 +1,60 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { EventsService } from '../../services/events-service';
 
 @Component({
   selector: 'app-details',
   templateUrl: './details.page.html',
   styleUrls: ['./details.page.scss'],
 })
-export class DetailsPage implements OnInit {
+export class DetailsPage implements OnInit, OnDestroy {
 
+  conversationWith: string;
+  conversationWithFullname: string;
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
-    public events: EventsService
-  ) { }
+    private router: Router
+  ) {
+    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+    console.log('constructor DetailsPage: ', this.conversationWith, this.conversationWithFullname);
+  }
 
   ngOnInit() {
-    //this.events.subscribe('resize_', this.onResizeWindow);
-    // if(window.innerWidth < 768){
-    //   this.navigatePage();
-    // }
+    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+    console.log('ngOnInit DetailsPage: ', this.conversationWith, this.conversationWithFullname);
   }
 
+  // ngOnDestroy() {
+  //   this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+  //   this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+  //   console.log('ngOnDestroy DetailsPage: ', this.conversationWith, this.conversationWithFullname);
+  //   // this.destroyParent();
+  // }
+
+  @HostListener("window:beforeunload")
+  ngOnDestroy() {
+    console.log("Parent component destroyed")
+  }
+
+  ionViewWillEnter() {
+    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+    console.log('ionViewWillEnter DetailsPage: ', this.conversationWith, this.conversationWithFullname);
+  }
+
+  /** */
   ionViewDidEnter() {
-    console.log('app-details ------------> ionViewDidEnter');
+    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+    console.log('ionViewDidEnter DetailsPage: ', this.conversationWith, this.conversationWithFullname);
   }
 
-  // onResizeWindow = (type: string) => {
-  //   console.log('resize_', type);
-  //   if(type === 'mobile'){
-  //     this.navigatePage();
-  //   }
-  // }
-
-  // private navigatePage(){
-  //   this.router.navigateByUrl('conversations-list');
-  // }
-
-
+  ionViewWillLeave() {
+    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+    console.log('ionViewWillLeave DetailsPage: ', this.conversationWith, this.conversationWithFullname);
+  }
 
 }

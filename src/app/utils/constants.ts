@@ -3,6 +3,9 @@
 // export const SERVICE_WORKER_DEV = '/chat/';
 // export const SERVICE_WORKER_PROD = './chat/';
 
+// CHAT ENGINE
+export const CHAT_ENGINE_NQTT = 'nqtt';
+export const CHAT_ENGINE_FIREBASE = 'firebase';
 
 
 // MESSAGES STATUS

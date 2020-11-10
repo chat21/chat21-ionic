@@ -25,7 +25,8 @@
       
       <ng-template #contentConversations>
         <ion-item lines="none" class="ion-no-padding" *ngFor="let conversation of conversations"
-          (mousedown)="setUidConvSelected(conversation.uid)" (mouseup)="openMessageList()">
+          (mousedown)="setUidConvSelected(conversation.uid)"> 
+          <!-- (mouseup)="openMessageList()" -->
           <div [class.selected]="conversation.uid === uidConvSelected"></div>
           <ion-avatar item-start>
             <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>

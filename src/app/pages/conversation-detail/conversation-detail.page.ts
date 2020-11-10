@@ -23,6 +23,7 @@ import { AppConfigProvider } from '../../services/app-config';
 import { DatabaseProvider } from '../../services/database';
 import { CustomTranslateService } from 'src/app/services/custom-translate.service';
 import { TypingService } from 'src/app/services/typing.service';
+import { ConversationHandlerFactory } from 'src/app/services/conversation-handler-factory.service';
 
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
@@ -189,25 +190,26 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
-    public contactsService: ContactsService
+    public contactsService: ContactsService,
+    public conversationHandlerFactory: ConversationHandlerFactory
   ) {
-    // this.unsubescribeAll();
-    this.loggedUser = this.authService.getUser();
-    this.tenant = environment.tenant;
-    this.translations();
+    // // this.unsubescribeAll();
+    // this.loggedUser = this.authService.getUser();
+    // this.tenant = environment.tenant;
+    // this.translations();
 
-    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
-    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+    // this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+    // this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
 
-    console.log(
-      'CONVERSATION DETAIL COSTRACTOR' +
-      this.loggedUser +
-      this.tenant +
-      this.conversationWith +
-      this.conversationWithFullname
-    );
+    // console.log(
+    //   'CONVERSATION DETAIL COSTRACTOR' +
+    //   this.loggedUser +
+    //   this.tenant +
+    //   this.conversationWith +
+    //   this.conversationWithFullname
+    // );
 
-    this.setHeaderContent();
+    // this.setHeaderContent();
 
     if (!this.loggedUser) {
       const that = this;
@@ -224,19 +226,40 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
 
   // -------------- SYSTEM FUNCTIONS -------------- //
   /** */
+  // con il routing la gestione delle pagine è automatica (da indagare),
+  // non sempre passa da ngOnInit/ngOnDestroy! Evitare di aggiungere logica qui
+  //
   ngOnInit() {
     console.log('ngOnInit ConversationDetailPage: ');
-    this.showMessageWelcome = false;
+    
   }
 
-  // ngOnDestroy() {
-  //   console.log('ngOnDestroy ConversationDetailPage: ');
-  //   this.unsubescribeAll();
-  // }
+  ngOnDestroy() {
+    console.log('ngOnDestroy ConversationDetailPage: ');
+    // this.unsubescribeAll();
+  }
 
   /** */
   ionViewWillEnter() {
     console.log('ionViewWillEnter ConversationDetailPage: ', this.loggedUser);
+    // this.unsubescribeAll();
+    this.showMessageWelcome = false;
+    this.loggedUser = this.authService.getUser();
+    this.tenant = environment.tenant;
+    this.translations();
+
+    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+
+    console.log(
+      'CONVERSATION DETAIL COSTRACTOR' +
+      this.loggedUser +
+      this.tenant +
+      this.conversationWith +
+      this.conversationWithFullname
+    );
+
+    this.setHeaderContent();
     if (this.loggedUser) {
       this.initialize();
     }
@@ -249,10 +272,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * quando esco dalla pagina distruggo i subscribe
    * e chiudo la finestra di info
    */
-  // ionViewWillLeave() {
-  //   console.log('ionViewWillLeave ConversationDetailPage: ');
-  //   this.unsubescribeAll();
-  // }
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave ConversationDetailPage: ');
+    this.unsubescribeAll();
+  }
 
   // -------------- START MY functions -------------- //
   /**
@@ -339,7 +362,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       ' CONVERSATION FULLNAME ', this.conversationWithFullname,
       ' CONVERSATION LOGGED ', this.loggedUser,
       ' CONVERSATION TENANT ', this.tenant);
-      this.conversationHandlerService = new FirebaseConversationHandler();
+      this.conversationHandlerService = this.conversationHandlerFactory.build(); //new FirebaseConversationHandler();
       this.conversationHandlerService.initialize(
       this.conversationWith,
       this.conversationWithFullname,
@@ -354,6 +377,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       this.conversationHandlerService = handler;
     }
     this.messages = this.conversationHandlerService.messages;
+    this.scrollBottom(0);
     console.log('CONVERSATION MESSAGES ', this.messages);
 
     // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
@@ -363,7 +387,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
         that.showMessageWelcome = true;
         console.log('setTimeout ***', that.showMessageWelcome);
       }
-    }, 0);
+    }, 1000);
   }
 
   /**
@@ -372,6 +396,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   startConversation() {
     console.log('startConversation: ', this.conversationWith);
     if (this.conversationWith) {
+      this.channelType = setChannelType(this.conversationWith);
+      console.log('setChannelType: ', this.channelType);
+      this.selectInfoContentTypeComponent();
       this.setHeaderContent();
       this.detectBottom();
       this.initSubscriptions();
@@ -380,9 +407,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
 
   setHeaderContent() {
     if (this.conversationWith) {
-      this.channelType = setChannelType(this.conversationWith);
-      console.log('setChannelType: ', this.channelType);
-      this.selectInfoContentTypeComponent();
       this.conversationAvatar = setConversationAvatar(
         this.conversationWith,
         this.conversationWithFullname,
@@ -531,7 +555,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * subscriptions list
    */
   initSubscriptions() {
-    console.log('initSubscriptions');
+    console.log('||------------> initSubscriptions: ', this.subscriptions);
     this.addEventsKeyboard();
 
     const that = this;
@@ -541,6 +565,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     if (this.subscriptions.indexOf(subscribeConversationsChanged) === -1 ) {
       this.subscriptions.push(subscribeConversationsChanged);
     }
+
 
     const subscribeMessageAdded = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
       console.log('***** DATAIL messageAdded *****', msg);
@@ -598,7 +623,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * unsubscribe all subscribe events
    */
   unsubescribeAll() {
-    console.log('unsubescribeAll: ', this.subscriptions);
+    console.log('||------------> unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -609,7 +634,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     window.removeEventListener('keyboardDidShow', null);
     window.removeEventListener('keyboardWillHide', null);
     window.removeEventListener('keyboardDidHide', null);
-    this.conversationHandlerService.dispose();
+    //this.conversationHandlerService.dispose();
   }
   // -------------- END SUBSCRIBTIONS functions -------------- //
 
@@ -748,18 +773,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * @param message
    */
   newMessageAdded(message: MessageModel) {
-    setTimeout( () => {
 
       if (message) {
         console.log('newMessageAdded', message);
         console.log('message.isSender', message.isSender);
+        console.log('message.status', message.status);
         if (message.isSender) {
-          if (message.status && message.status < 200) {
-            console.log('message.status < 200');
-            this.scrollBottom(0);
-          } else {
-            console.log('message.status >= 200');
-          }
+          console.log('message.status < 200');
+          this.scrollBottom(0);
         } else {
           if (message.status && message.status < 200 ) {
             console.log('message.status < 200');
@@ -784,7 +805,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       //   console.log('cccccc');
       //   this.showButtonToBottom = true;
       // }
-    }, 0);
+
   }
 
 
@@ -797,8 +818,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       console.log('scrollBottom', this.ionContentChatArea);
       this.showButtonToBottom = false;
       this.NUM_BADGES = 0;
-      this.ionContentChatArea.scrollToBottom(time);
-      this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+      setTimeout( () => {
+        this.ionContentChatArea.scrollToBottom(time);
+        this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+      }, 200);
+      // nota: trovare il modo di scrollare il content area dopo aver renderizzato il msg
     }
   }
 

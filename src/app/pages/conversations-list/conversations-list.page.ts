@@ -116,6 +116,7 @@ export class ConversationListPage implements OnInit {
     }
   }
 
+
   ionViewDidEnter() {
     console.log('ConversationListPage ------------> ionViewDidEnter');
   }
@@ -445,11 +446,22 @@ export class ConversationListPage implements OnInit {
         if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
           pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
         }
+        // let pageUrl = 'detail/' + this.uidConvSelected;
+        // if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
+        //   pageUrl = 'detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
+        // }
         console.log('setUidConvSelected navigateByUrl--->: ', pageUrl);
         this.router.navigateByUrl(pageUrl);
+
+        // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        // this.router.onSameUrlNavigation = 'reload';
+        // this.router.navigateByUrl(pageUrl);
+
       }
     }
   }
+
+
 
   /**
    * ::: onOpenContactsDirectory :::
@@ -533,7 +545,7 @@ export class ConversationListPage implements OnInit {
           }
         };
         console.log('1 openPage', urlPage);
-        this.router.navigateByUrl(urlPage);
+        // this.router.navigateByUrl(urlPage);
         // that.navService.openPage(urlPage, ConversationDetailPage, navigationExtras);
       } else if (!type) {
         if (windowsMatchMedia()) {
