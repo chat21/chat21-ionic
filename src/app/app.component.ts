@@ -31,7 +31,7 @@ import { ConversationListPage } from './pages/conversations-list/conversations-l
 
 // utils
 import { createExternalSidebar, checkPlatformIsMobile } from './utils/utils';
-import { PLATFORM_MOBILE, PLATFORM_DESKTOP } from './utils/constants';
+import { PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE } from './utils/constants';
 import { environment } from '../environments/environment';
 import { UserModel } from './models/user';
 
@@ -86,8 +86,9 @@ export class AppComponent implements OnInit {
     console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
-    this.initFirebase();
-
+    if (environment.chatEngine === CHAT_ENGINE_FIREBASE) {
+      this.initFirebase();
+    }
   }
 
 
