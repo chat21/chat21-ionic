@@ -44,7 +44,6 @@ export class FirebaseAuthService extends AuthService {
   initialize() {
     this.URL_TILEDESK_SIGNIN = this.SERVER_BASE_URL + 'auth/signin';
     this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
-    console.log(' ---------------- AuthService initialize ---------------- ');
     this.checkIsAuth();
     this.onAuthStateChanged();
   }
@@ -61,6 +60,7 @@ export class FirebaseAuthService extends AuthService {
       this.createCustomToken();
     } else {
       console.log(' ---------------- NON sono loggato ---------------- ');
+      this.authStateChanged.next('offline');
     }
 
     // da rifattorizzare il codice seguente!!!
@@ -103,7 +103,7 @@ export class FirebaseAuthService extends AuthService {
       console.log(' onAuthStateChanged', user);
       if (!user) {
         console.log(' 1 - PASSO OFFLINE AL CHAT MANAGER');
-        that.authStateChanged.next('offline');
+        // that.authStateChanged.next('offline');
       } else {
         console.log(' 2 - PASSO ONLINE AL CHAT MANAGER');
         that.authStateChanged.next(user);
@@ -316,5 +316,10 @@ export class FirebaseAuthService extends AuthService {
   // }
 
 
+  public logout() {
+    // cancello token firebase dal local storage e da firebase
+    // dovrebbe scattare l'evento authchangeStat
+    console.log('logout non nancora abilitato');
+  }
 
 }

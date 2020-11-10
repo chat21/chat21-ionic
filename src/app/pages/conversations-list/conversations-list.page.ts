@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ModalController, IonRouterOutlet, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+
 // config
 import { environment } from '../../../environments/environment';
 
@@ -38,6 +39,7 @@ import { ConversationDetailPage } from '../conversation-detail/conversation-deta
 import { ContactsDirectoryPage } from '../contacts-directory/contacts-directory.page';
 import { ProfileInfoPage } from '../profile-info/profile-info.page';
 import { AuthService } from 'src/app/services/auth.service';
+import { CustomTranslateService } from 'src/app/services/custom-translate.service';
 
 @Component({
   selector: 'app-conversations-list',
@@ -72,22 +74,11 @@ export class ConversationListPage implements OnInit {
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
     public chatManager: ChatManager,
-    public authService: AuthService
+    public authService: AuthService,
+    private translateService: CustomTranslateService
   ) {
     console.log('constructor ConversationListPage');
     this.loggedUserUid = this.authService.getUser().uid;
-
-    if (!this.loggedUserUid) {
-      const that = this;
-      this.authService.authStateChanged.subscribe((data: any) => {
-          console.log('***** authStateChanged *****', data);
-          if (data && data.uid) {
-            that.loggedUserUid = data.uid;
-            that.initialize();
-          }
-      });
-    }
-
   }
 
 
@@ -111,11 +102,29 @@ export class ConversationListPage implements OnInit {
    */
   ngOnInit() {
     console.log('ngOnInit ConversationListPage');
+
     if (this.loggedUserUid) {
       this.initialize();
     }
   }
 
+  private listnerUserLogged() {
+    if (!this.loggedUserUid) {
+      const that = this;
+      this.authService.authStateChanged.subscribe((data: any) => {
+          console.log('***** authStateChanged *****', data);
+          if (data && data.uid) {
+            that.loggedUserUid = data.uid;
+            that.initialize();
+          }
+      });
+    }
+  }
+
+  ionViewWillEnter() {
+    console.log('ConversationListPage ------------> ionViewWillEnter');
+    this.listnerUserLogged();
+  }
 
   ionViewDidEnter() {
     console.log('ConversationListPage ------------> ionViewDidEnter');
@@ -155,6 +164,31 @@ export class ConversationListPage implements OnInit {
   // BEGIN SUBSCRIPTIONS
   // ------------------------------------------------------------------ //
 
+
+  /**
+   * ::: initConversationsHandler :::
+   * inizializzo chatConversationsHandler e archviedConversationsHandler
+   * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
+   * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
+   * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
+   * salvo conversationHandler in chatManager
+   */
+  initConversationsHandler(userId: string) {
+    const keys = [
+      'LABEL_TU'
+    ];
+    const translationMap = this.translateService.translateLanguage(keys);
+
+    console.log('initConversationsHandler ------------->', userId);
+    // 1 - init chatConversationsHandler and  archviedConversationsHandler
+    this.conversationsHandlerService.initialize(userId, translationMap);
+    // 2 - get conversations from storage
+    // this.chatConversationsHandler.getConversationsFromStorage();
+    // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
+    this.conversationsHandlerService.connect();
+    // 6 - save conversationHandler in chatManager
+    this.chatManager.setConversationsHandler(this.conversationsHandlerService);
+  }
   /** */
   initSubscriptions() {
     let key = '';
@@ -339,6 +373,7 @@ export class ConversationListPage implements OnInit {
    * ::: initialize :::
    */
   initialize() {
+    this.initConversationsHandler(this.loggedUserUid);
     this.tenant = environment.tenant;
     this.subscriptions = [];
     this.initVariables();

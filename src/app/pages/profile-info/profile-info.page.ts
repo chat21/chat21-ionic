@@ -7,6 +7,7 @@ import { ChatManager } from '../../services/chat-manager';
 import { CustomTranslateService } from '../../services/custom-translate.service';
 import { PresenceService } from '../../services/presence.service';
 import { EventsService } from '../../services/events-service';
+import { AuthService } from '../../services/auth.service';
 
 // models
 import { UserModel } from 'src/app/models/user';
@@ -36,7 +37,8 @@ export class ProfileInfoPage implements OnInit {
     private chatManager: ChatManager,
     private translateService: CustomTranslateService,
     public presenceService: PresenceService,
-    public events: EventsService
+    public events: EventsService,
+    private authService: AuthService
   ) { }
 
   /** */
@@ -89,7 +91,8 @@ export class ProfileInfoPage implements OnInit {
       'LABEL_LAST_ACCESS',
       'ARRAY_DAYS',
       'LABEL_ACTIVE_NOW',
-      'LABEL_IS_WRITING'
+      'LABEL_IS_WRITING',
+      'LABEL_LOGOUT'
     ];
     this.translationMap = this.translateService.translateLanguage(keys);
   }
@@ -158,5 +161,10 @@ export class ProfileInfoPage implements OnInit {
     } else {
       this.navService.pop();
     }
+  }
+
+  /** */
+  public onLogout() {
+    this.authService.logout();
   }
 }

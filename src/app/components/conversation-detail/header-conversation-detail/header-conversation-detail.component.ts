@@ -17,7 +17,7 @@ export class HeaderConversationDetailComponent implements OnInit {
   DIRECT = 'direct';
 
   isDirect = false;
-  isTypings = false;
+  isTyping = false;
   borderColor = '#ffffff';
   fontColor = '#949494';
   membersConversation = ['SYSTEM'];

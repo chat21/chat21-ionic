@@ -31,7 +31,7 @@ import { ConversationListPage } from './pages/conversations-list/conversations-l
 
 // utils
 import { createExternalSidebar, checkPlatformIsMobile } from './utils/utils';
-import { PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE } from './utils/constants';
+import { PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE } from './utils/constants';
 import { environment } from '../environments/environment';
 import { UserModel } from './models/user';
 
@@ -89,6 +89,7 @@ export class AppComponent implements OnInit {
     if (environment.chatEngine === CHAT_ENGINE_FIREBASE) {
       this.initFirebase();
     }
+
   }
 
 
@@ -98,28 +99,26 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     console.log('ngOnInit -->', this.route.snapshot.params);
     this.initializeApp();
-    this.initSubscriptions();
   }
 
 
   /** */
   initializeApp() {
     this.notificationsEnabled = true;
-    this.zone = new NgZone({});
+    this.zone = new NgZone({}); // a cosa serve?
     this.platform.ready().then(() => {
-      this.splashScreen.hide();
       this.setLanguage();
+      this.splashScreen.hide();
       this.statusBar.styleDefault();
-
+      this.navService.init(this.sidebarNav, this.detailNav);
       this.authService.initialize();
       this.currentUserService.initialize();
-      this.navService.init(this.sidebarNav, this.detailNav);
-
-      this.msgService.initialize();
+      this.chatManager.initialize();
       this.presenceService.initialize();
       this.typingService.initialize();
-      this.chatManager.initialize();
+      this.initSubscriptions();
 
+      this.msgService.initialize();
       console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
     });
   }
@@ -144,22 +143,22 @@ export class AppComponent implements OnInit {
    * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
    * salvo conversationHandler in chatManager
    */
-  initConversationsHandler(userId: string) {
-    const keys = [
-      'LABEL_TU'
-    ];
-    const translationMap = this.translateService.translateLanguage(keys);
+  // initConversationsHandler(userId: string) {
+  //   const keys = [
+  //     'LABEL_TU'
+  //   ];
+  //   const translationMap = this.translateService.translateLanguage(keys);
 
-    console.log('initConversationsHandler ------------->', userId);
-    // 1 - init chatConversationsHandler and  archviedConversationsHandler
-    this.conversationsHandlerService.initialize(userId, translationMap);
-    // 2 - get conversations from storage
-    // this.chatConversationsHandler.getConversationsFromStorage();
-    // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-    this.conversationsHandlerService.connect();
-    // 6 - save conversationHandler in chatManager
-    this.chatManager.setConversationsHandler(this.conversationsHandlerService);
-  }
+  //   console.log('initConversationsHandler ------------->', userId);
+  //   // 1 - init chatConversationsHandler and  archviedConversationsHandler
+  //   this.conversationsHandlerService.initialize(userId, translationMap);
+  //   // 2 - get conversations from storage
+  //   // this.chatConversationsHandler.getConversationsFromStorage();
+  //   // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
+  //   this.conversationsHandlerService.connect();
+  //   // 6 - save conversationHandler in chatManager
+  //   this.chatManager.setConversationsHandler(this.conversationsHandlerService);
+  // }
 
   /** */
   setLanguage() {
@@ -240,11 +239,12 @@ export class AppComponent implements OnInit {
   /** */
   initSubscriptions() {
     const that = this;
+
     this.authService.authStateChanged.subscribe((data: any) => {
         console.log('***** authStateChanged *****', data);
         if (data && data.uid) {
           that.goOnLine(data);
-        } else if (data === 'offline') {
+        } else if (data === AUTH_STATE_OFFLINE) {
           that.goOffLine();
         } else {
           // sono nel primo caso null
@@ -342,12 +342,11 @@ export class AppComponent implements OnInit {
    */
   goOnLine = (user: any) => {
     console.log('************** goOnLine', user);
-    // clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.authService.getTiledeskToken();
     this.chatManager.setTiledeskToken(tiledeskToken);
     this.currentUserService.detailCurrentUser(tiledeskToken);
-    this.chatPresenceHandler.setupMyPresence(user.uid);
-    this.initConversationsHandler(user.uid);
+    this.presenceService.userIsOnline(user.uid);
+    // this.initConversationsHandler(user.uid);
     try {
       console.log('************** closeModal', this.authModal);
       if (this.authModal) {

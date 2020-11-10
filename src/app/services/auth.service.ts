@@ -21,5 +21,5 @@ export abstract class AuthService {
   abstract getToken(): string;
   abstract getTiledeskToken(): string;
   abstract signInWithEmailAndPassword(email: string, password: string): void;
-
+  abstract logout(): void;
 }

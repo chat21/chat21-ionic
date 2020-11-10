@@ -7,6 +7,10 @@
 export const CHAT_ENGINE_NQTT = 'nqtt';
 export const CHAT_ENGINE_FIREBASE = 'firebase';
 
+// AUTH
+export const AUTH_STATE_OFFLINE = 'offline';
+
+
 
 // MESSAGES STATUS
 export const MSG_STATUS_FAILED = -100;

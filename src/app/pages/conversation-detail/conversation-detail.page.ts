@@ -123,7 +123,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   public openInfoConversation = false;
   public openInfoMessage: boolean;              /** check is open info message */
   public isMobile = false;
-  public isTypings = false;
+  public isTyping = false;
   public nameUserTypingNow: string;
 
   public heightMessageTextArea = '';
@@ -193,24 +193,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     public contactsService: ContactsService,
     public conversationHandlerFactory: ConversationHandlerFactory
   ) {
-    // // this.unsubescribeAll();
-    // this.loggedUser = this.authService.getUser();
-    // this.tenant = environment.tenant;
-    // this.translations();
+  }
 
-    // this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
-    // this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
-
-    // console.log(
-    //   'CONVERSATION DETAIL COSTRACTOR' +
-    //   this.loggedUser +
-    //   this.tenant +
-    //   this.conversationWith +
-    //   this.conversationWithFullname
-    // );
-
-    // this.setHeaderContent();
-
+  // -------------- SYSTEM FUNCTIONS -------------- //
+  private listnerUserLogged() {
     if (!this.loggedUser) {
       const that = this;
       this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
@@ -221,22 +207,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
         }
       });
     }
-
   }
 
-  // -------------- SYSTEM FUNCTIONS -------------- //
   /** */
   // con il routing la gestione delle pagine è automatica (da indagare),
   // non sempre passa da ngOnInit/ngOnDestroy! Evitare di aggiungere logica qui
   //
   ngOnInit() {
-    console.log('ngOnInit ConversationDetailPage: ');
-    
+    // console.log('ngOnInit ConversationDetailPage: ');
   }
 
   ngOnDestroy() {
-    console.log('ngOnDestroy ConversationDetailPage: ');
-    // this.unsubescribeAll();
+    // console.log('ngOnDestroy ConversationDetailPage: ');
   }
 
   /** */
@@ -260,8 +242,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     );
 
     this.setHeaderContent();
+
+    
+    
+    
     if (this.loggedUser) {
       this.initialize();
+    } else {
+      this.listnerUserLogged();
     }
   }
 
@@ -273,7 +261,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * e chiudo la finestra di info
    */
   ionViewWillLeave() {
-    console.log('ionViewWillLeave ConversationDetailPage: ');
+    // console.log('ionViewWillLeave ConversationDetailPage: ');
     this.unsubescribeAll();
   }
 

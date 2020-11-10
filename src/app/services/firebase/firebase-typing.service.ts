@@ -56,7 +56,7 @@ export class FirebaseTypingService extends TypingService {
     const ref = firebase.database().ref(urlTyping).orderByChild('timestamp').limitToLast(1);
     ref.on('child_changed', (childSnapshot) => {
       console.log('urlTyping: ', childSnapshot.val());
-      that.events.publish('isTypings', childSnapshot);
+      that.events.publish('isTyping', childSnapshot);
     });
   }
 
