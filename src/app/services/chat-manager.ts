@@ -206,8 +206,8 @@ export class ChatManager {
    */
   setOffAllReferences() {
     this.handlers.forEach((data) => {
-      const item = data.ref;
-      item.ref.off();
+      // const item = data.ref;
+      // item.ref.off();
     });
     this.handlers = [];
   }

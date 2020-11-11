@@ -103,7 +103,8 @@ export class FirebaseAuthService extends AuthService {
       console.log(' onAuthStateChanged', user);
       if (!user) {
         console.log(' 1 - PASSO OFFLINE AL CHAT MANAGER');
-        // that.authStateChanged.next('offline');
+        // se non esiste il token
+        that.authStateChanged.next('offline');
       } else {
         console.log(' 2 - PASSO ONLINE AL CHAT MANAGER');
         that.authStateChanged.next(user);
@@ -205,15 +206,18 @@ export class FirebaseAuthService extends AuthService {
   /**
    * FIREBASE: signOut
    */
-  async signOut() {
+  private signOut() {
     const that = this;
-    try {
-      await firebase.auth().signOut();
+    firebase.auth().signOut()
+    .then(() => {
       console.log('firebase-sign-out');
+      // cancello token
+      localStorage.removeItem('tiledeskToken');
+      localStorage.removeItem('firebaseToken');
       // that.firebaseSignOut.next();
-    } catch (error) {
+    }).catch((error) => {
       console.log('error: ', error);
-    }
+    });
   }
 
   /**
@@ -319,6 +323,7 @@ export class FirebaseAuthService extends AuthService {
   public logout() {
     // cancello token firebase dal local storage e da firebase
     // dovrebbe scattare l'evento authchangeStat
+    this.signOut();
     console.log('logout non nancora abilitato');
   }
 

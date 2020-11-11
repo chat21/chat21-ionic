@@ -147,12 +147,8 @@
 //     }
 // }
 
-ion-content {
-    ion-item {
-        --padding-end: 0px;
-        --inner-padding-end: 0px;
-        --min-height: 20px;
-    }
+// ion-content {
+
     // .row-day {
     //     padding: 0 10px;
     //     text-align: center;
@@ -274,7 +270,7 @@ ion-content {
 //         }
 //     }
 
-}
+// }
 
 
 
@@ -286,6 +282,11 @@ ion-header {
 }
 
 ion-content {
+    ion-item {
+        --padding-end: 0px;
+        --inner-padding-end: 0px;
+        --min-height: 20px;
+    }
     ion-grid.grid_content {
         height: calc(100% - 10px);
         border: 0;
@@ -304,7 +305,7 @@ ion-content {
         ion-col {
             padding: 5px 0;
         }
-        background-color: aquamarine;
+        // background-color: aquamarine;
     }
     .row_chat_area {
         height: calc(100% - 60px);
@@ -357,12 +358,8 @@ ion-content {
                 max-width: 100%;
             }
         }
-    }  
-
-    
+    }     
 }
-
-
 
 
 #buttonScrollToBottom {
@@ -410,7 +407,12 @@ ion-content {
     background-color:#eee;
 }
 
-
+.ionContentChatArea{
+    opacity: 0.0;
+    &.active{
+        opacity: 1.0;
+    }
+}
 
 
 /**

@@ -284,20 +284,7 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname);
   }
 
-  /**
-   *
-   */
-  goOffLine = () => {
-    console.log('************** goOffLine:', this.authModal);
-    this.chatManager.goOffLine();
-    const that = this;
-    // clearTimeout(this.timeModalLogin);
-    // this.timeModalLogin = setTimeout( () => {
-    if (!this.authModal) {
-      this.authModal = this.presentModal();
-    }
-    // }, 0);
-  }
+  
 
   private async presentModal(): Promise<any> {
     const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
@@ -357,6 +344,23 @@ export class AppComponent implements OnInit {
     } catch (err) {
       console.error('-> error:', err);
     }
+  }
+
+  /**
+   *
+   */
+  goOffLine = () => {
+    console.log('************** goOffLine:', this.authModal);
+
+    this.chatManager.setTiledeskToken(null);
+    this.chatManager.goOffLine();
+    const that = this;
+    // clearTimeout(this.timeModalLogin);
+    // this.timeModalLogin = setTimeout( () => {
+    if (!this.authModal) {
+      this.authModal = this.presentModal();
+    }
+    // }, 0);
   }
 
   /** */
