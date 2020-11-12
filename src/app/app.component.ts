@@ -17,7 +17,7 @@ import { EventsService } from './services/events-service';
 import { AuthService } from './services/auth.service';
 import { PresenceService } from './services/presence.service';
 import { TypingService } from './services/typing.service';
-import { ChatPresenceHandler} from './services/chat-presence-handler';
+// import { ChatPresenceHandler} from './services/chat-presence-handler';
 import { NavProxyService } from './services/nav-proxy.service';
 import { MessagingService } from './services/messaging-service';
 import { ChatManager } from './services/chat-manager';
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
   public zone: NgZone;
   private platformIs: string;
   private doitResize: any;
-  // private timeModalLogin: any;
+  private timeModalLogin: any;
   public tenant: string;
   public authModal: any;
 
@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private renderer: Renderer2,
     private navService: NavProxyService,
-    public chatPresenceHandler: ChatPresenceHandler,
+    // public chatPresenceHandler: ChatPresenceHandler,
     public typingService: TypingService,
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
@@ -240,8 +240,8 @@ export class AppComponent implements OnInit {
   initSubscriptions() {
     const that = this;
 
-    this.authService.authStateChanged.subscribe((data: any) => {
-        console.log('***** authStateChanged *****', data);
+    this.authService.BSAuthStateChanged.subscribe((data: any) => {
+        console.log('***** BSAuthStateChanged *****', data);
         if (data && data.uid) {
           that.goOnLine(data);
         } else if (data === AUTH_STATE_OFFLINE) {
@@ -250,6 +250,14 @@ export class AppComponent implements OnInit {
           // sono nel primo caso null
         }
     });
+
+    this.authService.BSSignOut.subscribe((data: any) => {
+      console.log('***** BSSignOut *****', data);
+      if (data) {
+        that.presenceService.removePresence();
+      }
+    });
+
 
     this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
       console.log('***** app comp BScurrentUser *****', currentUser);
@@ -285,10 +293,12 @@ export class AppComponent implements OnInit {
   }
 
   
+    
+
 
   private async presentModal(): Promise<any> {
-    const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
     console.log('presentModal');
+    const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
        await this.modalController.create({
           component: LoginPage,
@@ -298,7 +308,7 @@ export class AppComponent implements OnInit {
     });
     modal.onDidDismiss().then((detail: any) => {
       console.log('The result: CHIUDI!!!!!', detail.data);
-      this.checkPlatform();
+      // this.checkPlatform();
       if (detail !== null) {
        //  console.log('The result: CHIUDI!!!!!', detail.data);
       }
@@ -328,19 +338,16 @@ export class AppComponent implements OnInit {
    * @param user
    */
   goOnLine = (user: any) => {
+    clearTimeout(this.timeModalLogin);
     console.log('************** goOnLine', user);
     const tiledeskToken = this.authService.getTiledeskToken();
     this.chatManager.setTiledeskToken(tiledeskToken);
     this.currentUserService.detailCurrentUser(tiledeskToken);
-    this.presenceService.userIsOnline(user.uid);
-    // this.initConversationsHandler(user.uid);
+    this.presenceService.setPresence(user.uid);
+    this.checkPlatform();
     try {
       console.log('************** closeModal', this.authModal);
-      if (this.authModal) {
-        this.closeModal();
-      } else {
-        this.checkPlatform();
-      }
+      this.closeModal();
     } catch (err) {
       console.error('-> error:', err);
     }
@@ -355,12 +362,11 @@ export class AppComponent implements OnInit {
     this.chatManager.setTiledeskToken(null);
     this.chatManager.goOffLine();
     const that = this;
-    // clearTimeout(this.timeModalLogin);
-    // this.timeModalLogin = setTimeout( () => {
-    if (!this.authModal) {
+
+    clearTimeout(this.timeModalLogin);
+    this.timeModalLogin = setTimeout( () => {
       this.authModal = this.presentModal();
-    }
-    // }, 0);
+    }, 1000);
   }
 
   /** */

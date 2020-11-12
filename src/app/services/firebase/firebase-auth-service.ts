@@ -17,7 +17,8 @@ import { AuthService } from '../auth.service';
 
 export class FirebaseAuthService extends AuthService {
 
-  authStateChanged: BehaviorSubject<any>;
+  BSAuthStateChanged: BehaviorSubject<any>;
+  BSSignOut: BehaviorSubject<any>;
   // firebaseSignInWithCustomToken: BehaviorSubject<any>;
 
   persistence: string;
@@ -60,7 +61,7 @@ export class FirebaseAuthService extends AuthService {
       this.createCustomToken();
     } else {
       console.log(' ---------------- NON sono loggato ---------------- ');
-      this.authStateChanged.next('offline');
+      this.BSAuthStateChanged.next('offline');
     }
 
     // da rifattorizzare il codice seguente!!!
@@ -104,10 +105,10 @@ export class FirebaseAuthService extends AuthService {
       if (!user) {
         console.log(' 1 - PASSO OFFLINE AL CHAT MANAGER');
         // se non esiste il token
-        that.authStateChanged.next('offline');
+        that.BSAuthStateChanged.next('offline');
       } else {
         console.log(' 2 - PASSO ONLINE AL CHAT MANAGER');
-        that.authStateChanged.next(user);
+        that.BSAuthStateChanged.next(user);
       }
     });
   }
@@ -214,11 +215,11 @@ export class FirebaseAuthService extends AuthService {
       // cancello token
       localStorage.removeItem('tiledeskToken');
       localStorage.removeItem('firebaseToken');
-      // that.firebaseSignOut.next();
     }).catch((error) => {
       console.log('error: ', error);
     });
   }
+
 
   /**
    * FIREBASE: currentUser delete
@@ -323,6 +324,7 @@ export class FirebaseAuthService extends AuthService {
   public logout() {
     // cancello token firebase dal local storage e da firebase
     // dovrebbe scattare l'evento authchangeStat
+    this.BSSignOut.next(true);
     this.signOut();
     console.log('logout non nancora abilitato');
   }

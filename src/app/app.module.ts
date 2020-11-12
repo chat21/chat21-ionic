@@ -61,9 +61,9 @@ export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
 export function presenceFactory(events: EventsService) {
   console.log('presenceFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_NQTT) {
-    return new FirebasePresenceService(events);
+    return new FirebasePresenceService();
   } else {
-    return new FirebasePresenceService(events);
+    return new FirebasePresenceService();
   }
 }
 

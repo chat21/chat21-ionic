@@ -87,7 +87,7 @@ export class ChatManager {
    */
   dispose() {
     console.log(' 1 - setOffAllReferences');
-    if(this.handlers) { this.setOffAllReferences(); }
+    if (this.handlers) { this.setOffAllReferences(); }
     console.log(' 2 - disposeConversationsHandler');
     if (this.conversationsHandlerService) { this.disposeConversationsHandler(); }
     console.log(' 3 - disposeArchivedConversationsHandler');

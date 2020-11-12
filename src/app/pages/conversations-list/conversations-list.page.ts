@@ -111,7 +111,7 @@ export class ConversationListPage implements OnInit {
   private listnerUserLogged() {
     if (!this.loggedUserUid) {
       const that = this;
-      this.authService.authStateChanged.subscribe((data: any) => {
+      this.authService.BSAuthStateChanged.subscribe((data: any) => {
           console.log('***** authStateChanged *****', data);
           if (data && data.uid) {
             that.loggedUserUid = data.uid;

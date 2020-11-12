@@ -640,15 +640,15 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   // -------------- START OUTPUT functions -------------- //
   logScrollStart(event: any) {
-    console.log('logScrollStart : When Scroll Starts', event);
+    // console.log('logScrollStart : When Scroll Starts', event);
   }
 
   logScrolling(event: any) {
-    console.log('logScrolling : When Scrolling', event);
+    // console.log('logScrolling : When Scrolling', event);
   }
 
   logScrollEnd(event: any) {
-    console.log('logScrollEnd : When Scroll Ends', event);
+    // console.log('logScrollEnd : When Scroll Ends', event);
     this.detectBottom();
   }
 
@@ -662,10 +662,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   async detectBottom() {
     const scrollElement = await this.ionContentChatArea.getScrollElement();
     // console.log('scrollElement', scrollElement);
-    console.log('scrollHeight', scrollElement.scrollHeight);
-    console.log('clientHeight', scrollElement.clientHeight);
-    console.log('scrollElement.scrollTop', scrollElement.scrollTop);
-    console.log('scrollElement.scrollHeight - scrollElement.clientHeight', (scrollElement.scrollHeight - scrollElement.clientHeight));
+    // console.log('scrollHeight', scrollElement.scrollHeight);
+    // console.log('clientHeight', scrollElement.clientHeight);
+    // console.log('scrollElement.scrollTop', scrollElement.scrollTop);
+    // console.log('scrollElement.scrollHeight - scrollElement.clientHeight', (scrollElement.scrollHeight - scrollElement.clientHeight));
     if (scrollElement.scrollTop < scrollElement.scrollHeight - scrollElement.clientHeight ) {
       this.showButtonToBottom = true;
     } else {
@@ -674,19 +674,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
     }
   }
-
-  async controlloPos(): Promise<boolean> {
-    const scrollElement = await this.ionContentChatArea.getScrollElement();
-    console.log('SCROLL ELEMENT TO TOP:: ', scrollElement.scrollTop);
-    console.log('SCROLL ELEMENT TO HEIGHT:: ', scrollElement.scrollHeight);
-    console.log('SCROLL ELEMENT CLIENT HEIGHT: ', scrollElement.clientHeight);
-    if ( scrollElement.scrollTop === scrollElement.scrollHeight - scrollElement.clientHeight ) {
-      console.log(':::SONO ALLA FINE:::');
-      return true;
-    }
-    return false;
-  }
-
 
 
   /** */
@@ -808,13 +795,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     setTimeout( () => {
       // this.showButtonToBottom = false;
       this.showIonContent = true;
-      console.log('scrollBottom ---> ', this.ionContentChatArea);
+      // console.log('scrollBottom ---> ', this.ionContentChatArea);
       if (this.ionContentChatArea) {
         // this.showButtonToBottom = false;
         // this.NUM_BADGES = 0;
         // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
         this.ionContentChatArea.scrollToBottom(time);
-        // nota: se elimino il settimeout lo scrollToBottom non viene richiamato
+        // nota: se elimino il settimeout lo scrollToBottom non viene richiamato!!!!!
       }
     }, 0);
   }
