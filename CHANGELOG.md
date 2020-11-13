@@ -1,5 +1,12 @@
 # chat21-ionic ver 1.0
 
+### 3.0.15
+- bug-fix: changed routing removing url parameters
+- bug-fix: create new conversation
+- changed: create abstract classes for services
+- bug-fix: scroll-page
+- changed: replaced Observable with BehaviourSubject
+
 ### 3.0.14
 - new: create new conversation
 - new: added conversations cache

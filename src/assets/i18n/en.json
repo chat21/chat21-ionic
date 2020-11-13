@@ -82,6 +82,7 @@
   "LABEL_ERROR_EMAIL": "Enter a valid email address.",
   "LABEL_ERROR_PASSWORD": "The password must be at least 6 characters.",
   "LABEL_LOGIN": "Login",
+  "LABEL_LOGOUT": "Logout",
 
   "LABEL_WELCOME_TO": "Welcome to",
   "LABEL_SIGNUP": "Sign up",

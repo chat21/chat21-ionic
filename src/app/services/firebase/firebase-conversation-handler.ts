@@ -32,13 +32,13 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     messageAdded: BehaviorSubject<MessageModel>;
     messageChanged: BehaviorSubject<MessageModel>;
     messageRemoved: BehaviorSubject<string>;
-    isTypings: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    isTyping: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
     // public variables
     public attributes: any;
     public messages: MessageModel[];
     public conversationWith: string;
-    public ref: firebase.database.Query;
+
 
     // private variables
     private translationMap: Map<string, string>; // LABEL_TODAY, LABEL_TOMORROW
@@ -51,6 +51,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private listSubsriptions: any[];
     private CLIENT_BROWSER: string;
     private lastDate = '';
+    private ref: firebase.database.Query;
 
 
     constructor(
@@ -127,7 +128,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         typeMsg: string,
         metadataMsg: string,
         conversationWith: string,
-        conversationWithDetailFullname: string,
+        conversationWithFullname: string,
         senderMsg: string,
         senderFullname: string,
         channelType: string
@@ -140,7 +141,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
 
         // const key = messageRef.key;
         const lang = document.documentElement.lang;
-        const recipientFullname = conversationWithDetailFullname;
+        const recipientFullname = conversationWithFullname;
         const dateSendingMessage = setHeaderDate(this.translationMap, '');
 
         const messageRef = firebaseMessagesCustomUid.push({

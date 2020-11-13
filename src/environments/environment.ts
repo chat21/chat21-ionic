@@ -29,5 +29,6 @@ export const environment = {
         appId: "1:92907897826:web:f255664014a7cc14ee2fbb",
         chat21ApiUrl: "https://us-central1-tiledesk-prod-v2.cloudfunctions.net"
     },
-    authPersistence: 'LOCAL'
+    authPersistence: 'LOCAL',
+    chatEngine: 'nqtt'
 };

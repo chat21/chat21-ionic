@@ -31,7 +31,7 @@ import { ConversationListPage } from './pages/conversations-list/conversations-l
 
 // utils
 import { createExternalSidebar, checkPlatformIsMobile } from './utils/utils';
-import { PLATFORM_MOBILE, PLATFORM_DESKTOP } from './utils/constants';
+import { PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE } from './utils/constants';
 import { environment } from '../environments/environment';
 import { UserModel } from './models/user';
 
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
   public zone: NgZone;
   private platformIs: string;
   private doitResize: any;
-  // private timeModalLogin: any;
+  private timeModalLogin: any;
   public tenant: string;
   public authModal: any;
 
@@ -86,7 +86,9 @@ export class AppComponent implements OnInit {
     console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
-    // this.initFirebase();
+    // if (environment.chatEngine === CHAT_ENGINE_FIREBASE) {
+      this.initFirebase();
+    // }
 
   }
 
@@ -97,28 +99,26 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     console.log('ngOnInit -->', this.route.snapshot.params);
     this.initializeApp();
-    this.initSubscriptions();
   }
 
 
   /** */
   initializeApp() {
     this.notificationsEnabled = true;
-    this.zone = new NgZone({});
+    this.zone = new NgZone({}); // a cosa serve?
     this.platform.ready().then(() => {
-      this.splashScreen.hide();
       this.setLanguage();
+      this.splashScreen.hide();
       this.statusBar.styleDefault();
-
+      this.navService.init(this.sidebarNav, this.detailNav);
       this.authService.initialize();
       this.currentUserService.initialize();
-      this.navService.init(this.sidebarNav, this.detailNav);
-
-      this.msgService.initialize();
+      this.chatManager.initialize();
       this.presenceService.initialize();
       this.typingService.initialize();
-      this.chatManager.initialize();
+      this.initSubscriptions();
 
+      this.msgService.initialize();
       console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
     });
   }
@@ -143,22 +143,22 @@ export class AppComponent implements OnInit {
    * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
    * salvo conversationHandler in chatManager
    */
-  initConversationsHandler(userId: string) {
-    const keys = [
-      'LABEL_TU'
-    ];
-    const translationMap = this.translateService.translateLanguage(keys);
+  // initConversationsHandler(userId: string) {
+  //   const keys = [
+  //     'LABEL_TU'
+  //   ];
+  //   const translationMap = this.translateService.translateLanguage(keys);
 
-    console.log('initConversationsHandler ------------->', userId);
-    // 1 - init chatConversationsHandler and  archviedConversationsHandler
-    this.conversationsHandlerService.initialize(userId, translationMap);
-    // 2 - get conversations from storage
-    // this.chatConversationsHandler.getConversationsFromStorage();
-    // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-    this.conversationsHandlerService.connect();
-    // 6 - save conversationHandler in chatManager
-    this.chatManager.setConversationsHandler(this.conversationsHandlerService);
-  }
+  //   console.log('initConversationsHandler ------------->', userId);
+  //   // 1 - init chatConversationsHandler and  archviedConversationsHandler
+  //   this.conversationsHandlerService.initialize(userId, translationMap);
+  //   // 2 - get conversations from storage
+  //   // this.chatConversationsHandler.getConversationsFromStorage();
+  //   // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
+  //   this.conversationsHandlerService.connect();
+  //   // 6 - save conversationHandler in chatManager
+  //   this.chatManager.setConversationsHandler(this.conversationsHandlerService);
+  // }
 
   /** */
   setLanguage() {
@@ -239,16 +239,25 @@ export class AppComponent implements OnInit {
   /** */
   initSubscriptions() {
     const that = this;
-    this.authService.authStateChanged.subscribe((data: any) => {
-        console.log('***** authStateChanged *****', data);
+
+    this.authService.BSAuthStateChanged.subscribe((data: any) => {
+        console.log('***** BSAuthStateChanged *****', data);
         if (data && data.uid) {
           that.goOnLine(data);
-        } else if (data === 'offline') {
+        } else if (data === AUTH_STATE_OFFLINE) {
           that.goOffLine();
         } else {
           // sono nel primo caso null
         }
     });
+
+    this.authService.BSSignOut.subscribe((data: any) => {
+      console.log('***** BSSignOut *****', data);
+      if (data) {
+        that.presenceService.removePresence();
+      }
+    });
+
 
     this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
       console.log('***** app comp BScurrentUser *****', currentUser);
@@ -283,24 +292,13 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname);
   }
 
-  /**
-   *
-   */
-  goOffLine = () => {
-    console.log('************** goOffLine:', this.authModal);
-    this.chatManager.goOffLine();
-    const that = this;
-    // clearTimeout(this.timeModalLogin);
-    // this.timeModalLogin = setTimeout( () => {
-    if (!this.authModal) {
-      this.authModal = this.presentModal();
-    }
-    // }, 0);
-  }
+  
+    
+
 
   private async presentModal(): Promise<any> {
-    const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
     console.log('presentModal');
+    const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
        await this.modalController.create({
           component: LoginPage,
@@ -310,7 +308,7 @@ export class AppComponent implements OnInit {
     });
     modal.onDidDismiss().then((detail: any) => {
       console.log('The result: CHIUDI!!!!!', detail.data);
-      this.checkPlatform();
+      // this.checkPlatform();
       if (detail !== null) {
        //  console.log('The result: CHIUDI!!!!!', detail.data);
       }
@@ -340,23 +338,35 @@ export class AppComponent implements OnInit {
    * @param user
    */
   goOnLine = (user: any) => {
+    clearTimeout(this.timeModalLogin);
     console.log('************** goOnLine', user);
-    // clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.authService.getTiledeskToken();
     this.chatManager.setTiledeskToken(tiledeskToken);
     this.currentUserService.detailCurrentUser(tiledeskToken);
-    // this.chatPresenceHandler.setupMyPresence(user.uid);
-    this.initConversationsHandler(user.uid);
+    this.presenceService.setPresence(user.uid);
+    this.checkPlatform();
     try {
       console.log('************** closeModal', this.authModal);
-      if (this.authModal) {
-        this.closeModal();
-      } else {
-        this.checkPlatform();
-      }
+      this.closeModal();
     } catch (err) {
       console.error('-> error:', err);
     }
+  }
+
+  /**
+   *
+   */
+  goOffLine = () => {
+    console.log('************** goOffLine:', this.authModal);
+
+    this.chatManager.setTiledeskToken(null);
+    this.chatManager.goOffLine();
+    const that = this;
+
+    clearTimeout(this.timeModalLogin);
+    this.timeModalLogin = setTimeout( () => {
+      this.authModal = this.presentModal();
+    }, 1000);
   }
 
   /** */

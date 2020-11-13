@@ -24,7 +24,7 @@ export class MessageTextAreaComponent implements OnInit {
   }
 
   onChange(e: any) {
-    console.log('onChange ************** event:: ', e.detail.value);
+    // console.log('onChange ************** event:: ', e.detail.value);
 
     const lastChar = e.target.textContent.substr(-1);
     const codeChar = lastChar.charCodeAt(0);

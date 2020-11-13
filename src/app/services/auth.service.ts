@@ -9,7 +9,8 @@ import { environment } from 'src/environments/environment';
 export abstract class AuthService {
 
   // BehaviorSubject
-  abstract authStateChanged: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  abstract BSAuthStateChanged: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  abstract BSSignOut: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   // params
   abstract persistence = environment.authPersistence;
@@ -21,5 +22,5 @@ export abstract class AuthService {
   abstract getToken(): string;
   abstract getTiledeskToken(): string;
   abstract signInWithEmailAndPassword(email: string, password: string): void;
-
+  abstract logout(): void;
 }

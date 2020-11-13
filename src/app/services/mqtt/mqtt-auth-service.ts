@@ -21,7 +21,12 @@ declare var Chat21Client: any;
 
 export class MQTTAuthService extends AuthService {
 
-  authStateChanged: BehaviorSubject<any>; // = new BehaviorSubject<any>([]);
+  // authStateChanged: BehaviorSubject<any>; // = new BehaviorSubject<any>([]);
+
+  // BehaviorSubject
+  BSAuthStateChanged: BehaviorSubject<any>;
+  BSSignOut: BehaviorSubject<any>;
+
   persistence: string;
   SERVER_BASE_URL: string;
 
@@ -50,6 +55,10 @@ export class MQTTAuthService extends AuthService {
     console.log(' ---------------- login con token url ---------------- ');
     this.checkIsAuth();
     this.onAuthStateChanged();
+  }
+
+  logout() {
+    console.log('logged out');
   }
 
   checkIsAuth() {
@@ -85,14 +94,14 @@ export class MQTTAuthService extends AuthService {
     console.log('UserService::onAuthStateChanged');
     if (localStorage.getItem('tiledeskToken') == null) {
       this.currentUser = null;
-      this.authStateChanged.next('offline');
+      this.BSAuthStateChanged.next('offline');
     }
     const that = this;
     window.addEventListener('storage', (e) => {
       console.log('Changed:', e.key);
       if (localStorage.getItem('tiledeskToken') == null) {
         that.currentUser = null;
-        that.authStateChanged.next('offline');
+        that.BSAuthStateChanged.next('offline');
       }
     }, false);
 
@@ -297,11 +306,14 @@ export class MQTTAuthService extends AuthService {
       let fullname = result["fullname"]
       // let user = new UserModel(uid, '', firstname, lastname, fullname, '');
       const user = {
-        uid: userid
+        uid: userid,
+        fullname: fullname,
+        firstname: firstname,
+        lastname: lastname
       };
       this.currentUser = user;
       console.log('User signed in:', user);
-      this.authStateChanged.next(user);
+      this.BSAuthStateChanged.next(user);
     });
   }
 

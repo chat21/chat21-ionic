@@ -6,7 +6,8 @@ import { NavProxyService } from '../../services/nav-proxy.service';
 import { ChatManager } from '../../services/chat-manager';
 import { CustomTranslateService } from '../../services/custom-translate.service';
 import { PresenceService } from '../../services/presence.service';
-import { EventsService } from '../../services/events-service';
+// import { EventsService } from '../../services/events-service';
+import { AuthService } from '../../services/auth.service';
 
 // models
 import { UserModel } from 'src/app/models/user';
@@ -36,7 +37,8 @@ export class ProfileInfoPage implements OnInit {
     private chatManager: ChatManager,
     private translateService: CustomTranslateService,
     public presenceService: PresenceService,
-    public events: EventsService
+    // public events: EventsService,
+    private authService: AuthService
   ) { }
 
   /** */
@@ -89,7 +91,8 @@ export class ProfileInfoPage implements OnInit {
       'LABEL_LAST_ACCESS',
       'ARRAY_DAYS',
       'LABEL_ACTIVE_NOW',
-      'LABEL_IS_WRITING'
+      'LABEL_IS_WRITING',
+      'LABEL_LOGOUT'
     ];
     this.translationMap = this.translateService.translateLanguage(keys);
   }
@@ -100,16 +103,42 @@ export class ProfileInfoPage implements OnInit {
     this.presenceService.userIsOnline(this.loggedUser.uid);
     this.presenceService.lastOnlineForUser(this.loggedUser.uid);
     let keySubscription = '';
-    keySubscription = 'is-online-' + this.loggedUser.uid;
-    if (!isInArray(keySubscription, this.subscriptions)) {
-      this.subscriptions.push(keySubscription);
-      this.events.subscribe(keySubscription, this.userIsOnLine);
-    }
-    keySubscription = 'last-connection-date-' + this.loggedUser.uid;
-    if (!isInArray(keySubscription, this.subscriptions)) {
-      this.subscriptions.push(keySubscription);
-      this.events.subscribe(keySubscription, this.userLastConnection);
-    }
+    // keySubscription = 'is-online-' + this.loggedUser.uid;
+    // if (!isInArray(keySubscription, this.subscriptions)) {
+    //   this.subscriptions.push(keySubscription);
+    //   this.events.subscribe(keySubscription, this.userIsOnLine);
+    // }
+    // keySubscription = 'last-connection-date-' + this.loggedUser.uid;
+    // if (!isInArray(keySubscription, this.subscriptions)) {
+    //   this.subscriptions.push(keySubscription);
+    //   this.events.subscribe(keySubscription, this.userLastConnection);
+    // }
+
+
+    const that = this;
+    const subscribeBSIsOnline =  this.presenceService.BSIsOnline.subscribe((data: any) => {
+      console.log('***** BSIsOnline *****', data);
+      if (data) {
+        const userId = data.uid;
+        const isOnline = data.isOnline;
+        if (this.loggedUser.uid === userId) {
+          that.userIsOnLine(userId, isOnline);
+        }
+      }
+    });
+
+    const subscribeBSLastOnline =  this.presenceService.BSLastOnline.subscribe((data: any) => {
+      console.log('***** BSLastOnline *****', data);
+      if (data) {
+        const userId = data.uid;
+        const timestamp = data.lastOnline;
+        if (this.loggedUser.uid === userId) {
+          that.userLastConnection(userId, timestamp);
+        }
+      }
+    });
+
+
   }
 
   /**
@@ -145,7 +174,7 @@ export class ProfileInfoPage implements OnInit {
     console.log('unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach((subscription: any) => {
       console.log('unsubescribe: ', subscription);
-      this.events.unsubscribe(subscription, null);
+      // this.events.unsubscribe(subscription, null);
     });
     this.subscriptions = [];
   }
@@ -158,5 +187,10 @@ export class ProfileInfoPage implements OnInit {
     } else {
       this.navService.pop();
     }
+  }
+
+  /** */
+  public onLogout() {
+    this.authService.logout();
   }
 }

@@ -56,7 +56,7 @@ export class FirebaseTypingService extends TypingService {
     const ref = firebase.database().ref(urlTyping).orderByChild('timestamp').limitToLast(1);
     ref.on('child_changed', (childSnapshot) => {
       console.log('urlTyping: ', childSnapshot.val());
-      that.events.publish('isTypings', childSnapshot);
+      that.events.publish('isTyping', childSnapshot);
     });
   }
 
@@ -69,15 +69,15 @@ export class FirebaseTypingService extends TypingService {
       if (idUser) {
         urlTyping = this.urlNodeTypings + idUser + '/' + idConversation;
       }
-      console.log('setWritingMessages:', urlTyping, userFullname);
+      // console.log('setWritingMessages:', urlTyping, userFullname);
       const timestampData =  firebase.database.ServerValue.TIMESTAMP;
       const precence = new TypingModel(timestampData, message, userFullname);
-      console.log('precence::::', precence);
+      // console.log('precence::::', precence);
       firebase.database().ref(urlTyping).set(precence, ( error ) => {
         if (error) {
           console.log('ERRORE', error);
         } else {
-          console.log('OK update typing');
+          // console.log('OK update typing');
         }
         that.events.publish('setTyping', precence, error);
       });

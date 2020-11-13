@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
 // firebase
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
@@ -17,11 +19,14 @@ import { environment } from '../../../environments/environment';
 })
 export class MQTTPresenceService extends PresenceService {
 
+  BSIsOnline: BehaviorSubject<any>;
+  BSLastOnline: BehaviorSubject<any>;
+
   tenant: string;
   private urlNodePresence: string;
 
   constructor(
-    private events: EventsService
+    // private events: EventsService
   ) {
     super();
   }
@@ -60,6 +65,43 @@ export class MQTTPresenceService extends PresenceService {
     //     that.events.publish('last-connection-date-' + userid, userid, '');
     //   }
     // });
+  }
+
+  public setPresence(userid: string): void  {
+    // console.log(' setPresence: ', userid);
+    // this.onlineConnectionsRef = this.referenceOnlineForUser(userid);
+    // this.lastOnlineConnectionsRef = this.referenceLastOnlineForUser(userid);
+    // const connectedRefURL = '/.info/connected';
+    // const conn = firebase.database().ref(connectedRefURL);
+    // conn.on('value', (dataSnapshot) => {
+    //   // console.log('self.deviceConnectionRef: ', dataSnapshot.val());
+    //   if (dataSnapshot.val()) {
+    //     if (this.onlineConnectionsRef) {
+    //       this.keyConnectionRef = this.onlineConnectionsRef.push(true);
+    //       this.keyConnectionRef.onDisconnect().remove();
+    //       const now: Date = new Date();
+    //       const timestamp = now.valueOf();
+    //       this.lastOnlineConnectionsRef.onDisconnect().set(timestamp);
+    //     } else {
+    //       console.log('This is an error. self.deviceConnectionRef already set. Cannot be set again.');
+    //     }
+    //   }
+    // });
+  }
+
+  /**
+   * removePresence
+   * richiamato prima del logout
+   */
+  public removePresence(): void {
+    // if (this.onlineConnectionsRef) {
+    //   const now: Date = new Date();
+    //   const timestamp = now.valueOf();
+    //   this.lastOnlineConnectionsRef.set(timestamp);
+    //   this.onlineConnectionsRef.off();
+    //   this.onlineConnectionsRef.remove();
+    //   console.log('goOffline onlineConnectionsRef', this.onlineConnectionsRef);
+    // }
   }
 
 }

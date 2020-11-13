@@ -22,7 +22,7 @@ export class UserTypingComponent implements OnInit, OnDestroy {
 
   public status = '';
   private subscriptions = [];
-  public isTypings = false;
+  public isTyping = false;
   public nameUserTypingNow: string;
 
   private setTimeoutWritingMessages: any;
@@ -64,7 +64,7 @@ export class UserTypingComponent implements OnInit, OnDestroy {
 
   /** */
   private setSubscriptions() {
-    const key = 'isTypings';
+    const key = 'isTyping';
     if (!isInArray(key, this.subscriptions)) {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.subscribeTypings);
@@ -78,14 +78,14 @@ export class UserTypingComponent implements OnInit, OnDestroy {
     console.log('subscribeTypings childSnapshot', childSnapshot);
     const userTyping = this.membersConversation.includes(childSnapshot.key);
     if ( !userTyping ) {
-      this.isTypings = true;
+      this.isTyping = true;
       this.nameUserTypingNow = childSnapshot.name;
       console.log('child_changed key', childSnapshot.key);
       console.log('child_changed val', childSnapshot.val());
       console.log('child_changed name', childSnapshot.name);
       clearTimeout(this.setTimeoutWritingMessages);
       this.setTimeoutWritingMessages = setTimeout(() => {
-          that.isTypings = false;
+          that.isTyping = false;
       }, 2000);
     }
   }

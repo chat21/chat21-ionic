@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer} from '@angular/platform-browser';
 
 import { 
-  ModalController, 
-  PopoverController, 
+  ModalController,
+  PopoverController,
   Platform, ActionSheetController, NavController, IonContent, IonTextarea } from '@ionic/angular';
 
 
@@ -23,6 +23,7 @@ import { AppConfigProvider } from '../../services/app-config';
 import { DatabaseProvider } from '../../services/database';
 import { CustomTranslateService } from 'src/app/services/custom-translate.service';
 import { TypingService } from 'src/app/services/typing.service';
+import { ConversationHandlerFactory } from 'src/app/services/conversation-handler-factory.service';
 
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
@@ -89,6 +90,7 @@ import {
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { FirebaseConversationHandler } from 'src/app/services/firebase/firebase-conversation-handler';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -98,7 +100,7 @@ import { environment } from 'src/environments/environment';
 
 
 
-export class ConversationDetailPage implements OnInit, OnDestroy {
+export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('ionContentChatArea', {static: false}) ionContentChatArea: IonContent;
   @ViewChild('rowMessageTextArea', {static: false}) rowTextArea: ElementRef;
 
@@ -121,7 +123,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   public openInfoConversation = false;
   public openInfoMessage: boolean;              /** check is open info message */
   public isMobile = false;
-  public isTypings = false;
+  public isTyping = false;
   public nameUserTypingNow: string;
 
   public heightMessageTextArea = '';
@@ -132,6 +134,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   public urlConversationSupportGroup: any;
   private tagsCanned: any = [];
   private isFileSelected: boolean;
+  private timeScrollBottom: any;
+  public showIonContent = false;
 
   // private arrayLocalImmages: Array<any> = [];
   // private projectId: string;
@@ -188,37 +192,15 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
-    public contactsService: ContactsService
+    public contactsService: ContactsService,
+    public conversationHandlerFactory: ConversationHandlerFactory
   ) {
-    console.log('CONVERSATION DETAIL COSTRACTOR', this.loggedUser);
-    this.loggedUser = this.authService.getUser();
-    this.tenant = environment.tenant;
-    this.translations();
-    // get params from url (conversationWith, conversationWithFullname)
-    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
-    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
-    this.setHeaderContent();
-    console.log('this.conversationWith: ', this.conversationWith);
-    // this.channelType = setChannelType(this.conversationWith);
+  }
 
+  // -------------- SYSTEM FUNCTIONS -------------- //
+  private listnerUserLogged() {
     if (!this.loggedUser) {
       const that = this;
-
-      /** */
-      // this.route.queryParams.subscribe(params => {
-      //   if (params && params.conversationWithFullname) {
-      //     this.conversationWithFullname = params.conversationWithFullname;
-      //     this.conversationAvatar = setConversationAvatar(
-      //       this.conversationWith,
-      //       this.conversationWithFullname,
-      //       this.channelType
-      //     );
-      //     this.initialize();
-      //   }
-      //   console.log('route.queryParams ---> ', this.conversationWithFullname);
-      // });
-
-      /** */
       this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
         console.log('***** BScurrentUser *****', currentUser);
         if (currentUser) {
@@ -226,39 +208,67 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
           that.initialize();
         }
       });
-
     }
-
   }
 
-  // -------------- SYSTEM FUNCTIONS -------------- //
   /** */
+  // con il routing la gestione delle pagine è automatica (da indagare),
+  // non sempre passa da ngOnInit/ngOnDestroy! Evitare di aggiungere logica qui
+  //
   ngOnInit() {
-    console.log('ngOnInit ConversationDetailPage: ');
-    this.showMessageWelcome = false;
+    // console.log('ngOnInit ConversationDetailPage: ');
+  }
+
+  ngAfterViewInit() {
+    // console.log('ngAfterViewInit ConversationDetailPage: ');
   }
 
   ngOnDestroy() {
-    console.log('ngOnDestroy ConversationDetailPage: ');
-    this.unsubescribeAll();
+    // console.log('ngOnDestroy ConversationDetailPage: ');
   }
 
   /** */
   ionViewWillEnter() {
     console.log('ionViewWillEnter ConversationDetailPage: ', this.loggedUser);
+    this.showButtonToBottom = false;
+    this.showMessageWelcome = false;
+    this.loggedUser = this.authService.getUser();
+    this.tenant = environment.tenant;
+    this.translations();
+
+    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
+    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
+
+    console.log(
+      'CONVERSATION DETAIL COSTRACTOR' +
+      this.loggedUser +
+      this.tenant +
+      this.conversationWith +
+      this.conversationWithFullname
+    );
+
+    this.setHeaderContent();
+
+
     if (this.loggedUser) {
       this.initialize();
+    } else {
+      this.listnerUserLogged();
     }
   }
 
   /** */
-  ionViewDidEnter() {}
+  ionViewDidEnter() {
+  }
 
   /**
    * quando esco dalla pagina distruggo i subscribe
    * e chiudo la finestra di info
    */
-  ionViewWillLeave() {}
+  ionViewWillLeave() {
+    // console.log('ionViewWillLeave ConversationDetailPage: ');
+    this.unsubescribeAll();
+  }
 
   // -------------- START MY functions -------------- //
   /**
@@ -336,15 +346,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     ];
     const translationMap = this.customTranslateService.translateLanguage(keys);
     this.showMessageWelcome = false;
-
+    console.log('DETTAGLIO CONV - chatManager **************', this.conversationWith);
     const handler: ConversationHandlerService = this.chatManager.getConversationHandlerByConversationId(this.conversationWith);
-    console.log('DETTAGLIO CONV - initConversationHandler **************', this.chatManager, handler, this.conversationWith);
+    console.log('DETTAGLIO CONV - handler **************', handler, this.conversationWith);
     if (!handler) {
       console.log(
       ' CONVERSATION WITH ', this.conversationWith,
       ' CONVERSATION FULLNAME ', this.conversationWithFullname,
       ' CONVERSATION LOGGED ', this.loggedUser,
       ' CONVERSATION TENANT ', this.tenant);
+      this.conversationHandlerService = this.conversationHandlerFactory.build(); //new FirebaseConversationHandler();
       this.conversationHandlerService.initialize(
       this.conversationWith,
       this.conversationWithFullname,
@@ -353,26 +364,30 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       translationMap);
 
       this.conversationHandlerService.connect();
-
-      console.log('PRIMA ***', this.chatManager.handlers);
       this.chatManager.addConversationHandler(this.conversationHandlerService);
-      console.log('DOPO ***', this.chatManager.handlers);
+      this.messages = this.conversationHandlerService.messages;
+      // non ci sono messaggi!!!
+
+      // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
+      const that = this;
+      setTimeout( () => {
+        if (!that.messages || that.messages.length === 0) {
+          this.showIonContent = true;
+          that.showMessageWelcome = true;
+          console.log('setTimeout ***', that.showMessageWelcome);
+        }
+      }, 2000);
+
     } else {
       console.log('NON ENTRO ***', this.conversationHandlerService, handler);
       this.conversationHandlerService = handler;
+      this.messages = this.conversationHandlerService.messages;
+      // sicuramente ci sono messaggi
+      // la conversazione l'ho già caricata precedentemente
+      // mi arriva sempre notifica dell'ultimo msg (tramite BehaviorSubject)
+      // scrollo al bottom della pagina
     }
-    this.messages = this.conversationHandlerService.messages;
-    console.log('CONVERSATION MESSAGES ', this.messages);
-
-    // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
-    const that = this;
-    setTimeout( () => {
-      console.log('setTimeout ***', that.messages);
-      if (!that.messages || that.messages.length === 0) {
-        that.showMessageWelcome = true;
-        console.log('setTimeout ***', that.showMessageWelcome);
-      }
-    }, 0);
+    console.log('CONVERSATION MESSAGES ' + this.messages + this.showIonContent);
   }
 
   /**
@@ -381,17 +396,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   startConversation() {
     console.log('startConversation: ', this.conversationWith);
     if (this.conversationWith) {
+      this.channelType = setChannelType(this.conversationWith);
+      console.log('setChannelType: ', this.channelType);
+      this.selectInfoContentTypeComponent();
       this.setHeaderContent();
-      this.detectBottom();
       this.initSubscriptions();
     }
   }
 
   setHeaderContent() {
     if (this.conversationWith) {
-      this.channelType = setChannelType(this.conversationWith);
-      console.log('setChannelType: ', this.channelType);
-      this.selectInfoContentTypeComponent();
       this.conversationAvatar = setConversationAvatar(
         this.conversationWith,
         this.conversationWithFullname,
@@ -499,6 +513,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     if (this.loggedUser.fullname) {
       fullname = this.loggedUser.fullname;
     }
+    console.log('this.loggedUser: ', this.loggedUser);
     // const sender = this.loggedUser.uid;
     // let senderFullname = this.loggedUser.fullname; // this.conversationSelected.sender_fullname;
     // if (this.conversationSelected.recipient === this.loggedUser.uid) {
@@ -509,6 +524,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
 
     console.log('conversationWith: ', this.conversationWith);
     console.log('conversationWithFullname: ', this.conversationWithFullname);
+    console.log('SENDERFullname: ', fullname);
 
     (metadata) ? metadata = metadata : metadata = '';
     console.log('SEND MESSAGE: ', msg, this.messages, this.loggedUser);
@@ -540,7 +556,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * subscriptions list
    */
   initSubscriptions() {
-    console.log('initSubscriptions');
+    console.log('||------------> initSubscriptions: ', this.subscriptions);
     this.addEventsKeyboard();
 
     const that = this;
@@ -551,9 +567,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
       this.subscriptions.push(subscribeConversationsChanged);
     }
 
+
     const subscribeMessageAdded = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
-      // console.log('***** DATAIL messageAdded *****', msg);
-      that.newMessageAdded(msg);
+      console.log('***** DATAIL messageAdded *****', msg);
+      if (msg) {
+        that.newMessageAdded(msg);
+      }
     });
     if (this.subscriptions.indexOf(subscribeMessageAdded) === -1 ) {
       this.subscriptions.push(subscribeMessageAdded);
@@ -605,7 +624,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    * unsubscribe all subscribe events
    */
   unsubescribeAll() {
-    console.log('unsubescribeAll: ', this.subscriptions);
+    console.log('||------------> unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -616,7 +635,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     window.removeEventListener('keyboardDidShow', null);
     window.removeEventListener('keyboardWillHide', null);
     window.removeEventListener('keyboardDidHide', null);
-
+    // this.conversationHandlerService.dispose();
   }
   // -------------- END SUBSCRIBTIONS functions -------------- //
 
@@ -635,23 +654,28 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     this.detectBottom();
   }
 
+
+  
+
+
   /**
    * detectBottom
    */
   async detectBottom() {
-    if (!this.ionContentChatArea) {
-      return;
-    }
     const scrollElement = await this.ionContentChatArea.getScrollElement();
-    if ( scrollElement.scrollTop === scrollElement.scrollHeight - scrollElement.clientHeight ) {
+    // console.log('scrollElement', scrollElement);
+    // console.log('scrollHeight', scrollElement.scrollHeight);
+    // console.log('clientHeight', scrollElement.clientHeight);
+    // console.log('scrollElement.scrollTop', scrollElement.scrollTop);
+    // console.log('scrollElement.scrollHeight - scrollElement.clientHeight', (scrollElement.scrollHeight - scrollElement.clientHeight));
+    if (scrollElement.scrollTop < scrollElement.scrollHeight - scrollElement.clientHeight ) {
+      this.showButtonToBottom = true;
+    } else {
       this.showButtonToBottom = false;
       this.NUM_BADGES = 0;
       this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
-    } else {
-      this.showButtonToBottom = true;
     }
   }
-
 
 
   /** */
@@ -659,13 +683,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     try {
       this.heightMessageTextArea = e.target.scrollHeight + 20;
       const message = e.detail.value;
-      console.log('------------> returnChangeTextArea', this.heightMessageTextArea);
-      console.log('------------> returnChangeTextArea', e.detail.value);
+      // console.log('------------> returnChangeTextArea', this.heightMessageTextArea);
+      // console.log('------------> returnChangeTextArea', e.detail.value);
 
-      console.log('------------> returnChangeTextArea loggedUser uid:', this.loggedUser.uid);
-      console.log('------------> returnChangeTextArea loggedUser firstname:', this.loggedUser.firstname);
-      console.log('------------> returnChangeTextArea conversationSelected uid:', this.conversationWith);
-      console.log('------------> returnChangeTextArea channelType:', this.channelType);
+      // console.log('------------> returnChangeTextArea loggedUser uid:', this.loggedUser.uid);
+      // console.log('------------> returnChangeTextArea loggedUser firstname:', this.loggedUser.firstname);
+      // console.log('------------> returnChangeTextArea conversationSelected uid:', this.conversationWith);
+      // console.log('------------> returnChangeTextArea channelType:', this.channelType);
       let userId = '';
       let userFullname = '';
 
@@ -739,50 +763,63 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
 
 
   /**
-   *
+   * newMessageAdded 
    * @param message
    */
   newMessageAdded(message: MessageModel) {
-    setTimeout( () => {
-      console.log('newMessageAdded', message);
-      if (message && message.isSender) {
-        this.scrollBottom(0);
-      } else if (message && message.status && message.status < 200 ) {
-        this.NUM_BADGES++;
-        this.showButtonToBottom = true;
-      } else {
-        this.showButtonToBottom = true;
+      console.log('newMessageAdded:');
+      if (message) {
+        console.log('newMessageAdded', message);
+        console.log('message.isSender', message.isSender);
+        console.log('message.status', message.status);
+        if (message.isSender) {
+          console.log('message message.isSender', this.ionContentChatArea);
+          this.scrollBottom(0);
+        } else {
+          if (message.status && message.status < 200 ) {
+            console.log('message.status < 200');
+            this.NUM_BADGES++;
+            this.showButtonToBottom = true;
+          } else {
+            console.log('message.status >= 200');
+            this.scrollBottom(0);
+          }
+        }
       }
-    }, 0);
   }
 
 
   /**
-   *
+   * scrollBottom
    * @param time
    */
   private scrollBottom(time: number) {
-    if (this.ionContentChatArea) {
-      console.log('scrollBottom', this.ionContentChatArea);
-      this.showButtonToBottom = false;
-      this.NUM_BADGES = 0;
-      this.ionContentChatArea.scrollToBottom(time);
-      this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
-    }
+    setTimeout( () => {
+      // this.showButtonToBottom = false;
+      this.showIonContent = true;
+      // console.log('scrollBottom ---> ', this.ionContentChatArea);
+      if (this.ionContentChatArea) {
+        // this.showButtonToBottom = false;
+        // this.NUM_BADGES = 0;
+        // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+        this.ionContentChatArea.scrollToBottom(time);
+        // nota: se elimino il settimeout lo scrollToBottom non viene richiamato!!!!!
+      }
+    }, 0);
   }
 
   /**
    * Scroll to bottom of page after a short delay.
    */
   public actionScrollBottom() {
-    console.log('scrollBottom', this.ionContentChatArea);
-    const that = this;
-    this.showButtonToBottom = false;
-    this.NUM_BADGES = 0;
+    console.log('actionScrollBottom ---> ', this.ionContentChatArea);
+    // const that = this;
+    // this.showButtonToBottom = false;
+    // this.NUM_BADGES = 0;
     setTimeout( () => {
       this.ionContentChatArea.scrollToBottom(5);
-      this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
-    }, 200);
+      // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+    }, 0);
   }
 
   /**
@@ -796,6 +833,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   /** */
   setHeightTextArea() {
     try {
+      // tslint:disable-next-line: no-string-literal
       this.heightMessageTextArea = this.rowTextArea['el'].offsetHeight;
     } catch (e) {
       this.heightMessageTextArea = '50';
@@ -832,7 +870,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
    */
   // subscribeTypings: any = (childSnapshot) => {
   //   if(this.channelType === TYPE_DIRECT) {
-  //     this.isTypings = true;
+  //     this.isTyping = true;
   //     this.nameUserTypingNow = this.fullnameConversationWith;
   //     console.log('*********** subscribeTypings', this.nameUserTypingNow);
   //   } else {
@@ -843,7 +881,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   //   const that = this;
   //   clearTimeout(this.setTimeoutWritingMessages);
   //   this.setTimeoutWritingMessages = setTimeout(function () {
-  //       that.isTypings = false;
+  //       that.isTyping = false;
   //   }, 2000);
   // }
 
@@ -1073,8 +1111,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   //       ) {
   //       this.userService.getUserDetail(memberID)
   //       .then(function (snapshot) {
-  //         if(that.isTypings == false){
-  //           that.isTypings = true;
+  //         if(that.isTyping == false){
+  //           that.isTyping = true;
   //         }
           
   //         console.log('getUserDetail snapshot: ', snapshot.val());
@@ -1101,7 +1139,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
   //       // });
   //     }
   //   } else {
-  //     this.isTypings = true;
+  //     this.isTyping = true;
   //     this.nameUserTypingNow = member.fullname;
   //   }
   // }

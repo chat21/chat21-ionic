@@ -16,6 +16,7 @@ import { DatabaseProvider } from 'src/app/services/database';
 import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
 import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from 'src/app/utils/utils-user';
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from 'src/app/utils/utils';
+import { ImageRepoService } from 'src/app/services/image-repo.service';
 // import { ConsoleReporter } from 'jasmine';
 
 @Injectable({ providedIn: 'root' })
@@ -28,6 +29,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     conversationsChanged: BehaviorSubject<ConversationModel[]>;
     conversationsRemoved: BehaviorSubject<ConversationModel[]>;
     loadedConversationsStorage: BehaviorSubject<ConversationModel[]>;
+    imageRepo: ImageRepoService;
 
     // public variables
     conversations: Array<ConversationModel> = [];

@@ -168,13 +168,24 @@ export class MQTTConversationHandler extends ConversationHandlerService {
      * @param conversationWith
      * @param conversationWithDetailFullname
      */
+    // sendMessage(
+    //     msg,
+    //     type,
+    //     metadata,
+    //     this.conversationWith,
+    //     this.conversationWithFullname,
+    //     this.loggedUser.uid,
+    //     fullname,
+    //     this.channelType
+    //   );
+      
     sendMessage(
         msg: string,
         typeMsg: string,
         metadataMsg: string,
         conversationWith: string,
-        conversationWithDetailFullname: string,
-        senderMsg: string,
+        conversationWithFullname: string,
+        senderId: string,
         senderFullname: string,
         channelType: string
     ) {
@@ -183,6 +194,7 @@ export class MQTTConversationHandler extends ConversationHandlerService {
             channelType = TYPE_DIRECT;
         }
 
+        console.log('Senderfullname', senderFullname);
         // const firebaseMessagesCustomUid = firebase.database().ref(this.urlNodeFirebase);
         // const lang = document.documentElement.lang;
         // const recipientFullname = conversationWithDetailFullname;
@@ -204,11 +216,12 @@ export class MQTTConversationHandler extends ConversationHandlerService {
         // });
 
         const language = document.documentElement.lang;
-        const recipientFullname = conversationWithDetailFullname;
+        const recipientFullname = conversationWithFullname;
+        const recipientId = conversationWith;
         this.chat21Service.chatClient.sendMessage(
             msg,
             typeMsg,
-            conversationWith,
+            recipientId,
             recipientFullname,
             senderFullname,
             {

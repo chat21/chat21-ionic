@@ -34,12 +34,17 @@ const routes: Routes = [
   //   loadChildren: () => import('./pages/details/details.module').then( m => m.DetailsPageModule),
   //   // loadChildren: './pages/details/details.module',
   // },
-  {
-    path: 'detail',
-    loadChildren: './pages/details/details.module#DetailsPageModule'
-    // loadChildren: () => import('./pages/details/details.module').then( m => m.DetailsPageModule),
-    // loadChildren: './pages/details/details.module',
-  },
+  // {
+  //   path: 'detail/:IDConv/:FullNameConv',
+  //   loadChildren: () => import('./pages/details/details.module').then( m => m.DetailsPageModule),
+  //   // loadChildren: './pages/details/details.module',
+  // },
+  // {
+  //   path: 'detail',
+  //   loadChildren: './pages/details/details.module#DetailsPageModule'
+  //   // loadChildren: () => import('./pages/details/details.module').then( m => m.DetailsPageModule),
+  //   // loadChildren: './pages/details/details.module',
+  // },
   {
     path: 'contacts-directory',
     loadChildren: () => import('./pages/contacts-directory/contacts-directory.module').then( m => m.ContactsDirectoryPageModule)
