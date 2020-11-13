@@ -189,9 +189,9 @@ export function conversationsHandlerFactory(
   return new MQTTConversationsHandler(databaseProvider, chat21Service);
 }
 
-export function conversationHandlerFactory() {
+export function conversationHandlerFactory(chat21Service: Chat21Service) {
   console.log('conversationHandlerFactory: ');
-  return new MQTTConversationHandler();
+  return new MQTTConversationHandler(chat21Service);
 }
 
 
@@ -275,7 +275,7 @@ export function conversationHandlerFactory() {
     {
       provide: ConversationHandlerService,
       useFactory: conversationHandlerFactory,
-      deps: [DatabaseProvider]
+      deps: [Chat21Service]
     },
     StatusBar,
     SplashScreen,

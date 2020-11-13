@@ -14,7 +14,7 @@ import { DatabaseProvider } from 'src/app/services/database';
 
 // utils
 import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
-import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from 'src/app/utils/utils';
+import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from 'src/app/utils/utils-user';
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from 'src/app/utils/utils';
 // import { ConsoleReporter } from 'jasmine';
 
@@ -33,6 +33,8 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     conversations: Array<ConversationModel> = [];
     uidConvSelected: string;
     tenant: string;
+    FIREBASESTORAGE_BASE_URL_IMAGE: string;
+    urlStorageBucket: string;
 
     // private variables
     private loggedUserId: string;
@@ -139,7 +141,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
      * 7 -  pubblico conversations:update
      */
     private added(childSnapshot: any) {
-        const childData: ConversationModel = childSnapshot.val();
+        const childData: ConversationModel = childSnapshot;
         childData.uid = childSnapshot.key;
         const conversation = this.completeConversation(childData);
         if (this.isValidConversation(childSnapshot.key, conversation)) {
@@ -344,7 +346,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
-        conv.image = getImageUrlThumbFromFirebasestorage(conversation_with);
+        // conv.image = getImageUrlThumbFromFirebasestorage(conversation_with);
         return conv;
     }
 

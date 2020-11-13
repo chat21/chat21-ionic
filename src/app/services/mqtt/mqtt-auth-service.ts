@@ -49,13 +49,13 @@ export class MQTTAuthService extends AuthService {
     // this.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
     console.log(' ---------------- login con token url ---------------- ');
     this.checkIsAuth();
-    // this.onAuthStateChanged();
+    this.onAuthStateChanged();
   }
 
   checkIsAuth() {
-    const tiledeskTokenTEMP = localStorage.getItem('tiledeskToken');
-    if (tiledeskTokenTEMP && tiledeskTokenTEMP !== undefined) {
-      this.getCustomToken(tiledeskTokenTEMP);
+    this.tiledeskToken = localStorage.getItem('tiledeskToken');
+    if (this.tiledeskToken && this.tiledeskToken !== undefined) {
+      this.getCustomToken(this.tiledeskToken);
     } else {
       console.log(' ---------------- NON sono loggato ---------------- ');
     }
@@ -79,27 +79,37 @@ export class MQTTAuthService extends AuthService {
     return this.token;
   }
 
-  // ********************* START FIREBASE AUTH ********************* //
   /**
-   * FIREBASE: onAuthStateChanged
    */
-  // onAuthStateChanged() {
-  //   console.log('UserService::onAuthStateChanged');
-  //   const that = this;
-  //   firebase.auth().onAuthStateChanged(user => {
-  //     console.log(' onAuthStateChanged', user);
-  //     if (!user) {
-  //       console.log(' 1 - PASSO OFFLINE AL CHAT MANAGER');
-  //       that.authStateChanged.next(null);
-  //       // taht.events.publish('go-off-line');
-  //     } else {
-  //       console.log(' 2 - PASSO ONLINE AL CHAT MANAGER');
-  //       that.currentUser = user;
-  //       that.authStateChanged.next(user);
-  //       // taht.events.publish('go-on-line', user);
-  //     }
-  //   });
-  // }
+  onAuthStateChanged() {
+    console.log('UserService::onAuthStateChanged');
+    if (localStorage.getItem('tiledeskToken') == null) {
+      this.currentUser = null;
+      this.authStateChanged.next('offline');
+    }
+    const that = this;
+    window.addEventListener('storage', (e) => {
+      console.log('Changed:', e.key);
+      if (localStorage.getItem('tiledeskToken') == null) {
+        that.currentUser = null;
+        that.authStateChanged.next('offline');
+      }
+    }, false);
+
+    // firebase.auth().onAuthStateChanged(user => {
+    //   console.log(' onAuthStateChanged', user);
+    //   if (!user) {
+    //     console.log(' 1 - PASSO OFFLINE AL CHAT MANAGER');
+    //     that.authStateChanged.next(null);
+    //     // taht.events.publish('go-off-line');
+    //   } else {
+    //     console.log(' 2 - PASSO ONLINE AL CHAT MANAGER');
+    //     that.currentUser = user;
+    //     that.authStateChanged.next(user);
+    //     // taht.events.publish('go-on-line', user);
+    //   }
+    // });
+  }
 
 
   // /** */
@@ -230,7 +240,7 @@ export class MQTTAuthService extends AuthService {
       .subscribe(data => {
         console.log("data:", JSON.stringify(data));
         if (data['success'] && data['token']) {
-          this.tiledeskToken = data['token'];
+          that.tiledeskToken = data['token'];
           localStorage.setItem('tiledeskToken', this.tiledeskToken);
           that.getCustomToken(this.tiledeskToken);
           // that.firebaseCreateCustomToken(tiledeskToken);
@@ -289,6 +299,7 @@ export class MQTTAuthService extends AuthService {
       const user = {
         uid: userid
       };
+      this.currentUser = user;
       console.log('User signed in:', user);
       this.authStateChanged.next(user);
     });

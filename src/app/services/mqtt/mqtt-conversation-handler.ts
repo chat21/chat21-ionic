@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ɵConsole } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-// firebase
-import * as firebase from 'firebase/app';
-import 'firebase/messaging';
-import 'firebase/database';
-import 'firebase/firestore';
+// // firebase
+// import * as firebase from 'firebase/app';
+// import 'firebase/messaging';
+// import 'firebase/database';
+// import 'firebase/firestore';
+// mqtt
+import {Chat21Service} from '../chat-service';
 
 // models
 import { MessageModel } from 'src/app/models/message';
@@ -38,11 +40,11 @@ export class MQTTConversationHandler extends ConversationHandlerService {
     public attributes: any;
     public messages: MessageModel[];
     public conversationWith: string;
-    public ref: firebase.database.Query;
+    public ref: any;
 
     // private variables
     private translationMap: Map<string, string>; // LABEL_TODAY, LABEL_TOMORROW
-    private urlNodeFirebase: string;
+    // private urlNodeFirebase: string;
     private recipientId: string;
     private recipientFullname: string;
     private tenant: string;
@@ -54,8 +56,10 @@ export class MQTTConversationHandler extends ConversationHandlerService {
 
 
     constructor(
+        public chat21Service: Chat21Service
     ) {
-    super();
+        super();
+        console.log('contructor MQTTConversationHandler');
     }
 
     /**
@@ -92,6 +96,41 @@ export class MQTTConversationHandler extends ConversationHandlerService {
      * mi sottoscrivo a change, removed, added
      */
     connect() {
+        this.chat21Service.chatClient.lastMessages(this.conversationWith, (err, messages) => {
+            if (!err) {
+                messages.forEach(msg => {
+                    this.addedMessage(msg);
+                });
+            }
+        });
+        console.log('connecting conversation handler...');
+        if (this.conversationWith == null) {
+            console.error('cant connect invalid this.conversationWith', this.conversationWith);
+            return;
+        }
+        const handler_message_added = this.chat21Service.chatClient.onMessageAddedInConversation(
+            this.conversationWith, (message, topic) => {
+                console.log('message added:', message, 'on topic:', topic);
+                this.addedMessage(message);
+        });
+        const handler_message_updated = this.chat21Service.chatClient.onMessageUpdatedInConversation(
+            this.conversationWith,  (message, topic) => {
+            console.log('message updated:', message, 'on topic:', topic);
+            this.updatedMessageStatus(message);
+        });
+        console.log("this.conversationWith,", this.conversationWith);
+        if (this.isGroup(this.conversationWith)) {
+            this.chat21Service.chatClient.getGroup(this.conversationWith, (err, group) => {
+                console.log('got group:', group)
+                console.log('subscribing to group updates...');
+                const handler_group_updated = this.chat21Service.chatClient.onGroupUpdated( (group, topic) => {
+                    if (topic.conversWith === this.conversationWith) {
+                        console.log('group updated:', group);
+                    }
+                });
+            });
+        }
+
         // this.lastDate = '';
         // const that = this;
         // this.urlNodeFirebase = conversationMessagesRef(this.tenant, this.loggedUser.uid);
@@ -110,6 +149,13 @@ export class MQTTConversationHandler extends ConversationHandlerService {
         // this.ref.on('child_removed', (childSnapshot) => {
         //     that.removed(childSnapshot);
         // });
+    }
+
+    isGroup(groupId) {
+        if (groupId.indexOf('group-') >= 0) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -136,71 +182,68 @@ export class MQTTConversationHandler extends ConversationHandlerService {
         if (!channelType || channelType === 'undefined') {
             channelType = TYPE_DIRECT;
         }
-        const firebaseMessagesCustomUid = firebase.database().ref(this.urlNodeFirebase);
 
-        // const key = messageRef.key;
-        const lang = document.documentElement.lang;
-        const recipientFullname = conversationWithDetailFullname;
-        const dateSendingMessage = setHeaderDate(this.translationMap, '');
-
-        const messageRef = firebaseMessagesCustomUid.push({
-            language: lang,
-            recipient: conversationWith,
-            recipient_fullname: recipientFullname,
-            sender: senderMsg,
-            sender_fullname: senderFullname,
-            status: 0,
-            metadata: metadataMsg,
-            text: msg,
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-            type: typeMsg,
-            attributes: this.attributes,
-            channel_type: channelType
-            // isSender: true
-        });
-
-        // const message = new MessageModel(
-        //     key,
-        //     language, // language
-        //     conversationWith, // recipient
-        //     recipientFullname, // recipient_full_name
-        //     sender, // sender
-        //     senderFullname, // sender_full_name
-        //     0, // status
-        //     metadata, // metadata
-        //     msg, // text
-        //     0, // timestamp
-        //     dateSendingMessage, // headerDate
-        //     type, // type
-        //     this.attributes, // attributes
-        //     channelType, // channel_type
-        //     true // is_sender
-        // );
-        console.log('messages: ',  this.messages);
-        console.log('senderFullname: ',  senderFullname);
-        console.log('sender: ',  senderMsg);
-        console.log('SEND MESSAGE: ', msg, channelType);
-        console.log('timestamp: ', );
-        console.log('messaggio **************', );
-        // messageRef.update({
-        //     uid: messageRef.key
-        // }, ( error ) => {
-        //     // if (error) {
-        //     //     message.status = -100;
-        //     //     console.log('ERRORE', error);
-        //     // } else {
-        //     //     message.status = 150;
-        //     //     console.log('OK MSG INVIATO CON SUCCESSO AL SERVER', message);
-        //     // }
-        //     // console.log('****** changed *****', that.messages);
+        // const firebaseMessagesCustomUid = firebase.database().ref(this.urlNodeFirebase);
+        // const lang = document.documentElement.lang;
+        // const recipientFullname = conversationWithDetailFullname;
+        // const dateSendingMessage = setHeaderDate(this.translationMap, '');
+        // const messageRef = firebaseMessagesCustomUid.push({
+        //     language: lang,
+        //     recipient: conversationWith,
+        //     recipient_fullname: recipientFullname,
+        //     sender: senderMsg,
+        //     sender_fullname: senderFullname,
+        //     status: 0,
+        //     metadata: metadataMsg,
+        //     text: msg,
+        //     timestamp: firebase.database.ServerValue.TIMESTAMP,
+        //     type: typeMsg,
+        //     attributes: this.attributes,
+        //     channel_type: channelType
+        //     // isSender: true
         // });
+
+        const language = document.documentElement.lang;
+        const recipientFullname = conversationWithDetailFullname;
+        this.chat21Service.chatClient.sendMessage(
+            msg,
+            typeMsg,
+            conversationWith,
+            recipientFullname,
+            senderFullname,
+            {
+                lang: language,
+                attributes: this.attributes
+            },
+            metadataMsg,
+            channelType,
+            // language,
+            (err, message) => {
+                console.log('message: ' + JSON.stringify(message) + ' sent with err: ' + err);
+                if (err) {
+                // cambio lo stato in rosso: invio nn riuscito!!!
+                message.status = '-100';
+                console.log('ERRORE', err);
+                } else {
+                message.status = '150';
+                console.log('OK MSG INVIATO CON SUCCESSO AL SERVER', message);
+                }
+            }
+        );
+        // console.log('messages: ',  this.messages);
+        // console.log('senderFullname: ',  senderFullname);
+        // console.log('sender: ',  senderMsg);
+        // console.log('SEND MESSAGE: ', msg, channelType);
+        // console.log('timestamp: ', );
+        // console.log('messaggio **************', );
+        // messageRef.update({
     }
 
     /**
      * dispose reference della conversazione
      */
     dispose() {
-        this.ref.off();
+        // this.ref.off();
     }
 
 
@@ -224,8 +267,9 @@ export class MQTTConversationHandler extends ConversationHandlerService {
     }
 
     /** */
-    private added(childSnapshot: any) {
-        const msg = this.messageGenerate(childSnapshot);
+    private addedMessage(messageSnapshot: any) {
+        const msg = this.messageGenerate(messageSnapshot);
+        msg.uid = msg.message_id;
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
         msg.headerDate = null;
         const headerDate = setHeaderDate(this.translationMap, msg.timestamp);
@@ -233,19 +277,41 @@ export class MQTTConversationHandler extends ConversationHandlerService {
             this.lastDate = headerDate;
             msg.headerDate = headerDate;
         }
-        console.log('>>>>>>>>>>>>>> added headerDate: ', msg);
-        this.addRepalceMessageInArray(childSnapshot.key, msg);
-        // this.messageAdded.next(msg);
+        console.log('adding message:' + JSON.stringify(msg));
+        console.log('childSnapshot.message_id:' + msg.message_id);
+        console.log('childSnapshot.key:' + msg.key);
+        console.log('childSnapshot.uid:' + msg.uid);
+        this.addReplaceMessageInArray(msg.uid, msg);
+        this.updateMessageStatusReceived(msg);
         this.messageAdded.next(msg);
     }
 
+    // /** */
+    // private updatedMessage(message: any) {
+    //     const msg = this.messageGenerate(message);
+    //     msg.uid = msg.message_id;
+    //     // imposto il giorno del messaggio per visualizzare o nascondere l'header data
+    //     // con**** DATAIL messageAdded ***sole.log('>>>>>>>>>>>>>> changed headerDate: ', msg);
+    //     this.addReplaceMessageInArray(msg.uid, msg);
+    //     this.messageChanged.next(msg);
+    // }
+
     /** */
-    private changed(childSnapshot: any) {
-        const msg = this.messageGenerate(childSnapshot);
-        // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        console.log('>>>>>>>>>>>>>> changed headerDate: ', msg);
-        this.addRepalceMessageInArray(childSnapshot.key, msg);
-        this.messageChanged.next(msg);
+    private updatedMessageStatus(patch: any) {
+        // const msg = this.messageGenerate(message);
+        console.log('updating message with patch', patch);
+        const index = searchIndexInArrayForUid(this.messages, patch.message_id);
+        if (index > -1) {
+            const message = this.messages[index];
+            if (message) {
+                message.status = patch.status;
+                console.log('message found and patched (replacing)', message);
+                // imposto il giorno del messaggio per visualizzare o nascondere l'header data
+                // con**** DATAIL messageAdded ***sole.log('>>>>>>>>>>>>>> changed headerDate: ', msg);
+                this.addReplaceMessageInArray(message.uid, message);
+                this.messageChanged.next(message);
+            }
+        }
     }
 
     /** */
@@ -260,7 +326,9 @@ export class MQTTConversationHandler extends ConversationHandlerService {
 
     /** */
     private messageGenerate(childSnapshot: any) {
-        const msg: MessageModel = childSnapshot.val();
+        // const msg: MessageModel = childSnapshot.val();
+        console.log("childSnapshot>" + JSON.stringify(childSnapshot));
+        const msg = childSnapshot;
         msg.uid = childSnapshot.key;
         // controllo fatto per i gruppi da rifattorizzare
         if (!msg.sender_fullname || msg.sender_fullname === 'undefined') {
@@ -271,6 +339,8 @@ export class MQTTConversationHandler extends ConversationHandlerService {
             msg.text = htmlEntities(msg.text);
         }
         // verifico che il sender è il logged user
+        console.log("****>msg.sender:" + msg.sender);
+        console.log("****>this.loggedUser.uid:" + this.loggedUser.uid);
         msg.isSender = this.isSender(msg.sender, this.loggedUser.uid);
         // traduco messaggi se sono del server
         if (msg.attributes && msg.attributes.subtype) {
@@ -282,8 +352,8 @@ export class MQTTConversationHandler extends ConversationHandlerService {
     }
 
     /** */
-    private addRepalceMessageInArray(key: string, msg: MessageModel) {
-        const index = searchIndexInArrayForUid(this.messages, key);
+    private addReplaceMessageInArray(uid: string, msg: MessageModel) {
+        const index = searchIndexInArrayForUid(this.messages, uid);
         if (index > -1) {
             const headerDate = this.messages[index].headerDate;
             msg.headerDate = headerDate;
@@ -292,8 +362,6 @@ export class MQTTConversationHandler extends ConversationHandlerService {
             this.messages.splice(0, 0, msg);
         }
         this.messages.sort(compareValues('timestamp', 'asc'));
-        // aggiorno stato messaggio, questo stato indica che è stato consegnato al client e NON che è stato letto
-        this.setStatusMessage(msg, this.conversationWith);
     }
 
     /** */
@@ -345,14 +413,22 @@ export class MQTTConversationHandler extends ConversationHandlerService {
      * @param item
      * @param conversationWith
      */
-    private setStatusMessage(msg: MessageModel, conversationWith: string) {
-        if (msg.status < MSG_STATUS_RECEIVED) {
+    private updateMessageStatusReceived(msg) {
+        console.log('updateMessageStatusReceived', msg);
+        if (msg['status'] < MSG_STATUS_RECEIVED) {
+            console.log('status ', msg['status'], ' < (RECEIVED:200)', MSG_STATUS_RECEIVED);
             if (msg.sender !== this.loggedUser.uid && msg.status < MSG_STATUS_RECEIVED) {
-            const urlNodeMessagesUpdate  = this.urlNodeFirebase + '/' + msg.uid;
-            console.log('AGGIORNO STATO MESSAGGIO', urlNodeMessagesUpdate);
-            firebase.database().ref(urlNodeMessagesUpdate).update({ status: MSG_STATUS_RECEIVED });
+                console.log('updating message with status received');
+                this.chat21Service.chatClient.updateMessageStatus(msg.message_id, this.conversationWith, MSG_STATUS_RECEIVED, null);
             }
         }
+        // if (msg.status < MSG_STATUS_RECEIVED) {
+        //     if (msg.sender !== this.loggedUser.uid && msg.status < MSG_STATUS_RECEIVED) {
+        //     const urlNodeMessagesUpdate  = this.urlNodeFirebase + '/' + msg.uid;
+        //     console.log('AGGIORNO STATO MESSAGGIO', urlNodeMessagesUpdate);
+        //     firebase.database().ref(urlNodeMessagesUpdate).update({ status: MSG_STATUS_RECEIVED });
+        //     }
+        // }
     }
 
     /**

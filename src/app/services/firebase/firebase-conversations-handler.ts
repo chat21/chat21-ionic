@@ -20,6 +20,7 @@ import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
 import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from 'src/app/utils/utils-user';
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from 'src/app/utils/utils';
 
+
 @Injectable({ providedIn: 'root' })
 
 export class FirebaseConversationsHandler extends ConversationsHandlerService {
@@ -288,7 +289,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
-        conv.image = getImageUrlThumbFromFirebasestorage(conversation_with, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
+        // conv.image = getImageUrlThumbFromFirebasestorage(conversation_with);
         return conv;
     }
 

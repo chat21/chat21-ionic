@@ -280,6 +280,10 @@ class Chat21Client {
         this.on_message_handler = this.client.on('message', (topic, message) => {
             console.log("topic:" + topic + "\nmessage payload:" + message)
             const _topic = this.parseTopic(topic)
+            if (!_topic) {
+                console.log("Invalid message topic:", topic);
+                return;
+            }
             const conversWith = _topic.conversWith
             try {
                 const message_json = JSON.parse(message.toString())
