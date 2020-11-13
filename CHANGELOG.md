@@ -1,4 +1,10 @@
 # chat21-ionic ver 1.0
+
+### 3.0.17
+- bug fix: changed abstract classes in app module
+- changed: class presence
+- changed: class typing
+
 ### 3.0.16
 
 
