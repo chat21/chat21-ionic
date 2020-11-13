@@ -31,14 +31,14 @@ import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootst
 // services
 import { DatabaseProvider } from '../../services/database';
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
-import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
+import { ConversationsHandlerService } from 'src/app/services/abstract/conversations-handler.service';
 import { ChatManager } from '../../services/chat-manager';
 import { NavProxyService } from '../../services/nav-proxy.service';
 
 import { ConversationDetailPage } from '../conversation-detail/conversation-detail.page';
 import { ContactsDirectoryPage } from '../contacts-directory/contacts-directory.page';
 import { ProfileInfoPage } from '../profile-info/profile-info.page';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/abstract/auth.service';
 import { CustomTranslateService } from 'src/app/services/custom-translate.service';
 
 @Component({

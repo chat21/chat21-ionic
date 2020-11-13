@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 // services
-import { PresenceService } from 'src/app/services/presence.service';
+import { PresenceService } from 'src/app/services/abstract/presence.service';
 
 // utils
 import { isInArray, setLastDateWithLabels } from 'src/app/utils/utils';

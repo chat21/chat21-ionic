@@ -17,24 +17,23 @@ import { AppRoutingModule } from './app-routing.module';
 
 // CONFIG
 import { environment } from '../environments/environment';
-import { CHAT_ENGINE_NQTT, CHAT_ENGINE_FIREBASE } from './utils/constants';
+import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE } from './utils/constants';
 
 // SERVICES
 import { AppConfigProvider } from './services/app-config';
-import { MessagingService } from './services/messaging-service';
 import { EventsService } from './services/events-service';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './services/abstract/auth.service';
 import { FirebaseAuthService } from './services/firebase/firebase-auth-service';
-import { PresenceService } from './services/presence.service';
+import { PresenceService } from './services/abstract/presence.service';
 import { FirebasePresenceService } from './services/firebase/firebase-presence.service';
-import { TypingService } from './services/typing.service';
+import { TypingService } from './services/abstract/typing.service';
 import { FirebaseTypingService } from './services/firebase/firebase-typing.service';
-import { ConversationsHandlerService } from './services/conversations-handler.service';
+import { ConversationsHandlerService } from './services/abstract/conversations-handler.service';
 import { FirebaseConversationsHandler } from './services/firebase/firebase-conversations-handler';
 import { DatabaseProvider } from './services/database';
 import { FirebaseImageRepoService } from './services/firebase/firebase-image-repo';
-import { ImageRepoService } from './services/image-repo.service';
-import { ConversationHandlerBuilderService } from './services/conversation-handler-builder.service';
+import { ImageRepoService } from './services/abstract/image-repo.service';
+import { ConversationHandlerBuilderService } from './services/abstract/conversation-handler-builder.service';
 import { FirebaseConversationHandlerBuilderService } from './services/firebase/firebase-conversation-handler-builder.service';
 
 // PAGES
@@ -53,35 +52,35 @@ export function createTranslateLoader(http: HttpClient) {
 
 export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
   console.log('authenticationFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseAuthService(http, route);
   } else {
     return new FirebaseAuthService(http, route);
   }
 }
 
-export function presenceFactory(events: EventsService) {
+export function presenceFactory() {
   console.log('presenceFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebasePresenceService();
   } else {
     return new FirebasePresenceService();
   }
 }
 
-export function typingFactory(events: EventsService) {
+export function typingFactory() {
   console.log('typingFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
-    return new FirebaseTypingService(events);
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+    return new FirebaseTypingService();
   } else {
-    return new FirebaseTypingService(events);
+    return new FirebaseTypingService();
   }
 }
 
 export function conversationsHandlerFactory(
   databaseProvider: DatabaseProvider) {
   console.log('conversationsHandlerFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseConversationsHandler(databaseProvider);
   } else {
     return new FirebaseConversationsHandler(databaseProvider);
@@ -90,7 +89,7 @@ export function conversationsHandlerFactory(
 
 export function imageRepoFactory() {
   console.log('imageRepoFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseImageRepoService();
   } else {
     return new FirebaseImageRepoService();
@@ -99,7 +98,7 @@ export function imageRepoFactory() {
 
 export function conversationHandlerBuilderFactory() {
   console.log('conversationHandlerBuilderFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseConversationHandlerBuilderService();
   } else {
     return new FirebaseConversationHandlerBuilderService();
@@ -167,12 +166,12 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: PresenceService,
       useFactory: presenceFactory,
-      deps: [EventsService, HttpClient]
+      deps: []
     },
     {
       provide: TypingService,
       useFactory: typingFactory,
-      deps: [EventsService, HttpClient]
+      deps: []
     },
     {
       provide: ConversationsHandlerService,
@@ -193,7 +192,6 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     SplashScreen,
     Keyboard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    MessagingService,
     EventsService,
     DatabaseProvider
   ]

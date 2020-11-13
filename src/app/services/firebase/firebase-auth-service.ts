@@ -11,7 +11,7 @@ import 'firebase/auth';
 
 // services
 // import { EventsService } from '../events-service';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../abstract/auth.service';
 
 @Injectable({ providedIn: 'root' })
 

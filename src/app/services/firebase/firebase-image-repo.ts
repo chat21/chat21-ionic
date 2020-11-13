@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 // services
-import { ImageRepoService } from '../image-repo.service';
+import { ImageRepoService } from '../abstract/image-repo.service';
 
 @Injectable({ providedIn: 'root' })
 
 export class FirebaseImageRepoService extends ImageRepoService {
 
+    // private params
     FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
     urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
+
     constructor() {
         super();
     }

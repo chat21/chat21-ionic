@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 
 // services
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../services/abstract/auth.service';
 import { CustomTranslateService } from '../../../services/custom-translate.service';
 import { EventsService } from '../../../services/events-service';
 

@@ -8,8 +8,8 @@ import { UserModel } from '../models/user';
 // import { ChatConversationHandler } from './chat-conversation-handler';
 // import { ChatConversationsHandler } from './chat-conversations-handler';
 
-import { ConversationHandlerService } from 'src/app/services/conversation-handler.service';
-import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
+import { ConversationHandlerService } from 'src/app/services/abstract/conversation-handler.service';
+import { ConversationsHandlerService } from 'src/app/services/abstract/conversations-handler.service';
 // import { ChatArchivedConversationsHandler } from './chat-archived-conversations-handler';
 import { ChatContactsSynchronizer } from './chat-contacts-synchronizer';
 import { environment } from '../../environments/environment';

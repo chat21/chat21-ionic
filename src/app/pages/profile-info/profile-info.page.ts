@@ -5,9 +5,9 @@ import { ModalController } from '@ionic/angular';
 import { NavProxyService } from '../../services/nav-proxy.service';
 import { ChatManager } from '../../services/chat-manager';
 import { CustomTranslateService } from '../../services/custom-translate.service';
-import { PresenceService } from '../../services/presence.service';
+import { PresenceService } from '../../services/abstract/presence.service';
 // import { EventsService } from '../../services/events-service';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/abstract/auth.service';
 
 // models
 import { UserModel } from 'src/app/models/user';

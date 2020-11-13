@@ -14,15 +14,14 @@ import { AppConfigProvider } from './services/app-config';
 // import { UserService } from './services/user.service';
 import { CurrentUserService } from './services/current-user/current-user.service';
 import { EventsService } from './services/events-service';
-import { AuthService } from './services/auth.service';
-import { PresenceService } from './services/presence.service';
-import { TypingService } from './services/typing.service';
+import { AuthService } from './services/abstract/auth.service';
+import { PresenceService } from './services/abstract/presence.service';
+import { TypingService } from './services/abstract/typing.service';
 // import { ChatPresenceHandler} from './services/chat-presence-handler';
 import { NavProxyService } from './services/nav-proxy.service';
-import { MessagingService } from './services/messaging-service';
 import { ChatManager } from './services/chat-manager';
 // import { ChatConversationsHandler } from './services/chat-conversations-handler';
-import { ConversationsHandlerService } from './services/conversations-handler.service';
+import { ConversationsHandlerService } from './services/abstract/conversations-handler.service';
 import { CustomTranslateService } from './services/custom-translate.service';
 
 // pages
@@ -60,7 +59,6 @@ export class AppComponent implements OnInit {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private appConfigProvider: AppConfigProvider,
-    private msgService: MessagingService,
     private events: EventsService,
     public config: Config,
     public chatManager: ChatManager,
@@ -117,8 +115,6 @@ export class AppComponent implements OnInit {
       this.presenceService.initialize();
       this.typingService.initialize();
       this.initSubscriptions();
-
-      this.msgService.initialize();
       console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
     });
   }

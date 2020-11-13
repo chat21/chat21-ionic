@@ -30,7 +30,8 @@
         <div *ngIf="conversationAvatar" class="user-typing">
           <app-user-typing 
             [idConversation] = conversationAvatar.uid
-            [idUser] = idLoggedUser
+            [idCurrentUser] = idLoggedUser
+            [isDirect] = isDirect
             [translationMap] = translationMap
             [color] = fontColor
             [membersConversation] = membersConversation

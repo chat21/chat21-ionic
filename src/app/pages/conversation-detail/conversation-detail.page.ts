@@ -17,17 +17,17 @@ import { MessageModel } from '../../models/message';
 import { ConversationModel } from '../../models/conversation';
 
 // services
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/abstract/auth.service';
 import { ChatManager } from '../../services/chat-manager';
 import { AppConfigProvider } from '../../services/app-config';
 import { DatabaseProvider } from '../../services/database';
 import { CustomTranslateService } from 'src/app/services/custom-translate.service';
-import { TypingService } from 'src/app/services/typing.service';
-import { ConversationHandlerBuilderService } from 'src/app/services/conversation-handler-builder.service';
+import { TypingService } from 'src/app/services/abstract/typing.service';
+import { ConversationHandlerBuilderService } from 'src/app/services/abstract/conversation-handler-builder.service';
 
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
-import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
-import { ConversationHandlerService } from 'src/app/services/conversation-handler.service';
+import { ConversationsHandlerService } from 'src/app/services/abstract/conversations-handler.service';
+import { ConversationHandlerService } from 'src/app/services/abstract/conversation-handler.service';
 import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 
@@ -679,7 +679,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   /** */
   returnChangeTextArea(e: any) {
     try {
-      this.heightMessageTextArea = e.offsetHeight; //e.target.scrollHeight + 20;
+      let height: number = e.offsetHeight;
+      if (height < 50 ) {
+        height = 50;
+      }
+      this.heightMessageTextArea = height.toString(); //e.target.scrollHeight + 20;
       const message = e.msg; // e.detail.value;
       // console.log('------------> returnChangeTextArea', this.heightMessageTextArea);
       // console.log('------------> returnChangeTextArea', e.detail.value);
@@ -688,19 +692,19 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // console.log('------------> returnChangeTextArea loggedUser firstname:', this.loggedUser.firstname);
       // console.log('------------> returnChangeTextArea conversationSelected uid:', this.conversationWith);
       // console.log('------------> returnChangeTextArea channelType:', this.channelType);
-      let userId = '';
+      let idCurrentUser = '';
       let userFullname = '';
 
       // serve x mantenere la compatibilità con le vecchie chat
       // if (this.channelType === TYPE_DIRECT) {
       //   userId = this.loggedUser.uid;
       // }
-      userId = this.loggedUser.uid;
+      idCurrentUser = this.loggedUser.uid;
       // -----------------//
       if (this.loggedUser.firstname && this.loggedUser.firstname !== undefined) {
         userFullname = this.loggedUser.firstname;
       }
-      this.typingService.setTyping(this.conversationWith, message, userId, userFullname);
+      this.typingService.setTyping(this.conversationWith, message, idCurrentUser, userFullname);
       // const elTextArea = this.rowTextArea['el'];
       // this.heightMessageTextArea = elTextArea.offsetHeight;
     } catch (err) {

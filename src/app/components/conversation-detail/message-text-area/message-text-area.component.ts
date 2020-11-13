@@ -24,20 +24,15 @@ export class MessageTextAreaComponent implements OnInit {
   }
 
   onChange(e: any) {
-    console.log('onChange ************** event:: ', e.detail.target.innerHTML);
-
-    // const lastChar = e.target.textContent.substr(-1);
-    // const codeChar = lastChar.charCodeAt(0);
     const codeChar = e.detail.data;
-    const message = e.detail.target.innerHTML;
+    const message = e.detail.target.innerHTML + e.detail.data;
     const height = e.detail.target.offsetHeight;
-    // console.log('lastChar', lastChar.charCodeAt(0));
+    console.log('onChange ************** event:: ', message);
     if ( codeChar === 10 ) {
       console.log('premuto invio ');
     } else {
       try {
-        const text = e.detail.target.innerHTML.trim();
-        if ( text.length > 0 ) {
+        if ( message.trim().length > 0 ) {
           this.conversationEnabled = true;
         } else {
           this.conversationEnabled = false;

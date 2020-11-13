@@ -8,7 +8,7 @@ import 'firebase/database';
 
 // services
 // import { EventsService } from '../events-service';
-import { PresenceService } from '../presence.service';
+import { PresenceService } from '../abstract/presence.service';
 
 // utils
 // import { setLastDate } from '../../utils/utils';
@@ -19,19 +19,20 @@ import { PresenceService } from '../presence.service';
 })
 export class FirebasePresenceService extends PresenceService {
 
+  // BehaviorSubject
   BSIsOnline: BehaviorSubject<any>;
   BSLastOnline: BehaviorSubject<any>;
 
+  // public params
   public tenant: string;
 
+  // private params
   private urlNodePresence: string;
   private onlineConnectionsRef: any;
   private lastOnlineConnectionsRef: any;
   private keyConnectionRef: any;
 
-  constructor(
-    // private events: EventsService
-  ) {
+  constructor() {
     super();
   }
 
@@ -44,7 +45,7 @@ export class FirebasePresenceService extends PresenceService {
   }
 
   /**
-   *
+   * userIsOnline
    * @param userid
    */
   public userIsOnline(userid: string) {
@@ -57,16 +58,14 @@ export class FirebasePresenceService extends PresenceService {
       console.log('is-online-' + userid);
       if (child.val()) {
         this.BSIsOnline.next({uid: userid, isOnline: true});
-        // that.events.publish('is-online-' + userid, userid, true);
       } else {
         this.BSIsOnline.next({uid: userid, isOnline: false});
-        // that.events.publish('is-online-' + userid, userid, false);
       }
     });
   }
 
   /**
-   *
+   * lastOnlineForUser
    * @param userid
    */
   public lastOnlineForUser(userid: string) {
@@ -76,10 +75,8 @@ export class FirebasePresenceService extends PresenceService {
     lastOnlineRef.on('value', (child) => {
       if (child.val()) {
         this.BSLastOnline.next({uid: userid, lastOnline: child.val()});
-        // that.events.publish('last-connection-date-' + userid, userid, child.val());
       } else {
         this.BSLastOnline.next({uid: userid, lastOnline: null});
-        // that.events.publish('last-connection-date-' + userid, userid, '');
       }
     });
   }

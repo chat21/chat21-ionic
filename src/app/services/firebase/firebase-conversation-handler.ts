@@ -12,7 +12,7 @@ import { MessageModel } from 'src/app/models/message';
 import { UserModel } from 'src/app/models/user';
 
 // services
-import { ConversationHandlerService } from 'src/app/services/conversation-handler.service';
+import { ConversationHandlerService } from 'src/app/services/abstract/conversation-handler.service';
 
 // utils
 import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT } from 'src/app/utils/constants';

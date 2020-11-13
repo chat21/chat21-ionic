@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 // firebase
 import * as firebase from 'firebase/app';
@@ -6,13 +7,7 @@ import 'firebase/messaging';
 import 'firebase/database';
 
 // services
-import { EventsService } from '../events-service';
-import { PresenceService } from '../presence.service';
-
-// utils
-import { setLastDate } from '../../utils/utils';
-import { environment } from '../../../environments/environment';
-import { TypingService } from '../typing.service';
+import { TypingService } from '../abstract/typing.service';
 
 export class TypingModel {
   constructor(
@@ -28,14 +23,18 @@ export class TypingModel {
 
 export class FirebaseTypingService extends TypingService {
 
-  tenant: string;
+  // BehaviorSubject
+  BSIsTyping: BehaviorSubject<any>;
+  BSSetTyping: BehaviorSubject<any>;
 
+  // public params
+  public tenant: string;
+
+  // private params
   private urlNodeTypings: string;
   private setTimeoutWritingMessages: any;
 
-  constructor(
-    private events: EventsService
-  ) {
+  constructor() {
     super();
   }
 
@@ -46,31 +45,27 @@ export class FirebaseTypingService extends TypingService {
   }
 
   /** */
-  public isTyping(idConversation: string, idUser: string) {
+  public isTyping(idConversation: string, idCurrentUser: string, isDirect: boolean ) {
     const that = this;
-    
     let urlTyping = this.urlNodeTypings + idConversation;
-    if (idUser) {
-      urlTyping = this.urlNodeTypings + idUser + '/' + idConversation;
+    if (isDirect) {
+      urlTyping = this.urlNodeTypings + idCurrentUser + '/' + idConversation;
     }
     console.log('urlTyping: ', urlTyping);
-    const ref = firebase.database().ref(urlTyping).orderByChild('timestamp').limitToLast(1);
+    const ref = firebase.database().ref(urlTyping);
     ref.on('child_changed', (childSnapshot) => {
-      console.log('urlTyping: ', childSnapshot.val());
-      // this.BSIsTyping.next({uid: childSnapshot.key, nameUserTypingNow: childSnapshot.name});
-      that.events.publish('isTyping', childSnapshot);
+      const precence: TypingModel = childSnapshot.val();
+      console.log('urlTyping: child_changed ', childSnapshot.val());
+      this.BSIsTyping.next({uid: idConversation, nameUserTypingNow: precence.name});
     });
   }
 
   /** */
-  public setTyping(idConversation: string, message: string, idUser: string, userFullname: string) {
+  public setTyping(idConversation: string, message: string, idCurrentUser: string, userFullname: string) {
     const that = this;
+    clearTimeout(this.setTimeoutWritingMessages);
     this.setTimeoutWritingMessages = setTimeout(() => {
-
-      let urlTyping = this.urlNodeTypings + idConversation;
-      if (idUser) {
-        urlTyping = this.urlNodeTypings + idConversation + '/' + idUser ;
-      }
+      const urlTyping = this.urlNodeTypings + idConversation + '/' + idCurrentUser + '/user';
       console.log('setWritingMessages:', urlTyping, userFullname);
       const timestampData =  firebase.database.ServerValue.TIMESTAMP;
       const precence = new TypingModel(timestampData, message, userFullname);
@@ -78,9 +73,8 @@ export class FirebaseTypingService extends TypingService {
         if (error) {
           console.log('ERRORE', error);
         } else {
-          // console.log('OK update typing');
+          this.BSSetTyping.next({uid: idConversation, typing: precence});
         }
-        that.events.publish('setTyping', precence, error);
       });
     }, 500);
   }

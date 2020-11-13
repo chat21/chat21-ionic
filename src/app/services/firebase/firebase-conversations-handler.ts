@@ -12,14 +12,14 @@ import 'firebase/storage';
 import { ConversationModel } from 'src/app/models/conversation';
 
 // services
-import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
+import { ConversationsHandlerService } from 'src/app/services/abstract/conversations-handler.service';
 import { DatabaseProvider } from 'src/app/services/database';
 
 // utils
 import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
 import { avatarPlaceholder, getColorBck } from 'src/app/utils/utils-user';
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from 'src/app/utils/utils';
-import { ImageRepoService } from '../image-repo.service';
+import { ImageRepoService } from '../abstract/image-repo.service';
 import { FirebaseImageRepoService } from './firebase-image-repo';
 
 
@@ -34,15 +34,13 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     conversationsRemoved: BehaviorSubject<ConversationModel[]>;
     loadedConversationsStorage: BehaviorSubject<ConversationModel[]>;
 
-    // public variables
+    // public params
     conversations: Array<ConversationModel> = [];
     uidConvSelected: string;
     tenant: string;
     imageRepo: ImageRepoService = new FirebaseImageRepoService();
-    // FIREBASESTORAGE_BASE_URL_IMAGE: string;
-    // urlStorageBucket: string;
 
-    // private variables
+    // private params
     private loggedUserId: string;
     private translationMap: Map<string, string>;
     private isConversationClosingMap: Map<string, boolean>;

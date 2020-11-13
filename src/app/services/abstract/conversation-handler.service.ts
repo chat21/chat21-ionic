@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 // models
-import { MessageModel } from '../models/message';
+import { MessageModel } from '../../models/message';
 import { UserModel } from 'src/app/models/user';
 
 @Injectable({

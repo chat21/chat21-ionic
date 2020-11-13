@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 // models
-import { ConversationModel } from '../models/conversation';
+import { ConversationModel } from '../../models/conversation';
 import { ImageRepoService } from './image-repo.service';
 
 @Injectable({
