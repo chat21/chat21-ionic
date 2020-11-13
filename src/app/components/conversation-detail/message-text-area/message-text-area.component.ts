@@ -9,7 +9,7 @@ import { TYPE_MSG_TEXT } from 'src/app/utils/constants';
   styleUrls: ['./message-text-area.component.scss'],
 })
 export class MessageTextAreaComponent implements OnInit {
-  @Output() eventChangeTextArea = new EventEmitter<IonTextarea>();
+  @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
 
   public conversationEnabled = false;
@@ -24,16 +24,19 @@ export class MessageTextAreaComponent implements OnInit {
   }
 
   onChange(e: any) {
-    // console.log('onChange ************** event:: ', e.detail.value);
+    console.log('onChange ************** event:: ', e.detail.target.innerHTML);
 
-    const lastChar = e.target.textContent.substr(-1);
-    const codeChar = lastChar.charCodeAt(0);
+    // const lastChar = e.target.textContent.substr(-1);
+    // const codeChar = lastChar.charCodeAt(0);
+    const codeChar = e.detail.data;
+    const message = e.detail.target.innerHTML;
+    const height = e.detail.target.offsetHeight;
     // console.log('lastChar', lastChar.charCodeAt(0));
     if ( codeChar === 10 ) {
       console.log('premuto invio ');
     } else {
       try {
-        const text = e.target.textContent.trim();
+        const text = e.detail.target.innerHTML.trim();
         if ( text.length > 0 ) {
           this.conversationEnabled = true;
         } else {
@@ -42,7 +45,7 @@ export class MessageTextAreaComponent implements OnInit {
       } catch (err) {
         this.conversationEnabled = false;
       }
-      this.eventChangeTextArea.emit(e);
+      this.eventChangeTextArea.emit({ msg: message, offsetHeight: height } );
     }
   }
 

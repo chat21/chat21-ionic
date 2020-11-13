@@ -26,7 +26,6 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
 
   constructor(
     public presenceService: PresenceService
-    // public events: EventsService
   ) { }
 
   ngOnInit() {

@@ -61,7 +61,7 @@ export class FirebaseAuthService extends AuthService {
       this.createCustomToken();
     } else {
       console.log(' ---------------- NON sono loggato ---------------- ');
-      this.BSAuthStateChanged.next('offline');
+      // this.BSAuthStateChanged.next('offline');
     }
 
     // da rifattorizzare il codice seguente!!!
@@ -104,7 +104,6 @@ export class FirebaseAuthService extends AuthService {
       console.log(' onAuthStateChanged', user);
       if (!user) {
         console.log(' 1 - PASSO OFFLINE AL CHAT MANAGER');
-        // se non esiste il token
         that.BSAuthStateChanged.next('offline');
       } else {
         console.log(' 2 - PASSO ONLINE AL CHAT MANAGER');

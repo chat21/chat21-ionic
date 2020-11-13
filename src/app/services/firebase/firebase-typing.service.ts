@@ -40,14 +40,15 @@ export class FirebaseTypingService extends TypingService {
   }
 
   /** */
-  initialize() {
+  public initialize() {
     console.log('FirebaseTypingService', this.tenant);
     this.urlNodeTypings = '/apps/' + this.tenant + '/typings/';
   }
 
   /** */
-  isTyping(idConversation: string, idUser: string) {
+  public isTyping(idConversation: string, idUser: string) {
     const that = this;
+    
     let urlTyping = this.urlNodeTypings + idConversation;
     if (idUser) {
       urlTyping = this.urlNodeTypings + idUser + '/' + idConversation;
@@ -56,23 +57,23 @@ export class FirebaseTypingService extends TypingService {
     const ref = firebase.database().ref(urlTyping).orderByChild('timestamp').limitToLast(1);
     ref.on('child_changed', (childSnapshot) => {
       console.log('urlTyping: ', childSnapshot.val());
+      // this.BSIsTyping.next({uid: childSnapshot.key, nameUserTypingNow: childSnapshot.name});
       that.events.publish('isTyping', childSnapshot);
     });
   }
 
   /** */
-  setTyping(idConversation: string, message: string, idUser: string, userFullname: string) {
+  public setTyping(idConversation: string, message: string, idUser: string, userFullname: string) {
     const that = this;
     this.setTimeoutWritingMessages = setTimeout(() => {
 
       let urlTyping = this.urlNodeTypings + idConversation;
       if (idUser) {
-        urlTyping = this.urlNodeTypings + idUser + '/' + idConversation;
+        urlTyping = this.urlNodeTypings + idConversation + '/' + idUser ;
       }
-      // console.log('setWritingMessages:', urlTyping, userFullname);
+      console.log('setWritingMessages:', urlTyping, userFullname);
       const timestampData =  firebase.database.ServerValue.TIMESTAMP;
       const precence = new TypingModel(timestampData, message, userFullname);
-      // console.log('precence::::', precence);
       firebase.database().ref(urlTyping).set(precence, ( error ) => {
         if (error) {
           console.log('ERRORE', error);

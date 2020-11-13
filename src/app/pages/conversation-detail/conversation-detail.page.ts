@@ -23,7 +23,7 @@ import { AppConfigProvider } from '../../services/app-config';
 import { DatabaseProvider } from '../../services/database';
 import { CustomTranslateService } from 'src/app/services/custom-translate.service';
 import { TypingService } from 'src/app/services/typing.service';
-import { ConversationHandlerFactory } from 'src/app/services/conversation-handler-factory.service';
+import { ConversationHandlerBuilderService } from 'src/app/services/conversation-handler-builder.service';
 
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
@@ -193,7 +193,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
     public contactsService: ContactsService,
-    public conversationHandlerFactory: ConversationHandlerFactory
+    public conversationHandlerBuilderService: ConversationHandlerBuilderService
   ) {
   }
 
@@ -355,7 +355,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       ' CONVERSATION FULLNAME ', this.conversationWithFullname,
       ' CONVERSATION LOGGED ', this.loggedUser,
       ' CONVERSATION TENANT ', this.tenant);
-      this.conversationHandlerService = this.conversationHandlerFactory.build(); //new FirebaseConversationHandler();
+      this.conversationHandlerService = this.conversationHandlerBuilderService.build(); //new FirebaseConversationHandler();
       this.conversationHandlerService.initialize(
       this.conversationWith,
       this.conversationWithFullname,
@@ -679,8 +679,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   /** */
   returnChangeTextArea(e: any) {
     try {
-      this.heightMessageTextArea = e.target.scrollHeight + 20;
-      const message = e.detail.value;
+      this.heightMessageTextArea = e.offsetHeight; //e.target.scrollHeight + 20;
+      const message = e.msg; // e.detail.value;
       // console.log('------------> returnChangeTextArea', this.heightMessageTextArea);
       // console.log('------------> returnChangeTextArea', e.detail.value);
 
@@ -691,9 +691,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       let userId = '';
       let userFullname = '';
 
-      if (this.channelType === TYPE_DIRECT) {
-        userId = this.loggedUser.uid;
-      }
+      // serve x mantenere la compatibilità con le vecchie chat
+      // if (this.channelType === TYPE_DIRECT) {
+      //   userId = this.loggedUser.uid;
+      // }
+      userId = this.loggedUser.uid;
+      // -----------------//
       if (this.loggedUser.firstname && this.loggedUser.firstname !== undefined) {
         userFullname = this.loggedUser.firstname;
       }

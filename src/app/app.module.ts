@@ -34,6 +34,8 @@ import { FirebaseConversationsHandler } from './services/firebase/firebase-conve
 import { DatabaseProvider } from './services/database';
 import { FirebaseImageRepoService } from './services/firebase/firebase-image-repo';
 import { ImageRepoService } from './services/image-repo.service';
+import { ConversationHandlerBuilderService } from './services/conversation-handler-builder.service';
+import { FirebaseConversationHandlerBuilderService } from './services/firebase/firebase-conversation-handler-builder.service';
 
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -92,6 +94,15 @@ export function imageRepoFactory() {
     return new FirebaseImageRepoService();
   } else {
     return new FirebaseImageRepoService();
+  }
+}
+
+export function conversationHandlerBuilderFactory() {
+  console.log('conversationHandlerBuilderFactory: ');
+  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+    return new FirebaseConversationHandlerBuilderService();
+  } else {
+    return new FirebaseConversationHandlerBuilderService();
   }
 }
 
@@ -171,6 +182,11 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ImageRepoService,
       useFactory: imageRepoFactory,
+      deps: []
+    },
+    {
+      provide: ConversationHandlerBuilderService,
+      useFactory: conversationHandlerBuilderFactory,
       deps: []
     },
     StatusBar,

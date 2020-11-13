@@ -33,12 +33,13 @@ export class UserTypingComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    console.log('UserTypingComponent - ngOnInit');
     this.initialize();
   }
 
   /** */
   ngOnDestroy() {
-    console.log('UserPresenceComponent - ngOnDestroy');
+    console.log('UserTypingComponent - ngOnDestroy');
     this.unsubescribeAll();
   }
 
@@ -51,8 +52,16 @@ export class UserTypingComponent implements OnInit, OnDestroy {
     this.typingService.isTyping(this.idConversation, this.idUser);
   }
 
+  /** */
+  private setSubscriptions() {
+    const key = 'isTyping';
+    if (!isInArray(key, this.subscriptions)) {
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.subscribeTypings);
+    }
+  }
 
-   /** */
+  /** */
   private unsubescribeAll() {
     console.log('unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach((subscription: any) => {
@@ -63,16 +72,6 @@ export class UserTypingComponent implements OnInit, OnDestroy {
   }
 
   /** */
-  private setSubscriptions() {
-    const key = 'isTyping';
-    if (!isInArray(key, this.subscriptions)) {
-      this.subscriptions.push(key);
-      this.events.subscribe(key, this.subscribeTypings);
-    }
-  }
-
-  /**
-   */
   subscribeTypings = (childSnapshot: any) => {
     const that = this;
     console.log('subscribeTypings childSnapshot', childSnapshot);

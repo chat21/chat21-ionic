@@ -1,4 +1,6 @@
 # chat21-ionic ver 1.0
+### 3.0.16
+
 
 ### 3.0.15
 - bug-fix: changed routing removing url parameters

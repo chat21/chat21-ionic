@@ -19,7 +19,7 @@
           auto-grow = "true"
           [value] = ""
           [(ngModel)]="messageString"
-          (ionChange)="onChange($event);"
+          (ionInput)="onChange($event);"
           (keyup.enter)="pressedOnKeyboard($event, messageString);" 
           >
         </ion-textarea>
