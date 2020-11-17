@@ -10,6 +10,7 @@ import 'firebase/firestore';
 // models
 import { MessageModel } from 'src/app/models/message';
 import { UserModel } from 'src/app/models/user';
+import { ConversationModel } from 'src/app/models/conversation';
 
 // services
 import { ConversationHandlerService } from 'src/app/services/abstract/conversation-handler.service';
@@ -23,6 +24,7 @@ import {
   setHeaderDate,
   conversationMessagesRef
 } from 'src/app/utils/utils';
+
 
 
 @Injectable({ providedIn: 'root' })
@@ -69,7 +71,9 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         tenant: string,
         translationMap: Map<string, string>
     ) {
-        console.log('initWithRecipient:::', tenant);
+        console.log('initWithRecipient::: FirebaseConversationHandler',
+        recipientId, recipientFullName, loggedUser, tenant, translationMap
+        );
         this.recipientId = recipientId;
         this.recipientFullname = recipientFullName;
         this.loggedUser = loggedUser;
@@ -112,6 +116,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
             that.removed(childSnapshot);
         });
     }
+
 
     /**
      * bonifico url in testo messaggio
@@ -201,7 +206,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
      * dispose reference della conversazione
      */
     dispose() {
-        this.ref.off();
+        // this.ref.off();
     }
 
 
@@ -210,17 +215,24 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     // ---------------------------------------------------------- //
     /** */
     private setAttributes(): any {
-        let attributes: any = JSON.parse(sessionStorage.getItem('attributes'));
-        if (!attributes || attributes === 'undefined') {
-            attributes = {
-                client: this.CLIENT_BROWSER,
-                sourcePage: location.href,
-                userEmail: this.loggedUser.email,
-                userFullname: this.loggedUser.fullname
-            };
-            console.log('>>>>>>>>>>>>>> setAttributes: ', JSON.stringify(attributes));
-            sessionStorage.setItem('attributes', JSON.stringify(attributes));
-        }
+        const attributes = {
+            client: this.CLIENT_BROWSER,
+            sourcePage: location.href,
+            userEmail: this.loggedUser.email,
+            userFullname: this.loggedUser.fullname
+        };
+
+        // let attributes: any = JSON.parse(sessionStorage.getItem('attributes'));
+        // if (!attributes || attributes === 'undefined') {
+        //     attributes = {
+        //         client: this.CLIENT_BROWSER,
+        //         sourcePage: location.href,
+        //         userEmail: this.loggedUser.email,
+        //         userFullname: this.loggedUser.fullname
+        //     };
+        //     console.log('>>>>>>>>>>>>>> setAttributes: ', JSON.stringify(attributes));
+        //     sessionStorage.setItem('attributes', JSON.stringify(attributes));
+        // }
         return attributes;
     }
 
@@ -278,6 +290,10 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
             if (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support') {
                 this.translateInfoSupportMessages(msg);
             }
+        }
+        if (msg.attributes && msg.attributes.projectId) {
+            this.attributes.projectId = msg.attributes.projectId;
+            // sessionStorage.setItem('attributes', JSON.stringify(attributes));
         }
         return msg;
     }

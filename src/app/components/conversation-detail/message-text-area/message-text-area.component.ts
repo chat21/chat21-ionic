@@ -25,7 +25,10 @@ export class MessageTextAreaComponent implements OnInit {
 
   onChange(e: any) {
     const codeChar = e.detail.data;
-    const message = e.detail.target.innerHTML + e.detail.data;
+    let message = e.detail.target.innerHTML;
+    if (e.detail.data) {
+      message += e.detail.data;
+    }
     const height = e.detail.target.offsetHeight;
     console.log('onChange ************** event:: ', message);
     if ( codeChar === 10 ) {

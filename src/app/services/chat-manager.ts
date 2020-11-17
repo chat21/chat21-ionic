@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 // import 'rxjs/add/operator/map';
 
 // models
@@ -18,6 +19,9 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 
 export class ChatManager {
+
+  BSStart: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
   supportMode = environment.supportMode;
   tenant = environment.tenant;
 
@@ -73,6 +77,9 @@ export class ChatManager {
     return this.currentUser;
   }
 
+  public startApp() {
+    this.BSStart.next(this.currentUser);
+  }
   /**
    *
    */

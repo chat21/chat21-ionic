@@ -28,7 +28,7 @@ import { ConversationHandlerBuilderService } from 'src/app/services/abstract/con
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/app/services/abstract/conversations-handler.service';
 import { ConversationHandlerService } from 'src/app/services/abstract/conversation-handler.service';
-import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
+// import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
@@ -54,7 +54,8 @@ import {
   MESSAGE_TYPE_INFO,
   MESSAGE_TYPE_MINE,
   MESSAGE_TYPE_OTHERS,
-  MESSAGE_TYPE_DATE
+  MESSAGE_TYPE_DATE,
+  AUTH_STATE_OFFLINE
 } from '../../utils/constants';
 
 import {
@@ -109,12 +110,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   COLOR_GREEN = '#24d066'; // colore presence active da spostare nelle costanti
   COLOR_RED = '#db4437'; // colore presence none da spostare nelle costanti
 
-  private subscriptions: Array<Subscription>;
+  private subscriptions: Array<any>;
   private tenant: string;
   public loggedUser: UserModel;
   public conversationWith: string;
   public conversationWithFullname: string;
   public messages: Array<MessageModel> = [];
+  private conversationSelected: any;
+  // public attributes: any;
   public messageSelected: any;
   public channelType: string;
   public online: boolean;
@@ -137,24 +140,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   private timeScrollBottom: any;
   public showIonContent = false;
 
-  // private arrayLocalImmages: Array<any> = [];
-  // private projectId: string;
-  // private groupDetailAttributes: any;
-  // private memberSelected: UserModel;
-  // private fullnameConversationWith: string;
-  // private conversationType: string;
-  // private messageString: string;
-  // private selectedFiles: FileList;
-  // private conversationEnabled = true;
-  // private advancedAttributes: any = [];
-  // private openInfoAdvanced = false;
-  // private openInfoUser = false;                 /** check is open info conversation */
-  // private setTimeoutWritingMessages;
-  // private conversationMembers: any = [];
-
-
-
-
   MESSAGE_TYPE_INFO = MESSAGE_TYPE_INFO;
   MESSAGE_TYPE_MINE = MESSAGE_TYPE_MINE;
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS;
@@ -168,11 +153,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    // private el: ElementRef,
-    // public popoverCtrl: PopoverController,
-    // public navCtrl: NavController,
-    // public userService: UserService,
-    // public events: EventsService,
     public chatManager: ChatManager,
     public actionSheetCtrl: ActionSheetController,
     public platform: Platform,
@@ -189,7 +169,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
     public conversationHandlerService: ConversationHandlerService,
-    public currentUserService: CurrentUserService,
+    // public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
     public contactsService: ContactsService,
@@ -198,17 +178,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   // -------------- SYSTEM FUNCTIONS -------------- //
-  private listnerUserLogged() {
-    if (!this.loggedUser) {
-      const that = this;
-      this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
-        console.log('***** BScurrentUser *****', currentUser);
-        if (currentUser) {
-          that.loggedUser = currentUser;
-          that.initialize();
-        }
-      });
-    }
+  private listnerStart() {
+    const that = this;
+    this.chatManager.BSStart.subscribe((data: any) => {
+      console.log('***** BSStart ConversationDetailPage *****', data);
+      if (data) {
+        that.initialize();
+      }
+    });
   }
 
   /** */
@@ -229,34 +206,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   /** */
   ionViewWillEnter() {
+    this.loggedUser = this.authService.getCurrentUser();
     console.log('ionViewWillEnter ConversationDetailPage: ', this.loggedUser);
-    this.showButtonToBottom = false;
-    this.showMessageWelcome = false;
-    this.loggedUser = this.authService.getUser();
-    this.tenant = environment.tenant;
-    this.translations();
-
-    this.conversationWith = this.route.snapshot.paramMap.get('IDConv');
-    this.conversationWithFullname = this.route.snapshot.paramMap.get('FullNameConv');
-
-    console.log(
-      'CONVERSATION DETAIL COSTRACTOR' +
-      this.loggedUser +
-      this.tenant +
-      this.conversationWith +
-      this.conversationWithFullname
-    );
-
-    this.setHeaderContent();
-
-
-    if (this.loggedUser) {
-      this.initialize();
-    } else {
-      this.listnerUserLogged();
-    }
+    this.listnerStart();
+    // if (this.loggedUser) {
+    //   this.initialize();
+    // } else {
+    //   this.listnerUserLogged();
+    // }
   }
 
+
+  
   /** */
   ionViewDidEnter() {
   }
@@ -271,18 +232,22 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   // -------------- START MY functions -------------- //
-  /**
-   * resetto array messaggi
-   * resetto stato online user with
-   * resetto data ultima connessione
-   * recupero loggedUser
-   * load stato utente con cui si conversa online/offline
-   * load data ultimo aggesso utente con cui si conversa
-   * recupero info status user conversation with
-   * carico messaggi
-   */
+  /** */
   initialize() {
-    console.log('initialize ConversationDetailPage: ', this.loggedUser );
+    this.loggedUser = this.authService.getCurrentUser();
+    this.translations();
+    // this.conversationSelected = localStorage.getItem('conversationSelected');
+    this.showButtonToBottom = false;
+    this.showMessageWelcome = false;
+    this.tenant = environment.tenant;
+
+    // Change list on date change
+    this.route.paramMap.subscribe(params => {
+      this.conversationWith = params.get('IDConv');
+      this.conversationWithFullname = params.get('FullNameConv');
+    });
+
+    console.log('initialize ConversationDetailPage: ', this.conversationWith, this.conversationWithFullname );
     this.subscriptions = [];
     this.setHeightTextArea();
     this.tagsCanned = []; // list of canned
@@ -298,7 +263,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
     this.online = false;
     this.lastConnectionDate = '';
+
+    this.initConversationsHandler();
     this.initConversationHandler();
+    this.initSubscriptions();
+    this.addEventsKeyboard();
     this.startConversation();
   }
 
@@ -322,15 +291,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.translationMap = this.customTranslateService.translateLanguage(keys);
   }
 
-
   /**
-   * recupero da chatManager l'handler
-   * se NON ESISTE creo un handler e mi connetto e lo memorizzo nel chatmanager
-   * se ESISTE mi connetto
-   * carico messaggi
-   * attendo x sec se nn arrivano messaggi visualizzo msg wellcome
+   * setTranslationMapForConversationHandler
    */
-  initConversationHandler() {
+  private setTranslationMapForConversationHandler(): Map<string, string> {
     const keys = [
       'INFO_SUPPORT_USER_ADDED_SUBJECT',
       'INFO_SUPPORT_USER_ADDED_YOU_VERB',
@@ -344,29 +308,35 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'LABEL_TO',
       'ARRAY_DAYS'
     ];
-    const translationMap = this.customTranslateService.translateLanguage(keys);
+    return this.customTranslateService.translateLanguage(keys);
+  }
+
+  /**
+   * recupero da chatManager l'handler
+   * se NON ESISTE creo un handler e mi connetto e lo memorizzo nel chatmanager
+   * se ESISTE mi connetto
+   * carico messaggi
+   * attendo x sec se nn arrivano messaggi visualizzo msg wellcome
+   */
+  initConversationHandler() {
+    const translationMap = this.setTranslationMapForConversationHandler();
     this.showMessageWelcome = false;
-    console.log('DETTAGLIO CONV - chatManager **************', this.conversationWith);
     const handler: ConversationHandlerService = this.chatManager.getConversationHandlerByConversationId(this.conversationWith);
     console.log('DETTAGLIO CONV - handler **************', handler, this.conversationWith);
     if (!handler) {
-      console.log(
-      ' CONVERSATION WITH ', this.conversationWith,
-      ' CONVERSATION FULLNAME ', this.conversationWithFullname,
-      ' CONVERSATION LOGGED ', this.loggedUser,
-      ' CONVERSATION TENANT ', this.tenant);
-      this.conversationHandlerService = this.conversationHandlerBuilderService.build(); //new FirebaseConversationHandler();
+      this.conversationHandlerService = this.conversationHandlerBuilderService.build();
       this.conversationHandlerService.initialize(
-      this.conversationWith,
-      this.conversationWithFullname,
-      this.loggedUser,
-      this.tenant,
-      translationMap);
-
+        this.conversationWith,
+        this.conversationWithFullname,
+        this.loggedUser,
+        this.tenant,
+        translationMap
+      );
       this.conversationHandlerService.connect();
-      this.chatManager.addConversationHandler(this.conversationHandlerService);
+      console.log('DETTAGLIO CONV - NEW handler **************', this.conversationHandlerService);
       this.messages = this.conversationHandlerService.messages;
-      // non ci sono messaggi!!!
+
+      this.chatManager.addConversationHandler(this.conversationHandlerService);
 
       // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
       const that = this;
@@ -376,7 +346,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
           that.showMessageWelcome = true;
           console.log('setTimeout ***', that.showMessageWelcome);
         }
-      }, 2000);
+      }, 8000);
 
     } else {
       console.log('NON ENTRO ***', this.conversationHandlerService, handler);
@@ -390,6 +360,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log('CONVERSATION MESSAGES ' + this.messages + this.showIonContent);
   }
 
+
+  initConversationsHandler() {
+    console.log('initConversationsHandler ------------->:::', this.tenant, this.loggedUser.uid, this.conversationWith);
+    this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+  }
+
+
+
   /**
    * startConversation
    */
@@ -398,20 +376,17 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (this.conversationWith) {
       this.channelType = setChannelType(this.conversationWith);
       console.log('setChannelType: ', this.channelType);
-      this.selectInfoContentTypeComponent();
+      // this.selectInfoContentTypeComponent();
       this.setHeaderContent();
-      this.initSubscriptions();
     }
   }
 
   setHeaderContent() {
-    if (this.conversationWith) {
-      this.conversationAvatar = setConversationAvatar(
-        this.conversationWith,
-        this.conversationWithFullname,
-        this.channelType
-      );
-    }
+    this.conversationAvatar = setConversationAvatar(
+      this.conversationWith,
+      this.conversationWithFullname,
+      this.channelType
+    );
     console.log('this.conversationAvatar: ', this.conversationAvatar);
   }
 
@@ -420,6 +395,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    *
    */
   selectInfoContentTypeComponent() {
+    console.log('selectInfoContentTypeComponent: ', this.conversationWith);
+    this.channelType = setChannelType(this.conversationWith);
     if (this.channelType === TYPE_DIRECT) {
       this.setInfoDirect();
     } else if (this.channelType === TYPE_GROUP) {
@@ -434,6 +411,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    *
    */
   setInfoDirect() {
+    console.log('setInfoDirect:::: ', this.contactsService, this.conversationWith);
     this.member = null;
     const that = this;
     const tiledeskToken = this.authService.getTiledeskToken();
@@ -452,18 +430,20 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    */
   setInfoSupportGroup() {
     let projectID = '';
+    const tiledeskToken = this.authService.getTiledeskToken();
     const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
-    if (this.conversationHandlerService.attributes && this.conversationHandlerService.attributes.projectId) {
-      projectID = this.conversationHandlerService.attributes.projectId;
+    if (this.conversationSelected) {
+      projectID = this.conversationSelected.attributes.projectId;
     }
     if (projectID && this.conversationWith) {
-      const urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
+      let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
+      urlPanel += '?token=' + tiledeskToken;
       const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
       this.urlConversationSupportGroup = urlConversationTEMP;
     } else {
       this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
     }
-    console.log('this.urlConversationSupportGroup:: ', this.urlConversationSupportGroup);
+    console.log('this.urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
   }
   // -------------- END SET INFO COMPONENT -------------- //
 
@@ -555,48 +535,74 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    */
   initSubscriptions() {
     console.log('||------------> initSubscriptions: ', this.subscriptions);
-    this.addEventsKeyboard();
 
     const that = this;
-    const subscribeConversationsChanged = this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
-      // console.log('***** DATAIL conversationsChanged *****', conversations);
-    });
-    if (this.subscriptions.indexOf(subscribeConversationsChanged) === -1 ) {
-      this.subscriptions.push(subscribeConversationsChanged);
+    let subscribtion: any;
+    let subscribtionKey: string;
+
+    subscribtionKey = 'BSConversationDetail';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      subscribtion = this.conversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
+        console.log('***** DATAIL subscribeConversationDetail *****', data);
+        if (data) {
+          that.conversationSelected = data;
+          that.selectInfoContentTypeComponent();
+        }
+      });
+      const subscribe = {key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
+    }
+
+    subscribtionKey = 'BScontactDetail';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      subscribtion = this.contactsService.BScontactDetail.subscribe((contact: UserModel) => {
+        console.log('***** DATAIL subscribeBScontactDetail *****BScontactDetail', this.conversationWith, contact);
+        if (contact && this.conversationWith === contact.uid ) {
+          that.member = contact;
+        }
+      });
+      const subscribe = {key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
     }
 
 
-    const subscribeMessageAdded = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
-      console.log('***** DATAIL messageAdded *****', msg);
-      if (msg) {
-        that.newMessageAdded(msg);
-      }
-    });
-    if (this.subscriptions.indexOf(subscribeMessageAdded) === -1 ) {
-      this.subscriptions.push(subscribeMessageAdded);
+    subscribtionKey = 'messageAdded';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      console.log('***** add messageAdded *****',  this.conversationHandlerService);
+      subscribtion = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
+        console.log('***** DATAIL messageAdded *****', msg);
+        if (msg) {
+          that.newMessageAdded(msg);
+        }
+      });
+      const subscribe = {key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
     }
 
-    const subscribeMessageChanged = this.conversationHandlerService.messageChanged.subscribe((msg: any) => {
-      // console.log('***** DATAIL messageChanged *****', msg);
-    });
-    if (this.subscriptions.indexOf(subscribeMessageChanged) === -1 ) {
-      this.subscriptions.push(subscribeMessageChanged);
+    subscribtionKey = 'messageChanged';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      subscribtion = this.conversationHandlerService.messageChanged.subscribe((msg: any) => {
+        // console.log('***** DATAIL messageChanged *****', msg);
+      });
+      const subscribe = {key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
     }
 
-    const subscribeMessageRemoved = this.conversationHandlerService.messageRemoved.subscribe((messageId: any) => {
-      // console.log('***** DATAIL messageRemoved *****', messageId);
-    });
-    if (this.subscriptions.indexOf(subscribeMessageRemoved) === -1 ) {
-      this.subscriptions.push(subscribeMessageRemoved);
+
+    subscribtionKey = 'messageRemoved';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      subscribtion = this.conversationHandlerService.messageRemoved.subscribe((messageId: any) => {
+        // console.log('***** DATAIL messageRemoved *****', messageId);
+      });
+      const subscribe = {key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
     }
 
-    const subscribeBScontactDetail = this.contactsService.BScontactDetail.subscribe((contact: UserModel) => {
-      // console.log('***** DATAIL subscribeBScontactDetail *****', contact);
-      that.member = contact;
-    });
-    if (this.subscriptions.indexOf(subscribeBScontactDetail) === -1 ) {
-      this.subscriptions.push(subscribeBScontactDetail);
-    }
 
   }
 
@@ -624,7 +630,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   unsubescribeAll() {
     console.log('||------------> unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
+      subscription.value.unsubscribe(); // vedere come fare l'unsubscribe!!!!
     });
     this.subscriptions = [];
 
@@ -737,9 +743,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   /** */
-  pushPage(pageName: string ) {
-    this.router.navigateByUrl(pageName);
-  }
+  // pushPage(pageName: string ) {
+  //   this.router.navigateByUrl(pageName);
+  // }
   // -------------- END CLICK functions -------------- //
 
 
@@ -848,844 +854,3 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 }
 // END ALL //
-
-   /**
-   * callback sottoscrizione openInfoMessage
-   * apre il box di dx del info messaggio
-   */
-  // onOpenInfoMessage: any = (message) => {
-  //   console.log('onOpenInfoMessage');
-  //   this.openInfoMessage = true;
-  //   this.openInfoConversation = false;
-  //   this.messageSelected = message;
-  //   //console.log('OPEN MESSAGE **************', message);
-  // }
-
-  // onOpenVideoChat: any = (message) => {
-  //   console.log('onOpenVideoChat');
-  //   this.messageString = message;
-  //   const text_area = this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0];
-  //   text_area.value = message; //<HTMLInputElement>document.getElementById('chat21-main-message-context');
-  //   text_area.focus();
-  // }
-
-
-  /**
-   * on subscribe Typings
-   */
-  // subscribeTypings: any = (childSnapshot) => {
-  //   if(this.channelType === TYPE_DIRECT) {
-  //     this.isTyping = true;
-  //     this.nameUserTypingNow = this.fullnameConversationWith;
-  //     console.log('*********** subscribeTypings', this.nameUserTypingNow);
-  //   } else {
-  //     console.log('child_changed key', childSnapshot.key);
-  //     console.log('child_changed val', childSnapshot.val());
-  //     this.getFullNameUserForId(childSnapshot.key);
-  //   }
-  //   const that = this;
-  //   clearTimeout(this.setTimeoutWritingMessages);
-  //   this.setTimeoutWritingMessages = setTimeout(function () {
-  //       that.isTyping = false;
-  //   }, 2000);
-  // }
-
-  /** 
-   * init group details subscription
-   */
-  // loadGroupDetail() {
-  //   console.log('-------------------------->  Dettaglio conersazione ::loadGroupDetail');
-  //   const keySubscription = 'conversationGroupDetails';
-  //   if (!isInArray(keySubscription, this.subscriptions)) {
-  //     console.log(' subscribe ::groupDetails');
-  //     this.events.subscribe(keySubscription, this.returnLoadGroupDetail);
-  //     // carico il gruppo in info dettaglio
-  //     //this.groupService.conversationLoadGroupDetail(this.loggedUser.uid, this.conversationWith, keySubscription);
-  //   }
-  // }
-
-  /**
-   * information detail group called of groupService.loadGroupDetail
-   */
-  // returnLoadGroupDetail = (snapshot) => {
-  //   console.log('<<<<<<<<<<< returnLoadGroupDetail >>>>>>>>>>>>>>>>>>', snapshot.val());
-  //   if (snapshot.val()) {
-  //     console.log('Dettaglio conersazione ::subscribeGroupDetails', snapshot.val());
-  //     const groupDetails = snapshot.val();
-  //     this.groupDetailAttributes = groupDetails.attributes;
-  //   }
-  // }
-
-
-  // /**
-  //  * individuo nella conversazione id e nome dell'utente con il quale sto conversando
-  //  * se il tipo di chat è DIRECT o SUPPORT GROUP: id = recipient/sender e fullname = recipientFullname/senderFullname
-  //  * altrimenti se è un semplice GRUPPO: id = recipient e fullname = recipientFullname
-  //  */
-  // setConversationWith() {
-  //   console.log('DETTAGLIO CONV - conversationSelected »»»»»»» : ', this.conversationSelected);
-  //   this.loadGroupDetail();
-  //   //this.loadTagsCanned();
-  //   if (this.conversationSelected) {
-  //     // GROUP CONVERSATION 
-  //     this.conversationType = TYPE_GROUP;
-  //     let conversationWith = this.conversationSelected.recipient;
-  //     let fullnameConversationWith = this.conversationSelected.recipientFullname;
-  //     // DIRECT CONVERSATION
-  //     if (this.conversationSelected.channelType === TYPE_DIRECT) {
-  //       this.conversationType = TYPE_DIRECT;
-  //       if (this.conversationSelected.recipient === this.loggedUser.uid) {
-  //         conversationWith = this.conversationSelected.sender;
-  //         fullnameConversationWith = this.conversationSelected.senderFullname;
-  //       } else {
-  //         conversationWith = this.conversationSelected.recipient;
-  //         fullnameConversationWith = this.conversationSelected.recipientFullname;
-  //       }
-  //     }
-  //     // SUPPORT GROUP CONVERSATION 
-  //     else if (this.conversationSelected.channelType === TYPE_GROUP && this.conversationSelected.recipient.startsWith(TYPE_SUPPORT_GROUP)) {
-  //       this.conversationType = TYPE_SUPPORT_GROUP;
-  //       console.log('DETTAGLIO CONV - SUPPORT GROUP CONVERSATION ------------>', this.conversationType)
-  //       console.log('DETTAGLIO CONV - this.conversationSelected ------------>', this.conversationSelected)
-  //       console.log('DETTAGLIO CONV - this.conversationSelected.attributes ------------>', this.conversationSelected.attributes)
-  //       console.log('DETTAGLIO CONV - this.conversationSelected.attributes.requester_id ------------>', this.conversationSelected.attributes.requester_id)
-  //       if (this.conversationSelected.attributes && this.conversationSelected.attributes.requester_id) {
-  //         conversationWith = this.conversationSelected.attributes.requester_id;
-  //         console.log('DETTAGLIO CONV - RECUPERO requester_id ------------>', conversationWith)
-  //       }
-  //       if (this.conversationSelected.senderAuthInfo && this.conversationSelected.senderAuthInfo.authVar && this.conversationSelected.senderAuthInfo.authVar.uid) {
-  //         // conversationWith = this.conversationSelected.senderAuthInfo.authVar.uid;
-  //         fullnameConversationWith = this.conversationSelected.recipientFullname;
-  //       }
-  //     }
-  //     this.conversationWith = conversationWith;
-  //     this.fullnameConversationWith = fullnameConversationWith
-  //     console.log('IMPOSTO this.conversationWith ------------>', this.conversationWith)
-  //   }
-
-  //   if (this.conversationWith) {
-  //     console.log('SOTTOSCRIZIONE:  ', this.conversationType, this.conversationWith);
-
-  //     if (this.conversationType != TYPE_GROUP) {
-  //       console.log('MI SOTTOSCRIVO SE E DIVERSO DA  ', TYPE_GROUP);
-  //       // subscribe data ultima connessione utente con cui si conversa
-  //       let key = 'lastConnectionDate-' + this.conversationWith;
-  //       if (!isInArray(key, this.subscriptions)) {
-  //         this.subscriptions.push(key);
-  //         this.events.subscribe(key, this.updateLastConnectionDate);
-  //       }
-  //       // subscribe status utente con il quale si conversa (online/offline)
-  //       key = 'statusUser:online-' + this.conversationWith;
-  //       if (!isInArray(key, this.subscriptions)) {
-  //         this.subscriptions.push(key);
-  //         this.events.subscribe(key, this.statusUserOnline);
-  //       }
-  //     }
-  //   }
-
-
-
-   
-  // }
-
-
- 
-
-  // private isContentScrollEnd(divScrollMe): boolean {
-  //   console.log('isContentScrollEnd');
-  //   if (divScrollMe.scrollTop === (divScrollMe.scrollHeight - divScrollMe.offsetHeight)) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
-  // //// CALLBACK SUBSCRIBTIONS ////
-  // onConversationEnabled: any = (status) => {
-  //   console.log('onConversationEnabled');
-  //   this.conversationEnabled = status;
-  // }
-
-
- 
-
-  // /**
-  //  * on subscribe stato utente con cui si conversa ONLINE
-  //  */
-  // statusUserOnline: any = (uid: string, status: boolean) => {
-  //   console.log('************** statusUserOnline', uid, this.conversationWith, status);
-  //   // if(uid !== this.conversationWith){return;}
-  //   if (status === true) {
-  //     console.log('************** ONLINE');
-  //     this.online = true;
-  //   } else {
-  //     console.log('************** OFFLINE');
-  //     this.online = false;
-  //   }
-  //   //this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
-  // }
-  // // /**
-  // //  * on subscribe stato utente con cui si conversa OFFLINE
-  // //  */
-  // // statusUserOffline: any = (uid) => {
-  // //   if(uid !== this.conversationWith){return;}
-  // //   this.online = false;
-  // //   this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
-  // //   console.log('************** OFFLINE');
-  // // }
-
-  // /**
-  //  * on subscribe data ultima connessione utente con cui si conversa
-  //  */
-  // updateLastConnectionDate: any = (uid: string, lastConnectionDate: string) => {
-  //   this.lastConnectionDate = lastConnectionDate;
-  //   // this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
-  //   console.log('************** updateLastConnectionDate', this.lastConnectionDate);
-  // }
-
-  
-
-
-  
-
-  // //// SYSTEM FUNCTIONS ////
-
-  // ionViewWillEnter() {
-  //   console.log('------------> ionViewWillEnter', this.conversationSelected);
-  //   this.initSubscriptions();
-  //   this.initialize();
-  //   // if(this.conversationSelected){
-  //   //   this.initSubscriptions();
-  //   //   this.initialize();
-  //   //   // console.log(">>>>>>>>>>>> ", this.navProxy.onSplitPaneChanged);
-  //   // } else {
-  //   //   this.openInfoConversation = false;
-  //   // }
-  // }
-  // /**
-  //  * quando ho renderizzato la pagina richiamo il metodo di inizialize
-  //  */
-
-  
-
-  // /**
-  //  * quando esco dalla pagina distruggo i subscribe
-  //  * e chiudo la finestra di info
-  //  */
-  // ionViewWillLeave() {
-  //   console.log('------------> ionViewWillLeave');
-  //   this.openInfoMessage = false;
-  //   this.openInfoConversation = false;
-  //   this.unsubescribeAll();
-  // }
-
-  // ngAfterViewInit() {
-  //   console.log('------------> ngAfterViewInit ');
-  //   //this.events.subscribe('conversationEnabled', this.onConversationEnabled);
-  // }
-
-
-  
-
-  // /**
-  //  * chiamato dal subscribe('listMessages:added')
-  //  * ogni volta che viene aggiunto un messaggio
-  //  * aggiorno la lista dei messaggi e mi posiziono sull'ultimo
-  //  * @param messages 
-  //  */
-  // updateMessageList(messages) {
-  //   // if(!this.updatingMessageList){
-  //   this.messages = messages;
-  //   console.log('updateMessageList **************', this.messages.length);
-  //   this.doScroll();
-  //   // }
-  //   // this.updatingMessageList = true;
-  // }
-
-
-  /**
-   */
-  // getFullNameUserForId(memberID){
-  //   const that = this;
-  //   console.log('getFullNameUserForId', this.conversationMembers);
-  //   const member = this.conversationMembers.find(item => item.uid === memberID);
-  //   if (!member) {
-  //     if ( memberID.trim() !== ''
-  //           && memberID.trim() !== SYSTEM
-  //           && memberID.trim() !== this.loggedUser.uid
-  //       ) {
-  //       this.userService.getUserDetail(memberID)
-  //       .then(function (snapshot) {
-  //         if(that.isTyping == false){
-  //           that.isTyping = true;
-  //         }
-          
-  //         console.log('getUserDetail snapshot: ', snapshot.val());
-  //         if (snapshot.val()) {
-  //           const user = snapshot.val();
-  //           const fullname = user.firstname + " " + user.lastname;
-  //           that.nameUserTypingNow = fullname;
-  //           let position = that.conversationMembers.findIndex(i => i.uid === memberID);
-  //           if (position == -1 ) {            
-  //             var member = { 'uid': memberID, 'fullname': fullname};
-  //             that.conversationMembers.push(member);
-  //           }
-  //           console.log('getUserDetail: nameUserTypingNow', that.nameUserTypingNow);
-  //         }
-  //       }).catch(function(error) {
-  //         console.log('getUserDetail error: ', error);
-  //       });
-        
-  //       // this.userService.getSenderDetail(this.conversationWith)
-  //       // .then(function (snapshot) {
-  //       //   if (snapshot.val()) {
-  //       //     console.log('::::getSenderDetail::::',snapshot.val() );
-  //       //   }
-  //       // });
-  //     }
-  //   } else {
-  //     this.isTyping = true;
-  //     this.nameUserTypingNow = member.fullname;
-  //   }
-  // }
-
-
-
-
-  //// START Scroll managemant functions ////
-  
-  
-
-  // //// END Scroll managemant functions ////
-
-
-  // // //// START FUNZIONI RICHIAMATE DA HTML ////
-  // // /** 
-  // //  * chiude il box di dx del info messaggio
-  // // */
-  // // onCloseInfoPage(){
-  // //   if(this.openInfoMessage){
-  // //     this.openInfoMessage = false;
-  // //   } else {
-  // //     this.onOpenCloseInfoConversation();
-  // //   }
-  // // }
-
-  // returnCloseInfoMessage() {
-  //   console.log('returnCloseInfoMessage');
-  //   this.openInfoMessage = false;
-  // }
-
-  // returnOpenInfoUser(member) {
-  //   this.memberSelected = member;
-  //   this.openInfoUser = true;
-  //   console.log('returnOpenInfoUser **************', this.openInfoUser);
-  // }
-  // returnCloseInfoUser() {
-  //   this.openInfoUser = false;
-  //   console.log('returnCloseInfoUser **************', this.openInfoUser);
-  // }
-
-  // returnOpenInfoAdvanced(advanced) {
-  //   console.log('returnOpenInfoAdvanced **************', advanced);
-  //   this.advancedAttributes = advanced;
-  //   this.openInfoAdvanced = true;
-  // }
-  // returnCloseInfoAdvanced() {
-  //   this.openInfoAdvanced = false;
-  //   this.advancedAttributes = [];
-  //   console.log('returnCloseInfoAdvanced **************', this.openInfoAdvanced);
-  // }
-
-
-
-  // /** 
-  //  * 
-  // */
- 
-
-  // /** */
-  // onInfoConversation() {
-  //   // ordino array x tempo decrescente
-  //   // cerco messaggi non miei
-  //   // prendo il primo
-  //   console.log('onInfoConversation');
-  //   let msgRicevuti: any;
-  //   let attributes: any[] = [];
-  //   try {
-  //     msgRicevuti = this.messages.find(item => item.sender !== this.loggedUser.uid);
-  //     if (msgRicevuti) {
-  //       attributes = msgRicevuti.attributes;
-  //     }
-  //     console.log('msgRicevuti::::: ', msgRicevuti);
-  //   } catch (err) {
-  //     console.log("DettaglioConversazionePage::onInfoConversation:error:", err)
-  //   }
-  //   //const msgRicevuti = this.messages.find(item => item.sender !== this.loggedUser.uid);
-  //   //console.log('onUidSelected::::: ', this.conversationWith,  this.openInfoConversation);
-  //   //this.events.publish('onOpenInfoConversation', this.openInfoConversation, this.conversationWith, this.channelType, attributes);
-  //   //this.events.publish('changeStatusUserSelected', (this.online, this.lastConnectionDate));
-  // }
-
-  /**
-   * Check if the user is the sender of the message.
-   */
-  // public isSender(message) {
-  //   console.log('isSender');
-  //   const currentUser = this.chatManager.getLoggedUser();
-  //   return this.conversationHandler.isSender(message, currentUser);
-  // }
-
-
-  
-
-
-  // /**
-  //  * 
-  //  * @param metadata 
-  //  */
-  // // updateMetadataMessage(metadata) {
-  // //   // recupero id nodo messaggio
-  // //   const key = metadata.src.substring(metadata.src.length - 16);
-  // //   const uid =  this.arrayLocalImmages[key];
-  // //   console.log("UPDATE MESSAGE: ",key, uid);
-  // //   this.conversationHandler.updateMetadataMessage(uid, metadata);
-  // //   delete this.arrayLocalImmages[key];
-  // // }
-  // /**
-  //  * purifico il messaggio
-  //  * e lo passo al metodo di invio
-  //  * @param messageString
-  //  */
-  // public controlOfMessage(messageString: string) {
-  //   console.log('controlOfMessage **************');
-  //   messageString = messageString.replace(/(\r\n|\n|\r)/gm, "");
-  //   if (messageString.trim() !== '') {
-  //     this.sendMessage(messageString, TYPE_MSG_TEXT);
-  //   }
-  //   this.messageString = '';
-  // }
-  // /**
-  //  * invocata dalla pressione del tasto invio sul campo di input messaggio
-  //  * se il messaggio non è vuoto lo passo al metodo di controllo
-  //  * @param event 
-  //  * @param messageString 
-  //  */
-  // pressedOnKeyboard(event, messageString) {
-  //   console.log('pressedOnKeyboard ************** event:: ', event);  
-  //   if (event.inputType == "insertLineBreak" && event.data == null) {
-  //     this.messageString = "";
-  //     return
-  //   }
-  //   else {
-  //     this.controlOfMessage(messageString);
-  //   }
-  // }
-  // /**
-  //  * metodo chiamato dall'html quando premo sul nome utente nell'header della pagina
-  //  * apro la pg di dettaglio user
-  //  * @param uidReciver 
-  //  */
-  // goToUserDetail(uidReciver: string) {
-  //   console.log('goToUserDetail::: ', this.navProxy.isOn, uidReciver);
-  //   this.navCtrl.push(ProfilePage, {
-  //     uidUser: uidReciver
-  //   });
-  // }
-  
-  
-
-  // // setUrlString(text, name): any {
-  // //   return name;
-  // //   // if(text) {
-  // //   //   return setUrlString(text, name);
-  // //   // } else {
-  // //   //   return name;
-  // //   // }
-  // // }
-
-
-  // /**
-  //  * 
-  //  * @param msg 
-  //  */
-  // showDetailMessage(msg) {
-  //   console.log('showDetailMessage', msg);
-  //   //this.presentPopover(msg);
-  // }
-  
-  // //// END FUNZIONI RICHIAMATE DA HTML ////
-
-
-
-
-
-
-  // //// START LOAD IMAGE ////
-  // /**
-  //  * 
-  //  * @param event 
-  //  */
-  // detectFiles(event) {
-  //   console.log('detectFiles');
-  //   if (event && event.target && event.target.files) {
-  //     this.selectedFiles = event.target.files;
-  //     this.fileChange(event);
-  //     console.log('event: ', event.target.files);
-  //   }
-  // }
-
-  // fileChange(event) {
-  //   console.log('fileChange');
-  //   const that = this;
-  //   if (event.target.files && event.target.files[0]) {
-  //     const nameImg = event.target.files[0].name;
-  //     const typeFile = event.target.files[0].type;
-  //     // const preview = document.querySelector('img');
-  //     // const file    = document.querySelector('input[type=file]').files[0];
-  //     const reader = new FileReader();
-  //     reader.addEventListener('load', function () {
-  //       that.isFileSelected = true;
-
-  //       if (typeFile.indexOf('image') !== -1) {
-  //         const file4Load = new Image;
-  //         // if (typeof reader.result == 'string' || reader.result instanceof String) {}
-  //         file4Load.src = reader.result.toString();
-  //         file4Load.title = nameImg;
-  //         file4Load.onload = function () {
-  //           console.log('that.file4Load: ', file4Load);
-  //           that.arrayLocalImmages.push(file4Load);
-  //           const file = that.selectedFiles.item(0);
-  //           const uid = file4Load.src.substring(file4Load.src.length - 16);
-  //           const metadata = {
-  //             'name': file.name,
-  //             'src': file4Load.src,
-  //             'width': file4Load.width,
-  //             'height': file4Load.height,
-  //             'type': typeFile,
-  //             'uid': uid
-  //           };
-  //           const type_msg = 'image';
-  //           // 1 - invio messaggio
-  //           that.addLocalMessage(metadata, type_msg);
-  //           // 2 - carico immagine
-  //           that.uploadSingle(metadata, type_msg);
-  //         };
-  //       } else if (typeFile.indexOf('application') !== -1) {
-  //         const type_msg = 'file';
-  //         const file = that.selectedFiles.item(0);
-  //         const metadata = {
-  //           'name': file.name,
-  //           'src': event.target.files[0].src,
-  //           'type': type_msg
-  //         };
-
-  //         // 1 - invio messaggio
-  //         that.addLocalMessage(metadata, type_msg);
-  //         // 2 - carico immagine
-  //         that.uploadSingle(metadata, type_msg);
-  //       }
-
-  //     }, false);
-  //     if (event.target.files[0]) {
-  //       reader.readAsDataURL(event.target.files[0]);
-  //       console.log('reader-result: ', event.target.result);
-  //     }
-  //   }
-  // }
-
-  // /**
-  //  * salvo un messaggio localmente nell'array dei msg
-  //  * @param metadata
-  //  */
-  // addLocalMessage(metadata, type_msg) {
-  //   const now: Date = new Date();
-  //   const timestamp = now.valueOf();
-  //   const language = document.documentElement.lang;
-  //   let textMessage = type_msg;
-  //   if (type_msg === 'image') {
-  //     textMessage = '';
-  //   }
-  //   const message = new MessageModel(
-  //     metadata.uid, // uid
-  //     language, // language
-  //     this.conversationWith, // recipient
-  //     this.conversationWithFullname, //'Support Group', // recipientFullname
-  //     this.loggedUser.uid, // sender
-  //     this.loggedUser.fullname, //'Ospite', // senderFullname
-  //     '', // status
-  //     metadata, // metadata
-  //     textMessage, // text
-  //     timestamp, // timestamp
-  //     '', // headerDate
-  //     type_msg, //TYPE_MSG_IMAGE,
-  //     '', //attributes
-  //     '', // channelType
-  //     true
-  //   );
-
-  //   // if(type_msg == 'file'){
-  //   //   message.text = metadata.src;
-  //   // }
-
-
-  //   //this.messages.push(message);
-  //   // message.metadata.uid = message.uid;
-  //   console.log('addLocalMessage: ', this.messages);
-  //   //this.isFileSelected = true;
-  //   this.doScroll();
-  // }
-
-  // /**
-  //  * 
-  //  * @param metadata 
-  //  */
-  // uploadSingle(metadata, type_msg) {
-  //   this.isFileSelected = false;
-  //   const that = this;
-  //   const file = this.selectedFiles.item(0);
-  //   console.log('Uploaded a file! ', file);
-  //   const currentUpload = new UploadModel(file);
-  //   let uploadTask = this.upSvc.pushUploadMessage(currentUpload)
-
-  //   // Register three observers:
-  //   // 1. 'state_changed' observer, called any time the state changes
-  //   // 2. Error observer, called on failure
-  //   // 3. Completion observer, called on successful completion
-  //   uploadTask.on('state_changed', function (snapshot) {
-  //     // Observe state change events such as progress, pause, and resume
-  //     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-  //     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //     console.log('Upload is ' + progress + '% done');
-  //   }, function (error) {
-  //     // Handle unsuccessful uploads
-  //     const errorCode = error.code;
-  //     const errorMessage = error.message;
-  //     console.log('error: ', errorCode, errorMessage);
-  //   }, function () {
-  //     // Handle successful uploads on complete
-  //     // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-  //     uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-  //       console.log('File available at', downloadURL);
-
-  //       metadata.src = downloadURL;
-  //       let type_message = TYPE_MSG_TEXT;
-  //       let message = 'File: ' + metadata.src;
-  //       if (metadata.type.startsWith('image')) {
-  //         type_message = TYPE_MSG_IMAGE;
-  //         message = 'Image: ' + metadata.src;
-  //       }
-  //       that.sendMessage(message, type_message, metadata);
-  //     });
-  //   });
-
-
-  //   // .then(function(snapshot) {
-  //   //   console.log('1 Uploaded a blob or file! ', snapshot);
-  //   //   // metadata.src = snapshot.downloadURL;
-  //   //   // that.sendMessage('', type_msg, metadata);
-  //   //   metadata.src = snapshot.downloadURL;
-  //   //   let type_message = TYPE_MSG_TEXT;
-  //   //   let message = 'File: ' + metadata.src;
-  //   //   if (metadata.type.startsWith('image')) {
-  //   //       type_message = TYPE_MSG_IMAGE;
-  //   //       message = 'Image: ' + metadata.src;
-  //   //   }
-  //   //   that.sendMessage(message, type_message, metadata);
-  //   // })
-  //   // .catch(function(error) {
-  //   //   // Handle Errors here.
-  //   //   const errorCode = error.code;
-  //   //   const errorMessage = error.message;
-  //   //   console.log('error: ', errorCode, errorMessage);
-  //   // });
-  //   console.log('reader-result: ', file);
-  // }
-  // /**
-  //  * 
-  //  * @param metadata 
-  //  */
-  // onSendImage(metadata) {
-  //   console.log('onSendImage::::: ', metadata);
-  //   this.sendMessage('', TYPE_MSG_IMAGE, metadata);
-  //   this.doScroll();
-  // }
-
-
-
-
-  // /**
-  //  * 
-  //  * @param str 
-  //  */
-  
-
-  // loadTagsCanned(strSearch){
-  //   // recupero tagsCanned dalla memoria 
-  //   const that = this;
-  //   console.log('projectId--->XXXX--->> ', this.conversationSelected);//attributes.projectId);
-  //   console.log('this.appConfig.getConfig().SERVER_BASE_URL--->> ', this.appConfig.getConfig().SERVER_BASE_URL);
-  //   if(!this.conversationSelected || !this.conversationSelected.attributes || !this.conversationSelected.attributes.projectId || !this.appConfig.getConfig().SERVER_BASE_URL){
-  //     return;
-  //   }
-  //   var projectId = this.conversationSelected.attributes.projectId;
-  //   var SERVER_BASE_URL = this.appConfig.getConfig().SERVER_BASE_URL;
-  //   //console.log('SERVER_BASE_URL---> ', SERVER_BASE_URL);//attributes.projectId);
-  //   // this.contactsService.getLeads(this.queryString, this.pageNo).subscribe((leads_object: any) => {
-  //   console.log('this.tagsCanned.length---> ', this.tagsCanned.length);//attributes.projectId);
-  //   //if(this.tagsCanned.length <= 0 ){
-  //   this.tagsCanned = [];
-  //   this.cannedResponsesServiceProvider.getCannedResponses(SERVER_BASE_URL, projectId)
-  //     .toPromise()
-  //     .then(data => {
-  //       console.log('----------------------------------> getCannedResponses:');
-  //       console.log(data);
-  //       that.tagsCanned = data;
-  //       that.showTagsCanned(strSearch);
-  //     }).catch(err => {
-  //       console.log('error', err);
-  //     });
-  //   // } else {
-  //   //   that.showTagsCanned(strSearch);
-  //   // }
-  // }
-
-  // /** */
-  // showTagsCanned(strSearch){
-  //   const that = this;
-  //     that.tagsCannedFilter = [];
-  //     var tagsCannedClone = JSON.parse(JSON.stringify(that.tagsCanned));
-  //     //console.log("that.contacts lenght:: ", strSearch);
-  //     that.tagsCannedFilter = that.filterItems(tagsCannedClone, strSearch);
-  //     that.tagsCannedFilter.sort(compareValues('title', 'asc'));
-  //     var strReplace = strSearch;
-  //     if(strSearch.length > 0){
-  //       strReplace = "<b>"+strSearch+"</b>";
-  //     }
-  //     for(var i=0; i < that.tagsCannedFilter.length; i++) {
-  //       const textCanned = "<div class='cannedText'>"+that.replacePlaceholderInCanned(that.tagsCannedFilter[i].text)+"</div>";
-  //       that.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>"+that.tagsCannedFilter[i].title.toString().replace(strSearch,strReplace.trim())+"</div>"+textCanned+'</div>';
-  //     }
-      
-  // }
-
-
-
-  // /**
-  //  * filtro array contatti per parola passata 
-  //  * filtro sul campo fullname
-  //  * @param items 
-  //  * @param searchTerm 
-  //  */
-  // filterItems(items,searchTerm){
-  //   //console.log("filterItems::: ",searchTerm);
-  //   return items.filter((item) => {
-  //     //console.log("filterItems::: ", item.title.toString().toLowerCase());
-  //     return item.title.toString().toLowerCase().indexOf(searchTerm.toString().toLowerCase()) > -1;
-  //   });     
-  // }
-
-  // /**
-  //  * 
-  //  */
-  // replaceTagInMessage(canned){
-  //   const that = this;
-  //   this.tagsCannedFilter = [];
-  //   console.log("canned::: ",canned.text);
-  //   // // prendo val input
-  //   var text_area = this.messageTextArea['_elementRef'].nativeElement.getElementsByTagName('textarea')[0];
-  //   console.log("messageTextArea::: ",text_area.value);
-    
-  //   // replace text
-  //   var pos = text_area.value.lastIndexOf("/");
-  //   var strSearch = text_area.value.substr(pos);
-  //   var strTEMP = text_area.value.replace(strSearch,canned.text);
-  //   console.log("strSearch::: ",strSearch);
-  //   console.log("this.conversationSelected.attributes:::::: ",this.conversationSelected.attributes);
-  //   strTEMP = this.replacePlaceholderInCanned(strTEMP);
-  //   console.log("strSearch::: ",strSearch);
-  //   text_area.value = '';
-  //   that.messageString = strTEMP;
-  //   //text_area.value = strTEMP;
-  //   setTimeout(() => {
-  //     text_area.focus();
-  //     that.resizeTextArea();
-  //   },200);
-  // }
-
-  // replacePlaceholderInCanned(str){
-  //   if (this.groupDetailAttributes && this.groupDetailAttributes.userEmail) {
-  //     str = str.replace('$email',this.groupDetailAttributes.userEmail);
-  //   }
-  //   if (this.groupDetailAttributes && this.groupDetailAttributes.website) {
-  //     str = str.replace('$website',this.groupDetailAttributes.website);
-  //   }
-  //   if (this.groupDetailAttributes && this.groupDetailAttributes.userFullname) {
-  //     str = str.replace('$recipient_name',this.groupDetailAttributes.userFullname);
-  //   }
-  //   if (this.loggedUser && this.loggedUser.fullname) {
-  //     str = str.replace('$agent_name',this.loggedUser.fullname);
-  //   }
-  //   return str;
-  // }
-
-
-  
-  // insertAtCursor(myField, myValue) {
-  //   console.log('CANNED-RES-CREATE.COMP - insertAtCursor - myValue ', myValue );
-     
-  //   // if (this.addWhiteSpaceBefore === true) {
-  //   //   myValue = ' ' + myValue;
-  //   //   console.log('CANNED-RES-CREATE.COMP - GET TEXT AREA - QUI ENTRO myValue ', myValue );
-  //   // }
-   
-  //   //IE support
-  //   if (myField.selection) {
-  //     myField.focus();
-  //     let sel = myField.selection.createRange();
-  //     sel.text = myValue;
-  //     // this.cannedResponseMessage = sel.text;
-  //   }
-  //   //MOZILLA and others
-  //   else if (myField.selectionStart || myField.selectionStart == '0') {
-  //     var startPos = myField.selectionStart;
-  //     console.log('CANNED-RES-CREATE.COMP - insertAtCursor - startPos ', startPos);
-      
-  //     var endPos = myField.selectionEnd;
-  //     console.log('CANNED-RES-CREATE.COMP - insertAtCursor - endPos ', endPos);
-      
-  //     myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
-  
-  //     // place cursor at end of text in text input element
-  //     //myField.focus();
-  //     var val = myField.value; //store the value of the element
-  //     myField.value = ''; //clear the value of the element
-  //     myField.value = val + ' '; //set that value back. 
-  
-  //     //this.cannedResponseMessage = myField.value;
-  //     //this.texareaIsEmpty = false;
-  //     /// myField.select();
-  //   } else {
-  //     myField.value += myValue;
-  //     //this.cannedResponseMessage = myField.value;
-  //   }
-  // }
-  
-  // onResizeWindow = (type: string) => {
-  //   console.log('resize_', type);
-  //   if(type === 'mobile' && !this.IDConv && !this.conversationSelected) {
-  //     this.router.navigateByUrl('/conversations-list');
-  //   } else {
-  //   }
-  // }
-
-  // @HostListener('window:resize', ['$event'])
-  // onResize(event: any) {
-  //   const newInnerWidth = event.target.innerWidth;
-  //   console.log("newInnerWidth ", newInnerWidth);
-  //   if (newInnerWidth < 768) {
-  //     console.log("sparisci!!!!!", newInnerWidth)
-  //     this.openInfoMessage = false;
-  //     this.openInfoConversation = false;
-  //   }
-  // }

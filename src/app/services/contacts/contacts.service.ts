@@ -78,6 +78,7 @@ export class ContactsService {
    */
   public loadContactDetail(token: string, uid: string) {
     this.contacts = [];
+    console.log('loadContactDetail:: uid ', uid);
     const urlRemoreContactDetail = this.urlRemoteContacts + '/' + uid;
     if (urlRemoreContactDetail.startsWith('http') && token) {
       const that = this;

@@ -723,7 +723,7 @@ export function redirect2(router, IDConv, conversationSelected) {
 
 /** */
 export function  checkPlatformIsMobile() {
-  // console.log('checkPlatformIsMobile:: ', window.innerWidth);
+  console.log('checkPlatformIsMobile:: ', window.innerWidth);
   if (window.innerWidth < 768) {
     return true;
   }

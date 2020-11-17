@@ -55,30 +55,46 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
   private setSubscriptions() {
     this.presenceService.userIsOnline(this.idUser);
     this.presenceService.lastOnlineForUser(this.idUser);
-    let keySubscription = '';
+    let subscribtionKey = '';
+    let subscribtion: any;
 
     const that = this;
-    const subscribeBSIsOnline =  this.presenceService.BSIsOnline.subscribe((data: any) => {
-      console.log('***** BSIsOnline *****', data);
-      if (data) {
-        const userId = data.uid;
-        const isOnline = data.isOnline;
-        if (this.idUser === userId) {
-          that.userIsOnLine(userId, isOnline);
-        }
-      }
-    });
 
-    const subscribeBSLastOnline =  this.presenceService.BSLastOnline.subscribe((data: any) => {
-      console.log('***** BSLastOnline *****', data);
-      if (data) {
-        const userId = data.uid;
-        const timestamp = data.lastOnline;
-        if (this.idUser === userId) {
-          that.userLastConnection(userId, timestamp);
+    subscribtionKey = 'BSIsOnline';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      subscribtion =  this.presenceService.BSIsOnline.subscribe((data: any) => {
+        console.log('***** BSIsOnline *****', data);
+        if (data) {
+          const userId = data.uid;
+          const isOnline = data.isOnline;
+          if (this.idUser === userId) {
+            that.userIsOnLine(userId, isOnline);
+          }
         }
-      }
-    });
+      });
+      const subscribe = {key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
+    }
+
+
+    subscribtionKey = 'BSLastOnline';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      subscribtion =  this.presenceService.BSLastOnline.subscribe((data: any) => {
+        console.log('***** BSLastOnline *****', data);
+        if (data) {
+          const userId = data.uid;
+          const timestamp = data.lastOnline;
+          if (this.idUser === userId) {
+            that.userLastConnection(userId, timestamp);
+          }
+        }
+      });
+      const subscribe = {key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
+    }
+
 
     // keySubscription = 'is-online-' + this.idUser;
     // if (!isInArray(keySubscription, this.subscriptions)) {
@@ -127,9 +143,8 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
   /** */
   private unsubescribeAll() {
     console.log('unsubescribeAll: ', this.subscriptions);
-    this.subscriptions.forEach((subscription: any) => {
-      console.log('unsubescribe: ', subscription);
-      // this.events.unsubscribe(subscription, null);
+    this.subscriptions.forEach(subscription => {
+      subscription.value.unsubscribe(); // vedere come fare l'unsubscribe!!!!
     });
     this.subscriptions = [];
   }

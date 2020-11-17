@@ -18,7 +18,7 @@
         <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{stripTags(message.text)}}contentOther</div>
       </ng-template>
       <ng-template #contentNewTab>
-        <div class="message-content message-content-text" [innerHTML]="message.text"></div>
+        <div class="message-content message-content-text" [innerHTML]="message.text | linkify"></div>
       </ng-template>
     </div>
     <div class="timestamp-message right">{{message.timestamp | date: 'H:mm'}}</div>

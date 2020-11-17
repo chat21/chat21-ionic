@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+
+// models
+import { UserModel } from 'src/app/models/user';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +22,9 @@ export abstract class AuthService {
 
   // functions
   abstract initialize(): void;
-  abstract getUser(): any;
+  abstract getCurrentUser(): UserModel;
+  // tslint:disable-next-line: max-line-length
+  // passare usermodel e completare il dettaglio dai parametri passati da tiledesk, quindi eliminare tutte la chiamate alla classe di service current-user!!! // oppure  richiamare il servizio x completare il dettaglio prima di far scattare l'evento di connect
   abstract getToken(): string;
   abstract getTiledeskToken(): string;
   abstract signInWithEmailAndPassword(email: string, password: string): void;

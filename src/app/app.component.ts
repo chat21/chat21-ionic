@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 // services
 import { AppConfigProvider } from './services/app-config';
 // import { UserService } from './services/user.service';
-import { CurrentUserService } from './services/current-user/current-user.service';
+// import { CurrentUserService } from './services/current-user/current-user.service';
 import { EventsService } from './services/events-service';
 import { AuthService } from './services/abstract/auth.service';
 import { PresenceService } from './services/abstract/presence.service';
@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
     public alertController: AlertController,
     public navCtrl: NavController,
     // public userService: UserService,
-    public currentUserService: CurrentUserService,
+    // public currentUserService: CurrentUserService,
     public modalController: ModalController,
     public authService: AuthService,
     public presenceService: PresenceService,
@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
       this.authService.initialize();
-      this.currentUserService.initialize();
+      // this.currentUserService.initialize();
       this.chatManager.initialize();
       this.presenceService.initialize();
       this.typingService.initialize();
@@ -192,14 +192,14 @@ export class AppComponent implements OnInit {
     if (checkPlatformIsMobile()) {
       this.platformIs = PLATFORM_MOBILE;
       console.log('PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE);
-      this.router.navigateByUrl(pageUrl);
+      // this.router.navigateByUrl(pageUrl);
       // this.navService.setRoot(ConversationListPage, {});
     } else {
-      console.log('PLATFORM_DESKTOP', this.navService, pageUrl);
+      console.log('PLATFORM_DESKTOP ', this.navService, pageUrl);
       this.platformIs = PLATFORM_DESKTOP;
       this.navService.setRoot(ConversationListPage, {});
       console.log('checkPlatform navigateByUrl', pageUrl);
-      this.router.navigateByUrl(pageUrl);
+      // this.router.navigateByUrl(pageUrl);
 
       // const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
       // createExternalSidebar(this.renderer, DASHBOARD_URL);
@@ -255,12 +255,12 @@ export class AppComponent implements OnInit {
     });
 
 
-    this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
-      console.log('***** app comp BScurrentUser *****', currentUser);
-      if (currentUser) {
-        that.chatManager.setCurrentUser(currentUser);
-      }
-    });
+    // this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
+    //   console.log('***** app comp BScurrentUser *****', currentUser);
+    //   if (currentUser) {
+    //     that.chatManager.setCurrentUser(currentUser);
+    //   }
+    // });
 
 
     // this.events.subscribe('go-off-line', this.goOffLine);
@@ -288,8 +288,6 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname);
   }
 
-  
-    
 
 
   private async presentModal(): Promise<any> {
@@ -337,16 +335,20 @@ export class AppComponent implements OnInit {
     clearTimeout(this.timeModalLogin);
     console.log('************** goOnLine', user);
     const tiledeskToken = this.authService.getTiledeskToken();
+    const currentUser = this.authService.getCurrentUser();
     this.chatManager.setTiledeskToken(tiledeskToken);
-    this.currentUserService.detailCurrentUser(tiledeskToken);
+    this.chatManager.setCurrentUser(currentUser);
     this.presenceService.setPresence(user.uid);
     this.checkPlatform();
     try {
       console.log('************** closeModal', this.authModal);
-      this.closeModal();
+      if (this.authModal) {
+        this.closeModal();
+      }
     } catch (err) {
       console.error('-> error:', err);
     }
+    this.chatManager.startApp();
   }
 
   /**
@@ -354,11 +356,11 @@ export class AppComponent implements OnInit {
    */
   goOffLine = () => {
     console.log('************** goOffLine:', this.authModal);
-
     this.chatManager.setTiledeskToken(null);
+    this.chatManager.setCurrentUser(null);
     this.chatManager.goOffLine();
-    const that = this;
 
+    const that = this;
     clearTimeout(this.timeModalLogin);
     this.timeModalLogin = setTimeout( () => {
       this.authModal = this.presentModal();

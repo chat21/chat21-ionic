@@ -10,26 +10,40 @@ import 'firebase/database';
 import 'firebase/auth';
 
 // services
-// import { EventsService } from '../events-service';
 import { AuthService } from '../abstract/auth.service';
+import { ImageRepoService } from '../abstract/image-repo.service';
+import { FirebaseImageRepoService } from './firebase-image-repo';
+
+// models
+import { UserModel } from 'src/app/models/user';
+
+// utils
+import {
+  avatarPlaceholder,
+  getColorBck,
+} from 'src/app/utils/utils-user';
 
 @Injectable({ providedIn: 'root' })
 
 export class FirebaseAuthService extends AuthService {
 
+  // BehaviorSubject
   BSAuthStateChanged: BehaviorSubject<any>;
   BSSignOut: BehaviorSubject<any>;
   // firebaseSignInWithCustomToken: BehaviorSubject<any>;
 
-  persistence: string;
-  SERVER_BASE_URL: string;
+  // piblic
+  public persistence: string;
+  public SERVER_BASE_URL: string;
 
-  public tiledeskToken: string;
-  public firebaseToken: string;
-  public user: any;
-
+  // private
   private URL_TILEDESK_SIGNIN: string;
   private URL_TILEDESK_CREATE_CUSTOM_TOKEN: string;
+  private imageRepo: ImageRepoService = new FirebaseImageRepoService();
+
+  private tiledeskToken: string;
+  private firebaseToken: string;
+  private currentUser: UserModel;
 
   constructor(
     // private events: EventsService,
@@ -56,6 +70,7 @@ export class FirebaseAuthService extends AuthService {
   checkIsAuth() {
     console.log(' ---------------- AuthService checkIsAuth ---------------- ');
     this.tiledeskToken = localStorage.getItem('tiledeskToken');
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (this.tiledeskToken) {
       console.log(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ');
       this.createCustomToken();
@@ -77,8 +92,9 @@ export class FirebaseAuthService extends AuthService {
   /**
    *
    */
-  getUser(): firebase.User {
-    return firebase.auth().currentUser;
+  getCurrentUser(): UserModel {
+    // return firebase.auth().currentUser;
+    return this.currentUser;
   }
 
 
@@ -155,7 +171,7 @@ export class FirebaseAuthService extends AuthService {
     .then( async () => {
       return firebase.auth().signInWithCustomToken(token)
       .then( async (response) => {
-        that.user = response.user;
+        // that.currentUser = response.user;
         // that.firebaseSignInWithCustomToken.next(response);
       })
       .catch((error) => {
@@ -271,12 +287,47 @@ export class FirebaseAuthService extends AuthService {
       .subscribe(data => {
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
+          this.createCompleteUser(data['user']);
           localStorage.setItem('tiledeskToken', that.tiledeskToken);
           that.createCustomToken();
         }
       }, error => {
         console.log(error);
       });
+  }
+
+  /**
+   * createCompleteUser
+   * @param user
+   */
+  private createCompleteUser(user: any) {
+    const member = new UserModel(user._id);
+    try {
+      const uid = user._id;
+      const firstname = user.firstname ? user.firstname : '';
+      const lastname = user.lastname ? user.lastname : '';
+      const email = user.email ? user.email : '';
+      const fullname = ( firstname + ' ' + lastname ).trim();
+      const avatar = avatarPlaceholder(fullname);
+      const color = getColorBck(fullname);
+      const imageurl = this.imageRepo.getImageThumb(uid);
+
+      member.uid = uid;
+      member.email = email;
+      member.firstname = firstname;
+      member.lastname = lastname;
+      member.fullname = fullname;
+      member.imageurl = imageurl;
+      member.avatar = avatar;
+      member.color = color;
+      console.log('createCompleteUser: ', member);
+    } catch (err) {
+      console.log('createCompleteUser error:' + err);
+    }
+    this.currentUser = member;
+    // salvo nel local storage e sollevo l'evento
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+    // this.BScurrentUser.next(this.currentUser);
   }
 
   /**

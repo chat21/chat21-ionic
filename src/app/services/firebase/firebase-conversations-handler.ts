@@ -28,6 +28,7 @@ import { FirebaseImageRepoService } from './firebase-image-repo';
 export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
     // BehaviorSubject
+    BSConversationDetail: BehaviorSubject<ConversationModel>;
     readAllMessages: BehaviorSubject<string>;
     conversationsAdded: BehaviorSubject<ConversationModel[]>;
     conversationsChanged: BehaviorSubject<ConversationModel[]>;
@@ -59,9 +60,11 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * inizializzo conversations handler
      */
     initialize(
+        tenant: string,
         userId: string,
         translationMap: Map<string, string>
         ) {
+        this.tenant = tenant;
         this.loggedUserId = userId;
         this.translationMap = translationMap;
         this.conversations = [];
@@ -114,7 +117,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * @returns true if the conversation is waiting to be closed, false otherwise
      */
     getClosingConversation(conversationId: string) {
-    return this.isConversationClosingMap[conversationId];
+        return this.isConversationClosingMap[conversationId];
     }
 
     /**
@@ -135,6 +138,22 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     }
 
 
+    public getConversationDetail(tenant: string, loggedUserUid: string, conversationId: string) {
+        const conversationSelected = this.conversations.find(item => item.uid === conversationId);
+        console.log('>>>>>>>>>>>>>> getConversationDetail *****: ', conversationSelected);
+        if (conversationSelected) {
+            this.BSConversationDetail.next(conversationSelected);
+        } else {
+            const urlNodeFirebase = '/apps/' + tenant + '/users/' + loggedUserUid + '/conversations/' + conversationId;
+            console.log('urlNodeFirebase conversationDetail *****', urlNodeFirebase);
+            const firebaseMessages = firebase.database().ref(urlNodeFirebase);
+            firebaseMessages.on('value', (childSnapshot) => {
+                console.log('>>>>>>>>>>>>>> urlNodeFirebase conversationDetail *****: ', childSnapshot.val());
+                const conversation: ConversationModel = childSnapshot.val();
+                this.BSConversationDetail.next(conversation);
+            });
+        }
+    }
     /**
      * dispose reference di conversations
      */
@@ -172,6 +191,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * @param childSnapshot
      */
     private conversationGenerate(childSnapshot: any): boolean {
+        console.log('conversationGenerate: ', childSnapshot.val());
         const childData: ConversationModel = childSnapshot.val();
         childData.uid = childSnapshot.key;
         const conversation = this.completeConversation(childData);

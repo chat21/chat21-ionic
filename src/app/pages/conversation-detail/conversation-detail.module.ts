@@ -31,7 +31,7 @@ import { InfoGroupComponent } from 'src/app/components/conversation-info/info-gr
 
 import { SharedModule } from 'src/app/shared/shared.module';
 // import { SharedConversationInfoModule } from 'src/app/shared/shared-conversation-info.module';
-
+import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 
 @NgModule({
   imports: [
@@ -46,7 +46,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
         deps: [HttpClient]
       },
     }),
-    SharedModule
+    SharedModule,
+    NgxLinkifyjsModule
   ],
   entryComponents: [MessageTextAreaComponent],
   declarations: [

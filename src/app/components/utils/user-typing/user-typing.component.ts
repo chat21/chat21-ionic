@@ -37,7 +37,7 @@ export class UserTypingComponent implements OnInit, OnDestroy {
   /** */
   ngOnDestroy() {
     console.log('UserTypingComponent - ngOnDestroy');
-    this.unsubescribeAll();
+    // this.unsubescribeAll();
   }
 
   /** */
@@ -52,17 +52,19 @@ export class UserTypingComponent implements OnInit, OnDestroy {
   /** */
   private setSubscriptions() {
     const that = this;
-    const subscribeBSIsTyping =  this.typingService.BSIsTyping.subscribe((data: any) => {
-      console.log('***** BSIsTyping *****', data);
-      if (data) {
-        const isTypingUid = data.uid;
-        if (this.idConversation === isTypingUid) {
-          that.subscribeTypings(data);
+    const conversationSelected = this.subscriptions.find(item => item.key === this.idConversation);
+    if (!conversationSelected) {
+      const subscribeBSIsTyping =  this.typingService.BSIsTyping.subscribe((data: any) => {
+        console.log('***** BSIsTyping *****', data);
+        if (data) {
+          const isTypingUid = data.uid;
+          if (this.idConversation === isTypingUid) {
+            that.subscribeTypings(data);
+          }
         }
-      }
-    });
-    if (this.subscriptions.indexOf(subscribeBSIsTyping) === -1 ) {
-      this.subscriptions.push(subscribeBSIsTyping);
+      });
+      const subscribe = {key: this.idConversation, value: subscribeBSIsTyping };
+      this.subscriptions.push(subscribe);
     }
   }
 
@@ -75,7 +77,7 @@ export class UserTypingComponent implements OnInit, OnDestroy {
       if (data.nameUserTypingNow) {
         this.nameUserTypingNow = data.nameUserTypingNow;
       }
-      console.log('subscribeTypings data:', data);
+      console.log('subscribeTypings data:', data.uid);
       const userTyping = this.membersConversation.includes(key);
       if ( !userTyping ) {
         this.isTyping = true;
@@ -94,7 +96,7 @@ export class UserTypingComponent implements OnInit, OnDestroy {
 
   /** */
   private unsubescribeAll() {
-    console.log('unsubescribeAll: ', this.subscriptions);
+    console.log('UserTypingComponent unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach((subscription: any) => {
       console.log('unsubescribe: ', subscription);
       subscription.unsubescribe();

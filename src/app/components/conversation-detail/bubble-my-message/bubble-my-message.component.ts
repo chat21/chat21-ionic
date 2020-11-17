@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MessageModel } from 'src/app/models/message';
+
+
+
 // utils
 import {
   popupUrl,
@@ -22,6 +25,7 @@ import {
   templateUrl: './bubble-my-message.component.html',
   styleUrls: ['./bubble-my-message.component.scss'],
 })
+
 export class BubbleMyMessageComponent implements OnInit {
   @Input() message: MessageModel;
   @Input() isFirstMessage = true;

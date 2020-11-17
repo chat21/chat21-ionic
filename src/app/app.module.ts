@@ -10,6 +10,7 @@ import {TranslateLoader, TranslateModule, TranslatePipe} from '@ngx-translate/co
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 
 // COMPONENTS
 import { AppComponent } from './app.component';
@@ -139,6 +140,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     }),
     ScrollbarThemeModule,
     SharedModule,
+    NgxLinkifyjsModule.forRoot()
     // SharedConversationInfoModule
     // LinkyModule,
     // IonicStorageModule.forRoot({

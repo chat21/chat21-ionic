@@ -1,5 +1,7 @@
-<ion-content [ngSwitch]="channelType" [style.display]="openInfoConversation ? 'block' : 'none'">
 
+
+<ion-content [ngSwitch]="channelType" [style.display]="openInfoConversation ? 'block' : 'none'">
+  
   <app-info-direct 
     *ngSwitchCase="'direct'"
     [member] = member

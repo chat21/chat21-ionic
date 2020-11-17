@@ -11,6 +11,7 @@ import { TypingService } from '../abstract/typing.service';
 
 export class TypingModel {
   constructor(
+      public uid: string,
       public timestamp: any,
       public message: string,
       public name: string
@@ -56,7 +57,7 @@ export class FirebaseTypingService extends TypingService {
     ref.on('child_changed', (childSnapshot) => {
       const precence: TypingModel = childSnapshot.val();
       console.log('urlTyping: child_changed ', childSnapshot.val());
-      this.BSIsTyping.next({uid: idConversation, nameUserTypingNow: precence.name});
+      this.BSIsTyping.next({uid: idConversation, uidUserTypingNow: precence.uid, nameUserTypingNow: precence.name});
     });
   }
 
@@ -68,7 +69,7 @@ export class FirebaseTypingService extends TypingService {
       const urlTyping = this.urlNodeTypings + idConversation + '/' + idCurrentUser + '/user';
       console.log('setWritingMessages:', urlTyping, userFullname);
       const timestampData =  firebase.database.ServerValue.TIMESTAMP;
-      const precence = new TypingModel(timestampData, message, userFullname);
+      const precence = new TypingModel(idCurrentUser, timestampData, message, userFullname);
       firebase.database().ref(urlTyping).set(precence, ( error ) => {
         if (error) {
           console.log('ERRORE', error);
