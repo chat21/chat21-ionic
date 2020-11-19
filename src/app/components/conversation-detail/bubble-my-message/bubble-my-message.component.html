@@ -20,7 +20,7 @@
         <div style="text-decoration: underline; padding:8px; cursor: pointer;" (click)="popupUrl(message.text,'windowName')">{{stripTags(message.text)}}</div>
       </ng-template>
       <ng-template #contentNewTab>
-        <div class="message-content message-content-text" [innerHTML]="message.text | linkify"></div>
+        <div class="message-content message-content-text" [innerHTML]="message.text"></div>
       </ng-template>
     </div>
 

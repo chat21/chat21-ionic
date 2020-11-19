@@ -281,7 +281,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         }
         // bonifico messaggio da url
         if (msg.type === 'text') {
-            msg.text = htmlEntities(msg.text);
+            // msg.text = htmlEntities(msg.text);
         }
         // verifico che il sender è il logged user
         msg.isSender = this.isSender(msg.sender, this.loggedUser.uid);

@@ -25,6 +25,11 @@
 .message-my {
     width: 100%;
     margin-top: 4px;
+    .message-content.message-content-text{
+        color: var(--white)!important;
+    }
+        
+  
     .bobble-message {
         background-color: var(--bobble-blue);
         color: white;

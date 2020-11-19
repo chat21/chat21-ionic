@@ -4,8 +4,15 @@
     <ion-col col-auto>
       
       <div class="buttons-left">
-        <ion-button class="attach-button" ion-button fill="clear" (click)="controlOfMessage(messageString)">
+        <!-- <ion-button class="attach-button" ion-button fill="clear" (click)="controlOfMessage(messageString)">
           <ion-icon slot="icon-only" name="attach"></ion-icon>
+        </ion-button> -->
+        <ion-button class="attach-button" ion-button fill="clear">
+          <!-- <input type="file" accept="image/*" capture="camera" (change)="onFileSelectedMobile($event)" id="fileInput"/> -->
+          <input type="file" accept="image/*" multiple capture="camera" (change)="onFileSelected($event)" id="fileInput"/>
+          <label for="fileInput" icon-only ion-button>
+            <ion-icon slot="icon-only" name="attach"></ion-icon>
+          </label>
         </ion-button>
       </div>
 

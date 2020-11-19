@@ -57,6 +57,10 @@ const routes: Routes = [
     path: 'profile-info',
     loadChildren: () => import('./pages/profile-info/profile-info.module').then( m => m.ProfileInfoPageModule)
   },
+  {
+    path: 'loader-preview',
+    loadChildren: () => import('./pages/loader-preview/loader-preview.module').then( m => m.LoaderPreviewPageModule)
+  },
 
 
   // {

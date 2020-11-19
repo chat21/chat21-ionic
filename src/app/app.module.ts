@@ -11,6 +11,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
+import { Chooser } from '@ionic-native/chooser/ngx';
 
 // COMPONENTS
 import { AppComponent } from './app.component';
@@ -41,6 +42,7 @@ import { FirebaseConversationHandlerBuilderService } from './services/firebase/f
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
 import { ConversationDetailPageModule } from './pages/conversation-detail/conversation-detail.module';
 import {LoginPageModule} from './pages/authentication/login/login.module';
+import {LoaderPreviewPageModule} from './pages/loader-preview/loader-preview.module';
 
 // UTILS
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
@@ -140,15 +142,8 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     }),
     ScrollbarThemeModule,
     SharedModule,
-    NgxLinkifyjsModule.forRoot()
-    // SharedConversationInfoModule
-    // LinkyModule,
-    // IonicStorageModule.forRoot({
-    //   name: "tilechat",
-    //   storeName: 'settings',
-    //   driverOrder: ['indexeddb','sqlite', 'websql', 'indexeddb', 'localstorage']
-    // })
-    // ConversationListTestPageModule
+    NgxLinkifyjsModule.forRoot(),
+    LoaderPreviewPageModule
   ],
   bootstrap: [AppComponent],
 
@@ -195,7 +190,8 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     Keyboard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     EventsService,
-    DatabaseProvider
+    DatabaseProvider,
+    Chooser
   ]
 })
 export class AppModule {}

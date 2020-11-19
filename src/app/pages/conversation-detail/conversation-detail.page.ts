@@ -91,7 +91,7 @@ import {
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { FirebaseConversationHandler } from 'src/app/services/firebase/firebase-conversation-handler';
+import {NgxLinkifyjsService, Link, LinkType, NgxLinkifyOptions} from 'ngx-linkifyjs';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -150,6 +150,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   isFirstMessage = isFirstMessage;
   messageType = messageType;
 
+
+  private linkifyOptions: NgxLinkifyOptions = {
+    className: 'linkify',
+    target : {
+      url : '_blank'
+    }
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -173,7 +181,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
     // public groupService: GroupService
     public contactsService: ContactsService,
-    public conversationHandlerBuilderService: ConversationHandlerBuilderService
+    public conversationHandlerBuilderService: ConversationHandlerBuilderService,
+    public linkifyService: NgxLinkifyjsService
   ) {
   }
 
@@ -217,7 +226,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
-  
+
   /** */
   ionViewDidEnter() {
   }
@@ -264,6 +273,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.online = false;
     this.lastConnectionDate = '';
 
+    // init handler vengono prima delle sottoscrizioni!
     this.initConversationsHandler();
     this.initConversationHandler();
     this.initSubscriptions();
@@ -396,14 +406,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    */
   selectInfoContentTypeComponent() {
     console.log('selectInfoContentTypeComponent: ', this.conversationWith);
-    this.channelType = setChannelType(this.conversationWith);
-    if (this.channelType === TYPE_DIRECT) {
-      this.setInfoDirect();
-    } else if (this.channelType === TYPE_GROUP) {
-      this.setInfoGroup();
-    } else if (this.channelType === TYPE_SUPPORT_GROUP) {
-      this.urlConversationSupportGroup = '';
-      this.setInfoSupportGroup();
+    if (this.conversationWith) {
+      this.channelType = setChannelType(this.conversationWith);
+      if (this.channelType === TYPE_DIRECT) {
+        this.setInfoDirect();
+      } else if (this.channelType === TYPE_GROUP) {
+        this.setInfoGroup();
+      } else if (this.channelType === TYPE_SUPPORT_GROUP) {
+        this.urlConversationSupportGroup = '';
+        this.setInfoSupportGroup();
+      }
     }
   }
 
@@ -655,11 +667,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   logScrollEnd(event: any) {
     // console.log('logScrollEnd : When Scroll Ends', event);
-    this.detectBottom();
   }
 
 
-  
 
 
   /**
@@ -667,6 +677,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    */
   async detectBottom() {
     const scrollElement = await this.ionContentChatArea.getScrollElement();
+    console.log('detectBottom');
     // console.log('scrollElement', scrollElement);
     // console.log('scrollHeight', scrollElement.scrollHeight);
     // console.log('clientHeight', scrollElement.clientHeight);
@@ -779,6 +790,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    */
   newMessageAdded(message: MessageModel) {
       console.log('newMessageAdded:');
+      message.text = this.linkifyService.linkify(message.text, this.linkifyOptions);
       if (message) {
         console.log('newMessageAdded', message);
         console.log('message.isSender', message.isSender);
@@ -786,6 +798,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         if (message.isSender) {
           console.log('message message.isSender', this.ionContentChatArea);
           this.scrollBottom(0);
+          this.detectBottom();
         } else {
           if (message.status && message.status < 200 ) {
             console.log('message.status < 200');
@@ -794,6 +807,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
           } else {
             console.log('message.status >= 200');
             this.scrollBottom(0);
+            this.detectBottom();
           }
         }
       }

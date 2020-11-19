@@ -11,16 +11,18 @@
         width: 30px;
         height: 100%;
         .attach-button {
-            font-size: 12px;
+            font-size: 24px;
             position: absolute;
             bottom: 0px;
             left: 0px;
-            margin: 2px 0;
+            margin: auto 0;
             --padding-top: 0;
             --padding-bottom: 0;
             --padding-start: 0;
             --padding-end: 0;
         }
+
+        
     }
     .buttons-right {
         position: absolute;
@@ -62,3 +64,12 @@
         }
     }
 }
+
+#fileInput{
+    position: absolute;
+    opacity: 0;
+  }
+  
+  .myFakeUploadButton{
+   /* Whatever you want */
+  }
