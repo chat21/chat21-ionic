@@ -14,7 +14,7 @@
 
 .previewSelected{
     width: 100%;
-    max-height: calc(100% - 170px);
+    height: auto;
     padding: 20px;
     position: relative;
     // background-color: gainsboro;
@@ -38,8 +38,9 @@
     }
 }
 
-.textMessage{
-    background-color: beige;
+.messageTextArea{
+    // background-color: grey;
+    margin-bottom: 20px;
     padding: 10px;
     width: 100%;
     height: auto;
@@ -48,16 +49,14 @@
     overflow: visible;
     position: relative;
     ion-textarea {
-        margin: 0px;
+        max-height: 100px;
+        margin: 5px 0;
     }
 }
 
 
-
-
-
-
-.thumbnailPreview {
+.thumbnailsPreview {
+    background-color: #efefef;
     padding: 20px;
     width: 100%;
     height: 100px;
@@ -73,7 +72,7 @@
         overflow-x: auto;
         overflow-y: hidden;
     }
-    .thumbnailContent {
+    .thumbnailsContent {
         height: 50px;
         width: auto;
         max-height: 50px;
@@ -104,4 +103,8 @@
         -moz-border-radius: 5px;
         cursor: pointer;
     }
-  }
+}
+
+.sendButton {
+    bottom: 52px;
+}
