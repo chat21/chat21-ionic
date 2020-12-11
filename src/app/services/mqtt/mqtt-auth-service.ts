@@ -301,15 +301,15 @@ export class MQTTAuthService extends AuthService {
     this.chat21Service.chatClient.connect(userid, result.token, () => {
       console.log('Chat connected.');
       const uid = userid;
-      let firstname = result["firstname"]
-      let lastname = result["lastname"]
-      let fullname = result["fullname"]
+      const firstname = result['firstname'];
+      const lastname = result['lastname'];
+      const fullname = result['fullname'];
       // let user = new UserModel(uid, '', firstname, lastname, fullname, '');
       const user = {
         uid: userid,
-        fullname: fullname,
-        firstname: firstname,
-        lastname: lastname
+        fullname,
+        firstname,
+        lastname
       };
       this.currentUser = user;
       console.log('User signed in:', user);

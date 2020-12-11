@@ -33,7 +33,7 @@ export abstract class ConversationHandlerService {
     metadata: string,
     conversationWith: string,
     conversationWithFullname: string,
-    sender: string,
+    senderId: string,
     senderFullname: string,
     channelType: string
   ): void;
