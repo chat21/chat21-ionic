@@ -1,6 +1,9 @@
-# chat21-ionic ver 1.0
+# ChangeLog
 
-### 2.0.12
+### branch v2 - untagged
+- updated Firebase dependency to 7.24.0
+
+### 2.0.12 -> Cloud Production
 - bug-fix: typing not work
 
 ### 2.0.11
