@@ -33,7 +33,7 @@ cp -p src/manifest.json platforms/browser/www/
 # cp -p src/chat-config.json platforms/browser/www/
 
 cd platforms/browser/www
-aws s3 sync . s3://tiledesk-dashboard-pre/chat/
+aws s3 sync --profile f21 . s3://tiledesk-dashboard-pre/chat/
 cd ../../../
 
 #aws cloudfront create-invalidation --distribution-id E2DTAKWHWQ7C3J --paths "/*"
