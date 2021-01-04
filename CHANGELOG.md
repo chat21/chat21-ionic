@@ -1,7 +1,8 @@
 # ChangeLog
 
 ### branch v2 - untagged
-- updated Firebase dependency to 7.24.0
+- Updated Firebase dependency to 7.24.0
+- Added "esnext.asynciterable" to tsconfig.json
 
 ### 2.0.12 -> Cloud Production
 - bug-fix: typing not work
