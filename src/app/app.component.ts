@@ -82,7 +82,7 @@ export class MyApp {
       throw new Error('firebase config is not defined. Please create your firebase-config.json. See the Chat21-Web_widget Installation Page');
     }
     firebase.initializeApp(appConfigProvider.getConfig().firebaseConfig);  // here shows the error
-
+    console.log('firebase', firebase);
 
     platform.ready().then(() => {
       this.events.subscribe('requestPermission', this.callbackRequestPermission);

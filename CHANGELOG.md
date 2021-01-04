@@ -1,6 +1,9 @@
 # ChangeLog
 
-### branch v2 - untagged
+### 2.0.13-beta.1 (branch v2)
+- Print firebase info and version
+
+### 2.0.13-beta.0 (branch v2)
 - Updated Firebase dependency to 7.24.0
 - Added "esnext.asynciterable" to tsconfig.json
 
