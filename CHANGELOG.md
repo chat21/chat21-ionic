@@ -1,5 +1,8 @@
 # ChangeLog
 
+### 2.0.14 (branch v2)
+- Added tag
+
 ### 2.0.13-beta.1 (branch v2)
 - Print firebase info and version
 
