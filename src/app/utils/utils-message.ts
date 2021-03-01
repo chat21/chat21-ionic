@@ -5,7 +5,7 @@ import {
     MESSAGE_TYPE_DATE,
     MAX_WIDTH_IMAGES,
     CHANNEL_TYPE_GROUP
-} from './constants';
+} from '../../chat21-core/utils/constants';
 
 /**  */
 export function isFirstMessage(i: number) {

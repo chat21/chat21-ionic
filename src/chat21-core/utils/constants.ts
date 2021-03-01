@@ -78,3 +78,6 @@ export const URL_SOUND = 'assets/pling.mp3';
 // PARAMETERS
 export const PLATFORM_MOBILE = 'mobile';
 export const PLATFORM_DESKTOP = 'desktop';
+
+// STORAGE
+export const STORAGE_PREFIX = 'tiledesk_widget_';

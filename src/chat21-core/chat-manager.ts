@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-// import 'rxjs/add/operator/map';
 
 // models
-import { UserModel } from '../models/user';
+import { UserModel } from './models/user';
 
 // handlers
-// import { ChatConversationHandler } from './chat-conversation-handler';
-// import { ChatConversationsHandler } from './chat-conversations-handler';
-
-import { ConversationHandlerService } from 'src/app/services/abstract/conversation-handler.service';
-import { ConversationsHandlerService } from 'src/app/services/abstract/conversations-handler.service';
-// import { ChatArchivedConversationsHandler } from './chat-archived-conversations-handler';
-import { ChatContactsSynchronizer } from './chat-contacts-synchronizer';
-import { environment } from '../../environments/environment';
+import { ConversationHandlerService } from './providers/abstract/conversation-handler.service';
+import { ConversationsHandlerService } from './providers/abstract/conversations-handler.service';
+// import { ChatContactsSynchronizer } from '../app/services/chat-contacts-synchronizer';
+import { environment } from '../environments/environment';
+import { ArchivedConversationsHandlerService } from './providers/abstract/archivedconversations-handler.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -30,12 +26,13 @@ export class ChatManager {
 
   private handlers: ConversationHandlerService[];
   // public archivedConversationsHandler: ChatArchivedConversationsHandler;
-  public contactsSynchronizer: ChatContactsSynchronizer;
+  // public contactsSynchronizer: ChatContactsSynchronizer;
   public openInfoConversation: boolean;
 
   constructor(
-    public chatContactsSynchronizer: ChatContactsSynchronizer,
-    public conversationsHandlerService: ConversationsHandlerService
+    // public chatContactsSynchronizer: ChatContactsSynchronizer,
+    public conversationsHandlerService: ConversationsHandlerService,
+    public archivedConversationsService: ArchivedConversationsHandlerService
   ) { }
   /**
    * inizializza chatmanager
@@ -100,10 +97,10 @@ export class ChatManager {
     console.log(' 3 - disposeArchivedConversationsHandler');
     // if (this.archivedConversationsHandler) { this.disposeConversationsHandler(); }
     console.log(' 4 - disposeContactsSynchronizer');
-    if (this.contactsSynchronizer) { this.disposeContactsSynchronizer(); }
+    // if (this.contactsSynchronizer) { this.disposeContactsSynchronizer(); }
     console.log(' OKK ');
     this.conversationsHandlerService = null;
-    this.contactsSynchronizer = null;
+    // this.contactsSynchronizer = null;
   }
 
   /**
@@ -189,7 +186,6 @@ export class ChatManager {
     this.handlers.forEach(conv => {
       // console.log('forEach ***', conversationId, this.handlers, conv);
       if (conv.conversationWith === conversationId) {
-        console.log('OKKKKKK', conversationId, conv.conversationWith);
         handler = conv;
         return;
       }
@@ -227,6 +223,9 @@ export class ChatManager {
   setConversationsHandler(handler) {
     this.conversationsHandlerService = handler;
   }
+  setArchivedConversationsHandler(handler) {
+    this.archivedConversationsService = handler;
+  }
 
   /**
    * elimino la reference dell'handler delle conversazioni
@@ -242,22 +241,22 @@ export class ChatManager {
    * creo handler sincronizzazione contatti se ancora nn esiste
    * inizio la sincronizzazione
    */
-  initContactsSynchronizer() {
-    console.log(' initContactsSynchronizer:: ', this.contactsSynchronizer, this.tenant, this.currentUser);
-    if (!this.contactsSynchronizer) {
-      this.contactsSynchronizer = this.chatContactsSynchronizer.initWithTenant(this.tenant, this.currentUser);
-      //this.contactsSynchronizer = this.createContactsSynchronizerForUser();
-      this.contactsSynchronizer.startSynchro();
-    } else {
-      this.contactsSynchronizer.startSynchro();
-    }
-  }
+  // initContactsSynchronizer() {
+  //   console.log(' initContactsSynchronizer:: ', this.contactsSynchronizer, this.tenant, this.currentUser);
+  //   if (!this.contactsSynchronizer) {
+  //     this.contactsSynchronizer = this.chatContactsSynchronizer.initWithTenant(this.tenant, this.currentUser);
+  //     //this.contactsSynchronizer = this.createContactsSynchronizerForUser();
+  //     this.contactsSynchronizer.startSynchro();
+  //   } else {
+  //     this.contactsSynchronizer.startSynchro();
+  //   }
+  // }
   /**
    * elimino la reference dell'handler della sincronizzazione contatti
    */
-  disposeContactsSynchronizer() {
-    this.contactsSynchronizer.dispose();
-  }
+  // disposeContactsSynchronizer() {
+  //   this.contactsSynchronizer.dispose();
+  // }
   /// END metodi sincronizzazione contatti ////
 
 

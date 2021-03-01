@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 // services
-import { TypingService } from 'src/app/services/abstract/typing.service';
+import { TypingService } from '../../providers/abstract/typing.service';
 
 @Component({
   selector: 'app-user-typing',

@@ -12,22 +12,22 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 
 // models
-import { UserModel } from '../../models/user';
-import { MessageModel } from '../../models/message';
-import { ConversationModel } from '../../models/conversation';
+import { UserModel } from 'src/chat21-core/models/user';
+import { MessageModel } from 'src/chat21-core/models/message';
+import { ConversationModel } from 'src/chat21-core/models/conversation';
 
 // services
-import { AuthService } from '../../services/abstract/auth.service';
-import { ChatManager } from '../../services/chat-manager';
+import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { ChatManager } from '../../../chat21-core/chat-manager';
 import { AppConfigProvider } from '../../services/app-config';
 import { DatabaseProvider } from '../../services/database';
-import { CustomTranslateService } from 'src/app/services/custom-translate.service';
-import { TypingService } from 'src/app/services/abstract/typing.service';
-import { ConversationHandlerBuilderService } from 'src/app/services/abstract/conversation-handler-builder.service';
+import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
+import { TypingService } from 'src/chat21-core/providers/abstract/typing.service';
+import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
 
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
-import { ConversationsHandlerService } from 'src/app/services/abstract/conversations-handler.service';
-import { ConversationHandlerService } from 'src/app/services/abstract/conversation-handler.service';
+import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/conversation-handler.service';
 // import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 
@@ -56,7 +56,7 @@ import {
   MESSAGE_TYPE_OTHERS,
   MESSAGE_TYPE_DATE,
   AUTH_STATE_OFFLINE
-} from '../../utils/constants';
+} from '../../../chat21-core/utils/constants';
 
 import {
   isInArray,
@@ -69,13 +69,13 @@ import {
   closeModal,
   setConversationAvatar,
   setChannelType
-} from '../../utils/utils';
+} from '../../../chat21-core/utils/utils';
 
 import {
   getColorBck,
   avatarPlaceholder,
   getImageUrlThumbFromFirebasestorage,
-} from '../../utils/utils-user';
+} from '../../../chat21-core/utils/utils-user';
 
 import {
   isFirstMessage,

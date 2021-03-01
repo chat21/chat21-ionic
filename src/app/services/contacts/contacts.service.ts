@@ -4,14 +4,14 @@ import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 // models
-import { UserModel } from 'src/app/models/user';
+import { UserModel } from 'src/chat21-core/models/user';
 
 // utils
 import {
   avatarPlaceholder,
   getColorBck,
   getImageUrlThumbFromFirebasestorage
-} from 'src/app/utils/utils-user';
+} from 'src/chat21-core/utils/utils-user';
 
 
 @Injectable({

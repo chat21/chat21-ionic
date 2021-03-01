@@ -14,25 +14,25 @@ import { AppConfigProvider } from './services/app-config';
 // import { UserService } from './services/user.service';
 // import { CurrentUserService } from './services/current-user/current-user.service';
 import { EventsService } from './services/events-service';
-import { AuthService } from './services/abstract/auth.service';
-import { PresenceService } from './services/abstract/presence.service';
-import { TypingService } from './services/abstract/typing.service';
+import { AuthService } from '../chat21-core/providers/abstract/auth.service';
+import { PresenceService } from '../chat21-core/providers/abstract/presence.service';
+import { TypingService } from '../chat21-core/providers/abstract/typing.service';
 // import { ChatPresenceHandler} from './services/chat-presence-handler';
 import { NavProxyService } from './services/nav-proxy.service';
-import { ChatManager } from './services/chat-manager';
+import { ChatManager } from '../chat21-core/chat-manager';
 // import { ChatConversationsHandler } from './services/chat-conversations-handler';
-import { ConversationsHandlerService } from './services/abstract/conversations-handler.service';
-import { CustomTranslateService } from './services/custom-translate.service';
+import { ConversationsHandlerService } from '../chat21-core/providers/abstract/conversations-handler.service';
+import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
 
 // pages
 import { LoginPage } from './pages/authentication/login/login.page';
 import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 
 // utils
-import { createExternalSidebar, checkPlatformIsMobile } from './utils/utils';
-import { PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE } from './utils/constants';
+import { createExternalSidebar, checkPlatformIsMobile } from '../chat21-core/utils/utils';
+import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE } from '../chat21-core/utils/constants';
 import { environment } from '../environments/environment';
-import { UserModel } from './models/user';
+import { UserModel } from '../chat21-core/models/user';
 
 @Component({
   selector: 'app-root',
@@ -110,6 +110,7 @@ export class AppComponent implements OnInit {
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
       this.authService.initialize();
+      // this.authService.initialize(this.setStoragePrefix());
       // this.currentUserService.initialize();
       this.chatManager.initialize();
       this.presenceService.initialize();
@@ -119,6 +120,17 @@ export class AppComponent implements OnInit {
     });
   }
 
+  setStoragePrefix(): string{
+    let prefix = STORAGE_PREFIX;
+    let projectid = environment.firebaseConfig.projectId;
+    try {
+        const sv = 'sv' + environment.shemaVersion + '_';
+        prefix = prefix + sv;
+    } catch (e) {
+        //this.g.wdLog(['> Error :' + e]);
+    }
+    return prefix + projectid + '_';
+}
   /**
    * initFirebase
    */

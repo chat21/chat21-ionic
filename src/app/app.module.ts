@@ -19,24 +19,27 @@ import { AppRoutingModule } from './app-routing.module';
 
 // CONFIG
 import { environment } from '../environments/environment';
-import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE } from './utils/constants';
+import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE } from '../chat21-core/utils/constants';
 
 // SERVICES
 import { AppConfigProvider } from './services/app-config';
+
 import { EventsService } from './services/events-service';
-import { AuthService } from './services/abstract/auth.service';
-import { FirebaseAuthService } from './services/firebase/firebase-auth-service';
-import { PresenceService } from './services/abstract/presence.service';
-import { FirebasePresenceService } from './services/firebase/firebase-presence.service';
-import { TypingService } from './services/abstract/typing.service';
-import { FirebaseTypingService } from './services/firebase/firebase-typing.service';
-import { ConversationsHandlerService } from './services/abstract/conversations-handler.service';
-import { FirebaseConversationsHandler } from './services/firebase/firebase-conversations-handler';
+import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { FirebaseAuthService } from 'src/chat21-core/providers/firebase/firebase-auth-service';
+import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
+import { FirebasePresenceService } from 'src/chat21-core/providers/firebase/firebase-presence.service';
+import { TypingService } from 'src/chat21-core/providers/abstract/typing.service';
+import { FirebaseTypingService } from 'src/chat21-core/providers/firebase/firebase-typing.service';
+import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { FirebaseConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-conversations-handler';
 import { DatabaseProvider } from './services/database';
-import { FirebaseImageRepoService } from './services/firebase/firebase-image-repo';
-import { ImageRepoService } from './services/abstract/image-repo.service';
-import { ConversationHandlerBuilderService } from './services/abstract/conversation-handler-builder.service';
-import { FirebaseConversationHandlerBuilderService } from './services/firebase/firebase-conversation-handler-builder.service';
+import { FirebaseImageRepoService } from 'src/chat21-core/providers/firebase/firebase-image-repo';
+import { FirebaseArchivedConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-archivedconversations-handler';
+import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
+import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
+import { FirebaseConversationHandlerBuilderService } from 'src/chat21-core/providers/firebase/firebase-conversation-handler-builder.service';
 
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -61,6 +64,18 @@ export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
     return new FirebaseAuthService(http, route);
   }
 }
+
+// export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider ) {
+//   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+//     const auth= new FirebaseAuthService(http); 
+//     auth.setBaseUrl(appConfig.getConfig().apiUrl)
+//     return auth
+//   } else {
+//     const auth= new FirebaseAuthService(http); 
+//     auth.setBaseUrl(appConfig.getConfig().apiUrl)
+//     return auth
+//   }
+// }
 
 export function presenceFactory() {
   console.log('presenceFactory: ');
@@ -96,6 +111,14 @@ export function imageRepoFactory() {
     return new FirebaseImageRepoService();
   } else {
     return new FirebaseImageRepoService();
+  }
+}
+
+export function archivedConversationsHandlerFactory() {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+    return new FirebaseArchivedConversationsHandler();
+  } else {
+    return new FirebaseArchivedConversationsHandler();
   }
 }
 
@@ -160,6 +183,11 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
       useFactory: authenticationFactory,
       deps: [HttpClient, ActivatedRoute]
      },
+    //  {
+    //   provide: AuthService2,
+    //   useFactory: authenticationFactory,
+    //   deps: [HttpClient, AppConfigProvider ]
+    // },
     {
       provide: PresenceService,
       useFactory: presenceFactory,
@@ -174,6 +202,11 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
       provide: ConversationsHandlerService,
       useFactory: conversationsHandlerFactory,
       deps: [DatabaseProvider]
+    },
+    {
+      provide: ArchivedConversationsHandlerService,
+      useFactory: archivedConversationsHandlerFactory,
+      deps: []
     },
     {
       provide: ImageRepoService,

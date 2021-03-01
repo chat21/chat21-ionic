@@ -28,5 +28,6 @@ export class AppConfigProvider {
   getConfig() {
     return this.appConfig;
   }
+  
 
 }

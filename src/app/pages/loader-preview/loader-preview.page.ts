@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { TYPE_MSG_IMAGE } from 'src/chat21-core/utils/constants';
 
 @Component({
   selector: 'app-loader-preview',
@@ -34,7 +35,8 @@ export class LoaderPreviewPage implements OnInit {
   readAsDataURL(file: any) {
     const reader = new FileReader();
     reader.onloadend = (evt) => {
-        const img = evt.target.result.toString();
+        // const img = evt.target.result.toString();
+        const img = reader.result.toString();
         console.log('read success');
         this.arrayFiles.push(img);
         if (!this.fileSelected) {
@@ -49,10 +51,15 @@ export class LoaderPreviewPage implements OnInit {
     const heightThumbnailsPreview = this.thumbnailsPreview.nativeElement.offsetHeight;
     const heightMessageTextArea = this.messageTextArea.nativeElement.offsetHeight;
     this.heightPreviewArea = (heightMessageTextArea + heightThumbnailsPreview).toString();
-    // console.log('heightThumbnailsPreview', heightThumbnailsPreview);
-    // console.log('heightMessageTextArea', heightMessageTextArea);
-    // console.log('heightPreviewArea', this.heightPreviewArea);
+    console.log('heightThumbnailsPreview', heightThumbnailsPreview);
+    console.log('heightMessageTextArea', this.messageTextArea);
+    console.log('heightPreviewArea', this.heightPreviewArea);
   }
+
+  uploadImages(){
+
+  }
+
 
   /** */
   onChangeTextArea(e: any) {
@@ -78,6 +85,11 @@ export class LoaderPreviewPage implements OnInit {
   onSendMessage() {
     console.log('onSendMessage foto::', this.fileSelected);
     console.log('onSendMessage testo::', this.messageString);
+    const text = this.messageString.replace(/(\r\n|\n|\r)/gm, '');
+    if (text.trim() !== '') {
+      // this.eventSendMessage.emit({ message: text, type: TYPE_MSG_IMAGE });
+    }
+
   }
 
 }

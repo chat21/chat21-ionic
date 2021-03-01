@@ -9,16 +9,16 @@ import 'firebase/auth';
 import 'firebase/storage';
 
 // models
-import { ConversationModel } from 'src/app/models/conversation';
+import { ConversationModel } from '../../models/conversation';
 
 // services
-import { ConversationsHandlerService } from 'src/app/services/abstract/conversations-handler.service';
+import { ConversationsHandlerService } from '../abstract/conversations-handler.service';
 import { DatabaseProvider } from 'src/app/services/database';
 
 // utils
-import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
-import { avatarPlaceholder, getColorBck } from 'src/app/utils/utils-user';
-import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from 'src/app/utils/utils';
+import { TYPE_GROUP, URL_SOUND } from 'src/chat21-core/utils/constants';
+import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user';
+import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from 'src/chat21-core/utils/utils';
 import { ImageRepoService } from '../abstract/image-repo.service';
 import { FirebaseImageRepoService } from './firebase-image-repo';
 

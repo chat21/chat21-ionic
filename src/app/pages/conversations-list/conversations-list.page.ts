@@ -6,8 +6,8 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 // models
-import { ConversationModel } from '../../models/conversation';
-import { UserModel } from '../../models/user';
+import { ConversationModel } from 'src/chat21-core/models/conversation';
+import { UserModel } from 'src/chat21-core/models/user';
 
 // utils
 import {
@@ -18,8 +18,8 @@ import {
   getParameterByName,
   convertMessage,
   windowsMatchMedia
- } from '../../utils/utils';
-import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE } from '../../utils/constants';
+ } from '../../../chat21-core/utils/utils';
+import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE } from '../../../chat21-core/utils/constants';
 import { EventsService } from '../../services/events-service';
 import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootstrap/perfect-scrollbar
 
@@ -31,15 +31,15 @@ import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootst
 // services
 import { DatabaseProvider } from '../../services/database';
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
-import { ConversationsHandlerService } from 'src/app/services/abstract/conversations-handler.service';
-import { ChatManager } from '../../services/chat-manager';
+import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { ChatManager } from '../../../chat21-core/chat-manager';
 import { NavProxyService } from '../../services/nav-proxy.service';
 
 import { ConversationDetailPage } from '../conversation-detail/conversation-detail.page';
 import { ContactsDirectoryPage } from '../contacts-directory/contacts-directory.page';
 import { ProfileInfoPage } from '../profile-info/profile-info.page';
-import { AuthService } from 'src/app/services/abstract/auth.service';
-import { CustomTranslateService } from 'src/app/services/custom-translate.service';
+import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
 
 @Component({
   selector: 'app-conversations-list',

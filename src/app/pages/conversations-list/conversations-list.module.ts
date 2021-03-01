@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import { createTranslateLoader } from '../../utils/utils';
+import { createTranslateLoader } from '../../../chat21-core/utils/utils';
 
 import { ConversationListPageRoutingModule } from './conversations-list-routing.module';
 import { ConversationListPage } from './conversations-list.page';

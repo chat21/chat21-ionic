@@ -6,7 +6,7 @@ import { ModalController } from '@ionic/angular';
 // pages
 import { LoaderPreviewPage } from 'src/app/pages/loader-preview/loader-preview.page';
 // utils
-import { TYPE_MSG_TEXT } from 'src/app/utils/constants';
+import { TYPE_MSG_TEXT } from 'src/chat21-core/utils/constants';
 
 @Component({
   selector: 'app-message-text-area',

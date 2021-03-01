@@ -6,13 +6,13 @@ import { Storage } from '@ionic/storage';
 // import 'rxjs/add/operator/map';
 import { Config } from '@ionic/angular';
 // models
-import { UserModel } from '../models/user';
+import { UserModel } from 'src/chat21-core/models/user';
 // firebase
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
 import 'firebase/database';
 //utils
-import { getNowTimestamp, compareValues } from '../utils/utils';
+import { getNowTimestamp, compareValues } from '../../chat21-core/utils/utils';
 
 /**
  * GESTIONE SALVATAGGIO IMMAGINI IN FIREBASE

@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { AvatarProfileComponent } from 'src/app/components/utils/avatar-profile/avatar-profile.component';
 import { DdpHeaderComponent } from 'src/app/components/ddp-header/ddp-header.component';
 import { UserPresenceComponent } from 'src/app/components/utils/user-presence/user-presence.component';
-import { UserTypingComponent } from 'src/app/components/utils/user-typing/user-typing.component';
+import { UserTypingComponent } from 'src/chat21-core/utils/user-typing/user-typing.component';
 
 
 @NgModule({

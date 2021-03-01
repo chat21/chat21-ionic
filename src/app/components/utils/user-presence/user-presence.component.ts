@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 // services
-import { PresenceService } from 'src/app/services/abstract/presence.service';
+import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
 
 // utils
-import { isInArray, setLastDateWithLabels } from 'src/app/utils/utils';
+import { isInArray, setLastDateWithLabels } from 'src/chat21-core/utils/utils';
 
 @Component({
   selector: 'app-user-presence',

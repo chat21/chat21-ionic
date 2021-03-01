@@ -8,22 +8,22 @@ import 'firebase/database';
 import 'firebase/firestore';
 
 // models
-import { MessageModel } from 'src/app/models/message';
-import { UserModel } from 'src/app/models/user';
-import { ConversationModel } from 'src/app/models/conversation';
+import { MessageModel } from '../../models/message';
+import { UserModel } from '../../models/user';
+import { ConversationModel } from '../../models/conversation';
 
 // services
-import { ConversationHandlerService } from 'src/app/services/abstract/conversation-handler.service';
+import { ConversationHandlerService } from '../abstract/conversation-handler.service';
 
 // utils
-import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT } from 'src/app/utils/constants';
+import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT } from 'src/chat21-core/utils/constants';
 import {
   htmlEntities,
   compareValues,
   searchIndexInArrayForUid,
   setHeaderDate,
   conversationMessagesRef
-} from 'src/app/utils/utils';
+} from 'src/chat21-core/utils/utils';
 
 
 

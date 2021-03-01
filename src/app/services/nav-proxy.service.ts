@@ -3,7 +3,7 @@ import { IonicModule, IonNav, IonRouterOutlet } from '@ionic/angular';
 import { Router, NavigationExtras } from '@angular/router';
 
 // utils
-import { checkPlatformIsMobile } from '../utils/utils';
+import { checkPlatformIsMobile } from '../../chat21-core/utils/utils';
 // import { ConversationDetailPage } from '../pages/conversation-detail/conversation-detail.page';
 
 @Injectable({

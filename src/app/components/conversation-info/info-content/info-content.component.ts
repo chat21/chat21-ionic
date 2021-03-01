@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-
 // models
-import { UserModel } from 'src/app/models/user';
+import { UserModel } from 'src/chat21-core/models/user';
 
 @Component({
   selector: 'app-info-content',
@@ -36,7 +35,7 @@ export class InfoContentComponent implements OnInit {
 // import { UserService } from '../../services/user.service';
 // import { PresenceService } from '../../services/presence.service';
 // import { EventsService } from '../../services/events-service';
-// import { CustomTranslateService } from '../../services/custom-translate.service';
+// import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
 
 // // models
 // import { UserModel } from '../../models/user';

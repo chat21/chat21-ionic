@@ -44,6 +44,17 @@ export function conversationsPathForUserId(tenant, userId) {
   const urlNodeConversations = '/apps/' + tenant + '/users/' + userId + '/conversations';
   return urlNodeConversations;
 }
+
+/**
+ * chiamata da ArchivedConversationsHandler
+ * restituisce url '/archived_conversations'
+ * @param tenant
+ */
+export function archivedConversationsPathForUserId(tenant, userId) {
+  const urlNodeConversations = '/apps/' + tenant + '/users/' + userId + '/archived_conversations';
+  return urlNodeConversations;
+}
+
 /**
  * chiamata da ChatConversationHandler
  * restituisce url '/messages'

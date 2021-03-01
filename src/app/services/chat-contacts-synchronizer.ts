@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 // providers
 import { DatabaseProvider } from './database';
 // models
-import { UserModel } from '../models/user';
+import { UserModel } from 'src/chat21-core/models/user';
 // firebase
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
 import 'firebase/database';
 // utils
-import { contactsRef } from '../utils/utils';
+import { contactsRef } from '../../chat21-core/utils/utils';
 
 @Injectable({ providedIn: 'root' })
 export class ChatContactsSynchronizer {

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MessageModel } from 'src/app/models/message';
+import { MessageModel } from 'src/chat21-core/models/message';
 
 
 
@@ -9,7 +9,7 @@ import {
   urlify,
   isPopupUrl,
   stripTags
-} from 'src/app/utils/utils';
+} from 'src/chat21-core/utils/utils';
 
 import {
   getSizeImg
@@ -18,7 +18,7 @@ import {
 import {
   MSG_STATUS_SENT,
   MSG_STATUS_RETURN_RECEIPT
-} from 'src/app/utils/constants';
+} from 'src/chat21-core/utils/constants';
 
 @Component({
   selector: 'app-bubble-my-message',

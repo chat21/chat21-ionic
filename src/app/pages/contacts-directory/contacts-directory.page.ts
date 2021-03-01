@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { NavProxyService } from '../../services/nav-proxy.service';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 // import { ContactsDirectoryService, CONTACTS_URL } from '../../services/contacts-directory.service';
-import { UserModel } from 'src/app/models/user';
+import { UserModel } from 'src/chat21-core/models/user';
 import { EventsService } from '../../services/events-service';
 
 

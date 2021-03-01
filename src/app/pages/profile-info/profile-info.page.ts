@@ -3,17 +3,17 @@ import { ModalController } from '@ionic/angular';
 
 // services
 import { NavProxyService } from '../../services/nav-proxy.service';
-import { ChatManager } from '../../services/chat-manager';
-import { CustomTranslateService } from '../../services/custom-translate.service';
-import { PresenceService } from '../../services/abstract/presence.service';
+import { ChatManager } from '../../../chat21-core/chat-manager';
+import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
+import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
 // import { EventsService } from '../../services/events-service';
-import { AuthService } from '../../services/abstract/auth.service';
+import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
 
 // models
-import { UserModel } from 'src/app/models/user';
+import { UserModel } from 'src/chat21-core/models/user';
 
 // utils
-import { isInArray, setLastDateWithLabels } from 'src/app/utils/utils';
+import { isInArray, setLastDateWithLabels } from 'src/chat21-core/utils/utils';
 import * as PACKAGE from 'package.json';
 
 @Component({

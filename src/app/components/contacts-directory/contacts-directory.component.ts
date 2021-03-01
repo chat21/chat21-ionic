@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { UserModel } from 'src/app/models/user';
+import { UserModel } from 'src/chat21-core/models/user';
 
 @Component({
   selector: 'component-contacts-directory',

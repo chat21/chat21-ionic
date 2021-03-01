@@ -15,13 +15,13 @@ import { ImageRepoService } from '../abstract/image-repo.service';
 import { FirebaseImageRepoService } from './firebase-image-repo';
 
 // models
-import { UserModel } from 'src/app/models/user';
+import { UserModel } from '../../models/user';
 
 // utils
 import {
   avatarPlaceholder,
   getColorBck,
-} from 'src/app/utils/utils-user';
+} from 'src/chat21-core/utils/utils-user';
 
 @Injectable({ providedIn: 'root' })
 

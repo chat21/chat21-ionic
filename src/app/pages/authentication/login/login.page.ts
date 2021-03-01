@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 
 // services
-import { AuthService } from '../../../services/abstract/auth.service';
-import { CustomTranslateService } from '../../../services/custom-translate.service';
+import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
 import { EventsService } from '../../../services/events-service';
 
 import { LoginComponent } from '../../../components/authentication/login/login.component';
 
 // utils
-import { isInArray } from 'src/app/utils/utils';
+import { isInArray } from 'src/chat21-core/utils/utils';
 
 @Component({
   selector: 'app-login',
