@@ -17,6 +17,7 @@ import { EventsService } from './services/events-service';
 import { AuthService } from '../chat21-core/providers/abstract/auth.service';
 import { PresenceService } from '../chat21-core/providers/abstract/presence.service';
 import { TypingService } from '../chat21-core/providers/abstract/typing.service';
+import { UploadService } from '../chat21-core/providers/abstract/upload.service';
 // import { ChatPresenceHandler} from './services/chat-presence-handler';
 import { NavProxyService } from './services/nav-proxy.service';
 import { ChatManager } from '../chat21-core/chat-manager';
@@ -76,6 +77,8 @@ export class AppComponent implements OnInit {
     private navService: NavProxyService,
     // public chatPresenceHandler: ChatPresenceHandler,
     public typingService: TypingService,
+    public uploadService: UploadService,
+    
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
     private translateService: CustomTranslateService
@@ -115,6 +118,7 @@ export class AppComponent implements OnInit {
       this.chatManager.initialize();
       this.presenceService.initialize();
       this.typingService.initialize();
+      this.uploadService.initialize();
       this.initSubscriptions();
       console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
     });

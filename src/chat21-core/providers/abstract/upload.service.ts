@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { environment } from 'src/environments/environment';
+//import { environment } from 'src/environments/environment';
+
+// models
+import { UploadModel } from '../../models/upload';
 
 @Injectable({
   providedIn: 'root'
@@ -8,17 +11,13 @@ import { environment } from 'src/environments/environment';
 
 export abstract class UploadService {
 
-  // BehaviorSubject
-  // abstract BSIsOnline: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  // abstract BSLastOnline: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  BehaviorSubject
+  abstract BSStateUpload: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   // params
   // abstract tenant = environment.tenant;
 
   // functions
   abstract initialize(): void;
-  // abstract userIsOnline(userid: string): void;
-  // abstract lastOnlineForUser(userid: string): void;
-  // abstract setPresence(userid: string): void;
-  // abstract removePresence(): void;
+  abstract pushUploadMessage(upload: UploadModel);
 }

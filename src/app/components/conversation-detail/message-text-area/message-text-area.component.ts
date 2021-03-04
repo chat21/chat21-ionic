@@ -5,8 +5,12 @@ import { ModalController } from '@ionic/angular';
 
 // pages
 import { LoaderPreviewPage } from 'src/app/pages/loader-preview/loader-preview.page';
+// services 
+import { UploadService } from 'src/chat21-core/providers/abstract/upload.service';
 // utils
 import { TYPE_MSG_TEXT } from 'src/chat21-core/utils/constants';
+// models
+import { UploadModel } from 'src/chat21-core/models/upload';
 
 @Component({
   selector: 'app-message-text-area',
@@ -25,9 +29,11 @@ export class MessageTextAreaComponent implements OnInit {
   constructor(
     public chooser: Chooser,
     public modalController: ModalController,
+    public uploadService: UploadService
   ) { }
 
   ngOnInit() {
+    // this.setSubscriptions();
   }
 
   onChange(e: any) {
@@ -55,6 +61,23 @@ export class MessageTextAreaComponent implements OnInit {
   }
 
 
+  // attualmente non usata
+  // dovrebbe scattare quando termina il caricamento dell'immagine per inviare il messaggio
+  private setSubscriptions() {
+    const that = this;
+    const subscribeBSStateUpload =  this.uploadService.BSStateUpload.subscribe((data: any) => {
+      console.log('***** BSStateUpload *****', data);
+      if (data) {
+        let message = data.message;
+        let type_message = data.type_message;
+        let metadata = data.metadata;
+        console.log('***** message *****', message);
+        console.log('***** type_message *****', type_message);
+        console.log('***** metadata *****', metadata);
+        //this.eventSendMessage.emit({ message: messageString, type: TYPE_MSG_TEXT });
+      }
+    });
+  }
 
   /**
    * 
@@ -135,8 +158,12 @@ export class MessageTextAreaComponent implements OnInit {
 
 
 
-
+  /**
+   * 
+   * @param e 
+   */
   private async presentModal(e: any): Promise<any> {
+    const that = this;
     console.log('presentModal', e);
     console.log('presentModal', e.target);
     console.log('presentModal', e.target.files);
@@ -151,22 +178,25 @@ export class MessageTextAreaComponent implements OnInit {
           backdropDismiss: true
     });
     modal.onDidDismiss().then((detail: any) => {
+      let fileSelected = e.target.files.item(0);//detail.data.fileSelected;
+      let messageString = detail.data.messageString;
+      let metadata = detail.data.metadata;
+      let type = detail.data.type;
       console.log('The result: CHIUDI!!!!!', detail.data);
       if (detail !== null) {
-       //  console.log('The result: CHIUDI!!!!!', detail.data);
+        const currentUpload = new UploadModel(fileSelected);
+        let uploadTask = that.uploadService.pushUploadMessage(currentUpload);
+        console.log('invio msg uploadTask::: ', uploadTask);
+        // send message
+        this.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
       }
    });
-    // await modal.present();
-    // modal.onDidDismiss().then((detail: any) => {
-    //    console.log('The result: CHIUDI!!!!!', detail.data);
-    //   //  this.checkPlatform();
-    //    if (detail !== null) {
-    //     //  console.log('The result: CHIUDI!!!!!', detail.data);
-    //    }
-    // });
     return await modal.present();
   }
 
+  /**
+   * 
+   */
   private async closeModal() {
     console.log('closeModal', this.modalController);
     await this.modalController.getTop();

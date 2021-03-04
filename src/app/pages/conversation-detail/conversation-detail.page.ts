@@ -512,7 +512,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // }
 
     console.log('loggedUserID: ', this.loggedUser.uid);
-
     console.log('conversationWith: ', this.conversationWith);
     console.log('conversationWithFullname: ', this.conversationWithFullname);
 
@@ -733,9 +732,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   returnSendMessage(e: any) {
     console.log('returnSendMessage::: ', e);
     try {
-      const message = e.message;
+      let message = '';
+      if(e.message){
+        message = e.message;
+      }
       const type = e.type;
-      this.sendMessage(message, type);
+      const metadata = e.metadata;
+      this.sendMessage(message, type, metadata);
     } catch (err) {
       console.log('error: ', err);
     }

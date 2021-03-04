@@ -40,6 +40,8 @@ import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/a
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
 import { FirebaseConversationHandlerBuilderService } from 'src/chat21-core/providers/firebase/firebase-conversation-handler-builder.service';
+import { UploadService } from 'src/chat21-core/providers/abstract/upload.service';
+import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/firebase-upload.service';
 
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -92,6 +94,15 @@ export function typingFactory() {
     return new FirebaseTypingService();
   } else {
     return new FirebaseTypingService();
+  }
+}
+
+export function uploadFactory() {
+  console.log('uploadFactory: ');
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+    return new FirebaseUploadService();
+  } else {
+    return new FirebaseUploadService();
   }
 }
 
@@ -183,11 +194,6 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
       useFactory: authenticationFactory,
       deps: [HttpClient, ActivatedRoute]
      },
-    //  {
-    //   provide: AuthService2,
-    //   useFactory: authenticationFactory,
-    //   deps: [HttpClient, AppConfigProvider ]
-    // },
     {
       provide: PresenceService,
       useFactory: presenceFactory,
@@ -196,6 +202,11 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: TypingService,
       useFactory: typingFactory,
+      deps: []
+    },
+    {
+      provide: UploadService,
+      useFactory: uploadFactory,
       deps: []
     },
     {
