@@ -4,15 +4,12 @@
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
-    "ionic": "ionic",
-    "start": "ionic serve",
-    "build": "ionic build",
-    "test": "ionic test",
-    "lint": "ionic lint",
-    "e2e": "ionic e2e"
-  },
-  "engines": {
-    "node": "14.x"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
