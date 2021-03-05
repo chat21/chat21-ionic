@@ -13,6 +13,25 @@
         .message-content-image {
             border-radius: 15px 6px 0px 0px;
         }
+        &.no-text {
+            line-height: 0;
+            .message-content-image {
+                border-radius: 15px 6px 0px 15px;
+            }
+            .message-content.message-content-text{
+                padding: 0px;
+                height: 0px;
+            }
+            .timestamp-message {
+                background-color: #00000045;
+                padding: 4px;
+                color: white;
+            }
+        }
+        &.image{
+            max-width: 300px;
+        }
+        
     }
 
     
@@ -24,7 +43,7 @@
         font-size: 10px;
         padding: 0px;
         position: absolute;
-        bottom: 0px;
+        bottom: 2px;
         right: 6px;
         line-height: 15px;
     }
@@ -34,7 +53,7 @@
     margin-top: 4px;
     .message-content.message-content-text{
         color: var(--white)!important;
-        padding: 0 20px 5px 10px;
+        padding: 5px 20px 5px 10px;
     }
         
   

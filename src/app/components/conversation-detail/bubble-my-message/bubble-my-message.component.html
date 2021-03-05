@@ -1,10 +1,16 @@
-<div class="message message-my" [class.first-message]="isFirstMessage">
+<div class="message message-my" [class.first-message]="isFirstMessage" >
  
-  <div class="bobble-message" (mouseover)="showButtonInfo()">
+  <div class="bobble-message" 
+    [class.image]="message.type == 'image'" 
+    [class.no-text]="!message.text" 
+    (mouseover)="showButtonInfo()">
     <span class="buttonInfo" (click)="presentPopover($event, message)"> </span>
     
-    <div *ngIf="message.type == 'image';" (click)="popupUrl(message.metadata.src,'windowName')">
-        <img class="message-content message-content-image" 
+    <div *ngIf="message.type == 'image';" 
+    (click)="popupUrl(message.metadata.src,'windowName')"
+    >
+      <img 
+        class="message-content message-content-image" 
         [src]="message.metadata.src" 
         [width]="getSizeImg(message).width"
         [height]="getSizeImg(message).height" />
@@ -13,6 +19,8 @@
     <div *ngIf="message.type == 'file';" class="message-content message-content-text" 
     [innerHTML]="urlify(message.metadata.src, message.metadata.name)"
     ></div>
+    
+    <div>
     
     <!-- <div *ngIf="message.type == 'text'"> -->
       <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here is ignored</div>
@@ -24,6 +32,8 @@
       </ng-template>
     <!-- </div> -->
 
+    </div>
+    
     <div class="timestamp-message right">{{message.timestamp | date: 'H:mm'}}</div>
   </div>
 

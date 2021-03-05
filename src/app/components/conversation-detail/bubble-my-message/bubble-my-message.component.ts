@@ -17,7 +17,8 @@ import {
 
 import {
   MSG_STATUS_SENT,
-  MSG_STATUS_RETURN_RECEIPT
+  MSG_STATUS_RETURN_RECEIPT,
+  MAX_WIDTH_IMAGES
 } from 'src/chat21-core/utils/constants';
 
 @Component({
@@ -41,7 +42,8 @@ export class BubbleMyMessageComponent implements OnInit {
 
   MSG_STATUS_SENT = MSG_STATUS_SENT;
   MSG_STATUS_RETURN_RECEIPT = MSG_STATUS_RETURN_RECEIPT;
-
+  MAX_WIDTH_IMAGES = MAX_WIDTH_IMAGES;
+  
   constructor() { }
 
   ngOnInit() {
