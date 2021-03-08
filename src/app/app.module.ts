@@ -82,15 +82,9 @@ import { AppConfigProvider } from './services/app-config';
 import { MessagingService } from './services/messaging-service';
 import { EventsService } from './services/events-service';
 import { AuthService } from './services/auth.service';
-<<<<<<< HEAD
-import { MQTTAuthService } from './services/mqtt/mqtt-auth-service';
-import { UserService } from './services/user.service';
-import { FirebaseUserService } from './services/firebase/firebase-user-service';
-=======
 import { FirebaseAuthService } from './services/firebase/firebase-auth-service';
 // import { UserService } from './services/user.service';
 // import { FirebaseUserService } from './services/firebase/firebase-user-service';
->>>>>>> master
 import { PresenceService } from './services/presence.service';
 import { FirebasePresenceService } from './services/firebase/firebase-presence.service';
 import { TypingService } from './services/typing.service';
@@ -102,6 +96,7 @@ import { ConversationHandlerService } from './services/conversation-handler.serv
 import { FirebaseConversationHandler } from './services/firebase/firebase-conversation-handler';
 
 import { Chat21Service } from './services/chat-service';
+import { MQTTAuthService } from './services/mqtt/mqtt-auth-service';
 
 // import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';

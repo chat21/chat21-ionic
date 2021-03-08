@@ -230,8 +230,7 @@ export class MQTTAuthService extends AuthService {
           const tiledeskToken = data['token'];
           localStorage.setItem('tiledeskToken', tiledeskToken);
           that.getCustomToken(tiledeskToken);
-          that.firebaseCreateCustomToken(tiledeskToken);
-          // that.firebaseSignInWithCustomToken(tiledeskToken);
+          // that.firebaseCreateCustomToken(tiledeskToken);
         }
       }, error => {
         console.log(error);
@@ -293,89 +292,62 @@ export class MQTTAuthService extends AuthService {
   }
 
 
-  private firebaseCreateCustomToken(tiledeskToken: string) {
-    console.log('getting firebase custom token with tiledesk token', tiledeskToken);
-    const headers = new HttpHeaders({
-      'Content-type': 'application/json',
-      Authorization: tiledeskToken
-    });
-    const responseType = 'text';
-    const postData = {};
-    const that = this;
-    const url = this.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
-    console.log('firebase custom token URL', url);
-    this.http.post(url, postData, { headers, responseType})
-    .subscribe(data =>  {
-      console.log('got firebase custom token', data);
-      that.firebaseSignInWithCustomToken(data);
-    }, error => {
-      console.log('error while getting firebase token!');
-      console.log(error);
-    });
-  }
-
-  firebaseSignInWithCustomToken(token: string): any {
-    console.log('connecting to firebase with token', token);
-    const that = this;
-    let firebasePersistence;
-    switch (this.persistence) {
-      case 'SESSION': {
-        firebasePersistence = firebase.auth.Auth.Persistence.SESSION;
-        break;
-      }
-      case 'LOCAL': {
-        firebasePersistence = firebase.auth.Auth.Persistence.LOCAL;
-        break;
-      }
-      case 'NONE': {
-        firebasePersistence = firebase.auth.Auth.Persistence.NONE;
-        break;
-      }
-      default: {
-        firebasePersistence = firebase.auth.Auth.Persistence.NONE;
-        break;
-      }
-    }
-    return firebase.auth().setPersistence(firebasePersistence)
-    .then( async () => {
-      return firebase.auth().signInWithCustomToken(token)
-      .then( async (response) => {
-        console.log('connected on firebase');
-      })
-      .catch((error) => {
-        console.error('Error: ', error);
-      });
-    })
-    .catch((error) => {
-      console.error('Error: ', error);
-    });
-  }
-
-  // private setUserAndToken(resp: any) {
-  //   try {
-  //     if (resp.token) {
-  //       this.token = resp.token;
-  //     }
-  //     if (resp.user) {
-  //       this.user = resp.user;
-  //       this.events.publish('sign-in', resp.user, null);
-  //     }
-  //   } catch (error) {
-  //     console.log('error: ', error);
-  //     this.events.publish('sign-in', null, error);
-  //   }
+  // private firebaseCreateCustomToken(tiledeskToken: string) {
+  //   console.log('getting firebase custom token with tiledesk token', tiledeskToken);
+  //   const headers = new HttpHeaders({
+  //     'Content-type': 'application/json',
+  //     Authorization: tiledeskToken
+  //   });
+  //   const responseType = 'text';
+  //   const postData = {};
+  //   const that = this;
+  //   const url = this.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
+  //   console.log('firebase custom token URL', url);
+  //   this.http.post(url, postData, { headers, responseType})
+  //   .subscribe(data =>  {
+  //     console.log('got firebase custom token', data);
+  //     that.firebaseSignInWithCustomToken(data);
+  //   }, error => {
+  //     console.log('error while getting firebase token!');
+  //     console.log(error);
+  //   });
   // }
 
-  // handleError(error: HttpErrorResponse) {
-  //   if (error.error instanceof ErrorEvent) {
-  //     console.error('An error occurred:', error.error.message);
-  //   } else {
-  //     console.error(
-  //       `Backend returned code ${error.status}, ` +
-  //       `body was: ${error.error}`);
+  // firebaseSignInWithCustomToken(token: string): any {
+  //   console.log('connecting to firebase with token', token);
+  //   const that = this;
+  //   let firebasePersistence;
+  //   switch (this.persistence) {
+  //     case 'SESSION': {
+  //       firebasePersistence = firebase.auth.Auth.Persistence.SESSION;
+  //       break;
+  //     }
+  //     case 'LOCAL': {
+  //       firebasePersistence = firebase.auth.Auth.Persistence.LOCAL;
+  //       break;
+  //     }
+  //     case 'NONE': {
+  //       firebasePersistence = firebase.auth.Auth.Persistence.NONE;
+  //       break;
+  //     }
+  //     default: {
+  //       firebasePersistence = firebase.auth.Auth.Persistence.NONE;
+  //       break;
+  //     }
   //   }
-  //   return throwError(
-  //     'Something bad happened; please try again later.');
+  //   return firebase.auth().setPersistence(firebasePersistence)
+  //   .then( async () => {
+  //     return firebase.auth().signInWithCustomToken(token)
+  //     .then( async (response) => {
+  //       console.log('connected on firebase');
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error: ', error);
+  //     });
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error: ', error);
+  //   });
   // }
 
 }
