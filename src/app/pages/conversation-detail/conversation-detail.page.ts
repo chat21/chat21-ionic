@@ -229,10 +229,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   /** */
   ionViewWillEnter() {
-    console.log('ionViewWillEnter ConversationDetailPage: ', this.loggedUser);
+    
     this.showButtonToBottom = false;
     this.showMessageWelcome = false;
     this.loggedUser = this.authService.getUser();
+    console.log('ionViewWillEnter ConversationDetailPage: ', this.loggedUser);
     this.tenant = environment.tenant;
     this.translations();
 
