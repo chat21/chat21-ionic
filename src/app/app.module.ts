@@ -21,6 +21,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE } from '../chat21-core/utils/constants';
 
+
+import { CHAT_ENGINE_NQTT, CHAT_ENGINE_FIREBASE } from './utils/constants';
+
 // SERVICES
 import { AppConfigProvider } from './services/app-config';
 
@@ -43,6 +46,13 @@ import { FirebaseConversationHandlerBuilderService } from 'src/chat21-core/provi
 import { UploadService } from 'src/chat21-core/providers/abstract/upload.service';
 import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/firebase-upload.service';
 
+// MQTT
+import { Chat21Service } from './services/chat-service';
+import { MQTTAuthService } from './services/mqtt/mqtt-auth-service';
+import { MQTTConversationsHandler } from './services/mqtt/mqtt-conversations-handler';
+import { MQTTTypingService } from './services/mqtt/mqtt-typing.service';
+import { MQTTPresenceService } from './services/mqtt/mqtt-presence.service';
+
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
 import { ConversationDetailPageModule } from './pages/conversation-detail/conversation-detail.module';
@@ -58,10 +68,19 @@ export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
+// export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
+//   console.log('authenticationFactory: ');
+//   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+//     return new FirebaseAuthService(http, route);
+//   } else {
+//     return new FirebaseAuthService(http, route);
+//   }
+// }
+
+export function authenticationFactory(http: HttpClient, route: ActivatedRoute, chat21Service: Chat21Service) {
   console.log('authenticationFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseAuthService(http, route);
+    return new MQTTAuthService(http, chat21Service);
   } else {
     return new FirebaseAuthService(http, route);
   }
