@@ -156,7 +156,7 @@ export class ConversationListPage implements OnInit {
    */
   initConversationsHandler(userId: string) {
     const keys = [
-      'LABEL_TU'
+      'YOU'
     ];
     const translationMap = this.translateService.translateLanguage(keys);
 
@@ -215,15 +215,15 @@ export class ConversationListPage implements OnInit {
     // }
 
     const that = this;
-    this.conversationsHandlerService.conversationsAdded.subscribe((conversations: any) => {
+    this.conversationsHandlerService.conversationAdded.subscribe((conversations: any) => {
       // console.log('***** conversationsAdded *****', conversations);
       // that.conversationsChanged(conversations);
     });
-    this.conversationsHandlerService.conversationsChanged.subscribe((conversations: any) => {
+    this.conversationsHandlerService.conversationChanged.subscribe((conversations: any) => {
       // console.log('***** conversationsChanged *****', conversations);
       // that.conversationsChanged(conversations);
     });
-    this.conversationsHandlerService.conversationsRemoved.subscribe((conversations: any) => {
+    this.conversationsHandlerService.conversationRemoved.subscribe((conversations: any) => {
       // console.log('***** conversationsRemoved *****', conversations);
       // that.conversationsChanged(conversations);
     });

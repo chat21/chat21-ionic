@@ -109,13 +109,12 @@ export function uploadFactory() {
   }
 }
 
-export function conversationsHandlerFactory(
-  databaseProvider: DatabaseProvider) {
+export function conversationsHandlerFactory() {
   console.log('conversationsHandlerFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseConversationsHandler(databaseProvider);
+    return new FirebaseConversationsHandler();
   } else {
-    return new FirebaseConversationsHandler(databaseProvider);
+    return new FirebaseConversationsHandler();
   }
 }
 
@@ -220,7 +219,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ConversationsHandlerService,
       useFactory: conversationsHandlerFactory,
-      deps: [DatabaseProvider]
+      deps: []
     },
     {
       provide: ArchivedConversationsHandlerService,
