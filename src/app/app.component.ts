@@ -31,7 +31,7 @@ import { ConversationListPage } from './pages/conversations-list/conversations-l
 
 // utils
 import { createExternalSidebar, checkPlatformIsMobile } from '../chat21-core/utils/utils';
-import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE } from '../chat21-core/utils/constants';
+import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE, AUTH_STATE_ONLINE } from '../chat21-core/utils/constants';
 import { environment } from '../environments/environment';
 import { UserModel } from '../chat21-core/models/user';
 
@@ -113,7 +113,6 @@ export class AppComponent implements OnInit {
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
       this.authService.initialize('');
-      // this.authService.initialize(this.setStoragePrefix());
       // this.currentUserService.initialize();
       this.chatManager.initialize();
       this.presenceService.initialize();
@@ -124,17 +123,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  setStoragePrefix(): string{
-    let prefix = STORAGE_PREFIX;
-    let projectid = environment.firebaseConfig.projectId;
-    try {
-        const sv = 'sv' + environment.shemaVersion + '_';
-        prefix = prefix + sv;
-    } catch (e) {
-        //this.g.wdLog(['> Error :' + e]);
-    }
-    return prefix + projectid + '_';
-}
   /**
    * initFirebase
    */
@@ -254,7 +242,7 @@ export class AppComponent implements OnInit {
 
     this.authService.BSAuthStateChanged.subscribe((state: any) => {
         console.log('***** BSAuthStateChanged *****', state);
-        if(state && state === 'online'){
+        if(state && state === AUTH_STATE_ONLINE){
           const user = that.authService.getCurrentUser();
           that.goOnLine(user);
         } else if (state === AUTH_STATE_OFFLINE) {

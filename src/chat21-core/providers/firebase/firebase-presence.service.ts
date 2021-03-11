@@ -14,9 +14,8 @@ import { PresenceService } from '../abstract/presence.service';
 // import { setLastDate } from '../../utils/utils';
 // import { environment } from '../../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+// @Injectable({providedIn: 'root'})
+@Injectable()
 export class FirebasePresenceService extends PresenceService {
 
   // BehaviorSubject
@@ -40,7 +39,6 @@ export class FirebasePresenceService extends PresenceService {
    *
    */
   public initialize() {
-    console.log('FirebasePresenceService', this.tenant);
     this.urlNodePresence = '/apps/' + this.tenant + '/presence/';
   }
 
@@ -95,7 +93,7 @@ export class FirebasePresenceService extends PresenceService {
    * @param userid
    */
   public setPresence(userid: string): void  {
-    // console.log(' setPresence: ', userid);
+    //console.log(' setPresence: ', userid);
     this.onlineConnectionsRef = this.referenceOnlineForUser(userid);
     this.lastOnlineConnectionsRef = this.referenceLastOnlineForUser(userid);
     const connectedRefURL = '/.info/connected';

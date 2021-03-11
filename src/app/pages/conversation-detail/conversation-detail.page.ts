@@ -376,6 +376,23 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
   }
 
+  private setAttributes(): any {
+    const attributes: any = {
+        client: navigator.userAgent,
+        sourcePage: location.href,
+        
+    };
+
+    if(this.loggedUser && this.loggedUser.email ){
+        attributes.userEmail = this.loggedUser.email
+    }
+    if(this.loggedUser && this.loggedUser.fullname) {
+        attributes.userFullname = this.loggedUser.fullname
+    }
+    
+    return attributes;
+}
+
 
 
   /**
@@ -527,7 +544,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         this.loggedUser.uid,
         fullname,
         this.channelType,
-        this.conversationSelected.attributes
+        this.setAttributes()
       );
       this.chatManager.conversationsHandlerService.uidConvSelected = this.conversationWith;
     }

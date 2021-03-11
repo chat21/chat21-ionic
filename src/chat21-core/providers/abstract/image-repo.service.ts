@@ -6,5 +6,5 @@ import { Injectable } from '@angular/core';
 export abstract class ImageRepoService {
 
   // functions
-  abstract getImageThumb(uid: string): string;
+  abstract getImagePhotoUrl(storageBaseUrl: string, uid: string): string;
 }
