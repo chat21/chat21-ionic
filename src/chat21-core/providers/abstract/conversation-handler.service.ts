@@ -5,10 +5,10 @@ import { BehaviorSubject } from 'rxjs';
 import { MessageModel } from '../../models/message';
 import { UserModel } from '../../models/user';
 
-@Injectable({
-  providedIn: 'root'
-})
-
+// @Injectable({
+//   providedIn: 'root'
+// })
+@Injectable()
 export abstract class ConversationHandlerService {
 
   // BehaviorSubject
@@ -36,7 +36,18 @@ export abstract class ConversationHandlerService {
     sender: string,
     senderFullname: string,
     channelType: string
-  ): void;
+  ): MessageModel;
+  abstract sendMessage2(
+    msg: string,
+    type: string,
+    metadata: string,
+    conversationWith: string,
+    conversationWithFullname: string,
+    sender: string,
+    senderFullname: string,
+    channelType: string,
+    attributes: any
+  ): MessageModel;
   abstract dispose(): void;
 
 }

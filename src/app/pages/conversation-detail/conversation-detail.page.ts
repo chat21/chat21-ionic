@@ -518,7 +518,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     (metadata) ? metadata = metadata : metadata = '';
     console.log('SEND MESSAGE: ', msg, this.messages, this.loggedUser);
     if (msg && msg.trim() !== '' || type !== TYPE_MSG_TEXT) {
-      this.conversationHandlerService.sendMessage(
+      this.conversationHandlerService.sendMessage2(
         msg,
         type,
         metadata,
@@ -526,7 +526,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         this.conversationWithFullname,
         this.loggedUser.uid,
         fullname,
-        this.channelType
+        this.channelType,
+        this.conversationSelected.attributes
       );
       this.chatManager.conversationsHandlerService.uidConvSelected = this.conversationWith;
     }

@@ -32,7 +32,11 @@ import { FirebasePresenceService } from 'src/chat21-core/providers/firebase/fire
 import { TypingService } from 'src/chat21-core/providers/abstract/typing.service';
 import { FirebaseTypingService } from 'src/chat21-core/providers/firebase/firebase-typing.service';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { ConversationHandlerService } from '../chat21-core/providers/abstract/conversation-handler.service';
+
 import { FirebaseConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-conversations-handler';
+import { FirebaseConversationHandler } from 'src/chat21-core/providers/firebase/firebase-conversation-handler';
+
 import { DatabaseProvider } from './services/database';
 import { FirebaseImageRepoService } from 'src/chat21-core/providers/firebase/firebase-image-repo';
 import { FirebaseArchivedConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-archivedconversations-handler';
@@ -144,6 +148,14 @@ export function conversationHandlerBuilderFactory() {
   }
 }
 
+export function conversationHandlerFactory() {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+    return new FirebaseConversationHandler(true);
+  } else {
+    return new FirebaseConversationHandler(true);
+  }
+}
+
 const appInitializerFn = (appConfig: AppConfigProvider) => {
   return () => {
     if (environment.remoteConfig) {
@@ -224,6 +236,11 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ArchivedConversationsHandlerService,
       useFactory: archivedConversationsHandlerFactory,
+      deps: []
+    },
+    {
+      provide: ConversationHandlerService,
+      useFactory: conversationHandlerFactory,
       deps: []
     },
     {

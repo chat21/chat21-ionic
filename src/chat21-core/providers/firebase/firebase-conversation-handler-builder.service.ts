@@ -13,7 +13,7 @@ export class FirebaseConversationHandlerBuilderService extends ConversationHandl
   }
 
   public build(): any {
-    const conversationHandlerService = new FirebaseConversationHandler();
+    const conversationHandlerService = new FirebaseConversationHandler(true);
     return conversationHandlerService;
   }
 }
