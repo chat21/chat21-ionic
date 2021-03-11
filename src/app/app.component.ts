@@ -112,7 +112,7 @@ export class AppComponent implements OnInit {
       this.splashScreen.hide();
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
-      this.authService.initialize();
+      this.authService.initialize('');
       // this.authService.initialize(this.setStoragePrefix());
       // this.currentUserService.initialize();
       this.chatManager.initialize();
@@ -252,11 +252,12 @@ export class AppComponent implements OnInit {
   initSubscriptions() {
     const that = this;
 
-    this.authService.BSAuthStateChanged.subscribe((data: any) => {
-        console.log('***** BSAuthStateChanged *****', data);
-        if (data && data.uid) {
-          that.goOnLine(data);
-        } else if (data === AUTH_STATE_OFFLINE) {
+    this.authService.BSAuthStateChanged.subscribe((state: any) => {
+        console.log('***** BSAuthStateChanged *****', state);
+        if(state && state === 'online'){
+          const user = that.authService.getCurrentUser();
+          that.goOnLine(user);
+        } else if (state === AUTH_STATE_OFFLINE) {
           that.goOffLine();
         } else {
           // sono nel primo caso null

@@ -65,6 +65,9 @@ export class LoginPage implements OnInit {
       this.subscriptions.push(keySubscription);
       this.events.subscribe(keySubscription, this.signIn);
     }
+    const subAuthStateChanged = this.authService.BSAuthStateChanged.subscribe(state => {
+      console.log('BSAuthStateChanged:::', state);
+    });
   }
 
   /**

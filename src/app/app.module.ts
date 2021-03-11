@@ -58,12 +58,15 @@ export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
-  console.log('authenticationFactory: ');
+export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider ) {
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseAuthService(http, route);
+    const auth= new FirebaseAuthService(http); 
+    auth.setBaseUrl(appConfig.getConfig().apiUrl)
+    return auth
   } else {
-    return new FirebaseAuthService(http, route);
+    const auth= new FirebaseAuthService(http); 
+    auth.setBaseUrl(appConfig.getConfig().apiUrl)
+    return auth
   }
 }
 
@@ -189,10 +192,15 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
       multi: true,
       deps: [AppConfigProvider]
     },
+    // {
+    //   provide: AuthService,
+    //   useFactory: authenticationFactory,
+    //   deps: [HttpClient, AppConfigService ]
+    // },
     {
       provide: AuthService,
       useFactory: authenticationFactory,
-      deps: [HttpClient, ActivatedRoute]
+      deps: [HttpClient, AppConfigProvider]
      },
     {
       provide: PresenceService,
