@@ -72,12 +72,12 @@ export class UserTypingComponent implements OnInit, OnDestroy {
   subscribeTypings(data: any) {
     const that = this;
     try {
-      const key = data.uid;
+      const key = data.uidUserTypingNow;
       this.nameUserTypingNow = null;
       if (data.nameUserTypingNow) {
         this.nameUserTypingNow = data.nameUserTypingNow;
       }
-      console.log('subscribeTypings data:', data.uid);
+      console.log('subscribeTypings data:', data);
       const userTyping = this.membersConversation.includes(key);
       if ( !userTyping ) {
         this.isTyping = true;

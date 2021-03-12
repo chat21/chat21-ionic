@@ -26,7 +26,6 @@ export class AppConfigProvider {
 
   /** */
   getConfig() {
-    console.log('appConfig:::: ',this.appConfig);
     return this.appConfig;
   }
   

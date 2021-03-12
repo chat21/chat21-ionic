@@ -55,8 +55,7 @@ export class FirebaseTypingService extends TypingService {
     const ref = firebase.database().ref(urlTyping);
     ref.on('child_changed', (childSnapshot) => {
       const precence: TypingModel = childSnapshot.val();
-      //this.BSIsTyping.next({uid: idConversation, uidUserTypingNow: precence.uid, nameUserTypingNow: precence.name});
-      this.BSIsTyping.next({uid: idConversation, uidUserTypingNow: childSnapshot.key, nameUserTypingNow: precence.name});
+      this.BSIsTyping.next({uid: idConversation, uidUserTypingNow: precence.uid, nameUserTypingNow: precence.name});
     });
   }
 
