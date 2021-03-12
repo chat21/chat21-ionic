@@ -366,6 +366,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     /** */
     private added(childSnapshot: any) {
         const msg = this.messageGenerate(childSnapshot);
+        console.log('messageGenerate return' + JSON.stringify(msg))
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
         msg.headerDate = null;
         const headerDate = setHeaderDate(this.translationMap, msg.timestamp);
@@ -407,7 +408,8 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
 
     /** */
     private messageGenerate(childSnapshot: any) {
-        const msg: MessageModel = childSnapshot.val();        
+        const msg: MessageModel = childSnapshot.val();
+        console.log('messssss', childSnapshot.val(), msg)        
         msg.uid = childSnapshot.key;
         // controllo fatto per i gruppi da rifattorizzare
         if (!msg.sender_fullname || msg.sender_fullname === 'undefined') {
@@ -456,6 +458,8 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         const INFO_SUPPORT_USER_ADDED_VERB = this.translationMap.get('INFO_SUPPORT_USER_ADDED_VERB');
         const INFO_SUPPORT_CHAT_REOPENED = this.translationMap.get('INFO_SUPPORT_CHAT_REOPENED');
         const INFO_SUPPORT_CHAT_CLOSED = this.translationMap.get('INFO_SUPPORT_CHAT_CLOSED');
+
+        console.log('messageeee infooooo', message)
         if (message.attributes.messagelabel
             && message.attributes.messagelabel.parameters
             && message.attributes.messagelabel.key === MEMBER_JOINED_GROUP

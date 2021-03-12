@@ -31,6 +31,7 @@
           <ion-avatar item-start>
             <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
             <div *ngIf="conversation.image" #avatarImage class="avatar-profile" [style.background-image]="'url(' + conversation.image + ')'"></div>
+            <!-- <div *ngIf="getImageAvatar(conversation.sender)" #avatarImage class="avatar-profile" [style.background-image]="'url(' + getImageAvatar(conversation.sender) + ')'"></div> -->
           </ion-avatar>
           <ion-label>
             <div class="conversation_with truncate" [innerHTML]="conversation.conversation_with_fullname"></div>

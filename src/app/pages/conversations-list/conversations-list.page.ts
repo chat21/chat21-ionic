@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ModalController, IonRouterOutlet, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-
+import {setConversationAvatar} from '../../../chat21-core/utils/utils';
 // config
 import { environment } from '../../../environments/environment';
 
@@ -19,7 +19,7 @@ import {
   convertMessage,
   windowsMatchMedia
  } from '../../../chat21-core/utils/utils';
-import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE } from '../../../chat21-core/utils/constants';
+import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE, FIREBASESTORAGE_BASE_URL_IMAGE } from '../../../chat21-core/utils/constants';
 import { EventsService } from '../../services/events-service';
 import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootstrap/perfect-scrollbar
 
@@ -40,6 +40,7 @@ import { ContactsDirectoryPage } from '../contacts-directory/contacts-directory.
 import { ProfileInfoPage } from '../profile-info/profile-info.page';
 import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
 import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 
 @Component({
   selector: 'app-conversations-list',
@@ -75,6 +76,7 @@ export class ConversationListPage implements OnInit {
     public conversationsHandlerService: ConversationsHandlerService,
     public chatManager: ChatManager,
     public authService: AuthService,
+    public imageRepoService:ImageRepoService,
     private translateService: CustomTranslateService
   ) {
     // console.log('constructor ConversationListPage');
@@ -352,6 +354,20 @@ export class ConversationListPage implements OnInit {
   }
 
 
+  getImageAvatar(conversation: ConversationModel): string{
+    if(conversation && conversation.sender === this.loggedUserUid){
+      //get uid from recipient
+      // let conversationAvatar = setConversationAvatar(
+      //   conversation.uid,
+      //   this.conversationWithFullname,
+      //   this.channelType
+      // );
+      return this.imageRepoService.getImagePhotoUrl(FIREBASESTORAGE_BASE_URL_IMAGE, conversation.recipient)
+    }else if (conversation && conversation.sender !== this.loggedUserUid){
+      // get uid from sender
+      return this.imageRepoService.getImagePhotoUrl(FIREBASESTORAGE_BASE_URL_IMAGE, conversation.recipient)
+    }
+  }
   /**
    * ::: initVariables :::
    * al caricamento della pagina:
