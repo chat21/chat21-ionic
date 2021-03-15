@@ -415,6 +415,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.conversationWithFullname,
       this.channelType
     );
+    
     console.log('this.conversationAvatar: ', this.conversationAvatar);
   }
 
