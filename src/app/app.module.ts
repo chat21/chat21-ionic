@@ -150,9 +150,9 @@ export function conversationHandlerBuilderFactory() {
 
 export function conversationHandlerFactory() {
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseConversationHandler(true);
+    return new FirebaseConversationHandler(false);
   } else {
-    return new FirebaseConversationHandler(true);
+    return new FirebaseConversationHandler(false);
   }
 }
 

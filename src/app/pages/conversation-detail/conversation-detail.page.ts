@@ -383,6 +383,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         
     };
 
+    //TODO: servono ???
     if(this.loggedUser && this.loggedUser.email ){
         attributes.userEmail = this.loggedUser.email
     }
@@ -810,7 +811,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    * @param message
    */
   newMessageAdded(message: MessageModel) {
-      console.log('newMessageAdded:');
       message.text = this.linkifyService.linkify(message.text, this.linkifyOptions);
       if (message) {
         console.log('newMessageAdded', message);
@@ -860,8 +860,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public actionScrollBottom() {
     console.log('actionScrollBottom ---> ', this.ionContentChatArea);
     // const that = this;
-    // this.showButtonToBottom = false;
-    // this.NUM_BADGES = 0;
+     this.showButtonToBottom = false;
+     this.NUM_BADGES = 0;
     setTimeout( () => {
       this.ionContentChatArea.scrollToBottom(5);
       // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);

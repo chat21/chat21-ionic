@@ -202,7 +202,6 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     //  * @param childSnapshot
     //  */
     private conversationGenerate(childSnapshot: any): boolean {
-        console.log('conversationGenerate: ', childSnapshot.val());
         const childData: ConversationModel = childSnapshot.val();
         console.log(childData.sender_fullname);
         childData.uid = childSnapshot.key;
@@ -266,7 +265,6 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      */
     //TODO-GAB: ora emit singola conversation e non dell'intero array di conversations
     private added(childSnapshot: any) {
-        console.log('added childSnapshot:: ', childSnapshot.val());
         if (this.conversationGenerate(childSnapshot)) {
             const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
             if (index > -1) {
@@ -337,7 +335,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * @param conv
      */
     private completeConversation(conv): ConversationModel {
-        console.log('completeConversation'+ conv.sender_fullname);
+        console.log('completeConversation', conv);
         conv.selected = false;
         if (!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === '') {
             conv.sender_fullname = conv.sender;
@@ -351,7 +349,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.sender_fullname = this.translationMap.get('YOU')
-            conv.last_message_text = this.translationMap.get('YOU') + ': ' + conv.last_message_text;
+            // conv.last_message_text = this.translationMap.get('YOU') + ': ' + conv.last_message_text;
         } else if (conv.channel_type === TYPE_GROUP) {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.sender_fullname;
@@ -412,7 +410,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      *  check if the conversations is valid or not
      */
     private isValidConversation(convToCheck: ConversationModel): boolean {
-        console.log('isValidConversation:', convToCheck);
+
         if (!this.isValidField(convToCheck.uid)) {
             return false;
         }
