@@ -3,6 +3,7 @@
 ### 3.0.18
 ...
 
+
 ### 3.0.17
 - bug fix: changed abstract classes in app module
 - changed: class presence
