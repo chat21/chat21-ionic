@@ -1,3 +1,4 @@
+import { CustomLogger } from './../chat21-core/providers/logger/customLogger';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
@@ -12,6 +13,7 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { Chooser } from '@ionic-native/chooser/ngx';
+import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 
 // COMPONENTS
 import { AppComponent } from './app.component';
@@ -56,6 +58,7 @@ import {LoaderPreviewPageModule} from './pages/loader-preview/loader-preview.mod
 // UTILS
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -188,6 +191,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
         deps: [HttpClient]
       }
     }),
+    LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR}),
     ScrollbarThemeModule,
     SharedModule,
     NgxLinkifyjsModule.forRoot(),
@@ -252,6 +256,10 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
       provide: ConversationHandlerBuilderService,
       useFactory: conversationHandlerBuilderFactory,
       deps: []
+    },
+    {
+      provide: LoggerService,
+      useClass: CustomLogger
     },
     StatusBar,
     SplashScreen,

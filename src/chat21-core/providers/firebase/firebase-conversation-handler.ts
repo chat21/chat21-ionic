@@ -366,7 +366,6 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     /** */
     private added(childSnapshot: any) {
         const msg = this.messageGenerate(childSnapshot);
-        console.log('messageGenerate return' + JSON.stringify(msg))
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
         msg.headerDate = null;
         const headerDate = setHeaderDate(this.translationMap, msg.timestamp);
