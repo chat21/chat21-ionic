@@ -31,6 +31,7 @@ import { InfoContentComponent } from '../components/conversation-info/info-conte
 import { InfoSupportGroupComponent } from '../components/conversation-info/info-support-group/info-support-group.component';
 import { InfoDirectComponent } from '../components/conversation-info/info-direct/info-direct.component';
 import { InfoGroupComponent } from '../components/conversation-info/info-group/info-group.component';
+import { TooltipModule } from 'ng2-tooltip-directive';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { InfoGroupComponent } from '../components/conversation-info/info-group/i
   imports: [
     CommonModule,
     IonicModule,
-    MomentModule
+    MomentModule,
+    TooltipModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

@@ -65,15 +65,13 @@ export class BubbleMessageComponent implements OnInit {
   */
  handleTooltipEvents(event) {
   const that = this;
-  const showDelay = this.tooltipOptions['showDelay'];
-  // console.log(this.tooltipOptions);
+  const showDelay = this.tooltipOptions['show-delay'];
   setTimeout(function () {
     try {
+      
       const domRepresentation = document.getElementsByClassName('chat-tooltip');
-      console.log('dommmmmmm', document)
       if (domRepresentation) {
         const item = domRepresentation[0] as HTMLInputElement;
-        // console.log(item);
         if (!item.classList.contains('tooltip-show')) {
           item.classList.add('tooltip-show');
         }

@@ -61,9 +61,13 @@ import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
+// Directives
+import { TooltipModule } from 'ng2-tooltip-directive';
+
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+
 }
 
 export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider ) {
