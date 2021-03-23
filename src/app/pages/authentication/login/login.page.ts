@@ -3,7 +3,7 @@ import { ToastController } from '@ionic/angular';
 
 // services
 import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
-import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
+import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { EventsService } from '../../../services/events-service';
 
 import { LoginComponent } from '../../../components/authentication/login/login.component';

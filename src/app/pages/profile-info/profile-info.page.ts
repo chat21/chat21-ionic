@@ -3,8 +3,8 @@ import { ModalController } from '@ionic/angular';
 
 // services
 import { NavProxyService } from '../../services/nav-proxy.service';
-import { ChatManager } from '../../../chat21-core/chat-manager';
-import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
+import { ChatManager } from 'src/chat21-core/providers/chat-manager';
+import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
 // import { EventsService } from '../../services/events-service';
 import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';

@@ -17,7 +17,7 @@ import { ConversationModel } from '../../models/conversation';
 import { ConversationHandlerService } from '../abstract/conversation-handler.service';
 
 // utils
-import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT } from '../../utils/constants';
+import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT, MESSAGE_TYPE_INFO } from '../../utils/constants';
 import {
   htmlEntities,
   compareValues,
@@ -27,6 +27,7 @@ import {
 } from '../../utils/utils';
 import { timestamp } from 'rxjs/operators';
 import { MessageModel } from '../../models/message';
+import { messageType } from 'src/chat21-core/utils/utils-message';
 
 
 
@@ -151,7 +152,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         // const key = messageRef.key;
         const lang = document.documentElement.lang;
         const recipientFullname = conversationWithFullname;
-        const dateSendingMessage = setHeaderDate(this.translationMap, '');
+        // const dateSendingMessage = setHeaderDate(this.translationMap, '');
         const timestamp = firebase.database.ServerValue.TIMESTAMP
         console.log('ssssssssssssssssssss', senderFullname, sender)
         const message = new MessageModel(
@@ -165,7 +166,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
             metadataMsg,
             msg,
             timestamp,
-            dateSendingMessage,
+            //dateSendingMessage,
             typeMsg,
             this.attributes,
             channelType,
@@ -247,7 +248,6 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         // const key = messageRef.key;
         const lang = document.documentElement.lang;
         const recipientFullname = conversationWithFullname;
-        const dateSendingMessage = setHeaderDate(this.translationMap, '');
         const timestamp = firebase.database.ServerValue.TIMESTAMP
         const message = new MessageModel(
             '',
@@ -260,7 +260,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
             metadataMsg,
             msg,
             timestamp,
-            dateSendingMessage,
+            //dateSendingMessage,
             typeMsg,
             attributes,
             channelType,
@@ -366,15 +366,8 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     /** */
     private added(childSnapshot: any) {
         const msg = this.messageGenerate(childSnapshot);
-        // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        msg.headerDate = null;
-        const headerDate = setHeaderDate(this.translationMap, msg.timestamp);
-        if (headerDate !== this.lastDate) {
-            this.lastDate = headerDate;
-            msg.headerDate = headerDate;
-        }
-
-        if(this.skipMessage && msg.attributes && msg.attributes['subtype'] === 'info'){
+        // msg.attributes && msg.attributes['subtype'] === 'info'
+        if(this.skipMessage && messageType(MESSAGE_TYPE_INFO, msg) ){
             return;
         }
         // console.log('>>>>>>>>>>>>>> added headerDate: ', msg);
@@ -386,8 +379,9 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private changed(childSnapshot: any) {
         const msg = this.messageGenerate(childSnapshot);
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        // con**** DATAIL messageAdded ***sole.log('>>>>>>>>>>>>>> changed headerDate: ', msg);
-        if(this.skipMessage && msg.attributes && msg.attributes['subtype'] === 'info'){
+        // console.log('>>>>>>>>>>>>>> changed headerDate: ', msg);
+        // msg.attributes && msg.attributes['subtype'] === 'info'
+        if(this.skipMessage && messageType(MESSAGE_TYPE_INFO, msg) ){
             return;
         }
         this.addRepalceMessageInArray(childSnapshot.key, msg);
@@ -407,8 +401,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
 
     /** */
     private messageGenerate(childSnapshot: any) {
-        const msg: MessageModel = childSnapshot.val();
-        console.log('messssss', childSnapshot.val(), msg)        
+        const msg: MessageModel = childSnapshot.val();       
         msg.uid = childSnapshot.key;
         // controllo fatto per i gruppi da rifattorizzare
         if (!msg.sender_fullname || msg.sender_fullname === 'undefined') {
@@ -437,14 +430,13 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private addRepalceMessageInArray(key: string, msg: MessageModel) {
         const index = searchIndexInArrayForUid(this.messages, key);
         if (index > -1) {
-            const headerDate = this.messages[index].headerDate;
-            msg.headerDate = headerDate;
             this.messages.splice(index, 1, msg);
         } else {
             this.messages.splice(0, 0, msg);
         }
         this.messages.sort(compareValues('timestamp', 'asc'));
         // aggiorno stato messaggio, questo stato indica che è stato consegnato al client e NON che è stato letto
+        // CONTROLLARE FUNZIONA --> conversationwith
         this.setStatusMessage(msg, this.conversationWith);
     }
 

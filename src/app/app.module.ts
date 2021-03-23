@@ -1,4 +1,5 @@
-import { CustomLogger } from './../chat21-core/providers/logger/customLogger';
+import { MomentModule } from 'angular2-moment';
+import { CustomLogger } from 'src/chat21-core/providers/logger/customLogger';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
@@ -13,7 +14,7 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { Chooser } from '@ionic-native/chooser/ngx';
-import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
+import { LoggerModule, NGXLogger, NgxLoggerLevel } from "ngx-logger";
 
 // COMPONENTS
 import { AppComponent } from './app.component';
@@ -159,6 +160,10 @@ export function conversationHandlerFactory() {
   }
 }
 
+export function loggerFactory(logger: NGXLogger) {
+    return new CustomLogger(true, logger);
+}
+
 const appInitializerFn = (appConfig: AppConfigProvider) => {
   return () => {
     if (environment.remoteConfig) {
@@ -191,7 +196,12 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
         deps: [HttpClient]
       }
     }),
-    LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR}),
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.DEBUG, 
+      serverLogLevel: NgxLoggerLevel.ERROR,
+      timestampFormat: 'HH:mm:ss.SSS',
+      enableSourceMaps: true
+    }),
     ScrollbarThemeModule,
     SharedModule,
     NgxLinkifyjsModule.forRoot(),
@@ -259,7 +269,8 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     },
     {
       provide: LoggerService,
-      useClass: CustomLogger
+      useFactory: loggerFactory,
+      deps: [NGXLogger]
     },
     StatusBar,
     SplashScreen,

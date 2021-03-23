@@ -13,7 +13,7 @@ import {
 
 import {
   getSizeImg
-} from 'src/app/utils/utils-message';
+} from 'src/chat21-core/utils/utils-message';
 
 import {
   MSG_STATUS_SENT,
