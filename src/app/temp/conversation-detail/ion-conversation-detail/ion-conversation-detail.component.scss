@@ -1,0 +1,106 @@
+
+ion-item {
+    --padding-end: 0px;
+    --inner-padding-end: 0px;
+    --min-height: 20px;
+}
+
+/* ====== SET MESSAGES ====== */
+.msg_container {
+    overflow: hidden;
+    display: flex;
+    //opacity: 0px;
+}
+
+.msg_info_container{
+    text-align: center;
+    padding: 2px 0px 2px 0px;
+}
+
+.message_sender_fullname{
+    font-size: 0.7em;
+    margin: 0 0 1px 10px;
+    color: var(--gray);
+}
+
+.messages {
+    border-radius: 18px;
+    padding: 0;
+    word-wrap: break-word;
+    // padding: 14px;
+    // padding: 6px 6px 6px 6px;
+    // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    // -webkit-animation: heartbeat 1.5s ease-in-out both;
+    // animation: heartbeat 1.5s ease-in-out both;                    
+}
+                
+/* send message */
+.base_sent {
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 2px 0px 4px 40px;
+
+    .msg_sent {
+        background-color: var(--bobble-blue);
+        color: var(--col-msg-sent);
+        margin-right: 4px;
+        margin-left: 4px;
+        max-width: calc(100% - 70px);
+        min-width: 14px;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 0px;
+        
+    }
+    
+}
+    
+/** recive message **/
+.base_receive {
+    padding: 0px 0px 6px 0px;
+    /* avatar */
+    .content-avatar {
+        position: relative;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        margin-right: 6px;
+
+        .profile_image{
+            position: relative;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #ffffff;
+            border: 1px solid #e2e2e2;
+        }
+        .profile_image img{
+            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            min-width: 25px;
+            min-height: 25px;
+            object-fit: cover;
+        }
+    }
+    /* message */
+    .msg_receive {
+        background-color: var(--light-white);
+        color: #1a1a1a;
+        // max-width: 260px;
+        max-width: calc(100% - 70px);
+        min-width: 14px;
+        margin: 0 20px 4px 10px;
+        height: fit-content;
+        width: auto;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 0px;
+
+    }                    
+}
+
+.time{
+    margin-bottom: 20px;
+}
+
+

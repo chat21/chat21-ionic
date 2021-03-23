@@ -20,10 +20,10 @@ import { TypingService } from '../chat21-core/providers/abstract/typing.service'
 import { UploadService } from '../chat21-core/providers/abstract/upload.service';
 // import { ChatPresenceHandler} from './services/chat-presence-handler';
 import { NavProxyService } from './services/nav-proxy.service';
-import { ChatManager } from '../chat21-core/chat-manager';
+import { ChatManager } from 'src/chat21-core/providers/chat-manager';
 // import { ChatConversationsHandler } from './services/chat-conversations-handler';
-import { ConversationsHandlerService } from '../chat21-core/providers/abstract/conversations-handler.service';
-import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
+import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 
 // pages
 import { LoginPage } from './pages/authentication/login/login.page';

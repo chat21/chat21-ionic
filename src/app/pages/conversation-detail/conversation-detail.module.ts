@@ -54,14 +54,14 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     ConversationDetailPage,
     HeaderConversationDetailComponent,
     MessageTextAreaComponent,
-    BubbleDayMessageComponent,
-    BubbleSystemMessageComponent,
-    BubbleMyMessageComponent,
-    BubbleOthersMessageComponent,
-    InfoContentComponent,
-    InfoSupportGroupComponent,
-    InfoDirectComponent,
-    InfoGroupComponent
+    // BubbleDayMessageComponent,
+    // BubbleSystemMessageComponent,
+    // BubbleMyMessageComponent,
+    // BubbleOthersMessageComponent,
+    // InfoContentComponent,
+    // InfoSupportGroupComponent,
+    // InfoDirectComponent,
+    // InfoGroupComponent
   ]
 })
 export class ConversationDetailPageModule {}

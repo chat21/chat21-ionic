@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ModalController, IonRouterOutlet, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-
 // config
 import { environment } from '../../../environments/environment';
 
@@ -19,7 +18,7 @@ import {
   convertMessage,
   windowsMatchMedia
  } from '../../../chat21-core/utils/utils';
-import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE } from '../../../chat21-core/utils/constants';
+import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE, FIREBASESTORAGE_BASE_URL_IMAGE, TYPE_GROUP } from '../../../chat21-core/utils/constants';
 import { EventsService } from '../../services/events-service';
 import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootstrap/perfect-scrollbar
 
@@ -32,14 +31,16 @@ import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootst
 import { DatabaseProvider } from '../../services/database';
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
-import { ChatManager } from '../../../chat21-core/chat-manager';
+import { ChatManager } from 'src/chat21-core/providers/chat-manager';
 import { NavProxyService } from '../../services/nav-proxy.service';
 
 import { ConversationDetailPage } from '../conversation-detail/conversation-detail.page';
 import { ContactsDirectoryPage } from '../contacts-directory/contacts-directory.page';
 import { ProfileInfoPage } from '../profile-info/profile-info.page';
 import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
-import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
+import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
 @Component({
   selector: 'app-conversations-list',
@@ -63,6 +64,8 @@ export class ConversationListPage implements OnInit {
   public convertMessage = convertMessage;
   private isShowMenuPage = false;
 
+  translationMapConversation: Map<string, string>;
+  styleMap: Map<string, string>;
 
   constructor(
     private router: Router,
@@ -75,7 +78,9 @@ export class ConversationListPage implements OnInit {
     public conversationsHandlerService: ConversationsHandlerService,
     public chatManager: ChatManager,
     public authService: AuthService,
-    private translateService: CustomTranslateService
+    public imageRepoService:ImageRepoService,
+    private translateService: CustomTranslateService,
+    private logger: LoggerService
   ) {
     // console.log('constructor ConversationListPage');
   }
@@ -92,7 +97,7 @@ export class ConversationListPage implements OnInit {
   }
 
   ngOnInit() {
-    // console.log('ngOnInit ConversationDetailPage: ');
+    //console.log('ngOnInit ConversationDetailPage: ');
   }
 
   ionViewWillEnter() {
@@ -216,15 +221,15 @@ export class ConversationListPage implements OnInit {
 
     const that = this;
     this.conversationsHandlerService.conversationAdded.subscribe((conversations: any) => {
-      // console.log('***** conversationsAdded *****', conversations);
+       console.log('***** conversationsAdded *****', conversations);
       // that.conversationsChanged(conversations);
     });
     this.conversationsHandlerService.conversationChanged.subscribe((conversations: any) => {
-      // console.log('***** conversationsChanged *****', conversations);
+       console.log('***** conversationsChanged *****', conversations);
       // that.conversationsChanged(conversations);
     });
     this.conversationsHandlerService.conversationRemoved.subscribe((conversations: any) => {
-      // console.log('***** conversationsRemoved *****', conversations);
+       console.log('***** conversationsRemoved *****', conversations);
       // that.conversationsChanged(conversations);
     });
 
@@ -442,6 +447,34 @@ export class ConversationListPage implements OnInit {
       }
     }
   }
+
+  onConversationSelected(conversation: ConversationModel){
+    //console.log('returnSelectedConversation::', conversation)
+    this.navigateByUrl(conversation.uid)
+  }
+
+  onImageLoaded(conversation: ConversationModel){
+    let conversation_with_fullname = conversation.sender_fullname;
+    let conversation_with = conversation.sender; 
+    if (conversation.sender === this.loggedUserUid) {
+      conversation_with = conversation.recipient;
+      conversation_with_fullname = conversation.recipient_fullname;
+    } else if (conversation.channel_type === TYPE_GROUP) {
+        conversation_with = conversation.recipient;
+        conversation_with_fullname = conversation.sender_fullname;
+        // conv.last_message_text = conv.last_message_text;
+    }
+    conversation.image= this.imageRepoService.getImagePhotoUrl(FIREBASESTORAGE_BASE_URL_IMAGE, conversation_with)
+  }
+
+  onConversationLoaded(conversation: ConversationModel){
+    const keys = [ 'YOU' ];
+    const translationMap = this.translateService.translateLanguage(keys);
+    if (conversation.sender === this.loggedUserUid) {
+      conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text;
+    }
+  }
+
 
   navigateByUrl(uidConvSelected: string) {
     this.setUidConvSelected(uidConvSelected);

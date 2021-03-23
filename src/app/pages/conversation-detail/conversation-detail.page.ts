@@ -18,10 +18,10 @@ import { ConversationModel } from 'src/chat21-core/models/conversation';
 
 // services
 import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
-import { ChatManager } from '../../../chat21-core/chat-manager';
+import { ChatManager } from 'src/chat21-core/providers/chat-manager';
 import { AppConfigProvider } from '../../services/app-config';
 import { DatabaseProvider } from '../../services/database';
-import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
+import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { TypingService } from 'src/chat21-core/providers/abstract/typing.service';
 import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
 
@@ -84,7 +84,7 @@ import {
   isInfo,
   isMine,
   messageType
-} from '../../utils/utils-message';
+} from 'src/chat21-core/utils/utils-message';
 
 // import { EventsService } from '../../services/events-service';
 // import { initializeApp } from 'firebase';
@@ -676,15 +676,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   // -------------- START OUTPUT functions -------------- //
   logScrollStart(event: any) {
-    // console.log('logScrollStart : When Scroll Starts', event);
+     //console.log('logScrollStart : When Scroll Starts', event);
   }
 
   logScrolling(event: any) {
-    // console.log('logScrolling : When Scrolling', event);
+     //console.log('logScrolling : When Scrolling', event);
+     this.detectBottom()
   }
 
   logScrollEnd(event: any) {
-    // console.log('logScrollEnd : When Scroll Ends', event);
+     //console.log('logScrollEnd : When Scroll Ends', event);
   }
 
 
@@ -702,8 +703,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // console.log('scrollElement.scrollTop', scrollElement.scrollTop);
     // console.log('scrollElement.scrollHeight - scrollElement.clientHeight', (scrollElement.scrollHeight - scrollElement.clientHeight));
     if (scrollElement.scrollTop < scrollElement.scrollHeight - scrollElement.clientHeight ) {
+      //NON SONO ALLA FINE --> mostra badge
       this.showButtonToBottom = true;
     } else {
+      // SONO ALLA FINE --> non mostrare badge,
       this.showButtonToBottom = false;
       this.NUM_BADGES = 0;
       this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
@@ -814,10 +817,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       message.text = this.linkifyService.linkify(message.text, this.linkifyOptions);
       if (message) {
         console.log('newMessageAdded', message);
-        console.log('message.isSender', message.isSender);
-        console.log('message.status', message.status);
+        // console.log('message.isSender', message.isSender);
+        // console.log('message.status', message.status);
         if (message.isSender) {
-          console.log('message message.isSender', this.ionContentChatArea);
+          //console.log('message message.isSender', this.ionContentChatArea);
           this.scrollBottom(0);
           this.detectBottom();
         } else {
@@ -886,6 +889,62 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
   // -------------- END SCROLL/RESIZE functions -------------- //
+
+
+  // -------------- START HANDLER functions -------------- //
+  returnOnBeforeMessageRender(event){
+    //this.onBeforeMessageRender.emit(event)
+  }
+
+  returnOnAfterMessageRender(event){
+    // this.onAfterMessageRender.emit(event)
+  }
+
+  returnOnMenuOption(event:boolean){
+    // this.isMenuShow = event;
+  }
+
+  returnOnScrollContent(event: boolean){
+    // this.showBadgeScroollToBottom = event;
+    // console.log('scroool eventtt', event)
+    // //se sono alla fine (showBadgeScroollBottom === false) allora imposto messageBadgeCount a 0
+    // if(this.showBadgeScroollToBottom === false){
+    //   this.messagesBadgeCount = 0;
+    //   //this.updateConversationBadge();
+    // }
+  }
+
+  returnOnAttachmentButtonClicked(event: any) {
+    // console.log('eventbutton', event)
+    // if (!event || !event.target.type) {
+    //   return;
+    // }
+    // switch (event.target.type) {
+    //   case 'url':
+    //     try {
+    //       this.openLink(event.target.button);
+    //     } catch (err) {
+    //       this.g.wdLog(['> Error :' + err]);
+    //     }
+    //     return;
+    //   case 'action':
+    //     try {
+    //       this.actionButton(event.target.button);
+    //     } catch (err) {
+    //       this.g.wdLog(['> Error :' + err]);
+    //     }
+    //     return false;
+    //   case 'text':
+    //     try{
+    //       const text = event.target.button.value
+    //       const metadata = { 'button': true };
+    //       this.conversationFooter.sendMessage(text, TYPE_MSG_TEXT, metadata);
+    //     }catch(err){
+    //       this.g.wdLog(['> Error :' + err]);
+    //     }
+    //   default: return;
+    // }
+  }
 
 }
 // END ALL //

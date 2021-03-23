@@ -43,13 +43,13 @@
               [class.active]="showIonContent"
               >
             
-              <ion-list no-lines>
+              <!-- <ion-list no-lines>
                 <div *ngFor="let message of messages; let i = index">
                   
-                  <!-- <ion-item *ngIf="messageType(MESSAGE_TYPE_DATE, message)" class="ion-no-padding" text-wrap lines="none"> -->
-                  <ion-item *ngIf="message.headerDate" class="ion-no-padding" text-wrap lines="none">
+                  <!- - <ion-item *ngIf="messageType(MESSAGE_TYPE_DATE, message)" class="ion-no-padding" text-wrap lines="none"> - ->
+                  <ion-item *ngIf="message.timestamp" class="ion-no-padding" text-wrap lines="none">
                     <app-bubble-day-message
-                      messageDate = {{message.headerDate}}
+                      messageDate = {{message.timestamp}}
                     ></app-bubble-day-message>
                   </ion-item>
 
@@ -76,7 +76,20 @@
                   </ion-item>
 
                 </div>
-              </ion-list>
+              </ion-list> -->
+
+              <ion-conversation-detail
+                [channelType]="channelType"
+                [messages]="messages"
+                [senderId]="loggedUser.uid"
+                [baseLocation]="window?.location?.origin"
+                [stylesMap]="styleMap"
+                (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+                (onAfterMessageRender)="returnOnAfterMessageRender($event)"
+                (onAttachmentButtonClicked)="returnOnAttachmentButtonClicked($event)"
+                (onScrollContent)="returnOnScrollContent($event)"
+                (onMenuOptionShow)="returnOnMenuOption($event)">
+              </ion-conversation-detail>
 
             </ion-content>
             </ng-template>
