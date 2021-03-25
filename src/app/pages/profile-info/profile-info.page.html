@@ -49,13 +49,13 @@
   </div>
 
   <ion-list *ngIf="loggedUser" >
-    <ion-item lines="none" class="sidebar-items">
+    <ion-item lines="none" class="sidebar-items" (click)="onClickArchivedConversation()">
         <ion-icon name="archive-outline" class="sidebar-icons" ></ion-icon>
         <ion-label class="sidebar-labels">
           <h3>{{ 'LABEL_ARCHIVED' | translate }}</h3>
         </ion-label>
     </ion-item>
-    <ion-item lines="none" class="sidebar-items">
+    <ion-item lines="none" class="sidebar-items" (click)="onClickContact()">
       <ion-icon name="albums-outline" class="sidebar-icons" ></ion-icon>
       <ion-label class="sidebar-labels">
         <h3>{{ 'LABEL_CONTACTS' | translate }}</h3>

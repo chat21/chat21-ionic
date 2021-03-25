@@ -1,3 +1,4 @@
+import { ConversationsArchivedListPageModule } from './../conversations-archived-list/conversations-archived-list.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -26,6 +27,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ConversationListPageRoutingModule,
     // ConversationDetailPageModule,
     ContactsDirectoryPageModule,
+    ConversationsArchivedListPageModule,
     ProfileInfoPageModule,
     TranslateModule.forChild({
       loader: {

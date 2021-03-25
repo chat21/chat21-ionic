@@ -1,3 +1,5 @@
+import { IonConversationDetailComponent } from '../../temp/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
+import { TooltipModule } from 'ng2-tooltip-directive';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -47,7 +49,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
       },
     }),
     SharedModule,
-    NgxLinkifyjsModule
+    NgxLinkifyjsModule,
   ],
   entryComponents: [MessageTextAreaComponent],
   declarations: [
@@ -61,7 +63,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     // InfoContentComponent,
     // InfoSupportGroupComponent,
     // InfoDirectComponent,
-    // InfoGroupComponent
+    // InfoGroupComponent,
   ]
 })
 export class ConversationDetailPageModule {}

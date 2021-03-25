@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // services
@@ -15,6 +15,7 @@ import { UserModel } from 'src/chat21-core/models/user';
 // utils
 import { isInArray, setLastDateWithLabels } from 'src/chat21-core/utils/utils';
 import * as PACKAGE from 'package.json';
+import { EventsService } from 'src/app/services/events-service';
 
 @Component({
   selector: 'app-profile-info',
@@ -37,7 +38,7 @@ export class ProfileInfoPage implements OnInit {
     private chatManager: ChatManager,
     private translateService: CustomTranslateService,
     public presenceService: PresenceService,
-    // public events: EventsService,
+    public events: EventsService,
     private authService: AuthService
   ) { }
 
@@ -168,6 +169,15 @@ export class ProfileInfoPage implements OnInit {
     }
   }
 
+  onClickArchivedConversation(){
+    this.events.publish('profileInfoButtonClick:changed', 'displayArchived');
+    // this.onClose();
+  }
+
+  onClickContact(){
+    this.events.publish('profileInfoButtonClick:changed', 'displayContact');
+    // this.onClose();
+  }
 
   /** */
   private unsubescribeAll() {

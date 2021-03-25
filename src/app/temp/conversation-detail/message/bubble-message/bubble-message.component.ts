@@ -68,7 +68,6 @@ export class BubbleMessageComponent implements OnInit {
   const showDelay = this.tooltipOptions['show-delay'];
   setTimeout(function () {
     try {
-      
       const domRepresentation = document.getElementsByClassName('chat-tooltip');
       if (domRepresentation) {
         const item = domRepresentation[0] as HTMLInputElement;
@@ -82,7 +81,7 @@ export class BubbleMessageComponent implements OnInit {
         }, that.tooltipOptions['hideDelayAfterClick']);
       }
     } catch (err) {
-        that.logger.printLog('> Error :' + err);
+        that.logger.printError('> Error :' + err);
     }
   }, showDelay);
 }

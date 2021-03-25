@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { IonConversationDetailComponent } from './../../temp/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Directive } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer} from '@angular/platform-browser';
 
@@ -92,6 +93,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {NgxLinkifyjsService, Link, LinkType, NgxLinkifyOptions} from 'ngx-linkifyjs';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -104,7 +106,7 @@ import {NgxLinkifyjsService, Link, LinkType, NgxLinkifyOptions} from 'ngx-linkif
 export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('ionContentChatArea', {static: false}) ionContentChatArea: IonContent;
   @ViewChild('rowMessageTextArea', {static: false}) rowTextArea: ElementRef;
-
+  
   showButtonToBottom = false; // indica lo stato del pulsante per scrollare la chat (showed/hidden)
   NUM_BADGES = 0; // numero di messaggi non letti
   COLOR_GREEN = '#24d066'; // colore presence active da spostare nelle costanti
@@ -182,7 +184,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // public groupService: GroupService
     public contactsService: ContactsService,
     public conversationHandlerBuilderService: ConversationHandlerBuilderService,
-    public linkifyService: NgxLinkifyjsService
+    public linkifyService: NgxLinkifyjsService,
+    private logger: LoggerService
   ) {
   }
 
@@ -584,6 +587,25 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.subscriptions.push(subscribe);
     }
 
+    subscribtionKey = 'BSConversationsChanged';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      subscribtion = this.conversationsHandlerService.conversationChanged.subscribe((data: any) => {
+        console.log('***** DATAIL subscribeConversationChanged*****', data, this.loggedUser.uid);
+        if (data && data.sender !== this.loggedUser.uid) {
+          // const checkContentScrollPosition = this.checkContentScrollPosition();
+          // console.log('SONO ALLE FINEEE???', checkContentScrollPosition)
+          // if(checkContentScrollPosition){
+          //   that.updateConversationBadge();
+          // }
+          this.detectBottom();
+        }
+      });
+      const subscribe = {key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
+    }
+
+
     subscribtionKey = 'BScontactDetail';
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
@@ -690,7 +712,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
 
-
+  // checkContentScrollPosition(divScrollMe?): boolean {
+  //   if(!divScrollMe){
+  //     divScrollMe = this.ionContentChatArea.getScrollElement();
+  //   }
+  //   if (divScrollMe.scrollTop < divScrollMe.scrollHeight - divScrollMe.clientHeight) {
+  //     this.logger.printLog('SONO ALLA FINE');
+  //       return true;
+  //   } else {
+  //     this.logger.printLog(' NON SONO ALLA FINE');
+  //       return false;
+  //   }
+  // }
   /**
    * detectBottom
    */
@@ -709,7 +742,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // SONO ALLA FINE --> non mostrare badge,
       this.showButtonToBottom = false;
       this.NUM_BADGES = 0;
-      this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+      this.updateConversationBadge()
+      // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
     }
   }
 
@@ -826,8 +860,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         } else {
           if (message.status && message.status < 200 ) {
             console.log('message.status < 200');
-            this.NUM_BADGES++;
-            this.showButtonToBottom = true;
+            this.scrollBottom(0);
+            // this.NUM_BADGES++;
+            // this.showButtonToBottom = true;
           } else {
             console.log('message.status >= 200');
             this.scrollBottom(0);
@@ -837,13 +872,20 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       }
   }
 
+  updateConversationBadge() {
+    console.log('updateConversationBadge', this.conversationSelected)
+    if (this.conversationSelected && this.conversationsHandlerService) {
+      this.conversationsHandlerService.setConversationRead(this.conversationSelected)
+    }
+  }
+
 
   /**
    * scrollBottom
    * @param time
    */
   private scrollBottom(time: number) {
-    setTimeout( () => {
+    // setTimeout( () => {
       // this.showButtonToBottom = false;
       this.showIonContent = true;
       // console.log('scrollBottom ---> ', this.ionContentChatArea);
@@ -851,10 +893,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         // this.showButtonToBottom = false;
         // this.NUM_BADGES = 0;
         // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
-        this.ionContentChatArea.scrollToBottom(time);
+        setTimeout( () => {
+          this.ionContentChatArea.scrollToBottom(time);
+          // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+        }, 0);
         // nota: se elimino il settimeout lo scrollToBottom non viene richiamato!!!!!
       }
-    }, 0);
+    // }, 0);
   }
 
   /**
@@ -866,7 +911,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
      this.showButtonToBottom = false;
      this.NUM_BADGES = 0;
     setTimeout( () => {
-      this.ionContentChatArea.scrollToBottom(5);
+      this.ionContentChatArea.scrollToBottom(0);
       // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
     }, 0);
   }
@@ -905,6 +950,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   returnOnScrollContent(event: boolean){
+    // console.log('returnOnScrollContent', event)
     // this.showBadgeScroollToBottom = event;
     // console.log('scroool eventtt', event)
     // //se sono alla fine (showBadgeScroollBottom === false) allora imposto messageBadgeCount a 0

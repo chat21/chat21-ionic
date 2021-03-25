@@ -1,3 +1,5 @@
+import { ConversationsArchivedListPage } from './../conversations-archived-list/conversations-archived-list.page';
+import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ModalController, IonRouterOutlet, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
@@ -52,6 +54,7 @@ export class ConversationListPage implements OnInit {
   public tenant: string;
   public loggedUserUid: string;
   public conversations: Array<ConversationModel> = [];
+  public archivedConversations: Array<ConversationModel> = [];
   public uidConvSelected: string;
   public conversationSelected: ConversationModel;
   public uidReciverFromUrl: string;
@@ -76,6 +79,7 @@ export class ConversationListPage implements OnInit {
     public databaseProvider: DatabaseProvider,
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
+    public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     public chatManager: ChatManager,
     public authService: AuthService,
     public imageRepoService:ImageRepoService,
@@ -160,9 +164,8 @@ export class ConversationListPage implements OnInit {
    * salvo conversationHandler in chatManager
    */
   initConversationsHandler(userId: string) {
-    const keys = [
-      'YOU'
-    ];
+    const keys = ['YOU'];
+
     const translationMap = this.translateService.translateLanguage(keys);
 
     console.log('initConversationsHandler ------------->', userId, this.tenant);
@@ -184,6 +187,47 @@ export class ConversationListPage implements OnInit {
       }
     }, 2000);
   }
+
+  /**
+   * ::: initArchivedConversationsHandler :::
+   * inizializzo archviedConversationsHandler
+   * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
+   * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
+   * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
+   * salvo conversationHandler in chatManager
+   */
+   initArchivedConversationsHandler(userId: string) {
+    const keys = ['YOU'];
+    const keysConversation = ['CLOSED'];
+
+    const translationMap = this.translateService.translateLanguage(keys);
+    this.translationMapConversation = this.translateService.translateLanguage(keysConversation);
+
+    console.log('initConversationsHandler ------------->', userId, this.tenant);
+    // 1 - init  archviedConversationsHandler
+    this.archivedConversationsHandlerService.initialize(this.tenant, userId, translationMap);
+    // 2 - get conversations from storage
+    // this.chatConversationsHandler.getConversationsFromStorage();
+    // 5 - connect archviedConversationsHandler to firebase event (add, change, remove)
+    this.archivedConversationsHandlerService.connect();
+    this.archivedConversations = this.archivedConversationsHandlerService.archivedConversations;
+    this.logger.printDebug("archived conversation", this.archivedConversations)
+    // 6 - save archivedConversationsHandlerService in chatManager
+    this.chatManager.setArchivedConversationsHandler(this.archivedConversationsHandlerService);
+    const that = this;
+    this.showPlaceholder = false;
+    setTimeout( () => {
+      if (!that.archivedConversations || that.archivedConversations.length === 0) {
+        this.showPlaceholder = true;
+      }
+    }, 2000);
+    
+  }
+
+
+
+
+
   /** */
   initSubscriptions() {
     let key = '';
@@ -213,11 +257,11 @@ export class ConversationListPage implements OnInit {
       this.readAllMessages(conversationId);
     });
 
-    // key = 'uidConvSelected:changed';
-    // if (!isInArray(key, this.subscriptions)) {
-    //   this.subscriptions.push(key);
-    //   this.events.subscribe(key, this.subscribeChangedConversationSelected);
-    // }
+    key = 'profileInfoButtonClick:changed';
+    if (!isInArray(key, this.subscriptions)) {
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.subscribeProfileInfoButtonClicked);
+    }
 
     const that = this;
     this.conversationsHandlerService.conversationAdded.subscribe((conversations: any) => {
@@ -334,6 +378,21 @@ export class ConversationListPage implements OnInit {
     }
     // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
   }
+
+  /**
+   * ::: subscribeProfileInfoButtonClicked :::
+   * evento richiamato quando si seleziona bottone profile-info-modal
+   */
+   subscribeProfileInfoButtonClicked = (event: string) => {
+    console.log('************** subscribeProfileInfoButtonClicked', event);
+    if(event === 'displayArchived'){
+      this.initArchivedConversationsHandler(this.loggedUserUid);
+      this.openArchivedConversationsModal()
+    }else if (event === 'displayContact'){
+
+    }
+  }
+
   // ------------------------------------------------------------------//
   // END SUBSCRIPTIONS
   // ------------------------------------------------------------------//
@@ -535,9 +594,28 @@ export class ConversationListPage implements OnInit {
     const TOKEN = this.authService.getToken();
     console.log('open ProfileInfoPage', TOKEN );
     if (checkPlatformIsMobile()) {
-      presentModal(this.modalController, ProfileInfoPage, { token: TOKEN });
+      presentModal(this.modalController, ProfileInfoPage, { token: TOKEN })
     } else {
-      this.navService.push(ProfileInfoPage, { token: TOKEN });
+      this.navService.push(ProfileInfoPage, { token: TOKEN })
+    }
+  }
+
+
+  /**
+   * ::: openArchivedConversationsModal :::
+   * apro pagina chat archiviate
+   * (metodo richiamato da subscribeProfileInfoButtonClicked handler)
+   */
+   openArchivedConversationsModal() {
+    console.log('open ArchivedConversationsModal');
+    if (checkPlatformIsMobile()) {
+      presentModal(this.modalController, ConversationsArchivedListPage, { listConversations: this.archivedConversations,
+                                                                          styleMap: this.styleMap,
+                                                                          translationMap: this.translationMapConversation })
+    } else {
+      this.navService.push(ConversationsArchivedListPage, { listConversations: this.archivedConversations,
+                                                            styleMap: this.styleMap,
+                                                            translationMap: this.translationMapConversation })
     }
   }
 

@@ -43,4 +43,5 @@
     </ion-button>
   </ion-buttons>
   <div item-end class="notification_point" *ngIf="conversation.is_new">&nbsp;</div>
+  <div item-end *ngIf="conversation.archived">{{ translationMap.get('CLOSED') }}</div>
 </ion-item>

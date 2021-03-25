@@ -11,7 +11,6 @@
     <app-ddp-header
     [numberOpenConv] = numberOpenConv
     [supportMode] = supportMode
-    (openArchivedConversationsPage) = openArchivedConversationsPage()
     (openContactsDirectory) = openContactsDirectory($event)
     (openProfileInfo) = openProfileInfo($event)
     ></app-ddp-header>
@@ -56,6 +55,8 @@
           (onImageLoaded)="onImageLoaded($event)"
           (onConversationLoaded)="onConversationLoaded($event)">
         </ion-list-conversations>
+
+        
 
       </ng-template>
   

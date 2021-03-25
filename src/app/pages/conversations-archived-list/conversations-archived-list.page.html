@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ 'LABEL_ARCHIVED' | translate }}</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button ion-button (click)="onClose()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list-conversations 
+    [listConversations]="listConversations"
+    [styleMap]="styleMap"
+    [translationMap]="translationMap"
+    (onConversationSelected)=onConversationSelected($event)
+    (onImageLoaded)="onImageLoaded($event)"
+    (onConversationLoaded)="onConversationLoaded($event)">
+  </ion-list-conversations>
+</ion-content>

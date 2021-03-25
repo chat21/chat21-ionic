@@ -185,17 +185,15 @@ export class ConversationContentComponent implements OnInit {
   /**
   * function customize tooltip
   */
-  handleTooltipEvents() {
-    console.log('handleToolpitEvents')
+   handleTooltipEvents(event) {
     const that = this;
-    const showDelay = this.tooltipOptions['showDelay'];
-    // console.log(this.tooltipOptions);
+    const showDelay = this.tooltipOptions['show-delay'];
     setTimeout(function () {
       try {
+        
         const domRepresentation = document.getElementsByClassName('chat-tooltip');
         if (domRepresentation) {
           const item = domRepresentation[0] as HTMLInputElement;
-          // console.log(item);
           if (!item.classList.contains('tooltip-show')) {
             item.classList.add('tooltip-show');
           }
@@ -206,7 +204,7 @@ export class ConversationContentComponent implements OnInit {
           }, that.tooltipOptions['hideDelayAfterClick']);
         }
       } catch (err) {
-        that.logger.printLog('> Error :' + err);
+          that.logger.printError('> Error :' + err);
       }
     }, showDelay);
   }

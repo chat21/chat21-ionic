@@ -179,7 +179,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   entryComponents: [
   ],
