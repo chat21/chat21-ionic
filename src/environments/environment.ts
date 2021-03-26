@@ -17,7 +17,8 @@ export const environment = {
         appId: "tilechat",
         MQTTendpoint: 'mqtt://localhost:15675/ws', // MQTT endpoint
         APIendpoint: 'http://localhost:8004/api',
-        loginServiceEndpoint: 'http://console-native.tiledesk.com/api/chat21/native/auth/createCustomToken'
+        //loginServiceEndpoint: 'http://console-native.tiledesk.com/api/chat21/native/auth/createCustomToken'
+        loginServiceEndpoint: 'http://localhost:8002/tiledesk/signin'
     },
     firebaseConfig: {
         apiKey: "AIzaSyDKfdKrlD7AYcbQ-U-xxgV-b3FUQ4xt7NM",

@@ -10,6 +10,8 @@ import {TranslateLoader, TranslateModule, TranslatePipe} from '@ngx-translate/co
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
+import { Chooser } from '@ionic-native/chooser/ngx';
 
 // COMPONENTS
 import { AppComponent } from './app.component';
@@ -17,35 +19,42 @@ import { AppRoutingModule } from './app-routing.module';
 
 // CONFIG
 import { environment } from '../environments/environment';
-import { CHAT_ENGINE_NQTT, CHAT_ENGINE_FIREBASE } from './utils/constants';
+import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE } from '../chat21-core/utils/constants';
 
 // SERVICES
 import { AppConfigProvider } from './services/app-config';
-import { MessagingService } from './services/messaging-service';
+
 import { EventsService } from './services/events-service';
-import { AuthService } from './services/auth.service';
-import { FirebaseAuthService } from './services/firebase/firebase-auth-service';
-import { PresenceService } from './services/presence.service';
-import { FirebasePresenceService } from './services/firebase/firebase-presence.service';
-import { TypingService } from './services/typing.service';
-import { FirebaseTypingService } from './services/firebase/firebase-typing.service';
-import { ConversationsHandlerService } from './services/conversations-handler.service';
-import { FirebaseConversationsHandler } from './services/firebase/firebase-conversations-handler';
+import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { FirebaseAuthService } from 'src/chat21-core/providers/firebase/firebase-auth-service';
+import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
+import { FirebasePresenceService } from 'src/chat21-core/providers/firebase/firebase-presence.service';
+import { TypingService } from 'src/chat21-core/providers/abstract/typing.service';
+import { FirebaseTypingService } from 'src/chat21-core/providers/firebase/firebase-typing.service';
+import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { FirebaseConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-conversations-handler';
 import { DatabaseProvider } from './services/database';
-import { FirebaseImageRepoService } from './services/firebase/firebase-image-repo';
-import { ImageRepoService } from './services/image-repo.service';
+import { FirebaseImageRepoService } from 'src/chat21-core/providers/firebase/firebase-image-repo';
+import { FirebaseArchivedConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-archivedconversations-handler';
+import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
+import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
+import { FirebaseConversationHandlerBuilderService } from 'src/chat21-core/providers/firebase/firebase-conversation-handler-builder.service';
+import { UploadService } from 'src/chat21-core/providers/abstract/upload.service';
+import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/firebase-upload.service';
 
 // MQTT
 import { Chat21Service } from './services/chat-service';
-import { MQTTAuthService } from './services/mqtt/mqtt-auth-service';
-import { MQTTConversationsHandler } from './services/mqtt/mqtt-conversations-handler';
-import { MQTTTypingService } from './services/mqtt/mqtt-typing.service';
-import { MQTTPresenceService } from './services/mqtt/mqtt-presence.service';
+import { MQTTAuthService } from '../chat21-core/providers/mqtt/mqtt-auth-service';
+import { MQTTConversationsHandler } from '../chat21-core/providers/mqtt/mqtt-conversations-handler';
+import { MQTTTypingService } from '../chat21-core/providers/mqtt/mqtt-typing.service';
+import { MQTTPresenceService } from '../chat21-core/providers/mqtt/mqtt-presence.service';
 
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
 import { ConversationDetailPageModule } from './pages/conversation-detail/conversation-detail.module';
 import {LoginPageModule} from './pages/authentication/login/login.module';
+import {LoaderPreviewPageModule} from './pages/loader-preview/loader-preview.module';
 
 // UTILS
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
@@ -56,37 +65,67 @@ export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
+// export function authenticationFactory(http: HttpClient, route: ActivatedRoute) {
+//   console.log('authenticationFactory: ');
+//   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+//     return new FirebaseAuthService(http, route);
+//   } else {
+//     return new FirebaseAuthService(http, route);
+//   }
+// }
+
 export function authenticationFactory(http: HttpClient, route: ActivatedRoute, chat21Service: Chat21Service) {
   console.log('authenticationFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTAuthService(http, chat21Service);
   } else {
     return new FirebaseAuthService(http, route);
   }
 }
 
-export function presenceFactory(events: EventsService) {
+// export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider ) {
+//   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+//     const auth= new FirebaseAuthService(http); 
+//     auth.setBaseUrl(appConfig.getConfig().apiUrl)
+//     return auth
+//   } else {
+//     const auth= new FirebaseAuthService(http); 
+//     auth.setBaseUrl(appConfig.getConfig().apiUrl)
+//     return auth
+//   }
+// }
+
+export function presenceFactory() {
   console.log('presenceFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTPresenceService();
   } else {
     return new FirebasePresenceService();
   }
 }
 
-export function typingFactory(events: EventsService) {
+export function typingFactory() {
   console.log('typingFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTTypingService(events);
   } else {
-    return new FirebaseTypingService(events);
+    return new FirebaseTypingService();
+  }
+}
+
+export function uploadFactory() {
+  console.log('uploadFactory: ');
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+    return new FirebaseUploadService();
+  } else {
+    return new FirebaseUploadService();
   }
 }
 
 export function conversationsHandlerFactory(
   databaseProvider: DatabaseProvider, chat21Service: Chat21Service) {
   console.log('conversationsHandlerFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTConversationsHandler(databaseProvider, chat21Service);
   } else {
     return new FirebaseConversationsHandler(databaseProvider);
@@ -95,10 +134,27 @@ export function conversationsHandlerFactory(
 
 export function imageRepoFactory() {
   console.log('imageRepoFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseImageRepoService();
   } else {
     return new FirebaseImageRepoService();
+  }
+}
+
+export function archivedConversationsHandlerFactory() {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+    return new FirebaseArchivedConversationsHandler();
+  } else {
+    return new FirebaseArchivedConversationsHandler();
+  }
+}
+
+export function conversationHandlerBuilderFactory() {
+  console.log('conversationHandlerBuilderFactory: ');
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+    return new FirebaseConversationHandlerBuilderService();
+  } else {
+    return new FirebaseConversationHandlerBuilderService();
   }
 }
 
@@ -136,14 +192,8 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     }),
     ScrollbarThemeModule,
     SharedModule,
-    // SharedConversationInfoModule
-    // LinkyModule,
-    // IonicStorageModule.forRoot({
-    //   name: "tilechat",
-    //   storeName: 'settings',
-    //   driverOrder: ['indexeddb','sqlite', 'websql', 'indexeddb', 'localstorage']
-    // })
-    // ConversationListTestPageModule
+    NgxLinkifyjsModule.forRoot(),
+    LoaderPreviewPageModule
   ],
   bootstrap: [AppComponent],
 
@@ -155,49 +205,53 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
       multi: true,
       deps: [AppConfigProvider]
     },
-    // {
-    //   provide: AuthService,
-    //   useFactory: authenticationFactory,
-    //   deps: [HttpClient, ActivatedRoute]
-    //  },
     {
       provide: AuthService,
       useFactory: authenticationFactory,
-      deps: [HttpClient, ActivatedRoute, Chat21Service]
+      deps: [HttpClient, ActivatedRoute]
      },
     {
       provide: PresenceService,
       useFactory: presenceFactory,
-      deps: [EventsService, HttpClient]
+      deps: []
     },
     {
       provide: TypingService,
       useFactory: typingFactory,
-      deps: [EventsService, HttpClient]
+      deps: []
     },
-    // {
-    //   provide: ConversationsHandlerService,
-    //   useFactory: conversationsHandlerFactory,
-    //   deps: [DatabaseProvider]
-    // },
+    {
+      provide: UploadService,
+      useFactory: uploadFactory,
+      deps: []
+    },
     {
       provide: ConversationsHandlerService,
       useFactory: conversationsHandlerFactory,
-      deps: [DatabaseProvider, Chat21Service]
+      deps: [DatabaseProvider]
+    },
+    {
+      provide: ArchivedConversationsHandlerService,
+      useFactory: archivedConversationsHandlerFactory,
+      deps: []
     },
     {
       provide: ImageRepoService,
       useFactory: imageRepoFactory,
       deps: []
     },
+    {
+      provide: ConversationHandlerBuilderService,
+      useFactory: conversationHandlerBuilderFactory,
+      deps: []
+    },
     StatusBar,
     SplashScreen,
     Keyboard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    MessagingService,
     EventsService,
     DatabaseProvider,
-    Chat21Service
+    Chooser
   ]
 })
 export class AppModule {}
