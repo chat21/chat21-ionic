@@ -51,7 +51,7 @@ import { UploadService } from 'src/chat21-core/providers/abstract/upload.service
 import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/firebase-upload.service';
 
 // MQTT
-import { Chat21Service } from './services/chat-service';
+import { Chat21Service } from '../chat21-core/providers/mqtt/chat-service';
 import { MQTTAuthService } from '../chat21-core/providers/mqtt/mqtt-auth-service';
 import { MQTTConversationsHandler } from '../chat21-core/providers/mqtt/mqtt-conversations-handler';
 import { MQTTTypingService } from '../chat21-core/providers/mqtt/mqtt-typing.service';
@@ -77,11 +77,12 @@ export function createTranslateLoader(http: HttpClient) {
 
 }
 
-export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider ) {
+export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service ) {
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    const auth= new FirebaseAuthService(http); 
-    auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
-    return auth
+    // const auth= new FirebaseAuthService(http);
+    // auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
+    // return auth
+    return new MQTTAuthService(http, chat21Service);
   } else {
     const auth= new FirebaseAuthService(http); 
     auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
@@ -128,10 +129,10 @@ export function uploadFactory() {
   }
 }
 
-export function conversationsHandlerFactory() {
+export function conversationsHandlerFactory(chat21Service: Chat21Service) {
   console.log('conversationsHandlerFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseConversationsHandler();
+    return new MQTTConversationsHandler(chat21Service);
   } else {
     return new FirebaseConversationsHandler();
   }

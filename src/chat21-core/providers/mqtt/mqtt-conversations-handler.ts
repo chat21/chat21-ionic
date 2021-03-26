@@ -9,8 +9,7 @@ import { ConversationModel } from 'src/app/models/conversation';
 
 // services
 import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
-import { DatabaseProvider } from 'src/app/services/database';
-// import { TiledeskConversationProvider } from 'src/app/services/tiledesk-conversation';
+// import { DatabaseProvider } from 'src/app/services/database';
 
 // utils
 import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
@@ -49,7 +48,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
 
     constructor(
         // private tiledeskConversationsProvider: TiledeskConversationProvider,
-        public databaseProvider: DatabaseProvider,
+        // public databaseProvider: DatabaseProvider,
         public chat21Service: Chat21Service
     ) {
         super();
@@ -66,7 +65,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         this.loggedUserId = userId;
         this.translationMap = translationMap;
         this.conversations = [];
-        this.databaseProvider.initialize(userId, this.tenant);
+        // this.databaseProvider.initialize(userId, this.tenant);
         this.isConversationClosingMap = new Map();
         // this.getConversationsFromStorage();
     }
@@ -155,7 +154,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
                 this.conversations.splice(index, 1, conversation);
             } else {
                 this.conversations.splice(0, 0, conversation);
-                this.databaseProvider.setConversation(conversation);
+                // this.databaseProvider.setConversation(conversation);
             }
             this.conversations.sort(compareValues('timestamp', 'desc'));
             this.conversationsChanged.next(this.conversations);
@@ -186,7 +185,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
             if (index > -1) {
                 this.conversations.splice(index, 1, conversation);
             }
-            this.databaseProvider.setConversation(conversation);
+            // this.databaseProvider.setConversation(conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
             this.conversationsChanged.next(this.conversations);
             // this.events.publish('conversationsChanged', this.conversations);
@@ -211,7 +210,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         if (index > -1) {
             this.conversations.splice(index, 1);
             // this.conversations.sort(compareValues('timestamp', 'desc'));
-            this.databaseProvider.removeConversation(childSnapshot.key);
+            // this.databaseProvider.removeConversation(childSnapshot.key);
             this.conversationsRemoved.next(this.conversations);
         }
         // remove the conversation from the isConversationClosingMap
