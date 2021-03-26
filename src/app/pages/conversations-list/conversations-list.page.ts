@@ -1,6 +1,6 @@
 import { ConversationsArchivedListPage } from './../conversations-archived-list/conversations-archived-list.page';
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, EventEmitter } from '@angular/core';
 import { ModalController, IonRouterOutlet, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 // config
@@ -69,6 +69,12 @@ export class ConversationListPage implements OnInit {
 
   translationMapConversation: Map<string, string>;
   styleMap: Map<string, string>;
+
+  // --- START:::event Emitter handler functions --- //
+  private onConversationSelectedHandler = new EventEmitter();
+  private onImageLoadedHandler = new EventEmitter();
+  private onConversationLoadedHandler = new EventEmitter();
+   // --- END:::event Emitter handler functions --- //
 
   constructor(
     private router: Router,
@@ -157,10 +163,10 @@ export class ConversationListPage implements OnInit {
 
   /**
    * ::: initConversationsHandler :::
-   * inizializzo chatConversationsHandler e archviedConversationsHandler
+   * inizializzo chatConversationsHandler 
    * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
-   * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
-   * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
+   * imposto uidConvSelected in conversationHandler
+   * e mi sottoscrivo al nodo conversazioni in conversationHandler (connect)
    * salvo conversationHandler in chatManager
    */
   initConversationsHandler(userId: string) {
@@ -192,8 +198,8 @@ export class ConversationListPage implements OnInit {
    * ::: initArchivedConversationsHandler :::
    * inizializzo archviedConversationsHandler
    * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
-   * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
-   * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
+   * imposto uidConvSelected in chatArchivedConversationsHandler
+   * e mi sottoscrivo al nodo conversazioni in chatArchivedConversationsHandler (connect)
    * salvo conversationHandler in chatManager
    */
    initArchivedConversationsHandler(userId: string) {
@@ -203,7 +209,7 @@ export class ConversationListPage implements OnInit {
     const translationMap = this.translateService.translateLanguage(keys);
     this.translationMapConversation = this.translateService.translateLanguage(keysConversation);
 
-    console.log('initConversationsHandler ------------->', userId, this.tenant);
+    console.log('initArchivedConversationsHandler ------------->', userId, this.tenant);
     // 1 - init  archviedConversationsHandler
     this.archivedConversationsHandlerService.initialize(this.tenant, userId, translationMap);
     // 2 - get conversations from storage
@@ -236,32 +242,35 @@ export class ConversationListPage implements OnInit {
     //   this.subscriptions.push(key);
     //   this.events.subscribe(key, this.subscribeLoggedUserLogin);
     // }
-    key = 'loggedUser:logout';
-    if (!isInArray(key, this.subscriptions)) {
-      this.subscriptions.push(key);
-      this.events.subscribe(key, this.subscribeLoggedUserLogout);
-    }
+
     // key = 'conversationsChanged';
     // if (!isInArray(key, this.subscriptions)) {
     //   this.subscriptions.push(key);
     //   this.events.subscribe(key, this.conversationsChanged);
     // }
+
+    key = 'loggedUser:logout';
+    if (!isInArray(key, this.subscriptions)) {
+      this.subscriptions.push(key);
+      this.events.subscribe(key, this.subscribeLoggedUserLogout);
+    }
+    
     key = 'readAllMessages';
     if (!isInArray(key, this.subscriptions)) {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.readAllMessages);
     }
 
-    this.conversationsHandlerService.readAllMessages.subscribe((conversationId: string) => {
-      console.log('***** readAllMessages *****', conversationId);
-      this.readAllMessages(conversationId);
-    });
-
     key = 'profileInfoButtonClick:changed';
     if (!isInArray(key, this.subscriptions)) {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.subscribeProfileInfoButtonClicked);
     }
+
+    this.conversationsHandlerService.readAllMessages.subscribe((conversationId: string) => {
+      console.log('***** readAllMessages *****', conversationId);
+      this.readAllMessages(conversationId);
+    });
 
     const that = this;
     this.conversationsHandlerService.conversationAdded.subscribe((conversations: any) => {
@@ -397,7 +406,22 @@ export class ConversationListPage implements OnInit {
   // END SUBSCRIPTIONS
   // ------------------------------------------------------------------//
 
+  // :: handler degli eventi in output per i componenti delle modali
+  // ::::: vedi ARCHIVED-CONVERSATION-LIST --> MODALE
+  initHandlerEventEmitter(){
+    this.onConversationSelectedHandler.subscribe(conversation=> {
+      console.log('archived conversaation selectedddd', conversation)
+      this.onConversationSelected(conversation)
+    })
 
+    this.onImageLoadedHandler.subscribe(conversation=> {
+      this.onImageLoaded(conversation)
+    })
+
+    this.onConversationLoadedHandler.subscribe(conversation=> {
+      this.onConversationLoaded(conversation)
+    })
+  }
 
   // ------------------------------------------------------------------//
   // BEGIN FUNCTIONS
@@ -413,6 +437,7 @@ export class ConversationListPage implements OnInit {
     this.databaseProvider.initialize(this.loggedUserUid, this.tenant);
     this.initVariables();
     this.initSubscriptions();
+    this.initHandlerEventEmitter();
   }
 
 
@@ -435,23 +460,25 @@ export class ConversationListPage implements OnInit {
     console.log('uidReciverFromUrl:: ' + this.uidReciverFromUrl);
     console.log('loggedUserUid:: ' + this.loggedUserUid);
     console.log('tenant:: ' + this.tenant);
-    const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
-    console.log('ConversationListPage .conversationWith: ', IDConv);
-    if (IDConv) {
-      console.log('22222');
-      this.setUidConvSelected(IDConv);
-    } else {
-      this.databaseProvider.getUidLastOpenConversation()
-      .then((uid: string) => {
-        console.log('getUidLastOpenConversation:: ' + uid);
-        console.log('33333');
-        that.navigateByUrl(uid);
-      })
-      .catch((error) => {
-        console.log('44444');
-        console.log('error::: ', error);
-      });
+    if(this.route.component['name'] !== "ConversationListPage" ){
+      const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
+      console.log('ConversationListPage .conversationWith: ', IDConv);
+      if (IDConv) {
+        console.log('22222');
+        this.setUidConvSelected(IDConv);
+      } else {
+        this.databaseProvider.getUidLastOpenConversation().then((uid: string) => {
+          console.log('getUidLastOpenConversation:: ' + uid);
+          console.log('33333');
+          that.navigateByUrl(uid);
+        })
+        .catch((error) => {
+          console.log('44444');
+          console.log('error::: ', error);
+        });
+      }
     }
+    
     console.log('::::tenant:::: ', this.tenant);
     console.log('::::uidReciverFromUrl:::: ', this.uidReciverFromUrl);
   }
@@ -539,7 +566,8 @@ export class ConversationListPage implements OnInit {
     this.setUidConvSelected(uidConvSelected);
     if (checkPlatformIsMobile()) {
       console.log('PLATFORM_MOBILE 1', this.navService);
-      // this.router.navigateByUrl('conversations-list');
+      let pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
+      this.router.navigateByUrl(pageUrl);
     } else {
       console.log('PLATFORM_DESKTOP 2', this.navService);
       let pageUrl = 'conversation-detail/' + this.uidConvSelected;
@@ -608,16 +636,25 @@ export class ConversationListPage implements OnInit {
    */
    openArchivedConversationsModal() {
     console.log('open ArchivedConversationsModal');
+    // this.presentModal();
     if (checkPlatformIsMobile()) {
       presentModal(this.modalController, ConversationsArchivedListPage, { listConversations: this.archivedConversations,
                                                                           styleMap: this.styleMap,
-                                                                          translationMap: this.translationMapConversation })
+                                                                          translationMap: this.translationMapConversation,
+                                                                          onConversationSelected: this.onConversationSelectedHandler,
+                                                                          onImageLoaded: this.onImageLoadedHandler,
+                                                                          onConversationLoaded: this.onConversationLoadedHandler })
     } else {
       this.navService.push(ConversationsArchivedListPage, { listConversations: this.archivedConversations,
                                                             styleMap: this.styleMap,
-                                                            translationMap: this.translationMapConversation })
+                                                            translationMap: this.translationMapConversation,
+                                                            onConversationSelected: this.onConversationSelectedHandler,
+                                                            onImageLoaded: this.onImageLoadedHandler,
+                                                            onConversationLoaded: this.onConversationLoadedHandler })
+                                                                                                                 
     }
   }
+
 
   /**
    * ::: openMessageList :::

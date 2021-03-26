@@ -3,7 +3,7 @@
     <ion-title>{{ 'LABEL_ARCHIVED' | translate }}</ion-title>
 
     <ion-buttons slot="start">
-      <ion-button ion-button (click)="onClose()">
+      <ion-button ion-button (click)="onCloseArchived()">
         <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -16,8 +16,8 @@
     [listConversations]="listConversations"
     [styleMap]="styleMap"
     [translationMap]="translationMap"
-    (onConversationSelected)=onConversationSelected($event)
-    (onImageLoaded)="onImageLoaded($event)"
-    (onConversationLoaded)="onConversationLoaded($event)">
+    (onConversationSelected)=onConversationSelectedFN($event)
+    (onImageLoaded)="onImageLoadedFN($event)"
+    (onConversationLoaded)="onConversationLoadedFN($event)">
   </ion-list-conversations>
 </ion-content>

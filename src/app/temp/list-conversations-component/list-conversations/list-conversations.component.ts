@@ -16,13 +16,13 @@ export class ListConversationsComponent implements OnInit {
   @Input() limit?: number
   @Input() styleMap: Map<string, string>;
   @Input() translationMap: Map< string, string>;
-  @Output() onConversationSelected = new EventEmitter<string>();
+  @Output() onConversationSelected = new EventEmitter<ConversationModel>();
   @Output() onImageLoaded = new EventEmitter<ConversationModel>();
   @Output() onConversationLoaded = new EventEmitter<ConversationModel>();
   // ========= end:: Input/Output values ============//
 
   iterableDifferListConv: any;
-
+  uidConvSelected: string;
   constructor(public iterableDiffers: IterableDiffers,
               public imageRepoService: ImageRepoService) {
           this.iterableDifferListConv = this.iterableDiffers.find([]).create(null);
@@ -38,6 +38,7 @@ export class ListConversationsComponent implements OnInit {
     if ( conversation ) {
       // this.conversationsService.updateIsNew(conversation);
       // this.conversationsService.updateConversationBadge();
+      this.uidConvSelected = conversation.uid
       this.onConversationSelected.emit(conversation);
     }
   }

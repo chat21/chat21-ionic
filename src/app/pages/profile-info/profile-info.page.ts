@@ -28,6 +28,7 @@ export class ProfileInfoPage implements OnInit {
   itemAvatar: any;
   public translationMap: Map<string, string>;
 
+
   private subscriptions = [];
   borderColor = '#2d323e';
   fontColor = '#949494';
@@ -169,14 +170,14 @@ export class ProfileInfoPage implements OnInit {
     }
   }
 
-  onClickArchivedConversation(){
-    this.events.publish('profileInfoButtonClick:changed', 'displayArchived');
-    // this.onClose();
+  onClickArchivedConversation(){   
+    this.onClose().then(()=> {
+      this.events.publish('profileInfoButtonClick:changed', 'displayArchived');
+    })
   }
 
   onClickContact(){
     this.events.publish('profileInfoButtonClick:changed', 'displayContact');
-    // this.onClose();
   }
 
   /** */
