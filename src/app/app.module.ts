@@ -54,6 +54,7 @@ import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/fireba
 import { Chat21Service } from '../chat21-core/providers/mqtt/chat-service';
 import { MQTTAuthService } from '../chat21-core/providers/mqtt/mqtt-auth-service';
 import { MQTTConversationsHandler } from '../chat21-core/providers/mqtt/mqtt-conversations-handler';
+import { MQTTConversationHandlerBuilderService } from 'src/chat21-core/providers/mqtt/mqtt-conversation-handler-builder.service';
 import { MQTTTypingService } from '../chat21-core/providers/mqtt/mqtt-typing.service';
 import { MQTTPresenceService } from '../chat21-core/providers/mqtt/mqtt-presence.service';
 
@@ -158,7 +159,7 @@ export function archivedConversationsHandlerFactory() {
 export function conversationHandlerBuilderFactory() {
   console.log('conversationHandlerBuilderFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseConversationHandlerBuilderService();
+    return new MQTTConversationHandlerBuilderService();
   } else {
     return new FirebaseConversationHandlerBuilderService();
   }
