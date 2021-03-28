@@ -24,7 +24,7 @@ export class ConversationHandlerFactory {
 
   public build(): ConversationHandlerService {
     console.log('chat21Serviceeeee', this.chat21Service.chatClient.options);
-    if (environment.chatEngine === 'nqtt') {
+    if (environment.chatEngine === 'mqtt') {
       this.conversationHandlerService = new MQTTConversationHandler(this.chat21Service);
     } else {
       this.conversationHandlerService = new FirebaseConversationHandler();

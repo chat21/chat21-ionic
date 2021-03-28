@@ -13,12 +13,12 @@ export const environment = {
     //remoteContactsUrl: 'https://api.tiledesk.com/v2/chat21/contacts',
     remoteContactsUrl: 'http://console-native.tiledesk.com/api/chat21/contacts',
 
-    chat21Config: {
-        appId: "tilechat",
-        MQTTendpoint: 'mqtt://34.251.97.85:15675/ws', // MQTT endpoint
-        APIendpoint: 'http://34.251.97.85:8004/api',
-        loginServiceEndpoint: 'http://console-native.tiledesk.com/api/chat21/native/auth/createCustomToken'
-    },
+    // chat21Config: {
+    //     appId: "tilechat",
+    //     MQTTendpoint: 'mqtt://34.251.97.85:15675/ws', // MQTT endpoint
+    //     APIendpoint: 'http://34.251.97.85:8004/api',
+    //     loginServiceEndpoint: 'http://console-native.tiledesk.com/api/chat21/native/auth/createCustomToken'
+    // },
     firebaseConfig: {
         apiKey: "AIzaSyDKfdKrlD7AYcbQ-U-xxgV-b3FUQ4xt7NM",
         authDomain: "tiledesk-prod-v2.firebaseapp.com",
@@ -30,5 +30,5 @@ export const environment = {
         chat21ApiUrl: "https://us-central1-tiledesk-prod-v2.cloudfunctions.net"
     },
     authPersistence: 'LOCAL',
-    chatEngine: 'nqtt'
+    chatEngine: 'mqtt'
 };

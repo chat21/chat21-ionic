@@ -507,8 +507,8 @@ class Chat21Client {
         this.user_id = user_id;
         // console.log("userid:", this.user_id)
         this.jwt = jwt
-        // console.log("connecting user_id:", user_id)
-        console.log("usgin jwt token:", jwt)
+        console.log("connecting user_id:", user_id)
+        console.log("using jwt token:", jwt)
         
         if (this.client) {
             this.client.end()
@@ -537,7 +537,7 @@ class Chat21Client {
         
         this.client.on('connect',
             () => {
-                console.log("chat client connected.")
+                console.log("chat client connected...")
                 if (!this.connected) {
                     console.log("chat client first connection.")
                     this.connected = true
