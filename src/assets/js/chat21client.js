@@ -61,7 +61,7 @@ class Chat21Client {
     subscribeToMyConversations() { // MESSAGES ETC.
         // WILDCARS:
         // MQTT: https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/
-        // RABBOTMQ: https://www.cloudamqp.com/blog/2015-09-03-part4-rabbitmq-for-beginners-exchanges-routing-keys-bindings.html#topic-exchange
+        // RABBITMQ: https://www.cloudamqp.com/blog/2015-09-03-part4-rabbitmq-for-beginners-exchanges-routing-keys-bindings.html#topic-exchange
         this.topic_inbox = 'apps/tilechat/users/' + this.user_id + "/#"
         console.log("subscribing to:", this.user_id, "topic", this.topic_inbox)
         this.client.subscribe(this.topic_inbox, (err)  => {
@@ -287,21 +287,17 @@ class Chat21Client {
             const conversWith = _topic.conversWith
             try {
                 const message_json = JSON.parse(message.toString())
-                // if (this.onMessageCallbacks) {
-                //     this.onMessageCallbacks.forEach((callback, handler, map) => {
-                //         console.log("iterating callback:", handler);
-                //         callback(message_json, topic) // topic not parsed for raw messages
-                //     });
-                // }
+                
 
-                if (this.onConversationAddedCallbacks) {
-                    if (topic.includes("/conversations/") && topic.endsWith(_CLIENTADDED)) {
-                        // map.forEach((value, key, map) =>)
-                        this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
-                            callback(message_json, _topic)
-                        });
-                    }
-                }
+                // TEMPORARILY DISABLED, CONVERSATIONS OBSERVED BY NEW MESSAGES.
+                // if (this.onConversationAddedCallbacks) {
+                //     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTADDED)) {
+                //         // map.forEach((value, key, map) =>)
+                //         this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
+                //             callback(message_json, _topic)
+                //         });
+                //     }
+                // }
 
                 if (this.onConversationUpdatedCallbacks) {
                     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTUPDATED)) {
@@ -326,6 +322,13 @@ class Chat21Client {
                         this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                             callback(message_json, _topic)
                         });
+                        // try this, observing conversations from messages
+                        if (this.onConversationAddedCallbacks) {
+                            console.log("aggiungo alla conv!!!!!!", message_json)
+                            this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
+                                callback(message_json, _topic)
+                            });
+                        }
                     }
                 }
 
