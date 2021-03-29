@@ -153,6 +153,31 @@ export class MQTTAuthService extends AuthService {
     })
   }
 
+  // ********************* NATIVE AUTH (NO TILEDESK) ********************* //
+  private signinMQTT(url: string, username: string, password: string) {
+    console.log("signinMQTT...")
+    const httpHeaders = new HttpHeaders();
+    httpHeaders.append('Accept', 'application/json');
+    httpHeaders.append('Content-Type', 'application/json' );
+    const requestOptions = { headers: httpHeaders };
+    const postData = {
+      username: username,
+      password: password
+    };
+    const that = this;
+    this.http.post(url, postData, requestOptions)
+      .subscribe(data => {
+        console.log("data:", JSON.stringify(data));
+        if (data['token'] && data['userid']) {
+          localStorage.setItem('tiledeskToken', data['token']);
+          that.connectMQTT(data);
+          // that.firebaseCreateCustomToken(tiledeskToken);
+        }
+      }, error => {
+        console.log(error);
+      });
+  }
+
   /**
    * @param tiledeskToken
    */
@@ -181,8 +206,16 @@ export class MQTTAuthService extends AuthService {
 
 // ********************* TILEDESK AUTH ********************* //
   signInWithEmailAndPassword(email: string, password: string) {
+    // console.log('signInWithEmailAndPassword', email, password);
+    // this.signIn(this.URL_TILEDESK_SIGNIN, email, password);
+
     console.log('signInWithEmailAndPassword', email, password);
-    this.signIn(this.URL_TILEDESK_SIGNIN, email, password);
+    if (this.SERVER_BASE_URL !== '') {
+      this.signIn(this.URL_TILEDESK_SIGNIN, email, password);
+    }
+    else {
+      this.signinMQTT(environment.chat21Config.loginServiceEndpoint, email, password);
+    }
   }
 
   private signIn(url: string, emailVal: string, pswVal: string) {

@@ -6,7 +6,8 @@ export const environment = {
     FIREBASESTORAGE_BASE_URL_IMAGE: "https://firebasestorage.googleapis.com/v0/b/",
     //SERVER_BASE_URL: "https://api.tiledesk.com/v2/",
     // http://console-native.tiledesk.com/api/chat21/native/auth
-    SERVER_BASE_URL: "http://console-native.tiledesk.com/api/",
+    // SERVER_BASE_URL: "http://console-native.tiledesk.com/api/",
+    SERVER_BASE_URL: "",
     production: true,
     remoteConfig: false,
     remoteConfigUrl: './chat-config.json',
