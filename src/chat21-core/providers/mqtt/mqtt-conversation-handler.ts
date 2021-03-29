@@ -185,7 +185,7 @@ export class MQTTConversationHandler extends ConversationHandlerService {
         metadataMsg: string,
         conversationWith: string,
         conversationWithFullname: string,
-        senderId: string,
+        sender: string,
         senderFullname: string,
         channelType: string
     ) {
@@ -250,6 +250,23 @@ export class MQTTConversationHandler extends ConversationHandlerService {
         // console.log('timestamp: ', );
         // console.log('messaggio **************', );
         // messageRef.update({
+
+        return new MessageModel(
+            '',
+            language,
+            conversationWith,
+            recipientFullname,
+            sender,
+            senderFullname,
+            0,
+            metadataMsg,
+            msg,
+            Date.now(),
+            typeMsg,
+            this.attributes,
+            channelType,
+            false
+        );
     }
 
     sendMessage2(
@@ -269,26 +286,6 @@ export class MQTTConversationHandler extends ConversationHandlerService {
         }
 
         console.log('Senderfullname', senderFullname);
-        // const firebaseMessagesCustomUid = firebase.database().ref(this.urlNodeFirebase);
-        // const lang = document.documentElement.lang;
-        // const recipientFullname = conversationWithDetailFullname;
-        // const dateSendingMessage = setHeaderDate(this.translationMap, '');
-        // const messageRef = firebaseMessagesCustomUid.push({
-        //     language: lang,
-        //     recipient: conversationWith,
-        //     recipient_fullname: recipientFullname,
-        //     sender: senderMsg,
-        //     sender_fullname: senderFullname,
-        //     status: 0,
-        //     metadata: metadataMsg,
-        //     text: msg,
-        //     timestamp: firebase.database.ServerValue.TIMESTAMP,
-        //     type: typeMsg,
-        //     attributes: this.attributes,
-        //     channel_type: channelType
-        //     // isSender: true
-        // });
-
         const language = document.documentElement.lang;
         const recipientFullname = conversationWithFullname;
         const recipientId = conversationWith;
@@ -300,7 +297,7 @@ export class MQTTConversationHandler extends ConversationHandlerService {
             senderFullname,
             {
                 lang: language,
-                attributes: this.attributes
+                attributes: attributes
             },
             // attributes: attributes? TODO
             metadataMsg,
@@ -318,13 +315,22 @@ export class MQTTConversationHandler extends ConversationHandlerService {
                 }
             }
         );
-        // console.log('messages: ',  this.messages);
-        // console.log('senderFullname: ',  senderFullname);
-        // console.log('sender: ',  senderMsg);
-        // console.log('SEND MESSAGE: ', msg, channelType);
-        // console.log('timestamp: ', );
-        // console.log('messaggio **************', );
-        // messageRef.update({
+        return new MessageModel(
+            '',
+            language,
+            conversationWith,
+            recipientFullname,
+            sender,
+            senderFullname,
+            0,
+            metadataMsg,
+            msg,
+            Date.now(),
+            typeMsg,
+            this.attributes,
+            channelType,
+            false
+        );
     }
 
     /**
@@ -443,8 +449,8 @@ export class MQTTConversationHandler extends ConversationHandlerService {
     private addReplaceMessageInArray(uid: string, msg: MessageModel) {
         const index = searchIndexInArrayForUid(this.messages, uid);
         if (index > -1) {
-            const headerDate = this.messages[index].headerDate;
-            msg.headerDate = headerDate;
+            // const headerDate = this.messages[index].headerDate;
+            // msg.headerDate = headerDate;
             this.messages.splice(index, 1, msg);
         } else {
             this.messages.splice(0, 0, msg);

@@ -9,13 +9,15 @@ import { Chat21Service } from './chat-service';
 })
 export class MQTTConversationHandlerBuilderService extends ConversationHandlerBuilderService {
 
-  constructor() {
+  constructor(
+    public chat21Service: Chat21Service
+  ) {
     super();
   }
 
   public build(): any {
     const conversationHandlerService = new MQTTConversationHandler(
-      Chat21Service
+      this.chat21Service
     );
     return conversationHandlerService;
   }
