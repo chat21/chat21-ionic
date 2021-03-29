@@ -4,22 +4,22 @@ export const environment = {
     CHAT_SEND_BY_EMAIL_LINK: "mailto:",
     DASHBOARD_URL: "https://console.tiledesk.com/v2/dashboard/",
     FIREBASESTORAGE_BASE_URL_IMAGE: "https://firebasestorage.googleapis.com/v0/b/",
-    //SERVER_BASE_URL: "https://api.tiledesk.com/v2/",
-    // http://console-native.tiledesk.com/api/chat21/native/auth
-    // SERVER_BASE_URL: "http://console-native.tiledesk.com/api/",
-    SERVER_BASE_URL: "",
+    //SERVER_BASE_URL: "https://api.tiledesk.com/v2/", // prod
+    // SERVER_BASE_URL: "http://console-native.tiledesk.com/api/", // pre
+    SERVER_BASE_URL: '', // local
     production: true,
     remoteConfig: false,
     remoteConfigUrl: './chat-config.json',
-    //remoteContactsUrl: 'https://api.tiledesk.com/v2/chat21/contacts',
-    remoteContactsUrl: 'http://console-native.tiledesk.com/api/chat21/contacts',
+    //remoteContactsUrl: 'https://api.tiledesk.com/v2/chat21/contacts', // prod
+    // remoteContactsUrl: 'http://console-native.tiledesk.com/api/chat21/contacts', // pre
+    remoteContactsUrl: 'http://localhost:8002/contacts',
 
     chat21Config: {
         appId: "tilechat",
         MQTTendpoint: 'mqtt://localhost:15675/ws', // MQTT endpoint
         APIendpoint: 'http://localhost:8004/api',
         //loginServiceEndpoint: 'http://console-native.tiledesk.com/api/chat21/native/auth/createCustomToken'
-        loginServiceEndpoint: 'http://localhost:8002/tiledesk/signin'
+        loginServiceEndpoint: 'http://localhost:8002/tilechat/signin'
     },
     firebaseConfig: {
         apiKey: "AIzaSyDKfdKrlD7AYcbQ-U-xxgV-b3FUQ4xt7NM",
@@ -32,5 +32,5 @@ export const environment = {
         chat21ApiUrl: "https://us-central1-tiledesk-prod-v2.cloudfunctions.net"
     },
     authPersistence: 'LOCAL',
-    chatEngine: 'mqtt'
+    chatEngine: 'mqtt' // firebase
 };
