@@ -29,7 +29,7 @@ export class MQTTAuthService extends AuthService {
   BSAuthStateChanged: BehaviorSubject<any>;
   BSSignOut: BehaviorSubject<any>;
 
-  private persistence: string;
+  // private persistence: string;
   SERVER_BASE_URL: string;
 
   public token: any;

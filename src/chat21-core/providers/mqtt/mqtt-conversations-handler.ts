@@ -59,6 +59,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
      * inizializzo conversations handler
      */
     initialize(
+        tenant: string, 
         userId: string,
         translationMap: Map<string, string>
         ) {
@@ -69,6 +70,31 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         // this.databaseProvider.initialize(userId, this.tenant);
         this.isConversationClosingMap = new Map();
         // this.getConversationsFromStorage();
+    }
+
+    public getConversationDetail(tenant: string, loggedUserUid: string, conversationId: string) {
+        // const conversationSelected = this.conversations.find(item => item.uid === conversationId);
+        // console.log('>>>>>>>>>>>>>> getConversationDetail *****: ', conversationSelected);
+        // if (conversationSelected) {
+        //     this.BSConversationDetail.next(conversationSelected);
+        // } else {
+        //     const urlNodeFirebase = '/apps/' + tenant + '/users/' + loggedUserUid + '/conversations/' + conversationId;
+        //     console.log('urlNodeFirebase conversationDetail *****', urlNodeFirebase);
+        //     const firebaseMessages = firebase.database().ref(urlNodeFirebase);
+        //     firebaseMessages.on('value', (childSnapshot) => {
+        //         console.log('>>>>>>>>>>>>>> urlNodeFirebase conversationDetail *****: ', childSnapshot.val());
+        //         const conversation: ConversationModel = childSnapshot.val();
+        //         this.BSConversationDetail.next(conversation);
+        //     });
+        // }
+    }
+
+    setConversationRead(conversation: ConversationModel): void {
+        // const urlUpdate = conversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversation.recipient;
+        // const update = {};
+        // console.log('connect -------> conversations update', urlUpdate);
+        // update['/is_new'] = false;
+        // firebase.database().ref(urlUpdate).update(update);
     }
 
     /**
@@ -158,8 +184,8 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
                 // this.databaseProvider.setConversation(conversation);
             }
             this.conversations.sort(compareValues('timestamp', 'desc'));
-            this.conversationsChanged.next(this.conversations);
-            this.conversationsAdded.next(this.conversations);
+            this.conversationChanged.next(conversation);
+            this.conversationAdded.next(conversation);
             // this.events.publish('conversationsChanged', this.conversations);
         } else {
             console.error('ChatConversationsHandler::added::conversations with conversationId: ', childSnapshot.key, 'is not valid');
@@ -188,9 +214,9 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
             }
             // this.databaseProvider.setConversation(conversation);
             this.conversations.sort(compareValues('timestamp', 'desc'));
-            this.conversationsChanged.next(this.conversations);
+            this.conversationChanged.next(conversation);
             // this.events.publish('conversationsChanged', this.conversations);
-            this.conversationsChanged.next(this.conversations);
+            this.conversationChanged.next(conversation);
         } else {
             console.error('ChatConversationsHandler::changed::conversations with conversationId: ', childSnapshot.key, 'is not valid');
         }
@@ -209,10 +235,11 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     private removed(childSnapshot) {
         const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
         if (index > -1) {
+            const conversationRemoved = this.conversations[index]
             this.conversations.splice(index, 1);
             // this.conversations.sort(compareValues('timestamp', 'desc'));
             // this.databaseProvider.removeConversation(childSnapshot.key);
-            this.conversationsRemoved.next(this.conversations);
+            this.conversationRemoved.next(conversationRemoved);
         }
         // remove the conversation from the isConversationClosingMap
         this.deleteClosingConversation(childSnapshot.key);

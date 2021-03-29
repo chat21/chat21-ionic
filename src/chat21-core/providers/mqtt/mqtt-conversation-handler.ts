@@ -258,7 +258,7 @@ export class MQTTConversationHandler extends ConversationHandlerService {
         metadataMsg: string,
         conversationWith: string,
         conversationWithFullname: string,
-        senderId: string,
+        sender: string,
         senderFullname: string,
         channelType: string,
         attributes: any
@@ -302,6 +302,7 @@ export class MQTTConversationHandler extends ConversationHandlerService {
                 lang: language,
                 attributes: this.attributes
             },
+            // attributes: attributes? TODO
             metadataMsg,
             channelType,
             // language,
