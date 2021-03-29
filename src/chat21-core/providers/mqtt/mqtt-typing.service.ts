@@ -6,13 +6,13 @@ import 'firebase/messaging';
 import 'firebase/database';
 
 // services
-import { EventsService } from '../events-service';
-import { PresenceService } from '../presence.service';
+// import { EventsService } from './abstract/events-service';
+import { PresenceService } from '../abstract/presence.service';
 
 // utils
 import { setLastDate } from '../../utils/utils';
 import { environment } from '../../../environments/environment';
-import { TypingService } from '../typing.service';
+import { TypingService } from '../abstract/typing.service';
 
 export class TypingModel {
   constructor(
@@ -34,7 +34,7 @@ export class MQTTTypingService extends TypingService {
   private setTimeoutWritingMessages: any;
 
   constructor(
-    private events: EventsService
+    // private events: EventsService
   ) {
     super();
   }

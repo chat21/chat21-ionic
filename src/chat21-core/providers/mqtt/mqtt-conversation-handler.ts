@@ -7,24 +7,24 @@ import { BehaviorSubject } from 'rxjs';
 // import 'firebase/database';
 // import 'firebase/firestore';
 // mqtt
-import {Chat21Service} from '../chat-service';
+import {Chat21Service} from './chat-service';
 
 // models
-import { MessageModel } from 'src/app/models/message';
-import { UserModel } from 'src/app/models/user';
+import { MessageModel } from '../../models/message';
+import { UserModel } from '../../models/user';
 
 // services
-import { ConversationHandlerService } from 'src/app/services/conversation-handler.service';
+import { ConversationHandlerService } from '../abstract/conversation-handler.service';
 
 // utils
-import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT } from 'src/app/utils/constants';
+import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT } from '../../utils/constants';
 import {
   htmlEntities,
   compareValues,
   searchIndexInArrayForUid,
   setHeaderDate,
   conversationMessagesRef
-} from 'src/app/utils/utils';
+} from '../../utils/utils';
 
 
 @Injectable({ providedIn: 'root' })
@@ -188,6 +188,80 @@ export class MQTTConversationHandler extends ConversationHandlerService {
         senderId: string,
         senderFullname: string,
         channelType: string
+    ) {
+        const that = this;
+        if (!channelType || channelType === 'undefined') {
+            channelType = TYPE_DIRECT;
+        }
+
+        console.log('Senderfullname', senderFullname);
+        // const firebaseMessagesCustomUid = firebase.database().ref(this.urlNodeFirebase);
+        // const lang = document.documentElement.lang;
+        // const recipientFullname = conversationWithDetailFullname;
+        // const dateSendingMessage = setHeaderDate(this.translationMap, '');
+        // const messageRef = firebaseMessagesCustomUid.push({
+        //     language: lang,
+        //     recipient: conversationWith,
+        //     recipient_fullname: recipientFullname,
+        //     sender: senderMsg,
+        //     sender_fullname: senderFullname,
+        //     status: 0,
+        //     metadata: metadataMsg,
+        //     text: msg,
+        //     timestamp: firebase.database.ServerValue.TIMESTAMP,
+        //     type: typeMsg,
+        //     attributes: this.attributes,
+        //     channel_type: channelType
+        //     // isSender: true
+        // });
+
+        const language = document.documentElement.lang;
+        const recipientFullname = conversationWithFullname;
+        const recipientId = conversationWith;
+        this.chat21Service.chatClient.sendMessage(
+            msg,
+            typeMsg,
+            recipientId,
+            recipientFullname,
+            senderFullname,
+            {
+                lang: language,
+                attributes: this.attributes
+            },
+            metadataMsg,
+            channelType,
+            // language,
+            (err, message) => {
+                console.log('message: ' + JSON.stringify(message) + ' sent with err: ' + err);
+                if (err) {
+                // cambio lo stato in rosso: invio nn riuscito!!!
+                message.status = '-100';
+                console.log('ERRORE', err);
+                } else {
+                message.status = '150';
+                console.log('OK MSG INVIATO CON SUCCESSO AL SERVER', message);
+                }
+            }
+        );
+        // console.log('messages: ',  this.messages);
+        // console.log('senderFullname: ',  senderFullname);
+        // console.log('sender: ',  senderMsg);
+        // console.log('SEND MESSAGE: ', msg, channelType);
+        // console.log('timestamp: ', );
+        // console.log('messaggio **************', );
+        // messageRef.update({
+    }
+
+    sendMessage2(
+        msg: string,
+        typeMsg: string,
+        metadataMsg: string,
+        conversationWith: string,
+        conversationWithFullname: string,
+        senderId: string,
+        senderFullname: string,
+        channelType: string,
+        attributes: any
     ) {
         const that = this;
         if (!channelType || channelType === 'undefined') {

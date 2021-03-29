@@ -7,8 +7,8 @@ import 'firebase/messaging';
 import 'firebase/database';
 
 // services
-import { EventsService } from '../events-service';
-import { PresenceService } from '../presence.service';
+// import { EventsService } from '../events-service';
+import { PresenceService } from '../abstract/presence.service';
 
 // utils
 import { setLastDate } from '../../utils/utils';

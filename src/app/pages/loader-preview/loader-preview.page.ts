@@ -27,7 +27,7 @@ export class LoaderPreviewPage implements OnInit {
   ngOnInit() {
     console.log('LoaderPreviewPage' );
     // tslint:disable-next-line: prefer-for-of
-    this.selectedFiles = this.files;
+     this.selectedFiles = this.files;
     for ( let i = 0; i < this.files.length; i++ ) {
       this.readAsDataURL(this.files[i]);
       //this.fileChange(this.files[i]);

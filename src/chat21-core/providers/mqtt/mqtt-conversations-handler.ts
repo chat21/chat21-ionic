@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 // mqtt
-import {Chat21Service} from '../chat-service';
+import {Chat21Service} from './chat-service';
 
 // models
-import { ConversationModel } from 'src/app/models/conversation';
+import { ConversationModel } from '../../models/conversation';
 
 // services
-import { ConversationsHandlerService } from 'src/app/services/conversations-handler.service';
+import { ConversationsHandlerService } from '../abstract/conversations-handler.service';
 // import { DatabaseProvider } from 'src/app/services/database';
 
 // utils
-import { TYPE_GROUP, URL_SOUND } from 'src/app/utils/constants';
-import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from 'src/app/utils/utils-user';
-import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from 'src/app/utils/utils';
-import { ImageRepoService } from 'src/app/services/image-repo.service';
+import { TYPE_GROUP, URL_SOUND } from '../../utils/constants';
+import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from '../../utils/utils-user';
+import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from '../../utils/utils';
+import { ImageRepoService } from '../abstract/image-repo.service';
 // import { ConsoleReporter } from 'jasmine';
 
 @Injectable({ providedIn: 'root' })
@@ -23,10 +23,11 @@ import { ImageRepoService } from 'src/app/services/image-repo.service';
 export class MQTTConversationsHandler extends ConversationsHandlerService {
 
     // BehaviorSubject
+    BSConversationDetail: BehaviorSubject<ConversationModel>;
     readAllMessages: BehaviorSubject<string>;
-    conversationsAdded: BehaviorSubject<ConversationModel[]>;
-    conversationsChanged: BehaviorSubject<ConversationModel[]>;
-    conversationsRemoved: BehaviorSubject<ConversationModel[]>;
+    conversationAdded: BehaviorSubject<ConversationModel>;
+    conversationChanged: BehaviorSubject<ConversationModel>;
+    conversationRemoved: BehaviorSubject<ConversationModel>;
     loadedConversationsStorage: BehaviorSubject<ConversationModel[]>;
     imageRepo: ImageRepoService;
 

@@ -11,8 +11,10 @@ import 'firebase/auth';
 
 // services
 // import { EventsService } from '../events-service';
-import { AuthService } from '../auth.service';
-import { Chat21Service } from '../chat-service';
+import { AuthService } from '../abstract/auth.service';
+import { Chat21Service } from './chat-service';
+// models
+import { UserModel } from '../../models/user';
 
 declare var Chat21Client: any;
 
@@ -27,16 +29,19 @@ export class MQTTAuthService extends AuthService {
   BSAuthStateChanged: BehaviorSubject<any>;
   BSSignOut: BehaviorSubject<any>;
 
-  persistence: string;
+  private persistence: string;
   SERVER_BASE_URL: string;
 
   public token: any;
   public tiledeskToken: any;
   public user: any;
   private currentUser: any;
+  private storagePrefix: string;
 
   private URL_TILEDESK_SIGNIN: string;
   private URL_TILEDESK_CREATE_CUSTOM_TOKEN: string;
+  private URL_TILEDESK_SIGNIN_ANONYMOUSLY: string;
+  private URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN: string;
 
   constructor(
     public http: HttpClient,
@@ -48,9 +53,14 @@ export class MQTTAuthService extends AuthService {
   /**
    *
    */
-  initialize() {
+  initialize(storagePrefix: string) {
+    this.SERVER_BASE_URL = this.getBaseUrl();
+    this.storagePrefix = storagePrefix;
     this.URL_TILEDESK_SIGNIN = this.SERVER_BASE_URL + 'auth/signin';
+    this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously'
     this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = environment.chat21Config.loginServiceEndpoint;
+    this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'auth/signinWithCustomToken';
+    this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
     // this.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
     console.log(' ---------------- login con token url ---------------- ');
     this.checkIsAuth();
@@ -59,6 +69,11 @@ export class MQTTAuthService extends AuthService {
 
   logout() {
     console.log('logged out');
+  }
+
+  getCurrentUser(): UserModel {
+    // return firebase.auth().currentUser;
+    return this.currentUser;
   }
 
   checkIsAuth() {
@@ -105,129 +120,64 @@ export class MQTTAuthService extends AuthService {
       }
     }, false);
 
-    // firebase.auth().onAuthStateChanged(user => {
-    //   console.log(' onAuthStateChanged', user);
-    //   if (!user) {
-    //     console.log(' 1 - PASSO OFFLINE AL CHAT MANAGER');
-    //     that.authStateChanged.next(null);
-    //     // taht.events.publish('go-off-line');
-    //   } else {
-    //     console.log(' 2 - PASSO ONLINE AL CHAT MANAGER');
-    //     that.currentUser = user;
-    //     that.authStateChanged.next(user);
-    //     // taht.events.publish('go-on-line', user);
-    //   }
-    // });
   }
 
 
-  // /** */
-  // updateTokenOnAuthStateIsLogin() {
-  //   const taht = this;
-  //   firebase.auth().currentUser.getIdToken(false)
-  //   .then((token) => {
-  //     console.log('idToken.', token);
-  //     taht.token = token;
-  //   }).catch((error) => {
-  //     console.log('idToken error: ', error);
-  //   });
-  // }
+  /**
+   * @param projectID
+   */
+  signInAnonymously(projectID: string): Promise<any> {
+    console.log('signInAnonymously', projectID);
+    const httpHeaders = new HttpHeaders();
+    
+    httpHeaders.append('Accept', 'application/json');
+    httpHeaders.append('Content-Type', 'application/json' );
+    const requestOptions = { headers: httpHeaders };
+    const postData = {
+      id_project: projectID
+    };
+    const that = this;
+    return new Promise((resolve, reject)=> {
+      this.http.post(this.URL_TILEDESK_SIGNIN_ANONYMOUSLY, postData, requestOptions).subscribe((data) => {
+        if (data['success'] && data['token']) {
+          that.tiledeskToken = data['token'];
+          // this.createCompleteUser(data['user']);
+          localStorage.setItem(this.storagePrefix + 'tiledeskToken', that.tiledeskToken);
+          that.getCustomToken(this.tiledeskToken);
+          resolve(this.currentUser)
+        }
+    }, (error) => {
+      console.log(error);
+      reject(error)
+    });
+    })
+  }
 
-  // /**
-  //  * @param token
-  //  */
-  // signInWithCustomToken(token: string): any {
-  //   console.log('signInWithCustomToken:', token);
-  //   const that = this;
-  //   let firebasePersistence;
-  //   switch (this.persistence) {
-  //     case 'SESSION': {
-  //       firebasePersistence = firebase.auth.Auth.Persistence.SESSION;
-  //       break;
-  //     }
-  //     case 'LOCAL': {
-  //       firebasePersistence = firebase.auth.Auth.Persistence.LOCAL;
-  //       break;
-  //     }
-  //     case 'NONE': {
-  //       firebasePersistence = firebase.auth.Auth.Persistence.NONE;
-  //       break;
-  //     }
-  //     default: {
-  //       firebasePersistence = firebase.auth.Auth.Persistence.NONE;
-  //       break;
-  //     }
-  //   }
-  //   return firebase.auth().setPersistence(firebasePersistence)
-  //   .then( async () => {
-  //     return firebase.auth().signInWithCustomToken(token)
-  //     .then( async (response) => {
-  //       that.setUserAndToken(response);
-  //       that.events.publish('firebase-sign-in-with-custom-token', response, null);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error: ', error);
-  //       that.events.publish('firebase-sign-in-with-custom-token', null, error);
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error: ', error);
-  //     that.events.publish('firebase-sign-in-with-custom-token', null, error);
-  //   });
-  // }
-
-  // createUserWithEmailAndPassword(email: string, password: string): any {
-  //   const that = this;
-  //   return firebase.auth().createUserWithEmailAndPassword(email, password)
-  //   .then((response) => {
-  //     console.log('firebase-create-user-with-email-and-password');
-  //     that.events.publish('firebase-create-user-with-email-and-password', response);
-  //     return response;
-  //   })
-  //   .catch((error) => {
-  //       console.log('error: ', error.message);
-  //       return error;
-  //   });
-  // }
-
-  // sendPasswordResetEmail(email: string): any {
-  //   const that = this;
-  //   return firebase.auth().sendPasswordResetEmail(email).
-  //   then(() => {
-  //     console.log('firebase-send-password-reset-email');
-  //     that.events.publish('firebase-send-password-reset-email', email);
-  //   }).catch((error) => {
-  //     console.log('error: ', error);
-  //   });
-  // }
-
-  // async signOut() {
-    // const that = this;
-    // try {
-    //   await firebase.auth().signOut();
-    //   console.log('firebase-sign-out');
-    //   that.events.publish('firebase-sign-out');
-    // } catch (error) {
-    //   console.log('error: ', error);
-    // }
-  // }
-
-  // delete() {
-  //   const that = this;
-  //   const user = firebase.auth().currentUser;
-  //   user.delete().then(() => {
-  //     console.log('firebase-current-user-delete');
-  //     that.events.publish('firebase-current-user-delete');
-  //   }).catch((error) => {
-  //     console.log('error: ', error);
-  //   });
-  // }
-
-// ********************* END FIREBASE AUTH ********************* //
-
-
-
-
+  /**
+   * @param tiledeskToken
+   */
+  signInWithCustomToken(tiledeskToken: string): Promise<any>{
+    const headers = new HttpHeaders({
+      'Content-type': 'application/json',
+      Authorization: tiledeskToken
+    });
+    const requestOptions = { headers: headers };
+    const that = this;
+    return new Promise((resolve, reject)=> {
+      this.http.post(this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN, null, requestOptions).subscribe((data) => {
+        if (data['success'] && data['token']) {
+          that.tiledeskToken = data['token'];
+          // this.createCompleteUser(data['user']);
+          localStorage.setItem(this.storagePrefix + 'tiledeskToken', that.tiledeskToken);
+          that.getCustomToken(this.tiledeskToken);
+          resolve(this.currentUser)
+        }
+      }, (error) => {
+        console.log(error);
+        reject(error)
+      });
+    });
+  }
 
 // ********************* TILEDESK AUTH ********************* //
   signInWithEmailAndPassword(email: string, password: string) {
@@ -250,7 +200,7 @@ export class MQTTAuthService extends AuthService {
         console.log("data:", JSON.stringify(data));
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
-          localStorage.setItem('tiledeskToken', this.tiledeskToken);
+          localStorage.setItem(this.storagePrefix + 'tiledeskToken', that.tiledeskToken);
           that.getCustomToken(this.tiledeskToken);
           // that.firebaseCreateCustomToken(tiledeskToken);
         }
