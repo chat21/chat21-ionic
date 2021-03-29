@@ -48,6 +48,7 @@ export class ConversationsArchivedListPage implements OnInit {
   onConversationSelectedFN(conversation: ConversationModel){
     //console.log('onConversationSelectedFN::', conversation)
     this.onConversationSelected.emit(conversation)
+    this.onCloseArchived();
   }
 
   onImageLoadedFN(conversation: ConversationModel){

@@ -470,7 +470,7 @@ export class ConversationListPage implements OnInit {
         this.databaseProvider.getUidLastOpenConversation().then((uid: string) => {
           console.log('getUidLastOpenConversation:: ' + uid);
           console.log('33333');
-          that.navigateByUrl(uid);
+          that.navigateByUrl('active', uid);
         })
         .catch((error) => {
           console.log('44444');
@@ -519,11 +519,17 @@ export class ConversationListPage implements OnInit {
   /**
    * ::: setUidConvSelected :::
    */
-  setUidConvSelected(uidConvSelected?: string) {
+  setUidConvSelected(conversationType: string, uidConvSelected?: string) {
+    console.log('setuidCOnvSelected', uidConvSelected)
     this.uidConvSelected = uidConvSelected;
     this.conversationsHandlerService.uidConvSelected = uidConvSelected;
     if (uidConvSelected) {
-      const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+      let conversationSelected;
+      if(conversationType === 'active'){
+        conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+      }else if(conversationType === 'archived'){
+        conversationSelected = this.archivedConversations.find(item => item.uid === this.uidConvSelected);
+      }
       if (conversationSelected) {
         console.log('la conv ' + this.conversationSelected + ' è già stata caricata');
         this.conversationSelected = conversationSelected;
@@ -536,7 +542,12 @@ export class ConversationListPage implements OnInit {
 
   onConversationSelected(conversation: ConversationModel){
     //console.log('returnSelectedConversation::', conversation)
-    this.navigateByUrl(conversation.uid)
+    if(conversation.archived){
+      this.navigateByUrl('archived', conversation.uid)
+    }else {
+      this.navigateByUrl('active', conversation.uid)
+    }
+    
   }
 
   onImageLoaded(conversation: ConversationModel){
@@ -562,11 +573,12 @@ export class ConversationListPage implements OnInit {
   }
 
 
-  navigateByUrl(uidConvSelected: string) {
-    this.setUidConvSelected(uidConvSelected);
+  navigateByUrl(converationType: string, uidConvSelected: string) {
+    this.setUidConvSelected(converationType, uidConvSelected);
     if (checkPlatformIsMobile()) {
       console.log('PLATFORM_MOBILE 1', this.navService);
       let pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
+      this.logger.printDebug('pageURL', pageUrl)
       this.router.navigateByUrl(pageUrl);
     } else {
       console.log('PLATFORM_DESKTOP 2', this.navService);
