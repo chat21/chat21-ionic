@@ -4,7 +4,7 @@
 // export const SERVICE_WORKER_PROD = './chat/';
 
 // CHAT ENGINE
-export const CHAT_ENGINE_NQTT = 'mqtt';
+export const CHAT_ENGINE_MQTT = 'mqtt';
 export const CHAT_ENGINE_FIREBASE = 'firebase';
 
 // AUTH

@@ -32,5 +32,5 @@ export const environment = {
         chat21ApiUrl: "https://us-central1-tiledesk-prod-v2.cloudfunctions.net"
     },
     authPersistence: 'LOCAL',
-    chatEngine: 'mqtt'
+    chatEngine: 'mqtt' // firebase
 };

@@ -17,7 +17,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 // CONFIG
 import { environment } from '../environments/environment';
-import { CHAT_ENGINE_NQTT, CHAT_ENGINE_FIREBASE } from './utils/constants';
+import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE } from './utils/constants';
 
 // SERVICES
 import { AppConfigProvider } from './services/app-config';
@@ -58,7 +58,7 @@ export function createTranslateLoader(http: HttpClient) {
 
 export function authenticationFactory(http: HttpClient, route: ActivatedRoute, chat21Service: Chat21Service) {
   console.log('authenticationFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTAuthService(http, chat21Service);
   } else {
     return new FirebaseAuthService(http, route);
@@ -67,7 +67,7 @@ export function authenticationFactory(http: HttpClient, route: ActivatedRoute, c
 
 export function presenceFactory(events: EventsService) {
   console.log('presenceFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTPresenceService();
   } else {
     return new FirebasePresenceService();
@@ -76,7 +76,7 @@ export function presenceFactory(events: EventsService) {
 
 export function typingFactory(events: EventsService) {
   console.log('typingFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTTypingService(events);
   } else {
     return new FirebaseTypingService(events);
@@ -86,7 +86,7 @@ export function typingFactory(events: EventsService) {
 export function conversationsHandlerFactory(
   databaseProvider: DatabaseProvider, chat21Service: Chat21Service) {
   console.log('conversationsHandlerFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTConversationsHandler(databaseProvider, chat21Service);
   } else {
     return new FirebaseConversationsHandler(databaseProvider);
@@ -95,7 +95,7 @@ export function conversationsHandlerFactory(
 
 export function imageRepoFactory() {
   console.log('imageRepoFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_NQTT) {
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseImageRepoService();
   } else {
     return new FirebaseImageRepoService();
