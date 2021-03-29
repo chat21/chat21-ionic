@@ -17,7 +17,7 @@ export class LoaderPreviewPage implements OnInit {
   public fileSelected: any;
   public messageString: string;
   public heightPreviewArea = '183';
-  private selectedFiles: FileList;
+  private selectedFiles: any;
 
   constructor(
     public viewCtrl: ModalController
