@@ -290,6 +290,7 @@ class Chat21Client {
                 
 
                 // TEMPORARILY DISABLED, CONVERSATIONS OBSERVED BY NEW MESSAGES.
+                // MOVED TO: this.onMessageAddedCallbacks
                 // if (this.onConversationAddedCallbacks) {
                 //     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTADDED)) {
                 //         // map.forEach((value, key, map) =>)
@@ -322,12 +323,17 @@ class Chat21Client {
                         this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                             callback(message_json, _topic)
                         });
-                        // try this, observing conversations from messages
+                        // Observing conversations added from messages
                         if (this.onConversationAddedCallbacks) {
-                            console.log("aggiungo alla conv!!!!!!", message_json)
-                            this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
-                                callback(message_json, _topic)
-                            });
+                            let update_conversation = true;
+                            if (message_json.attributes && message_json.attributes.updateconversation == false) {
+                              update_conversation = false
+                            }
+                            if (update_conversation) {
+                                this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
+                                    callback(message_json, _topic)
+                                });
+                            }
                         }
                     }
                 }
