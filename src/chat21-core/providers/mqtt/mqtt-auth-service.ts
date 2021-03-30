@@ -16,7 +16,7 @@ import { Chat21Service } from './chat-service';
 // models
 import { UserModel } from '../../models/user';
 
-declare var Chat21Client: any;
+// declare var Chat21Client: any;
 
 
 @Injectable({ providedIn: 'root' })
@@ -48,6 +48,7 @@ export class MQTTAuthService extends AuthService {
     public chat21Service: Chat21Service
   ) {
     super();
+    console.log("chat21Service:", chat21Service)
   }
 
   /**
@@ -55,6 +56,7 @@ export class MQTTAuthService extends AuthService {
    */
   initialize(storagePrefix: string) {
     this.SERVER_BASE_URL = this.getBaseUrl();
+    console.log("this.SERVER_BASE_URL = this.getBaseUrl();", this.SERVER_BASE_URL)
     this.storagePrefix = storagePrefix;
     this.URL_TILEDESK_SIGNIN = this.SERVER_BASE_URL + 'auth/signin';
     this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously'
@@ -210,7 +212,8 @@ export class MQTTAuthService extends AuthService {
     // this.signIn(this.URL_TILEDESK_SIGNIN, email, password);
 
     console.log('signInWithEmailAndPassword', email, password);
-    if (this.SERVER_BASE_URL !== '') {
+    if (this.SERVER_BASE_URL !== '__') {
+      console.log('this.URL_TILEDESK_SIGNIN', this.URL_TILEDESK_SIGNIN);
       this.signIn(this.URL_TILEDESK_SIGNIN, email, password);
     }
     else {

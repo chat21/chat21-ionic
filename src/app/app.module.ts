@@ -80,12 +80,14 @@ export function createTranslateLoader(http: HttpClient) {
 
 export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service ) {
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    // const auth= new FirebaseAuthService(http);
-    // auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
-    // return auth
-    return new MQTTAuthService(http, chat21Service);
+    console.log("chat21Service::", chat21Service)
+    const auth = new MQTTAuthService(http, chat21Service);
+    console.log("appConfig.getConfig().SERVER_BASE_URL", appConfig.getConfig().SERVER_BASE_URL);
+    auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
+    console.log("auth.getBaseUrl()", auth.getBaseUrl());
+    return auth
   } else {
-    const auth= new FirebaseAuthService(http); 
+    const auth= new FirebaseAuthService(http);
     auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
     return auth
   }
@@ -156,10 +158,10 @@ export function archivedConversationsHandlerFactory() {
   }
 }
 
-export function conversationHandlerBuilderFactory() {
+export function conversationHandlerBuilderFactory(chat21Service: Chat21Service) {
   console.log('conversationHandlerBuilderFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new MQTTConversationHandlerBuilderService();
+    return new MQTTConversationHandlerBuilderService(chat21Service);
   } else {
     return new FirebaseConversationHandlerBuilderService();
   }
