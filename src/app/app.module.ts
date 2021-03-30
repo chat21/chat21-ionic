@@ -89,7 +89,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
   } else {
     const auth= new FirebaseAuthService(http);
     auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
-    return auth
+    return auth 
   }
 }
 
@@ -293,7 +293,8 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     EventsService,
     DatabaseProvider,
-    Chooser
+    Chooser,
+    Chat21Service
   ]
 })
 export class AppModule {}
