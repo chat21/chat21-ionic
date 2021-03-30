@@ -324,11 +324,14 @@ class Chat21Client {
                             callback(message_json, _topic)
                         });
                         // Observing conversations added from messages
+                        console.log("Observing conversations added from messages", message_json);
                         if (this.onConversationAddedCallbacks) {
+                            console.log("callbacks ok........");
                             let update_conversation = true;
                             if (message_json.attributes && message_json.attributes.updateconversation == false) {
                               update_conversation = false
                             }
+                            console.log("update_conversation........", update_conversation);
                             if (update_conversation) {
                                 this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
                                     callback(message_json, _topic)

@@ -169,6 +169,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
      * 7 -  pubblico conversations:update
      */
     private added(childSnapshot: any) {
+        console.log("NEW CONV:::", childSnapshot)
         const childData: ConversationModel = childSnapshot;
         childData.uid = childSnapshot.key;
         const conversation = this.completeConversation(childData);
@@ -184,6 +185,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
                 // this.databaseProvider.setConversation(conversation);
             }
             this.conversations.sort(compareValues('timestamp', 'desc'));
+            console.log("ALL CONVS:", this.conversations)
             this.conversationChanged.next(conversation);
             this.conversationAdded.next(conversation);
             // this.events.publish('conversationsChanged', this.conversations);
@@ -494,43 +496,43 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     private isValidConversation(convToCheckId, convToCheck: ConversationModel) : boolean {
         //console.log("[BEGIN] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
         if (!this.isValidField(convToCheck.uid)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'uid is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'uid is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.is_new)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'is_new is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'is_new is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.last_message_text)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'last_message_text is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'last_message_text is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.recipient)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'recipient is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'recipient is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.recipient_fullname)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'recipient_fullname is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'recipient_fullname is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.sender)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'sender is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'sender is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.sender_fullname)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'sender_fullname is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'sender_fullname is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.status)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'status is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'status is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.timestamp)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'timestamp is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'timestamp is not valid' ");
             return false;
         }
         if (!this.isValidField(convToCheck.channel_type)) {
-            //console.error("ChatConversationsHandler::isValidConversation:: 'channel_type is not valid' ");
+            console.error("ChatConversationsHandler::isValidConversation:: 'channel_type is not valid' ");
             return false;
         }
         //console.log("[END] ChatConversationsHandler:: convToCheck with uid: ", convToCheckId);
