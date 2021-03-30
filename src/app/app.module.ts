@@ -240,7 +240,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: AuthService,
       useFactory: authenticationFactory,
-      deps: [HttpClient, AppConfigProvider]
+      deps: [HttpClient, AppConfigProvider, Chat21Service]
      },
     {
       provide: PresenceService,
