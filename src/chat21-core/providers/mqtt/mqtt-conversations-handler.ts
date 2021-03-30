@@ -207,15 +207,19 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
             } else {
                 console.log("NON TROVATO")
                 this.conversations.splice(0, 0, conversation);
-                this.databaseProvider.setConversation(conversation);
+                // this.databaseProvider.setConversation(conversation);
             }
             this.conversations.sort(compareValues('timestamp', 'desc'));
-            this.conversationsChanged.next(this.conversations);
-            this.conversationsAdded.next(this.conversations);
+            this.conversationChanged.next(conversation);
+            this.conversationAdded.next(conversation);
             // this.events.publish('conversationsChanged', this.conversations);
         } else {
             console.error('ChatConversationsHandler::added::conversations with conversationId: ', conversation.conversation_with, 'is not valid');
         }
+    }
+
+    searchIndexInArrayForConversationWith(conversations, conversation_with: string) {
+        return conversations.findIndex(conv => conv.conversation_with === conversation_with);
     }
 
     /**
@@ -232,7 +236,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         childData.uid = childSnapshot.key;
         console.log('changed conversation: ', childData);
         const conversation = this.completeConversation(childData);
-        if (this.isValidConversation(childSnapshot.key, conversation)) {
+        if (this.isValidConversation(conversation)) {
             this.setClosingConversation(childSnapshot.key, false);
             const index = searchIndexInArrayForUid(this.conversations, conversation.uid);
             if (index > -1) {
