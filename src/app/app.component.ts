@@ -87,9 +87,9 @@ export class AppComponent implements OnInit {
     console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
-    if (environment.chatEngine === CHAT_ENGINE_FIREBASE) {
+    // if (environment.chatEngine === CHAT_ENGINE_FIREBASE) {
       this.initFirebase();
-    }
+    // }
 
   }
 

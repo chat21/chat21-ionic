@@ -297,7 +297,8 @@ export class MQTTAuthService extends AuthService {
       };
       this.currentUser = user;
       console.log('User signed in:', user);
-      this.BSAuthStateChanged.next(user);
+      // this.BSAuthStateChanged.next(user);
+      this.BSAuthStateChanged.next('online');
     });
   }
 

@@ -108,7 +108,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
 export function presenceFactory() {
   console.log('presenceFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebasePresenceService();
+    return new MQTTPresenceService();
   } else {
     return new FirebasePresenceService();
   }
@@ -117,7 +117,7 @@ export function presenceFactory() {
 export function typingFactory() {
   console.log('typingFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseTypingService();
+    return new MQTTTypingService();
   } else {
     return new FirebaseTypingService();
   }
@@ -260,7 +260,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ConversationsHandlerService,
       useFactory: conversationsHandlerFactory,
-      deps: []
+      deps: [Chat21Service]
     },
     {
       provide: ArchivedConversationsHandlerService,
@@ -280,7 +280,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ConversationHandlerBuilderService,
       useFactory: conversationHandlerBuilderFactory,
-      deps: []
+      deps: [Chat21Service]
     },
     {
       provide: LoggerService,
