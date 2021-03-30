@@ -3,6 +3,7 @@
     "FIREBASESTORAGE_BASE_URL_IMAGE": "${FIREBASESTORAGE_BASE_URL_IMAGE}",
     "DASHBOARD_URL": "${DASHBOARD_URL}",
     "SERVER_BASE_URL": "${SERVER_BASE_URL}",
+    "chatEngine": "${CHAT21_ENGINE}",
     "firebaseConfig": {
         "apiKey": "${FIREBASE_APIKEY}",
         "authDomain": "${FIREBASE_AUTHDOMAIN}",
