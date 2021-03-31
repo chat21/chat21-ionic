@@ -176,11 +176,6 @@ export class ProfileInfoPage implements OnInit {
     })
   }
 
-  onClickContact(){
-    this.onClose().then(()=> {
-      this.events.publish('profileInfoButtonClick:changed', 'displayContact');
-    })
-  }
 
   /** */
   private unsubescribeAll() {

@@ -54,9 +54,7 @@ export class ContactsService {
       const postData = {
       };
       console.log('urlRemoteContacts:: url ', this.urlRemoteContacts);
-      this.http
-      .get<any[]>(this.urlRemoteContacts, httpOptions)
-      .subscribe(users => {
+      this.http.get<any[]>(this.urlRemoteContacts, httpOptions).subscribe(users => {
         console.log('urlRemoteContacts:: data ', users);
         users.forEach(user => {
           const member = that.createCompleteUser(user);

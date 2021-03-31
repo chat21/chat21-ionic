@@ -2,9 +2,12 @@
   <ion-searchbar debounce="500" (ionInput)="onSearchInput($event)"></ion-searchbar>
   <ion-list>
     
-    <ion-item ion-item *ngFor="let user of contacts" (click)="goToChat(user)">
+    <ion-item lines="none" class="ion-no-padding" *ngFor="let user of contacts" (click)="goToChat(user)">
+      <div [class.selected]="user.uid === uidUserSelected"></div>
       <ion-avatar slot="start">
-        <img src = {{user.image}} onError="this.src='assets/images/no_image.png';" >
+        <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="user.color" [innerHTML]="user.avatar"></div>
+        <div *ngIf="user.imageurl" #avatarImage class="avatar-profile" [style.background-image]="'url(' + user.imageurl + ')'"></div>
+        <!-- <div *ngIf="getImageAvatar(conversation.sender)" #avatarImage class="avatar-profile" [style.background-image]="'url(' + getImageAvatar(conversation.sender) + ')'"></div> -->
       </ion-avatar>
       <ion-label>
         <h2>{{ user.fullname }}</h2>

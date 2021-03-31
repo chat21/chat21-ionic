@@ -1,4 +1,5 @@
-import { Component, IterableDiffers, KeyValueDiffers, OnInit } from '@angular/core';
+import { Component, EventEmitter, IterableDiffers, KeyValueDiffers, OnInit, Output } from '@angular/core';
+import { ConversationModel } from 'src/chat21-core/models/conversation';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { convertMessage } from 'src/chat21-core/utils/utils';
 import { ListConversationsComponent } from '../list-conversations/list-conversations.component';
@@ -10,6 +11,8 @@ import { ListConversationsComponent } from '../list-conversations/list-conversat
 })
 export class IonListConversationsComponent extends ListConversationsComponent implements OnInit {
 
+  @Output() onCloseConversation = new EventEmitter<ConversationModel>();
+
   public convertMessage = convertMessage;
   
   constructor(public iterableDiffers: IterableDiffers,
@@ -17,6 +20,11 @@ export class IonListConversationsComponent extends ListConversationsComponent im
                 super(iterableDiffers, imageRepoService)}
 
   ngOnInit() {}
+
+  closeConversation(conversation: ConversationModel) {
+    var conversationId = conversation.uid;
+    this.onCloseConversation.emit(conversation)
+  }
 
 
 }

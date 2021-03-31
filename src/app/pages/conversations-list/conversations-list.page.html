@@ -59,7 +59,8 @@
           [translationMap]="translationMapConversation"
           (onConversationSelected)=onConversationSelected($event)
           (onImageLoaded)="onImageLoaded($event)"
-          (onConversationLoaded)="onConversationLoaded($event)">
+          (onConversationLoaded)="onConversationLoaded($event)"
+          (onCloseConversation)="onCloseConversation($event)">
         </ion-list-conversations>
 
         <ion-list-conversations *ngIf="conversationType ==='archived'"

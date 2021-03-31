@@ -757,7 +757,7 @@ export class ConversationListPage implements OnInit {
 
 
   /**
-   * ::: closeConversation :::
+   * ::: onCloseConversation :::
    * chiudo conversazione
    * (metodo richiamato da html) 
    * the conversationId is:
@@ -766,8 +766,9 @@ export class ConversationListPage implements OnInit {
    * @param conversation 
    * https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
    */
-  closeConversation(conversation) {
+  onCloseConversation(conversation: ConversationModel) {
     var conversationId = conversation.uid;
+    console.log('archive conv::::', conversation)
     // var isSupportConversation = conversationId.startsWith("support-group");
     // if (!isSupportConversation) {
     //   this.deleteConversation(conversationId, function (result, data) {
