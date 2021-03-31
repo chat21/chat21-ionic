@@ -4,6 +4,7 @@ export class ConversationModel {
     public attributes: any,
     public channel_type: string,
     public conversation_with_fullname: string,
+    public conversation_with: string,
     public recipient: string,
     public recipient_fullname: string,
     public image: string,
@@ -17,7 +18,6 @@ export class ConversationModel {
     public time_last_message: string,
     public selected: boolean,
     public color: string,
-    public avatar: string,
-    public archived: boolean
+    public avatar: string
   ) { }
 }
