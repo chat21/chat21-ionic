@@ -76,6 +76,9 @@ export class ConversationListPage implements OnInit {
   private onConversationLoadedHandler = new EventEmitter();
    // --- END:::event Emitter handler functions --- //
 
+   public conversationType = 'active'
+   headerTitle: string
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -396,9 +399,15 @@ export class ConversationListPage implements OnInit {
     console.log('************** subscribeProfileInfoButtonClicked', event);
     if(event === 'displayArchived'){
       this.initArchivedConversationsHandler(this.loggedUserUid);
-      this.openArchivedConversationsModal()
+      // this.openArchivedConversationsModal()
+      this.conversationType = 'archived'
+      const keys = [ 'LABEL_ARCHIVED' ];
+      this.headerTitle = this.translateService.translateLanguage(keys).get(keys[0]);
+      
     }else if (event === 'displayContact'){
-
+      this.conversationType = 'archived'
+      const keys = [ 'LABEL_CONTACTS' ];
+      this.headerTitle = this.translateService.translateLanguage(keys).get(keys[0]);
     }
   }
 
@@ -422,6 +431,8 @@ export class ConversationListPage implements OnInit {
       this.onConversationLoaded(conversation)
     })
   }
+
+  
 
   // ------------------------------------------------------------------//
   // BEGIN FUNCTIONS
@@ -568,8 +579,13 @@ export class ConversationListPage implements OnInit {
     const keys = [ 'YOU' ];
     const translationMap = this.translateService.translateLanguage(keys);
     if (conversation.sender === this.loggedUserUid) {
-      conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text;
+      conversation.last_message_text = convertMessage(translationMap.get('YOU') + ': ' + conversation.last_message_text)
+
     }
+  }
+
+  onBackButtonFN(){
+    this.conversationType = 'active'
   }
 
 
@@ -650,7 +666,7 @@ export class ConversationListPage implements OnInit {
     console.log('open ArchivedConversationsModal');
     // this.presentModal();
     if (checkPlatformIsMobile()) {
-      presentModal(this.modalController, ConversationsArchivedListPage, { listConversations: this.archivedConversations,
+      presentModal(this.modalController, ConversationsArchivedListPage, { istConversations: this.archivedConversations,
                                                                           styleMap: this.styleMap,
                                                                           translationMap: this.translationMapConversation,
                                                                           onConversationSelected: this.onConversationSelectedHandler,
@@ -663,6 +679,7 @@ export class ConversationListPage implements OnInit {
                                                             onConversationSelected: this.onConversationSelectedHandler,
                                                             onImageLoaded: this.onImageLoadedHandler,
                                                             onConversationLoaded: this.onConversationLoadedHandler })
+                                            
                                                                                                                  
     }
   }

@@ -32,6 +32,7 @@ import { InfoSupportGroupComponent } from '../components/conversation-info/info-
 import { InfoDirectComponent } from '../components/conversation-info/info-direct/info-direct.component';
 import { InfoGroupComponent } from '../components/conversation-info/info-group/info-group.component';
 import { TooltipModule } from 'ng2-tooltip-directive';
+import { OptionHeaderComponent } from '../components/conversation-detail/option-header/option-header.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,9 @@ import { TooltipModule } from 'ng2-tooltip-directive';
     InfoDirectComponent,
     InfoGroupComponent,
 
-    MarkedPipe
+    MarkedPipe,
+
+    OptionHeaderComponent
   ],
   exports: [
     AvatarProfileComponent,
@@ -94,7 +97,9 @@ import { TooltipModule } from 'ng2-tooltip-directive';
     InfoContentComponent,
     InfoSupportGroupComponent,
     InfoDirectComponent,
-    InfoGroupComponent
+    InfoGroupComponent,
+
+    OptionHeaderComponent
 
   ],
   imports: [

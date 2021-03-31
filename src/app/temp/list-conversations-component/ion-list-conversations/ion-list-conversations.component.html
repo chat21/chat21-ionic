@@ -33,7 +33,7 @@
   <ion-label>
     <div class="conversation_with truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
     <div class="conversation_message">
-      <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
+      <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="conversation.last_message_text"></p>
     </div>
   </ion-label>
   <ion-note class="conversation_time">{{conversation.time_last_message}}</ion-note>

@@ -729,7 +729,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    */
   async detectBottom() {
     const scrollElement = await this.ionContentChatArea.getScrollElement();
-    console.log('detectBottom');
+    // console.log('detectBottom');
     // console.log('scrollElement', scrollElement);
     // console.log('scrollHeight', scrollElement.scrollHeight);
     // console.log('clientHeight', scrollElement.clientHeight);
@@ -873,7 +873,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   updateConversationBadge() {
-    console.log('updateConversationBadge', this.conversationSelected)
+    // console.log('updateConversationBadge', this.conversationSelected)
     if (this.conversationSelected && this.conversationsHandlerService) {
       this.conversationsHandlerService.setConversationRead(this.conversationSelected)
     }

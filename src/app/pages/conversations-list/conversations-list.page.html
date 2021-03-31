@@ -8,12 +8,17 @@
 
 <!-- <ng-template #contentConversations> -->
   <ion-header no-border class="ion-no-border">
-    <app-ddp-header
-    [numberOpenConv] = numberOpenConv
-    [supportMode] = supportMode
-    (openContactsDirectory) = openContactsDirectory($event)
-    (openProfileInfo) = openProfileInfo($event)
-    ></app-ddp-header>
+    <app-ddp-header *ngIf="conversationType ==='active'"
+      [numberOpenConv] = numberOpenConv
+      [supportMode] = supportMode
+      (openContactsDirectory) = openContactsDirectory($event)
+      (openProfileInfo) = openProfileInfo($event)>
+    </app-ddp-header>
+
+    <app-option-header *ngIf="conversationType !=='active'"
+      [headerTitle] = headerTitle
+      (onBackButton) = onBackButtonFN($event)>
+    </app-option-header>
   </ion-header>
   
   <ion-content class="list-avatar-page" appScrollbarTheme>
@@ -47,8 +52,18 @@
           <div item-end class="notification_point" *ngIf="conversation.is_new">&nbsp;</div>
         </ion-item> -->
 
-        <ion-list-conversations
+        <!-- ACTIVE CONVERSATION LIST -->
+        <ion-list-conversations *ngIf="conversationType ==='active'"
           [listConversations]="conversations"
+          [styleMap]="styleMap"
+          [translationMap]="translationMapConversation"
+          (onConversationSelected)=onConversationSelected($event)
+          (onImageLoaded)="onImageLoaded($event)"
+          (onConversationLoaded)="onConversationLoaded($event)">
+        </ion-list-conversations>
+
+        <ion-list-conversations *ngIf="conversationType ==='archived'"
+          [listConversations]="archivedConversations"
           [styleMap]="styleMap"
           [translationMap]="translationMapConversation"
           (onConversationSelected)=onConversationSelected($event)

@@ -76,7 +76,7 @@ export class ListConversationsComponent implements OnInit {
       changesListConversation.forEachAddedItem(element => {
         //console.log('1111 added ', element)
         let conv = element.item
-        conv.image = this.imageRepoService.getImagePhotoUrl(FIREBASESTORAGE_BASE_URL_IMAGE, conv.sender)
+        // conv.image = this.imageRepoService.getImagePhotoUrl(FIREBASESTORAGE_BASE_URL_IMAGE, conv.sender)
         this.onImageLoaded.emit(conv)
         this.onConversationLoaded.emit(conv)
       });
