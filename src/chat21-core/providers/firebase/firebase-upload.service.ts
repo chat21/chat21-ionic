@@ -13,6 +13,7 @@ import { UploadService } from '../abstract/upload.service';
 
 // models
 import { UploadModel } from '../../models/upload';
+import { CustomLogger } from '../logger/customLogger';
 
 // @Injectable({
 //   providedIn: 'root'
@@ -22,12 +23,16 @@ export class FirebaseUploadService extends UploadService {
   // BehaviorSubject
   BSStateUpload: BehaviorSubject<any>;
 
+  //private
+  private url: string;
+  private logger: CustomLogger = new CustomLogger(true);
+
   constructor() {
     super();
   }
 
   public initialize() {
-    console.log('FirebaseUploadService');
+    this.logger.printLog('FirebaseUploadService');
   }
 
   private createGuid() {
@@ -36,21 +41,20 @@ export class FirebaseUploadService extends UploadService {
        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
        return v.toString(16);
     });
-   }
+  }
    
    
-   public pushUploadMessage(upload: UploadModel): Promise<any> {
+  public pushUploadMessage(upload: UploadModel): Promise<any> {
     const that = this;
-    console.log('pushUploadMessage::::::::::::: ', upload.file);
     const uid = this.createGuid();
     const urlImagesNodeFirebase = '/public/images/' + uid + '/';
-    console.log('pushUpload::::::::::::: ', urlImagesNodeFirebase);
+    this.logger.printDebug('pushUpload::::::::::::: ', urlImagesNodeFirebase, upload.file);
     // Create a root reference
     const storageRef = firebase.storage().ref();
-    console.log('storageRef::::::::::::: ', storageRef);
+    this.logger.printDebug('storageRef::::::::::::: ', storageRef);
     // Create a reference to 'mountains.jpg'
     const mountainsRef = storageRef.child(urlImagesNodeFirebase);
-    console.log('mountainsRef::::::::::::: ', mountainsRef);
+    this.logger.printDebug('mountainsRef::::::::::::: ', mountainsRef);
     const metadata = {};
     let uploadTask = mountainsRef.put(upload.file, metadata);
 
@@ -59,13 +63,13 @@ export class FirebaseUploadService extends UploadService {
             // Observe state change events such as progress, pause, and resume
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
+            this.logger.printDebug('Upload is ' + progress + '% done');
             switch (snapshot.state) {
               case firebase.storage.TaskState.PAUSED: // or 'paused'
-                console.log('Upload is paused');
+              this.logger.printDebug('Upload is paused');
                 break;
               case firebase.storage.TaskState.RUNNING: // or 'running'
-                console.log('Upload is running');
+              this.logger.printDebug('Upload is running');
                 break;
             }
           }, function error(error) {
@@ -73,7 +77,7 @@ export class FirebaseUploadService extends UploadService {
             reject(error)
           }, function complete() {
               // Handle successful uploads on complete
-              console.log('Upload is complete', upload);
+              this.logger.printDebug('Upload is complete', upload);
             //   uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
             //       console.log('File available at', downloadURL);
             //   });

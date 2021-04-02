@@ -282,6 +282,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.initSubscriptions();
     this.addEventsKeyboard();
     this.startConversation();
+    this.updateConversationBadge(); // AGGIORNO STATO DELLA CONVERSAZIONE A 'LETTA' (is_new = false)
   }
 
 
@@ -593,12 +594,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       subscribtion = this.conversationsHandlerService.conversationChanged.subscribe((data: any) => {
         console.log('***** DATAIL subscribeConversationChanged*****', data, this.loggedUser.uid);
         if (data && data.sender !== this.loggedUser.uid) {
-          // const checkContentScrollPosition = this.checkContentScrollPosition();
-          // console.log('SONO ALLE FINEEE???', checkContentScrollPosition)
-          // if(checkContentScrollPosition){
-          //   that.updateConversationBadge();
-          // }
-          this.detectBottom();
+          // AGGIORNO LA CONVERSAZIONE A 'LETTA' SE SONO IO CHE HA SCRITTO L'ULTIMO MESSAGGIO DELLA CONVERSAZIONE
+          // E SE LA POSIZIONE DELLO SCROLL E' ALLA FINE
+          if(!this.showButtonToBottom){ //SONO ALLA FINE
+            this.updateConversationBadge()
+          }
         }
       });
       const subscribe = {key: subscribtionKey, value: subscribtion };
@@ -696,57 +696,48 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // -------------- END SUBSCRIBTIONS functions -------------- //
 
 
-  // -------------- START OUTPUT functions -------------- //
+  x/**
+   * newMessageAdded 
+   * @param message
+   */
+  newMessageAdded(message: MessageModel) {
+    message.text = this.linkifyService.linkify(message.text, this.linkifyOptions);
+    if (message) {
+      console.log('newMessageAdded', message);
+      // console.log('message.isSender', message.isSender);
+      // console.log('message.status', message.status);
+      if (message.isSender) {
+        this.scrollBottom(0);
+        // this.detectBottom();
+      } else if (!message.isSender ) {
+        if(this.showButtonToBottom){ // NON SONO ALLA FINE
+          this.NUM_BADGES++;
+        }else{ //SONO ALLA FINE
+          this.scrollBottom(0);
+        }
+      } 
+    }
+}
+
+updateConversationBadge() {
+  if (this.conversationSelected && this.conversationsHandlerService) {
+    this.conversationsHandlerService.setConversationRead(this.conversationSelected)
+  }
+}
+
+  // -------------- START OUTPUT-EVENT handler functions -------------- //
   logScrollStart(event: any) {
      //console.log('logScrollStart : When Scroll Starts', event);
   }
 
   logScrolling(event: any) {
-     //console.log('logScrolling : When Scrolling', event);
+    // EVENTO IONIC-NATIVE: SCATTA SEMPRE, QUINDI DECIDO SE MOSTRARE O MENO IL BADGE 
      this.detectBottom()
   }
 
   logScrollEnd(event: any) {
      //console.log('logScrollEnd : When Scroll Ends', event);
   }
-
-
-
-  // checkContentScrollPosition(divScrollMe?): boolean {
-  //   if(!divScrollMe){
-  //     divScrollMe = this.ionContentChatArea.getScrollElement();
-  //   }
-  //   if (divScrollMe.scrollTop < divScrollMe.scrollHeight - divScrollMe.clientHeight) {
-  //     this.logger.printLog('SONO ALLA FINE');
-  //       return true;
-  //   } else {
-  //     this.logger.printLog(' NON SONO ALLA FINE');
-  //       return false;
-  //   }
-  // }
-  /**
-   * detectBottom
-   */
-  async detectBottom() {
-    const scrollElement = await this.ionContentChatArea.getScrollElement();
-    // console.log('detectBottom');
-    // console.log('scrollElement', scrollElement);
-    // console.log('scrollHeight', scrollElement.scrollHeight);
-    // console.log('clientHeight', scrollElement.clientHeight);
-    // console.log('scrollElement.scrollTop', scrollElement.scrollTop);
-    // console.log('scrollElement.scrollHeight - scrollElement.clientHeight', (scrollElement.scrollHeight - scrollElement.clientHeight));
-    if (scrollElement.scrollTop < scrollElement.scrollHeight - scrollElement.clientHeight ) {
-      //NON SONO ALLA FINE --> mostra badge
-      this.showButtonToBottom = true;
-    } else {
-      // SONO ALLA FINE --> non mostrare badge,
-      this.showButtonToBottom = false;
-      this.NUM_BADGES = 0;
-      this.updateConversationBadge()
-      // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
-    }
-  }
-
 
   /** */
   returnChangeTextArea(e: any) {
@@ -800,143 +791,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  // -------------- END OUTPUT functions -------------- //
-
-
-  // -------------- START CLICK functions -------------- //
-  /** */
-  returnOpenCloseInfoConversation(openInfoConversation: boolean) {
-    console.log('returnOpenCloseInfoConversation **************', openInfoConversation);
-    this.resizeTextArea();
-    this.openInfoMessage = false;
-    this.openInfoConversation = openInfoConversation;
-  }
-
-  /** */
-  // pushPage(pageName: string ) {
-  //   this.router.navigateByUrl(pageName);
-  // }
-  // -------------- END CLICK functions -------------- //
-
-
-
-  // -------------- START SCROLL/RESIZE functions -------------- //
-  /** */
-  resizeTextArea() {
-    try {
-      const elTextArea = this.rowTextArea['el'];
-      const that = this;
-      setTimeout( () => {
-        const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
-        console.log('messageTextArea.ngAfterViewInit ', textArea);
-        const txtValue = textArea.value;
-        textArea.value = ' ';
-        textArea.value = txtValue;
-      }, 0);
-      setTimeout( () => {
-        console.log('text_area.nativeElement ', elTextArea.offsetHeight);
-        that.heightMessageTextArea = elTextArea.offsetHeight;
-      }, 100);
-    } catch (err) {
-      console.log('error: ', err);
-    }
-  }
-
-
-  /**
-   * newMessageAdded 
-   * @param message
-   */
-  newMessageAdded(message: MessageModel) {
-      message.text = this.linkifyService.linkify(message.text, this.linkifyOptions);
-      if (message) {
-        console.log('newMessageAdded', message);
-        // console.log('message.isSender', message.isSender);
-        // console.log('message.status', message.status);
-        if (message.isSender) {
-          //console.log('message message.isSender', this.ionContentChatArea);
-          this.scrollBottom(0);
-          this.detectBottom();
-        } else {
-          if (message.status && message.status < 200 ) {
-            console.log('message.status < 200');
-            this.scrollBottom(0);
-            // this.NUM_BADGES++;
-            // this.showButtonToBottom = true;
-          } else {
-            console.log('message.status >= 200');
-            this.scrollBottom(0);
-            this.detectBottom();
-          }
-        }
-      }
-  }
-
-  updateConversationBadge() {
-    // console.log('updateConversationBadge', this.conversationSelected)
-    if (this.conversationSelected && this.conversationsHandlerService) {
-      this.conversationsHandlerService.setConversationRead(this.conversationSelected)
-    }
-  }
-
-
-  /**
-   * scrollBottom
-   * @param time
-   */
-  private scrollBottom(time: number) {
-    // setTimeout( () => {
-      // this.showButtonToBottom = false;
-      this.showIonContent = true;
-      // console.log('scrollBottom ---> ', this.ionContentChatArea);
-      if (this.ionContentChatArea) {
-        // this.showButtonToBottom = false;
-        // this.NUM_BADGES = 0;
-        // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
-        setTimeout( () => {
-          this.ionContentChatArea.scrollToBottom(time);
-          // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
-        }, 0);
-        // nota: se elimino il settimeout lo scrollToBottom non viene richiamato!!!!!
-      }
-    // }, 0);
-  }
-
-  /**
-   * Scroll to bottom of page after a short delay.
-   */
-  public actionScrollBottom() {
-    console.log('actionScrollBottom ---> ', this.ionContentChatArea);
-    // const that = this;
-     this.showButtonToBottom = false;
-     this.NUM_BADGES = 0;
-    setTimeout( () => {
-      this.ionContentChatArea.scrollToBottom(0);
-      // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
-    }, 0);
-  }
-
-  /**
-   * Scroll to top of the page after a short delay.
-   */
-  scrollTop() {
-    console.log('scrollTop');
-    this.ionContentChatArea.scrollToTop(100);
-  }
-
-  /** */
-  setHeightTextArea() {
-    try {
-      // tslint:disable-next-line: no-string-literal
-      this.heightMessageTextArea = this.rowTextArea['el'].offsetHeight;
-    } catch (e) {
-      this.heightMessageTextArea = '50';
-    }
-  }
-  // -------------- END SCROLL/RESIZE functions -------------- //
-
-
-  // -------------- START HANDLER functions -------------- //
   returnOnBeforeMessageRender(event){
     //this.onBeforeMessageRender.emit(event)
   }
@@ -991,6 +845,115 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     //   default: return;
     // }
   }
+
+  // -------------- END OUTPUT-EVENT handler functions -------------- //
+
+
+  // -------------- START CLICK functions -------------- //
+  /** */
+  returnOpenCloseInfoConversation(openInfoConversation: boolean) {
+    console.log('returnOpenCloseInfoConversation **************', openInfoConversation);
+    this.resizeTextArea();
+    this.openInfoMessage = false;
+    this.openInfoConversation = openInfoConversation;
+  }
+
+  /** */
+  // pushPage(pageName: string ) {
+  //   this.router.navigateByUrl(pageName);
+  // }
+  // -------------- END CLICK functions -------------- //
+
+
+
+  // -------------- START SCROLL/RESIZE functions -------------- //
+  /** */
+  resizeTextArea() {
+    try {
+      const elTextArea = this.rowTextArea['el'];
+      const that = this;
+      setTimeout( () => {
+        const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
+        console.log('messageTextArea.ngAfterViewInit ', textArea);
+        const txtValue = textArea.value;
+        textArea.value = ' ';
+        textArea.value = txtValue;
+      }, 0);
+      setTimeout( () => {
+        console.log('text_area.nativeElement ', elTextArea.offsetHeight);
+        that.heightMessageTextArea = elTextArea.offsetHeight;
+      }, 100);
+    } catch (err) {
+      console.log('error: ', err);
+    }
+  }
+
+  /**
+   * scrollBottom
+   * @param time
+   */
+  private scrollBottom(time: number) {
+      this.showIonContent = true;
+      if (this.ionContentChatArea) {
+        // this.showButtonToBottom = false;
+        // this.NUM_BADGES = 0;
+        // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+        setTimeout( () => {
+          this.ionContentChatArea.scrollToBottom(time);
+        }, 0);
+        // nota: se elimino il settimeout lo scrollToBottom non viene richiamato!!!!!
+      }
+  }
+
+  /**
+   * detectBottom
+   */
+  async detectBottom() {
+    const scrollElement = await this.ionContentChatArea.getScrollElement();
+    
+    if (scrollElement.scrollTop < scrollElement.scrollHeight - scrollElement.clientHeight ) {
+      //NON SONO ALLA FINE --> mostra badge
+      this.showButtonToBottom = true;
+    } else {
+      // SONO ALLA FINE --> non mostrare badge,
+      this.showButtonToBottom = false;
+    }
+  }
+
+  /**
+   * Scroll to bottom of page after a short delay.
+   */
+  public actionScrollBottom() {
+    console.log('actionScrollBottom ---> ', this.ionContentChatArea);
+    // const that = this;
+     this.showButtonToBottom = false;
+     this.NUM_BADGES = 0;
+    setTimeout( () => {
+      this.ionContentChatArea.scrollToBottom(0);
+      // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+    }, 0);
+  }
+
+  /**
+   * Scroll to top of the page after a short delay.
+   */
+  scrollTop() {
+    console.log('scrollTop');
+    this.ionContentChatArea.scrollToTop(100);
+  }
+
+  /** */
+  setHeightTextArea() {
+    try {
+      // tslint:disable-next-line: no-string-literal
+      this.heightMessageTextArea = this.rowTextArea['el'].offsetHeight;
+    } catch (e) {
+      this.heightMessageTextArea = '50';
+    }
+  }
+  // -------------- END SCROLL/RESIZE functions -------------- //
+
+  
 
 }
 // END ALL //

@@ -51,12 +51,12 @@ import { UploadService } from 'src/chat21-core/providers/abstract/upload.service
 import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/firebase-upload.service';
 
 // MQTT
-import { Chat21Service } from '../chat21-core/providers/mqtt/chat-service';
-import { MQTTAuthService } from '../chat21-core/providers/mqtt/mqtt-auth-service';
-import { MQTTConversationsHandler } from '../chat21-core/providers/mqtt/mqtt-conversations-handler';
+import { Chat21Service } from 'src/chat21-core/providers/mqtt/chat-service';
+import { MQTTAuthService } from 'src/chat21-core/providers/mqtt/mqtt-auth-service';
+import { MQTTConversationsHandler } from 'src/chat21-core/providers/mqtt/mqtt-conversations-handler';
 import { MQTTConversationHandlerBuilderService } from 'src/chat21-core/providers/mqtt/mqtt-conversation-handler-builder.service';
-import { MQTTTypingService } from '../chat21-core/providers/mqtt/mqtt-typing.service';
-import { MQTTPresenceService } from '../chat21-core/providers/mqtt/mqtt-presence.service';
+import { MQTTTypingService } from 'src/chat21-core/providers/mqtt/mqtt-typing.service';
+import { MQTTPresenceService } from 'src/chat21-core/providers/mqtt/mqtt-presence.service';
 
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -176,7 +176,7 @@ export function conversationHandlerFactory() {
 }
 
 export function loggerFactory(logger: NGXLogger) {
-    return new CustomLogger(true, logger);
+    return new CustomLogger(true) ;
 }
 
 const appInitializerFn = (appConfig: AppConfigProvider) => {
