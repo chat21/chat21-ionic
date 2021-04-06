@@ -93,18 +93,6 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
   }
 }
 
-// export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider ) {
-//   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-//     const auth= new FirebaseAuthService(http); 
-//     auth.setBaseUrl(appConfig.getConfig().apiUrl)
-//     return auth
-//   } else {
-//     const auth= new FirebaseAuthService(http); 
-//     auth.setBaseUrl(appConfig.getConfig().apiUrl)
-//     return auth
-//   }
-// }
-
 export function presenceFactory() {
   console.log('presenceFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {

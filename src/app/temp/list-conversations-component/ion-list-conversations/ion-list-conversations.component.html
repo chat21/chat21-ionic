@@ -38,10 +38,14 @@
   </ion-label>
   <ion-note class="conversation_time">{{conversation.time_last_message}}</ion-note>
   <ion-buttons slot="end">
-    <ion-button id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
+    <ion-button *ngIf="!conversation.archived" id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
       <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="close" item-end></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="conversation.archived" class="close-conversation-button" ion-button clear item-end disabled padding>
+      <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="archive-outline" item-end></ion-icon>
+      <!-- <div item-end *ngIf="conversation.archived">{{ translationMap.get('CLOSED') }}</div> -->
     </ion-button>
   </ion-buttons>
   <div item-end class="notification_point" *ngIf="conversation.is_new">&nbsp;</div>
-  <div item-end *ngIf="conversation.archived">{{ translationMap.get('CLOSED') }}</div>
+  
 </ion-item>

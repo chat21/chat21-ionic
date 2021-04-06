@@ -30,14 +30,19 @@
     </ion-item> -->
 
     <!-- message INFO/SUPPORT:: -->
-    <div  *ngIf="messageType(MESSAGE_TYPE_INFO, message)" class="msg_info_container">
+    <!-- <div  *ngIf="messageType(MESSAGE_TYPE_INFO, message)" class="msg_info_container">
       <tiledeskwidget-info-message class="messages"
           [message]="message">
       </tiledeskwidget-info-message>
-    </div>
+    </div> -->
+    <ion-item class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)" class="msg_info_container">
+      <tiledeskwidget-info-message class="messages"
+          [message]="message">
+      </tiledeskwidget-info-message>
+    </ion-item>
 
     <!-- message RECIPIENT:: -->
-    <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
+    <ion-item role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
                           
       <!--backgroundColor non viene ancora usato -->
       <tiledeskwidget-bubble-message class="messages msg_sent slide-in-right"
@@ -53,7 +58,7 @@
           [status]="message.status">
       </tiledeskwidget-return-receipt>
 
-    </div>
+    </ion-item>
 
     <!-- message RECIPIENT:: -->
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message) && isChannelTypeGroup(channelType)" class="message_sender_fullname slide-in-left">{{message.sender_fullname}}</div>

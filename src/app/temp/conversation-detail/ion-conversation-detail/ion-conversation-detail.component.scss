@@ -3,6 +3,14 @@ ion-item {
     --padding-end: 0px;
     --inner-padding-end: 0px;
     --min-height: 20px;
+    --border-style: none;
+
+    .input-wrapper{
+
+        .align-center{
+            display: block;
+        }
+    }
 }
 
 /* ====== SET MESSAGES ====== */

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, IterableDiffers, KeyValueDiffer, KeyVal
 import { FIREBASESTORAGE_BASE_URL_IMAGE } from 'src/chat21-core/utils/constants';
 import { ConversationModel } from '../../../../chat21-core/models/conversation';
 import { ImageRepoService } from '../../../../chat21-core/providers/abstract/image-repo.service';
-//import {FIREBASESTORAGE_BASE_URL_IMAGE} from '../../utils/constants'
 
 @Component({
   selector: 'tiledeskwidget-list-conversations',
@@ -46,29 +45,6 @@ export class ListConversationsComponent implements OnInit {
   ngAfterViewInit() {
     console.log(' --------ngAfterViewInit: list-conversations-------- ', this.listConversations);
   }
-
-  // ngOnChanges(changes: SimpleChanges){
-  //   if(changes && changes['listConversations'] && changes['listConversations'].currentValue !== undefined){
-  //     //this.differ = this.differs.find(this.listConversations).create();
-  //     this.objDiffers = this.differs.find([]).create();  
-  //     this.listConversations.forEach((itemGroup, index) => {
-  //       this.objDiffers[index] = this.differs.find(itemGroup).create();
-  //       this.differ[index] = itemGroup;
-  //     });
-  //   }
-  //   console.log('ssssssss 1111', changes, this.objDiffers)
-  // }
-
-
-  // ngDoCheck() {
-  //   let changesListConversation = this.iterableDifferListConv.diff(this.listConversations);
-  //   if (changesListConversation) {
-  //     this.listConversations.forEach(conv => {
-  //       conv.image = this.imageRepoService.getImagePhotoUrl(FIREBASESTORAGE_BASE_URL_IMAGE, conv.sender)
-  //       this.onImageLoad.emit(conv)
-  //     });
-  //   }
-  // }
   
   ngDoCheck() {
     let changesListConversation = this.iterableDifferListConv.diff(this.listConversations);
@@ -76,7 +52,6 @@ export class ListConversationsComponent implements OnInit {
       changesListConversation.forEachAddedItem(element => {
         //console.log('1111 added ', element)
         let conv = element.item
-        // conv.image = this.imageRepoService.getImagePhotoUrl(FIREBASESTORAGE_BASE_URL_IMAGE, conv.sender)
         this.onImageLoaded.emit(conv)
         this.onConversationLoaded.emit(conv)
       });
