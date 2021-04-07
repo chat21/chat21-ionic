@@ -540,7 +540,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     (metadata) ? metadata = metadata : metadata = '';
     console.log('SEND MESSAGE: ', msg, this.messages, this.loggedUser);
     if (msg && msg.trim() !== '' || type !== TYPE_MSG_TEXT) {
-      this.conversationHandlerService.sendMessage2(
+      this.conversationHandlerService.sendMessage(
         msg,
         type,
         metadata,
