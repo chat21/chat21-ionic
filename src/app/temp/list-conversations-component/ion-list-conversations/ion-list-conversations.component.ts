@@ -1,4 +1,4 @@
-import { Component, EventEmitter, IterableDiffers, KeyValueDiffers, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, IterableDiffers, KeyValueDiffers, OnInit, Output } from '@angular/core';
 import { ConversationModel } from 'src/chat21-core/models/conversation';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { convertMessage } from 'src/chat21-core/utils/utils';
@@ -11,6 +11,7 @@ import { ListConversationsComponent } from '../list-conversations/list-conversat
 })
 export class IonListConversationsComponent extends ListConversationsComponent implements OnInit {
 
+  @Input() uidConvSelected: string;
   @Output() onCloseConversation = new EventEmitter<ConversationModel>();
 
   public convertMessage = convertMessage;

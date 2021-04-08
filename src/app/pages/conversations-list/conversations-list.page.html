@@ -54,6 +54,7 @@
 
         <!-- ACTIVE CONVERSATION LIST -->
         <ion-list-conversations *ngIf="conversationType ==='active'"
+          [uidConvSelected]="uidConvSelected" 
           [listConversations]="conversations"
           [styleMap]="styleMap"
           [translationMap]="translationMapConversation"

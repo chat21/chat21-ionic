@@ -530,7 +530,7 @@ export class ConversationListPage implements OnInit {
   /**
    * ::: setUidConvSelected :::
    */
-  setUidConvSelected(conversationType: string, uidConvSelected?: string) {
+  setUidConvSelected( uidConvSelected: string, conversationType?: string,) {
     console.log('setuidCOnvSelected', uidConvSelected)
     this.uidConvSelected = uidConvSelected;
     this.conversationsHandlerService.uidConvSelected = uidConvSelected;
@@ -590,7 +590,7 @@ export class ConversationListPage implements OnInit {
 
 
   navigateByUrl(converationType: string, uidConvSelected: string) {
-    this.setUidConvSelected(converationType, uidConvSelected);
+    this.setUidConvSelected(uidConvSelected, converationType );
     if (checkPlatformIsMobile()) {
       console.log('PLATFORM_MOBILE 1', this.navService);
       let pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
