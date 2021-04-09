@@ -120,12 +120,12 @@ export function uploadFactory() {
   }
 }
 
-export function conversationsHandlerFactory(chat21Service: Chat21Service) {
+export function conversationsHandlerFactory(chat21Service: Chat21Service, httpClient: HttpClient, appConfig: AppConfigProvider ) {
   console.log('conversationsHandlerFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTConversationsHandler(chat21Service);
   } else {
-    return new FirebaseConversationsHandler();
+    return new FirebaseConversationsHandler(httpClient, appConfig);
   }
 }
 
@@ -248,7 +248,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ConversationsHandlerService,
       useFactory: conversationsHandlerFactory,
-      deps: [Chat21Service]
+      deps: [Chat21Service, HttpClient, AppConfigProvider]
     },
     {
       provide: ArchivedConversationsHandlerService,
