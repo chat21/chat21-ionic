@@ -161,6 +161,8 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     }
 
     archiveConversation(conversationId: string) {
+
+        this.setClosingConversation(conversationId, true);
         const index = searchIndexInArrayForUid(this.conversations, conversationId);
         // if (index > -1) {
         //     this.conversations.splice(index, 1);
@@ -168,11 +170,13 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         // console.log('FIREBASE-CONVERSATION-HANDLER ARCHIVE CONV conversationId',  conversationId) 
         this.deleteConversation(conversationId, function (response) {
             console.log('FIREBASE-CONVERSATION-HANDLER ARCHIVE-CONV response', response)
-
+           
             if (response === 'success') {
                 if (index > -1) {
                     this.conversations.splice(index, 1);
                 }
+            } else if (response === 'error') {
+                this.setClosingConversation(conversationId, false);
             }
 
         })
