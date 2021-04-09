@@ -32,6 +32,7 @@ export abstract class ConversationsHandlerService {
   abstract countIsNew(): number;
   abstract setConversationRead(conversation: ConversationModel): void;
   abstract dispose(): void;
+  abstract archiveConversation(conversationId: string): void;
   abstract getConversationDetail(tenant: string, userId: string, conversationId: string): void;
   abstract getClosingConversation(conversationId: string): boolean;
   abstract setClosingConversation(conversationId: string, status: boolean): void;

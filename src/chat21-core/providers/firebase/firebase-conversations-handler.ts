@@ -145,7 +145,15 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * @param conversationId the id of the conversation of which is wants to delete
      */
     deleteClosingConversation(conversationId: string) {
-    this.isConversationClosingMap.delete(conversationId);
+        this.isConversationClosingMap.delete(conversationId);
+    }
+
+    archiveConversation(conversationId: string){
+        const index = searchIndexInArrayForUid(this.conversations, conversationId);
+        if (index > -1) {
+            this.conversations.splice(index, 1);
+            // fare chiamata delete per rimuoverle la conversazione da remoto
+        }
     }
 
 

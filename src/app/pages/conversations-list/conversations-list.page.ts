@@ -769,6 +769,7 @@ export class ConversationListPage implements OnInit {
   onCloseConversation(conversation: ConversationModel) {
     var conversationId = conversation.uid;
     console.log('archive conv::::', conversation)
+    this.conversationsHandlerService.archiveConversation(conversationId)
     // var isSupportConversation = conversationId.startsWith("support-group");
     // if (!isSupportConversation) {
     //   this.deleteConversation(conversationId, function (result, data) {
