@@ -3,6 +3,7 @@ import { ConversationModel } from 'src/chat21-core/models/conversation';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { convertMessage } from 'src/chat21-core/utils/utils';
 import { ListConversationsComponent } from '../list-conversations/list-conversations.component';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'ion-list-conversations',
@@ -15,12 +16,19 @@ export class IonListConversationsComponent extends ListConversationsComponent im
   @Output() onCloseConversation = new EventEmitter<ConversationModel>();
 
   public convertMessage = convertMessage;
-  
-  constructor(public iterableDiffers: IterableDiffers,
-              public imageRepoService: ImageRepoService) { 
-                super(iterableDiffers, imageRepoService)}
+  isApp: boolean;
+  constructor(
+    public iterableDiffers: IterableDiffers,
+    public imageRepoService: ImageRepoService,
+    public platform: Platform
+  ) {
+    super(iterableDiffers, imageRepoService)
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.isApp = this.platform.is('cordova')
+    console.log('ION-LIST-CONV IS-APP ',this.isApp )
+   }
 
   closeConversation(conversation: ConversationModel) {
     var conversationId = conversation.uid;

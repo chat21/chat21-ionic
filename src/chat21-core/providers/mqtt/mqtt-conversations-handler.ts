@@ -312,6 +312,11 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     deleteClosingConversation(conversationId: string) {
         this.isConversationClosingMap.delete(conversationId);
     }
+
+    archiveConversation(conversationId: string) { 
+        // da implementare
+    }
+    
     // ---------------------------------------------------------- //
     // BEGIN FUNCTIONS 
     // ---------------------------------------------------------- //

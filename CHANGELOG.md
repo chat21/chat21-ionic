@@ -1,5 +1,13 @@
 # chat21-ionic ver 1.0
 
+### 3.0.22
+- Fixes the bug: the modal login window opens even if the user is logged in
+- Fixes the bug: contact avatar is not displayed in the contact list (write to)
+- Manages scroll position in concversation detail page as widget behaviour 
+- Bug fixed onInit selected conversation in ion-list-conversations.component
+- Improves the conversation list graphics in the left side panel
+- Implemented the method for archiving conversations
+
 ### 3.0.21
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button
 - Fixes the bug: on mobile the archived conversations window is no longer displayed if it has been opened once

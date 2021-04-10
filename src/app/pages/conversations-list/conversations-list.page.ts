@@ -542,7 +542,7 @@ export class ConversationListPage implements OnInit {
         conversationSelected = this.archivedConversations.find(item => item.uid === this.uidConvSelected);
       }
       if (conversationSelected) {
-        console.log('la conv ' + this.conversationSelected + ' è già stata caricata');
+        console.log('la conv ' , this.conversationSelected , ' è già stata caricata');
         this.conversationSelected = conversationSelected;
         console.log('setUidConvSelected: ', this.conversationSelected);
         this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
