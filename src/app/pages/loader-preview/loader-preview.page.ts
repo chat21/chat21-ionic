@@ -19,6 +19,7 @@ export class LoaderPreviewPage implements OnInit {
   public heightPreviewArea = '183';
   private selectedFiles: any;
 
+  
   constructor(
     public viewCtrl: ModalController
   ) { }
@@ -26,7 +27,7 @@ export class LoaderPreviewPage implements OnInit {
   ngOnInit() {
     console.log('LoaderPreviewPage' );
     // tslint:disable-next-line: prefer-for-of
-    this.selectedFiles = this.files;
+     this.selectedFiles = this.files;
     for ( let i = 0; i < this.files.length; i++ ) {
       this.readAsDataURL(this.files[i]);
       //this.fileChange(this.files[i]);

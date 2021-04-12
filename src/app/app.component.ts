@@ -1,4 +1,4 @@
-import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2,  } from '@angular/core';
+import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2, } from '@angular/core';
 import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -20,10 +20,10 @@ import { TypingService } from '../chat21-core/providers/abstract/typing.service'
 import { UploadService } from '../chat21-core/providers/abstract/upload.service';
 // import { ChatPresenceHandler} from './services/chat-presence-handler';
 import { NavProxyService } from './services/nav-proxy.service';
-import { ChatManager } from '../chat21-core/chat-manager';
+import { ChatManager } from 'src/chat21-core/providers/chat-manager';
 // import { ChatConversationsHandler } from './services/chat-conversations-handler';
-import { ConversationsHandlerService } from '../chat21-core/providers/abstract/conversations-handler.service';
-import { CustomTranslateService } from 'src/chat21-core/custom-translate.service';
+import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 
 // pages
 import { LoginPage } from './pages/authentication/login/login.page';
@@ -42,8 +42,8 @@ import { UserModel } from '../chat21-core/models/user';
 })
 
 export class AppComponent implements OnInit {
-  @ViewChild('sidebarNav', {static: false}) sidebarNav: IonNav;
-  @ViewChild('detailNav', {static: false}) detailNav: IonRouterOutlet;
+  @ViewChild('sidebarNav', { static: false }) sidebarNav: IonNav;
+  @ViewChild('detailNav', { static: false }) detailNav: IonRouterOutlet;
 
   private subscription: Subscription;
   public sidebarPage: any;
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
     // public chatPresenceHandler: ChatPresenceHandler,
     public typingService: TypingService,
     public uploadService: UploadService,
-    
+
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
     private translateService: CustomTranslateService
@@ -87,9 +87,9 @@ export class AppComponent implements OnInit {
     console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
-    if (environment.chatEngine === CHAT_ENGINE_FIREBASE) {
-      this.initFirebase();
-    }
+    // if (environment.chatEngine === CHAT_ENGINE_FIREBASE) {
+    this.initFirebase();
+    // }
 
   }
 
@@ -215,7 +215,7 @@ export class AppComponent implements OnInit {
 
   // BEGIN MY FUNCTIONS //
 
-  
+
 
   /** */
   // showNavbar() {
@@ -223,7 +223,7 @@ export class AppComponent implements OnInit {
   //   if (TEMP) { this.isNavBar = TEMP.split('&')[0]; }
   // }
 
-  
+
 
   /** */
   hideAlert() {
@@ -241,15 +241,14 @@ export class AppComponent implements OnInit {
     const that = this;
 
     this.authService.BSAuthStateChanged.subscribe((state: any) => {
-        console.log('***** BSAuthStateChanged *****', state);
-        if(state && state === AUTH_STATE_ONLINE){
-          const user = that.authService.getCurrentUser();
-          that.goOnLine(user);
-        } else if (state === AUTH_STATE_OFFLINE) {
-          that.goOffLine();
-        } else {
-          // sono nel primo caso null
-        }
+      console.log('APP-COMPONENT ***** BSAuthStateChanged ***** state', state);
+      if (state && state === AUTH_STATE_ONLINE) {
+        const user = that.authService.getCurrentUser();
+        that.goOnLine(user);
+      } else if (state === AUTH_STATE_OFFLINE) {
+        // that.goOffLine();
+        that.authenticate()
+      }
     });
 
     this.authService.BSSignOut.subscribe((data: any) => {
@@ -281,6 +280,17 @@ export class AppComponent implements OnInit {
     this.events.subscribe('uidConvSelected:changed', this.subscribeChangedConversationSelected);
   }
 
+  authenticate() {
+    let token = localStorage.getItem('tiledeskToken');
+    console.log('APP-COMPONENT ***** authenticate - stored token *****', token);
+    if (token) {
+      console.log('APP-COMPONENT ***** authenticate user is logged in');
+    } else {
+      console.log('APP-COMPONENT ***** authenticate user is NO logged in call goOffLine');
+      this.goOffLine()
+    }
+  }
+
 
   /**
    * ::: subscribeChangedConversationSelected :::
@@ -299,19 +309,19 @@ export class AppComponent implements OnInit {
     console.log('presentModal');
     const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
-       await this.modalController.create({
-          component: LoginPage,
-          componentProps: attributes,
-          swipeToClose: false,
-          backdropDismiss: false
-    });
+      await this.modalController.create({
+        component: LoginPage,
+        componentProps: attributes,
+        swipeToClose: false,
+        backdropDismiss: false
+      });
     modal.onDidDismiss().then((detail: any) => {
       console.log('The result: CHIUDI!!!!!', detail.data);
       // this.checkPlatform();
       if (detail !== null) {
-       //  console.log('The result: CHIUDI!!!!!', detail.data);
+        //  console.log('The result: CHIUDI!!!!!', detail.data);
       }
-   });
+    });
     // await modal.present();
     // modal.onDidDismiss().then((detail: any) => {
     //    console.log('The result: CHIUDI!!!!!', detail.data);
@@ -367,7 +377,7 @@ export class AppComponent implements OnInit {
 
     const that = this;
     clearTimeout(this.timeModalLogin);
-    this.timeModalLogin = setTimeout( () => {
+    this.timeModalLogin = setTimeout(() => {
       this.authModal = this.presentModal();
     }, 1000);
   }
@@ -399,27 +409,27 @@ export class AppComponent implements OnInit {
 
   // END SUBSCRIPTIONS //
 
-// BEGIN RESIZE FUNCTIONS //
-@HostListener('window:resize', ['$event'])
-onResize(event: any) {
-  const that = this;
-  clearTimeout(this.doitResize);
-  this.doitResize = setTimeout( () => {
-    let platformIsNow = PLATFORM_DESKTOP;
-    if (checkPlatformIsMobile()) {
-      platformIsNow = PLATFORM_MOBILE;
-    }
-    if (!this.platformIs || this.platformIs === '') {
-      this.platformIs = platformIsNow;
-    }
-    console.log('onResize width::::', window.innerWidth);
-    console.log('onResize width:::: platformIsNow', platformIsNow);
-    console.log('onResize width:::: platformIsNow this.platformIs', this.platformIs);
-    if ( platformIsNow !== this.platformIs ) {
-      window.location.reload();
-    }
-  }, 500);
-}
-// END RESIZE FUNCTIONS //
+  // BEGIN RESIZE FUNCTIONS //
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    const that = this;
+    clearTimeout(this.doitResize);
+    this.doitResize = setTimeout(() => {
+      let platformIsNow = PLATFORM_DESKTOP;
+      if (checkPlatformIsMobile()) {
+        platformIsNow = PLATFORM_MOBILE;
+      }
+      if (!this.platformIs || this.platformIs === '') {
+        this.platformIs = platformIsNow;
+      }
+      console.log('onResize width::::', window.innerWidth);
+      console.log('onResize width:::: platformIsNow', platformIsNow);
+      console.log('onResize width:::: platformIsNow this.platformIs', this.platformIs);
+      if (platformIsNow !== this.platformIs) {
+        window.location.reload();
+      }
+    }, 500);
+  }
+  // END RESIZE FUNCTIONS //
 
 }

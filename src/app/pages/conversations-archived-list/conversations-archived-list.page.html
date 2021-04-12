@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ 'LABEL_ARCHIVED' | translate }}</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button ion-button >
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-content>
+    <!-- <div *ngFor="let conv of listConversations">{{conv.last_message_text}}</div> -->
+  <ion-list-conversations
+      [listConversations]="listConversations"
+      [styleMap]="styleMap"
+      [translationMap]="translationMap"
+      (onConversationSelected)=onConversationSelectedFN($event)
+      (onImageLoaded)="onImageLoadedFN($event)"
+      (onConversationLoaded)="onConversationLoadedFN($event)">
+    </ion-list-conversations>
+  </ion-content>
+</ion-content>

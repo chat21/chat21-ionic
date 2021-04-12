@@ -12,11 +12,10 @@
 
   <app-header-conversation-detail      
     [isMobile] = isMobile 
-    [idLoggedUser] = loggedUser.uid  
+    [idLoggedUser] = loggedUser.uid
     [conversationAvatar] = conversationAvatar
     [translationMap] = translationMap
-    (eventOpenCloseInfoConversation)="returnOpenCloseInfoConversation($event)"
-  >
+    (eventOpenCloseInfoConversation)="returnOpenCloseInfoConversation($event)">
   </app-header-conversation-detail>
 
   <ion-content>
@@ -33,52 +32,65 @@
             </ng-template>
 
             <ng-template #content_messages>
-            <ion-content
-              #ionContentChatArea
-              class = "ionContentChatArea"
-              [scrollEvents]="true"
-              (ionScrollStart)="logScrollStart($event)" 
-              (ionScroll)="logScrolling($event)"
-              (ionScrollEnd)="logScrollEnd($event)"
-              [class.active]="showIonContent"
-              >
-            
-              <ion-list no-lines>
-                <div *ngFor="let message of messages; let i = index">
-                  
-                  <!-- <ion-item *ngIf="messageType(MESSAGE_TYPE_DATE, message)" class="ion-no-padding" text-wrap lines="none"> -->
-                  <ion-item *ngIf="message.headerDate" class="ion-no-padding" text-wrap lines="none">
-                    <app-bubble-day-message
-                      messageDate = {{message.headerDate}}
-                    ></app-bubble-day-message>
-                  </ion-item>
-
-                  <ion-item class="ion-no-padding" text-wrap lines="none">
+              <ion-content
+                #ionContentChatArea
+                class = "ionContentChatArea"
+                [scrollEvents]="true"
+                (ionScrollStart)="logScrollStart($event)" 
+                (ionScroll)="logScrolling($event)"
+                (ionScrollEnd)="logScrollEnd($event)"
+                [class.active]="showIonContent">
+              
+                <!-- <ion-list no-lines>
+                  <div *ngFor="let message of messages; let i = index">
                     
-                    <app-bubble-system-message
-                      *ngIf="messageType(MESSAGE_TYPE_INFO, message)"
-                      messageText = {{message.text}}
-                    ></app-bubble-system-message>
-                    
-                    <app-bubble-my-message 
-                      *ngIf="messageType(MESSAGE_TYPE_MINE, message)"
-                      [message] = message
-                      [isFirstMessage] = "isFirstMessage(i)"
-                    ></app-bubble-my-message>
+                    <!- - <ion-item *ngIf="messageType(MESSAGE_TYPE_DATE, message)" class="ion-no-padding" text-wrap lines="none"> - ->
+                    <ion-item *ngIf="message.timestamp" class="ion-no-padding" text-wrap lines="none">
+                      <app-bubble-day-message
+                        messageDate = {{message.timestamp}}
+                      ></app-bubble-day-message>
+                    </ion-item>
 
-                    <app-bubble-others-message 
-                      *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)"
-                      [message] = message
-                      [isFirstMessage] = "isFirstMessage(i)"
-                      [channelType] = channelType
-                    ></app-bubble-others-message>
+                    <ion-item class="ion-no-padding" text-wrap lines="none">
+                      
+                      <app-bubble-system-message
+                        *ngIf="messageType(MESSAGE_TYPE_INFO, message)"
+                        messageText = {{message.text}}
+                      ></app-bubble-system-message>
+                      
+                      <app-bubble-my-message 
+                        *ngIf="messageType(MESSAGE_TYPE_MINE, message)"
+                        [message] = message
+                        [isFirstMessage] = "isFirstMessage(i)"
+                      ></app-bubble-my-message>
 
-                  </ion-item>
+                      <app-bubble-others-message 
+                        *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)"
+                        [message] = message
+                        [isFirstMessage] = "isFirstMessage(i)"
+                        [channelType] = channelType
+                      ></app-bubble-others-message>
 
-                </div>
-              </ion-list>
+                    </ion-item>
 
-            </ion-content>
+                  </div>
+                </ion-list> -->
+
+                <ion-conversation-detail 
+                  #conversationContentDetail
+                  [channelType]="channelType"
+                  [messages]="messages"
+                  [senderId]="loggedUser.uid"
+                  [baseLocation]="window?.location?.origin"
+                  [stylesMap]="styleMap"
+                  (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+                  (onAfterMessageRender)="returnOnAfterMessageRender($event)"
+                  (onAttachmentButtonClicked)="returnOnAttachmentButtonClicked($event)"
+                  (onScrollContent)="returnOnScrollContent($event)"
+                  (onMenuOptionShow)="returnOnMenuOption($event)">
+                </ion-conversation-detail>
+
+              </ion-content>
             </ng-template>
             
           </ion-row>
@@ -108,7 +120,6 @@
               [translationMap] = translationMap
               [member] = member
             ></app-info-content>
-             
         </ion-col>
 
       </ion-row>

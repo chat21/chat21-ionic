@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // services
@@ -15,6 +15,7 @@ import { UserModel } from 'src/chat21-core/models/user';
 // utils
 import { isInArray, setLastDateWithLabels } from 'src/chat21-core/utils/utils';
 import * as PACKAGE from 'package.json';
+import { EventsService } from 'src/app/services/events-service';
 
 @Component({
   selector: 'app-profile-info',
@@ -27,6 +28,7 @@ export class ProfileInfoPage implements OnInit {
   itemAvatar: any;
   public translationMap: Map<string, string>;
 
+
   private subscriptions = [];
   borderColor = '#2d323e';
   fontColor = '#949494';
@@ -37,7 +39,7 @@ export class ProfileInfoPage implements OnInit {
     private chatManager: ChatManager,
     private translateService: CustomTranslateService,
     public presenceService: PresenceService,
-    // public events: EventsService,
+    public events: EventsService,
     private authService: AuthService
   ) { }
 
@@ -166,6 +168,12 @@ export class ProfileInfoPage implements OnInit {
         this.itemAvatar.status = lastConnectionDate;
       }
     }
+  }
+
+  onClickArchivedConversation(){   
+    this.onClose().then(()=> {
+      this.events.publish('profileInfoButtonClick:changed', 'displayArchived');
+    })
   }
 
 

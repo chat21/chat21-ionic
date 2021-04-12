@@ -60,7 +60,11 @@ const routes: Routes = [
   {
     path: 'loader-preview',
     loadChildren: () => import('./pages/loader-preview/loader-preview.module').then( m => m.LoaderPreviewPageModule)
+  },  {
+    path: 'conversations-archived-list',
+    loadChildren: () => import('./pages/conversations-archived-list/conversations-archived-list.module').then( m => m.ConversationsArchivedListPageModule)
   },
+
 
 
   // {

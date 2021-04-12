@@ -50,6 +50,14 @@ import { FirebaseConversationHandlerBuilderService } from 'src/chat21-core/provi
 import { UploadService } from 'src/chat21-core/providers/abstract/upload.service';
 import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/firebase-upload.service';
 
+// MQTT
+import { Chat21Service } from 'src/chat21-core/providers/mqtt/chat-service';
+import { MQTTAuthService } from 'src/chat21-core/providers/mqtt/mqtt-auth-service';
+import { MQTTConversationsHandler } from 'src/chat21-core/providers/mqtt/mqtt-conversations-handler';
+import { MQTTConversationHandlerBuilderService } from 'src/chat21-core/providers/mqtt/mqtt-conversation-handler-builder.service';
+import { MQTTTypingService } from 'src/chat21-core/providers/mqtt/mqtt-typing.service';
+import { MQTTPresenceService } from 'src/chat21-core/providers/mqtt/mqtt-presence.service';
+
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
 import { ConversationDetailPageModule } from './pages/conversation-detail/conversation-detail.module';
@@ -61,39 +69,34 @@ import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
+// Directives
+import { TooltipModule } from 'ng2-tooltip-directive';
+
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+
 }
 
-export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider ) {
+export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service ) {
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    const auth= new FirebaseAuthService(http); 
+    console.log("chat21Service::", chat21Service)
+    const auth = new MQTTAuthService(http, chat21Service);
+    console.log("appConfig.getConfig().SERVER_BASE_URL", appConfig.getConfig().SERVER_BASE_URL);
     auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
+    console.log("auth.getBaseUrl()", auth.getBaseUrl());
     return auth
   } else {
-    const auth= new FirebaseAuthService(http); 
+    const auth= new FirebaseAuthService(http);
     auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
     return auth
   }
 }
 
-// export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider ) {
-//   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-//     const auth= new FirebaseAuthService(http); 
-//     auth.setBaseUrl(appConfig.getConfig().apiUrl)
-//     return auth
-//   } else {
-//     const auth= new FirebaseAuthService(http); 
-//     auth.setBaseUrl(appConfig.getConfig().apiUrl)
-//     return auth
-//   }
-// }
-
 export function presenceFactory() {
   console.log('presenceFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebasePresenceService();
+    return new MQTTPresenceService();
   } else {
     return new FirebasePresenceService();
   }
@@ -102,7 +105,7 @@ export function presenceFactory() {
 export function typingFactory() {
   console.log('typingFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseTypingService();
+    return new MQTTTypingService();
   } else {
     return new FirebaseTypingService();
   }
@@ -117,12 +120,12 @@ export function uploadFactory() {
   }
 }
 
-export function conversationsHandlerFactory() {
+export function conversationsHandlerFactory(chat21Service: Chat21Service, httpClient: HttpClient, appConfig: AppConfigProvider ) {
   console.log('conversationsHandlerFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseConversationsHandler();
+    return new MQTTConversationsHandler(chat21Service);
   } else {
-    return new FirebaseConversationsHandler();
+    return new FirebaseConversationsHandler(httpClient, appConfig);
   }
 }
 
@@ -143,10 +146,10 @@ export function archivedConversationsHandlerFactory() {
   }
 }
 
-export function conversationHandlerBuilderFactory() {
+export function conversationHandlerBuilderFactory(chat21Service: Chat21Service) {
   console.log('conversationHandlerBuilderFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseConversationHandlerBuilderService();
+    return new MQTTConversationHandlerBuilderService(chat21Service);
   } else {
     return new FirebaseConversationHandlerBuilderService();
   }
@@ -161,7 +164,7 @@ export function conversationHandlerFactory() {
 }
 
 export function loggerFactory(logger: NGXLogger) {
-    return new CustomLogger(true, logger);
+    return new CustomLogger(true) ;
 }
 
 const appInitializerFn = (appConfig: AppConfigProvider) => {
@@ -175,7 +178,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   entryComponents: [
   ],
@@ -225,7 +228,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: AuthService,
       useFactory: authenticationFactory,
-      deps: [HttpClient, AppConfigProvider]
+      deps: [HttpClient, AppConfigProvider, Chat21Service]
      },
     {
       provide: PresenceService,
@@ -245,7 +248,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ConversationsHandlerService,
       useFactory: conversationsHandlerFactory,
-      deps: []
+      deps: [Chat21Service, HttpClient, AppConfigProvider]
     },
     {
       provide: ArchivedConversationsHandlerService,
@@ -265,7 +268,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ConversationHandlerBuilderService,
       useFactory: conversationHandlerBuilderFactory,
-      deps: []
+      deps: [Chat21Service]
     },
     {
       provide: LoggerService,
@@ -278,7 +281,8 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     EventsService,
     DatabaseProvider,
-    Chooser
+    Chooser,
+    Chat21Service
   ]
 })
 export class AppModule {}

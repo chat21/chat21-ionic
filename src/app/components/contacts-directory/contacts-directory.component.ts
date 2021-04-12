@@ -8,10 +8,10 @@ import { UserModel } from 'src/chat21-core/models/user';
 })
 export class ContactsDirectoryComponent implements OnInit {
   @Input() contacts: Array<UserModel>;
-  @Output() eventOpenNewChat = new EventEmitter<UserModel>();
+  @Output() onOpenNewChat = new EventEmitter<UserModel>();
 
   private contactsOrig: Array<UserModel>;
-  
+  uidUserSelected: string;
   constructor(
   ) { }
 
@@ -48,7 +48,8 @@ export class ContactsDirectoryComponent implements OnInit {
    *
    */
   goToChat(user: UserModel) {
-    this.eventOpenNewChat.emit(user);
+    this.uidUserSelected = user.uid
+    this.onOpenNewChat.emit(user);
   }
 
 

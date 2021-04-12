@@ -8,13 +8,17 @@
 
 <!-- <ng-template #contentConversations> -->
   <ion-header no-border class="ion-no-border">
-    <app-ddp-header
-    [numberOpenConv] = numberOpenConv
-    [supportMode] = supportMode
-    (openArchivedConversationsPage) = openArchivedConversationsPage()
-    (openContactsDirectory) = openContactsDirectory($event)
-    (openProfileInfo) = openProfileInfo($event)
-    ></app-ddp-header>
+    <app-ddp-header *ngIf="conversationType ==='active'"
+      [numberOpenConv] = numberOpenConv
+      [supportMode] = supportMode
+      (openContactsDirectory) = openContactsDirectory($event)
+      (openProfileInfo) = openProfileInfo($event)>
+    </app-ddp-header>
+
+    <app-option-header *ngIf="conversationType !=='active'"
+      [headerTitle] = headerTitle
+      (onBackButton) = onBackButtonFN($event)>
+    </app-option-header>
   </ion-header>
   
   <ion-content class="list-avatar-page" appScrollbarTheme>
@@ -24,13 +28,14 @@
       <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
       
       <ng-template #contentConversations>
-        <ion-item lines="none" class="ion-no-padding" *ngFor="let conversation of conversations"
+        <!-- <ion-item lines="none" class="ion-no-padding" *ngFor="let conversation of conversations"
           (mousedown)="navigateByUrl(conversation.uid)"> 
-          <!-- (mouseup)="openMessageList()" -->
+          <!- - (mouseup)="openMessageList()" - ->
           <div [class.selected]="conversation.uid === uidConvSelected"></div>
           <ion-avatar item-start>
             <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
             <div *ngIf="conversation.image" #avatarImage class="avatar-profile" [style.background-image]="'url(' + conversation.image + ')'"></div>
+            <!- - <div *ngIf="getImageAvatar(conversation.sender)" #avatarImage class="avatar-profile" [style.background-image]="'url(' + getImageAvatar(conversation.sender) + ')'"></div> - ->
           </ion-avatar>
           <ion-label>
             <div class="conversation_with truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
@@ -45,7 +50,31 @@
             </ion-button>
           </ion-buttons>
           <div item-end class="notification_point" *ngIf="conversation.is_new">&nbsp;</div>
-        </ion-item>
+        </ion-item> -->
+
+        <!-- ACTIVE CONVERSATION LIST -->
+        <ion-list-conversations *ngIf="conversationType ==='active'"
+          [uidConvSelected]="uidConvSelected" 
+          [listConversations]="conversations"
+          [styleMap]="styleMap"
+          [translationMap]="translationMapConversation"
+          (onConversationSelected)=onConversationSelected($event)
+          (onImageLoaded)="onImageLoaded($event)"
+          (onConversationLoaded)="onConversationLoaded($event)"
+          (onCloseConversation)="onCloseConversation($event)">
+        </ion-list-conversations>
+
+        <ion-list-conversations *ngIf="conversationType ==='archived'"
+          [listConversations]="archivedConversations"
+          [styleMap]="styleMap"
+          [translationMap]="translationMapConversation"
+          (onConversationSelected)=onConversationSelected($event)
+          (onImageLoaded)="onImageLoaded($event)"
+          (onConversationLoaded)="onConversationLoaded($event)">
+        </ion-list-conversations>
+
+        
+
       </ng-template>
   
       <ng-template #contentMessageWelcome>

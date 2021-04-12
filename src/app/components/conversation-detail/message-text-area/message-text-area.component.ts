@@ -43,7 +43,7 @@ export class MessageTextAreaComponent implements OnInit {
       message += e.detail.data;
     }
     const height = e.detail.target.offsetHeight;
-    console.log('onChange ************** event:: ', message);
+    // console.log('onChange ************** event:: ', message);
     if ( codeChar === 10 ) {
       console.log('premuto invio ');
     } else {

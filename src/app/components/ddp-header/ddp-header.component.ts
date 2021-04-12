@@ -10,7 +10,6 @@ export class DdpHeaderComponent implements OnInit {
   @Input() supportMode = false;
   @Output() openContactsDirectory = new EventEmitter();
   @Output() openProfileInfo = new EventEmitter();
-  @Output() openArchivedConversationsPage = new EventEmitter();
 
   constructor(
   ) { }
@@ -26,11 +25,6 @@ export class DdpHeaderComponent implements OnInit {
   /** */
   onOpenContactsDirectory(e: any) {
     this.openContactsDirectory.emit(e);
-  }
-
-  /** */
-  onOpenArchivedConversationsPage() {
-    this.openArchivedConversationsPage.emit();
   }
   // END @Output() //
 
