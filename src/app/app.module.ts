@@ -165,19 +165,11 @@ export function conversationHandlerFactory() {
 }
 
 export function loggerFactory(logger: NGXLogger) {
-<<<<<<< HEAD
-  // let customLogger = new CustomLogger(true, logger)
-  // console.log('loggggggg', customLogger)
-  // LoggerInstance.setInstance(customLogger)
-  // return customLogger
-  return new CustomLogger(true)
-=======
     // let customLogger = new CustomLogger(true, logger)
     // console.log('loggggggg', customLogger)
     // LoggerInstance.setInstance(customLogger)
     // return customLogger
     return new CustomLogger(true)
->>>>>>> features/widget-componets
 }
 
 const appInitializerFn = (appConfig: AppConfigProvider) => {
