@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-
+import {FIREBASESTORAGE_BASE_URL_IMAGE} from 'src/chat21-core/utils/constants'
 // models
 import { UserModel } from 'src/chat21-core/models/user';
 
@@ -27,7 +27,7 @@ export class ContactsService {
   // private
   private urlRemoteContacts: string;
   private contacts: UserModel[];
-  private FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
+  // private FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
   private urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
 
   constructor(
@@ -116,7 +116,7 @@ export class ContactsService {
       const fullname = ( firstname + ' ' + lastname ).trim();
       const avatar = avatarPlaceholder(fullname);
       const color = getColorBck(fullname);
-      const imageurl = getImageUrlThumbFromFirebasestorage(user.uid, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
+      const imageurl = getImageUrlThumbFromFirebasestorage(user.uid, FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
       member.uid = uid;
       member.email = email;
       member.firstname = firstname;
