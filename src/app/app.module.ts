@@ -71,6 +71,7 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 
 // Directives
 import { TooltipModule } from 'ng2-tooltip-directive';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -164,11 +165,19 @@ export function conversationHandlerFactory() {
 }
 
 export function loggerFactory(logger: NGXLogger) {
+<<<<<<< HEAD
   // let customLogger = new CustomLogger(true, logger)
   // console.log('loggggggg', customLogger)
   // LoggerInstance.setInstance(customLogger)
   // return customLogger
   return new CustomLogger(true)
+=======
+    // let customLogger = new CustomLogger(true, logger)
+    // console.log('loggggggg', customLogger)
+    // LoggerInstance.setInstance(customLogger)
+    // return customLogger
+    return new CustomLogger(true)
+>>>>>>> features/widget-componets
 }
 
 const appInitializerFn = (appConfig: AppConfigProvider) => {
