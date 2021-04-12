@@ -15,7 +15,7 @@ import { ConversationsHandlerService } from '../abstract/conversations-handler.s
 import { TYPE_GROUP, URL_SOUND } from '../../utils/constants';
 import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } from '../../utils/utils-user';
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from '../../utils/utils';
-import { ImageRepoService } from '../abstract/image-repo.service';
+// import { ImageRepoService } from '../abstract/image-repo.service';
 // import { ConsoleReporter } from 'jasmine';
 
 @Injectable({ providedIn: 'root' })
@@ -29,14 +29,14 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     conversationChanged: BehaviorSubject<ConversationModel>;
     conversationRemoved: BehaviorSubject<ConversationModel>;
     loadedConversationsStorage: BehaviorSubject<ConversationModel[]>;
-    imageRepo: ImageRepoService;
+    // imageRepo: ImageRepoService;
 
     // public variables
     conversations: Array<ConversationModel> = [];
     uidConvSelected: string;
     tenant: string;
-    FIREBASESTORAGE_BASE_URL_IMAGE: string;
-    urlStorageBucket: string;
+    // FIREBASESTORAGE_BASE_URL_IMAGE: string;
+    // urlStorageBucket: string;
 
     // private variables
     private loggedUserId: string;
