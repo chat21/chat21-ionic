@@ -1,5 +1,5 @@
 {
-    "chatEngine": "firebase",
+    "chatEngine": "mqtt",
     "firebaseConfig": {
         "apiKey": "CHANGEIT",
         "authDomain": "CHANGEIT",
