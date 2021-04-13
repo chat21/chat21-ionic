@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-declare var Chat21Client: any;
-
+import { Chat21Client } from 'src/assets/js/chat21client';
 /*
   Generated class for the AuthService provider.
   See https://angular.io/docs/ts/latest/guide/dependency-injection.html
