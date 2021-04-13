@@ -5,7 +5,8 @@
 */
 
 // var mqtt = require('mqtt');
-import mqtt  from 'mqtt';
+// import mqtt from 'mqtt.d';
+// import * as mqtt from 'mqtt';
 
 const _CLIENTADDED = "/clientadded"
 const _CLIENTUPDATED = "/clientupdated"
@@ -565,5 +566,5 @@ class Chat21Client {
     }
 }
 
-export { Chat21Client }
+// export { Chat21Client }
 // module.exports = { Chat21Client };

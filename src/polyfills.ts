@@ -61,6 +61,13 @@ import './zone-flags';
 import 'zone.js/dist/zone';  // Included with Angular CLI.
 
 
+// TO RUN mqtt js with ionic
+// (window as any).global = window;
+// global.Buffer = global.Buffer || require('buffer').Buffer;
+// (window as any).process = {
+//   version: ''
+// };
+
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
