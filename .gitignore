@@ -12,3 +12,4 @@ src/environments
 docs.zip
 firebase-messaging-sw.js
 env.pre
+.env
