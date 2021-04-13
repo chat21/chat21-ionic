@@ -13,12 +13,8 @@ export class AppConfigProvider {
   /** */
   loadAppConfig() {
     const that = this;
-    return this.http.get(this.appConfig.remoteConfigUrl)
-      .toPromise()
-      .then(data => {
+    return this.http.get(this.appConfig.remoteConfigUrl).toPromise().then(data => {
         that.appConfig = data;
-        console.log('----------------------------------> firebaseConfig:');
-        console.log(this.appConfig.firebaseConfig);
       }).catch(err => {
         console.log('error loadAppConfig' + err);
       });

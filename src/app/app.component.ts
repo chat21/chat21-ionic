@@ -88,7 +88,7 @@ export class AppComponent implements OnInit {
     this.tenant = environment.tenant;
     this.splashScreen.show();
     // if (environment.chatEngine === CHAT_ENGINE_FIREBASE) {
-    this.initFirebase();
+    // this.initFirebase();
     // }
 
   }

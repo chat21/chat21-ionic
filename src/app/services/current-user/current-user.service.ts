@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-
+import {FIREBASESTORAGE_BASE_URL_IMAGE} from 'src/chat21-core/utils/constants'
 import { environment } from 'src/environments/environment';
 
 // models
@@ -28,8 +28,8 @@ export class CurrentUserService {
   BScurrentUser: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(null);
 
   // public
-  SERVER_BASE_URL = environment.SERVER_BASE_URL;
-  FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
+  SERVER_BASE_URL = environment.apiUrl;
+  // FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
   urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
 
   // private
@@ -108,7 +108,7 @@ export class CurrentUserService {
       const fullname = ( firstname + ' ' + lastname ).trim();
       const avatar = avatarPlaceholder(fullname);
       const color = getColorBck(fullname);
-      const imageurl = getImageUrlThumbFromFirebasestorage(user._id, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
+      const imageurl = getImageUrlThumbFromFirebasestorage(user._id, FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
       member.uid = uid;
       member.email = email;
       member.firstname = firstname;

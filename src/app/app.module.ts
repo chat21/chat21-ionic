@@ -72,6 +72,7 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 // Directives
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+import { FirebaseInitService } from 'src/chat21-core/providers/firebase/firebase-init-service';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -81,15 +82,18 @@ export function createTranslateLoader(http: HttpClient) {
 
 export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service ) {
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    console.log("chat21Service::", chat21Service)
+    
+    chat21Service.initChat(appConfig.getConfig().chat21Config);
+    console.log("appConfig.getConfig().SERVER_BASE_URL", appConfig.getConfig().apiUrl);
     const auth = new MQTTAuthService(http, chat21Service);
-    console.log("appConfig.getConfig().SERVER_BASE_URL", appConfig.getConfig().SERVER_BASE_URL);
-    auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
-    console.log("auth.getBaseUrl()", auth.getBaseUrl());
+    
+    auth.setBaseUrl(appConfig.getConfig().apiUrl)
     return auth
   } else {
+
+    FirebaseInitService.initFirebase(appConfig.getConfig().firebaseConfig)
     const auth= new FirebaseAuthService(http);
-    auth.setBaseUrl(appConfig.getConfig().SERVER_BASE_URL)
+    auth.setBaseUrl(appConfig.getConfig().apiUrl)
     return auth
   }
 }
@@ -130,12 +134,18 @@ export function conversationsHandlerFactory(chat21Service: Chat21Service, httpCl
   }
 }
 
-export function imageRepoFactory() {
+export function imageRepoFactory(appConfig: AppConfigProvider) {
   console.log('imageRepoFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseImageRepoService();
+    const imageService = new FirebaseImageRepoService();
+    FirebaseInitService.initFirebase(appConfig.getConfig().firebaseConfig)
+    imageService.setImageBaseUrl(appConfig.getConfig().baseImageUrl)
+    return imageService
   } else {
-    return new FirebaseImageRepoService();
+    const imageService = new FirebaseImageRepoService();
+    FirebaseInitService.initFirebase(appConfig.getConfig().firebaseConfig)
+    imageService.setImageBaseUrl(appConfig.getConfig().baseImageUrl)
+    return imageService
   }
 }
 
@@ -175,7 +185,6 @@ export function loggerFactory(logger: NGXLogger) {
 const appInitializerFn = (appConfig: AppConfigProvider) => {
   return () => {
     if (environment.remoteConfig) {
-      console.log('environment.remoteConfig: ', environment.remoteConfig);
       return appConfig.loadAppConfig();
     }
   };
@@ -268,7 +277,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ImageRepoService,
       useFactory: imageRepoFactory,
-      deps: []
+      deps: [AppConfigProvider]
     },
     {
       provide: ConversationHandlerBuilderService,

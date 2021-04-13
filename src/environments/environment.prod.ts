@@ -1,14 +1,10 @@
 export const environment = {
-    tenant: 'CHANGEIT',
-    supportMode: true,
-    CHAT_SEND_BY_EMAIL_LINK: 'PRO-CHANGEIT',
-    FIREBASESTORAGE_BASE_URL_IMAGE: 'CHANGEIT',
-    DASHBOARD_URL: 'CHANGEIT',
-    SERVER_BASE_URL: 'CHANGEIT',
     production: false,
+    tenant: 'CHANGEIT',
     remoteConfig: true,
     remoteConfigUrl: './chat-config.json',
     remoteContactsUrl: '',
+    chatEngine: 'CHANGEIT',
     firebaseConfig: {
         apiKey: 'prod-CHANGEIT',
         authDomain: 'CHANGEIT',
@@ -18,5 +14,16 @@ export const environment = {
         messagingSenderId: 'CHANGEIT',
         appId: 'CHANGEIT',
         chat21ApiUrl: 'CHANGEIT'
-    }
+    },
+    chat21Config: {
+        appId: 'CHANGEIT',
+        MQTTendpoint: 'CHANGEIT', // MQTT endpoint
+        APIendpoint: 'CHANGEIT',
+        loginServiceEndpoint: 'CHANGEIT' // endpoint readed from apiUrl property
+    },
+    apiUrl: 'CHANGEIT',
+    baseImageUrl: 'CHANGEIT',
+    dashboardUrl: 'CHANGEIT', 
+    authPersistence: 'LOCAL',
+    supportMode: true,
 };

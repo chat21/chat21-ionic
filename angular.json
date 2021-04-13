@@ -29,7 +29,10 @@
                 "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
-              }
+              },
+              "src/chat-config-template.json",
+              "src/chat-config.json",
+              "src/chat-config-dev.json"
             ],
             "styles": [
               {

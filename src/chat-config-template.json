@@ -1,8 +1,4 @@
 {
-    "CHAT_SEND_BY_EMAIL_LINK": "${CHAT_SEND_BY_EMAIL_LINK}",
-    "FIREBASESTORAGE_BASE_URL_IMAGE": "${FIREBASESTORAGE_BASE_URL_IMAGE}",
-    "DASHBOARD_URL": "${DASHBOARD_URL}",
-    "SERVER_BASE_URL": "${SERVER_BASE_URL}",
     "chatEngine": "${CHAT21_ENGINE}",
     "firebaseConfig": {
         "apiKey": "${FIREBASE_APIKEY}",
@@ -19,5 +15,8 @@
         "MQTTendpoint": "${MQTT_ENDPOINT}",
         "APIendpoint": "${MQTT_APIENDPOINT}",
         "loginServiceEndpoint": "${MQTT_LOGINSERVICE_ENDPOINT}"
-    }
+    },
+    "apiUrl": "${API_URL}",
+    "baseImageUrl": "${API_BASEIMAGE_URL}",
+    "dashboardUrl": "${DASHBOARD_URL}"
 }
