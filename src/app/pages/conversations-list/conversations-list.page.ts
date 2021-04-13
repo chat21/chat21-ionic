@@ -20,7 +20,7 @@ import {
   convertMessage,
   windowsMatchMedia
  } from '../../../chat21-core/utils/utils';
-import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE, FIREBASESTORAGE_BASE_URL_IMAGE, TYPE_GROUP } from '../../../chat21-core/utils/constants';
+import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE, TYPE_GROUP } from '../../../chat21-core/utils/constants';
 import { EventsService } from '../../services/events-service';
 import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootstrap/perfect-scrollbar
 
@@ -572,7 +572,7 @@ export class ConversationListPage implements OnInit {
         conversation_with_fullname = conversation.sender_fullname;
         // conv.last_message_text = conv.last_message_text;
     }
-    conversation.image= this.imageRepoService.getImagePhotoUrl(FIREBASESTORAGE_BASE_URL_IMAGE, conversation_with)
+    conversation.image= this.imageRepoService.getImagePhotoUrl(conversation_with)
   }
 
   onConversationLoaded(conversation: ConversationModel){

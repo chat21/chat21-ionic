@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, IterableDiffers, KeyValueDiffer, KeyValueDiffers, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FIREBASESTORAGE_BASE_URL_IMAGE } from 'src/chat21-core/utils/constants';
 import { ConversationModel } from '../../../../chat21-core/models/conversation';
 import { ImageRepoService } from '../../../../chat21-core/providers/abstract/image-repo.service';
 
