@@ -23,8 +23,7 @@ export const environment = {
     },
     apiUrl: 'CHANGEIT',
     baseImageUrl: 'CHANGEIT',
-    CHAT_SEND_BY_EMAIL_LINK: "CHANGEIT",
-    DASHBOARD_URL: 'CHANGEIT', 
+    dashboardUrl: 'CHANGEIT', 
     authPersistence: 'LOCAL',
     supportMode: true,
 };
