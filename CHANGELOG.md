@@ -7,18 +7,21 @@
 - Bug fixed onInit selected conversation in ion-list-conversations.component
 - Improves the conversation list graphics in the left side panel
 - Implemented the method for archiving conversations
+- Fixes the bug: clicking on an archived conversation does not update the 'read conversation' badge
+- Fixes the bug: the messages in the conversation detail are all aligned to the left
+- Fixes the bug: the selected active conversation is no longer selected when the user returns to active conversations from archived conversations
+- Deletes the persistence of the last open conversation from the local storage
+- Restores the button 'open conversation detail'
 
 ### 3.0.21
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button
 - Fixes the bug: on mobile the archived conversations window is no longer displayed if it has been opened once
 - Highlights the archived conversation with a background color
 - Fixes the bug: the detail of the selected conversation does not open on mobile
-- Fixes the bug: clicking on an archived conversation does not update the 'read conversation' badge
-- Fixes the bug: the messages in the conversation detail are all aligned to the left
+
 
 ### 3.0.20
-- Adds the ability to display thr archived conversations
-
+- Adds the ability to display the archived conversations
 
 ### 3.0.17
 - bug fix: changed abstract classes in app module
