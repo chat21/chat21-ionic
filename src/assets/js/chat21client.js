@@ -585,5 +585,5 @@ class Chat21Client {
     }
 }
 
-// export { Chat21Client }
+export { Chat21Client }
 // module.exports = { Chat21Client };

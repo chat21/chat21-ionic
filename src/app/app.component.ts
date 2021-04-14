@@ -205,8 +205,8 @@ export class AppComponent implements OnInit {
       console.log('checkPlatform navigateByUrl', pageUrl);
       // this.router.navigateByUrl(pageUrl);
 
-      // const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
-      // createExternalSidebar(this.renderer, DASHBOARD_URL);
+      // const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
+      // createExternalSidebar(this.renderer, dashboardUrl);
     }
   }
 
@@ -300,7 +300,7 @@ export class AppComponent implements OnInit {
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
     console.log('************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
     // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
-    this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname);
+    this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname + '/' + type);
   }
 
 

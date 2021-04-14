@@ -77,7 +77,7 @@ export class InfoContentComponent implements OnInit {
 //     private events: EventsService,
 //     private translateService: CustomTranslateService,
 //   ) {
-//     this.DASHBOARD_URL = this.appConfig.getConfig().DASHBOARD_URL;
+//     this.DASHBOARD_URL = this.appConfig.getConfig().dashboardUrl;
 //     this.FIREBASESTORAGE_BASE_URL_IMAGE = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE;
 //     this.urlStorageBucket = this.appConfig.getConfig().firebaseConfig.storageBucket + '/o/profiles%2F';
 //   }

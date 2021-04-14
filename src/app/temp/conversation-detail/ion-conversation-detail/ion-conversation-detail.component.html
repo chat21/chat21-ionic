@@ -1,4 +1,4 @@
-<ion-list no-lines>
+<ion-list no-lines style="display: none;">
   <div *ngFor="let message of messages; let i = index">
     <!-- <ion-item *ngIf="messageType(MESSAGE_TYPE_DATE, message)" class="ion-no-padding" text-wrap lines="none"> -->
     <!-- <ion-item *ngIf="message.timestamp" class="ion-no-padding" text-wrap lines="none">
@@ -82,3 +82,58 @@
 
   </div>
 </ion-list>
+
+<!-- ----------------------------------------------------------- -->
+<!--  nk - no tag ionic -->
+<!-- ----------------------------------------------------------- -->
+
+  <div *ngFor="let message of messages; let i = index">
+
+    <div class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)" class="msg_info_container">
+      <tiledeskwidget-info-message class="messages"
+          [message]="message">
+      </tiledeskwidget-info-message>
+    </div>
+
+    <!-- message SENDER:: -->
+    <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
+                          
+      <!--backgroundColor non viene ancora usato -->
+      <tiledeskwidget-bubble-message class="messages msg_sent slide-in-right"
+          [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}"
+          [message]="message"
+          [textColor]="'col-msg-sent'"
+          (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+          (onAfterMessageRender)="returnOnAfterMessageRender($event)">
+      </tiledeskwidget-bubble-message>
+
+        <!-- icon status message -->
+      <tiledeskwidget-return-receipt class="slide-in-right"
+          [status]="message.status">
+      </tiledeskwidget-return-receipt>
+
+    </div>
+
+    <!-- message RECIPIENT:: -->
+    <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message) && isChannelTypeGroup(channelType)" class="message_sender_fullname slide-in-left">
+      {{message.sender_fullname}}
+    </div>
+    <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)" class="msg_container base_receive">
+                          
+      <!-- <tiledeskwidget-avatar-image class="slide-in-left"  
+          [senderID]="message.sender"
+          [senderFullname]="message.sender_fullname"
+          [baseLocation]="baseLocation">
+      </tiledeskwidget-avatar-image> -->
+
+      <!--backgroundColor non viene ancora usato -->
+      <tiledeskwidget-bubble-message class="messages msg_receive slide-in-left"
+          [message]="message"
+          [textColor]="'black'"
+          (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+          (onAfterMessageRender)="returnOnAfterMessageRender($event)">
+      </tiledeskwidget-bubble-message>
+
+    </div>
+
+  </div>

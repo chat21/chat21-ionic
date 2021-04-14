@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import {FIREBASESTORAGE_BASE_URL_IMAGE} from 'src/chat21-core/utils/constants'
+// import {FIREBASESTORAGE_BASE_URL_IMAGE} from 'src/chat21-core/utils/constants'
 // models
 import { UserModel } from 'src/chat21-core/models/user';
 
@@ -12,6 +12,7 @@ import {
   getColorBck,
   getImageUrlThumbFromFirebasestorage
 } from 'src/chat21-core/utils/utils-user';
+import { AppConfigProvider } from '../app-config';
 
 
 @Injectable({
@@ -27,14 +28,19 @@ export class ContactsService {
   // private
   private urlRemoteContacts: string;
   private contacts: UserModel[];
-  // private FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
-  private urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
+  private FIREBASESTORAGE_BASE_URL_IMAGE: string;
+  private urlStorageBucket: string;
 
   constructor(
-    public http: HttpClient
+    public http: HttpClient,
+    public appConfigProvider: AppConfigProvider
   ) {
     console.log('ContactsService');
-    this.urlRemoteContacts = environment.remoteContactsUrl;
+
+    this.urlRemoteContacts = appConfigProvider.getConfig().apiUrl + 'chat21/contacts';
+    this.FIREBASESTORAGE_BASE_URL_IMAGE = appConfigProvider.getConfig().baseImageUrl;
+    this.urlStorageBucket = appConfigProvider.getConfig().firebaseConfig.storageBucket + '/o/profiles%2F';
+
   }
 
 
@@ -47,7 +53,7 @@ export class ContactsService {
       const that = this;
       const httpOptions = {
         headers: new HttpHeaders({
-          'Content-Type':  'application/json',
+          'Content-Type': 'application/json',
           Authorization: token
         })
       };
@@ -77,27 +83,27 @@ export class ContactsService {
   public loadContactDetail(token: string, uid: string) {
     this.contacts = [];
     console.log('loadContactDetail:: uid ', uid);
-    const urlRemoreContactDetail = this.urlRemoteContacts + '/' + uid;
-    if (urlRemoreContactDetail.startsWith('http') && token) {
+    const urlRemoteContactDetail = this.urlRemoteContacts + '/' + uid;
+    if (urlRemoteContactDetail.startsWith('http') && token) {
       const that = this;
       const httpOptions = {
         headers: new HttpHeaders({
-          'Content-Type':  'application/json',
+          'Content-Type': 'application/json',
           Authorization: token
         })
       };
       const postData = {
       };
-      console.log('loadContactDetail:: url ', urlRemoreContactDetail);
+      console.log('loadContactDetail:: url ', urlRemoteContactDetail);
       this.http
-      .get<any>(urlRemoreContactDetail, httpOptions)
-      .subscribe(user => {
-        console.log('loadContactDetail:: data ', user);
-        const member = that.createCompleteUser(user);
-        this.BScontactDetail.next(member);
-      }, error => {
-        console.log('urlRemoreContactDetail:: error ', error);
-      });
+        .get<any>(urlRemoteContactDetail, httpOptions)
+        .subscribe(user => {
+          console.log('loadContactDetail:: data ', user);
+          const member = that.createCompleteUser(user);
+          this.BScontactDetail.next(member);
+        }, error => {
+          console.log('urlRemoreContactDetail:: error ', error);
+        });
     }
   }
 
@@ -113,10 +119,10 @@ export class ContactsService {
       const firstname = user.firstname ? user.firstname : '';
       const lastname = user.lastname ? user.lastname : '';
       const email = user.email ? user.email : '';
-      const fullname = ( firstname + ' ' + lastname ).trim();
+      const fullname = (firstname + ' ' + lastname).trim();
       const avatar = avatarPlaceholder(fullname);
       const color = getColorBck(fullname);
-      const imageurl = getImageUrlThumbFromFirebasestorage(user.uid, FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
+      const imageurl = getImageUrlThumbFromFirebasestorage(user.uid, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
       member.uid = uid;
       member.email = email;
       member.firstname = firstname;

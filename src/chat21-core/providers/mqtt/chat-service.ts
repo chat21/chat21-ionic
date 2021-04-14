@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-// import { Chat21Client } from 'src/assets/js/chat21client';
-declare var Chat21Client: any;
+import { Chat21Client } from 'src/assets/js/chat21client';
+// declare var Chat21Client: any;
 
 /*
   Generated class for the AuthService provider.
@@ -21,7 +21,7 @@ export class Chat21Service {
 
   initChat(chat21Config: any) {
     if (!chat21Config || chat21Config.appId === 'CHANGEIT') {
-      throw new Error('chat21Config config is not defined. Please create your widget-config.json. See the Chat21-Web_widget Installation Page');
+      throw new Error('chat21Config config is not defined. Please create your chat-config.json. See the Chat21-Web_widget Installation Page');
     }  
     this.chatClient = new Chat21Client(chat21Config)
     // console.log("chatClient init. ID:", this.chatClient.client_id)

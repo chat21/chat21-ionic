@@ -1,12 +1,13 @@
 import { IonConversationDetailComponent } from './../../temp/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Directive } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
-import { 
-  ModalController, 
-  PopoverController, 
-  Platform, ActionSheetController, NavController, IonContent, IonTextarea } from '@ionic/angular';
+import {
+  ModalController,
+  PopoverController,
+  Platform, ActionSheetController, NavController, IonContent, IonTextarea
+} from '@ionic/angular';
 
 
 // translate
@@ -28,6 +29,7 @@ import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abs
 
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/conversation-handler.service';
 // import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
@@ -92,7 +94,7 @@ import {
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import {NgxLinkifyjsService, Link, LinkType, NgxLinkifyOptions} from 'ngx-linkifyjs';
+import { NgxLinkifyjsService, Link, LinkType, NgxLinkifyOptions } from 'ngx-linkifyjs';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
 @Component({
@@ -104,9 +106,9 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 
 
 export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('ionContentChatArea', {static: false}) ionContentChatArea: IonContent;
-  @ViewChild('rowMessageTextArea', {static: false}) rowTextArea: ElementRef;
-  
+  @ViewChild('ionContentChatArea', { static: false }) ionContentChatArea: IonContent;
+  @ViewChild('rowMessageTextArea', { static: false }) rowTextArea: ElementRef;
+
   showButtonToBottom = false; // indica lo stato del pulsante per scrollare la chat (showed/hidden)
   NUM_BADGES = 0; // numero di messaggi non letti
   COLOR_GREEN = '#24d066'; // colore presence active da spostare nelle costanti
@@ -141,10 +143,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   private isFileSelected: boolean;
   private timeScrollBottom: any;
   public showIonContent = false;
+  public conv_type: string;
 
   MESSAGE_TYPE_INFO = MESSAGE_TYPE_INFO;
   MESSAGE_TYPE_MINE = MESSAGE_TYPE_MINE;
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS;
+
+
 
   // functions utils
   isMine = isMine;
@@ -155,8 +160,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   private linkifyOptions: NgxLinkifyOptions = {
     className: 'linkify',
-    target : {
-      url : '_blank'
+    target: {
+      url: '_blank'
     }
   };
 
@@ -178,6 +183,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public authService: AuthService,
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
+    public archivedConversationsHandlerService:ArchivedConversationsHandlerService,
     public conversationHandlerService: ConversationHandlerService,
     // public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
@@ -219,7 +225,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   /** */
   ionViewWillEnter() {
     this.loggedUser = this.authService.getCurrentUser();
-    console.log('ionViewWillEnter ConversationDetailPage: ', this.loggedUser);
+    console.log('ConversationDetailPage ionViewWillEnter loggedUser: ', this.loggedUser);
     this.listnerStart();
     // if (this.loggedUser) {
     //   this.initialize();
@@ -253,13 +259,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.showMessageWelcome = false;
     this.tenant = environment.tenant;
 
+
     // Change list on date change
     this.route.paramMap.subscribe(params => {
+      console.log('ConversationDetailPage initialize params: ', params);
       this.conversationWith = params.get('IDConv');
       this.conversationWithFullname = params.get('FullNameConv');
+      this.conv_type = params.get('Convtype');
     });
 
-    console.log('initialize ConversationDetailPage: ', this.conversationWith, this.conversationWithFullname );
+    console.log('ConversationDetailPage initialize - conversationWith: ', this.conversationWith, ' conversationWithFullname: ', this.conversationWithFullname);
     this.subscriptions = [];
     this.setHeightTextArea();
     this.tagsCanned = []; // list of canned
@@ -349,12 +358,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.conversationHandlerService.connect();
       console.log('DETTAGLIO CONV - NEW handler **************', this.conversationHandlerService);
       this.messages = this.conversationHandlerService.messages;
-
+      console.log('DETTAGLIO CONV - messages **************', this.messages);
       this.chatManager.addConversationHandler(this.conversationHandlerService);
 
       // attendo un secondo e poi visualizzo il messaggio se nn ci sono messaggi
       const that = this;
-      setTimeout( () => {
+      setTimeout(() => {
         if (!that.messages || that.messages.length === 0) {
           this.showIonContent = true;
           that.showMessageWelcome = true;
@@ -377,26 +386,30 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   initConversationsHandler() {
     console.log('initConversationsHandler ------------->:::', this.tenant, this.loggedUser.uid, this.conversationWith);
-    this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+    if (this.conv_type === 'active') {
+      this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+    } else if (this.conv_type === 'archived') {
+      this.archivedConversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+    }
   }
 
   private setAttributes(): any {
     const attributes: any = {
-        client: navigator.userAgent,
-        sourcePage: location.href,
-        
+      client: navigator.userAgent,
+      sourcePage: location.href,
+
     };
 
     //TODO: servono ???
-    if(this.loggedUser && this.loggedUser.email ){
-        attributes.userEmail = this.loggedUser.email
+    if (this.loggedUser && this.loggedUser.email) {
+      attributes.userEmail = this.loggedUser.email
     }
-    if(this.loggedUser && this.loggedUser.fullname) {
-        attributes.userFullname = this.loggedUser.fullname
+    if (this.loggedUser && this.loggedUser.fullname) {
+      attributes.userFullname = this.loggedUser.fullname
     }
-    
+
     return attributes;
-}
+  }
 
 
 
@@ -465,7 +478,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   setInfoSupportGroup() {
     let projectID = '';
     const tiledeskToken = this.authService.getTiledeskToken();
-    const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
+    const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
     if (this.conversationSelected) {
       projectID = this.conversationSelected.attributes.projectId;
     }
@@ -483,7 +496,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
 
-  
+
 
   /**
    *
@@ -584,7 +597,24 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
           that.selectInfoContentTypeComponent();
         }
       });
-      const subscribe = {key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
+    }
+
+    // ---------------------------------------------------------------------------------
+    // FOR THE ARCHIVED
+     // ---------------------------------------------------------------------------------
+    subscribtionKey = 'BSArchivedConversationDetail';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      subscribtion = this.archivedConversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
+        console.log('***** DATAIL ARCHIVED subscribeConversationDetail *****', data);
+        if (data) {
+          that.conversationSelected = data;
+          that.selectInfoContentTypeComponent();
+        }
+      });
+      const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
 
@@ -596,12 +626,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         if (data && data.sender !== this.loggedUser.uid) {
           // AGGIORNO LA CONVERSAZIONE A 'LETTA' SE SONO IO CHE HA SCRITTO L'ULTIMO MESSAGGIO DELLA CONVERSAZIONE
           // E SE LA POSIZIONE DELLO SCROLL E' ALLA FINE
-          if(!this.showButtonToBottom){ //SONO ALLA FINE
+          if (!this.showButtonToBottom) { //SONO ALLA FINE
             this.updateConversationBadge()
           }
         }
       });
-      const subscribe = {key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
 
@@ -611,11 +641,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (!subscribtion) {
       subscribtion = this.contactsService.BScontactDetail.subscribe((contact: UserModel) => {
         console.log('***** DATAIL subscribeBScontactDetail *****BScontactDetail', this.conversationWith, contact);
-        if (contact && this.conversationWith === contact.uid ) {
+        if (contact && this.conversationWith === contact.uid) {
           that.member = contact;
         }
       });
-      const subscribe = {key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
 
@@ -623,14 +653,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     subscribtionKey = 'messageAdded';
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
-      console.log('***** add messageAdded *****',  this.conversationHandlerService);
+      console.log('***** add messageAdded *****', this.conversationHandlerService);
       subscribtion = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
         console.log('***** DATAIL messageAdded *****', msg);
         if (msg) {
           that.newMessageAdded(msg);
         }
       });
-      const subscribe = {key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
 
@@ -640,7 +670,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       subscribtion = this.conversationHandlerService.messageChanged.subscribe((msg: any) => {
         // console.log('***** DATAIL messageChanged *****', msg);
       });
-      const subscribe = {key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
 
@@ -651,7 +681,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       subscribtion = this.conversationHandlerService.messageRemoved.subscribe((messageId: any) => {
         // console.log('***** DATAIL messageRemoved *****', messageId);
       });
-      const subscribe = {key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
 
@@ -709,41 +739,43 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       if (message.isSender) {
         this.scrollBottom(0);
         // this.detectBottom();
-      } else if (!message.isSender ) {
-        if(this.showButtonToBottom){ // NON SONO ALLA FINE
+      } else if (!message.isSender) {
+        if (this.showButtonToBottom) { // NON SONO ALLA FINE
           this.NUM_BADGES++;
-        }else{ //SONO ALLA FINE
+        } else { //SONO ALLA FINE
           this.scrollBottom(0);
         }
-      } 
+      }
     }
-}
-
-updateConversationBadge() {
-  if (this.conversationSelected && this.conversationsHandlerService) {
-    this.conversationsHandlerService.setConversationRead(this.conversationSelected)
   }
-}
+
+  updateConversationBadge() {
+    if (this.conversationSelected && this.conversationsHandlerService && this.conv_type === 'active') {
+      this.conversationsHandlerService.setConversationRead(this.conversationSelected)
+    } else if (this.conversationSelected && this.archivedConversationsHandlerService && this.conv_type === 'archived') {
+      this.archivedConversationsHandlerService.setConversationRead(this.conversationSelected)
+    }
+  }
 
   // -------------- START OUTPUT-EVENT handler functions -------------- //
   logScrollStart(event: any) {
-     //console.log('logScrollStart : When Scroll Starts', event);
+    //console.log('logScrollStart : When Scroll Starts', event);
   }
 
   logScrolling(event: any) {
     // EVENTO IONIC-NATIVE: SCATTA SEMPRE, QUINDI DECIDO SE MOSTRARE O MENO IL BADGE 
-     this.detectBottom()
+    this.detectBottom()
   }
 
   logScrollEnd(event: any) {
-     //console.log('logScrollEnd : When Scroll Ends', event);
+    //console.log('logScrollEnd : When Scroll Ends', event);
   }
 
   /** */
   returnChangeTextArea(e: any) {
     try {
       let height: number = e.offsetHeight;
-      if (height < 50 ) {
+      if (height < 50) {
         height = 50;
       }
       this.heightMessageTextArea = height.toString(); //e.target.scrollHeight + 20;
@@ -780,7 +812,7 @@ updateConversationBadge() {
     console.log('returnSendMessage::: ', e);
     try {
       let message = '';
-      if(e.message){
+      if (e.message) {
         message = e.message;
       }
       const type = e.type;
@@ -791,19 +823,19 @@ updateConversationBadge() {
     }
   }
 
-  returnOnBeforeMessageRender(event){
+  returnOnBeforeMessageRender(event) {
     //this.onBeforeMessageRender.emit(event)
   }
 
-  returnOnAfterMessageRender(event){
+  returnOnAfterMessageRender(event) {
     // this.onAfterMessageRender.emit(event)
   }
 
-  returnOnMenuOption(event:boolean){
+  returnOnMenuOption(event: boolean) {
     // this.isMenuShow = event;
   }
 
-  returnOnScrollContent(event: boolean){
+  returnOnScrollContent(event: boolean) {
     // console.log('returnOnScrollContent', event)
     // this.showBadgeScroollToBottom = event;
     // console.log('scroool eventtt', event)
@@ -872,14 +904,14 @@ updateConversationBadge() {
     try {
       const elTextArea = this.rowTextArea['el'];
       const that = this;
-      setTimeout( () => {
+      setTimeout(() => {
         const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
         console.log('messageTextArea.ngAfterViewInit ', textArea);
         const txtValue = textArea.value;
         textArea.value = ' ';
         textArea.value = txtValue;
       }, 0);
-      setTimeout( () => {
+      setTimeout(() => {
         console.log('text_area.nativeElement ', elTextArea.offsetHeight);
         that.heightMessageTextArea = elTextArea.offsetHeight;
       }, 100);
@@ -893,16 +925,16 @@ updateConversationBadge() {
    * @param time
    */
   private scrollBottom(time: number) {
-      this.showIonContent = true;
-      if (this.ionContentChatArea) {
-        // this.showButtonToBottom = false;
-        // this.NUM_BADGES = 0;
-        // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
-        setTimeout( () => {
-          this.ionContentChatArea.scrollToBottom(time);
-        }, 0);
-        // nota: se elimino il settimeout lo scrollToBottom non viene richiamato!!!!!
-      }
+    this.showIonContent = true;
+    if (this.ionContentChatArea) {
+      // this.showButtonToBottom = false;
+      // this.NUM_BADGES = 0;
+      // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+      setTimeout(() => {
+        this.ionContentChatArea.scrollToBottom(time);
+      }, 0);
+      // nota: se elimino il settimeout lo scrollToBottom non viene richiamato!!!!!
+    }
   }
 
   /**
@@ -910,8 +942,8 @@ updateConversationBadge() {
    */
   async detectBottom() {
     const scrollElement = await this.ionContentChatArea.getScrollElement();
-    
-    if (scrollElement.scrollTop < scrollElement.scrollHeight - scrollElement.clientHeight ) {
+
+    if (scrollElement.scrollTop < scrollElement.scrollHeight - scrollElement.clientHeight) {
       //NON SONO ALLA FINE --> mostra badge
       this.showButtonToBottom = true;
     } else {
@@ -926,9 +958,9 @@ updateConversationBadge() {
   public actionScrollBottom() {
     console.log('actionScrollBottom ---> ', this.ionContentChatArea);
     // const that = this;
-     this.showButtonToBottom = false;
-     this.NUM_BADGES = 0;
-    setTimeout( () => {
+    this.showButtonToBottom = false;
+    this.NUM_BADGES = 0;
+    setTimeout(() => {
       this.ionContentChatArea.scrollToBottom(0);
       // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
     }, 0);
@@ -953,7 +985,7 @@ updateConversationBadge() {
   }
   // -------------- END SCROLL/RESIZE functions -------------- //
 
-  
+
 
 }
 // END ALL //
