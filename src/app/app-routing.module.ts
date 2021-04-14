@@ -13,10 +13,10 @@ const routes: Routes = [
     loadChildren: './pages/conversations-list/conversations-list.module#ConversationListPageModule'
     // loadChildren: () => import('./pages/conversations-list/conversations-list.module').then( m => m.ConversationListPageModule)
   },
-  { path: 'conversation-detail/:IDConv',
+  { path: 'conversation-detail/:IDConv/:Convtype',
     loadChildren: './pages/conversation-detail/conversation-detail.module#ConversationDetailPageModule'
   },
-  { path: 'conversation-detail/:IDConv/:FullNameConv',
+  { path: 'conversation-detail/:IDConv/:FullNameConv/:Convtype',
     loadChildren: './pages/conversation-detail/conversation-detail.module#ConversationDetailPageModule'
   },
   {
@@ -60,7 +60,8 @@ const routes: Routes = [
   {
     path: 'loader-preview',
     loadChildren: () => import('./pages/loader-preview/loader-preview.module').then( m => m.LoaderPreviewPageModule)
-  },  {
+  },
+  {
     path: 'conversations-archived-list',
     loadChildren: () => import('./pages/conversations-archived-list/conversations-archived-list.module').then( m => m.ConversationsArchivedListPageModule)
   },

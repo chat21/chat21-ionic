@@ -19,7 +19,7 @@ import {
   getParameterByName,
   convertMessage,
   windowsMatchMedia
- } from '../../../chat21-core/utils/utils';
+} from '../../../chat21-core/utils/utils';
 import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE, TYPE_GROUP } from '../../../chat21-core/utils/constants';
 import { EventsService } from '../../services/events-service';
 import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootstrap/perfect-scrollbar
@@ -74,10 +74,10 @@ export class ConversationListPage implements OnInit {
   private onConversationSelectedHandler = new EventEmitter();
   private onImageLoadedHandler = new EventEmitter();
   private onConversationLoadedHandler = new EventEmitter();
-   // --- END:::event Emitter handler functions --- //
+  // --- END:::event Emitter handler functions --- //
 
-   public conversationType = 'active'
-   headerTitle: string
+  public conversationType = 'active'
+  headerTitle: string
 
   constructor(
     private router: Router,
@@ -91,18 +91,27 @@ export class ConversationListPage implements OnInit {
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     public chatManager: ChatManager,
     public authService: AuthService,
-    public imageRepoService:ImageRepoService,
+    public imageRepoService: ImageRepoService,
     private translateService: CustomTranslateService,
     private logger: LoggerService
   ) {
     // console.log('constructor ConversationListPage');
-  }
 
+    // this.getUrlParams();
+  }
+  // getUrlParams() {
+  //   this.route.paramMap.subscribe(params => {
+  //     console.log('ConversationListPage get params: ', params);
+  //     // this.conversationWith = params.get('IDConv');
+  //     // this.conversationWithFullname = params.get('FullNameConv');
+  //     // this.conv_type = params.get('Convtype');
+  //   });
+  // }
 
   private listnerStart() {
     const that = this;
     this.chatManager.BSStart.subscribe((data: any) => {
-      console.log('***** BSStart ConversationsListPage *****', data);
+      console.log('***** BSStart ConversationsListPage Current user *****', data);
       if (data) {
         that.initialize();
       }
@@ -185,12 +194,12 @@ export class ConversationListPage implements OnInit {
     // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
     this.conversationsHandlerService.connect();
     this.conversations = this.conversationsHandlerService.conversations;
-   
+
     // 6 - save conversationHandler in chatManager
     this.chatManager.setConversationsHandler(this.conversationsHandlerService);
     const that = this;
     this.showPlaceholder = false;
-    setTimeout( () => {
+    setTimeout(() => {
       if (!that.conversations || that.conversations.length === 0) {
         this.showPlaceholder = true;
       }
@@ -205,7 +214,7 @@ export class ConversationListPage implements OnInit {
    * e mi sottoscrivo al nodo conversazioni in chatArchivedConversationsHandler (connect)
    * salvo conversationHandler in chatManager
    */
-   initArchivedConversationsHandler(userId: string) {
+  initArchivedConversationsHandler(userId: string) {
     const keys = ['YOU'];
     const keysConversation = ['CLOSED'];
 
@@ -225,12 +234,12 @@ export class ConversationListPage implements OnInit {
     this.chatManager.setArchivedConversationsHandler(this.archivedConversationsHandlerService);
     const that = this;
     this.showPlaceholder = false;
-    setTimeout( () => {
+    setTimeout(() => {
       if (!that.archivedConversations || that.archivedConversations.length === 0) {
         this.showPlaceholder = true;
       }
     }, 2000);
-    
+
   }
 
 
@@ -257,7 +266,7 @@ export class ConversationListPage implements OnInit {
       this.subscriptions.push(key);
       this.events.subscribe(key, this.subscribeLoggedUserLogout);
     }
-    
+
     key = 'readAllMessages';
     if (!isInArray(key, this.subscriptions)) {
       this.subscriptions.push(key);
@@ -277,15 +286,15 @@ export class ConversationListPage implements OnInit {
 
     const that = this;
     this.conversationsHandlerService.conversationAdded.subscribe((conversations: any) => {
-       console.log('***** conversationsAdded *****', conversations);
+      console.log('***** conversationsAdded *****', conversations);
       // that.conversationsChanged(conversations);
     });
     this.conversationsHandlerService.conversationChanged.subscribe((conversations: any) => {
-       console.log('***** conversationsChanged *****', conversations);
+      console.log('***** conversationsChanged *****', conversations);
       // that.conversationsChanged(conversations);
     });
     this.conversationsHandlerService.conversationRemoved.subscribe((conversations: any) => {
-       console.log('***** conversationsRemoved *****', conversations);
+      console.log('***** conversationsRemoved *****', conversations);
       // that.conversationsChanged(conversations);
     });
 
@@ -359,7 +368,7 @@ export class ConversationListPage implements OnInit {
     const that = this;
     // this.conversations = conversations;
     this.numberOpenConv = this.conversationsHandlerService.countIsNew();
-    console.log('LISTA CONVERSAZIONI »»»»»»»»» conversationsChanged - CONVERSATIONS: ', this.numberOpenConv);
+    console.log('ConversationListPage  »»»»»»»»» conversationsChanged - CONVERSATIONS: ', this.numberOpenConv);
     // console.log('conversationsChanged »»»»»»»»» uidConvSelected', that.conversations[0], that.uidConvSelected);
     if (that.uidConvSelected && !this.conversationSelected) {
       const conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
@@ -380,12 +389,12 @@ export class ConversationListPage implements OnInit {
    * apro dettaglio conversazione
    */
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
-    console.log('************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
+    console.log('ConversationListPage  ************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
     this.uidConvSelected = user.uid;
     this.conversationsHandlerService.uidConvSelected = user.uid;
     const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
     if (conversationSelected) {
-      console.log('--> uidConvSelected: ', this.conversationSelected, this.uidConvSelected );
+      console.log('--> uidConvSelected: ', this.conversationSelected, this.uidConvSelected);
       this.conversationSelected = conversationSelected;
     }
     // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
@@ -395,21 +404,55 @@ export class ConversationListPage implements OnInit {
    * ::: subscribeProfileInfoButtonClicked :::
    * evento richiamato quando si seleziona bottone profile-info-modal
    */
-   subscribeProfileInfoButtonClicked = (event: string) => {
-    console.log('************** subscribeProfileInfoButtonClicked', event);
-    if(event === 'displayArchived'){
+  subscribeProfileInfoButtonClicked = (event: string) => {
+    console.log('ConversationListPage ************** subscribeProfileInfoButtonClicked: ', event);
+    if (event === 'displayArchived') {
       this.initArchivedConversationsHandler(this.loggedUserUid);
       // this.openArchivedConversationsModal()
       this.conversationType = 'archived'
-      const keys = [ 'LABEL_ARCHIVED' ];
+
+      // let storedArchivedConv = localStorage.getItem('activeConversationSelected');
+
+
+
+      const keys = ['LABEL_ARCHIVED'];
       this.headerTitle = this.translateService.translateLanguage(keys).get(keys[0]);
-      
-    }else if (event === 'displayContact'){
+
+    } else if (event === 'displayContact') {
       this.conversationType = 'archived'
-      const keys = [ 'LABEL_CONTACTS' ];
+      const keys = ['LABEL_CONTACTS'];
       this.headerTitle = this.translateService.translateLanguage(keys).get(keys[0]);
     }
   }
+
+  onBackButtonFN() {
+    this.conversationType = 'active'
+
+    let storedActiveConv = localStorage.getItem('activeConversationSelected');
+    // console.log('ConversationListPage - storedActiveConv: ', storedActiveConv);
+    if (storedActiveConv) {
+      let storedActiveConvObjct = JSON.parse(storedActiveConv)
+      console.log('ConversationListPage - storedActiveConv Objct: ', storedActiveConvObjct);
+      this.navigateByUrl('active', storedActiveConvObjct.uid)
+    } else {
+      // da implementare se nn c'è stata nessuna conv attive selezionata 
+    }
+    // this.route.params.subscribe(params => {
+    //   // PARAMS CHANGED ..    
+
+    //   let convtype = params['Convtype'];
+    //   this.router.navigateByUrl(this.router.url.replace(convtype, 'active'));
+    // });
+  }
+  //   this.router.navigate(
+  //     [], 
+  //     {
+  //       relativeTo: this.route,
+  //       queryParams: { Convtype: 'active' },
+  //       queryParamsHandling: 'merge'
+  //     });
+
+  // }
 
   // ------------------------------------------------------------------//
   // END SUBSCRIPTIONS
@@ -417,22 +460,22 @@ export class ConversationListPage implements OnInit {
 
   // :: handler degli eventi in output per i componenti delle modali
   // ::::: vedi ARCHIVED-CONVERSATION-LIST --> MODALE
-  initHandlerEventEmitter(){
-    this.onConversationSelectedHandler.subscribe(conversation=> {
+  initHandlerEventEmitter() {
+    this.onConversationSelectedHandler.subscribe(conversation => {
       console.log('archived conversaation selectedddd', conversation)
       this.onConversationSelected(conversation)
     })
 
-    this.onImageLoadedHandler.subscribe(conversation=> {
+    this.onImageLoadedHandler.subscribe(conversation => {
       this.onImageLoaded(conversation)
     })
 
-    this.onConversationLoadedHandler.subscribe(conversation=> {
+    this.onConversationLoadedHandler.subscribe(conversation => {
       this.onConversationLoaded(conversation)
     })
   }
 
-  
+
 
   // ------------------------------------------------------------------//
   // BEGIN FUNCTIONS
@@ -471,7 +514,7 @@ export class ConversationListPage implements OnInit {
     console.log('uidReciverFromUrl:: ' + this.uidReciverFromUrl);
     console.log('loggedUserUid:: ' + this.loggedUserUid);
     console.log('tenant:: ' + this.tenant);
-    if(this.route.component['name'] !== "ConversationListPage" ){
+    if (this.route.component['name'] !== "ConversationListPage") {
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
       console.log('ConversationListPage .conversationWith: ', IDConv);
       if (IDConv) {
@@ -483,13 +526,13 @@ export class ConversationListPage implements OnInit {
           console.log('33333');
           that.navigateByUrl('active', uid);
         })
-        .catch((error) => {
-          console.log('44444');
-          console.log('error::: ', error);
-        });
+          .catch((error) => {
+            console.log('44444');
+            console.log('error::: ', error);
+          });
       }
     }
-    
+
     console.log('::::tenant:::: ', this.tenant);
     console.log('::::uidReciverFromUrl:::: ', this.uidReciverFromUrl);
   }
@@ -530,53 +573,59 @@ export class ConversationListPage implements OnInit {
   /**
    * ::: setUidConvSelected :::
    */
-  setUidConvSelected( uidConvSelected: string, conversationType?: string,) {
+  setUidConvSelected(uidConvSelected: string, conversationType?: string,) {
     console.log('setuidCOnvSelected', uidConvSelected)
     this.uidConvSelected = uidConvSelected;
     this.conversationsHandlerService.uidConvSelected = uidConvSelected;
     if (uidConvSelected) {
       let conversationSelected;
-      if(conversationType === 'active'){
+      if (conversationType === 'active') {
         conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
-      }else if(conversationType === 'archived'){
+      } else if (conversationType === 'archived') {
         conversationSelected = this.archivedConversations.find(item => item.uid === this.uidConvSelected);
       }
       if (conversationSelected) {
-        console.log('la conv ' , this.conversationSelected , ' è già stata caricata');
+        console.log('ConversationListPage conversationSelected', conversationSelected);
+        console.log('la conv ', this.conversationSelected, ' è già stata caricata');
         this.conversationSelected = conversationSelected;
         console.log('setUidConvSelected: ', this.conversationSelected);
         this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
-        localStorage.setItem('conversationSelected', JSON.stringify(this.conversationSelected));
+
+        if (this.conversationSelected.status === "0") {
+          localStorage.setItem('activeConversationSelected', JSON.stringify(this.conversationSelected));
+        } else if (this.conversationSelected.status === "1") {
+          localStorage.setItem('archivedConversationSelected', JSON.stringify(this.conversationSelected));
+        }
       }
     }
   }
 
-  onConversationSelected(conversation: ConversationModel){
+  onConversationSelected(conversation: ConversationModel) {
     //console.log('returnSelectedConversation::', conversation)
-    if(conversation.archived){
+    if (conversation.archived) {
       this.navigateByUrl('archived', conversation.uid)
-    }else {
+    } else {
       this.navigateByUrl('active', conversation.uid)
     }
-    
+
   }
 
-  onImageLoaded(conversation: ConversationModel){
+  onImageLoaded(conversation: ConversationModel) {
     let conversation_with_fullname = conversation.sender_fullname;
-    let conversation_with = conversation.sender; 
+    let conversation_with = conversation.sender;
     if (conversation.sender === this.loggedUserUid) {
       conversation_with = conversation.recipient;
       conversation_with_fullname = conversation.recipient_fullname;
     } else if (conversation.channel_type === TYPE_GROUP) {
-        conversation_with = conversation.recipient;
-        conversation_with_fullname = conversation.sender_fullname;
-        // conv.last_message_text = conv.last_message_text;
+      conversation_with = conversation.recipient;
+      conversation_with_fullname = conversation.sender_fullname;
+      // conv.last_message_text = conv.last_message_text;
     }
-    conversation.image= this.imageRepoService.getImagePhotoUrl(conversation_with)
+    conversation.image = this.imageRepoService.getImagePhotoUrl(conversation_with)
   }
 
-  onConversationLoaded(conversation: ConversationModel){
-    const keys = [ 'YOU' ];
+  onConversationLoaded(conversation: ConversationModel) {
+    const keys = ['YOU'];
     const translationMap = this.translateService.translateLanguage(keys);
     if (conversation.sender === this.loggedUserUid) {
       conversation.last_message_text = convertMessage(translationMap.get('YOU') + ': ' + conversation.last_message_text)
@@ -584,23 +633,22 @@ export class ConversationListPage implements OnInit {
     }
   }
 
-  onBackButtonFN(){
-    this.conversationType = 'active'
-  }
+
 
 
   navigateByUrl(converationType: string, uidConvSelected: string) {
-    this.setUidConvSelected(uidConvSelected, converationType );
+    console.log('ConversationListPage navigateByUrl run  this.setUidConvSelected');
+    this.setUidConvSelected(uidConvSelected, converationType);
     if (checkPlatformIsMobile()) {
       console.log('PLATFORM_MOBILE 1', this.navService);
-      let pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
+      let pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname + '/' + converationType;
       this.logger.printDebug('pageURL', pageUrl)
       this.router.navigateByUrl(pageUrl);
     } else {
       console.log('PLATFORM_DESKTOP 2', this.navService);
       let pageUrl = 'conversation-detail/' + this.uidConvSelected;
       if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
-        pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
+        pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname + '/' + converationType;
       }
       // let pageUrl = 'detail/' + this.uidConvSelected;
       // if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
@@ -624,7 +672,7 @@ export class ConversationListPage implements OnInit {
    */
   openContactsDirectory(event: any) {
     const TOKEN = this.authService.getTiledeskToken();
-    console.log('openContactsDirectory', TOKEN );
+    console.log('openContactsDirectory', TOKEN);
     if (checkPlatformIsMobile()) {
       presentModal(this.modalController, ContactsDirectoryPage, { token: TOKEN });
     } else {
@@ -648,7 +696,7 @@ export class ConversationListPage implements OnInit {
    */
   openProfileInfo(event: any) {
     const TOKEN = this.authService.getToken();
-    console.log('open ProfileInfoPage', TOKEN );
+    console.log('open ProfileInfoPage', TOKEN);
     if (checkPlatformIsMobile()) {
       presentModal(this.modalController, ProfileInfoPage, { token: TOKEN })
     } else {
@@ -662,29 +710,35 @@ export class ConversationListPage implements OnInit {
    * apro pagina chat archiviate
    * (metodo richiamato da subscribeProfileInfoButtonClicked handler)
    */
-   openArchivedConversationsModal() {
+  openArchivedConversationsModal() {
     console.log('open ArchivedConversationsModal');
     // this.presentModal();
     if (checkPlatformIsMobile()) {
-      presentModal(this.modalController, ConversationsArchivedListPage, { istConversations: this.archivedConversations,
-                                                                          styleMap: this.styleMap,
-                                                                          translationMap: this.translationMapConversation,
-                                                                          onConversationSelected: this.onConversationSelectedHandler,
-                                                                          onImageLoaded: this.onImageLoadedHandler,
-                                                                          onConversationLoaded: this.onConversationLoadedHandler })
+      presentModal(this.modalController, ConversationsArchivedListPage, {
+        istConversations: this.archivedConversations,
+        styleMap: this.styleMap,
+        translationMap: this.translationMapConversation,
+        onConversationSelected: this.onConversationSelectedHandler,
+        onImageLoaded: this.onImageLoadedHandler,
+        onConversationLoaded: this.onConversationLoadedHandler
+      })
     } else {
-      this.navService.push(ConversationsArchivedListPage, { listConversations: this.archivedConversations,
-                                                            styleMap: this.styleMap,
-                                                            translationMap: this.translationMapConversation,
-                                                            onConversationSelected: this.onConversationSelectedHandler,
-                                                            onImageLoaded: this.onImageLoadedHandler,
-                                                            onConversationLoaded: this.onConversationLoadedHandler })
-                                            
-                                                                                                                 
+      this.navService.push(ConversationsArchivedListPage, {
+        listConversations: this.archivedConversations,
+        styleMap: this.styleMap,
+        translationMap: this.translationMapConversation,
+        onConversationSelected: this.onConversationSelectedHandler,
+        onImageLoaded: this.onImageLoadedHandler,
+        onConversationLoaded: this.onConversationLoadedHandler
+      })
+
+
     }
   }
 
-
+  // ---------------------------------------------------------------------------------
+  // nk Commentanto - nn sembra usato
+  // ---------------------------------------------------------------------------------
   /**
    * ::: openMessageList :::
    * 1 - cerco conv con id == this.uidConvSelected e imposto select a FALSE
@@ -698,45 +752,46 @@ export class ConversationListPage implements OnInit {
   // is_new lo cambio a false quando leggo tutti i messaggi della conversazione,
   // cioè quando scatta l evento che indica che sono al bottom della pagina
 
-  openMessageList(type?: string) {
-    const that = this;
-    console.log('openMessageList:: >>>> conversationSelected ', that.uidConvSelected);
-    // if the conversation from the isConversationClosingMap is waiting to be closed
-    // deny the click on the conversation
-    if (this.conversationsHandlerService.getClosingConversation(this.uidConvSelected)) { return; }
+  // openMessageList(type?: string) {
+  //   const that = this;
+  //   console.log('openMessageList:: >>>> conversationSelected ', that.uidConvSelected);
+  //   // if the conversation from the isConversationClosingMap is waiting to be closed
+  //   // deny the click on the conversation
+  //   if (this.conversationsHandlerService.getClosingConversation(this.uidConvSelected)) { return; }
 
-    setTimeout(() => {
-      const conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
-      if (conversationSelected) {
-        // conversationSelected.is_new = false;
-        // conversationSelected.status = '0';
-        // conversationSelected.selected = true;
-        // that.navProxy.pushDetail(DettaglioConversazionePage, {
-        //   conversationSelected: conversationSelected,
-        //   conversationWith: that.uidConvSelected,
-        //   conversationWithFullname: conversationSelected.conversation_with_fullname,
-        //   channelType: conversationSelected.channelType
-        // });
-        // that.conversationsHandler.setConversationRead(conversationSelected.uid);
-        that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
-        // that.openDetailsWithState(conversationSelected);
-        // const urlPage = 'conversation-detail/' + that.uidConvSelected
-        const urlPage = 'conversation-detail/' + that.uidConvSelected + '/' + conversationSelected.conversation_with_fullname;
-        const navigationExtras: NavigationExtras = {
-          state: {
-            conversationSelected: that.conversationSelected
-          }
-        };
-        console.log('1 openPage', urlPage);
-        this.router.navigateByUrl(urlPage);
-        // that.navService.openPage(urlPage, ConversationDetailPage, navigationExtras);
-      } else if (!type) {
-        if (windowsMatchMedia()) {
-          // that.navProxy.pushDetail(PlaceholderPage, {});
-        }
-      }
-    }, 0);
-  }
+  //   setTimeout(() => {
+  //     const conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
+  //     if (conversationSelected) {
+  //       // conversationSelected.is_new = false;
+  //       // conversationSelected.status = '0';
+  //       // conversationSelected.selected = true;
+  //       // that.navProxy.pushDetail(DettaglioConversazionePage, {
+  //       //   conversationSelected: conversationSelected,
+  //       //   conversationWith: that.uidConvSelected,
+  //       //   conversationWithFullname: conversationSelected.conversation_with_fullname,
+  //       //   channelType: conversationSelected.channelType
+  //       // });
+  //       // that.conversationsHandler.setConversationRead(conversationSelected.uid);
+  //       that.databaseProvider.setUidLastOpenConversation(that.uidConvSelected);
+  //       // that.openDetailsWithState(conversationSelected);
+  //       // const urlPage = 'conversation-detail/' + that.uidConvSelected
+  //       const urlPage = 'conversation-detail/' + that.uidConvSelected + '/' + conversationSelected.conversation_with_fullname;
+  //       // const navigationExtras: NavigationExtras = {
+  //       //   state: {
+  //       //     conversationSelected: that.conversationSelected
+  //       //   }
+  //       // };
+  //       console.log('1 openPage', urlPage);
+  //       this.router.navigateByUrl(urlPage);
+  //       // that.navService.openPage(urlPage, ConversationDetailPage, navigationExtras);
+  //     } else if (!type) {
+  //       if (windowsMatchMedia()) {
+  //         // that.navProxy.pushDetail(PlaceholderPage, {});
+  //       }
+  //     }
+  //   }, 0);
+  // }
+  // ::: ./ openMessageList :::
 
   // if (checkPlatformIsMobile()) {
   //   this.platformIs = PLATFORM_MOBILE;
