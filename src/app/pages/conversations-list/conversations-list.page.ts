@@ -428,31 +428,18 @@ export class ConversationListPage implements OnInit {
   onBackButtonFN() {
     this.conversationType = 'active'
 
-    let storedActiveConv = localStorage.getItem('activeConversationSelected');
-    // console.log('ConversationListPage - storedActiveConv: ', storedActiveConv);
-    if (storedActiveConv) {
-      let storedActiveConvObjct = JSON.parse(storedActiveConv)
-      console.log('ConversationListPage - storedActiveConv Objct: ', storedActiveConvObjct);
-      this.navigateByUrl('active', storedActiveConvObjct.uid)
-    } else {
-      // da implementare se nn c'è stata nessuna conv attive selezionata 
-    }
-    // this.route.params.subscribe(params => {
-    //   // PARAMS CHANGED ..    
-
-    //   let convtype = params['Convtype'];
-    //   this.router.navigateByUrl(this.router.url.replace(convtype, 'active'));
-    // });
+    // let storedActiveConv = localStorage.getItem('activeConversationSelected');
+    // // console.log('ConversationListPage - storedActiveConv: ', storedActiveConv);
+    // if (storedActiveConv) {
+    //   let storedActiveConvObjct = JSON.parse(storedActiveConv)
+    //   console.log('ConversationListPage - storedActiveConv Objct: ', storedActiveConvObjct);
+    //   this.navigateByUrl('active', storedActiveConvObjct.uid)
+    // } else {
+    //   // da implementare se nn c'è stata nessuna conv attive selezionata 
+    // }
+  
   }
-  //   this.router.navigate(
-  //     [], 
-  //     {
-  //       relativeTo: this.route,
-  //       queryParams: { Convtype: 'active' },
-  //       queryParamsHandling: 'merge'
-  //     });
 
-  // }
 
   // ------------------------------------------------------------------//
   // END SUBSCRIPTIONS
@@ -591,11 +578,11 @@ export class ConversationListPage implements OnInit {
         console.log('setUidConvSelected: ', this.conversationSelected);
         this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
 
-        if (this.conversationSelected.status === "0") {
-          localStorage.setItem('activeConversationSelected', JSON.stringify(this.conversationSelected));
-        } else if (this.conversationSelected.status === "1") {
-          localStorage.setItem('archivedConversationSelected', JSON.stringify(this.conversationSelected));
-        }
+        // if (this.conversationSelected.status === "0") {
+        //   localStorage.setItem('activeConversationSelected', JSON.stringify(this.conversationSelected));
+        // } else if (this.conversationSelected.status === "1") {
+        //   localStorage.setItem('archivedConversationSelected', JSON.stringify(this.conversationSelected));
+        // }
       }
     }
   }
