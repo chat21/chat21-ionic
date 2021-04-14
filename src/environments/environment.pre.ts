@@ -26,5 +26,5 @@ export const environment = {
     CHAT_SEND_BY_EMAIL_LINK: "CHANGEIT",
     DASHBOARD_URL: 'CHANGEIT', 
     authPersistence: 'LOCAL',
-    supportMode: true,
+    supportMode: false,
 };
