@@ -12,7 +12,9 @@
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button
 - Fixes the bug: on mobile the archived conversations window is no longer displayed if it has been opened once
 - Highlights the archived conversation with a background color
-- Fixes a bug: the detail of the selected conversation does not open on mobile
+- Fixes the bug: the detail of the selected conversation does not open on mobile
+- Fixes the bug: clicking on an archived conversation does not update the 'read conversation' badge
+- Fixes the bug: the messages in the conversation detail are all aligned to the left
 
 ### 3.0.20
 - Adds the ability to display thr archived conversations
