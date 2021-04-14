@@ -478,7 +478,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   setInfoSupportGroup() {
     let projectID = '';
     const tiledeskToken = this.authService.getTiledeskToken();
-    const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
+    const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
     if (this.conversationSelected) {
       projectID = this.conversationSelected.attributes.projectId;
     }
