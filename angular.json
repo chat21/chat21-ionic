@@ -21,6 +21,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/chat-config-pre.json",
+              "src/chat-config-mqtt.json",
               {
                 "glob": "**/*",
                 "input": "src/assets",

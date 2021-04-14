@@ -22,7 +22,7 @@ export class FirebaseInitService {
       console.log('initfirebase', FirebaseInitService.firebaseInit)
     if(!FirebaseInitService.firebaseInit){
         if (!firebaseConfig || firebaseConfig.apiKey === 'CHANGEIT') {
-            throw new Error('firebase config is not defined. Please create your widget-config.json. See the Chat21-Web_widget Installation Page');
+            throw new Error('firebase config is not defined. Please create your chat-config.json. See the Chat21-Web_widget Installation Page');
           } 
           FirebaseInitService.firebaseInit = firebase.initializeApp(firebaseConfig); 
     }
