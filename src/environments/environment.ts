@@ -3,7 +3,6 @@ export const environment = {
     tenant: 'tilechat',
     remoteConfig: true,
     remoteConfigUrl: './chat-config.json',
-    remoteContactsUrl: '',
     chatEngine: 'mqtt',
     firebaseConfig: {
         apiKey: 'CHANGEIT',
