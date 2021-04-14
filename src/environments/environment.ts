@@ -24,5 +24,5 @@ export const environment = {
     baseImageUrl: 'https://firebasestorage.googleapis.com/v0/b/',
     dashboardUrl: 'http://localhost:4500/',
     authPersistence: 'LOCAL',
-    supportMode: true,
+    supportMode: false,
 };
