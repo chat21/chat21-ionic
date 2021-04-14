@@ -18,6 +18,5 @@
     },
     "apiUrl": "http://localhost:3000/",
     "baseImageUrl": "https://firebasestorage.googleapis.com/v0/b/",
-    "CHAT_SEND_BY_EMAIL_LINK": "${CHAT_SEND_BY_EMAIL_LINK}",
-    "DASHBOARD_URL": "http://localhost:4500/"
+    "dashboardUrl": "http://localhost:4500/"
 }
