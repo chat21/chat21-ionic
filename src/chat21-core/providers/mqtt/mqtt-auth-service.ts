@@ -15,6 +15,7 @@ import { AuthService } from '../abstract/auth.service';
 import { Chat21Service } from './chat-service';
 // models
 import { UserModel } from '../../models/user';
+import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user';
 
 // declare var Chat21Client: any;
 
@@ -78,6 +79,7 @@ export class MQTTAuthService extends AuthService {
 
   checkIsAuth() {
     this.tiledeskToken = localStorage.getItem('tiledeskToken');
+    this.currentUser = JSON.parse(localStorage.getItem(this.storagePrefix + 'currentUser'));
     if (this.tiledeskToken && this.tiledeskToken !== undefined) {
       this.getCustomToken(this.tiledeskToken);
     } else {
@@ -141,7 +143,7 @@ export class MQTTAuthService extends AuthService {
       this.http.post(this.URL_TILEDESK_SIGNIN_ANONYMOUSLY, postData, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
-          // this.createCompleteUser(data['user']);
+          this.createCompleteUser(data['user']);
           localStorage.setItem(this.storagePrefix + 'tiledeskToken', that.tiledeskToken);
           that.getCustomToken(this.tiledeskToken);
           resolve(this.currentUser)
@@ -234,6 +236,7 @@ export class MQTTAuthService extends AuthService {
         console.log("data:", JSON.stringify(data));
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
+          this.createCompleteUser(data['user']);
           localStorage.setItem(this.storagePrefix + 'tiledeskToken', that.tiledeskToken);
           that.getCustomToken(this.tiledeskToken);
           // that.firebaseCreateCustomToken(tiledeskToken);
@@ -295,11 +298,48 @@ export class MQTTAuthService extends AuthService {
         firstname,
         lastname
       };
-      this.currentUser = user;
+      // this.currentUser = user;
       console.log('User signed in:', user);
       // this.BSAuthStateChanged.next(user);
       this.BSAuthStateChanged.next('online');
     });
+  }
+
+  /**
+   * createCompleteUser
+   * @param user
+   */
+  private createCompleteUser(user: any) {
+    const member = new UserModel(user._id);
+    try {
+      const uid = user._id;
+      const firstname = user.firstname ? user.firstname : '';
+      const lastname = user.lastname ? user.lastname : '';
+      const email = user.email ? user.email : '';
+      const fullname = ( firstname + ' ' + lastname ).trim();
+      const avatar = avatarPlaceholder(fullname);
+      const color = getColorBck(fullname);
+      //TODO-GAB
+      // const imageurl = this.imageRepo.getImageThumb(uid);
+
+      member.uid = uid;
+      member.email = email;
+      member.firstname = firstname;
+      member.lastname = lastname;
+      member.fullname = fullname;
+      //TODO-GAB
+      // member.imageurl = imageurl;
+      member.avatar = avatar;
+      member.color = color;
+      console.log('createCompleteUser: ', member);
+    } catch (err) {
+      console.log('createCompleteUser error:' + err);
+    }
+    console.log('createCompleteUser: ', member);
+    this.currentUser = member;
+    // salvo nel local storage e sollevo l'evento
+    localStorage.setItem(this.storagePrefix + 'currentUser', JSON.stringify(this.currentUser));
+    // this.BScurrentUser.next(this.currentUser);
   }
 
 
