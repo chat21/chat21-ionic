@@ -25,5 +25,5 @@ export const environment = {
     baseImageUrl: 'CHANGEIT',
     dashboardUrl: 'CHANGEIT', 
     authPersistence: 'LOCAL',
-    supportMode: true,
+    supportMode: false,
 };

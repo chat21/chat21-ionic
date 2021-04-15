@@ -3,7 +3,6 @@ export const environment = {
     tenant: 'tilechat',
     remoteConfig: true,
     remoteConfigUrl: './chat-config.json',
-    remoteContactsUrl: '',
     chatEngine: 'mqtt',
     firebaseConfig: {
         apiKey: 'CHANGEIT',
@@ -25,5 +24,5 @@ export const environment = {
     baseImageUrl: 'https://firebasestorage.googleapis.com/v0/b/',
     dashboardUrl: 'http://localhost:4500/',
     authPersistence: 'LOCAL',
-    supportMode: true,
+    supportMode: false,
 };
