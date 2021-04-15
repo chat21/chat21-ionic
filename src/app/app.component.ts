@@ -353,7 +353,9 @@ export class AppComponent implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     this.chatManager.setTiledeskToken(tiledeskToken);
     this.chatManager.setCurrentUser(currentUser);
-    this.presenceService.setPresence(user.uid);
+    if (user) {
+      this.presenceService.setPresence(user.uid);
+    }
     this.checkPlatform();
     try {
       console.log('************** closeModal', this.authModal);
