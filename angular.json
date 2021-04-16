@@ -44,7 +44,9 @@
                 "input": "src/global.scss"
               }
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/mqtt/mqtt.min.js"
+            ]
           },
           "configurations": {
             "production": {

@@ -24,6 +24,11 @@ const routes: Routes = [
     loadChildren: './pages/conversation-detail/conversation-detail.module#ConversationDetailPageModule'
     // loadChildren: () => import('./pages/conversation-detail/conversation-detail.module').then( m => m.ConversationDetailPageModule)
   },
+  {
+    path: 'conversation-detail/:IDConv',
+    loadChildren: './pages/conversation-detail/conversation-detail.module#ConversationDetailPageModule'
+   
+  },
 
   // {
   //   path: 'conversation-detail/:IDConv',

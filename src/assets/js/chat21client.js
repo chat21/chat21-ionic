@@ -5,8 +5,11 @@
 */
 
 // var mqtt = require('mqtt');
+
+// import * as mqtt from 'src/assets/js/mqtt/mqtt.min';
 // import mqtt from 'mqtt.d';
 // import * as mqtt from 'mqtt';
+// import * as mqtt from 'mqtt/mqtt';
 
 const _CLIENTADDED = "/clientadded"
 const _CLIENTUPDATED = "/clientupdated"
@@ -17,6 +20,8 @@ const CALLBACK_TYPE_ON_MESSAGE_ADDED_FOR_CONVERSATION = "onMessageAddedForConver
 class Chat21Client {
     
     constructor(options) {
+
+        console.log('CHAT21-CLIENT.JS  HELLO ', mqtt)
         this.client = null;
         this.reconnections = 0 // just to check how many reconnections
         this.client_id = Date.now();
