@@ -376,6 +376,7 @@ export class AppComponent implements OnInit {
     this.chatManager.setTiledeskToken(null);
     this.chatManager.setCurrentUser(null);
     this.chatManager.goOffLine();
+    this.authService.logout()
 
     const that = this;
     clearTimeout(this.timeModalLogin);
