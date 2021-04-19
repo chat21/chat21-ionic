@@ -29,6 +29,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     conversationChanged: BehaviorSubject<ConversationModel>;
     conversationRemoved: BehaviorSubject<ConversationModel>;
     loadedConversationsStorage: BehaviorSubject<ConversationModel[]>;
+    BSConversations: BehaviorSubject<ConversationModel[]>
     // imageRepo: ImageRepoService;
 
     // public variables
@@ -115,33 +116,63 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     /**
      * connecting to conversations
      */
-    connect() {
-        console.log('connecting MQTT conversations handler');
-        const handlerConversationAdded = this.chat21Service.chatClient.onConversationAdded( (conv) => {
-            console.log('conversation added:', conv.text);
-            this.added(conv);
-        });
-        const handlerConversationUpdated = this.chat21Service.chatClient.onConversationUpdated( (conv) => {
-            console.log('conversation updated:', conv.text);
-            this.changed(conv);
-        });
-        const handlerConversationDeleted = this.chat21Service.chatClient.onConversationDeleted( (conv) => {
-            console.log('conversation deleted:', conv.text);
-            this.removed(conv);
-        });
-        this.chat21Service.chatClient.lastConversations( (err, conversations) => {
-            console.log('Last conversations', conversations, 'err', err);
-            if (!err) {
-                conversations.forEach(conv => {
-                    this.added(conv);
-                });
-            }
-        });
-        // SET AUDIO
-        this.audio = new Audio();
-        this.audio.src = URL_SOUND;
-        this.audio.load();
+    // connect() {
+    //     console.log('connecting MQTT conversations handler');
+    //     const handlerConversationAdded = this.chat21Service.chatClient.onConversationAdded( (conv) => {
+    //         console.log('conversation added:', conv.text);
+    //         this.added(conv);
+    //     });
+    //     const handlerConversationUpdated = this.chat21Service.chatClient.onConversationUpdated( (conv) => {
+    //         console.log('conversation updated:', conv.text);
+    //         this.changed(conv);
+    //     });
+    //     const handlerConversationDeleted = this.chat21Service.chatClient.onConversationDeleted( (conv) => {
+    //         console.log('conversation deleted:', conv.text);
+    //         this.removed(conv);
+    //     });
+    //     this.chat21Service.chatClient.lastConversations( (err, conversations) => {
+    //         console.log('Last conversations', conversations, 'err', err);
+    //         if (!err) {
+    //             conversations.forEach(conv => {
+    //                 this.added(conv);
+    //             });
+    //         }
+    //     });
+    //     // SET AUDIO
+    //     this.audio = new Audio();
+    //     this.audio.src = URL_SOUND;
+    //     this.audio.load();
 
+
+    // ---------------------------------------------------------------------------------
+     // New connect - renamed subscribeToConversation
+     //----------------------------------------------------------------------------------
+     subscribeToConversations(callback) {
+            console.log('connecting MQTT conversations handler');
+            const handlerConversationAdded = this.chat21Service.chatClient.onConversationAdded( (conv) => {
+                console.log('conversation added:', conv.text);
+                this.added(conv);
+            });
+            const handlerConversationUpdated = this.chat21Service.chatClient.onConversationUpdated( (conv) => {
+                console.log('conversation updated:', conv.text);
+                this.changed(conv);
+            });
+            const handlerConversationDeleted = this.chat21Service.chatClient.onConversationDeleted( (conv) => {
+                console.log('conversation deleted:', conv.text);
+                this.removed(conv);
+            });
+            this.chat21Service.chatClient.lastConversations( (err, conversations) => {
+                console.log('Last conversations', conversations, 'err', err);
+                if (!err) {
+                    conversations.forEach(conv => {
+                        this.added(conv);
+                    });
+                }
+            });
+            // SET AUDIO
+            this.audio = new Audio();
+            this.audio.src = URL_SOUND;
+            this.audio.load();
         // const that = this;
         // const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUserId);
         // console.log('connect -------> conversations', urlNodeFirebase);

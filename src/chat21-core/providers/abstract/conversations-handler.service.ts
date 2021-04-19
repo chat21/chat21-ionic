@@ -15,6 +15,7 @@ export abstract class ConversationsHandlerService {
 
   // BehaviorSubject
   abstract BSConversationDetail: BehaviorSubject<ConversationModel> = new BehaviorSubject<ConversationModel>(null);
+  abstract BSConversations: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);
   abstract readAllMessages: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   abstract conversationAdded: BehaviorSubject<ConversationModel> = new BehaviorSubject<ConversationModel>(null);
   abstract conversationChanged: BehaviorSubject<ConversationModel> = new BehaviorSubject<ConversationModel>(null);
@@ -28,12 +29,13 @@ export abstract class ConversationsHandlerService {
 
   // functions
   abstract initialize(tenant: string, userId: string, translationMap: Map<string, string>): void;
-  abstract connect(): void;
+  // abstract connect(): void;
+  abstract subscribeToConversations(conversations: any): void;
   abstract countIsNew(): number;
   abstract setConversationRead(conversation: ConversationModel): void;
   abstract dispose(): void;
   abstract archiveConversation(conversationId: string): void;
-  abstract getConversationDetail(tenant: string, userId: string, conversationId: string): void;
+  abstract getConversationDetail(tenant: string, userId: string, conversationId: string): ConversationModel;
   abstract getClosingConversation(conversationId: string): boolean;
   abstract setClosingConversation(conversationId: string, status: boolean): void;
   abstract deleteClosingConversation(conversationId: string): void;

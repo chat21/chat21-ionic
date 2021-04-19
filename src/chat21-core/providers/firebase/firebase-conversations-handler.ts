@@ -37,6 +37,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     conversationChanged: BehaviorSubject<ConversationModel>;
     conversationRemoved: BehaviorSubject<ConversationModel>;
     loadedConversationsStorage: BehaviorSubject<ConversationModel[]>;
+    BSConversations: BehaviorSubject<ConversationModel[]>
 
     // public params
     conversations: Array<ConversationModel> = [];
@@ -92,10 +93,40 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * creo la reference
      * mi sottoscrivo a change, removed, added
      */
-    connect() {
+    // connect() {
+    //     const that = this;
+    //     const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUserId);
+    //     this.logger.printDebug('connect -------> conversations::ACTIVE', urlNodeFirebase)
+    //     this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
+    //     this.ref.on('child_changed', (childSnapshot) => {
+    //         that.changed(childSnapshot);
+    //     });
+    //     this.ref.on('child_removed', (childSnapshot) => {
+    //         that.removed(childSnapshot);
+    //     });
+    //     this.ref.on('child_added', (childSnapshot) => {
+    //         that.added(childSnapshot);
+    //     });
+    //     // SET AUDIO
+    //     // this.audio = new Audio();
+    //     // this.audio.src = URL_SOUND;
+    //     // this.audio.load();
+
+    // }
+
+        /**
+     * mi connetto al nodo conversations
+     * creo la reference
+     * mi sottoscrivo a change, removed, added
+     */
+
+     // ---------------------------------------------------------------------------------
+     // New connect - renamed subscribeToConversation
+     //----------------------------------------------------------------------------------
+     subscribeToConversations(callback) {
         const that = this;
         const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUserId);
-        this.logger.printDebug('connect -------> conversations::ACTIVE', urlNodeFirebase)
+        this.logger.printDebug('SubscribeToConversations (firebase-convs-handler) - conversations::ACTIVE urlNodeFirebase', urlNodeFirebase)
         this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
         this.ref.on('child_changed', (childSnapshot) => {
             that.changed(childSnapshot);
@@ -106,6 +137,14 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         this.ref.on('child_added', (childSnapshot) => {
             that.added(childSnapshot);
         });
+
+        console.log('SubscribeToConversations (firebase-convs-handler) - conversations' , that.conversations )
+
+        setTimeout(() => {
+        this.BSConversations.next(that.conversations) 
+            callback(that.conversations) 
+            
+          }, 2000);
         // SET AUDIO
         // this.audio = new Audio();
         // this.audio.src = URL_SOUND;
@@ -243,19 +282,23 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
 
 
-    public getConversationDetail(tenant: string, loggedUserUid: string, conversationId: string) {
+    public getConversationDetail(tenant: string, loggedUserUid: string, conversationId: string): ConversationModel {
         // fare promise o callback ??
         const conversationSelected = this.conversations.find(item => item.uid === conversationId);
-        this.logger.printDebug('>>>>>>>>>>>>>> getConversationDetail *****: ', conversationSelected)
+        this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> conversations *****: ', this.conversations)
+        this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> getConversationDetail *****: ', conversationSelected)
         if (conversationSelected) {
-            this.BSConversationDetail.next(conversationSelected);
+            return conversationSelected
+            // this.BSConversationDetail.next(conversationSelected);
         } else {
+            this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> conversations *****: ')
             const urlNodeFirebase = '/apps/' + tenant + '/users/' + loggedUserUid + '/conversations/' + conversationId;
             this.logger.printDebug('urlNodeFirebase conversationDetail *****', urlNodeFirebase)
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
                 const conversation: ConversationModel = childSnapshot.val();
                 this.BSConversationDetail.next(conversation);
+                this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> conversation *****: ',conversation)
             });
         }
     }

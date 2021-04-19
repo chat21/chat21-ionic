@@ -192,18 +192,27 @@ export class ConversationListPage implements OnInit {
     // 2 - get conversations from storage
     // this.chatConversationsHandler.getConversationsFromStorage();
     // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-    this.conversationsHandlerService.connect();
+    
+    // this.conversationsHandlerService.connect(); // old - now renamed in subscribeToConversations
+   
+    this.conversationsHandlerService.subscribeToConversations((conversations: any) => {
+      this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations', conversations)
+      if (!conversations || conversations.length === 0) {
+        that.showPlaceholder = true;
+      }
+    });
+
     this.conversations = this.conversationsHandlerService.conversations;
 
     // 6 - save conversationHandler in chatManager
     this.chatManager.setConversationsHandler(this.conversationsHandlerService);
     const that = this;
     this.showPlaceholder = false;
-    setTimeout(() => {
-      if (!that.conversations || that.conversations.length === 0) {
-        this.showPlaceholder = true;
-      }
-    }, 2000);
+    // setTimeout(() => {
+    //   if (!that.conversations || that.conversations.length === 0) {
+    //     that.showPlaceholder = true;
+    //   }
+    // }, 2000);
   }
 
   /**
@@ -227,7 +236,17 @@ export class ConversationListPage implements OnInit {
     // 2 - get conversations from storage
     // this.chatConversationsHandler.getConversationsFromStorage();
     // 5 - connect archviedConversationsHandler to firebase event (add, change, remove)
-    this.archivedConversationsHandlerService.connect();
+    // this.archivedConversationsHandlerService.subscribeToConversations();
+
+    this.archivedConversationsHandlerService.subscribeToConversations((conversations: any) => {
+      this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations archived', conversations)
+      if (!conversations || conversations.length === 0) {
+        that.showPlaceholder = true;
+      }
+    });
+
+
+
     this.archivedConversations = this.archivedConversationsHandlerService.archivedConversations;
     this.logger.printDebug("archived conversation", this.archivedConversations)
     // 6 - save archivedConversationsHandlerService in chatManager

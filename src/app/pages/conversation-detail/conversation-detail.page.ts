@@ -183,7 +183,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public authService: AuthService,
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
-    public archivedConversationsHandlerService:ArchivedConversationsHandlerService,
+    public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     public conversationHandlerService: ConversationHandlerService,
     // public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
@@ -286,7 +286,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.lastConnectionDate = '';
 
     // init handler vengono prima delle sottoscrizioni!
-    this.initConversationsHandler();
+    // this.initConversationsHandler(); // nk
     this.initConversationHandler();
     this.initSubscriptions();
     this.addEventsKeyboard();
@@ -389,9 +389,20 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log('initConversationsHandler ------------->:::', this.tenant, this.loggedUser.uid, this.conversationWith);
     if (this.conv_type === 'active') {
       // qui al refresh array conv è null
-      this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+
+      // this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+      this.conversationSelected = this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+      if (this.conversationSelected){
+        this.selectInfoContentTypeComponent();
+      }
+
     } else if (this.conv_type === 'archived') {
-      this.archivedConversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+      // this.archivedConversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+
+      this.conversationSelected = this.archivedConversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
+      if (this.conversationSelected){
+        this.selectInfoContentTypeComponent();
+      }
     }
   }
 
@@ -442,7 +453,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    *
    */
   selectInfoContentTypeComponent() {
-    console.log('selectInfoContentTypeComponent: ', this.conversationWith);
+    console.log('SubscribeToConversations - selectInfoContentTypeComponent: ', this.conversationWith);
     if (this.conversationWith) {
       this.channelType = setChannelType(this.conversationWith);
       if (this.channelType === TYPE_DIRECT) {
@@ -589,36 +600,49 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     let subscribtion: any;
     let subscribtionKey: string;
 
-    subscribtionKey = 'BSConversationDetail';
+    subscribtionKey = 'BSConversations';
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
-      subscribtion = this.conversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
-        console.log('***** DATAIL subscribeConversationDetail *****', data);
-        if (data) {
-          that.conversationSelected = data;
-          that.selectInfoContentTypeComponent();
+      subscribtion = this.conversationsHandlerService.BSConversations.subscribe((data: any) => {
+        console.log('SubscribeToConversations (conversation-detail-page) data *****', data);
+        if (data && data.length > 0) {
+          this.initConversationsHandler();
         }
       });
       const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
 
+    // subscribtionKey = 'BSConversationDetail';
+    // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    // if (!subscribtion) {
+    //   subscribtion = this.conversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
+    //     console.log('***** DATAIL subscribeConversationDetail *****', data);
+    //     if (data) {
+    //       that.conversationSelected = data;
+    //       that.selectInfoContentTypeComponent();
+    //     }
+    //   });
+    //   const subscribe = { key: subscribtionKey, value: subscribtion };
+    //   this.subscriptions.push(subscribe);
+    // }
+
     // ---------------------------------------------------------------------------------
     // FOR THE ARCHIVED
-     // ---------------------------------------------------------------------------------
-    subscribtionKey = 'BSArchivedConversationDetail';
-    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    if (!subscribtion) {
-      subscribtion = this.archivedConversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
-        console.log('***** DATAIL ARCHIVED subscribeConversationDetail *****', data);
-        if (data) {
-          that.conversationSelected = data;
-          that.selectInfoContentTypeComponent();
-        }
-      });
-      const subscribe = { key: subscribtionKey, value: subscribtion };
-      this.subscriptions.push(subscribe);
-    }
+    // ---------------------------------------------------------------------------------
+    // subscribtionKey = 'BSArchivedConversationDetail';
+    // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    // if (!subscribtion) {
+    //   subscribtion = this.archivedConversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
+    //     console.log('***** DATAIL ARCHIVED subscribeConversationDetail *****', data);
+    //     if (data) {
+    //       that.conversationSelected = data;
+    //       that.selectInfoContentTypeComponent();
+    //     }
+    //   });
+    //   const subscribe = { key: subscribtionKey, value: subscribtion };
+    //   this.subscriptions.push(subscribe);
+    // }
 
     subscribtionKey = 'BSConversationsChanged';
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
