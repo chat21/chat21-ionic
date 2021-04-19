@@ -3,7 +3,7 @@ import * as moment from 'moment/moment';
 // import * as moment from 'moment-timezone';
 import 'moment/locale/it.js';
 
-import { CHANNEL_TYPE_GROUP, FIREBASESTORAGE_BASE_URL_IMAGE, TYPE_GROUP } from './constants';
+import { FIREBASESTORAGE_BASE_URL_IMAGE, STORAGE_PREFIX, TYPE_GROUP } from './constants';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -271,6 +271,36 @@ export function setLastDateWithLabels(translationMap: Map<string, string>, times
 export function convertDayToString(translate, day) {
   const ARRAY_DAYS = translate.get('ARRAY_DAYS');
   return ARRAY_DAYS[day];
+}
+
+export function supports_html5_storage() {
+  try {
+      return 'localStorage' in window && window['localStorage'] !== null;
+  } catch (e) {
+    this.g.wdLog(['> Error :' + e]);
+    return false;
+  }
+}
+
+export function supports_html5_session() {
+  try {
+      return 'sessionStorage' in window && window['sessionStorage'] !== null;
+  } catch (e) {
+    this.g.wdLog(['> Error :' + e]);
+    return false;
+  }
+}
+
+export function setStoragePrefix(): string{
+  let prefix = STORAGE_PREFIX;
+  try {
+      // const sv = 'sv' + environment.shemaVersion + '_';
+      // prefix = prefix + sv;
+      prefix = environment.storage_prefix + '_';
+  } catch (e) {
+      this.g.wdLog(['> Error :' + e]);
+  }
+  return prefix + this.g.projectid + '_';
 }
 
 // function for dynamic sorting

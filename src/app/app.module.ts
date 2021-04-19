@@ -73,6 +73,8 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { FirebaseInitService } from 'src/chat21-core/providers/firebase/firebase-init-service';
+import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
+import { LocalSessionStorage } from 'src/chat21-core/providers/localSessionStorage';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -80,7 +82,7 @@ export function createTranslateLoader(http: HttpClient) {
 
 }
 
-export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service ) {
+export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service, appSorage: AppStorageService  ) {
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     
     chat21Service.config = appConfig.getConfig().chat21Config;
@@ -93,7 +95,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
   } else {
 
     FirebaseInitService.initFirebase(appConfig.getConfig().firebaseConfig)
-    const auth= new FirebaseAuthService(http);
+    const auth= new FirebaseAuthService(http, appSorage);
     auth.setBaseUrl(appConfig.getConfig().apiUrl)
     return auth
   }
@@ -243,7 +245,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: AuthService,
       useFactory: authenticationFactory,
-      deps: [HttpClient, AppConfigProvider, Chat21Service]
+      deps: [HttpClient, AppConfigProvider, Chat21Service, AppStorageService ]
      },
     {
       provide: PresenceService,
@@ -289,6 +291,10 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
       provide: LoggerService,
       useFactory: loggerFactory,
       deps: [NGXLogger]
+    },
+    {
+      provide: AppStorageService,
+      useClass: LocalSessionStorage
     },
     StatusBar,
     SplashScreen,
