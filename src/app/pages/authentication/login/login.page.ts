@@ -76,8 +76,8 @@ export class LoginPage implements OnInit {
    * @param error
    */
   signIn = (user: any, error: any) => {
-    console.log('************** signIn', user);
-    console.log('************** error', error);
+    console.log('LOGIN PAGE signIn - user', user);
+    console.log('LOGIN PAGE signIn - error', error);
     if (error) {
       // faccio uscire alert
       const errore =  this.translationMap.get('LABEL_SIGNIN_ERROR');
