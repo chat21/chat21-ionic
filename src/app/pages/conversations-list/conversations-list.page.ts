@@ -578,7 +578,7 @@ export class ConversationListPage implements OnInit {
         console.log('la conv ', this.conversationSelected, ' è già stata caricata');
         this.conversationSelected = conversationSelected;
         console.log('setUidConvSelected: ', this.conversationSelected);
-        this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
+        // this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
 
         // if (this.conversationSelected.status === "0") {
         //   localStorage.setItem('activeConversationSelected', JSON.stringify(this.conversationSelected));

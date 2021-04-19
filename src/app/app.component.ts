@@ -22,7 +22,7 @@ import { UploadService } from '../chat21-core/providers/abstract/upload.service'
 import { NavProxyService } from './services/nav-proxy.service';
 import { ChatManager } from 'src/chat21-core/providers/chat-manager';
 // import { ChatConversationsHandler } from './services/chat-conversations-handler';
-// import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 
 // pages
