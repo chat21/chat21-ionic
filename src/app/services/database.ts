@@ -81,30 +81,31 @@ export class DatabaseProvider {
     //const storageSettings = this.configStorage('settings');
     this.storageSettings.set('lastUpdate',lastUpdate);
   }
+  
   /**
    * ritorno uid ultima conversazione aperta salvata nel DB locale
    */
-  getUidLastOpenConversation() {
-    // settings
-    console.log("getUidLastOpenConversation");
-    return this.storageSettings.get('uidLastOpenConversation');
-  }
-  /**
-   * salvo uid ultima conversazione aperta nel DB
-   */
-  setUidLastOpenConversation(uid: string ) {
-    // settings
-    // console.log("SALVO NEL DB UID ULTIMA CHAT APERTA:", uid);
-    // const storageSettings = this.configStorage('settings');
-    // return storageSettings.set('uidLastOpenConversation',uid)
-    this.storageSettings.set('uidLastOpenConversation', uid)
-    .then(() => {
-      console.log('SALVATO:', uid);
-    })
-    .catch((error) => {
-      console.log('ERRORE SALVATAGGIO:', error);
-    });
-  }
+  // getUidLastOpenConversation() {
+  //   // settings
+  //   console.log("getUidLastOpenConversation");
+  //   return this.storageSettings.get('uidLastOpenConversation');
+  // }
+  // /**
+  //  * salvo uid ultima conversazione aperta nel DB
+  //  */
+  // setUidLastOpenConversation(uid: string ) {
+  //   // settings
+  //   // console.log("SALVO NEL DB UID ULTIMA CHAT APERTA:", uid);
+  //   // const storageSettings = this.configStorage('settings');
+  //   // return storageSettings.set('uidLastOpenConversation',uid)
+  //   this.storageSettings.set('uidLastOpenConversation', uid)
+  //   .then(() => {
+  //     console.log('SALVATO:', uid);
+  //   })
+  //   .catch((error) => {
+  //     console.log('ERRORE SALVATAGGIO:', error);
+  //   });
+  // }
 
 
   /**

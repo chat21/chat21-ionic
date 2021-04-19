@@ -384,9 +384,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
+  //DARINOMINARE 
   initConversationsHandler() {
     console.log('initConversationsHandler ------------->:::', this.tenant, this.loggedUser.uid, this.conversationWith);
     if (this.conv_type === 'active') {
+      // qui al refresh array conv è null
       this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
     } else if (this.conv_type === 'archived') {
       this.archivedConversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
