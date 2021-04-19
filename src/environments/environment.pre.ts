@@ -23,6 +23,7 @@ export const environment = {
     apiUrl: 'CHANGEIT',
     baseImageUrl: 'CHANGEIT',
     dashboardUrl: 'CHANGEIT', 
+    storage_prefix : 'chat_sv5',
     authPersistence: 'LOCAL',
     supportMode: false,
 };
