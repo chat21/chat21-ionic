@@ -18,8 +18,7 @@ export const environment = {
     chat21Config: {
         appId: 'CHANGEIT',
         MQTTendpoint: 'CHANGEIT', // MQTT endpoint
-        APIendpoint: 'CHANGEIT',
-        loginServiceEndpoint: 'CHANGEIT' // endpoint readed from apiUrl property
+        APIendpoint: 'CHANGEIT'
     },
     apiUrl: 'CHANGEIT',
     baseImageUrl: 'CHANGEIT',
