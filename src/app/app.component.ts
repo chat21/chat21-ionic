@@ -1,3 +1,4 @@
+import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2, } from '@angular/core';
 import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -78,6 +79,7 @@ export class AppComponent implements OnInit {
     // public chatPresenceHandler: ChatPresenceHandler,
     public typingService: TypingService,
     public uploadService: UploadService,
+    public appStorageService: AppStorageService,
 
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
@@ -112,6 +114,7 @@ export class AppComponent implements OnInit {
       this.splashScreen.hide();
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
+      this.appStorageService.initialize(environment.storage_prefix, environment.authPersistence, '')
       this.authService.initialize('');
       // this.currentUserService.initialize();
       this.chatManager.initialize();
@@ -247,7 +250,7 @@ export class AppComponent implements OnInit {
         that.goOnLine(user);
       } else if (state === AUTH_STATE_OFFLINE) {
         // that.goOffLine();
-        that.authenticate()
+        that.authenticate() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
       }
     });
 
@@ -281,10 +284,11 @@ export class AppComponent implements OnInit {
   }
 
   authenticate() {
-    let token = localStorage.getItem('tiledeskToken');
+    let token = this.appStorageService.getItem('tiledeskToken');
     console.log('APP-COMPONENT ***** authenticate - stored token *****', token);
     if (token) {
       console.log('APP-COMPONENT ***** authenticate user is logged in');
+      console.log('----------- sono già loggato -------');
     } else {
       console.log('APP-COMPONENT ***** authenticate user is NO logged in call goOffLine');
       this.goOffLine()
