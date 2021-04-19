@@ -244,6 +244,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
 
     public getConversationDetail(tenant: string, loggedUserUid: string, conversationId: string) {
+        // fare promise o callback ??
         const conversationSelected = this.conversations.find(item => item.uid === conversationId);
         this.logger.printDebug('>>>>>>>>>>>>>> getConversationDetail *****: ', conversationSelected)
         if (conversationSelected) {

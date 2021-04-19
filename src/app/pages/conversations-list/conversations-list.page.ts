@@ -508,15 +508,17 @@ export class ConversationListPage implements OnInit {
         console.log('22222');
         this.setUidConvSelected(IDConv);
       } else {
-        this.databaseProvider.getUidLastOpenConversation().then((uid: string) => {
-          console.log('getUidLastOpenConversation:: ' + uid);
-          console.log('33333');
-          that.navigateByUrl('active', uid);
-        })
-          .catch((error) => {
-            console.log('44444');
-            console.log('error::: ', error);
-          });
+
+        // // da togliere
+        // this.databaseProvider.getUidLastOpenConversation().then((uid: string) => {
+        //   console.log('getUidLastOpenConversation:: ' + uid);
+        //   console.log('33333');
+        //   that.navigateByUrl('active', uid);
+        // })
+        //   .catch((error) => {
+        //     console.log('44444');
+        //     console.log('error::: ', error);
+        //   });
       }
     }
 
@@ -576,7 +578,7 @@ export class ConversationListPage implements OnInit {
         console.log('la conv ', this.conversationSelected, ' è già stata caricata');
         this.conversationSelected = conversationSelected;
         console.log('setUidConvSelected: ', this.conversationSelected);
-        this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
+        // this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
 
         // if (this.conversationSelected.status === "0") {
         //   localStorage.setItem('activeConversationSelected', JSON.stringify(this.conversationSelected));
@@ -622,7 +624,7 @@ export class ConversationListPage implements OnInit {
 
 
 
-
+// ?????? 
   navigateByUrl(converationType: string, uidConvSelected: string) {
     console.log('ConversationListPage navigateByUrl run  this.setUidConvSelected');
     this.setUidConvSelected(uidConvSelected, converationType);

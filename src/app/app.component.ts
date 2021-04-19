@@ -129,6 +129,8 @@ export class AppComponent implements OnInit {
   /**
    * initFirebase
    */
+
+  /*
   initFirebase() {
     console.log('initFirebase', this.appConfigProvider.getConfig());
     if (!this.appConfigProvider.getConfig().firebaseConfig || this.appConfigProvider.getConfig().firebaseConfig.apiKey === 'CHANGEIT') {
@@ -137,6 +139,7 @@ export class AppComponent implements OnInit {
     }
     firebase.initializeApp(this.appConfigProvider.getConfig().firebaseConfig);
   }
+  */
 
   /**
    * ::: initConversationsHandler :::
