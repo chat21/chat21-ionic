@@ -24,6 +24,7 @@ import {
 } from '../../utils/utils-user';
 import { resolve } from 'url';
 import { CustomLogger } from '../logger/customLogger';
+import { AppStorageService } from '../abstract/app-storage.service';
 
 
 // @Injectable({ providedIn: 'root' })
@@ -56,6 +57,7 @@ export class FirebaseAuthService extends AuthService {
   constructor(
     // private events: EventsService,
     public http: HttpClient,
+    public appStorage: AppStorageService
     //public route: ActivatedRoute
   ) {
     super();
@@ -80,8 +82,8 @@ export class FirebaseAuthService extends AuthService {
    */
   checkIsAuth() {
     this.logger.printLog(' ---------------- AuthService checkIsAuth ---------------- ')
-    this.tiledeskToken = localStorage.getItem(this.storagePrefix+'tiledeskToken');
-    this.currentUser = JSON.parse(localStorage.getItem(this.storagePrefix + 'currentUser'));
+    this.tiledeskToken = this.appStorage.getItem('tiledeskToken')
+    this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
     if (this.tiledeskToken) {
       this.logger.printLog(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
       this.createFirebaseCustomToken();
@@ -141,6 +143,13 @@ export class FirebaseAuthService extends AuthService {
         that.BSAuthStateChanged.next('online');
       }
     });
+    window.addEventListener('storage', (e) => {
+      console.log('Changed:', e.key);
+      if (this.appStorage.getItem('tiledeskToken') == null) {
+        this.currentUser = null;
+        this.BSAuthStateChanged.next('offline');
+      }
+    }, false);
   }
 
 
@@ -183,6 +192,7 @@ export class FirebaseAuthService extends AuthService {
     return firebase.auth().setPersistence(firebasePersistence).then( async () => {
       return firebase.auth().signInWithCustomToken(token).then( async (response) => {
                 // that.currentUser = response.user;
+                console.log('signIn firebaseeee respp', response )
                 // that.firebaseSignInWithCustomToken.next(response);
               }).catch((error) => {
                 this.logger.printError('Error: ', error);
@@ -234,7 +244,7 @@ export class FirebaseAuthService extends AuthService {
     firebase.auth().signOut().then(() => {
       this.logger.printLog('firebase-sign-out');
       // cancello token
-      localStorage.removeItem(this.storagePrefix + 'tiledeskToken');
+      this.appStorage.removeItem('tiledeskToken');
       //localStorage.removeItem('firebaseToken');
     }).catch((error) => {
       this.logger.printError('error: ', error);
@@ -283,7 +293,7 @@ export class FirebaseAuthService extends AuthService {
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
           this.createCompleteUser(data['user']);
-          localStorage.setItem(this.storagePrefix + 'tiledeskToken', that.tiledeskToken);
+          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
           that.createFirebaseCustomToken();
         }
     }, (error) => {
@@ -310,7 +320,7 @@ export class FirebaseAuthService extends AuthService {
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
           this.createCompleteUser(data['user']);
-          localStorage.setItem(this.storagePrefix + 'tiledeskToken', that.tiledeskToken);
+          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
           that.createFirebaseCustomToken();
           resolve(this.currentUser)
         }
@@ -337,7 +347,7 @@ export class FirebaseAuthService extends AuthService {
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
           this.createCompleteUser(data['user']);
-          localStorage.setItem(this.storagePrefix + 'tiledeskToken', that.tiledeskToken);
+          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
           that.createFirebaseCustomToken();
           resolve(this.currentUser)
         }
@@ -409,7 +419,7 @@ export class FirebaseAuthService extends AuthService {
     }
     this.currentUser = member;
     // salvo nel local storage e sollevo l'evento
-    localStorage.setItem(this.storagePrefix + 'currentUser', JSON.stringify(this.currentUser));
+    this.appStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     // this.BScurrentUser.next(this.currentUser);
   }
 
