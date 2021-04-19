@@ -13,8 +13,7 @@
     "chat21Config": {
         "appId": "tilechat",
         "MQTTendpoint": "mqtt://localhost:15675/ws",
-        "APIendpoint": "http://localhost:8004/api",
-        "loginServiceEndpoint": "http://localhost:3000/chat21/native/auth/createCustomToken"
+        "APIendpoint": "http://localhost:8004/api"
     },
     "apiUrl": "http://localhost:3000/",
     "baseImageUrl": "https://firebasestorage.googleapis.com/v0/b/",
