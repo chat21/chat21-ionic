@@ -83,7 +83,8 @@ export function createTranslateLoader(http: HttpClient) {
 export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service ) {
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
     
-    chat21Service.initChat(appConfig.getConfig().chat21Config);
+    chat21Service.config = appConfig.getConfig().chat21Config;
+    chat21Service.initChat();
     console.log("appConfig.getConfig().SERVER_BASE_URL", appConfig.getConfig().apiUrl);
     const auth = new MQTTAuthService(http, chat21Service);
     

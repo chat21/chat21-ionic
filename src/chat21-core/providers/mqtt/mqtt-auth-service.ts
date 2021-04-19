@@ -74,6 +74,7 @@ export class MQTTAuthService extends AuthService {
 
   getCurrentUser(): UserModel {
     // return firebase.auth().currentUser;
+    console.log("user returned", this.currentUser);
     return this.currentUser;
   }
 
@@ -169,9 +170,11 @@ export class MQTTAuthService extends AuthService {
     const that = this;
     this.http.post(url, postData, requestOptions)
       .subscribe(data => {
-        console.log("data:", JSON.stringify(data));
+        console.log("native auth data:", JSON.stringify(data));
         if (data['token'] && data['userid']) {
           localStorage.setItem('tiledeskToken', data['token']);
+          data['_id'] = data['userid'];
+          this.createCompleteUser(data);
           that.connectMQTT(data);
           // that.firebaseCreateCustomToken(tiledeskToken);
         }
@@ -211,13 +214,16 @@ export class MQTTAuthService extends AuthService {
     // console.log('signInWithEmailAndPassword', email, password);
     // this.signIn(this.URL_TILEDESK_SIGNIN, email, password);
 
+    console.log("this.SERVER_BASE_URL", this.SERVER_BASE_URL)
     console.log('signInWithEmailAndPassword', email, password);
-    if (this.SERVER_BASE_URL !== '__') {
+    console.log("this.chat21Service.config.loginServiceEndpoint:", this.chat21Service.config.loginServiceEndpoint)
+    if (!this.chat21Service.config.loginServiceEndpoint) {
       console.log('this.URL_TILEDESK_SIGNIN', this.URL_TILEDESK_SIGNIN);
       this.signIn(this.URL_TILEDESK_SIGNIN, email, password);
     }
     else {
-      this.signinMQTT(environment.chat21Config.loginServiceEndpoint, email, password);
+      console.log('native mqtt signin config21config.loginServiceEndpoint', this.chat21Service.config.loginServiceEndpoint);
+      this.signinMQTT(this.chat21Service.config.loginServiceEndpoint, email, password);
     }
   }
 
