@@ -178,7 +178,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
     }
 
 
-    getConversationDetail(conversationId: string, callback: any): void {
+    getConversationDetail(conversationId: string, callback: (ConversationModel)=>void) {
         const conversation = this.archivedConversations.find(item => item.uid === conversationId);
         this.logger.printDebug('SubscribeToConversations  (firebase-archivded-convs-handler) getConversationDetail::ARCHIVED *****: ', conversation)
         if (conversation) {

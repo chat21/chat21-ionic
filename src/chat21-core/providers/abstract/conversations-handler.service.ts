@@ -34,7 +34,7 @@ export abstract class ConversationsHandlerService {
   abstract setConversationRead(conversation: ConversationModel): void;
   abstract dispose(): void;
   abstract archiveConversation(conversationId: string): void;
-  abstract getConversationDetail(conversationId: string, callback): void;
+  abstract getConversationDetail(conversationId: string, callback:(conv: ConversationModel)=>void): void;
   abstract getClosingConversation(conversationId: string): boolean;
   abstract setClosingConversation(conversationId: string, status: boolean): void;
   abstract deleteClosingConversation(conversationId: string): void;

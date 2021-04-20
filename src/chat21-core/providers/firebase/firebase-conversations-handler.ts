@@ -276,7 +276,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
 
 
-    public getConversationDetail(conversationId: string, callback): void {
+    public getConversationDetail(conversationId: string, callback: (conv: ConversationModel)=>void): void {
         // fare promise o callback ??
         const conversation = this.conversations.find(item => item.uid === conversationId);
         this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> conversations *****: ', this.conversations)
