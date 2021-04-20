@@ -12,6 +12,11 @@
 - Fixes the bug: the selected active conversation is no longer selected when the user returns to active conversations from archived conversations
 - Deletes the persistence of the last open conversation from the local storage
 - Restores the button 'open conversation detail'
+- Changes the mqtt library loading: from external loaded in index.html to local loaded in angular.json
+- Adds checking for user existence before running "setPresence" in the goOnLine method of app.component
+- Adds a path to "Conversation-detail" with only the conversation ID parameter
+- Renames (and improves) the method connect in subscribeToConversations and removes the subscriptions to the conversation detail
+- Modifies the "getConversationDetail" method to return a callback and moves the subscription to the method from the "conversation details" page to the "information-content" component
 
 ### 3.0.21
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button
