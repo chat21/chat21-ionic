@@ -13,6 +13,7 @@ import {
   getImageUrlThumbFromFirebasestorage
 } from 'src/chat21-core/utils/utils-user';
 import { AppConfigProvider } from '../app-config';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -75,12 +76,8 @@ export class ContactsService {
   }
 
 
-  /**
-   * 
-   * @param token
-   * @param uid
-   */
-  public loadContactDetail(token: string, uid: string) {
+
+  public _loadContactDetail(token: string, uid: string) {
     this.contacts = [];
     console.log('loadContactDetail:: uid ', uid);
     const urlRemoteContactDetail = this.urlRemoteContacts + '/' + uid;
@@ -94,16 +91,48 @@ export class ContactsService {
       };
       const postData = {
       };
-      console.log('loadContactDetail:: url ', urlRemoteContactDetail);
+      console.log('INFO-CONTENT-COMP (contact-service) loadContactDetail:: url ', urlRemoteContactDetail);
       this.http
         .get<any>(urlRemoteContactDetail, httpOptions)
         .subscribe(user => {
-          console.log('loadContactDetail:: data ', user);
+          console.log('INFO-CONTENT-COMP (contact-service) loadContactDetail:: data ', user);
           const member = that.createCompleteUser(user);
           this.BScontactDetail.next(member);
         }, error => {
           console.log('urlRemoreContactDetail:: error ', error);
         });
+    }
+  }
+
+  /**
+  * 
+  * @param token
+  * @param uid
+  */
+  public loadContactDetail(token: string, uid: string) {
+    this.contacts = [];
+    console.log('INFO-CONTENT-COMP (contact-service) - loadContactDetail:: uid ', uid);
+    const urlRemoteContactDetail = this.urlRemoteContacts + '/' + uid;
+    if (urlRemoteContactDetail.startsWith('http') && token) {
+
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          Authorization: token
+        })
+      };
+      // const postData = {};
+      console.log('loadContactDetail:: url ', urlRemoteContactDetail);
+      return this.http
+        .get(urlRemoteContactDetail, httpOptions)
+        .pipe(map((res: any) => {
+          console.log('INFO-CONTENT-COMP (contact-service) - loadContactDetail RES ', res);
+          if (res.uid) {
+            let user = this.createCompleteUser(res)
+            return user
+          }
+        }))
+
     }
   }
 
@@ -113,6 +142,7 @@ export class ContactsService {
    * @param user
    */
   private createCompleteUser(user: any): UserModel {
+    console.log('INFO-CONTENT-COMP (contact-service) - createCompleteUser !!!  ');
     const member = new UserModel(user.uid);
     try {
       const uid = user.uid;

@@ -1,6 +1,18 @@
 import { Component, OnInit, Input } from '@angular/core';
 // models
 import { UserModel } from 'src/chat21-core/models/user';
+import { ConversationModel } from 'src/chat21-core/models/conversation';
+
+import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
+import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
+import { ContactsService } from 'src/app/services/contacts/contacts.service';
+import { AppConfigProvider } from '../../../services/app-config';
+import { setChannelType} from '../../../../chat21-core/utils/utils';
+import { TYPE_SUPPORT_GROUP, TYPE_DIRECT, TYPE_GROUP } from '../../../../chat21-core/utils/constants';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-info-content',
@@ -13,19 +25,167 @@ export class InfoContentComponent implements OnInit {
 
   @Input() openInfoConversation: boolean;
   @Input() translationMap: Map<string, string>;
-  @Input() member: UserModel;
+  // @Input() member: UserModel;
+  @Input() loggedUser: UserModel
+  @Input() tenant: string
 
+  public  member: UserModel;
   public urlConversation: any;
-
+  // public loggedUser: UserModel;
+  // private tenant: string;
+  public conversationWith: string;
+  public conversationWithFullname: string;
+  public conv_type: string;
   private channelType: string;
-  private urlConversationSupportGroup: string;
+  private urlConversationSupportGroup: any;
+  public conversations: Array<ConversationModel> = [];
+  public conversationSelected:any;
 
-  constructor() { }
+  constructor(
+    public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
+    public conversationsHandlerService: ConversationsHandlerService,
+    public authService: AuthService,
+    private route: ActivatedRoute,
+    public contactsService: ContactsService,
+    public appConfigProvider: AppConfigProvider,
+    private sanitizer: DomSanitizer,
+  ) {
+    // this.loggedUser = this.authService.getCurrentUser();
+    // console.log('INFO-CONTENT-COMP loggedUser: ', this.loggedUser);
+    this.tenant = environment.tenant;
+
+    this.route.paramMap.subscribe(params => {
+      console.log('ConversationDetailPage initialize params: ', params);
+      this.conversationWith = params.get('IDConv');
+      this.conversationWithFullname = params.get('FullNameConv');
+      this.conv_type = params.get('Convtype');
+    });
+  }
 
   ngOnInit() {
     console.log('InfoContentComponent:::');
-    console.log(this.member);
+    console.log('INFO-CONTENT-COMP  Logged user' , this.loggedUser);
+    console.log('INFO-CONTENT-COMP  Tenant' , this.tenant);
+    this.initConversationsHandler(); // nk
+  
   }
+
+
+  //DARINOMINARE 
+  initConversationsHandler() {
+    console.log('INFO-CONTENT-COMP initConversationsHandler :::', this.tenant, this.loggedUser.uid, this.conversationWith);
+    if (this.conv_type === 'active') {
+      // qui al refresh array conv è null
+
+      this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+        if (conv) {
+          this.conversationSelected = conv;
+          this.conversationWith = conv.uid;
+          this.selectInfoContentTypeComponent();
+        } else {
+          // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ARCHIVIATE
+          console.log('INFO-CONTENT-COMP conv null', conv)
+          this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+            if (conv) {
+              this.conversationSelected = conv;
+              this.conversationWith = conv.uid;
+              this.selectInfoContentTypeComponent();
+            } else {
+              // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
+            }
+          });
+        }
+      });
+
+    } else if (this.conv_type === 'archived') {
+
+      this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+        if (conv) {
+          this.conversationSelected = conv
+          this.conversationWith = conv.uid
+          this.selectInfoContentTypeComponent();
+        } else {
+          // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ATTIVE
+          console.log('INFO-CONTENT-COMP conv null', conv)
+          this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+            if (conv) {
+              this.conversationSelected = conv;
+              this.conversationWith = conv.uid;
+              this.selectInfoContentTypeComponent();
+            } else {
+              // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
+            }
+          });
+        }
+      });
+    }
+  }
+  // ---------------------------------------------------
+  // START SET INFO COMPONENT
+  // ---------------------------------------------------
+  selectInfoContentTypeComponent() {
+    console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent conversationWith: ', this.conversationWith);
+    if (this.conversationWith) {
+      this.channelType = setChannelType(this.conversationWith);
+      if (this.channelType === TYPE_DIRECT) {
+        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+        this.setInfoDirect();
+      } else if (this.channelType === TYPE_GROUP) {
+        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+        this.setInfoGroup();
+      } else if (this.channelType === TYPE_SUPPORT_GROUP) {
+        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+        this.urlConversationSupportGroup = '';
+        this.setInfoSupportGroup();
+      }
+    }
+  }
+
+  // ---------------------------------------------------
+  // @ setInfoDirect
+  // ---------------------------------------------------
+  setInfoDirect() {
+    console.log('INFO-CONTENT-COMP - setInfoDirect ', this.contactsService, this.conversationWith);
+    console.log('INFO-CONTENT-COMP - setInfoDirect member',  this.member);
+    this.member = null;
+    const that = this;
+    const tiledeskToken = this.authService.getTiledeskToken();
+    this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith)
+    .subscribe(res => { 
+      console.log('INFO-CONTENT-COMP - setInfoDirect  RES', res);
+      this.member = res
+    }) ;
+  }
+
+  // ---------------------------------------------------
+  // @ setInfoGroup
+  // ---------------------------------------------------
+  setInfoGroup() {
+    // group
+  }
+
+
+    // ---------------------------------------------------
+  // @ setInfoGroup
+  // ---------------------------------------------------
+  setInfoSupportGroup() {
+    let projectID = '';
+    const tiledeskToken = this.authService.getTiledeskToken();
+    const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
+    if (this.conversationSelected) {
+      projectID = this.conversationSelected.attributes.projectId;
+    }
+    if (projectID && this.conversationWith) {
+      let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
+      urlPanel += '?token=' + tiledeskToken;
+      const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
+      this.urlConversationSupportGroup = urlConversationTEMP;
+    } else {
+      this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
+    }
+    console.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
+  }
+
 
 
 }
