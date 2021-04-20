@@ -163,8 +163,8 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     }
 
 
-    setConversationRead(conversation: ConversationModel): void {
-        const urlUpdate = conversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversation.recipient;
+    setConversationRead(conversationrecipient): void {
+        const urlUpdate = conversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversationrecipient;
         const update = {};
         update['/is_new'] = false;
         firebase.database().ref(urlUpdate).update(update);

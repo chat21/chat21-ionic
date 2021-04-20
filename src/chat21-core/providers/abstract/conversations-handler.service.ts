@@ -31,7 +31,7 @@ export abstract class ConversationsHandlerService {
   // abstract connect(): void;
   abstract subscribeToConversations(callback: any): void;
   abstract countIsNew(): number;
-  abstract setConversationRead(conversation: ConversationModel): void;
+  abstract setConversationRead(conversationId: string): void;
   abstract dispose(): void;
   abstract archiveConversation(conversationId: string): void;
   abstract getConversationDetail(conversationId: string, callback:(conv: ConversationModel)=>void): void;

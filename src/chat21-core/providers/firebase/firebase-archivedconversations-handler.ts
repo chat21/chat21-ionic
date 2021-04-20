@@ -143,8 +143,8 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
     }
 
     //imposto la conversazione come: letta
-    setConversationRead(conversation: ConversationModel): void {
-        const urlUpdate = archivedConversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversation.recipient;
+    setConversationRead(conversationrecipient): void {
+        const urlUpdate = archivedConversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversationrecipient;
         const update = {};
         update['/is_new'] = false;
         firebase.database().ref(urlUpdate).update(update);

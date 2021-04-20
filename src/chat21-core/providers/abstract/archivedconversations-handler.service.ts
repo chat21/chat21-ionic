@@ -24,7 +24,7 @@ export abstract class ArchivedConversationsHandlerService {
   // abstract connect(): void;
   abstract subscribeToConversations(callback: any): void;
   abstract countIsNew(): number;
-  abstract setConversationRead(conversation: ConversationModel)
+  abstract setConversationRead(conversationId: string)
   abstract dispose(): void;
   abstract getConversationDetail(conversationId: string, callback: (ConversationModel)=>void): void;
   abstract getClosingConversation(conversationId: string): boolean;
