@@ -17,6 +17,7 @@
 - Adds a path to "Conversation-detail" with only the conversation ID parameter
 - Renames (and improves) the method connect in subscribeToConversations and removes the subscriptions to the conversation detail
 - Modifies the "getConversationDetail" method to return a callback and moves the subscription to the method from the "conversation details" page to the "information-content" component
+- Changes the "setConversationRead" method to accept the conversation ID as parameter and no longer the selected conversation
 
 ### 3.0.21
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button
