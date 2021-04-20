@@ -182,22 +182,22 @@ export class ConversationListPage implements OnInit {
    * salvo conversationHandler in chatManager
    */
   initConversationsHandler(userId: string) {
-    const keys = ['YOU'];
+    // const keys = ['YOU'];
 
-    const translationMap = this.translateService.translateLanguage(keys);
+    // const translationMap = this.translateService.translateLanguage(keys);
 
-    console.log('initConversationsHandler ------------->', userId, this.tenant);
-    // 1 - init chatConversationsHandler and  archviedConversationsHandler
-    this.conversationsHandlerService.initialize(this.tenant, userId, translationMap);
+    // console.log('initConversationsHandler ------------->', userId, this.tenant);
+    // // 1 - init chatConversationsHandler and  archviedConversationsHandler
+    // this.conversationsHandlerService.initialize(this.tenant, userId, translationMap);
     // 2 - get conversations from storage
     // this.chatConversationsHandler.getConversationsFromStorage();
     // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
     
     // this.conversationsHandlerService.connect(); // old - now renamed in subscribeToConversations
    
-    this.conversationsHandlerService.subscribeToConversations((conversations: any) => {
-      this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations', conversations)
-      if (!conversations || conversations.length === 0) {
+    this.conversationsHandlerService.subscribeToConversations(() => {
+      this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
+      if (!this.conversations || this.conversations.length === 0) {
         that.showPlaceholder = true;
       }
     });
@@ -224,15 +224,15 @@ export class ConversationListPage implements OnInit {
    * salvo conversationHandler in chatManager
    */
   initArchivedConversationsHandler(userId: string) {
-    const keys = ['YOU'];
-    const keysConversation = ['CLOSED'];
+    // const keys = ['YOU'];
+    // const translationMap = this.translateService.translateLanguage(keys);
 
-    const translationMap = this.translateService.translateLanguage(keys);
+    const keysConversation = ['CLOSED'];
     this.translationMapConversation = this.translateService.translateLanguage(keysConversation);
 
-    console.log('initArchivedConversationsHandler ------------->', userId, this.tenant);
-    // 1 - init  archviedConversationsHandler
-    this.archivedConversationsHandlerService.initialize(this.tenant, userId, translationMap);
+    // console.log('initArchivedConversationsHandler ------------->', userId, this.tenant);
+    // // 1 - init  archviedConversationsHandler
+    // this.archivedConversationsHandlerService.initialize(this.tenant, userId, translationMap);
     // 2 - get conversations from storage
     // this.chatConversationsHandler.getConversationsFromStorage();
     // 5 - connect archviedConversationsHandler to firebase event (add, change, remove)

@@ -37,7 +37,6 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     conversationChanged: BehaviorSubject<ConversationModel>;
     conversationRemoved: BehaviorSubject<ConversationModel>;
     loadedConversationsStorage: BehaviorSubject<ConversationModel[]>;
-    BSConversations: BehaviorSubject<ConversationModel[]>
 
     // public params
     conversations: Array<ConversationModel> = [];
@@ -141,9 +140,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         console.log('SubscribeToConversations (firebase-convs-handler) - conversations' , that.conversations )
 
         setTimeout(() => {
-        this.BSConversations.next(that.conversations) 
-            callback(that.conversations) 
-            
+            callback() 
           }, 2000);
         // SET AUDIO
         // this.audio = new Audio();
@@ -282,25 +279,31 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
 
 
-    public getConversationDetail(tenant: string, loggedUserUid: string, conversationId: string): ConversationModel {
+    public getConversationDetail(conversationId: string, callback): void {
         // fare promise o callback ??
-        const conversationSelected = this.conversations.find(item => item.uid === conversationId);
+        const conversation = this.conversations.find(item => item.uid === conversationId);
         this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> conversations *****: ', this.conversations)
-        this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> getConversationDetail *****: ', conversationSelected)
-        if (conversationSelected) {
-            return conversationSelected
+        this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> getConversationDetail *****: ', conversation)
+        if (conversation) {
+            callback(conversation)
+            // return conversationSelected
             // this.BSConversationDetail.next(conversationSelected);
         } else {
-            this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> conversations *****: ')
-            const urlNodeFirebase = '/apps/' + tenant + '/users/' + loggedUserUid + '/conversations/' + conversationId;
+            const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/conversations/' + conversationId;
             this.logger.printDebug('urlNodeFirebase conversationDetail *****', urlNodeFirebase)
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
                 const conversation: ConversationModel = childSnapshot.val();
-                this.BSConversationDetail.next(conversation);
+                if(conversation){
+                    callback(conversation)
+                }else {
+                    callback(null)
+                }
+                // this.BSConversationDetail.next(conversation);
                 this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> conversation *****: ',conversation)
             });
         }
+
     }
     /**
      * dispose reference di conversations

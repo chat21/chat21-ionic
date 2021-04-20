@@ -286,7 +286,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.lastConnectionDate = '';
 
     // init handler vengono prima delle sottoscrizioni!
-    // this.initConversationsHandler(); // nk
+    this.initConversationsHandler(); // nk
     this.initConversationHandler();
     this.initSubscriptions();
     this.addEventsKeyboard();
@@ -391,10 +391,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // qui al refresh array conv è null
 
       // this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
-      this.conversationSelected = this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
-      if (this.conversationSelected){
-        this.selectInfoContentTypeComponent();
-      }
+      this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
+        if (conv){
+          this.selectInfoContentTypeComponent();
+        }else {
+          // archiveddd
+        }
+      });
+      
 
     } else if (this.conv_type === 'archived') {
       // this.archivedConversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
@@ -599,19 +603,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     const that = this;
     let subscribtion: any;
     let subscribtionKey: string;
-
-    subscribtionKey = 'BSConversations';
-    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    if (!subscribtion) {
-      subscribtion = this.conversationsHandlerService.BSConversations.subscribe((data: any) => {
-        console.log('SubscribeToConversations (conversation-detail-page) data *****', data);
-        if (data && data.length > 0) {
-          this.initConversationsHandler();
-        }
-      });
-      const subscribe = { key: subscribtionKey, value: subscribtion };
-      this.subscriptions.push(subscribe);
-    }
 
     // subscribtionKey = 'BSConversationDetail';
     // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);

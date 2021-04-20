@@ -1,3 +1,4 @@
+import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2, } from '@angular/core';
 import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav } from '@ionic/angular';
@@ -83,6 +84,7 @@ export class AppComponent implements OnInit {
 
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
+    public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     private translateService: CustomTranslateService
   ) {
     console.log('AppComponent');
@@ -250,7 +252,7 @@ export class AppComponent implements OnInit {
       console.log('APP-COMPONENT ***** BSAuthStateChanged ***** state', state);
       if (state && state === AUTH_STATE_ONLINE) {
         const user = that.authService.getCurrentUser();
-        that.goOnLine(user);
+        that.goOnLine();
       } else if (state === AUTH_STATE_OFFLINE) {
         // that.goOffLine();
         that.authenticate() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
@@ -353,15 +355,17 @@ export class AppComponent implements OnInit {
    * 3 - carico in d
    * @param user
    */
-  goOnLine = (user: any) => {
+  goOnLine = () => {
     clearTimeout(this.timeModalLogin);
-    console.log('************** goOnLine', user);
+    console.log('********* goOnLine****');
     const tiledeskToken = this.authService.getTiledeskToken();
     const currentUser = this.authService.getCurrentUser();
     this.chatManager.setTiledeskToken(tiledeskToken);
-    this.chatManager.setCurrentUser(currentUser);
-    if (user) {
-      this.presenceService.setPresence(user.uid);
+    if (currentUser) {
+      this.chatManager.setCurrentUser(currentUser);
+      this.presenceService.setPresence(currentUser.uid);
+      this.initConversationsHandler(currentUser.uid);
+      this.initArchivedConversationsHandler(currentUser.uid);
     }
     this.checkPlatform();
     try {
@@ -392,6 +396,26 @@ export class AppComponent implements OnInit {
     }, 1000);
   }
 
+
+  private initConversationsHandler(userId: string){
+    const keys = ['YOU'];
+
+    const translationMap = this.translateService.translateLanguage(keys);
+
+    console.log('initConversationsHandler ------------->', userId, this.tenant);
+    // 1 - init chatConversationsHandler and  archviedConversationsHandler
+    this.conversationsHandlerService.initialize(this.tenant, userId, translationMap);
+  }
+
+  private initArchivedConversationsHandler(userId: string) {
+    const keys = ['YOU'];
+
+    const translationMap = this.translateService.translateLanguage(keys);
+
+    console.log('initArchivedConversationsHandler ------------->', userId, this.tenant);
+    // 1 - init  archviedConversationsHandler
+    this.archivedConversationsHandlerService.initialize(this.tenant, userId, translationMap);
+  }
   /** */
   // signIn = (user: any, error: any) => {
   //   console.log('************** signIn:: user:' + user + '  - error: ' + error);
