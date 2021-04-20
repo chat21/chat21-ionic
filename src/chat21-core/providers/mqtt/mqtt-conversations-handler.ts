@@ -73,7 +73,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         // this.getConversationsFromStorage();
     }
 
-    public getConversationDetail(tenant: string, loggedUserUid: string, conversationId: string) {
+    public getConversationDetail(tenant: string, loggedUserUid: string, conversationId: string): ConversationModel {
         // const conversationSelected = this.conversations.find(item => item.uid === conversationId);
         // console.log('>>>>>>>>>>>>>> getConversationDetail *****: ', conversationSelected);
         // if (conversationSelected) {
@@ -88,6 +88,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         //         this.BSConversationDetail.next(conversation);
         //     });
         // }
+        return;
     }
 
     setConversationRead(conversation: ConversationModel): void {
