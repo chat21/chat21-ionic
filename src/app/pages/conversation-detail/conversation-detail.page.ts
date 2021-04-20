@@ -286,7 +286,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.lastConnectionDate = '';
 
     // init handler vengono prima delle sottoscrizioni!
-    this.initConversationsHandler(); // nk
+    // this.initConversationsHandler(); // nk
     this.initConversationHandler();
     this.initSubscriptions();
     this.addEventsKeyboard();
@@ -384,51 +384,111 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
-  //DARINOMINARE 
-  initConversationsHandler() {
-    console.log('initConversationsHandler ------------->:::', this.tenant, this.loggedUser.uid, this.conversationWith);
-    if (this.conv_type === 'active') {
-      // qui al refresh array conv è null
+  // ------------------------------------------------------------
+  // START SET INFO COMPONENT - moved in info-content.component.ts 
+  // -------------------------------------------------------------
+  // initConversationsHandler() {
+  //   console.log('initConversationsHandler ------------->:::', this.tenant, this.loggedUser.uid, this.conversationWith);
+  //   if (this.conv_type === 'active') {
+  //     // qui al refresh array conv è null
 
-      this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
-        if (conv){
-          this.conversationWith = conv.uid
-          this.selectInfoContentTypeComponent();
-        }else {
-          // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ARCHIVIATE
-          console.log('nullllll', conv)
-          this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
-            if (conv){
-              this.conversationWith = conv.uid
-              this.selectInfoContentTypeComponent();
-            }else {
-              // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
-            }
-          });
-        }
-      });
+  //     this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
+  //       if (conv){
+  //         this.conversationWith = conv.uid
+  //         this.selectInfoContentTypeComponent();
+  //       }else {
+  //         // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ARCHIVIATE
+  //         console.log('nullllll', conv)
+  //         this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
+  //           if (conv){
+  //             this.conversationWith = conv.uid
+  //             this.selectInfoContentTypeComponent();
+  //           }else {
+  //             // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
+  //           }
+  //         });
+  //       }
+  //     });
 
-    } else if (this.conv_type === 'archived') {
+  //   } else if (this.conv_type === 'archived') {
 
-      this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
-        if (conv){
-          this.conversationWith = conv.uid
-          this.selectInfoContentTypeComponent();
-        }else {
-          // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ATTIVE
-          console.log('nullllll', conv)
-          this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
-            if (conv){
-              this.conversationWith = conv.uid
-              this.selectInfoContentTypeComponent();
-            }else {
-              // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
-            }
-          });
-        }
-      });
-    }
-  }
+  //     this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
+  //       if (conv){
+  //         this.conversationWith = conv.uid
+  //         this.selectInfoContentTypeComponent();
+  //       }else {
+  //         // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ATTIVE
+  //         console.log('nullllll', conv)
+  //         this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
+  //           if (conv){
+  //             this.conversationWith = conv.uid
+  //             this.selectInfoContentTypeComponent();
+  //           }else {
+  //             // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
+
+  // ------------------------------------------------------------
+  // START SET INFO COMPONENT - moved in info-content.component.ts 
+  // -------------------------------------------------------------
+  // selectInfoContentTypeComponent() {
+  //   console.log('SubscribeToConversations - selectInfoContentTypeComponent: ', this.conversationWith);
+  //   if (this.conversationWith) {
+  //     this.channelType = setChannelType(this.conversationWith);
+  //     if (this.channelType === TYPE_DIRECT) {
+  //       this.setInfoDirect();
+  //     } else if (this.channelType === TYPE_GROUP) {
+  //       this.setInfoGroup();
+  //     } else if (this.channelType === TYPE_SUPPORT_GROUP) {
+  //       this.urlConversationSupportGroup = '';
+  //       this.setInfoSupportGroup();
+  //     }
+  //   }
+  // }
+
+  // ---------------------------------------------------------------
+  // setInfoDirect - moved in info-content.component.ts da cmmentare
+  // ---------------------------------------------------------------
+  // setInfoDirect() {
+  //   console.log('setInfoDirect:::: ', this.contactsService, this.conversationWith);
+  //   this.member = null;
+  //   const that = this;
+  //   const tiledeskToken = this.authService.getTiledeskToken();
+  //   this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith);
+  // }
+
+  // // ---------------------------------------------------------------
+  // // setInfoGroup - moved in info-content.component.ts da cmmentare
+  // // ---------------------------------------------------------------
+  // setInfoGroup() {
+  //   // group
+  // }
+
+  // ---------------------------------------------------------------------
+  // @ setInfoSupportGroup - moved in info-content.component.ts da cmmentare
+  // ---------------------------------------------------------------------
+  // setInfoSupportGroup() {
+  //   let projectID = '';
+  //   const tiledeskToken = this.authService.getTiledeskToken();
+  //   const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
+  //   if (this.conversationSelected) {
+  //     projectID = this.conversationSelected.attributes.projectId;
+  //   }
+  //   if (projectID && this.conversationWith) {
+  //     let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
+  //     urlPanel += '?token=' + tiledeskToken;
+  //     const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
+  //     this.urlConversationSupportGroup = urlConversationTEMP;
+  //   } else {
+  //     this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
+  //   }
+  //   console.log('this.urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
+  // }
+  // -------------- END SET INFO COMPONENT -------------- //
 
   private setAttributes(): any {
     const attributes: any = {
@@ -450,9 +510,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
 
-  /**
-   * startConversation
-   */
+  // ---------------------------------
+  // startConversation
+  // ---------------------------------
   startConversation() {
     console.log('startConversation: ', this.conversationWith);
     if (this.conversationWith) {
@@ -472,64 +532,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log('this.conversationAvatar: ', this.conversationAvatar);
   }
 
-  // -------------- START SET INFO COMPONENT -------------- //
-  /**
-   *
-   */
-  selectInfoContentTypeComponent() {
-    console.log('SubscribeToConversations - selectInfoContentTypeComponent: ', this.conversationWith);
-    if (this.conversationWith) {
-      this.channelType = setChannelType(this.conversationWith);
-      if (this.channelType === TYPE_DIRECT) {
-        this.setInfoDirect();
-      } else if (this.channelType === TYPE_GROUP) {
-        this.setInfoGroup();
-      } else if (this.channelType === TYPE_SUPPORT_GROUP) {
-        this.urlConversationSupportGroup = '';
-        this.setInfoSupportGroup();
-      }
-    }
-  }
-
-  /**
-   *
-   */
-  setInfoDirect() {
-    console.log('setInfoDirect:::: ', this.contactsService, this.conversationWith);
-    this.member = null;
-    const that = this;
-    const tiledeskToken = this.authService.getTiledeskToken();
-    this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith);
-  }
-
-  /**
-   *
-   */
-  setInfoGroup() {
-    // group
-  }
-
-  /**
-   *
-   */
-  setInfoSupportGroup() {
-    let projectID = '';
-    const tiledeskToken = this.authService.getTiledeskToken();
-    const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
-    if (this.conversationSelected) {
-      projectID = this.conversationSelected.attributes.projectId;
-    }
-    if (projectID && this.conversationWith) {
-      let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
-      urlPanel += '?token=' + tiledeskToken;
-      const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
-      this.urlConversationSupportGroup = urlConversationTEMP;
-    } else {
-      this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
-    }
-    console.log('this.urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
-  }
-  // -------------- END SET INFO COMPONENT -------------- //
+ 
 
 
 
@@ -673,18 +676,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
 
 
-    subscribtionKey = 'BScontactDetail';
-    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    if (!subscribtion) {
-      subscribtion = this.contactsService.BScontactDetail.subscribe((contact: UserModel) => {
-        console.log('***** DATAIL subscribeBScontactDetail *****BScontactDetail', this.conversationWith, contact);
-        if (contact && this.conversationWith === contact.uid) {
-          that.member = contact;
-        }
-      });
-      const subscribe = { key: subscribtionKey, value: subscribtion };
-      this.subscriptions.push(subscribe);
-    }
+    // subscribtionKey = 'BScontactDetail';
+    // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    // if (!subscribtion) {
+    //   subscribtion = this.contactsService.BScontactDetail.subscribe((contact: UserModel) => {
+    //     console.log('***** DATAIL subscribeBScontactDetail *****BScontactDetail', this.conversationWith, contact);
+    //     if (contact && this.conversationWith === contact.uid) {
+    //       that.member = contact;
+    //     }
+    //   });
+    //   const subscribe = { key: subscribtionKey, value: subscribtion };
+    //   this.subscriptions.push(subscribe);
+    // }
 
 
     subscribtionKey = 'messageAdded';
@@ -786,11 +789,19 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
+  // updateConversationBadge() {
+  //   if (this.conversationSelected && this.conversationsHandlerService && this.conv_type === 'active') {
+  //     this.conversationsHandlerService.setConversationRead(this.conversationSelected)
+  //   } else if (this.conversationSelected && this.archivedConversationsHandlerService && this.conv_type === 'archived') {
+  //     this.archivedConversationsHandlerService.setConversationRead(this.conversationSelected)
+  //   }
+  // }
+
   updateConversationBadge() {
-    if (this.conversationSelected && this.conversationsHandlerService && this.conv_type === 'active') {
-      this.conversationsHandlerService.setConversationRead(this.conversationSelected)
-    } else if (this.conversationSelected && this.archivedConversationsHandlerService && this.conv_type === 'archived') {
-      this.archivedConversationsHandlerService.setConversationRead(this.conversationSelected)
+    if (this.conversationWith && this.conversationsHandlerService && this.conv_type === 'active') {
+      this.conversationsHandlerService.setConversationRead(this.conversationWith)
+    } else if (this.conversationWith && this.archivedConversationsHandlerService && this.conv_type === 'archived') {
+      this.archivedConversationsHandlerService.setConversationRead(this.conversationWith)
     }
   }
 
