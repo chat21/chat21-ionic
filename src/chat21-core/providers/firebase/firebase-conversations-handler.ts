@@ -197,22 +197,21 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     }
 
     archiveConversation(conversationId: string) {
-
+        const that = this
         this.setClosingConversation(conversationId, true);
         const index = searchIndexInArrayForUid(this.conversations, conversationId);
         // if (index > -1) {
         //     this.conversations.splice(index, 1);
         // fare chiamata delete per rimuoverle la conversazione da remoto
-        // console.log('FIREBASE-CONVERSATION-HANDLER ARCHIVE CONV conversationId',  conversationId) 
         this.deleteConversation(conversationId, function (response) {
             console.log('FIREBASE-CONVERSATION-HANDLER ARCHIVE-CONV response', response)
            
             if (response === 'success') {
                 if (index > -1) {
-                    this.conversations.splice(index, 1);
+                    that.conversations.splice(index, 1);
                 }
             } else if (response === 'error') {
-                this.setClosingConversation(conversationId, false);
+                that.setClosingConversation(conversationId, false);
             }
 
         })
@@ -241,18 +240,16 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
                 const url = this.BASE_URL + '/api/' + this.tenant + '/conversations/' + conversationId + queryString;
                 console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV - URL:', url);
 
-                this.http
-                    .delete(url, httpOptions).subscribe(res => {
+                this.http.delete(url, httpOptions).subscribe(res => {
                         console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV - RES', res);
                         callback('success')
-                    }, (error) => {
+                }, (error) => {
                         console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV ERROR ', error);
-
                         callback('error')
-                    }, () => {
+                }, () => {
                         console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV * COMPLETE *');
 
-                    });
+                });
             } else {
                 callback('error')
             }
@@ -289,18 +286,20 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             // return conversationSelected
             // this.BSConversationDetail.next(conversationSelected);
         } else {
-            const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/conversations/' + conversationId;
+            // const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/conversations/' + conversationId;
+            const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversationId;
             this.logger.printDebug('urlNodeFirebase conversationDetail *****', urlNodeFirebase)
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
-                const conversation: ConversationModel = childSnapshot.val();
+                const childData: ConversationModel = childSnapshot.val();
+                childData.uid = childSnapshot.key;
+                const conversation = this.completeConversation(childData);
                 if(conversation){
                     callback(conversation)
                 }else {
                     callback(null)
                 }
                 // this.BSConversationDetail.next(conversation);
-                this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> conversation *****: ',conversation)
             });
         }
 

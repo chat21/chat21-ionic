@@ -10,13 +10,15 @@ import { UserModel } from 'src/chat21-core/models/user';
 
 
 export class InfoContentComponent implements OnInit {
-  @Input() channelType: string;
-  @Input() urlConversationSupportGroup: string;
+
   @Input() openInfoConversation: boolean;
   @Input() translationMap: Map<string, string>;
   @Input() member: UserModel;
 
   public urlConversation: any;
+
+  private channelType: string;
+  private urlConversationSupportGroup: string;
 
   constructor() { }
 

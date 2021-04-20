@@ -33,7 +33,6 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
 
     // BehaviorSubject
     BSConversationDetail: BehaviorSubject<ConversationModel>;
-    BSConversations: BehaviorSubject<ConversationModel[]>;
     readAllMessages: BehaviorSubject<string>;
     archivedConversationAdded: BehaviorSubject<ConversationModel>;
     archivedConversationChanged: BehaviorSubject<ConversationModel>;
@@ -101,7 +100,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
      // ---------------------------------------------------------------------------------
      // New connect - renamed subscribeToConversation
      //----------------------------------------------------------------------------------
-     subscribeToConversations(callback) {
+     subscribeToConversations(callback: any) {
         const that = this;
         const urlNodeFirebase = archivedConversationsPathForUserId(this.tenant, this.loggedUserId);
         this.logger.printDebug('SubscribeToConversations (firebase-convs-handler) - conversations::ARCHIVED urlNodeFirebase', urlNodeFirebase)
@@ -119,9 +118,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
         console.log('SubscribeToConversations (firebase-convs-handler) - archivedConversations' , that.archivedConversations )
 
         setTimeout(() => {
-        this.BSConversations.next(that.archivedConversations) 
-            callback(that.archivedConversations) 
-            
+            callback() 
           }, 2000);
         // SET AUDIO
         // this.audio = new Audio();
@@ -181,20 +178,27 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
     }
 
 
-    public getConversationDetail(tenant: string, loggedUserUid: string, conversationId: string): ConversationModel {
-        const conversationSelected = this.archivedConversations.find(item => item.uid === conversationId);
-        this.logger.printDebug('SubscribeToConversations  (firebase-archivded-convs-handler) getConversationDetail::ARCHIVED *****: ', conversationSelected)
-        if (conversationSelected) {
+    getConversationDetail(conversationId: string, callback: any): void {
+        const conversation = this.archivedConversations.find(item => item.uid === conversationId);
+        this.logger.printDebug('SubscribeToConversations  (firebase-archivded-convs-handler) getConversationDetail::ARCHIVED *****: ', conversation)
+        if (conversation) {
+            callback(conversation)
             // this.BSConversationDetail.next(conversationSelected);
-            return conversationSelected
         } else {
-            const urlNodeFirebase = '/apps/' + tenant + '/users/' + loggedUserUid + '/conversations/' + conversationId;
-            this.logger.printDebug('urlNodeFirebase conversationDetail::ARCHIVED *****', urlNodeFirebase)
+            // const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/archived_conversations/' + conversationId;
+            const urlNodeFirebase = archivedConversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversationId;
+            this.logger.printDebug('urlNodeFirebase conversationDetail *****', urlNodeFirebase)
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
-                const conversation: ConversationModel = childSnapshot.val();
-                this.BSConversationDetail.next(conversation);
-                this.logger.printDebug('SubscribeToConversations  (firebase-archivded-convs-handler) conversation: ', conversation)
+                const childData: ConversationModel = childSnapshot.val();
+                childData.uid = childSnapshot.key;
+                const conversation = this.completeConversation(childData);
+                if(conversation){
+                    callback(conversation)
+                }else {
+                    callback(null)
+                }
+                // this.BSConversationDetail.next(conversation);
             });
         }
     }

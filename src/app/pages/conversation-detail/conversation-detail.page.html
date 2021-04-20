@@ -114,12 +114,10 @@
           [class.mobile]="isMobile"
           [class.open]="openInfoConversation">
             <app-info-content 
-              [channelType] = channelType
               [openInfoConversation] = openInfoConversation
-              [urlConversationSupportGroup]= urlConversationSupportGroup
               [translationMap] = translationMap
-              [member] = member
-            ></app-info-content>
+              [member] = member>
+            </app-info-content>
         </ion-col>
 
       </ion-row>

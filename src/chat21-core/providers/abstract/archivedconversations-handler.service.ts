@@ -8,7 +8,6 @@ export abstract class ArchivedConversationsHandlerService {
 
   // BehaviorSubject
   abstract BSConversationDetail: BehaviorSubject<ConversationModel> = new BehaviorSubject<ConversationModel>(null);
-  abstract BSConversations: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);
   abstract readAllMessages: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   abstract archivedConversationAdded: BehaviorSubject<ConversationModel> = new BehaviorSubject<ConversationModel>(null);
   abstract archivedConversationChanged: BehaviorSubject<ConversationModel> = new BehaviorSubject<ConversationModel>(null);
@@ -23,11 +22,11 @@ export abstract class ArchivedConversationsHandlerService {
   // functions
   abstract initialize(tenant: string, userId: string, translationMap: Map<string, string>): void;
   // abstract connect(): void;
-  abstract subscribeToConversations(conversations: any): void;
+  abstract subscribeToConversations(callback: any): void;
   abstract countIsNew(): number;
   abstract setConversationRead(conversation: ConversationModel)
   abstract dispose(): void;
-  abstract getConversationDetail(tenant: string, userId: string, conversationId: string): ConversationModel;
+  abstract getConversationDetail(conversationId: string, callback): void;
   abstract getClosingConversation(conversationId: string): boolean;
   abstract setClosingConversation(conversationId: string, status: boolean): void;
   abstract deleteClosingConversation(conversationId: string): void;

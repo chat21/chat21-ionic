@@ -238,14 +238,12 @@ export class ConversationListPage implements OnInit {
     // 5 - connect archviedConversationsHandler to firebase event (add, change, remove)
     // this.archivedConversationsHandlerService.subscribeToConversations();
 
-    this.archivedConversationsHandlerService.subscribeToConversations((conversations: any) => {
-      this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations archived', conversations)
-      if (!conversations || conversations.length === 0) {
+    this.archivedConversationsHandlerService.subscribeToConversations(() => {
+      this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations archived')
+      if (!this.archivedConversations || this.archivedConversations.length === 0) {
         that.showPlaceholder = true;
       }
     });
-
-
 
     this.archivedConversations = this.archivedConversationsHandlerService.archivedConversations;
     this.logger.printDebug("archived conversation", this.archivedConversations)

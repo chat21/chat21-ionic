@@ -390,23 +390,43 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (this.conv_type === 'active') {
       // qui al refresh array conv è null
 
-      // this.conversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
       this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
         if (conv){
+          this.conversationWith = conv.uid
           this.selectInfoContentTypeComponent();
         }else {
-          // archiveddd
+          // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ARCHIVIATE
+          console.log('nullllll', conv)
+          this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
+            if (conv){
+              this.conversationWith = conv.uid
+              this.selectInfoContentTypeComponent();
+            }else {
+              // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
+            }
+          });
         }
       });
-      
 
     } else if (this.conv_type === 'archived') {
-      // this.archivedConversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
 
-      this.conversationSelected = this.archivedConversationsHandlerService.getConversationDetail(this.tenant, this.loggedUser.uid, this.conversationWith);
-      if (this.conversationSelected){
-        this.selectInfoContentTypeComponent();
-      }
+      this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
+        if (conv){
+          this.conversationWith = conv.uid
+          this.selectInfoContentTypeComponent();
+        }else {
+          // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ATTIVE
+          console.log('nullllll', conv)
+          this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
+            if (conv){
+              this.conversationWith = conv.uid
+              this.selectInfoContentTypeComponent();
+            }else {
+              // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
+            }
+          });
+        }
+      });
     }
   }
 
@@ -826,7 +846,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   /** */
   returnSendMessage(e: any) {
-    console.log('returnSendMessage::: ', e);
+    console.log('returnSendMessage::: ', e, this.conversationWith);
     try {
       let message = '';
       if (e.message) {
