@@ -200,5 +200,6 @@ export class ProfileInfoPage implements OnInit {
   /** */
   public onLogout() {
     this.authService.logout();
+    this.onClose()
   }
 }
