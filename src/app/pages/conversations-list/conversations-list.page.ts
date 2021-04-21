@@ -192,17 +192,21 @@ export class ConversationListPage implements OnInit {
     // 2 - get conversations from storage
     // this.chatConversationsHandler.getConversationsFromStorage();
     // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-    
+
     // this.conversationsHandlerService.connect(); // old - now renamed in subscribeToConversations
-   
-    this.conversationsHandlerService.subscribeToConversations(() => {
-      this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
-      if (!this.conversations || this.conversations.length === 0) {
-        that.showPlaceholder = true;
-      }
-    });
+
+    // ------------------------------------------------------------------------------------------
+    // subscribeToConversations Moved in APP.COMPONENT.ts - to manage that.showPlaceholder = true;
+    // ------------------------------------------------------------------------------------------ 
+    // this.conversationsHandlerService.subscribeToConversations(() => {
+    //   this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
+    //   if (!this.conversations || this.conversations.length === 0) {
+    //     that.showPlaceholder = true;
+    //   }
+    // });
 
     this.conversations = this.conversationsHandlerService.conversations;
+    console.log('CONVERSATION-LIST-PAGE CONVS', this.conversations)
 
     // 6 - save conversationHandler in chatManager
     this.chatManager.setConversationsHandler(this.conversationsHandlerService);
@@ -454,7 +458,7 @@ export class ConversationListPage implements OnInit {
     // } else {
     //   // da implementare se nn c'è stata nessuna conv attive selezionata 
     // }
-  
+
   }
 
 
@@ -641,7 +645,7 @@ export class ConversationListPage implements OnInit {
 
 
 
-// ?????? 
+  // ?????? 
   navigateByUrl(converationType: string, uidConvSelected: string) {
     console.log('ConversationListPage navigateByUrl run  this.setUidConvSelected');
     this.setUidConvSelected(uidConvSelected, converationType);

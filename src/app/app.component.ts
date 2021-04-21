@@ -124,9 +124,11 @@ export class AppComponent implements OnInit {
       this.typingService.initialize();
       this.uploadService.initialize();
       this.initSubscriptions();
+     
       console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
     });
   }
+
 
   /**
    * initFirebase
@@ -261,9 +263,9 @@ export class AppComponent implements OnInit {
 
     this.authService.BSSignOut.subscribe((data: any) => {
       console.log('***** BSSignOut *****', data);
-      if (data) {
-        that.presenceService.removePresence();
-      }
+      // if (data) {
+      //   that.presenceService.removePresence();
+      // }
     });
 
 
@@ -384,11 +386,12 @@ export class AppComponent implements OnInit {
    */
   goOffLine = () => {
     console.log('************** goOffLine:', this.authModal);
+    this.presenceService.removePresence();
     this.chatManager.setTiledeskToken(null);
     this.chatManager.setCurrentUser(null);
     this.chatManager.goOffLine();
+    
     this.authService.logout()
-
     const that = this;
     clearTimeout(this.timeModalLogin);
     this.timeModalLogin = setTimeout(() => {
@@ -405,7 +408,23 @@ export class AppComponent implements OnInit {
     console.log('initConversationsHandler ------------->', userId, this.tenant);
     // 1 - init chatConversationsHandler and  archviedConversationsHandler
     this.conversationsHandlerService.initialize(this.tenant, userId, translationMap);
+
+    this.subscribeToConvs()
+    
   }
+  subscribeToConvs(){
+    this.conversationsHandlerService.subscribeToConversations(() => {
+      console.log('APP-COMPONENT - INIT CONV')
+      const conversations = this.conversationsHandlerService.conversations;
+      console.log('APP-COMPONEN CONVS' , conversations )
+      // this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
+      // if (!this.conversations || this.conversations.length === 0) {
+      //   that.showPlaceholder = true;
+      // }
+    });
+  }
+
+
 
   private initArchivedConversationsHandler(userId: string) {
     const keys = ['YOU'];
