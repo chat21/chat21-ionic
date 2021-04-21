@@ -35,8 +35,8 @@ export class ContactsDirectoryPage implements OnInit {
 
   /** */
   initialize() {
-    console.log('initialize');
-    console.log('loadContactsFromUrl token: ', this.token);
+    console.log('Contact-directory-page - initialize');
+    console.log('Contact-directory-page - token: ', this.token);
     this.contacts = [];
     this.initSubscriptions();
     this.contactsService.loadContactsFromUrl(this.token);
@@ -46,10 +46,10 @@ export class ContactsDirectoryPage implements OnInit {
    * initSubscriptions
    */
   initSubscriptions() {
-    console.log('initSubscriptions');
+    console.log('Contact-directory-page initSubscriptions to BScontacts');
     const that = this;
     this.contactsService.BScontacts.subscribe((contacts: any) => {
-      console.log('***** BScontacts *****', contacts);
+      console.log('Contact-directory-page ***** BScontacts *****', contacts);
       if (contacts) {
         that.contacts = contacts;
       }
