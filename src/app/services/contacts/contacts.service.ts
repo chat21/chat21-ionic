@@ -50,6 +50,8 @@ export class ContactsService {
   /** */
   public loadContactsFromUrl(token: string) {
     this.contacts = [];
+    console.log('CONTACT_SERVICE token', token);
+    console.log('CONTACT_SERVICE urlRemoteContacts',  this.urlRemoteContacts)
     if (this.urlRemoteContacts.startsWith('http') && token) {
       const that = this;
       const httpOptions = {
