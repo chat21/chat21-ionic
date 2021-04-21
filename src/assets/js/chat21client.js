@@ -495,6 +495,29 @@ class Chat21Client {
         xmlhttp.send(null);
     }
 
+    conversationDetail(conversWith, callback) {
+        // ex.: http://localhost:8004/tilechat/04-ANDREASPONZIELLO/conversations/CONVERS_WITH
+        const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/conversations/${conversWith}`
+        console.log("getting conversation detail:", URL)
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", URL, true);
+        xmlhttp.setRequestHeader("authorization", this.jwt);
+        xmlhttp.onreadystatechange = function() {
+            console.log("onreadystatechange!")
+            if (callback && xmlhttp.readyState == 4 && xmlhttp.status == 200 && xmlhttp.responseText) {
+                try {
+                    const json = JSON.parse(xmlhttp.responseText);
+                    callback(null, json.result);
+                }
+                catch (err) {
+                    console.log("parsing json ERROR", err);
+                    callback(err, null);
+                }
+            }
+        };
+        xmlhttp.send(null);
+    }
+    
     getGroup(group_id, callback) {
         // ex.: http://localhost:8004/tilechat/04-ANDREASPONZIELLO/conversations
         const URL = `${this.APIendpoint}/${this.appid}/groups/${group_id}`
