@@ -93,9 +93,15 @@ export class ContactsDirectoryPage implements OnInit {
 
   /** */
   async onClose() {
+    console.log('CONTACTS-DIRECTORY - onClose MODAL')
+    console.log('CONTACTS-DIRECTORY - onClose MODAL isModalOpened ',await this.modalController.getTop())
     const isModalOpened = await this.modalController.getTop();
+   
     if (isModalOpened) {
-      this.modalController.dismiss({ confirmed: true });
+      this.modalController.dismiss({ 
+        
+        confirmed: true 
+      });
     } else {
       this.navService.pop();
     }
@@ -106,8 +112,10 @@ export class ContactsDirectoryPage implements OnInit {
    * @param user
    */
   openNewChat(user: UserModel) {
-    this.events.publish('uidConvSelected:changed', user, 'new');
     // this.onClose();
+    console.log('CONTACTS-DIRECTORY - openNewChat')
+    this.events.publish('uidConvSelected:changed', user, 'new');
+    this.onClose();
   }
 
 }
