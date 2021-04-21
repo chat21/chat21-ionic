@@ -48,7 +48,6 @@ export class FirebaseAuthService extends AuthService {
   //TODO-GAB
   // private imageRepo: ImageRepoService = new FirebaseImageRepoService();
 
-  private storagePrefix: string;
   private tiledeskToken: string;
   private firebaseToken: string;
   private currentUser: UserModel;
@@ -66,9 +65,8 @@ export class FirebaseAuthService extends AuthService {
   /**
    *
    */
-  initialize(storagePrefix: string) {
+  initialize() {
     this.SERVER_BASE_URL = this.getBaseUrl();
-    this.storagePrefix = storagePrefix;
     this.URL_TILEDESK_SIGNIN = this.SERVER_BASE_URL + 'auth/signin';
     this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously'
     this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'auth/signinWithCustomToken';

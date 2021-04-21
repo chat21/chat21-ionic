@@ -117,7 +117,7 @@ export class AppComponent implements OnInit {
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
       this.appStorageService.initialize(environment.storage_prefix, environment.authPersistence, '')
-      this.authService.initialize('');
+      this.authService.initialize();
       // this.currentUserService.initialize();
       this.chatManager.initialize();
       this.presenceService.initialize();
