@@ -36,7 +36,7 @@ export class ContactsDirectoryPage implements OnInit {
   /** */
   initialize() {
     console.log('initialize');
-    console.log('token: ', this.token);
+    console.log('loadContactsFromUrl token: ', this.token);
     this.contacts = [];
     this.initSubscriptions();
     this.contactsService.loadContactsFromUrl(this.token);
