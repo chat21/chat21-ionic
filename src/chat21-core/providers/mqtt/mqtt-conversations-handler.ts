@@ -73,22 +73,31 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         // this.getConversationsFromStorage();
     }
 
-    public getConversationDetail(conversationId: string, callback: (ConversationModel)=>void) {
-        // const conversationSelected = this.conversations.find(item => item.uid === conversationId);
-        // console.log('>>>>>>>>>>>>>> getConversationDetail *****: ', conversationSelected);
-        // if (conversationSelected) {
-        //     this.BSConversationDetail.next(conversationSelected);
-        // } else {
-        //     const urlNodeFirebase = '/apps/' + tenant + '/users/' + loggedUserUid + '/conversations/' + conversationId;
-        //     console.log('urlNodeFirebase conversationDetail *****', urlNodeFirebase);
-        //     const firebaseMessages = firebase.database().ref(urlNodeFirebase);
-        //     firebaseMessages.on('value', (childSnapshot) => {
-        //         console.log('>>>>>>>>>>>>>> urlNodeFirebase conversationDetail *****: ', childSnapshot.val());
-        //         const conversation: ConversationModel = childSnapshot.val();
-        //         this.BSConversationDetail.next(conversation);
-        //     });
-        // }
-        callback(null)
+    public getConversationDetail(conversationWith: string, callback) {
+        // 1 cerco array locale
+        // 2 cerco remoto
+        // callback
+
+        const conversation = this.conversations.find(conv => conv.conversation_with === conversationWith);
+        console.log('found locally? getConversationDetail *****: ', conversation);
+        if (conversation) {
+            console.log('found!');
+            callback(conversation);
+        } else {
+            console.log('Not found locally, remote.getConversationDetail *****: ', conversation);
+            this.chat21Service.chatClient.conversationDetail(conversationWith, (conversation) => {
+                if (conversation) {
+                    if (callback) {
+                        callback(this.completeConversation(conversation));
+                    }
+                }
+                else {
+                    if (callback) {
+                        callback(null);
+                    }
+                }
+            })
+        }
     }
 
     setConversationRead(conversationrecipient): void {

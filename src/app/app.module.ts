@@ -88,7 +88,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
     chat21Service.config = appConfig.getConfig().chat21Config;
     chat21Service.initChat();
     console.log("appConfig.getConfig().SERVER_BASE_URL", appConfig.getConfig().apiUrl);
-    const auth = new MQTTAuthService(http, chat21Service);
+    const auth = new MQTTAuthService(http, chat21Service, appSorage);
     
     auth.setBaseUrl(appConfig.getConfig().apiUrl)
     return auth
