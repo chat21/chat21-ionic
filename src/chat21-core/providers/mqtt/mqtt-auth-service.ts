@@ -55,9 +55,9 @@ export class MQTTAuthService extends AuthService {
   /**
    *
    */
-  initialize(storagePrefix: string) {
+  initialize() {
     this.SERVER_BASE_URL = this.getBaseUrl();
-    this.storagePrefix = storagePrefix;
+    this.storagePrefix = 'chat_sv5';
     this.URL_TILEDESK_SIGNIN = this.SERVER_BASE_URL + 'auth/signin';
     this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously';
     this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'chat21/native/auth/createCustomToken';
