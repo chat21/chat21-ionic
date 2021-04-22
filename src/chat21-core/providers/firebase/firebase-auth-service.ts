@@ -122,6 +122,7 @@ export class FirebaseAuthService extends AuthService {
 
   getTiledeskToken(): string {
     // console.log('UserService::tiledeskToken', this.tiledeskToken);
+    console.log('FIREBASE-AUTH-SERV - GET TILEDESK TOKEN: ', this.tiledeskToken);
     return this.tiledeskToken;
   }
 
@@ -211,7 +212,7 @@ export class FirebaseAuthService extends AuthService {
   createUserWithEmailAndPassword(email: string, password: string): any {
     const that = this;
     return firebase.auth().createUserWithEmailAndPassword(email, password).then((response) => {
-      this.logger.printLog('firebase-create-user-with-email-and-password');
+      this.logger.printLog('FIREBASE-AUTH-SERV - CRATE USER WITH EMAIL: ' ,email, ' & PSW: ', password);
       // that.firebaseCreateUserWithEmailAndPassword.next(response);
       return response;
     }).catch((error) => {
@@ -276,7 +277,7 @@ export class FirebaseAuthService extends AuthService {
    * @param password
    */
   signInWithEmailAndPassword(email: string, password: string) {
-    console.log('signInWithEmailAndPassword', email, password);
+    console.log('FIREBASE-AUTH-SERV - signInWithEmailAndPassword', email, password);
     const httpHeaders = new HttpHeaders();
     
     httpHeaders.append('Accept', 'application/json');
@@ -289,6 +290,7 @@ export class FirebaseAuthService extends AuthService {
     const that = this;
     this.http.post(this.URL_TILEDESK_SIGNIN, postData, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
+          console.log('FIREBASE-AUTH-SERV - signInWithEmailAndPassword data ', data);
           that.tiledeskToken = data['token'];
           this.createCompleteUser(data['user']);
           this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
@@ -467,8 +469,11 @@ export class FirebaseAuthService extends AuthService {
     // cancello token firebase dal local storage e da firebase
     // dovrebbe scattare l'evento authchangeStat
     this.BSSignOut.next(true);
-    this.signOut();
-    console.log('logout non nancora abilitato');
+    // setTimeout(() => {
+      this.signOut();
+    // }, 100);
+   
+    console.log('logout non nancora x');
   }
 
 }
