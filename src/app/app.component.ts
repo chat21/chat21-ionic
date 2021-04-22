@@ -124,10 +124,13 @@ export class AppComponent implements OnInit {
       this.typingService.initialize();
       this.uploadService.initialize();
       this.initSubscriptions();
-     
+
       console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
+      this.listenToLogoutEvent()
     });
   }
+
+
 
 
   /**
@@ -261,12 +264,12 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.authService.BSSignOut.subscribe((data: any) => {
-      console.log('***** BSSignOut *****', data);
-      // if (data) {
-      //   that.presenceService.removePresence();
-      // }
-    });
+    // this.authService.BSSignOut.subscribe((data: any) => {
+    //   console.log('***** BSSignOut *****', data);
+    //   if (data) {
+    //     that.presenceService.removePresence();
+    //   }
+    // });
 
 
     // this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
@@ -350,6 +353,8 @@ export class AppComponent implements OnInit {
     this.modalController.dismiss({ confirmed: true });
   }
 
+
+
   /**
    * goOnLine:
    * 1 - nascondo splashscreen
@@ -359,9 +364,10 @@ export class AppComponent implements OnInit {
    */
   goOnLine = () => {
     clearTimeout(this.timeModalLogin);
-    console.log('********* goOnLine****');
+    console.log('APP-COMP - goOnLine****');
     const tiledeskToken = this.authService.getTiledeskToken();
     const currentUser = this.authService.getCurrentUser();
+    console.log('APP-COMP currentUser', currentUser);
     this.chatManager.setTiledeskToken(tiledeskToken);
     if (currentUser) {
       this.chatManager.setCurrentUser(currentUser);
@@ -381,17 +387,33 @@ export class AppComponent implements OnInit {
     this.chatManager.startApp();
   }
 
+
+  listenToLogoutEvent() {
+    this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
+
+      console.log('APP-COMP hasclickedlogout', hasclickedlogout);
+
+      if (hasclickedlogout === true) {
+        this.removePresenceAndLogout()
+      }
+    });
+  }
+
+  removePresenceAndLogout() {
+    this.presenceService.removePresence();
+    this.authService.logout()
+  }
   /**
    *
    */
   goOffLine = () => {
     console.log('************** goOffLine:', this.authModal);
-    this.presenceService.removePresence();
+
     this.chatManager.setTiledeskToken(null);
     this.chatManager.setCurrentUser(null);
     this.chatManager.goOffLine();
-    
-    this.authService.logout()
+
+
     const that = this;
     clearTimeout(this.timeModalLogin);
     this.timeModalLogin = setTimeout(() => {
@@ -400,7 +422,7 @@ export class AppComponent implements OnInit {
   }
 
 
-  private initConversationsHandler(userId: string){
+  private initConversationsHandler(userId: string) {
     const keys = ['YOU'];
 
     const translationMap = this.translateService.translateLanguage(keys);
@@ -410,13 +432,13 @@ export class AppComponent implements OnInit {
     this.conversationsHandlerService.initialize(this.tenant, userId, translationMap);
 
     this.subscribeToConvs()
-    
+
   }
-  subscribeToConvs(){
+  subscribeToConvs() {
     this.conversationsHandlerService.subscribeToConversations(() => {
       console.log('APP-COMPONENT - INIT CONV')
       const conversations = this.conversationsHandlerService.conversations;
-      console.log('APP-COMPONEN CONVS' , conversations )
+      // console.log('APP-COMPONEN CONVS' , conversations )
       // this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
       // if (!this.conversations || this.conversations.length === 0) {
       //   that.showPlaceholder = true;

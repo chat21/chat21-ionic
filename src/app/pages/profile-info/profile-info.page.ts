@@ -199,7 +199,9 @@ export class ProfileInfoPage implements OnInit {
 
   /** */
   public onLogout() {
-    this.authService.logout();
+    // this.authService.logout();
     this.onClose()
+    // pubblico evento
+    this.events.publish('profileInfoButtonClick:logout', true);
   }
 }
