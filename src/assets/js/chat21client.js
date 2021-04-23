@@ -240,6 +240,7 @@ class Chat21Client {
     }
 
     onMessageAdded(callback) {
+        console.log("onMessageAdded(callback)")
         this.last_handler++
         this.onMessageAddedCallbacks.set(this.last_handler, callback)
         return this.last_handler;
@@ -347,28 +348,35 @@ class Chat21Client {
                     }
                 }
 
-                if (this.onMessageAddedCallbacks) {
-                    if (topic.includes("/messages/") && topic.endsWith(_CLIENTADDED)) {
+                // *********************************************************
+                // This snippet is important to get all messages and notify
+                // conversation > added (to create a conversation entry)
+                // *********************************************************
+                // if (this.onMessageAddedCallbacks) {
+                //     console.log("ttttttttt")
+                if (topic.includes("/messages/") && topic.endsWith(_CLIENTADDED)) {
+                    if (this.onMessageAddedCallbacks) {
                         this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                             callback(JSON.parse(message.toString()), _topic)
                         });
-                        // Observing conversations added from messages
-                        console.log("Observing conversations added from messages", message_json);
-                        if (this.onConversationAddedCallbacks) {
-                            console.log("callbacks ok........");
-                            let update_conversation = true;
-                            if (message_json.attributes && message_json.attributes.updateconversation == false) {
-                              update_conversation = false
-                            }
-                            console.log("update_conversation........", update_conversation);
-                            if (update_conversation) {
-                                this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
-                                    callback(JSON.parse(message.toString()), _topic)
-                                });
-                            }
-                        }
                     }
+                    // Observing conversations added from messages
+                    // console.log("Observing conversations added from messages", message_json);
+                    // if (this.onConversationAddedCallbacks) {
+                    // console.log("callbacks ok........");
+                    let update_conversation = true;
+                    if (message_json.attributes && message_json.attributes.updateconversation == false) {
+                        update_conversation = false
+                    }
+                    console.log("update_conversation........", update_conversation);
+                    if (update_conversation && this.onConversationAddedCallbacks) {
+                        this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
+                            callback(JSON.parse(message.toString()), _topic)
+                        });
+                    }
+                    // }
                 }
+                // }
 
                 if (this.onMessageUpdatedCallbacks) {
                     if (topic.includes("/messages/") && topic.endsWith(_CLIENTUPDATED)) {
