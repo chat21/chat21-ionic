@@ -52,7 +52,7 @@ export class FirebaseAuthService extends AuthService {
   private firebaseToken: string;
   private currentUser: UserModel;
   private logger: CustomLogger = new CustomLogger(true);
-  
+
   constructor(
     // private events: EventsService,
     public http: HttpClient,
@@ -108,9 +108,9 @@ export class FirebaseAuthService extends AuthService {
     return this.currentUser;
   }
 
-  setCurrentUser(user:UserModel) {
+  setCurrentUser(user: UserModel) {
     // return firebase.auth().currentUser;
-    this.currentUser= user;
+    this.currentUser = user;
   }
 
 
@@ -211,7 +211,7 @@ export class FirebaseAuthService extends AuthService {
   createUserWithEmailAndPassword(email: string, password: string): any {
     const that = this;
     return firebase.auth().createUserWithEmailAndPassword(email, password).then((response) => {
-      this.logger.printLog('FIREBASE-AUTH-SERV - CRATE USER WITH EMAIL: ' ,email, ' & PSW: ', password);
+      this.logger.printLog('FIREBASE-AUTH-SERV - CRATE USER WITH EMAIL: ', email, ' & PSW: ', password);
       // that.firebaseCreateUserWithEmailAndPassword.next(response);
       return response;
     }).catch((error) => {
@@ -264,13 +264,13 @@ export class FirebaseAuthService extends AuthService {
     });
   }
 
-// ********************* END FIREBASE AUTH ********************* //
+  // ********************* END FIREBASE AUTH ********************* //
 
 
 
 
 
-// ********************* TILEDESK AUTH ********************* //
+  // ********************* TILEDESK AUTH ********************* //
   /**
    * @param email
    * @param password
@@ -278,9 +278,9 @@ export class FirebaseAuthService extends AuthService {
   signInWithEmailAndPassword(email: string, password: string) {
     console.log('FIREBASE-AUTH-SERV - signInWithEmailAndPassword', email, password);
     const httpHeaders = new HttpHeaders();
-    
+
     httpHeaders.append('Accept', 'application/json');
-    httpHeaders.append('Content-Type', 'application/json' );
+    httpHeaders.append('Content-Type', 'application/json');
     const requestOptions = { headers: httpHeaders };
     const postData = {
       email: email,
@@ -288,15 +288,15 @@ export class FirebaseAuthService extends AuthService {
     };
     const that = this;
     this.http.post(this.URL_TILEDESK_SIGNIN, postData, requestOptions).subscribe((data) => {
-        if (data['success'] && data['token']) {
-          console.log('FIREBASE-AUTH-SERV - signInWithEmailAndPassword data ', data);
-          that.tiledeskToken = data['token'];
-          this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
-          that.createFirebaseCustomToken();
-        }
+      if (data['success'] && data['token']) {
+        console.log('FIREBASE-AUTH-SERV - signInWithEmailAndPassword data ', data);
+        that.tiledeskToken = data['token'];
+        this.createCompleteUser(data['user']);
+        this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
+        that.createFirebaseCustomToken();
+      }
     }, (error) => {
-      console.log(error);
+      this.logger.printError('FIREBASE-AUTH-SERV - signInWithEmailAndPassword ERR ',error);
     });
   }
 
@@ -304,17 +304,17 @@ export class FirebaseAuthService extends AuthService {
    * @param projectID
    */
   signInAnonymously(projectID: string): Promise<any> {
-    console.log('signInAnonymously', projectID);
+    this.logger.printLog('FIREBASE-AUTH-SERV - signInAnonymously - projectID', projectID);
     const httpHeaders = new HttpHeaders();
-    
+
     httpHeaders.append('Accept', 'application/json');
-    httpHeaders.append('Content-Type', 'application/json' );
+    httpHeaders.append('Content-Type', 'application/json');
     const requestOptions = { headers: httpHeaders };
     const postData = {
       id_project: projectID
     };
     const that = this;
-    return new Promise((resolve, reject)=> {
+    return new Promise((resolve, reject) => {
       this.http.post(this.URL_TILEDESK_SIGNIN_ANONYMOUSLY, postData, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
@@ -323,25 +323,25 @@ export class FirebaseAuthService extends AuthService {
           that.createFirebaseCustomToken();
           resolve(this.currentUser)
         }
-    }, (error) => {
-      console.log(error);
-      reject(error)
-    });
+      }, (error) => {
+        this.logger.printError('FIREBASE-AUTH-SERV - signInAnonymously ERR ',error);
+        reject(error)
+      });
     })
-    
+
   }
 
   /**
    * @param tiledeskToken
    */
-  signInWithCustomToken(tiledeskToken: string): Promise<any>{
+  signInWithCustomToken(tiledeskToken: string): Promise<any> {
     const headers = new HttpHeaders({
       'Content-type': 'application/json',
       Authorization: tiledeskToken
     });
     const requestOptions = { headers: headers };
     const that = this;
-    return new Promise((resolve, reject)=> {
+    return new Promise((resolve, reject) => {
       this.http.post(this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN, null, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
@@ -351,7 +351,7 @@ export class FirebaseAuthService extends AuthService {
           resolve(this.currentUser)
         }
       }, (error) => {
-        console.log(error);
+        this.logger.printError('FIREBASE-AUTH-SERV - signInWithCustomToken ERR ',error);
         reject(error)
       });
     });
@@ -397,7 +397,7 @@ export class FirebaseAuthService extends AuthService {
       const firstname = user.firstname ? user.firstname : '';
       const lastname = user.lastname ? user.lastname : '';
       const email = user.email ? user.email : '';
-      const fullname = ( firstname + ' ' + lastname ).trim();
+      const fullname = (firstname + ' ' + lastname).trim();
       const avatar = avatarPlaceholder(fullname);
       const color = getColorBck(fullname);
       //TODO-GAB
@@ -412,9 +412,11 @@ export class FirebaseAuthService extends AuthService {
       // member.imageurl = imageurl;
       member.avatar = avatar;
       member.color = color;
-      console.log('createCompleteUser: ', member);
+      // console.log('createCompleteUser: ', member);
+      this.logger.printLog('FIREBASE-AUTH-SERV - createCompleteUser member ', member) 
     } catch (err) {
-      console.log('createCompleteUser error:' + err);
+      // console.log('createCompleteUser error:' + err);
+      this.logger.printError('FIREBASE-AUTH-SERV - createCompleteUser ERR ', err) 
     }
     this.currentUser = member;
     // salvo nel local storage e sollevo l'evento
@@ -434,15 +436,16 @@ export class FirebaseAuthService extends AuthService {
     const responseType = 'text';
     const postData = {};
     const that = this;
-      this.http.post(this.URL_TILEDESK_CREATE_CUSTOM_TOKEN, postData, { headers, responseType}).subscribe(data =>  {
-        that.firebaseToken = data;
-        //localStorage.setItem('firebaseToken', that.firebaseToken);
-        that.signInFirebaseWithCustomToken(data)
-      }, error => {
-        console.log(error);
-        
-      });
-    
+    this.http.post(this.URL_TILEDESK_CREATE_CUSTOM_TOKEN, postData, { headers, responseType }).subscribe(data => {
+      that.firebaseToken = data;
+      //localStorage.setItem('firebaseToken', that.firebaseToken);
+      that.signInFirebaseWithCustomToken(data)
+    }, error => {
+      console.log(error);
+      this.logger.printError('FIREBASE-AUTH-SERV - createFirebaseCustomToken ERR ', error) 
+
+    });
+
   }
 
 
@@ -465,13 +468,13 @@ export class FirebaseAuthService extends AuthService {
 
 
   public logout() {
+    this.logger.printLog('FIREBASE-AUTH-SERV logout')
     // cancello token firebase dal local storage e da firebase
     // dovrebbe scattare l'evento authchangeStat
     this.BSSignOut.next(true);
-    // setTimeout(() => {
-      this.signOut();
-    // }, 100);
-   
+
+    this.signOut();
+
     console.log('logout non nancora x');
   }
 

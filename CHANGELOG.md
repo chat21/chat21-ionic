@@ -21,6 +21,7 @@
 - Closes the contacts modal window when a contact is selected
 - Moves conversations subscription in "app.component" from "conversation-list-page"
 - Fixes the bug: the "loadContactsFromUrl" service does not work if the chatEngine is "mqtt"
+- Fixes the bug: when the user logs out, the "removePresence" method is called after the Firebase "signOut" method, generating an error
 
 ### 3.0.21
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button
