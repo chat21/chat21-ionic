@@ -73,3 +73,29 @@
   .myFakeUploadButton{
    /* Whatever you want */
   }
+
+  #file-input {
+    // width: 0.1px;
+    // height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    // z-index: -1;
+  }
+
+  .upload-image-btn {
+    margin-bottom: 0px;
+    margin-top: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+    --border-radius: 50%;
+    --padding-end: 6px;
+    --padding-start: 6px;
+    --padding-top: 0px;
+    --padding-bottom: 0px;
+    height: 30px !important;
+  }
+
+  .upload-image-btn .button-native {
+      border-radius: 50%;
+  } 

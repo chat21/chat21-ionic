@@ -7,12 +7,18 @@
         <!-- <ion-button class="attach-button" ion-button fill="clear" (click)="controlOfMessage(messageString)">
           <ion-icon slot="icon-only" name="attach"></ion-icon>
         </ion-button> -->
-        <ion-button class="attach-button" ion-button fill="clear">
+        <ion-button class="attach-button" ion-button fill="clear" style="display: none;">
           <!-- <input type="file" multiple accept="image/*" capture="camera" (change)="onFileSelectedMobile($event)" id="fileInput"/> -->
           <input type="file" accept="image/*" capture="camera" (change)="onFileSelected($event)" id="fileInput"/>
           <label for="fileInput" icon-only ion-button>
             <ion-icon slot="icon-only" name="attach"></ion-icon>
           </label>
+        </ion-button>
+
+        <ion-button  ion-button class="upload-image-btn" (click)="hasClickedUploadImage()">
+          <ion-icon slot="icon-only" lazy="true" name="image" style="font-size: 18px;"></ion-icon>
+          <!-- <ion-label slot="end">Upload Image</ion-label> -->
+          <input type="file" (change)="onFileSelected($event)" capture="camera" id="file-input" accept="image/*">
         </ion-button>
       </div>
 
