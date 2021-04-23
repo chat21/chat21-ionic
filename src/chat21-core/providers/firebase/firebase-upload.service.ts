@@ -20,6 +20,7 @@ import { CustomLogger } from '../logger/customLogger';
 // })
 @Injectable()
 export class FirebaseUploadService extends UploadService {
+  
   // BehaviorSubject
   BSStateUpload: BehaviorSubject<any>;
 
@@ -44,7 +45,7 @@ export class FirebaseUploadService extends UploadService {
   }
    
    
-  public pushUploadMessage(upload: UploadModel): Promise<any> {
+  public upload(upload: UploadModel): Promise<any> {
     const that = this;
     const uid = this.createGuid();
     const urlImagesNodeFirebase = '/public/images/' + uid + '/';
@@ -87,6 +88,9 @@ export class FirebaseUploadService extends UploadService {
           });
     })
     
+  }
 
+  get(filename: string, type: string): string {
+    throw new Error('Method not implemented.');
   }
 }

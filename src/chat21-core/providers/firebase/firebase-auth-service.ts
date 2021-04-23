@@ -191,7 +191,6 @@ export class FirebaseAuthService extends AuthService {
     return firebase.auth().setPersistence(firebasePersistence).then( async () => {
       return firebase.auth().signInWithCustomToken(token).then( async (response) => {
                 // that.currentUser = response.user;
-                console.log('signIn firebaseeee respp', response )
                 // that.firebaseSignInWithCustomToken.next(response);
               }).catch((error) => {
                 this.logger.printError('Error: ', error);

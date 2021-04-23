@@ -185,10 +185,16 @@ export class MessageTextAreaComponent implements OnInit {
       console.log('The result: CHIUDI!!!!!', detail.data);
       if (detail !== null) {
         const currentUpload = new UploadModel(fileSelected);
-        let uploadTask = that.uploadService.pushUploadMessage(currentUpload);
-        console.log('invio msg uploadTask::: ', uploadTask);
-        // send message
-        this.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
+        that.uploadService.upload(currentUpload).then(downloadURL => {
+          metadata.src = downloadURL;
+          console.log('invio msg uploadTask::: ', downloadURL);
+          // send message
+          that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
+        }).catch(error => {
+          // Use to signal error if something goes wrong.
+          console.error(`MessageTextArea component::uploadSingle:: Failed to upload file and get link - ${error}`);
+        });
+        
       }
    });
     return await modal.present();

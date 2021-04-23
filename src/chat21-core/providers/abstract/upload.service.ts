@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 //import { environment } from 'src/environments/environment';
 
 // models
@@ -11,7 +12,22 @@ import { UploadModel } from '../../models/upload';
 
 export abstract class UploadService {
 
-  BehaviorSubject
+  //params
+  private DEFAULT_URL: string = environment.apiUrl;
+  private baseUrl;
+
+  public setBaseUrl(baseUrl): void {
+    this.baseUrl = baseUrl;
+  }
+  public getBaseUrl(): string {
+    if (this.baseUrl) {
+      return this.baseUrl;
+    } else {
+      return this.DEFAULT_URL;
+    }
+  }
+
+  //BehaviorSubject
   abstract BSStateUpload: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   // params
@@ -19,5 +35,6 @@ export abstract class UploadService {
 
   // functions
   abstract initialize(): void;
-  abstract pushUploadMessage(upload: UploadModel): Promise<any>;
+  abstract upload(upload: UploadModel): Promise<any>;
+  abstract get(filename: string, type: string): string;
 }
