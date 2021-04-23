@@ -51,7 +51,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     private logger: CustomLogger = new CustomLogger(true);
     private ref: firebase.database.Query;
 
-    BASE_URL: string;
+    private BASE_URL: string;
     // private audio: any;
     // private setTimeoutSound: any;
 

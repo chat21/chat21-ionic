@@ -51,30 +51,29 @@ export class ContactsService {
   public loadContactsFromUrl(token: string) {
     this.contacts = [];
     console.log('CONTACT-SERVICE token', token);
-    console.log('CONTACT-SERVICE urlRemoteContacts',  this.urlRemoteContacts)
-    if (this.urlRemoteContacts.startsWith('http') && token) {
-      const that = this;
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          Authorization: token
-        })
-      };
-      const postData = {
-      };
-      console.log('urlRemoteContacts:: url ', this.urlRemoteContacts);
-      this.http.get<any[]>(this.urlRemoteContacts, httpOptions).subscribe(users => {
-        console.log('urlRemoteContacts:: data ', users);
-        users.forEach(user => {
-          const member = that.createCompleteUser(user);
-          that.contacts.push(member);
-        });
-        localStorage.setItem('contacts', JSON.stringify(this.contacts));
-        this.BScontacts.next(this.contacts);
-      }, error => {
-        console.log('urlRemoteContacts:: error ', error);
+    console.log('CONTACT-SERVICE urlRemoteContacts', this.urlRemoteContacts)
+    // if (this.urlRemoteContacts.startsWith('http') && token) {
+    const that = this;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: token
+      })
+    };
+   
+    console.log('urlRemoteContacts:: url ', this.urlRemoteContacts);
+    this.http.get<any[]>(this.urlRemoteContacts, httpOptions).subscribe(users => {
+      console.log('urlRemoteContacts:: data ', users);
+      users.forEach(user => {
+        const member = that.createCompleteUser(user);
+        that.contacts.push(member);
       });
-    }
+      localStorage.setItem('contacts', JSON.stringify(this.contacts));
+      this.BScontacts.next(this.contacts);
+    }, error => {
+      console.log('urlRemoteContacts:: error ', error);
+    });
+    // }
   }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { IonTextarea } from '@ionic/angular';
 import { Chooser } from '@ionic-native/chooser/ngx';
 import { ModalController } from '@ionic/angular';
@@ -20,6 +20,8 @@ import { UploadModel } from 'src/chat21-core/models/upload';
 export class MessageTextAreaComponent implements OnInit {
   @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
+
+  @Input() conversationWith
 
   public conversationEnabled = false;
   public messageString: string;
@@ -130,6 +132,7 @@ export class MessageTextAreaComponent implements OnInit {
   /** */
   sendMessage(text: string) {
     console.log('sendMessage', text);
+    console.log('sendMessage conve width', this.conversationWith);
     this.messageString = '';
     text = text.replace(/(\r\n|\n|\r)/gm, '');
     if (text.trim() !== '') {
@@ -149,8 +152,13 @@ export class MessageTextAreaComponent implements OnInit {
     });
   }
 
+
+  hasClickedUploadImage() {
+    console.log('Message-text-area - hasClickedUploadImage conversationWith', this.conversationWith);
+  }
+
   onFileSelected(e: any){
-    console.log('controlOfMessage', e);
+    console.log('Message-text-area - onFileSelected event', e);
     this.presentModal(e);
   }
 
@@ -185,10 +193,16 @@ export class MessageTextAreaComponent implements OnInit {
       console.log('The result: CHIUDI!!!!!', detail.data);
       if (detail !== null) {
         const currentUpload = new UploadModel(fileSelected);
-        let uploadTask = that.uploadService.pushUploadMessage(currentUpload);
-        console.log('invio msg uploadTask::: ', uploadTask);
-        // send message
-        this.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
+        that.uploadService.upload(currentUpload).then(downloadURL => {
+          metadata.src = downloadURL;
+          console.log('invio msg uploadTask::: ', downloadURL);
+          // send message
+          that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
+        }).catch(error => {
+          // Use to signal error if something goes wrong.
+          console.error(`MessageTextArea component::uploadSingle:: Failed to upload file and get link - ${error}`);
+        });
+        
       }
    });
     return await modal.present();

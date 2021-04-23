@@ -75,6 +75,7 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 import { FirebaseInitService } from 'src/chat21-core/providers/firebase/firebase-init-service';
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 import { LocalSessionStorage } from 'src/chat21-core/providers/localSessionStorage';
+import { NativeUploadService } from 'src/chat21-core/providers/native/native-upload-service';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -119,15 +120,6 @@ export function typingFactory() {
   }
 }
 
-export function uploadFactory() {
-  console.log('uploadFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseUploadService();
-  } else {
-    return new FirebaseUploadService();
-  }
-}
-
 export function conversationsHandlerFactory(chat21Service: Chat21Service, httpClient: HttpClient, appConfig: AppConfigProvider ) {
   console.log('conversationsHandlerFactory: ');
   if (environment.chatEngine === CHAT_ENGINE_MQTT) {
@@ -149,6 +141,18 @@ export function imageRepoFactory(appConfig: AppConfigProvider) {
     FirebaseInitService.initFirebase(appConfig.getConfig().firebaseConfig)
     imageService.setImageBaseUrl(appConfig.getConfig().baseImageUrl)
     return imageService
+  }
+}
+
+export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, appStorage: AppStorageService) {
+  console.log('uploadFactory: ');
+  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+    const nativeUploadService = new NativeUploadService(http, appStorage)
+    nativeUploadService.setBaseUrl(appConfig.getConfig().apiUrl)
+    return nativeUploadService
+    // return new FirebaseUploadService();
+  } else {
+    return new FirebaseUploadService();
   }
 }
 
@@ -260,7 +264,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: UploadService,
       useFactory: uploadFactory,
-      deps: []
+      deps: [HttpClient, AppConfigProvider, AppStorageService ]
     },
     {
       provide: ConversationsHandlerService,

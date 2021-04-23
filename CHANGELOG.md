@@ -18,6 +18,14 @@
 - Renames (and improves) the method connect in subscribeToConversations and removes the subscriptions to the conversation detail
 - Modifies the "getConversationDetail" method to return a callback and moves the subscription to the method from the "conversation details" page to the "information-content" component
 - Changes the "setConversationRead" method to accept the conversation ID as parameter and no longer the selected conversation
+- Closes the contacts modal window when a contact is selected
+- Moves conversations subscription in "app.component" from "conversation-list-page"
+- Fixes the bug: the "loadContactsFromUrl" service does not work if the chatEngine is "mqtt"
+- Fixes the bug: when the user logs out, the "removePresence" method throws errors because it is executed after the "signOut" method of Firebase
+- Renamed "pushUploadMessage" in upload-service with "upload()"
+- Implemented new NATIVE-UPLOAD-SERVICE and added in mqtt app.module uploadFactory section (not active yet)
+- Handled promise of upload in message-text-area while upload a file/image
+- Fixes the bug: the images are not loaded in the current conversation
 
 ### 3.0.21
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button
