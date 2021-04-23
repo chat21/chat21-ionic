@@ -54,7 +54,7 @@ export class NativeUploadService extends UploadService {
             return new Promise ((resolve, reject)=> {
                 that.http.post(url, formData, requestOptions).subscribe(data => {
                     console.log("data:", data);
-                    const downloadURL = url + '?path='+ data['filename']
+                    const downloadURL = this.URL_TILEDESK_IMAGES + '?path='+ data['filename']
                     resolve(downloadURL)
                     // that.BSStateUpload.next({upload: upload});
                 }, (error) => {
@@ -67,7 +67,7 @@ export class NativeUploadService extends UploadService {
             return new Promise ((resolve, reject)=> {
                 that.http.post(url, formData, requestOptions).subscribe(data => {
                     console.log("data:", data);
-                    const downloadURL = url + '?path='+ data['filename']
+                    const downloadURL = this.URL_TILEDESK_FILE + '?path='+ data['filename']
                     resolve(downloadURL)
                     // that.BSStateUpload.next({upload: upload});
                 }, (error) => {
