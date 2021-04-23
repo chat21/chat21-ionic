@@ -70,6 +70,10 @@ export class MQTTAuthService extends AuthService {
 
   logout() {
     console.log('logged out');
+    // remove
+    // this.tiledeskToken = this.appStorage.getItem('tiledeskToken');
+    // this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
+    // mqtt.remove
   }
 
   getCurrentUser(): UserModel {

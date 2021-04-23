@@ -333,7 +333,7 @@ class Chat21Client {
                     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTUPDATED)) {
                         // map.forEach((value, key, map) =>)
                         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-                            callback(message_json, _topic)
+                            callback(JSON.parse(message.toString()), _topic)
                         });
                     }
                 }
@@ -342,7 +342,7 @@ class Chat21Client {
                     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTDELETED)) {
                         // map.forEach((value, key, map) =>)
                         this.onConversationDeletedCallbacks.forEach((callback, handler, map) => {
-                            callback(message_json, _topic)
+                            callback(JSON.parse(message.toString()), _topic)
                         });
                     }
                 }
@@ -350,7 +350,7 @@ class Chat21Client {
                 if (this.onMessageAddedCallbacks) {
                     if (topic.includes("/messages/") && topic.endsWith(_CLIENTADDED)) {
                         this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                            callback(message_json, _topic)
+                            callback(JSON.parse(message.toString()), _topic)
                         });
                         // Observing conversations added from messages
                         console.log("Observing conversations added from messages", message_json);
@@ -363,7 +363,7 @@ class Chat21Client {
                             console.log("update_conversation........", update_conversation);
                             if (update_conversation) {
                                 this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
-                                    callback(message_json, _topic)
+                                    callback(JSON.parse(message.toString()), _topic)
                                 });
                             }
                         }
@@ -373,7 +373,7 @@ class Chat21Client {
                 if (this.onMessageUpdatedCallbacks) {
                     if (topic.includes("/messages/") && topic.endsWith(_CLIENTUPDATED)) {
                         this.onMessageUpdatedCallbacks.forEach((callback, handler, map) => {
-                            callback(message_json, _topic)
+                            callback(JSON.parse(message.toString()), _topic)
                         });
                     }
                 }
@@ -381,7 +381,7 @@ class Chat21Client {
                 if (this.onGroupUpdatedCallbacks) {
                     if (topic.includes("/groups/") && topic.endsWith(_CLIENTUPDATED)) {
                         this.onGroupUpdatedCallbacks.forEach((callback, handler, map) => {
-                            callback(message_json, _topic)
+                            callback(JSON.parse(message.toString()), _topic)
                         });
                     }
                 }
@@ -400,7 +400,7 @@ class Chat21Client {
                         if (type === CALLBACK_TYPE_ON_MESSAGE_ADDED_FOR_CONVERSATION) {
                             if (conversWith === callback_obj.conversWith) {
                                 console.log("/messages/_CLIENTADDED on: ", conversWith)
-                                callback_obj.callback(message_json, _topic)
+                                callback_obj.callback(JSON.parse(message.toString()), _topic)
                             }
                         }
                     }
@@ -409,7 +409,7 @@ class Chat21Client {
                         if (type === CALLBACK_TYPE_ON_MESSAGE_UPDATED_FOR_CONVERSATION) {
                             if (conversWith === callback_obj.conversWith) {
                                 console.log("/messages/_CLIENTUPDATED on: ", conversWith)
-                                callback_obj.callback(message_json, _topic)
+                                callback_obj.callback(JSON.parse(message.toString()), _topic)
                             }
                         }
                     }
@@ -517,7 +517,7 @@ class Chat21Client {
         };
         xmlhttp.send(null);
     }
-    
+
     getGroup(group_id, callback) {
         // ex.: http://localhost:8004/tilechat/04-ANDREASPONZIELLO/conversations
         const URL = `${this.APIendpoint}/${this.appid}/groups/${group_id}`

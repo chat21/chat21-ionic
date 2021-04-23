@@ -157,7 +157,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     // ---------------------------------------------------------------------------------
      // New connect - renamed subscribeToConversation
      //----------------------------------------------------------------------------------
-     subscribeToConversations(callback) {
+     subscribeToConversations(loaded) {
             console.log('connecting MQTT conversations handler');
             const handlerConversationAdded = this.chat21Service.chatClient.onConversationAdded( (conv) => {
                 console.log('conversation added:', conv.text);
@@ -177,12 +177,13 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
                     conversations.forEach(conv => {
                         this.added(conv);
                     });
+                    loaded();
                 }
             });
             // SET AUDIO
-            this.audio = new Audio();
-            this.audio.src = URL_SOUND;
-            this.audio.load();
+            // this.audio = new Audio();
+            // this.audio.src = URL_SOUND;
+            // this.audio.load();
         // const that = this;
         // const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUserId);
         // console.log('connect -------> conversations', urlNodeFirebase);
@@ -210,7 +211,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
      * 7 -  pubblico conversations:update
      */
     private added(childSnapshot: any) {
-        // console.log("NEW CONV:::", childSnapshot)
+        console.log("NEW CONV:::", childSnapshot)
         // const childData: ConversationModel = childSnapshot;
         // childData.uid = childSnapshot.key;
         // const conversation = this.completeConversation(childData);
@@ -233,15 +234,19 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         // } else {
         //     console.error('ChatConversationsHandler::added::conversations with conversationId: ', childSnapshot.key, 'is not valid');
         // }
-        let childData: ConversationModel = childSnapshot;
-        const conversation = this.completeConversation(childData);
+        // let childData: ConversationModel = childSnapshot;
+        let conversation = this.completeConversation(childSnapshot);
         conversation.uid = conversation.conversation_with;
+        // console.log("NUOVA CONVER;" + conversation.uid)
+        console.log("NUOVA CONVER;.uid" + conversation.uid)
         if (this.isValidConversation(conversation)) {
             this.setClosingConversation(conversation.conversation_with, false);
+            console.log("NUOVA CONVER;.uid1" + conversation.uid)
             console.log("conversations:", this.conversations)
             console.log("cerco: ", conversation.uid)
             const index = this.searchIndexInArrayForConversationWith(this.conversations, conversation.conversation_with);
             console.log("found index:", index)
+            console.log("NUOVA CONVER;.uid2" + conversation.uid)
             if (index > -1) {
                 console.log("TROVATO")
                 this.conversations.splice(index, 1, conversation);
@@ -250,9 +255,14 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
                 this.conversations.splice(0, 0, conversation);
                 // this.databaseProvider.setConversation(conversation);
             }
+            console.log("NUOVA CONVER;.uid3" + conversation.uid)
             this.conversations.sort(compareValues('timestamp', 'desc'));
+            console.log("NUOVA CONVER;.uid4" + conversation.uid)
+            console.log("TUTTE:", this.conversations)
             this.conversationChanged.next(conversation);
+            console.log("NUOVA CONVER;.uid5" + conversation.uid)
             this.conversationAdded.next(conversation);
+            console.log("NUOVA CONVER;.uid6" + conversation.uid)
             // this.events.publish('conversationsChanged', this.conversations);
         } else {
             console.error('ChatConversationsHandler::added::conversations with conversationId: ', conversation.conversation_with, 'is not valid');
