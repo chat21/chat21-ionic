@@ -18,7 +18,7 @@
         <ion-button  ion-button class="upload-image-btn" (click)="hasClickedUploadImage()">
           <ion-icon slot="icon-only" lazy="true" name="image" style="font-size: 18px;"></ion-icon>
           <!-- <ion-label slot="end">Upload Image</ion-label> -->
-          <input type="file" (change)="onFileSelected($event)" capture="camera" id="file-input" accept="image/*">
+          <input type="file" (change)="onFileSelected($event)" capture="camera" id="file-input" accept="image/*, .pdf,.zip">
         </ion-button>
       </div>
 
