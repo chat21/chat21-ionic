@@ -4,6 +4,7 @@ export const environment = {
     remoteConfig: true,
     remoteConfigUrl: './chat-config.json',
     chatEngine: 'mqtt',
+    updateEngine: 'native',
     firebaseConfig: {
         apiKey: 'CHANGEIT',
         authDomain: 'CHANGEIT',
