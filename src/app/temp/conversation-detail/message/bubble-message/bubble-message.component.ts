@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MessageModel } from 'src/chat21-core/models/message';
 import { MAX_WIDTH_IMAGES} from 'src/chat21-core/utils/constants';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
-import { isFile, isImage } from 'src/chat21-core/utils/utils-message';
+import { isFile, isFrame, isImage } from 'src/chat21-core/utils/utils-message';
 @Component({
   selector: 'tiledeskwidget-bubble-message',
   templateUrl: './bubble-message.component.html',
@@ -18,6 +18,7 @@ export class BubbleMessageComponent implements OnInit {
 
   isImage = isImage;
   isFile = isFile;
+  isFrame = isFrame;
   
   tooltipOptions = {
     'show-delay': 1500,
