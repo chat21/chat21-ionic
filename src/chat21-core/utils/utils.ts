@@ -566,10 +566,11 @@ export function setConversationAvatar(
 /** */
 export function setChannelType(conversationWith: string): string {
   let channelType = TYPE_DIRECT;
-  if (conversationWith.startsWith(TYPE_SUPPORT_GROUP)) {
-    channelType = TYPE_SUPPORT_GROUP;
-  }else if(conversationWith.startsWith(TYPE_GROUP)){
+  if (conversationWith.includes(TYPE_GROUP + '-')) {
+    // channelType = TYPE_SUPPORT_GROUP;
     channelType = TYPE_GROUP;
+  // }else if(conversationWith.startsWith(TYPE_GROUP)){
+  //   channelType = TYPE_GROUP;
   }
   return channelType;
 }

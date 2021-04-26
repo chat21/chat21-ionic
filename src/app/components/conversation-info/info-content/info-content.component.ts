@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 import { AppConfigProvider } from '../../../services/app-config';
-import { setChannelType} from '../../../../chat21-core/utils/utils';
+import { setChannelType } from '../../../../chat21-core/utils/utils';
 import { TYPE_SUPPORT_GROUP, TYPE_DIRECT, TYPE_GROUP } from '../../../../chat21-core/utils/constants';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -29,17 +29,17 @@ export class InfoContentComponent implements OnInit {
   @Input() loggedUser: UserModel
   @Input() tenant: string
 
-  public  member: UserModel;
+  public member: UserModel;
   public urlConversation: any;
   // public loggedUser: UserModel;
   // private tenant: string;
   public conversationWith: string;
   public conversationWithFullname: string;
   public conv_type: string;
-  private channelType: string;
+  // private channelType: string;
   private urlConversationSupportGroup: any;
   public conversations: Array<ConversationModel> = [];
-  public conversationSelected:any;
+  public conversationSelected: any;
 
   constructor(
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
@@ -64,10 +64,10 @@ export class InfoContentComponent implements OnInit {
 
   ngOnInit() {
     console.log('InfoContentComponent:::');
-    console.log('INFO-CONTENT-COMP  Logged user' , this.loggedUser);
-    console.log('INFO-CONTENT-COMP  Tenant' , this.tenant);
+    console.log('INFO-CONTENT-COMP  Logged user', this.loggedUser);
+    console.log('INFO-CONTENT-COMP  Tenant', this.tenant);
     this.initConversationsHandler(); // nk
-  
+
   }
 
 
@@ -126,18 +126,37 @@ export class InfoContentComponent implements OnInit {
   selectInfoContentTypeComponent() {
     console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent conversationWith: ', this.conversationWith);
     if (this.conversationWith) {
-      this.channelType = setChannelType(this.conversationWith);
-      if (this.channelType === TYPE_DIRECT) {
-        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
-        this.setInfoDirect();
-      } else if (this.channelType === TYPE_GROUP) {
-        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
-        this.setInfoGroup();
-      } else if (this.channelType === TYPE_SUPPORT_GROUP) {
-        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+      // this.channelType = setChannelType(this.conversationWith);
+      // controlllare come comincia conversationWith nn + channel type
+
+      if (this.conversationWith.startsWith("support-group")) {
+        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent - SUPPORT_GROUP - conversationWith start with "support-group"  ', this.conversationWith.startsWith("support-group"));
         this.urlConversationSupportGroup = '';
         this.setInfoSupportGroup();
+
+      } else if (this.conversationWith.startsWith("group-")) {
+        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent - GROUP -  conversationWith start with "group-"  ', this.conversationWith.startsWith("group-"));
+        this.setInfoGroup();
+
+      } else  {
+        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent - DIRECT - conversationWith NOT START with "group-" NOR with "support-group" ', );
+        this.setInfoDirect();
+
       }
+
+
+
+      // if (this.channelType === TYPE_DIRECT) {
+      //   console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+      //   this.setInfoDirect();
+      // } else if (this.channelType === TYPE_GROUP) {
+      //   console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+      //   this.setInfoGroup();
+      // } else if (this.channelType === TYPE_SUPPORT_GROUP) {
+      //   console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+      //   this.urlConversationSupportGroup = '';
+      //   this.setInfoSupportGroup();
+      // }
     }
   }
 
@@ -146,15 +165,15 @@ export class InfoContentComponent implements OnInit {
   // ---------------------------------------------------
   setInfoDirect() {
     console.log('INFO-CONTENT-COMP - setInfoDirect ', this.contactsService, this.conversationWith);
-    console.log('INFO-CONTENT-COMP - setInfoDirect member',  this.member);
+    console.log('INFO-CONTENT-COMP - setInfoDirect member', this.member);
     this.member = null;
     const that = this;
     const tiledeskToken = this.authService.getTiledeskToken();
     this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith)
-    .subscribe(res => { 
-      console.log('INFO-CONTENT-COMP - setInfoDirect  RES', res);
-      this.member = res
-    }) ;
+      .subscribe(res => {
+        console.log('INFO-CONTENT-COMP - setInfoDirect  RES', res);
+        this.member = res
+      });
   }
 
   // ---------------------------------------------------
@@ -165,7 +184,7 @@ export class InfoContentComponent implements OnInit {
   }
 
 
-    // ---------------------------------------------------
+  // ---------------------------------------------------
   // @ setInfoGroup
   // ---------------------------------------------------
   setInfoSupportGroup() {
@@ -175,9 +194,13 @@ export class InfoContentComponent implements OnInit {
     if (this.conversationSelected) {
       projectID = this.conversationSelected.attributes.projectId;
     }
+    console.log('setInfoSupportGroup conversationSelected ', this.conversationSelected) 
+    console.log('setInfoSupportGroup projectID ', projectID) 
     if (projectID && this.conversationWith) {
+      console.log('setInfoSupportGroup HERE YES ') 
       let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
       urlPanel += '?token=' + tiledeskToken;
+      console.log('setInfoSupportGroup urlPanel ', urlPanel) 
       const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
       this.urlConversationSupportGroup = urlConversationTEMP;
     } else {

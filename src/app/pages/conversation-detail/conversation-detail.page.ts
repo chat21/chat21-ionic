@@ -574,7 +574,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    * 3 - se l'invio è andato a buon fine mi posiziono sull'ultimo messaggio
    */
   sendMessage(msg: string, type: string, metadata?: any) {
-    console.log('sendMessage: ');
+    console.log('sendMessage msg: ',msg);
 
     let fullname = this.loggedUser.uid;
     if (this.loggedUser.fullname) {
@@ -586,9 +586,15 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     //   senderFullname = this.conversationSelected.recipient_fullname;
     // }
 
-    console.log('loggedUserID: ', this.loggedUser.uid);
-    console.log('conversationWith: ', this.conversationWith);
-    console.log('conversationWithFullname: ', this.conversationWithFullname);
+    console.log('SEND MESSAGE loggedUserID: ', this.loggedUser.uid);
+    console.log('SEND MESSAGE conversationWith: ', this.conversationWith);
+    console.log('SEND MESSAGE conversationWithFullname: ', this.conversationWithFullname);
+    console.log('SEND MESSAGE metadata: ', metadata);
+    console.log('SEND MESSAGE type: ', type);
+
+    if (type === 'file') {
+      msg = msg + ' - '+ 'File: ' + metadata.src;
+    }
 
     (metadata) ? metadata = metadata : metadata = '';
     console.log('SEND MESSAGE: ', msg, this.messages, this.loggedUser);
@@ -857,6 +863,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   /** */
   returnSendMessage(e: any) {
+    console.log('returnSendMessage::: ', e, this.conversationWith);
     console.log('returnSendMessage::: ', e, this.conversationWith);
     try {
       let message = '';

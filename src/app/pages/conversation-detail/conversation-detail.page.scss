@@ -448,3 +448,141 @@ ion-content {
               transform: translateX(0px);
     }
   }
+
+  .buttons-left {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 30px;
+    height: 100%;
+ 
+
+    
+}
+
+// .attach-button {
+//     font-size: 24px;
+//     position: absolute;
+//     bottom: 0px;
+//     left: 0px;
+//     margin: auto 0;
+//     --padding-top: 0;
+//     --padding-bottom: 0;
+//     --padding-start: 0;
+//     --padding-end: 0;
+// }
+
+  #fileInput{
+    // position: absolute;
+    opacity: 0;  width: 0.1px;
+    height: 0.1px;
+    overflow: hidden;
+  }
+
+//   .attach-button {
+//     font-size: 24px;
+//     position: absolute;
+//     bottom: 0px;
+//     left: 0px;
+//     margin: auto 0;
+//     --padding-top: 0;
+//     --padding-bottom: 0;
+//     --padding-start: 0;
+//     --padding-end: 0;
+// }
+
+// ------- new
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label {
+    max-width: 80%;
+    font-size: 1.25rem;
+    /* 20px */
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    padding: 0.625rem 1.25rem;
+    /* 10px 20px */
+}
+
+
+.inputfile + label svg {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    fill: currentColor;
+    margin-top: -0.25em;
+    /* 4px */
+    margin-right: 0.25em;
+    /* 4px */
+}
+
+/* style 5 */
+
+.inputfile-5 + label {
+    color: #d3394c;
+}
+
+.inputfile-5:focus + label,
+.inputfile-5.has-focus + label,
+.inputfile-5 + label:hover {
+    color: #722040;
+}
+
+.inputfile-5 + label figure {
+    width: 100px;
+    height: 135px;
+    background-color: #d3394c;
+    display: block;
+    position: relative;
+    padding: 30px;
+    margin: 0 auto 10px;
+}
+
+.inputfile-5:focus + label figure,
+.inputfile-5.has-focus + label figure,
+.inputfile-5 + label:hover figure {
+    background-color: #722040;
+}
+
+.inputfile-5 + label figure::before,
+.inputfile-5 + label figure::after {
+    width: 0;
+    height: 0;
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.inputfile-5 + label figure::before {
+    border-top: 20px solid #dfc8ca;
+    border-left: 20px solid transparent;
+}
+
+.inputfile-5 + label figure::after {
+    border-bottom: 20px solid #722040;
+    border-right: 20px solid transparent;
+}
+
+.inputfile-5:focus + label figure::after,
+.inputfile-5.has-focus + label figure::after,
+.inputfile-5 + label:hover figure::after {
+    border-bottom-color: #d3394c;
+}
+
+.inputfile-5 + label svg {
+    width: 100%;
+    height: 100%;
+    fill: #f1e5e6;
+}
