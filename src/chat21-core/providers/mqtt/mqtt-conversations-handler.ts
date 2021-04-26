@@ -19,7 +19,6 @@ import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArr
 // import { ConsoleReporter } from 'jasmine';
 
 @Injectable({ providedIn: 'root' })
-
 export class MQTTConversationsHandler extends ConversationsHandlerService {
 
     // BehaviorSubject

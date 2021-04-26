@@ -50,7 +50,6 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     private isConversationClosingMap: Map<string, boolean>;
     private logger: CustomLogger = new CustomLogger(true);
     private ref: firebase.database.Query;
-
     private BASE_URL: string;
     // private audio: any;
     // private setTimeoutSound: any;
@@ -78,14 +77,8 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         this.isConversationClosingMap = new Map();
         //this.databaseProvider.initialize(userId, this.tenant);
         //this.getConversationsFromStorage();
-        this.getBaseUrl();
-    }
-
-    getBaseUrl() {
         this.BASE_URL = this.appConfig.getConfig().firebaseConfig.chat21ApiUrl;
-        console.log('FIREBASE-CONVERSATION-HANDLER BASE_URL', this.BASE_URL)
     }
-
 
     /**
      * mi connetto al nodo conversations
@@ -196,6 +189,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         this.isConversationClosingMap.delete(conversationId);
     }
 
+    // -------->>>> ARCHIVE CONVERSATION SECTION START <<<<---------------//
     archiveConversation(conversationId: string) {
         const that = this
         this.setClosingConversation(conversationId, true);
@@ -273,7 +267,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
                 });
         }
     }
-
+    // -------->>>> ARCHIVE CONVERSATION SECTION END <<<<---------------//
 
 
     public getConversationDetail(conversationId: string, callback: (conv: ConversationModel)=>void): void {
