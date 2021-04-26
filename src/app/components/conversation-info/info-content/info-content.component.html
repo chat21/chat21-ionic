@@ -1,20 +1,22 @@
 
 
-<ion-content [ngSwitch]="channelType" [style.display]="openInfoConversation ? 'block' : 'none'">
-  
+<ion-content  [style.display]="openInfoConversation ? 'block' : 'none'">
+ 
   <app-info-direct 
-    *ngSwitchCase="'direct'"
+    *ngIf="panelType === 'direct-panel'"
     [member] = member
     [translationMap] = translationMap
   ></app-info-direct>
 
   <app-info-group 
-    *ngSwitchCase="'group'"
+    *ngIf="panelType === 'group-panel'"
   ></app-info-group>
 
   <app-info-support-group 
-    *ngSwitchDefault
+  *ngIf="panelType === 'support-group-panel'"
+   
     [urlConversationSupportGroup] = urlConversationSupportGroup
   ></app-info-support-group>
 
+ 
 </ion-content>

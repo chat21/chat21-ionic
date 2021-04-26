@@ -26,6 +26,10 @@
 - Implemented new NATIVE-UPLOAD-SERVICE and added in mqtt app.module uploadFactory section (not active yet)
 - Handled promise of upload in message-text-area while upload a file/image
 - Fixes the bug: the images are not loaded in the current conversation
+- Fixes the bug: the right panel does not display information relating to the type of conversation selected
+- Fixes the bug: the 'channelType' in messages is incorrect
+- Fixes the bug: the link of the downloaded file is not displayed
+- Fixes the bug: the right side panel does not show the content related to the selected conversation type
 
 ### 3.0.21
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button
