@@ -1,6 +1,6 @@
 {
     "chatEngine": "${CHAT21_ENGINE}",
-    "updateEngine": "${UPDATE_ENGINE}",
+    "uploadEngine": "${UPLOAD_ENGINE}",
     "firebaseConfig": {
         "apiKey": "${FIREBASE_APIKEY}",
         "authDomain": "${FIREBASE_AUTHDOMAIN}",

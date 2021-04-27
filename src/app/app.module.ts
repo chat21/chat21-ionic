@@ -89,7 +89,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
     
     chat21Service.config = config.chat21Config;
     chat21Service.initChat();
-    console.log("appConfig.getConfig().SERVER_BASE_URL", config.apiUrl);
+    console.log("appConfig.getConfig()", config);
     const auth = new MQTTAuthService(http, chat21Service, appSorage);
     
     auth.setBaseUrl(appConfig.getConfig().apiUrl)
@@ -177,7 +177,7 @@ export function imageRepoFactory(appConfig: AppConfigProvider) {
 }
 
 export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, appStorage: AppStorageService) {
-  console.log('uploadFactory: ');
+  
   const config = appConfig.getConfig()
   if (config.uploadEngine === UPLOAD_ENGINE_NATIVE) {
     const nativeUploadService = new NativeUploadService(http, appStorage)
