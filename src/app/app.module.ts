@@ -76,6 +76,8 @@ import { FirebaseInitService } from 'src/chat21-core/providers/firebase/firebase
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 import { LocalSessionStorage } from 'src/chat21-core/providers/localSessionStorage';
 import { NativeUploadService } from 'src/chat21-core/providers/native/native-upload-service';
+import { GroupService } from 'src/chat21-core/providers/abstract/group.service';
+import { FirebaseGroupsHandler } from 'src/chat21-core/providers/firebase/firebase-group-handler';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -138,6 +140,15 @@ export function conversationHandlerFactory(appConfig: AppConfigProvider) {
     return new FirebaseConversationHandler(false);
   } else {
     return new FirebaseConversationHandler(false);
+  }
+}
+
+export function groupsFactory(http: HttpClient, appConfig: AppConfigProvider) {
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
+    return new FirebaseGroupsHandler(http, appConfig);
+  } else {
+    return new FirebaseGroupsHandler(http, appConfig);
   }
 }
 
@@ -307,6 +318,11 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: AppStorageService,
       useClass: LocalSessionStorage
+    },
+    {
+      provide: GroupService,
+      useFactory: groupsFactory,
+      deps: [HttpClient, AppConfigProvider,]
     },
     StatusBar,
     SplashScreen,
