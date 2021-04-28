@@ -96,6 +96,7 @@ import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NgxLinkifyjsService, Link, LinkType, NgxLinkifyOptions } from 'ngx-linkifyjs';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { GroupService } from 'src/chat21-core/providers/abstract/group.service';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -187,7 +188,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public conversationHandlerService: ConversationHandlerService,
     // public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
-    // public groupService: GroupService
+    public groupService: GroupService,
     public contactsService: ContactsService,
     public conversationHandlerBuilderService: ConversationHandlerBuilderService,
     public linkifyService: NgxLinkifyjsService,
@@ -288,6 +289,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // init handler vengono prima delle sottoscrizioni!
     // this.initConversationsHandler(); // nk
     this.initConversationHandler();
+    this.initGroupsHandler();
     this.initSubscriptions();
     this.addEventsKeyboard();
     this.startConversation();
@@ -381,6 +383,33 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // scrollo al bottom della pagina
     }
     console.log('CONVERSATION MESSAGES ' + this.messages + this.showIonContent);
+  }
+
+
+  initGroupsHandler(){
+    console.log('INFO-CONTENT-COMP  initGroupsHandler');
+    if(this.conversationWith.startsWith("support-group") || this.conversationWith.startsWith("group-")){
+      this.groupService.initialize(this.tenant, this.loggedUser.uid)
+      // this.groupService.connect();
+    }
+    // this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
+    //   console.log('group detail INFO CONTENT-->', groupDetail)
+    // });
+
+    const that = this;
+    let subscribtion: any;
+    let subscribtionKey: string;
+
+    // subscribtionKey = 'onGroupChange';
+    // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    // if (!subscribtion) {
+    //   subscribtion = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
+    //     console.log('group detail INFO CONTENT-->', groupDetail)
+    //   });
+    //   const subscribe = { key: subscribtionKey, value: subscribtion };
+    //   this.subscriptions.push(subscribe);
+    // }
+    
   }
 
 
@@ -726,6 +755,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (!subscribtion) {
       subscribtion = this.conversationHandlerService.messageRemoved.subscribe((messageId: any) => {
         // console.log('***** DATAIL messageRemoved *****', messageId);
+      });
+      const subscribe = { key: subscribtionKey, value: subscribtion };
+      this.subscriptions.push(subscribe);
+    }
+
+    subscribtionKey = 'onGroupChange';
+    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
+    if (!subscribtion) {
+      subscribtion = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
+        console.log('group detail INFO CONTENT ....-->', groupDetail)
       });
       const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);

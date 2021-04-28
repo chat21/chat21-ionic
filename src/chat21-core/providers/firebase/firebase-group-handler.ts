@@ -1,6 +1,6 @@
 import { GroupService } from './../abstract/group.service';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 // firebase
 import * as firebase from 'firebase/app';
@@ -28,6 +28,7 @@ export class FirebaseGroupsHandler extends GroupService {
     
     // BehaviorSubject
     BSgroupDetail: BehaviorSubject<GroupModel>;
+    SgroupDetail: Subject<GroupModel>;
     groupAdded: BehaviorSubject<GroupModel>;
     groupChanged: BehaviorSubject<GroupModel>;
     groupRemoved: BehaviorSubject<GroupModel>;
@@ -100,12 +101,13 @@ export class FirebaseGroupsHandler extends GroupService {
 
     getDetail(groupId: string, callback?: (group: GroupModel)=>void): Promise<GroupModel>{
         const urlNodeGroupById = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/groups/' + groupId;
-        this.logger.printDebug('connect -------> groups::', urlNodeGroupById)
+        this.logger.printDebug('getDetail -------> urlNodeGroupById::', urlNodeGroupById)
         const ref = firebase.database().ref(urlNodeGroupById)
         return new Promise((resolve) => {
             ref.on('value', (childSnapshot) => {
                 console.log('group info::', childSnapshot.val())
                 const group: GroupModel = childSnapshot.val();
+                group.uid = childSnapshot.key
                 // that.BSgroupDetail.next(group)
                 if(callback){
                     callback(group)
@@ -115,6 +117,24 @@ export class FirebaseGroupsHandler extends GroupService {
             });
         });
         
+    }
+
+    onGroupChange(groupId: string): Observable<GroupModel>{
+        const that = this;
+        const urlNodeGroupById = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/groups/' + groupId;
+        this.logger.printDebug('onGroupChange -------> urlNodeGroupById::', urlNodeGroupById)
+        const ref = firebase.database().ref(urlNodeGroupById)
+        ref.off()
+        ref.on('value', (childSnapshot) => {
+            console.log('group detail::', childSnapshot.val(), childSnapshot)
+            const group: GroupModel = childSnapshot.val();
+            group.uid = childSnapshot.key
+            // that.BSgroupDetail.next(group)
+            that.SgroupDetail.next(group)
+        });
+        // return that.BSgroupDetail
+        return this.SgroupDetail
+
     }
 
     leave(groupId: string, callback?:()=>void): Promise<any> {
@@ -145,6 +165,16 @@ export class FirebaseGroupsHandler extends GroupService {
  
             // });
         });
+    }
+
+      dispose() {
+        this.conversations = [];
+        this.uidConvSelected = '';
+        this.ref.off();
+        // this.ref.off("child_changed");
+        // this.ref.off("child_removed");
+        // this.ref.off("child_added");
+        this.logger.printDebug('DISPOSE::: ', this.ref)
     }
 
     // // -------->>>> ARCHIVE CONVERSATION SECTION START <<<<---------------//
