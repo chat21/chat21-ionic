@@ -1,5 +1,5 @@
 import { IonConversationDetailComponent } from './../../temp/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Directive } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Directive, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -33,7 +33,8 @@ import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/a
 import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/conversation-handler.service';
 // import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
-
+import { CannedResponsesService } from '../../services/canned-responses/canned-responses.service';
+import { compareValues } from '../../../chat21-core/utils/utils';
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
 // import { GroupService } from '../../services/group';
 
@@ -140,11 +141,15 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public membersConversation: any;
   public member: UserModel;
   public urlConversationSupportGroup: any;
-  private tagsCanned: any = [];
+ 
   private isFileSelected: boolean;
   private timeScrollBottom: any;
   public showIonContent = false;
   public conv_type: string;
+
+  public tagsCanned: any = [];
+  public tagsCannedFilter: any = [];
+  // eventsReplaceTexareaText: Subject<void> = new Subject<void>();
 
   MESSAGE_TYPE_INFO = MESSAGE_TYPE_INFO;
   MESSAGE_TYPE_MINE = MESSAGE_TYPE_MINE;
@@ -192,7 +197,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public contactsService: ContactsService,
     public conversationHandlerBuilderService: ConversationHandlerBuilderService,
     public linkifyService: NgxLinkifyjsService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    public cannedResponsesService: CannedResponsesService
   ) {
   }
 
@@ -893,12 +899,203 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         userFullname = this.loggedUser.firstname;
       }
       this.typingService.setTyping(this.conversationWith, message, idCurrentUser, userFullname);
+    // ----------------------------------------------------------
+      // START CANNED RESPONSES 
+      // ----------------------------------------------------------
+      setTimeout(() => {
+        var pos = message.lastIndexOf("/");
+        console.log("CONVERSATION-DETAIL returnChangeTextArea message ", message);
+        console.log("pos:: ", pos);
+        if (pos >= 0) {
+          // && that.tagsCanned.length > 0
+          var strSearch = message.substr(pos + 1);
+          this.loadTagsCanned(strSearch);
+          //that.showTagsCanned(strSearch);
+          //that.loadTagsCanned(strSearch);
+        } else {
+          this.tagsCannedFilter = [];
+        }
+      }, 300);
+      // ./ CANNED RESPONSES //
+
+
       // const elTextArea = this.rowTextArea['el'];
       // this.heightMessageTextArea = elTextArea.offsetHeight;
     } catch (err) {
       console.log('error: ', err);
     }
   }
+
+
+  loadTagsCanned(strSearch) {
+    console.log("CONVERSATION-DETAIL loadTagsCanned strSearch ", strSearch);
+
+    // console.log('projectId--->XXXX--->> ', this.conversationSelected);//attributes.projectId);
+    // console.log('this.appConfig.getConfig().SERVER_BASE_URL--->> ', this.appConfig.getConfig().SERVER_BASE_URL);
+    // if(!this.conversationSelected || !this.conversationSelected.attributes || !this.conversationSelected.attributes.projectId || !this.appConfig.getConfig().SERVER_BASE_URL){
+    //   return;
+    // }
+    const projectId = '604758bf52db8b0034468898'
+    const tiledeskToken = this.authService.getTiledeskToken();
+    console.log('CONVERSATION-DETAIL tagsCanned.length', this.tagsCanned.length);
+    //if(this.tagsCanned.length <= 0 ){
+    this.tagsCanned = [];
+    this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId)
+      .subscribe(res => {
+        console.log('CONVERSATION-DETAIL getCannedResponses RES', res);
+
+        this.tagsCanned = res
+        this.showTagsCanned(strSearch);
+
+      }, (error) => {
+        console.log('CONVERSATION-DETAIL getCannedResponses - ERROR  ', error);
+
+      }, () => {
+        console.log('CONVERSATION-DETAIL getCannedResponses * COMPLETE *');
+
+      });
+
+  }
+
+  showTagsCanned(strSearch) {
+
+    console.log('CONVERSATION-DETAIL showTagsCanned strSearch ', strSearch);
+
+    this.tagsCannedFilter = [];
+    var tagsCannedClone = JSON.parse(JSON.stringify(this.tagsCanned));
+    console.log('CONVERSATION-DETAIL showTagsCanned tagsCannedClone ', tagsCannedClone);
+    //console.log("that.contacts lenght:: ", strSearch);
+    this.tagsCannedFilter = this.filterItems(tagsCannedClone, strSearch);
+    console.log('CONVERSATION-DETAIL showTagsCanned tagsCannedFilter ', this.tagsCannedFilter);
+
+    this.tagsCannedFilter.sort(compareValues('title', 'asc'));
+    var strReplace = strSearch;
+    if (strSearch.length > 0) {
+      strReplace = "<b class='highlight-search-string'>" + strSearch + "</b>";
+    }
+    for (var i = 0; i < this.tagsCannedFilter.length; i++) {
+
+      const textCanned = "<div class='cannedText'>" + this.tagsCannedFilter[i].text + "</div>";
+      this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim()) + "</div>" + textCanned + '</div>';
+
+
+      // this.tagsCannedFilter[i].title = this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim());
+      // this.tagsCannedFilter[i].text = this.tagsCannedFilter[i].text
+    }
+  }
+
+  filterItems(items, searchTerm) {
+    console.log('CONVERSATION-DETAIL filterItems tagsCannedClone ', items, ' searchTerm: ', searchTerm);
+    //console.log("filterItems::: ",searchTerm);
+    return items.filter((item) => {
+      //console.log("filterItems::: ", item.title.toString().toLowerCase());
+      console.log('CONVERSATION-DETAIL item filtered tagsCannedClone ', item);
+      return item.title.toString().toLowerCase().indexOf(searchTerm.toString().toLowerCase()) > -1;
+    });
+  }
+
+  replacePlaceholderInCanned(str) {
+
+    console.log('CONVERSATION-DETAIL replacePlaceholderInCanned str ', str);
+
+    // if (this.groupDetailAttributes && this.groupDetailAttributes.userEmail) {
+    //   str = str.replace('$email',this.groupDetailAttributes.userEmail);
+    // }
+    // if (this.groupDetailAttributes && this.groupDetailAttributes.website) {
+    //   str = str.replace('$website',this.groupDetailAttributes.website);
+    // }
+    // if (this.groupDetailAttributes && this.groupDetailAttributes.userFullname) {
+    //   str = str.replace('$recipient_name',this.groupDetailAttributes.userFullname);
+    // }
+    // if (this.currentUserDetail && this.currentUserDetail.fullname) {
+    //   str = str.replace('$agent_name',this.currentUserDetail.fullname);
+    // }
+    // return str;
+  }
+
+
+  _replaceTagInMessage(event) {
+    console.log("CONVERSATION-DETAIL replaceTagInMessage  event ", event);
+    console.log("CONVERSATION-DETAIL replaceTagInMessage  canned text ", event.cannedSelected.text);
+    console.log("CONVERSATION-DETAIL replaceTagInMessage  message ", event.message);
+    const elTextArea = this.rowTextArea['el'];
+    const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
+    console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea ", textArea);
+    if (textArea && textArea.value) {
+      console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea value", textArea.value);
+      // replace text
+      var pos = textArea.value.lastIndexOf("/");
+      var strSearch = textArea.value.substr(pos);
+      console.log("CONVERSATION-DETAIL replaceTagInMessage  strSearch ", strSearch);
+
+      var strTEMP = textArea.value.replace(strSearch, event.cannedSelected.text);
+      console.log("CONVERSATION-DETAIL replaceTagInMessage  strTEMP ", strTEMP);
+    }
+    // strTEMP = this.replacePlaceholderInCanned(strTEMP);
+    // textArea.value = '';
+    // that.messageString = strTEMP;
+    // this.eventsReplaceTexareaText.next(strTEMP);
+    //text_area.value = strTEMP;
+    //  event.message = strTEMP;
+    textArea.value = strTEMP;
+    this.tagsCannedFilter = [];
+
+    setTimeout(() => {
+      textArea.focus();
+      this.resizeTextArea();
+    }, 200);
+
+  }
+
+
+  replaceTagInMessage(canned) {
+
+    this.tagsCannedFilter = [];
+    console.log("CONVERSATION-DETAIL replaceTagInMessage  canned text ", canned.text);
+    // // prendo val input
+    const elTextArea = this.rowTextArea['el'];
+    const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
+    console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea ", textArea);
+    console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea value", textArea.value);
+
+
+    // replace text
+    var pos = textArea.value.lastIndexOf("/");
+    var strSearch = textArea.value.substr(pos);
+    console.log("CONVERSATION-DETAIL replaceTagInMessage  strSearch ", strSearch);
+
+    var strTEMP = textArea.value.replace(strSearch, canned.text);
+
+    // strTEMP = this.replacePlaceholderInCanned(strTEMP);
+    // textArea.value = '';
+    // that.messageString = strTEMP;
+    textArea.value = strTEMP;
+    setTimeout(() => {
+      textArea.focus();
+      this.resizeTextArea();
+    }, 200);
+  }
+
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    console.log("CONVERSATION-DETAIL handleKeyboardEvent  event.key ", event.key);
+    if (event.key === 'ArrowDown') {
+      // Do action
+    const cannedItemEle =  <HTMLElement>document.querySelector('#canned-item_0')
+    console.log("CONVERSATION-DETAIL handleKeyboardEvent  cannedItemEle ", cannedItemEle);
+    }
+    else if (event.key === 'ArrowUp') {
+      // Another action
+    }
+
+    if (event.key === 'Enter') {
+      //Press action
+    }
+  }
+
+
+
 
   /** */
   returnSendMessage(e: any) {

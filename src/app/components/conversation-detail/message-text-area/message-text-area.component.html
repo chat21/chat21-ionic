@@ -22,6 +22,7 @@
         </ion-button>
       </div>
 
+
       <div class="text-message">
         <ion-textarea 
           #messageTextArea
@@ -32,10 +33,11 @@
           auto-grow = "true"
           [value] = ""
           [(ngModel)]="messageString"
-          (ionInput)="onChange($event);"
+          (ionChange)="ionChange($event);"
           (keyup.enter)="pressedOnKeyboard($event, messageString);" 
           >
         </ion-textarea>
+        <!-- (ionInput)="onChange($event);" -->
       </div>
 
       <div class="buttons-right">
@@ -44,6 +46,8 @@
         </ion-button>
       </div>
     </ion-col>
+
+  
 
     
   </ion-row>

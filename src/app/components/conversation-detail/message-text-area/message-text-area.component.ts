@@ -12,6 +12,7 @@ import { TYPE_MSG_TEXT } from 'src/chat21-core/utils/constants';
 // models
 import { UploadModel } from 'src/chat21-core/models/upload';
 
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-message-text-area',
   templateUrl: './message-text-area.component.html',
@@ -21,7 +22,10 @@ export class MessageTextAreaComponent implements OnInit {
   @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
 
-  @Input() conversationWith
+
+  @Input() conversationWith: string;
+  @Input() tagsCannedFilter: any = [];
+  @Input() events: Observable<void>;
 
   public conversationEnabled = false;
   public messageString: string;
@@ -36,21 +40,34 @@ export class MessageTextAreaComponent implements OnInit {
 
   ngOnInit() {
     // this.setSubscriptions();
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) HELLO !!!!! ");
+    // this.events.subscribe((cannedmessage) => {
+    //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) events.subscribe cannedmessage ", cannedmessage);
+    // })
   }
 
+  // ngDoCheck() {
+  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) tagsCannedFilter ", this.tagsCannedFilter);
+  // }
+
+  // !!!!! NOT used
   onChange(e: any) {
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange event ", e);
     const codeChar = e.detail.data;
+
     let message = e.detail.target.innerHTML;
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.target.innerHTML) ", message);
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.data) ", e.detail.data);
     if (e.detail.data) {
       message += e.detail.data;
     }
     const height = e.detail.target.offsetHeight;
     // console.log('onChange ************** event:: ', message);
-    if ( codeChar === 10 ) {
+    if (codeChar === 10) {
       console.log('premuto invio ');
     } else {
       try {
-        if ( message.trim().length > 0 ) {
+        if (message.trim().length > 0) {
           this.conversationEnabled = true;
         } else {
           this.conversationEnabled = false;
@@ -58,8 +75,28 @@ export class MessageTextAreaComponent implements OnInit {
       } catch (err) {
         this.conversationEnabled = false;
       }
-      this.eventChangeTextArea.emit({ msg: message, offsetHeight: height } );
+
+
+      this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
     }
+  }
+
+  ionChange(e: any) {
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange event ", e);
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange detail.value ", e.detail.value);
+    const message = e.detail.value
+    const height = e.target.offsetHeight;
+    try {
+      if (message.trim().length > 0) {
+        this.conversationEnabled = true;
+      } else {
+        this.conversationEnabled = false;
+      }
+    } catch (err) {
+      this.conversationEnabled = false;
+    }
+
+    this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
   }
 
 
@@ -67,7 +104,7 @@ export class MessageTextAreaComponent implements OnInit {
   // dovrebbe scattare quando termina il caricamento dell'immagine per inviare il messaggio
   private setSubscriptions() {
     const that = this;
-    const subscribeBSStateUpload =  this.uploadService.BSStateUpload.subscribe((data: any) => {
+    const subscribeBSStateUpload = this.uploadService.BSStateUpload.subscribe((data: any) => {
       console.log('***** BSStateUpload *****', data);
       if (data) {
         let message = data.message;
@@ -120,7 +157,7 @@ export class MessageTextAreaComponent implements OnInit {
   pressedOnKeyboard(e: any, text: string) {
     console.log('pressedOnKeyboard ************** event:: ', e);
     const message = e.target.textContent.trim();
-    if ( e.inputType === 'insertLineBreak' && message === '' ) {
+    if (e.inputType === 'insertLineBreak' && message === '') {
       this.messageString = '';
       return;
     } else {
@@ -144,12 +181,12 @@ export class MessageTextAreaComponent implements OnInit {
   onFileSelectedMobile(e: any) {
     console.log('controlOfMessage');
     this.chooser.getFile()
-    .then(file => {
-      console.log(file ? file.name : 'canceled');
-    })
-    .catch((error: any) => {
-      console.error(error);
-    });
+      .then(file => {
+        console.log(file ? file.name : 'canceled');
+      })
+      .catch((error: any) => {
+        console.error(error);
+      });
   }
 
 
@@ -157,7 +194,7 @@ export class MessageTextAreaComponent implements OnInit {
     console.log('Message-text-area - hasClickedUploadImage conversationWith', this.conversationWith);
   }
 
-  onFileSelected(e: any){
+  onFileSelected(e: any) {
     console.log('Message-text-area - onFileSelected event', e);
     this.presentModal(e);
   }
@@ -179,12 +216,12 @@ export class MessageTextAreaComponent implements OnInit {
     const dataFiles = e.target.files;
     const attributes = { files: dataFiles, enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
-       await this.modalController.create({
-          component: LoaderPreviewPage,
-          componentProps: attributes,
-          swipeToClose: false,
-          backdropDismiss: true
-    });
+      await this.modalController.create({
+        component: LoaderPreviewPage,
+        componentProps: attributes,
+        swipeToClose: false,
+        backdropDismiss: true
+      });
     modal.onDidDismiss().then((detail: any) => {
       console.log('presentModal onDidDismiss detail', detail);
       console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
@@ -213,11 +250,11 @@ export class MessageTextAreaComponent implements OnInit {
           that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
         }).catch(error => {
           // Use to signal error if something goes wrong.
-          console.error(`MessageTextArea component::uploadSingle:: Failed to upload file and get link - ${error}`);
+          console.error(`MessageTextArea component::uploadSingle:: Failed to upload file and get link `, error);
         });
-        
+
       }
-   });
+    });
     return await modal.present();
   }
 
@@ -229,4 +266,6 @@ export class MessageTextAreaComponent implements OnInit {
     await this.modalController.getTop();
     this.modalController.dismiss({ confirmed: true });
   }
+
+
 }
