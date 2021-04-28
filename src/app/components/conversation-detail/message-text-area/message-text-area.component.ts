@@ -172,10 +172,10 @@ export class MessageTextAreaComponent implements OnInit {
    */
   private async presentModal(e: any): Promise<any> {
     const that = this;
-    console.log('presentModal', e);
-    console.log('presentModal', e.target);
-    console.log('presentModal', e.target.files);
-    console.log('presentModal', e.target.files.length);
+    console.log('presentModal e', e);
+    console.log('presentModal e.target ', e.target);
+    console.log('presentModal e.target.files', e.target.files);
+    console.log('presentModal e.target.files.length', e.target.files.length);
     const dataFiles = e.target.files;
     const attributes = { files: dataFiles, enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
@@ -186,16 +186,29 @@ export class MessageTextAreaComponent implements OnInit {
           backdropDismiss: true
     });
     modal.onDidDismiss().then((detail: any) => {
+      console.log('presentModal onDidDismiss detail', detail);
+      console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+      let type = ''
+      if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image")) {
+        type = 'image'
+      } else if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application"))) {
+        type = 'file'
+
+      }
+
       let fileSelected = e.target.files.item(0);//detail.data.fileSelected;
       let messageString = detail.data.messageString;
       let metadata = detail.data.metadata;
-      let type = detail.data.type;
+      // let type = detail.data.type;
       console.log('The result: CHIUDI!!!!!', detail.data);
       if (detail !== null) {
         const currentUpload = new UploadModel(fileSelected);
         that.uploadService.upload(currentUpload).then(downloadURL => {
           metadata.src = downloadURL;
-          console.log('invio msg uploadTask::: ', downloadURL);
+          console.log('presentModal invio msg metadata::: ', metadata);
+          console.log('presentModal invio msg metadata downloadURL::: ', downloadURL);
+          console.log('presentModal invio msg type::: ', type);
+          console.log('presentModal invio msg message::: ', messageString);
           // send message
           that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
         }).catch(error => {

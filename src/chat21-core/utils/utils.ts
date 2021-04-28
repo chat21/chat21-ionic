@@ -56,6 +56,16 @@ export function archivedConversationsPathForUserId(tenant, userId) {
 }
 
 /**
+ * chiamata da GroupHandler
+ * restituisce url '/group'
+ * @param tenant
+ */
+export function groupsPathForUserId(tenant, userId) {
+  const urlNodeConversations = '/apps/' + tenant + '/users/' + userId + '/groups';
+  return urlNodeConversations;
+}
+
+/**
  * chiamata da ChatConversationHandler
  * restituisce url '/messages'
  */
@@ -72,6 +82,7 @@ export function contactsRef(tenant) {
   const urlNodeContacts = '/apps/' + tenant + '/contacts/';
   return urlNodeContacts;
 }
+
 
 /**
  * chiamata da ChatConversationsHandler
@@ -566,9 +577,7 @@ export function setConversationAvatar(
 /** */
 export function setChannelType(conversationWith: string): string {
   let channelType = TYPE_DIRECT;
-  if (conversationWith.startsWith(TYPE_SUPPORT_GROUP)) {
-    channelType = TYPE_SUPPORT_GROUP;
-  }else if(conversationWith.startsWith(TYPE_GROUP)){
+  if (conversationWith.includes(TYPE_GROUP + '-')) {
     channelType = TYPE_GROUP;
   }
   return channelType;

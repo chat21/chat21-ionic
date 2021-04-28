@@ -22,7 +22,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 // CONFIG
 import { environment } from '../environments/environment';
-import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE } from '../chat21-core/utils/constants';
+import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE, UPLOAD_ENGINE_NATIVE } from '../chat21-core/utils/constants';
 
 // SERVICES
 import { AppConfigProvider } from './services/app-config';
@@ -76,6 +76,8 @@ import { FirebaseInitService } from 'src/chat21-core/providers/firebase/firebase
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 import { LocalSessionStorage } from 'src/chat21-core/providers/localSessionStorage';
 import { NativeUploadService } from 'src/chat21-core/providers/native/native-upload-service';
+import { GroupService } from 'src/chat21-core/providers/abstract/group.service';
+import { FirebaseGroupsHandler } from 'src/chat21-core/providers/firebase/firebase-group-handler';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -84,100 +86,117 @@ export function createTranslateLoader(http: HttpClient) {
 }
 
 export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service, appSorage: AppStorageService  ) {
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
     
-    chat21Service.config = appConfig.getConfig().chat21Config;
+    chat21Service.config = config.chat21Config;
     chat21Service.initChat();
-    console.log("appConfig.getConfig().SERVER_BASE_URL", appConfig.getConfig().apiUrl);
+    console.log("appConfig.getConfig()", config);
     const auth = new MQTTAuthService(http, chat21Service, appSorage);
     
     auth.setBaseUrl(appConfig.getConfig().apiUrl)
     return auth
   } else {
 
-    FirebaseInitService.initFirebase(appConfig.getConfig().firebaseConfig)
+    FirebaseInitService.initFirebase(config.firebaseConfig)
     const auth= new FirebaseAuthService(http, appSorage);
-    auth.setBaseUrl(appConfig.getConfig().apiUrl)
+    auth.setBaseUrl(config.apiUrl)
     return auth
-  }
-}
-
-export function presenceFactory() {
-  console.log('presenceFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new MQTTPresenceService();
-  } else {
-    return new FirebasePresenceService();
-  }
-}
-
-export function typingFactory() {
-  console.log('typingFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    return new MQTTTypingService();
-  } else {
-    return new FirebaseTypingService();
   }
 }
 
 export function conversationsHandlerFactory(chat21Service: Chat21Service, httpClient: HttpClient, appConfig: AppConfigProvider ) {
   console.log('conversationsHandlerFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTConversationsHandler(chat21Service);
   } else {
     return new FirebaseConversationsHandler(httpClient, appConfig);
   }
 }
 
-export function imageRepoFactory(appConfig: AppConfigProvider) {
-  console.log('imageRepoFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    const imageService = new FirebaseImageRepoService();
-    FirebaseInitService.initFirebase(appConfig.getConfig().firebaseConfig)
-    imageService.setImageBaseUrl(appConfig.getConfig().baseImageUrl)
-    return imageService
-  } else {
-    const imageService = new FirebaseImageRepoService();
-    FirebaseInitService.initFirebase(appConfig.getConfig().firebaseConfig)
-    imageService.setImageBaseUrl(appConfig.getConfig().baseImageUrl)
-    return imageService
-  }
-}
-
-export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, appStorage: AppStorageService) {
-  console.log('uploadFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
-    const nativeUploadService = new NativeUploadService(http, appStorage)
-    nativeUploadService.setBaseUrl(appConfig.getConfig().apiUrl)
-    return nativeUploadService
-    // return new FirebaseUploadService();
-  } else {
-    return new FirebaseUploadService();
-  }
-}
-
-export function archivedConversationsHandlerFactory() {
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+export function archivedConversationsHandlerFactory(appConfig: AppConfigProvider) {
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseArchivedConversationsHandler();
   } else {
     return new FirebaseArchivedConversationsHandler();
   }
 }
 
-export function conversationHandlerBuilderFactory(chat21Service: Chat21Service) {
+export function conversationHandlerBuilderFactory(chat21Service: Chat21Service, appConfig: AppConfigProvider) {
   console.log('conversationHandlerBuilderFactory: ');
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTConversationHandlerBuilderService(chat21Service);
   } else {
     return new FirebaseConversationHandlerBuilderService();
   }
 }
 
-export function conversationHandlerFactory() {
-  if (environment.chatEngine === CHAT_ENGINE_MQTT) {
+export function conversationHandlerFactory(appConfig: AppConfigProvider) {
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseConversationHandler(false);
   } else {
     return new FirebaseConversationHandler(false);
+  }
+}
+
+export function groupsFactory(http: HttpClient, appConfig: AppConfigProvider) {
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
+    return new FirebaseGroupsHandler(http, appConfig);
+  } else {
+    return new FirebaseGroupsHandler(http, appConfig);
+  }
+}
+
+export function typingFactory(appConfig: AppConfigProvider) {
+  console.log('typingFactory: ');
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
+    return new MQTTTypingService();
+  } else {
+    return new FirebaseTypingService();
+  }
+}
+
+export function presenceFactory(appConfig: AppConfigProvider) {
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
+    return new MQTTPresenceService();
+  } else {
+    return new FirebasePresenceService();
+  }
+}
+
+export function imageRepoFactory(appConfig: AppConfigProvider) {
+  console.log('imageRepoFactory: ');
+  const config = appConfig.getConfig()
+  if (config.chatEngine === CHAT_ENGINE_MQTT) {
+    const imageService = new FirebaseImageRepoService();
+    FirebaseInitService.initFirebase(config.firebaseConfig)
+    imageService.setImageBaseUrl(config.baseImageUrl)
+    return imageService
+  } else {
+    const imageService = new FirebaseImageRepoService();
+    FirebaseInitService.initFirebase(config.firebaseConfig)
+    imageService.setImageBaseUrl(config.baseImageUrl)
+    return imageService
+  }
+}
+
+export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, appStorage: AppStorageService) {
+  
+  const config = appConfig.getConfig()
+  if (config.uploadEngine === UPLOAD_ENGINE_NATIVE) {
+    const nativeUploadService = new NativeUploadService(http, appStorage)
+    nativeUploadService.setBaseUrl(config.apiUrl)
+    return nativeUploadService
+    // return new FirebaseUploadService();
+  } else {
+    return new FirebaseUploadService();
   }
 }
 
@@ -254,12 +273,12 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: PresenceService,
       useFactory: presenceFactory,
-      deps: []
+      deps: [AppConfigProvider]
     },
     {
       provide: TypingService,
       useFactory: typingFactory,
-      deps: []
+      deps: [AppConfigProvider]
     },
     {
       provide: UploadService,
@@ -274,12 +293,12 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ArchivedConversationsHandlerService,
       useFactory: archivedConversationsHandlerFactory,
-      deps: []
+      deps: [AppConfigProvider]
     },
     {
       provide: ConversationHandlerService,
       useFactory: conversationHandlerFactory,
-      deps: []
+      deps: [AppConfigProvider]
     },
     {
       provide: ImageRepoService,
@@ -289,7 +308,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ConversationHandlerBuilderService,
       useFactory: conversationHandlerBuilderFactory,
-      deps: [Chat21Service]
+      deps: [Chat21Service, AppConfigProvider]
     },
     {
       provide: LoggerService,
@@ -299,6 +318,11 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: AppStorageService,
       useClass: LocalSessionStorage
+    },
+    {
+      provide: GroupService,
+      useFactory: groupsFactory,
+      deps: [HttpClient, AppConfigProvider,]
     },
     StatusBar,
     SplashScreen,

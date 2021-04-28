@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 import { AppConfigProvider } from '../../../services/app-config';
-import { setChannelType} from '../../../../chat21-core/utils/utils';
+import { setChannelType } from '../../../../chat21-core/utils/utils';
 import { TYPE_SUPPORT_GROUP, TYPE_DIRECT, TYPE_GROUP } from '../../../../chat21-core/utils/constants';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -29,7 +29,7 @@ export class InfoContentComponent implements OnInit {
   @Input() loggedUser: UserModel
   @Input() tenant: string
 
-  public  member: UserModel;
+  public member: UserModel;
   public urlConversation: any;
   // public loggedUser: UserModel;
   // private tenant: string;
@@ -39,7 +39,8 @@ export class InfoContentComponent implements OnInit {
   private channelType: string;
   private urlConversationSupportGroup: any;
   public conversations: Array<ConversationModel> = [];
-  public conversationSelected:any;
+  public conversationSelected: any;
+  public panelType: string;
 
   constructor(
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
@@ -50,12 +51,13 @@ export class InfoContentComponent implements OnInit {
     public appConfigProvider: AppConfigProvider,
     private sanitizer: DomSanitizer,
   ) {
+    console.log('INFO-CONTENT-COMP HELLO !!!!!');
     // this.loggedUser = this.authService.getCurrentUser();
     // console.log('INFO-CONTENT-COMP loggedUser: ', this.loggedUser);
     this.tenant = environment.tenant;
 
     this.route.paramMap.subscribe(params => {
-      console.log('ConversationDetailPage initialize params: ', params);
+      console.log('INFO-CONTENT-COMP initialize params: ', params);
       this.conversationWith = params.get('IDConv');
       this.conversationWithFullname = params.get('FullNameConv');
       this.conv_type = params.get('Convtype');
@@ -64,28 +66,33 @@ export class InfoContentComponent implements OnInit {
 
   ngOnInit() {
     console.log('InfoContentComponent:::');
-    console.log('INFO-CONTENT-COMP  Logged user' , this.loggedUser);
-    console.log('INFO-CONTENT-COMP  Tenant' , this.tenant);
+    console.log('INFO-CONTENT-COMP  Logged user', this.loggedUser);
+    console.log('INFO-CONTENT-COMP  Tenant', this.tenant);
     this.initConversationsHandler(); // nk
-  
+
   }
 
 
   //DARINOMINARE 
   initConversationsHandler() {
-    console.log('INFO-CONTENT-COMP initConversationsHandler :::', this.tenant, this.loggedUser.uid, this.conversationWith);
-    if (this.conv_type === 'active') {
+    console.log('INFO-CONTENT-COMP initConversationsHandler :::', this.tenant, this.loggedUser.uid, this.conversationWith, this.conv_type);
+    if (this.conv_type === 'active' || this.conv_type === 'new') {
       // qui al refresh array conv è null
-
+      console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE');
       this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+        console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - GET conv FROM ACTIVE - CONV FOUND ', conv);
         if (conv) {
           this.conversationSelected = conv;
           this.conversationWith = conv.uid;
           this.selectInfoContentTypeComponent();
         } else {
           // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ARCHIVIATE
-          console.log('INFO-CONTENT-COMP conv null', conv)
+          console.log('INFO-CONTENT-COMP initConversationsHandler conv null', conv)
+          console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - CONV NOT FOUND - get from ARCHIVED');
+
+
           this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+            console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - GET conv FROM ARCHIVED - CONV FOUND ', conv);
             if (conv) {
               this.conversationSelected = conv;
               this.conversationWith = conv.uid;
@@ -98,16 +105,20 @@ export class InfoContentComponent implements OnInit {
       });
 
     } else if (this.conv_type === 'archived') {
-
+      console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED ');
       this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+        console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED GET conv FROM ARCHIVED - CONV FOUND ', conv);
         if (conv) {
           this.conversationSelected = conv
           this.conversationWith = conv.uid
           this.selectInfoContentTypeComponent();
         } else {
           // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ATTIVE
-          console.log('INFO-CONTENT-COMP conv null', conv)
+          console.log('INFO-CONTENT-COMP initConversationsHandler conv null', conv)
+          console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED - CONV NOT FOUND - get from ARCHIVED');
+      
           this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+            console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED GET conv FROM ACTIVE - CONV FOUND ', conv);
             if (conv) {
               this.conversationSelected = conv;
               this.conversationWith = conv.uid;
@@ -118,6 +129,9 @@ export class InfoContentComponent implements OnInit {
           });
         }
       });
+    } else {
+      // use case conversation new (write to)
+      // this.selectInfoContentTypeComponent()
     }
   }
   // ---------------------------------------------------
@@ -126,18 +140,46 @@ export class InfoContentComponent implements OnInit {
   selectInfoContentTypeComponent() {
     console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent conversationWith: ', this.conversationWith);
     if (this.conversationWith) {
-      this.channelType = setChannelType(this.conversationWith);
-      if (this.channelType === TYPE_DIRECT) {
-        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
-        this.setInfoDirect();
-      } else if (this.channelType === TYPE_GROUP) {
-        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
-        this.setInfoGroup();
-      } else if (this.channelType === TYPE_SUPPORT_GROUP) {
-        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+      // this.channelType = setChannelType(this.conversationWith , 'INFO-CONTENT');
+      this.panelType = 'direct-panel'
+      // console.log('INFO-CONTENT-COMP - panelType: ', this.panelType);
+      // console.log('INFO-CONTENT-COMP - channelType: ', this.channelType);
+      // controlllare come comincia conversationWith nn + channel type
+
+      if (this.conversationWith.startsWith("support-group")) {
+        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent - SUPPORT_GROUP - conversationWith start with "support-group"  ', this.conversationWith.startsWith("support-group"));
         this.urlConversationSupportGroup = '';
         this.setInfoSupportGroup();
+        this.panelType = 'support-group-panel'
+        console.log('INFO-CONTENT-COMP - panelType: ', this.panelType);
+
+      } else if (this.conversationWith.startsWith("group-")) {
+        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent - GROUP -  conversationWith start with "group-"  ', this.conversationWith.startsWith("group-"));
+        this.setInfoGroup();
+        this.panelType = 'group-panel'
+        console.log('INFO-CONTENT-COMP - panelType: ', this.panelType);
+
+      } else {
+        console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent - DIRECT - conversationWith NOT START with "group-" NOR with "support-group" ',);
+        this.setInfoDirect();
+        this.panelType = 'direct-panel'
+        console.log('INFO-CONTENT-COMP - panelType: ', this.panelType);
+
       }
+
+
+
+      // if (this.channelType === TYPE_DIRECT) {
+      //   console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+      //   this.setInfoDirect();
+      // } else if (this.channelType === TYPE_GROUP) {
+      //   console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+      //   this.setInfoGroup();
+      // } else if (this.channelType === TYPE_SUPPORT_GROUP) {
+      //   console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
+      //   this.urlConversationSupportGroup = '';
+      //   this.setInfoSupportGroup();
+      // }
     }
   }
 
@@ -146,15 +188,15 @@ export class InfoContentComponent implements OnInit {
   // ---------------------------------------------------
   setInfoDirect() {
     console.log('INFO-CONTENT-COMP - setInfoDirect ', this.contactsService, this.conversationWith);
-    console.log('INFO-CONTENT-COMP - setInfoDirect member',  this.member);
+    console.log('INFO-CONTENT-COMP - setInfoDirect member', this.member);
     this.member = null;
     const that = this;
     const tiledeskToken = this.authService.getTiledeskToken();
     this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith)
-    .subscribe(res => { 
-      console.log('INFO-CONTENT-COMP - setInfoDirect  RES', res);
-      this.member = res
-    }) ;
+      .subscribe(res => {
+        console.log('INFO-CONTENT-COMP - setInfoDirect  RES', res);
+        this.member = res
+      });
   }
 
   // ---------------------------------------------------
@@ -165,7 +207,7 @@ export class InfoContentComponent implements OnInit {
   }
 
 
-    // ---------------------------------------------------
+  // ---------------------------------------------------
   // @ setInfoGroup
   // ---------------------------------------------------
   setInfoSupportGroup() {
@@ -175,9 +217,13 @@ export class InfoContentComponent implements OnInit {
     if (this.conversationSelected) {
       projectID = this.conversationSelected.attributes.projectId;
     }
+    console.log('setInfoSupportGroup conversationSelected ', this.conversationSelected)
+    console.log('setInfoSupportGroup projectID ', projectID)
     if (projectID && this.conversationWith) {
+      console.log('setInfoSupportGroup HERE YES ')
       let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
       urlPanel += '?token=' + tiledeskToken;
+      console.log('setInfoSupportGroup urlPanel ', urlPanel)
       const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
       this.urlConversationSupportGroup = urlConversationTEMP;
     } else {
