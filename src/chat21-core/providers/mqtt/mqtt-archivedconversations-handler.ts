@@ -18,7 +18,7 @@ import { ArchivedConversationsHandlerService } from '../abstract/archivedconvers
 
 @Injectable({ providedIn: 'root' })
 
-export class MQTTConversationsHandler extends ArchivedConversationsHandlerService {
+export class MQTTArchivedConversationsHandler extends ArchivedConversationsHandlerService {
 
     // BehaviorSubject
     BSConversationDetail: BehaviorSubject<ConversationModel>;
@@ -312,9 +312,9 @@ export class MQTTConversationsHandler extends ArchivedConversationsHandlerServic
      * 5 -  elimino conversazione dall'array delle conversazioni chiuse
      */
     private removed(childSnapshot) {
-        const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
+        const index = searchIndexInArrayForUid(this.archivedConversations, childSnapshot.key);
         if (index > -1) {
-            const conversationRemoved = this.conversations[index]
+            const conversationRemoved = this.archivedConversations[index]
             this.archivedConversations.splice(index, 1);
             // this.conversations.sort(compareValues('timestamp', 'desc'));
             // this.databaseProvider.removeConversation(childSnapshot.key);
