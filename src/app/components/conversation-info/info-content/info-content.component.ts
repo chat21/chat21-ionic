@@ -187,15 +187,21 @@ export class InfoContentComponent implements OnInit {
   // @ setInfoDirect
   // ---------------------------------------------------
   setInfoDirect() {
-    console.log('INFO-CONTENT-COMP - setInfoDirect ', this.contactsService, this.conversationWith);
+    console.log('INFO-CONTENT-COMP - setInfoDirect ',  this.conversationWith);
     console.log('INFO-CONTENT-COMP - setInfoDirect member', this.member);
     this.member = null;
     const that = this;
     const tiledeskToken = this.authService.getTiledeskToken();
     this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith)
       .subscribe(res => {
-        console.log('INFO-CONTENT-COMP - setInfoDirect  RES', res);
+        console.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail RES', res);
         this.member = res
+      }, (error) => {
+        console.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail - ERROR  ', error);
+        
+      }, () => {
+        console.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail * COMPLETE *');
+       
       });
   }
 
@@ -214,7 +220,7 @@ export class InfoContentComponent implements OnInit {
     let projectID = '';
     const tiledeskToken = this.authService.getTiledeskToken();
     const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
-    if (this.conversationSelected) {
+    if (this.conversationSelected && this.conversationSelected.attributes) {
       projectID = this.conversationSelected.attributes.projectId;
     }
     console.log('setInfoSupportGroup conversationSelected ', this.conversationSelected)

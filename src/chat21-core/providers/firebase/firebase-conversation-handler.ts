@@ -84,7 +84,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         this.CLIENT_BROWSER = navigator.userAgent;
         this.conversationWith = recipientId;
         this.messages = [];
-        this.attributes = this.setAttributes();
+        // this.attributes = this.setAttributes();
     }
 
     /**
@@ -230,34 +230,34 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     // BEGIN PRIVATE FUNCTIONS
     // ---------------------------------------------------------- //
     /** */
-    private setAttributes(): any {
-        const attributes: any = {
-            client: this.CLIENT_BROWSER,
-            sourcePage: location.href,
+    // private setAttributes(): any {
+    //     const attributes: any = {
+    //         client: this.CLIENT_BROWSER,
+    //         sourcePage: location.href,
             
-        };
+    //     };
 
-        if(this.loggedUser && this.loggedUser.email ){
-            attributes.userEmail = this.loggedUser.email
-        }
-        if(this.loggedUser && this.loggedUser.fullname) {
-            attributes.userFullname = this.loggedUser.fullname
-        }
+    //     if(this.loggedUser && this.loggedUser.email ){
+    //         attributes.userEmail = this.loggedUser.email
+    //     }
+    //     if(this.loggedUser && this.loggedUser.fullname) {
+    //         attributes.userFullname = this.loggedUser.fullname
+    //     }
         
 
-        // let attributes: any = JSON.parse(sessionStorage.getItem('attributes'));
-        // if (!attributes || attributes === 'undefined') {
-        //     attributes = {
-        //         client: this.CLIENT_BROWSER,
-        //         sourcePage: location.href,
-        //         userEmail: this.loggedUser.email,
-        //         userFullname: this.loggedUser.fullname
-        //     };
-        //     console.log('>>>>>>>>>>>>>> setAttributes: ', JSON.stringify(attributes));
-        //     sessionStorage.setItem('attributes', JSON.stringify(attributes));
-        // }
-        return attributes;
-    }
+    //     // let attributes: any = JSON.parse(sessionStorage.getItem('attributes'));
+    //     // if (!attributes || attributes === 'undefined') {
+    //     //     attributes = {
+    //     //         client: this.CLIENT_BROWSER,
+    //     //         sourcePage: location.href,
+    //     //         userEmail: this.loggedUser.email,
+    //     //         userFullname: this.loggedUser.fullname
+    //     //     };
+    //     //     console.log('>>>>>>>>>>>>>> setAttributes: ', JSON.stringify(attributes));
+    //     //     sessionStorage.setItem('attributes', JSON.stringify(attributes));
+    //     // }
+    //     return attributes;
+    // }
 
     /** */
     private added(childSnapshot: any) {

@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -25,11 +25,10 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-@import '~material-design-icons/iconfont/material-icons.css';
-@import 'variables.scss';
+@import "~material-design-icons/iconfont/material-icons.css";
+@import "variables.scss";
 
 // http://ionicframework.com/docs/v2/theming/
-
 
 // App Global Sass
 // --------------------------------------------------
@@ -49,11 +48,10 @@ body {
     user-select: text;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
     overflow: auto;
     text-rendering: optimizeLegibility;
 }
-
 
 // Ionic 'Split Pane' styles need to be tweaked to
 // get this 'master-detail' example to work!
@@ -76,33 +74,28 @@ body {
 //     --overflow: hidden;
 // }
 
-
-
-
 #sidebar {
     min-width: 256px;
     width: 33%;
     max-width: 320px;
 }
 
-
 app-conversations-list {
     width: 100%;
     height: 100%;
 }
 .truncate {
-    width: 100%!important;
-    white-space: nowrap!important;
-    overflow: hidden!important;
-    text-overflow: ellipsis!important;
+    width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
-
 
 // .popover-md .popover-content{
 //     width: auto!important;
 // }
 
-// ion-backdrop{  
+// ion-backdrop{
 //     display: block;
 //     background-color: #000000!important;
 //     width: 100%;
@@ -181,15 +174,14 @@ app-conversations-list {
 // }
 
 // @keyframes sk-bouncedelay {
-//     0%, 80%, 100% { 
+//     0%, 80%, 100% {
 //     -webkit-transform: scale(0);
 //     transform: scale(0);
-//     } 40% { 
+//     } 40% {
 //     -webkit-transform: scale(1.0);
 //     transform: scale(1.0);
 //     }
 // }
-
 
 // .c21-right{
 //     float: right;
@@ -239,7 +231,7 @@ app-conversations-list {
 //         -webkit-animation-fill-mode: both;
 //         animation-fill-mode: both;
 //     }
-    
+
 // }
 
 // ion-navbar {
@@ -282,135 +274,254 @@ app-conversations-list {
 //     border-right: 1px solid rgba(169, 169, 169, 0.1)!important;
 // }
 
-
 // START GESTIONE SIDEBAR ESTERNA CON IFRAME //
-    #tld-sidebar {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 60px;
-        background-color: black;
-        &.open{
-            width: 300px;
-            .btn-close {
-                display: block;
-                width: 100%;
-            }
-            .btn-open {
-                display: none;
-            }
-        }
-    }
-  
-    .tld-button {
-        width: 100%;
-        height: 56px;
-        .btn {
-            background-color: DodgerBlue;
-            border: none;
-            color: white;
-            padding: 20px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background-color: RoyalBlue;
-        }
+#tld-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 60px;
+    background-color: black;
+    &.open {
+        width: 300px;
         .btn-close {
-            display: none;
-        }
-        .btn-open {
             display: block;
             width: 100%;
-            font-size: 28px;
-            padding: 14px 14px;
+        }
+        .btn-open {
+            display: none;
         }
     }
-    .tld-iframe {
-        height: 100%;
-        width: 100%;
-    }
-    app-root {
-        position: absolute;
-        top: 0;
-        left: 0px;
-        height: 100%;
-        width: 100%;
-        float: right;
-        z-index: 2;
-        &.open {
-            left: 300px;
-            width: calc(100% - 300px);
-        }
-        &.close{
-            left: 60px;
-            width: calc(100% - 60px);
-        }
-    }
-    // END GESTIONE SIDEBAR ESTERNA CON IFRAME //
+}
 
+.tld-button {
+    width: 100%;
+    height: 56px;
+    .btn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 20px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+    .btn-close {
+        display: none;
+    }
+    .btn-open {
+        display: block;
+        width: 100%;
+        font-size: 28px;
+        padding: 14px 14px;
+    }
+}
+.tld-iframe {
+    height: 100%;
+    width: 100%;
+}
+app-root {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    float: right;
+    z-index: 2;
+    &.open {
+        left: 300px;
+        width: calc(100% - 300px);
+    }
+    &.close {
+        left: 60px;
+        width: calc(100% - 60px);
+    }
+}
+// END GESTIONE SIDEBAR ESTERNA CON IFRAME //
 
-    app-message-text-area {
-        width: 100%;
-    }
-    app-bubble-day-message {
-        width: 100%;
-    }
-    app-bubble-system-message {
-        max-width: 80%;
-        margin: 0 auto;
-    }
-    app-bubble-my-message {
-        width: 100%;
-    }
-    app-bubble-others-message {
-        width: 100%;
-    }
-    app-conversation-info {
-        height: calc(100% - 60px);
-    }
-    app-avatar-profile {
-        width: 100%;
-        height: 100%;
-    }
+app-message-text-area {
+    width: 100%;
+    z-index: 99999; // nk
+    background: #fff; // nk
+}
+app-bubble-day-message {
+    width: 100%;
+}
+app-bubble-system-message {
+    max-width: 80%;
+    margin: 0 auto;
+}
+app-bubble-my-message {
+    width: 100%;
+}
+app-bubble-others-message {
+    width: 100%;
+}
+app-conversation-info {
+    height: calc(100% - 60px);
+}
+app-avatar-profile {
+    width: 100%;
+    height: 100%;
+}
 
-    app-info-support-group {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow-y: hidden;
-    }
+app-info-support-group {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+}
 
-    ion-conversation-detail {
-        img {
-            border-style: none;
-            max-width: 100% !important;
-        }
+ion-conversation-detail {
+    img {
+        border-style: none;
+        max-width: 100% !important;
     }
+}
 
-    /* Change Autocomplete styles in Chrome*/
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover, 
-    input:-webkit-autofill:focus,
-    textarea:-webkit-autofill,
-    textarea:-webkit-autofill:hover,
-    textarea:-webkit-autofill:focus,
-    select:-webkit-autofill,
-    select:-webkit-autofill:hover,
-    select:-webkit-autofill:focus {
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
     // border: 0px solid green;
     // -webkit-text-fill-color: green;
     -webkit-box-shadow: 0 0 0px 0px #000 inset;
     transition: background-color 1000s ease-in-out 0s;
-    }
+}
 
-    .chat-tooltip {
-        font-family: 'Roboto','Google Sans', Helvetica, Arial, sans-serif;
-        font-size: 12px;
-        font-style: normal;
-        letter-spacing: normal;
-        font-stretch: normal;
-        font-variant: normal;
-        font-weight: 300;
-    }
+.chat-tooltip {
+    font-family: "Roboto", "Google Sans", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    letter-spacing: normal;
+    font-stretch: normal;
+    font-variant: normal;
+    font-weight: 300;
+}
+
+// da rivedere
+:host ::ng-deep tiledeskwidget-bubble-message > div > div > tiledeskwidget-image > div > img {
+    display: none !important;
+}
+
+/*
+ * Canned responses
+ * -------------------------------------------- */
+
+#canned {
+    z-index: 99999;
+    width: 100%;
+    // background: rgba(237,240,244,.9);
+    // position: fixed;
+    // top: 0;
+    // bottom: 0;
+    // left: 0;
+    // right: 0;
+    // overflow: hidden;
+}
+
+.canned-list {
+    // position: absolute;
+    // bottom: 0;
+    background-color: white !important;
+    width: 100%;
+    max-height: 310px;
+    overflow-y: auto;
+    // padding: 10px 0;
+    // margin: 0;
+    margin-bottom: 1px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #080f1a;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    // list-style: none;
+    z-index: 999999;
+}
+
+.canned-item {
+    -webkit-tap-highlight-color: transparent;
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    list-style: none;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    // margin: 0 10px;
+    position: relative;
+    outline: none;
+    color: #434a54;
+    // padding: 10px;
+    padding: 5px;
+    width: auto;
+    cursor: pointer;
+    // .item-inner{
+    //     border: none!important;
+    // }
+}
+
+// .canned-item:hover {
+//     background-color: #eaf1fd!important;
+//     border-radius: 4px;
+
+//   }
+
+#canned > ion-list > ion-item {
+    --background-hover: #1877f2 !important;
+}
+
+//   div.item-native > div:hover {
+//     background-color: #eaf1fd!important;
+// }
+
+//   div.item-native > div
+
+// .canned-item {
+//     // background-color: #eaf1fd!important;
+//     border-radius: 4px;
+//     --background-hover: #eaf1fd!important;
+//   }
+
+//   #canned > ion-list > ion-item {
+//     --background-hover: #eaf1fd!important;
+//   }
+
+//   :host {
+//     #canned > ion-list > ion-item {
+//       &:hover {
+//         --background-hover: #eaf1fd
+//       }
+//     }
+//   }
+
+// .cannedContent {
+//     width: 100%;
+// }
+
+#canned > ion-list > ion-item > div > div.cannedTitle {
+    padding-top: 5px;
+}
+
+#canned > ion-list > ion-item > div > div.cannedText {
+    text-align: left;
+    font-size: 12px;
+    display: block;
+    padding-bottom: 5px;
+    // white-space: nowrap;
+    // width: 100%;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
+    // border: 0px solid #000000;
+}
+
+.highlight-search-string {
+  color: #1877f2 !important;  
+}

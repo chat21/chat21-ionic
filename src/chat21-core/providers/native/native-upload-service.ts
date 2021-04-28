@@ -39,6 +39,7 @@ export class NativeUploadService extends UploadService {
 
 
     upload(upload: UploadModel): Promise<any>  {
+        console.log('NATIVE UPLOAD - upload new image/file ...')
         const headers = new HttpHeaders({
             Authorization: this.tiledeskToken,
             //'Content-Type': 'multipart/form-data',
