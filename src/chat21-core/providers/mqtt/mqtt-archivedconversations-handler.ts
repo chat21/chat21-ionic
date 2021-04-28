@@ -564,7 +564,7 @@ export class MQTTArchivedConversationsHandler extends ArchivedConversationsHandl
      */
     countIsNew(): number {
         let num = 0;
-        this.conversations.forEach((element) => {
+        this.archivedConversations.forEach((element) => {
             if (element.is_new === true) {
                 num++;
             }
