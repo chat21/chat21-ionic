@@ -75,8 +75,11 @@ export class MQTTAuthService extends AuthService {
       console.log("mqtt connection closed. OK");
       // remove
       this.appStorage.removeItem('tiledeskToken');
+      this.appStorage.removeItem('currentUser');
       this.currentUser = null;
       console.log("user removed.");
+      // this.BSSignOut.next(true);
+      this.BSAuthStateChanged.next('offline');
       // if (callback) {
       //   callback();
       // }
@@ -93,7 +96,7 @@ export class MQTTAuthService extends AuthService {
     this.tiledeskToken = this.appStorage.getItem('tiledeskToken');
     this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
     if (this.tiledeskToken && this.tiledeskToken !== undefined) {
-      this.getCustomToken(this.tiledeskToken);
+      this.connectWithCustomToken(this.tiledeskToken);
     } else {
       console.log(' ---------------- NON sono loggato ---------------- ');
     }
@@ -125,17 +128,23 @@ export class MQTTAuthService extends AuthService {
       this.currentUser = null;
       this.BSAuthStateChanged.next('offline');
     }
-    const that = this;
+    // const that = this;
+    console.log("STORAGE CHANGED: added listner")
     window.addEventListener('storage', (e) => {
-      console.log('Storage changed:', e.key);
-      if (this.appStorage.getItem('tiledeskToken') == null) {
-        that.currentUser = null;
+      console.log('STORAGE CHANGED:', e.key);
+      if (this.appStorage.getItem('tiledeskToken') == null && this.appStorage.getItem('currentUser') == null) {
+        console.log('STORAGE CHANGED: CASO TOKEN NULL');
+        this.currentUser = null;
         // that.logout(() => {
         //   that.BSAuthStateChanged.next('offline');
         // });
-        that.logout();
-        that.BSAuthStateChanged.next('offline');
-        
+        this.logout();
+      }
+      else if (this.currentUser == null && this.appStorage.getItem('tiledeskToken') != null && this.appStorage.getItem('currentUser') != null) {
+        console.log('STORAGE CHANGED: CASO LOGGED OUTSIDE');
+        this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
+        const tiledeskToken = this.appStorage.getItem('tiledeskToken');
+        this.connectWithCustomToken(tiledeskToken);
       }
     }, false);
 
@@ -155,14 +164,14 @@ export class MQTTAuthService extends AuthService {
     const postData = {
       id_project: projectID
     };
-    const that = this;
+    // const that = this;
     return new Promise((resolve, reject)=> {
       this.http.post(this.URL_TILEDESK_SIGNIN_ANONYMOUSLY, postData, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
-          that.tiledeskToken = data['token'];
+          this.tiledeskToken = data['token'];
           this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
-          that.getCustomToken(this.tiledeskToken);
+          this.appStorage.setItem('tiledeskToken', this.tiledeskToken);
+          this.connectWithCustomToken(this.tiledeskToken);
           resolve(this.currentUser)
         }
     }, (error) => {
@@ -208,14 +217,14 @@ export class MQTTAuthService extends AuthService {
       Authorization: tiledeskToken
     });
     const requestOptions = { headers: headers };
-    const that = this;
+    // const that = this;
     return new Promise((resolve, reject)=> {
       this.http.post(this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN, null, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
-          that.tiledeskToken = data['token'];
-          // this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
-          that.getCustomToken(this.tiledeskToken);
+          this.tiledeskToken = data['token'];
+          this.createCompleteUser(data['user']);
+          this.appStorage.setItem('tiledeskToken', this.tiledeskToken);
+          this.connectWithCustomToken(this.tiledeskToken);
           resolve(this.currentUser)
         }
       }, (error) => {
@@ -260,7 +269,7 @@ export class MQTTAuthService extends AuthService {
           that.tiledeskToken = data['token'];
           this.createCompleteUser(data['user']);
           this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
-          that.getCustomToken(this.tiledeskToken);
+          that.connectWithCustomToken(this.tiledeskToken);
           // that.firebaseCreateCustomToken(tiledeskToken);
         }
       }, error => {
@@ -284,45 +293,39 @@ export class MQTTAuthService extends AuthService {
   //   });
   // }
 
-  getCustomToken(tiledeskToken: string): any {
+  private connectWithCustomToken(tiledeskToken: string): any {
     const headers = new HttpHeaders({
       'Content-type': 'application/json',
       Authorization: tiledeskToken
     });
     const responseType = 'text';
     const postData = {};
-    const that = this;
+    // const that = this;
     this.http.post(this.URL_TILEDESK_CREATE_CUSTOM_TOKEN, postData, { headers, responseType})
     .subscribe(data =>  {
       const result = JSON.parse(data);
-      that.connectMQTT(result);
+      this.connectMQTT(result);
     }, error => {
       console.log(error);
     });
   }
 
-  connectMQTT(result: any): any {
-    console.log('result:', result);
-    const userid = result.userid;
-    // const chatOptions = environment.chat21Config;
-    // console.log('chatOptions:', chatOptions);
-    // this.chat21Service.initChat(chatOptions);
-    this.chat21Service.chatClient.connect(userid, result.token, () => {
+  connectMQTT(credentials: any): any {
+    console.log('credentials:', credentials);
+    const userid = credentials.userid;
+    this.chat21Service.chatClient.connect(userid, credentials.token, () => {
       console.log('Chat connected.');
-      const uid = userid;
-      const firstname = result['firstname'];
-      const lastname = result['lastname'];
-      const fullname = result['fullname'];
-      // let user = new UserModel(uid, '', firstname, lastname, fullname, '');
-      const user = {
-        uid: userid,
-        fullname,
-        firstname,
-        lastname
-      };
-      // this.currentUser = user;
-      console.log('User signed in:', user);
-      // this.BSAuthStateChanged.next(user);
+      // const uid = userid;
+      // const firstname = result['firstname'];
+      // const lastname = result['lastname'];
+      // const fullname = result['fullname'];
+      // const user = {
+      //   uid: userid,
+      //   fullname,
+      //   firstname,
+      //   lastname
+      // };
+      // console.log('User signed in:', user);
       this.BSAuthStateChanged.next('online');
     });
   }

@@ -661,7 +661,7 @@ class Chat21Client {
 
     close(callback) {
         if (this.topic_inbox) {
-            this.client.unsubscribe(topic, (err)  => {
+            this.client.unsubscribe(this.topic_inbox, (err)  => {
                 console.error("unsubscribed from", this.topic_inbox);
                 this.client.end(() => {
                     this.connected = false
@@ -669,6 +669,8 @@ class Chat21Client {
                     this.onConversationAddedCallbacks = new Map();
                     this.onConversationUpdatedCallbacks = new Map();
                     this.onConversationDeletedCallbacks = new Map();
+                    this.onArchivedConversationAddedCallbacks = new Map();
+                    this.onArchivedConversationDeletedCallbacks = new Map();
                     this.onMessageAddedCallbacks = new Map();
                     this.onMessageUpdatedCallbacks = new Map();
                     this.onGroupUpdatedCallbacks = new Map();
