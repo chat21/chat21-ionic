@@ -78,32 +78,32 @@ export class ContactsService {
 
 
 
-  public _loadContactDetail(token: string, uid: string) {
-    this.contacts = [];
-    console.log('loadContactDetail:: uid ', uid);
-    const urlRemoteContactDetail = this.urlRemoteContacts + '/' + uid;
-    if (urlRemoteContactDetail.startsWith('http') && token) {
-      const that = this;
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          Authorization: token
-        })
-      };
-      const postData = {
-      };
-      console.log('INFO-CONTENT-COMP (contact-service) loadContactDetail:: url ', urlRemoteContactDetail);
-      this.http
-        .get<any>(urlRemoteContactDetail, httpOptions)
-        .subscribe(user => {
-          console.log('INFO-CONTENT-COMP (contact-service) loadContactDetail:: data ', user);
-          const member = that.createCompleteUser(user);
-          this.BScontactDetail.next(member);
-        }, error => {
-          console.log('urlRemoreContactDetail:: error ', error);
-        });
-    }
-  }
+  // public _loadContactDetail(token: string, uid: string) {
+  //   this.contacts = [];
+  //   console.log('loadContactDetail:: uid ', uid);
+  //   const urlRemoteContactDetail = this.urlRemoteContacts + '/' + uid;
+  //   if (urlRemoteContactDetail.startsWith('http') && token) {
+  //     const that = this;
+  //     const httpOptions = {
+  //       headers: new HttpHeaders({
+  //         'Content-Type': 'application/json',
+  //         Authorization: token
+  //       })
+  //     };
+  //     const postData = {
+  //     };
+  //     console.log('INFO-CONTENT-COMP (contact-service) loadContactDetail:: url ', urlRemoteContactDetail);
+  //     this.http
+  //       .get<any>(urlRemoteContactDetail, httpOptions)
+  //       .subscribe(user => {
+  //         console.log('INFO-CONTENT-COMP (contact-service) loadContactDetail:: data ', user);
+  //         const member = that.createCompleteUser(user);
+  //         this.BScontactDetail.next(member);
+  //       }, error => {
+  //         console.log('urlRemoreContactDetail:: error ', error);
+  //       });
+  //   }
+  // }
 
   /**
   * 
@@ -112,7 +112,7 @@ export class ContactsService {
   */
   public loadContactDetail(token: string, uid: string) {
     this.contacts = [];
-    console.log('INFO-CONTENT-COMP (contact-service) - loadContactDetail:: uid ', uid);
+    console.log('INFO-CONTENT-COMP setInfoDirect (contact-service) - loadContactDetail:: uid ', uid);
     const urlRemoteContactDetail = this.urlRemoteContacts + '/' + uid;
     if (urlRemoteContactDetail.startsWith('http') && token) {
 
@@ -123,11 +123,11 @@ export class ContactsService {
         })
       };
       // const postData = {};
-      console.log('loadContactDetail:: url ', urlRemoteContactDetail);
+      console.log('INFO-CONTENT-COMP setInfoDirect (contact-service) - loadContactDetail  url ', urlRemoteContactDetail);
       return this.http
         .get(urlRemoteContactDetail, httpOptions)
         .pipe(map((res: any) => {
-          console.log('INFO-CONTENT-COMP (contact-service) - loadContactDetail RES ', res);
+          console.log('INFO-CONTENT-COMP setInfoDirect (contact-service) - loadContactDetail RES ', res);
           if (res.uid) {
             let user = this.createCompleteUser(res)
             return user
