@@ -68,12 +68,19 @@ export class MQTTAuthService extends AuthService {
     this.onAuthStateChanged();
   }
 
+  // logout(callback) {
   logout() {
-    console.log('logged out');
-    // remove
-    // this.tiledeskToken = this.appStorage.getItem('tiledeskToken');
-    // this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
-    // mqtt.remove
+    console.log("closing mqtt connection...");
+    this.chat21Service.chatClient.close(() => {
+      console.log("mqtt connection closed. OK");
+      // remove
+      this.appStorage.removeItem('tiledeskToken');
+      this.currentUser = null;
+      console.log("user removed.");
+      // if (callback) {
+      //   callback();
+      // }
+    });
   }
 
   getCurrentUser(): UserModel {
@@ -120,10 +127,15 @@ export class MQTTAuthService extends AuthService {
     }
     const that = this;
     window.addEventListener('storage', (e) => {
-      console.log('Changed:', e.key);
+      console.log('Storage changed:', e.key);
       if (this.appStorage.getItem('tiledeskToken') == null) {
         that.currentUser = null;
+        // that.logout(() => {
+        //   that.BSAuthStateChanged.next('offline');
+        // });
+        that.logout();
         that.BSAuthStateChanged.next('offline');
+        
       }
     }, false);
 
