@@ -1,4 +1,4 @@
-import { GroupService } from './../abstract/group.service';
+import { GroupsHandlerService } from './../abstract/groups-handler.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
@@ -24,7 +24,7 @@ import { GroupModel } from 'src/chat21-core/models/group';
 
 // @Injectable({ providedIn: 'root' })
 @Injectable()
-export class FirebaseGroupsHandler extends GroupService {
+export class FirebaseGroupsHandler extends GroupsHandlerService {
     
     // BehaviorSubject
     BSgroupDetail: BehaviorSubject<GroupModel>;
@@ -104,6 +104,7 @@ export class FirebaseGroupsHandler extends GroupService {
         this.logger.printDebug('getDetail -------> urlNodeGroupById::', urlNodeGroupById)
         const ref = firebase.database().ref(urlNodeGroupById)
         return new Promise((resolve) => {
+            ref.off()
             ref.on('value', (childSnapshot) => {
                 console.log('group info::', childSnapshot.val())
                 const group: GroupModel = childSnapshot.val();

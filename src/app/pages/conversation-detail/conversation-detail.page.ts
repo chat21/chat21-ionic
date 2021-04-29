@@ -97,7 +97,7 @@ import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NgxLinkifyjsService, Link, LinkType, NgxLinkifyOptions } from 'ngx-linkifyjs';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
-import { GroupService } from 'src/chat21-core/providers/abstract/group.service';
+import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -193,7 +193,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public conversationHandlerService: ConversationHandlerService,
     // public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
-    public groupService: GroupService,
+    public groupService: GroupsHandlerService,
     public contactsService: ContactsService,
     public conversationHandlerBuilderService: ConversationHandlerBuilderService,
     public linkifyService: NgxLinkifyjsService,
@@ -924,8 +924,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log('CONVERSATION-DETAIL tagsCanned.length', this.tagsCanned.length);
     //if(this.tagsCanned.length <= 0 ){
     this.tagsCanned = [];
-    this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId)
-      .subscribe(res => {
+    this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId).subscribe(res => {
         console.log('CONVERSATION-DETAIL getCannedResponses RES', res);
 
         this.tagsCanned = res

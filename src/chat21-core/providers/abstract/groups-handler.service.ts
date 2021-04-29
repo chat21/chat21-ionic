@@ -8,7 +8,7 @@ import { UserModel } from 'src/chat21-core/models/user';
 @Injectable({
   providedIn: 'root'
 })
-export abstract class GroupService {
+export abstract class GroupsHandlerService {
 
   // BehaviorSubject
   abstract BSgroupDetail: BehaviorSubject<GroupModel> = new BehaviorSubject<GroupModel>(null);
