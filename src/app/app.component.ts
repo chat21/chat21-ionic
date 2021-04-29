@@ -408,12 +408,12 @@ export class AppComponent implements OnInit {
    */
   goOffLine = () => {
     console.log('************** goOffLine:', this.authModal);
-
+    
     this.chatManager.setTiledeskToken(null);
     this.chatManager.setCurrentUser(null);
     this.chatManager.goOffLine();
 
-
+    this.router.navigateByUrl('conversation-detail/'); //redirect to basePage
     const that = this;
     clearTimeout(this.timeModalLogin);
     this.timeModalLogin = setTimeout(() => {
@@ -431,10 +431,7 @@ export class AppComponent implements OnInit {
     // 1 - init chatConversationsHandler and  archviedConversationsHandler
     this.conversationsHandlerService.initialize(this.tenant, userId, translationMap);
 
-    this.subscribeToConvs()
-
-  }
-  subscribeToConvs() {
+    // this.subscribeToConvs()
     this.conversationsHandlerService.subscribeToConversations(() => {
       console.log('APP-COMPONENT - INIT CONV')
       const conversations = this.conversationsHandlerService.conversations;
@@ -444,9 +441,8 @@ export class AppComponent implements OnInit {
       //   that.showPlaceholder = true;
       // }
     });
+
   }
-
-
 
   private initArchivedConversationsHandler(userId: string) {
     const keys = ['YOU'];
