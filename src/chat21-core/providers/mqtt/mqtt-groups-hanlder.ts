@@ -25,7 +25,8 @@ import { Chat21Service } from './chat-service';
      * inizializzo groups handler
      */
     initialize(tenant: string, loggedUserId: string): void {
-        throw new Error('Method not implemented.');
+       // throw new Error('Method not implemented.');
+        console.log('Method not implemented.');
     }
 
     /**
@@ -34,7 +35,8 @@ import { Chat21Service } from './chat-service';
      * mi sottoscrivo a change, removed, added
      */
     connect(): void {
-        throw new Error('Method not implemented.');
+//        throw new Error('Method not implemented.');
+         console.log('Method not implemented.');
     }
 
     /**
@@ -43,19 +45,24 @@ import { Chat21Service } from './chat-service';
      * mi sottoscrivo a value
      */
     getDetail(groupId: string, callback?: (group: GroupModel) => void): Promise<GroupModel> {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
+          console.log('Method not implemented.');
     }
     onGroupChange(groupId: string): Observable<GroupModel> {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
+        console.log('Method not implemented.');
     }
     leave(groupId: string, callback?: () => void): Promise<any> {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
+        console.log('Method not implemented.');
     }
     create(groupId: string, callback?: () => void): Promise<any> {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
+        console.log('Method not implemented.');
     }
     dispose(): void {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
+        console.log('Method not implemented.');
     }
       
   }
