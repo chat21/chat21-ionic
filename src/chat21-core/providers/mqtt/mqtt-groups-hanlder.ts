@@ -34,6 +34,7 @@ import { Chat21Service } from './chat-service';
         this.logger.printLog('initialize GROUP-HANDLER MQTT');
         this.tenant = tenant;
         this.loggedUserId = loggedUserId;
+
     }
 
     /**
@@ -42,7 +43,8 @@ import { Chat21Service } from './chat-service';
      * mi sottoscrivo a change, removed, added
      */
     connect(): void {
-        throw new Error('Method not implemented.');
+//        throw new Error('Method not implemented.');
+         console.log('Method not implemented.');
     }
 
     /**
@@ -51,7 +53,9 @@ import { Chat21Service } from './chat-service';
      * mi sottoscrivo a value
      */
     getDetail(groupId: string, callback?: (group: GroupModel) => void): Promise<GroupModel> {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
+          console.log('Method not implemented.');
+          return;
     }
 
     onGroupChange(groupId: string): Observable<GroupModel> {
@@ -59,15 +63,20 @@ import { Chat21Service } from './chat-service';
     }
 
     leave(groupId: string, callback?: () => void): Promise<any> {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
+        console.log('Method not implemented.');
+        return;
     }
 
     create(groupId: string, callback?: () => void): Promise<any> {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
+        console.log('Method not implemented.');
+        return;
     }
 
     dispose(): void {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
+        console.log('Method not implemented.');
     }
       
   }
