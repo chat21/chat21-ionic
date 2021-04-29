@@ -1,3 +1,4 @@
+import { MQTTGroupsHanlder } from './../chat21-core/providers/mqtt/mqtt-groups-hanlder';
 import { MomentModule } from 'angular2-moment';
 import { CustomLogger } from 'src/chat21-core/providers/logger/customLogger';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
@@ -144,10 +145,10 @@ export function conversationHandlerFactory(appConfig: AppConfigProvider) {
   }
 }
 
-export function groupsHandlerFactory(http: HttpClient, appConfig: AppConfigProvider) {
+export function groupsHandlerFactory(http: HttpClient, chat21Service: Chat21Service, appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseGroupsHandler(http, appConfig);
+    return new MQTTGroupsHanlder(chat21Service)
   } else {
     return new FirebaseGroupsHandler(http, appConfig);
   }
@@ -304,7 +305,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: GroupsHandlerService,
       useFactory: groupsHandlerFactory,
-      deps: [HttpClient, AppConfigProvider,]
+      deps: [HttpClient, Chat21Service, AppConfigProvider]
     },
     {
       provide: ImageRepoService,
