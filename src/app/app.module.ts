@@ -77,7 +77,7 @@ import { FirebaseInitService } from 'src/chat21-core/providers/firebase/firebase
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 import { LocalSessionStorage } from 'src/chat21-core/providers/localSessionStorage';
 import { NativeUploadService } from 'src/chat21-core/providers/native/native-upload-service';
-import { GroupService } from 'src/chat21-core/providers/abstract/group.service';
+import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
 import { FirebaseGroupsHandler } from 'src/chat21-core/providers/firebase/firebase-group-handler';
 
 // FACTORIES
@@ -116,13 +116,12 @@ export function conversationsHandlerFactory(chat21Service: Chat21Service, httpCl
   }
 }
 
-export function archivedConversationsHandlerFactory(appConfig: AppConfigProvider, chat21Service: Chat21Service) {
+export function archivedConversationsHandlerFactory(chat21Service: Chat21Service, appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseArchivedConversationsHandler();
-  } else {
-    // return new FirebaseArchivedConversationsHandler();
     return new MQTTArchivedConversationsHandler(chat21Service);
+  } else {
+    return new FirebaseArchivedConversationsHandler();
   }
 }
 
@@ -145,7 +144,7 @@ export function conversationHandlerFactory(appConfig: AppConfigProvider) {
   }
 }
 
-export function groupsFactory(http: HttpClient, appConfig: AppConfigProvider) {
+export function groupsHandlerFactory(http: HttpClient, appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseGroupsHandler(http, appConfig);
@@ -295,12 +294,17 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ArchivedConversationsHandlerService,
       useFactory: archivedConversationsHandlerFactory,
-      deps: [AppConfigProvider]
+      deps: [Chat21Service, AppConfigProvider]
     },
     {
       provide: ConversationHandlerService,
       useFactory: conversationHandlerFactory,
       deps: [AppConfigProvider]
+    },
+    {
+      provide: GroupsHandlerService,
+      useFactory: groupsHandlerFactory,
+      deps: [HttpClient, AppConfigProvider,]
     },
     {
       provide: ImageRepoService,
@@ -320,11 +324,6 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: AppStorageService,
       useClass: LocalSessionStorage
-    },
-    {
-      provide: GroupService,
-      useFactory: groupsFactory,
-      deps: [HttpClient, AppConfigProvider,]
     },
     StatusBar,
     SplashScreen,

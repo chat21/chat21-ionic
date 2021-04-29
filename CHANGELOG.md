@@ -1,5 +1,8 @@
 # chat21-ionic ver 1.0
 
+### 3.0.23
+- Adds the ability to manage responses with the project's 'canned responses' and select them with the keyboard's up and down arrows
+
 ### 3.0.22
 - Fixes the bug: the modal login window opens even if the user is logged in
 - Fixes the bug: contact avatar is not displayed in the contact list (write to)
@@ -30,6 +33,12 @@
 - Fixes the bug: the 'channelType' in messages is incorrect
 - Fixes the bug: the link of the downloaded file is not displayed
 - Fixes the bug: the right side panel does not show the content related to the selected conversation type
+- Handled archivedconversations service in dispose method of chat-manager
+- Bug fixed on logout
+- Bug fixed chat21client undefined in MqttArchivedConversationsHandlerService
+- Renamed group-service with groups-handler.service
+- Added MQTTArchivedConversationsHandler in the archivedConversationsHandlerFactory
+- Adds canned responses
 
 ### 3.0.21
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button

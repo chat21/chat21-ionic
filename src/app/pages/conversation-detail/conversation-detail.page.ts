@@ -17,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserModel } from 'src/chat21-core/models/user';
 import { MessageModel } from 'src/chat21-core/models/message';
 import { ConversationModel } from 'src/chat21-core/models/conversation';
+import { GroupModel } from 'src/chat21-core/models/group';
 
 // services
 import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
@@ -97,7 +98,7 @@ import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NgxLinkifyjsService, Link, LinkType, NgxLinkifyOptions } from 'ngx-linkifyjs';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
-import { GroupService } from 'src/chat21-core/providers/abstract/group.service';
+import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -123,6 +124,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public conversationWithFullname: string;
   public messages: Array<MessageModel> = [];
   private conversationSelected: any;
+  private groupDetail: GroupModel;
   // public attributes: any;
   public messageSelected: any;
   public channelType: string;
@@ -156,7 +158,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS;
 
   // arrowkeyLocation: number;
- arrowkeyLocation = -1;
+  arrowkeyLocation = -1;
 
   // functions utils
   isMine = isMine;
@@ -194,7 +196,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public conversationHandlerService: ConversationHandlerService,
     // public currentUserService: CurrentUserService,
     // public cannedResponsesServiceProvider: CannedResponsesServiceProvider,
-    public groupService: GroupService,
+    public groupService: GroupsHandlerService,
     public contactsService: ContactsService,
     public conversationHandlerBuilderService: ConversationHandlerBuilderService,
     public linkifyService: NgxLinkifyjsService,
@@ -295,9 +297,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     // init handler vengono prima delle sottoscrizioni!
     // this.initConversationsHandler(); // nk
-    this.initConversationHandler();
-    this.initGroupsHandler();
-    this.initSubscriptions();
+    if (this.conversationWith) {
+      this.initConversationHandler();
+      this.initGroupsHandler();
+      this.initSubscriptions();
+    }
     this.addEventsKeyboard();
     this.startConversation();
     this.updateConversationBadge(); // AGGIORNO STATO DELLA CONVERSAZIONE A 'LETTA' (is_new = false)
@@ -394,28 +398,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
   initGroupsHandler() {
-    console.log('INFO-CONTENT-COMP  initGroupsHandler');
     if (this.conversationWith.startsWith("support-group") || this.conversationWith.startsWith("group-")) {
       this.groupService.initialize(this.tenant, this.loggedUser.uid)
       // this.groupService.connect();
     }
-    // this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
-    //   console.log('group detail INFO CONTENT-->', groupDetail)
-    // });
-
-    const that = this;
-    let subscribtion: any;
-    let subscribtionKey: string;
-
-    // subscribtionKey = 'onGroupChange';
-    // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    // if (!subscribtion) {
-    //   subscribtion = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
-    //     console.log('group detail INFO CONTENT-->', groupDetail)
-    //   });
-    //   const subscribe = { key: subscribtionKey, value: subscribtion };
-    //   this.subscriptions.push(subscribe);
-    // }
 
   }
 
@@ -771,13 +757,20 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
       subscribtion = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
-        console.log('group detail INFO CONTENT ....-->', groupDetail)
+        this.groupDetail = groupDetail;
+        console.log('CONVERSATION-DETAIL group detail INFO CONTENT ....-->', this.groupDetail)
+        let memberStr = JSON.stringify(this.groupDetail.members);
+        console.log('arraymembersss', memberStr)
+        let arrayMembers = [];
+        JSON.parse(memberStr, (key, value) => {
+          arrayMembers.push(key);
+        });
+        console.log('arraymembersss', arrayMembers)
+
       });
       const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
-
-
   }
 
   /**
@@ -900,9 +893,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         userFullname = this.loggedUser.firstname;
       }
       this.typingService.setTyping(this.conversationWith, message, idCurrentUser, userFullname);
+
       // ----------------------------------------------------------
       // START CANNED RESPONSES 
       // ----------------------------------------------------------
+
       setTimeout(() => {
         var pos = message.lastIndexOf("/");
         console.log("CONVERSATION-DETAIL returnChangeTextArea message ", message);
@@ -936,25 +931,26 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // if(!this.conversationSelected || !this.conversationSelected.attributes || !this.conversationSelected.attributes.projectId || !this.appConfig.getConfig().SERVER_BASE_URL){
     //   return;
     // }
-    const projectId = '604758bf52db8b0034468898'
+    console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail', this.groupDetail);
+    console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail project id', this.groupDetail['attributes']['projectId']);
+    const projectId = this.groupDetail['attributes']['projectId']
     const tiledeskToken = this.authService.getTiledeskToken();
     console.log('CONVERSATION-DETAIL tagsCanned.length', this.tagsCanned.length);
     //if(this.tagsCanned.length <= 0 ){
     this.tagsCanned = [];
-    this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId)
-      .subscribe(res => {
-        console.log('CONVERSATION-DETAIL getCannedResponses RES', res);
+    this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId).subscribe(res => {
+      console.log('CONVERSATION-DETAIL loadTagsCanned getCannedResponses RES', res);
 
-        this.tagsCanned = res
-        this.showTagsCanned(strSearch);
+      this.tagsCanned = res
+      this.showTagsCanned(strSearch);
 
-      }, (error) => {
-        console.log('CONVERSATION-DETAIL getCannedResponses - ERROR  ', error);
+    }, (error) => {
+      console.log('CONVERSATION-DETAIL loadTagsCanned getCannedResponses - ERROR  ', error);
 
-      }, () => {
-        console.log('CONVERSATION-DETAIL getCannedResponses * COMPLETE *');
+    }, () => {
+      console.log('CONVERSATION-DETAIL loadTagsCanned getCannedResponses * COMPLETE *');
 
-      });
+    });
 
   }
 
@@ -976,12 +972,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
     for (var i = 0; i < this.tagsCannedFilter.length; i++) {
 
-      const textCanned = "<div class='cannedText'>" + this.tagsCannedFilter[i].text + "</div>";
+      const textCanned = "<div class='cannedText'>" + this.replacePlaceholderInCanned(this.tagsCannedFilter[i].text) + "</div>";
       this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim()) + "</div>" + textCanned + '</div>';
 
-
-      // this.tagsCannedFilter[i].title = this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim());
-      // this.tagsCannedFilter[i].text = this.tagsCannedFilter[i].text
     }
   }
 
@@ -1005,51 +998,52 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // if (this.groupDetailAttributes && this.groupDetailAttributes.website) {
     //   str = str.replace('$website',this.groupDetailAttributes.website);
     // }
-    // if (this.groupDetailAttributes && this.groupDetailAttributes.userFullname) {
-    //   str = str.replace('$recipient_name',this.groupDetailAttributes.userFullname);
-    // }
-    // if (this.currentUserDetail && this.currentUserDetail.fullname) {
-    //   str = str.replace('$agent_name',this.currentUserDetail.fullname);
-    // }
-    // return str;
-  }
-
-
-  _replaceTagInMessage(event) {
-    console.log("CONVERSATION-DETAIL replaceTagInMessage  event ", event);
-    console.log("CONVERSATION-DETAIL replaceTagInMessage  canned text ", event.cannedSelected.text);
-    console.log("CONVERSATION-DETAIL replaceTagInMessage  message ", event.message);
-    const elTextArea = this.rowTextArea['el'];
-    const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
-    console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea ", textArea);
-    if (textArea && textArea.value) {
-      console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea value", textArea.value);
-      // replace text
-      var pos = textArea.value.lastIndexOf("/");
-      var strSearch = textArea.value.substr(pos);
-      console.log("CONVERSATION-DETAIL replaceTagInMessage  strSearch ", strSearch);
-
-      var strTEMP = textArea.value.replace(strSearch, event.cannedSelected.text);
-      console.log("CONVERSATION-DETAIL replaceTagInMessage  strTEMP ", strTEMP);
+    if (this.groupDetail && this.groupDetail['attributes'] && this.groupDetail['attributes']['userFullname']) {
+      str = str.replace('$recipient_name', this.groupDetail['attributes']['userFullname']);
     }
-    // strTEMP = this.replacePlaceholderInCanned(strTEMP);
-    // textArea.value = '';
-    // that.messageString = strTEMP;
-    // this.eventsReplaceTexareaText.next(strTEMP);
-    //text_area.value = strTEMP;
-    //  event.message = strTEMP;
-    textArea.value = strTEMP;
-    this.tagsCannedFilter = [];
-
-    setTimeout(() => {
-      textArea.focus();
-      this.resizeTextArea();
-    }, 200);
-
+    if (this.loggedUser && this.loggedUser.fullname) {
+      str = str.replace('$agent_name', this.loggedUser.fullname);
+    }
+    return str;
   }
+
+
+  // _replaceTagInMessage(event) {
+  //   console.log("CONVERSATION-DETAIL replaceTagInMessage  event ", event);
+  //   console.log("CONVERSATION-DETAIL replaceTagInMessage  canned text ", event.cannedSelected.text);
+  //   console.log("CONVERSATION-DETAIL replaceTagInMessage  message ", event.message);
+  //   const elTextArea = this.rowTextArea['el'];
+  //   const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
+  //   console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea ", textArea);
+  //   if (textArea && textArea.value) {
+  //     console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea value", textArea.value);
+  //     // replace text
+  //     var pos = textArea.value.lastIndexOf("/");
+  //     var strSearch = textArea.value.substr(pos);
+  //     console.log("CONVERSATION-DETAIL replaceTagInMessage  strSearch ", strSearch);
+
+  //     var strTEMP = textArea.value.replace(strSearch, event.cannedSelected.text);
+  //     console.log("CONVERSATION-DETAIL replaceTagInMessage  strTEMP ", strTEMP);
+  //   }
+  //   // strTEMP = this.replacePlaceholderInCanned(strTEMP);
+  //   // textArea.value = '';
+  //   // that.messageString = strTEMP;
+  //   // this.eventsReplaceTexareaText.next(strTEMP);
+  //   //text_area.value = strTEMP;
+  //   //  event.message = strTEMP;
+  //   textArea.value = strTEMP;
+  //   this.tagsCannedFilter = [];
+
+  //   setTimeout(() => {
+  //     textArea.focus();
+  //     this.resizeTextArea();
+  //   }, 200);
+
+  // }
 
 
   replaceTagInMessage(canned) {
+    this.arrowkeyLocation = -1
     this.tagsCannedFilter = [];
     console.log("CONVERSATION-DETAIL replaceTagInMessage  canned text ", canned.text);
     // // prendo val input
@@ -1065,7 +1059,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log("CONVERSATION-DETAIL replaceTagInMessage  strSearch ", strSearch);
 
     var strTEMP = textArea.value.replace(strSearch, canned.text);
-
+    strTEMP = this.replacePlaceholderInCanned(strTEMP);
     // strTEMP = this.replacePlaceholderInCanned(strTEMP);
     // textArea.value = '';
     // that.messageString = strTEMP;
@@ -1079,46 +1073,44 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    console.log("CONVERSATION-DETAIL handleKeyboardEvent  event.key ", event.key);
-    
+    // console.log("CONVERSATION-DETAIL handleKeyboardEvent  event.key ", event.key);
+
     if (this.tagsCannedFilter.length > 0) {
-      
 
       if (event.key === 'ArrowDown') {
 
-        console.log("CONVERSATION-DETAIL handleKeyboardEvent  tagsCannedFilter ", this.tagsCannedFilter);
-        // console.log("CONVERSATION-DETAIL handleKeyboardEvent  tagsCannedFilter length", this.tagsCannedFilter.length);
-        // Do action
-        // const cannedItemEle =  <HTMLElement>document.querySelector('#canned-item_0')
-        // console.log("CONVERSATION-DETAIL handleKeyboardEvent  cannedItemEle ", cannedItemEle);
-        console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown tagsCannedFilter length", this.tagsCannedFilter.length);
+        // console.log("CONVERSATION-DETAIL handleKeyboardEvent  tagsCannedFilter ", this.tagsCannedFilter);
+        // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown tagsCannedFilter length", this.tagsCannedFilter.length);
         this.arrowkeyLocation++;
-        console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown arrowkeyLocation ", this.arrowkeyLocation);
+        // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown arrowkeyLocation ", this.arrowkeyLocation);
         if (this.arrowkeyLocation === this.tagsCannedFilter.length) {
 
           this.arrowkeyLocation--
-          console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown qui entro arrowkeyLocation ", this.arrowkeyLocation, ' tagsCannedFilter.length ', this.tagsCannedFilter.length);
+          // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown qui entro arrowkeyLocation ", this.arrowkeyLocation, ' tagsCannedFilter.length ', this.tagsCannedFilter.length);
         }
-        // else {
-
-        // }
-
       }
       else if (event.key === 'ArrowUp') {
-        // Another action 
-        console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowUp tagsCannedFilter length", this.tagsCannedFilter.length);
-        this.arrowkeyLocation--;
-        if (this.arrowkeyLocation === -1) {
-          this.arrowkeyLocation++;
 
-          console.log("CONVERSATION-DETAIL handleKeyboardEvent QUI ENTRO arrowkeyLocation ", this.arrowkeyLocation);
-        }
+        // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowUp tagsCannedFilter length", this.tagsCannedFilter.length);
+        // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowUp  this.arrowkeyLocation",  this.arrowkeyLocation);
+        if (this.arrowkeyLocation > 0) {
+          this.arrowkeyLocation--;
+        } else
+          if (this.arrowkeyLocation < 0) {
+            this.arrowkeyLocation++;
+
+            // console.log("CONVERSATION-DETAIL handleKeyboardEvent QUI ENTRO arrowkeyLocation ", this.arrowkeyLocation);
+          }
       }
 
       if (event.key === 'Enter') {
         //Press action `#${elementArrowIconId}`
-          const cannedItemEle =  <HTMLElement>document.querySelector(`#canned-item_${this.arrowkeyLocation}`)
-        console.log("CONVERSATION-DETAIL handleKeyboardEvent  cannedItemEle ", cannedItemEle);
+        //   const cannedItemEle =  <HTMLElement>document.querySelector(`#canned-item_${this.arrowkeyLocation}`)
+        // console.log("CONVERSATION-DETAIL handleKeyboardEvent  cannedItemEle ", cannedItemEle);
+        const canned_selected = this.tagsCannedFilter[this.arrowkeyLocation]
+        //  console.log("CONVERSATION-DETAIL handleKeyboardEvent  cannedItemEle ", canned_selected);
+        this.replaceTagInMessage(canned_selected)
+
       }
     }
   }

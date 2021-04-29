@@ -441,57 +441,19 @@ ion-content {
     }
 }
 
-
-
-  
- 
-
-
-
-
-
- 
-
- 
-
-  .overlay {
+.overlay {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(237,240,244,.9);
+    background: rgba(237, 240, 244, 0.9);
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
-    z-index: 99998 // here plz remove this comma
-
+    z-index: 99998; // here plz remove this comma
 }
 
-// .buttons-left {
-//     position: absolute;
-//     left: 0;
-//     bottom: 0;
-//     width: 30px;
-//     height: 100%;
-// }
-
-// .attach-button {
-//     font-size: 24px;
-//     position: absolute;
-//     bottom: 0px;
-//     left: 0px;
-//     margin: auto 0;
-//     --padding-top: 0;
-//     --padding-bottom: 0;
-//     --padding-start: 0;
-//     --padding-end: 0;
-// }
-
-// #fileInput {
-//     // position: absolute;
-//     opacity: 0;
-//     width: 0.1px;
-//     height: 0.1px;
-//     overflow: hidden;
-// }
-
+.is_active_item {
+    // background-color: #eaf1fd!important;
+    --background: #eaf1fd !important;
+}

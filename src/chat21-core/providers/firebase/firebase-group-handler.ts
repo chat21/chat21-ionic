@@ -1,4 +1,4 @@
-import { GroupService } from './../abstract/group.service';
+import { GroupsHandlerService } from './../abstract/groups-handler.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
@@ -24,8 +24,8 @@ import { GroupModel } from 'src/chat21-core/models/group';
 
 // @Injectable({ providedIn: 'root' })
 @Injectable()
-export class FirebaseGroupsHandler extends GroupService {
-    
+export class FirebaseGroupsHandler extends GroupsHandlerService {
+
     // BehaviorSubject
     BSgroupDetail: BehaviorSubject<GroupModel>;
     SgroupDetail: Subject<GroupModel>;
@@ -44,7 +44,7 @@ export class FirebaseGroupsHandler extends GroupService {
 
 
     private logger: CustomLogger = new CustomLogger(true);
-    
+
     // private audio: any;
     // private setTimeoutSound: any;
 
@@ -85,7 +85,7 @@ export class FirebaseGroupsHandler extends GroupService {
             this.logger.printDebug('groups child_removed ------->', childSnapshot.val())
             // that.removed(childSnapshot);
         });
-        
+
         // SET AUDIO
         // this.audio = new Audio();
         // this.audio.src = URL_SOUND;
@@ -93,33 +93,34 @@ export class FirebaseGroupsHandler extends GroupService {
 
     }
 
-        /**
-     * mi connetto al nodo groups/GROUPID
-     * creo la reference
-     * mi sottoscrivo a value
-     */
+    /**
+ * mi connetto al nodo groups/GROUPID
+ * creo la reference
+ * mi sottoscrivo a value
+ */
 
-    getDetail(groupId: string, callback?: (group: GroupModel)=>void): Promise<GroupModel>{
+    getDetail(groupId: string, callback?: (group: GroupModel) => void): Promise<GroupModel> {
         const urlNodeGroupById = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/groups/' + groupId;
         this.logger.printDebug('getDetail -------> urlNodeGroupById::', urlNodeGroupById)
         const ref = firebase.database().ref(urlNodeGroupById)
         return new Promise((resolve) => {
+            ref.off()
             ref.on('value', (childSnapshot) => {
                 console.log('group info::', childSnapshot.val())
                 const group: GroupModel = childSnapshot.val();
                 group.uid = childSnapshot.key
                 // that.BSgroupDetail.next(group)
-                if(callback){
+                if (callback) {
                     callback(group)
                 }
                 resolve(group)
- 
+
             });
         });
-        
+
     }
 
-    onGroupChange(groupId: string): Observable<GroupModel>{
+    onGroupChange(groupId: string): Observable<GroupModel> {
         const that = this;
         const urlNodeGroupById = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/groups/' + groupId;
         this.logger.printDebug('onGroupChange -------> urlNodeGroupById::', urlNodeGroupById)
@@ -128,16 +129,19 @@ export class FirebaseGroupsHandler extends GroupService {
         ref.on('value', (childSnapshot) => {
             console.log('group detail::', childSnapshot.val(), childSnapshot)
             const group: GroupModel = childSnapshot.val();
-            group.uid = childSnapshot.key
-            // that.BSgroupDetail.next(group)
-            that.SgroupDetail.next(group)
+            console.log('FIREBASE-GROUP-HANDLER group ', group)
+            if (group) {
+                group.uid = childSnapshot.key
+                // that.BSgroupDetail.next(group)
+                that.SgroupDetail.next(group)
+            } 
         });
         // return that.BSgroupDetail
         return this.SgroupDetail
 
     }
 
-    leave(groupId: string, callback?:()=>void): Promise<any> {
+    leave(groupId: string, callback?: () => void): Promise<any> {
         return new Promise((resolve) => {
             // ref.on('value', (childSnapshot) => {
             //     console.log('group info::', childSnapshot.val())
@@ -147,12 +151,12 @@ export class FirebaseGroupsHandler extends GroupService {
             //         callback(group)
             //     }
             //     resolve(group)
- 
+
             // });
         });
     }
 
-    create(groupId: string, callback?:()=>void): Promise<any> {
+    create(groupId: string, callback?: () => void): Promise<any> {
         return new Promise((resolve) => {
             // ref.on('value', (childSnapshot) => {
             //     console.log('group info::', childSnapshot.val())
@@ -162,12 +166,12 @@ export class FirebaseGroupsHandler extends GroupService {
             //         callback(group)
             //     }
             //     resolve(group)
- 
+
             // });
         });
     }
 
-      dispose() {
+    dispose() {
         this.conversations = [];
         this.uidConvSelected = '';
         this.ref.off();
@@ -187,7 +191,7 @@ export class FirebaseGroupsHandler extends GroupService {
     //     // fare chiamata delete per rimuoverle la conversazione da remoto
     //     this.deleteConversation(conversationId, function (response) {
     //         console.log('FIREBASE-CONVERSATION-HANDLER ARCHIVE-CONV response', response)
-           
+
     //         if (response === 'success') {
     //             if (index > -1) {
     //                 that.conversations.splice(index, 1);

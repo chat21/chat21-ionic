@@ -51,35 +51,33 @@ export class MessageTextAreaComponent implements OnInit {
   // }
 
   // !!!!! NOT used
-  onChange(e: any) {
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange event ", e);
-    const codeChar = e.detail.data;
+  // onChange(e: any) {
+  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange event ", e);
+  //   const codeChar = e.detail.data;
 
-    let message = e.detail.target.innerHTML;
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.target.innerHTML) ", message);
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.data) ", e.detail.data);
-    if (e.detail.data) {
-      message += e.detail.data;
-    }
-    const height = e.detail.target.offsetHeight;
-    // console.log('onChange ************** event:: ', message);
-    if (codeChar === 10) {
-      console.log('premuto invio ');
-    } else {
-      try {
-        if (message.trim().length > 0) {
-          this.conversationEnabled = true;
-        } else {
-          this.conversationEnabled = false;
-        }
-      } catch (err) {
-        this.conversationEnabled = false;
-      }
-
-
-      this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
-    }
-  }
+  //   let message = e.detail.target.innerHTML;
+  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.target.innerHTML) ", message);
+  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.data) ", e.detail.data);
+  //   if (e.detail.data) {
+  //     message += e.detail.data;
+  //   }
+  //   const height = e.detail.target.offsetHeight;
+  //   // console.log('onChange ************** event:: ', message);
+  //   if (codeChar === 10) {
+  //     console.log('premuto invio ');
+  //   } else {
+  //     try {
+  //       if (message.trim().length > 0) {
+  //         this.conversationEnabled = true;
+  //       } else {
+  //         this.conversationEnabled = false;
+  //       }
+  //     } catch (err) {
+  //       this.conversationEnabled = false;
+  //     }
+  //     this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
+  //   }
+  // }
 
   ionChange(e: any) {
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange event ", e);

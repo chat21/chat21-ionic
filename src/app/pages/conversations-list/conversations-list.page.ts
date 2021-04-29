@@ -181,7 +181,7 @@ export class ConversationListPage implements OnInit {
    * e mi sottoscrivo al nodo conversazioni in conversationHandler (connect)
    * salvo conversationHandler in chatManager
    */
-  initConversationsHandler(userId: string) {
+  initConversationsHandler() {
     // const keys = ['YOU'];
 
     // const translationMap = this.translateService.translateLanguage(keys);
@@ -495,7 +495,7 @@ export class ConversationListPage implements OnInit {
     this.tenant = environment.tenant;
     this.loggedUserUid = this.authService.getCurrentUser().uid;
     this.subscriptions = [];
-    this.initConversationsHandler(this.loggedUserUid);
+    this.initConversationsHandler();
     this.databaseProvider.initialize(this.loggedUserUid, this.tenant);
     this.initVariables();
     this.initSubscriptions();
@@ -725,7 +725,7 @@ export class ConversationListPage implements OnInit {
     // this.presentModal();
     if (checkPlatformIsMobile()) {
       presentModal(this.modalController, ConversationsArchivedListPage, {
-        istConversations: this.archivedConversations,
+        listConversations: this.archivedConversations,
         styleMap: this.styleMap,
         translationMap: this.translationMapConversation,
         onConversationSelected: this.onConversationSelectedHandler,
