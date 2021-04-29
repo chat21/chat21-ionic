@@ -342,12 +342,8 @@ export class MQTTArchivedConversationsHandler extends ArchivedConversationsHandl
      */
     dispose() {
         this.archivedConversations = [];
+        this.archivedConversations.length = 0;
         this.uidConvSelected = '';
-        // this.ref.off();
-        // this.ref.off("child_changed");
-        // this.ref.off("child_removed");
-        // this.ref.off("child_added");
-        // console.log('DISPOSE::: ', this.ref);
     }
 
     getClosingConversation(conversationId: string) {

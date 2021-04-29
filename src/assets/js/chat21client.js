@@ -319,7 +319,7 @@ class Chat21Client {
                 const message_json = JSON.parse(message.toString())
                 
 
-                // TEMPORARILY DISABLED, CONVERSATIONS OBSERVED BY NEW MESSAGES.
+                // TEMPORARILY DISABLED, ADDED-CONVERSATIONS ARE OBSERVED BY NEW MESSAGES.
                 // MOVED TO: this.onMessageAddedCallbacks
                 // if (this.onConversationAddedCallbacks) {
                 //     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTADDED)) {
@@ -332,6 +332,7 @@ class Chat21Client {
 
                 if (this.onConversationUpdatedCallbacks) {
                     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTUPDATED)) {
+                        console.log("conversation updated! /conversations/, topic:", topic)
                         // map.forEach((value, key, map) =>)
                         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
                             callback(JSON.parse(message.toString()), _topic)
@@ -389,7 +390,9 @@ class Chat21Client {
                     console.log("update_conversation........", update_conversation);
                     if (update_conversation && this.onConversationAddedCallbacks) {
                         this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
-                            callback(JSON.parse(message.toString()), _topic)
+                            message_json.is_new = true;
+                            const message_for_conv_string = JSON.stringify(message_json);
+                            callback(JSON.parse(message_for_conv_string), _topic)
                         });
                     }
                     // }
