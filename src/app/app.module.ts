@@ -57,6 +57,7 @@ import { MQTTConversationsHandler } from 'src/chat21-core/providers/mqtt/mqtt-co
 import { MQTTConversationHandlerBuilderService } from 'src/chat21-core/providers/mqtt/mqtt-conversation-handler-builder.service';
 import { MQTTTypingService } from 'src/chat21-core/providers/mqtt/mqtt-typing.service';
 import { MQTTPresenceService } from 'src/chat21-core/providers/mqtt/mqtt-presence.service';
+import { MQTTArchivedConversationsHandler } from 'src/chat21-core/providers/mqtt/mqtt-archivedconversations-handler';
 
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -115,12 +116,13 @@ export function conversationsHandlerFactory(chat21Service: Chat21Service, httpCl
   }
 }
 
-export function archivedConversationsHandlerFactory(appConfig: AppConfigProvider) {
+export function archivedConversationsHandlerFactory(appConfig: AppConfigProvider, chat21Service: Chat21Service) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new FirebaseArchivedConversationsHandler();
   } else {
-    return new FirebaseArchivedConversationsHandler();
+    // return new FirebaseArchivedConversationsHandler();
+    return new MQTTArchivedConversationsHandler(chat21Service);
   }
 }
 

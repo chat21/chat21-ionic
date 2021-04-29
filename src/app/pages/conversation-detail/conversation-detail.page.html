@@ -10,11 +10,8 @@
 
 <ng-template #showConversation>
 
-  <app-header-conversation-detail      
-    [isMobile] = isMobile 
-    [idLoggedUser] = loggedUser.uid
-    [conversationAvatar] = conversationAvatar
-    [translationMap] = translationMap
+  <app-header-conversation-detail [isMobile]=isMobile [idLoggedUser]=loggedUser.uid
+    [conversationAvatar]=conversationAvatar [translationMap]=translationMap
     (eventOpenCloseInfoConversation)="returnOpenCloseInfoConversation($event)">
   </app-header-conversation-detail>
 
@@ -22,9 +19,16 @@
     <ion-grid class="grid_content">
       <ion-row class="row_content">
         <ion-col id="chatArea" [class.mobile]="isMobile" [class.open]="openInfoConversation">
+          
+ 
+         
+          
           <ion-row class="row_chat_area" [style.height]="'calc(100% - '+heightMessageTextArea+'px)'">
-            <span *ngIf="showMessageWelcome && messages.length == 0; then content_welcome else content_messages">here is ignored</span>
-      
+            <span *ngIf="showMessageWelcome && messages.length == 0; then content_welcome else content_messages">here is
+              ignored</span>
+              
+              <div class="overlay" *ngIf="tagsCannedFilter.length > 0;"></div>
+
             <ng-template #content_welcome>
               <div class="messageFirst">
                 {{ 'LABEL_NO_MSG_HERE' | translate }}
@@ -32,15 +36,10 @@
             </ng-template>
 
             <ng-template #content_messages>
-              <ion-content
-                #ionContentChatArea
-                class = "ionContentChatArea"
-                [scrollEvents]="true"
-                (ionScrollStart)="logScrollStart($event)" 
-                (ionScroll)="logScrolling($event)"
-                (ionScrollEnd)="logScrollEnd($event)"
-                [class.active]="showIonContent">
-              
+              <ion-content #ionContentChatArea class="ionContentChatArea" [scrollEvents]="true"
+                (ionScrollStart)="logScrollStart($event)" (ionScroll)="logScrolling($event)"
+                (ionScrollEnd)="logScrollEnd($event)" [class.active]="showIonContent">
+ 
                 <!-- <ion-list no-lines>
                   <div *ngFor="let message of messages; let i = index">
                     
@@ -76,57 +75,61 @@
                   </div>
                 </ion-list> -->
 
-                <ion-conversation-detail 
-                  #conversationContentDetail
-                  [channelType]="channelType"
-                  [messages]="messages"
-                  [senderId]="loggedUser.uid"
-                  [baseLocation]="window?.location?.origin"
-                  [stylesMap]="styleMap"
+                <ion-conversation-detail #conversationContentDetail [channelType]="channelType" [messages]="messages"
+                  [senderId]="loggedUser.uid" [baseLocation]="window?.location?.origin" [stylesMap]="styleMap"
                   (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
                   (onAfterMessageRender)="returnOnAfterMessageRender($event)"
                   (onAttachmentButtonClicked)="returnOnAttachmentButtonClicked($event)"
-                  (onScrollContent)="returnOnScrollContent($event)"
-                  (onMenuOptionShow)="returnOnMenuOption($event)">
+                  (onScrollContent)="returnOnScrollContent($event)" (onMenuOptionShow)="returnOnMenuOption($event)">
                 </ion-conversation-detail>
 
               </ion-content>
             </ng-template>
-            
+
           </ion-row>
-          
+
           <ion-row class="row_message_text_area" #rowMessageTextArea>
             <div *ngIf="showButtonToBottom" id="buttonScrollToBottom" (click)="actionScrollBottom()">
               <div *ngIf="NUM_BADGES>0" id="buttonScrollToBottomBudge">{{NUM_BADGES}}</div>
               <ion-icon name="chevron-down-outline"></ion-icon>
             </div>
 
-            <app-message-text-area
-            (eventChangeTextArea)="returnChangeTextArea($event)"
-            (eventSendMessage)="returnSendMessage($event)"
-            [conversationWith]="conversationWith"
-            ></app-message-text-area>
+            <!-- ----------------------------------------------------------- -->
+            <!-- Canned responses -->
+            <!-- ----------------------------------------------------------- -->
+            <div id="canned" *ngIf="tagsCannedFilter.length > 0;">
+              <ion-list class="canned-list">
+                  <ion-item button="true" lines="none" class="canned-item" id="{{'canned-item_'+ i }}" *ngFor="let canned of tagsCannedFilter; let i = index;" [innerHtml]="canned.title" (click)="replaceTagInMessage(canned)">
+                  </ion-item>
+              </ion-list>
+            </div>
+            <!-- (eventReplaceMessageWithCanned)="replaceTagInMessage($event)" -->
+            <!-- [tagsCannedFilter]="tagsCannedFilter" -->
+            <app-message-text-area 
+              (eventChangeTextArea)="returnChangeTextArea($event)"
+              
+              (eventSendMessage)="returnSendMessage($event)" 
+              [conversationWith]="conversationWith"
+              [tagsCannedFilter]="tagsCannedFilter"
+              
+              ></app-message-text-area>
+              <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
           </ion-row>
 
         </ion-col>
 
-        <ion-col
-          id="chat21-info-conversation"
-          [class.mobile]="isMobile"
-          [class.open]="openInfoConversation">
-            <app-info-content 
-              [openInfoConversation] = openInfoConversation
-              [translationMap] = translationMap
-              [loggedUser] = loggedUser
-              [tenant] = tenant 
-              >
-              <!-- [member] = member -->
-            </app-info-content>
+        <ion-col id="chat21-info-conversation" [class.mobile]="isMobile" [class.open]="openInfoConversation">
+          <app-info-content [openInfoConversation]="openInfoConversation" [translationMap]="translationMap"
+            [loggedUser]="loggedUser" [tenant]="tenant">
+            <!-- [member] = member -->
+          </app-info-content>
         </ion-col>
 
       </ion-row>
 
     </ion-grid>
+
+
   </ion-content>
 
 </ng-template>
