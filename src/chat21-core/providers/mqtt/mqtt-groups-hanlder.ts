@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { GroupModel } from 'src/chat21-core/models/group';
 import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
+import { CustomLogger } from '../logger/customLogger';
 import { Chat21Service } from './chat-service';
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,11 @@ import { Chat21Service } from './chat-service';
     groupChanged: BehaviorSubject<GroupModel>;
     groupRemoved: BehaviorSubject<GroupModel>;
 
+    // private params
+    private tenant: string;
+    private loggedUserId: string;
+    private logger: CustomLogger = new CustomLogger(true);
+    
     constructor(
         public chat21Service: Chat21Service
     ) {
@@ -25,7 +31,9 @@ import { Chat21Service } from './chat-service';
      * inizializzo groups handler
      */
     initialize(tenant: string, loggedUserId: string): void {
-        throw new Error('Method not implemented.');
+        this.logger.printLog('initialize GROUP-HANDLER MQTT');
+        this.tenant = tenant;
+        this.loggedUserId = loggedUserId;
     }
 
     /**
@@ -45,15 +53,19 @@ import { Chat21Service } from './chat-service';
     getDetail(groupId: string, callback?: (group: GroupModel) => void): Promise<GroupModel> {
         throw new Error('Method not implemented.');
     }
+
     onGroupChange(groupId: string): Observable<GroupModel> {
-        throw new Error('Method not implemented.');
+        return this.SgroupDetail
     }
+
     leave(groupId: string, callback?: () => void): Promise<any> {
         throw new Error('Method not implemented.');
     }
+
     create(groupId: string, callback?: () => void): Promise<any> {
         throw new Error('Method not implemented.');
     }
+
     dispose(): void {
         throw new Error('Method not implemented.');
     }
