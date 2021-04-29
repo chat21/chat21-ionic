@@ -288,9 +288,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     // init handler vengono prima delle sottoscrizioni!
     // this.initConversationsHandler(); // nk
-    this.initConversationHandler();
-    this.initGroupsHandler();
-    this.initSubscriptions();
+    if(this.conversationWith){
+      this.initConversationHandler();
+      this.initGroupsHandler();
+      this.initSubscriptions();
+    }
     this.addEventsKeyboard();
     this.startConversation();
     this.updateConversationBadge(); // AGGIORNO STATO DELLA CONVERSAZIONE A 'LETTA' (is_new = false)
@@ -387,28 +389,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
   initGroupsHandler(){
-    console.log('INFO-CONTENT-COMP  initGroupsHandler');
     if(this.conversationWith.startsWith("support-group") || this.conversationWith.startsWith("group-")){
       this.groupService.initialize(this.tenant, this.loggedUser.uid)
       // this.groupService.connect();
     }
-    // this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
-    //   console.log('group detail INFO CONTENT-->', groupDetail)
-    // });
-
-    const that = this;
-    let subscribtion: any;
-    let subscribtionKey: string;
-
-    // subscribtionKey = 'onGroupChange';
-    // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    // if (!subscribtion) {
-    //   subscribtion = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
-    //     console.log('group detail INFO CONTENT-->', groupDetail)
-    //   });
-    //   const subscribe = { key: subscribtionKey, value: subscribtion };
-    //   this.subscriptions.push(subscribe);
-    // }
     
   }
 
