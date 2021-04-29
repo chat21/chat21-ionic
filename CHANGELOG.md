@@ -1,7 +1,7 @@
 # chat21-ionic ver 1.0
 
-### 3.0.23
-- Adds the ability to manage responses with the project's 'canned responses' and select them with the keyboard's up and down arrows
+
+
 
 ### 3.0.22
 - Fixes the bug: the modal login window opens even if the user is logged in
@@ -38,7 +38,7 @@
 - Bug fixed chat21client undefined in MqttArchivedConversationsHandlerService
 - Renamed group-service with groups-handler.service
 - Added MQTTArchivedConversationsHandler in the archivedConversationsHandlerFactory
-- Adds canned responses
+- Adds the ability to manage responses with the project's 'canned responses' and select them with the keyboard's up and down arrows
 
 ### 3.0.21
 - Fixes the bug: on the browser the archived conversation window is opened multiple times by clicking on the 'Archived' button
