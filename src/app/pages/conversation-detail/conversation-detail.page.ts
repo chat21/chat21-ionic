@@ -141,7 +141,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public membersConversation: any;
   public member: UserModel;
   public urlConversationSupportGroup: any;
- 
+
   private isFileSelected: boolean;
   private timeScrollBottom: any;
   public showIonContent = false;
@@ -155,7 +155,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   MESSAGE_TYPE_MINE = MESSAGE_TYPE_MINE;
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS;
 
-
+  // arrowkeyLocation: number;
+ arrowkeyLocation = -1;
 
   // functions utils
   isMine = isMine;
@@ -392,9 +393,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
-  initGroupsHandler(){
+  initGroupsHandler() {
     console.log('INFO-CONTENT-COMP  initGroupsHandler');
-    if(this.conversationWith.startsWith("support-group") || this.conversationWith.startsWith("group-")){
+    if (this.conversationWith.startsWith("support-group") || this.conversationWith.startsWith("group-")) {
       this.groupService.initialize(this.tenant, this.loggedUser.uid)
       // this.groupService.connect();
     }
@@ -415,7 +416,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     //   const subscribe = { key: subscribtionKey, value: subscribtion };
     //   this.subscriptions.push(subscribe);
     // }
-    
+
   }
 
 
@@ -567,7 +568,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log('this.conversationAvatar: ', this.conversationAvatar);
   }
 
- 
+
 
 
 
@@ -609,7 +610,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    * 3 - se l'invio è andato a buon fine mi posiziono sull'ultimo messaggio
    */
   sendMessage(msg: string, type: string, metadata?: any) {
-    console.log('sendMessage msg: ',msg);
+    console.log('sendMessage msg: ', msg);
 
     let fullname = this.loggedUser.uid;
     if (this.loggedUser.fullname) {
@@ -628,7 +629,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log('SEND MESSAGE type: ', type);
 
     if (type === 'file') {
-      msg = msg + ' - '+ 'File: ' + metadata.src;
+      msg = msg + ' - ' + 'File: ' + metadata.src;
     }
 
     (metadata) ? metadata = metadata : metadata = '';
@@ -899,7 +900,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         userFullname = this.loggedUser.firstname;
       }
       this.typingService.setTyping(this.conversationWith, message, idCurrentUser, userFullname);
-    // ----------------------------------------------------------
+      // ----------------------------------------------------------
       // START CANNED RESPONSES 
       // ----------------------------------------------------------
       setTimeout(() => {
@@ -1049,7 +1050,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
   replaceTagInMessage(canned) {
-
     this.tagsCannedFilter = [];
     console.log("CONVERSATION-DETAIL replaceTagInMessage  canned text ", canned.text);
     // // prendo val input
@@ -1080,17 +1080,46 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     console.log("CONVERSATION-DETAIL handleKeyboardEvent  event.key ", event.key);
-    if (event.key === 'ArrowDown') {
-      // Do action
-    const cannedItemEle =  <HTMLElement>document.querySelector('#canned-item_0')
-    console.log("CONVERSATION-DETAIL handleKeyboardEvent  cannedItemEle ", cannedItemEle);
-    }
-    else if (event.key === 'ArrowUp') {
-      // Another action
-    }
+    
+    if (this.tagsCannedFilter.length > 0) {
+      
 
-    if (event.key === 'Enter') {
-      //Press action
+      if (event.key === 'ArrowDown') {
+
+        console.log("CONVERSATION-DETAIL handleKeyboardEvent  tagsCannedFilter ", this.tagsCannedFilter);
+        // console.log("CONVERSATION-DETAIL handleKeyboardEvent  tagsCannedFilter length", this.tagsCannedFilter.length);
+        // Do action
+        // const cannedItemEle =  <HTMLElement>document.querySelector('#canned-item_0')
+        // console.log("CONVERSATION-DETAIL handleKeyboardEvent  cannedItemEle ", cannedItemEle);
+        console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown tagsCannedFilter length", this.tagsCannedFilter.length);
+        this.arrowkeyLocation++;
+        console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown arrowkeyLocation ", this.arrowkeyLocation);
+        if (this.arrowkeyLocation === this.tagsCannedFilter.length) {
+
+          this.arrowkeyLocation--
+          console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown qui entro arrowkeyLocation ", this.arrowkeyLocation, ' tagsCannedFilter.length ', this.tagsCannedFilter.length);
+        }
+        // else {
+
+        // }
+
+      }
+      else if (event.key === 'ArrowUp') {
+        // Another action 
+        console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowUp tagsCannedFilter length", this.tagsCannedFilter.length);
+        this.arrowkeyLocation--;
+        if (this.arrowkeyLocation === -1) {
+          this.arrowkeyLocation++;
+
+          console.log("CONVERSATION-DETAIL handleKeyboardEvent QUI ENTRO arrowkeyLocation ", this.arrowkeyLocation);
+        }
+      }
+
+      if (event.key === 'Enter') {
+        //Press action `#${elementArrowIconId}`
+          const cannedItemEle =  <HTMLElement>document.querySelector(`#canned-item_${this.arrowkeyLocation}`)
+        console.log("CONVERSATION-DETAIL handleKeyboardEvent  cannedItemEle ", cannedItemEle);
+      }
     }
   }
 
