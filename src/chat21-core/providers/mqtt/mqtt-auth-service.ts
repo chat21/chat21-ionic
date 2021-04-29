@@ -93,12 +93,14 @@ export class MQTTAuthService extends AuthService {
   }
 
   checkIsAuth() {
+    console.log('**** checkIsAuth ---------------- ');
     this.tiledeskToken = this.appStorage.getItem('tiledeskToken');
     this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
     if (this.tiledeskToken && this.tiledeskToken !== undefined) {
+      console.log('**** this.tiledeskToken !== undefined ---------------- ');
       this.connectWithCustomToken(this.tiledeskToken);
     } else {
-      console.log(' ---------------- NON sono loggato ---------------- ');
+      console.log('**** NON sono loggato ---------------- ');
     }
   }
 
@@ -198,6 +200,7 @@ export class MQTTAuthService extends AuthService {
         console.log("native auth data:", JSON.stringify(data));
         if (data['token'] && data['userid']) {
           this.appStorage.setItem('tiledeskToken', data['token']);
+          this.tiledeskToken = data['token'];
           data['_id'] = data['userid'];
           this.createCompleteUser(data);
           that.connectMQTT(data);
@@ -261,15 +264,15 @@ export class MQTTAuthService extends AuthService {
       email: emailVal,
       password: pswVal
     };
-    const that = this;
+    // const that = this;
     this.http.post(url, postData, requestOptions)
       .subscribe(data => {
         console.log("data:", JSON.stringify(data));
         if (data['success'] && data['token']) {
-          that.tiledeskToken = data['token'];
+          this.tiledeskToken = data['token'];
           this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
-          that.connectWithCustomToken(this.tiledeskToken);
+          this.appStorage.setItem('tiledeskToken', this.tiledeskToken);
+          this.connectWithCustomToken(this.tiledeskToken);
           // that.firebaseCreateCustomToken(tiledeskToken);
         }
       }, error => {
@@ -303,6 +306,7 @@ export class MQTTAuthService extends AuthService {
     // const that = this;
     this.http.post(this.URL_TILEDESK_CREATE_CUSTOM_TOKEN, postData, { headers, responseType})
     .subscribe(data =>  {
+      console.log("**** data", data)
       const result = JSON.parse(data);
       this.connectMQTT(result);
     }, error => {
@@ -311,7 +315,7 @@ export class MQTTAuthService extends AuthService {
   }
 
   connectMQTT(credentials: any): any {
-    console.log('credentials:', credentials);
+    console.log('**** credentials:', credentials);
     const userid = credentials.userid;
     this.chat21Service.chatClient.connect(userid, credentials.token, () => {
       console.log('Chat connected.');

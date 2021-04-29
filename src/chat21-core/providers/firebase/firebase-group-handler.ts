@@ -56,7 +56,7 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
     }
 
     /**
-     * inizializzo conversations handler
+     * inizializzo groups handler
      */
     initialize(tenant: string, loggedUserId: string) {
         this.logger.printLog('initialize GROUP-HANDLER');
@@ -65,7 +65,7 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
     }
 
     /**
-     * mi connetto al nodo conversations
+     * mi connetto al nodo groups
      * creo la reference
      * mi sottoscrivo a change, removed, added
      */
@@ -85,21 +85,14 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
             this.logger.printDebug('groups child_removed ------->', childSnapshot.val())
             // that.removed(childSnapshot);
         });
-
-        // SET AUDIO
-        // this.audio = new Audio();
-        // this.audio.src = URL_SOUND;
-        // this.audio.load();
-
     }
 
     /**
- * mi connetto al nodo groups/GROUPID
- * creo la reference
- * mi sottoscrivo a value
- */
-
-    getDetail(groupId: string, callback?: (group: GroupModel) => void): Promise<GroupModel> {
+     * mi connetto al nodo groups/GROUPID
+     * creo la reference
+     * mi sottoscrivo a value
+     */
+    getDetail(groupId: string, callback?: (group: GroupModel)=>void): Promise<GroupModel>{
         const urlNodeGroupById = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/groups/' + groupId;
         this.logger.printDebug('getDetail -------> urlNodeGroupById::', urlNodeGroupById)
         const ref = firebase.database().ref(urlNodeGroupById)
