@@ -95,11 +95,12 @@ export class ChatManager {
     console.log(' 2 - disposeConversationsHandler');
     if (this.conversationsHandlerService) { this.disposeConversationsHandler(); }
     console.log(' 3 - disposeArchivedConversationsHandler');
-    // if (this.archivedConversationsHandler) { this.disposeConversationsHandler(); }
+    if (this.archivedConversationsService) { this.disposeArchivedConversationsHandler(); }
     console.log(' 4 - disposeContactsSynchronizer');
     // if (this.contactsSynchronizer) { this.disposeContactsSynchronizer(); }
     console.log(' OKK ');
     this.conversationsHandlerService = null;
+    this.archivedConversationsService = null;
     // this.contactsSynchronizer = null;
   }
 
@@ -149,7 +150,7 @@ export class ChatManager {
   goOffLine() {
     this.currentUser = null;
     // cancello token e user dal localstorage!!!!!
-    console.log(' 1 - CANCELLO TUTTE LE REFERENCES DI FIREBASE');
+    console.log(' 1 - CANCELLO TUTTE LE REFERENCES');
     this.dispose();
   }
 
@@ -233,6 +234,14 @@ export class ChatManager {
   disposeConversationsHandler() {
     console.log(' 2 - this.conversationsHandler:: ', this.conversationsHandlerService);
     this.conversationsHandlerService.dispose();
+  }
+
+  /**
+   * elimino la reference dell'handler delle conversazioni archiviate
+   */
+  disposeArchivedConversationsHandler() {
+    console.log(' 3 - this.archivedConversationsService:: ', this.archivedConversationsService);
+    this.archivedConversationsService.dispose();
   }
   /// END metodi gestione conversazioni ////
 
