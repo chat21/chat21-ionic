@@ -28,6 +28,7 @@ export class InfoContentComponent implements OnInit {
   // @Input() member: UserModel;
   @Input() loggedUser: UserModel
   @Input() tenant: string
+  @Input() groupDetail: string
 
   public member: UserModel;
   public urlConversation: any;
@@ -41,6 +42,7 @@ export class InfoContentComponent implements OnInit {
   public conversations: Array<ConversationModel> = [];
   public conversationSelected: any;
   public panelType: string;
+  public project_id: string
 
   constructor(
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
@@ -51,7 +53,7 @@ export class InfoContentComponent implements OnInit {
     public appConfigProvider: AppConfigProvider,
     private sanitizer: DomSanitizer,
   ) {
-    console.log('INFO-CONTENT-COMP HELLO !!!!!');
+    console.log('INFO-CONTENT-COMP HELLO (CONSTUCTOR) !!!!!');
     // this.loggedUser = this.authService.getCurrentUser();
     // console.log('INFO-CONTENT-COMP loggedUser: ', this.loggedUser);
     this.tenant = environment.tenant;
@@ -61,84 +63,95 @@ export class InfoContentComponent implements OnInit {
       this.conversationWith = params.get('IDConv');
       this.conversationWithFullname = params.get('FullNameConv');
       this.conv_type = params.get('Convtype');
+      const conversationWith_segments = this.conversationWith.split('-');
+      console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent conversationWith_segments: ', conversationWith_segments);
+      this.project_id = conversationWith_segments[2]
     });
   }
 
   ngOnInit() {
-    console.log('InfoContentComponent:::');
+    console.log('INFO-CONTENT-COMP CALLING ngOnInit');
     console.log('INFO-CONTENT-COMP  Logged user', this.loggedUser);
     console.log('INFO-CONTENT-COMP  Tenant', this.tenant);
-    this.initConversationsHandler(); // nk
+    console.log('INFO-CONTENT-COMP  conversationWith', this.conversationWith);
+    console.log('INFO-CONTENT-COMP  conversationWithFullname', this.conversationWithFullname);
+    console.log('INFO-CONTENT-COMP  conv_type', this.conv_type);
+    console.log('INFO-CONTENT-COMP  project_id', this.project_id);
+    // this.initConversationsHandler(); // nk
+
+    this.selectInfoContentTypeComponent(); // nk
 
   }
 
 
   //DARINOMINARE 
-  initConversationsHandler() {
-    console.log('INFO-CONTENT-COMP initConversationsHandler :::', this.tenant, this.loggedUser.uid, this.conversationWith, this.conv_type);
-    if (this.conv_type === 'active' || this.conv_type === 'new') {
-      // qui al refresh array conv è null
-      console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE');
-      this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-        console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - GET conv FROM ACTIVE - CONV FOUND ', conv);
-        if (conv) {
-          this.conversationSelected = conv;
-          this.conversationWith = conv.uid;
-          this.selectInfoContentTypeComponent();
-        } else {
-          // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ARCHIVIATE
-          console.log('INFO-CONTENT-COMP initConversationsHandler conv null', conv)
-          console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - CONV NOT FOUND - get from ARCHIVED');
+  // initConversationsHandler() {
+  //   console.log('INFO-CONTENT-COMP initConversationsHandler ::: TENANT: ', this.tenant, 'LOGGED-USER-ID' , this.loggedUser.uid, ' CONV-WITH ' , this.conversationWith, ' CONV-TYPE ', this.conv_type);
+  //   if (this.conv_type === 'active' || this.conv_type === 'new') {
+  //     // qui al refresh array conv è null
+  //     console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE');
+  //     this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+  //       console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - GET conv FROM ACTIVE - CONV FOUND ', conv);
+  //       if (conv) {
+  //         this.conversationSelected = conv;
+  //         this.conversationWith = conv.uid;
+  //         this.selectInfoContentTypeComponent();
+  //       } else {
+  //         // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ARCHIVIATE
+  //         console.log('INFO-CONTENT-COMP initConversationsHandler conv null', conv)
+  //         console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - CONV NOT FOUND - get from ARCHIVED');
 
 
-          this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-            console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - GET conv FROM ARCHIVED - CONV FOUND ', conv);
-            if (conv) {
-              this.conversationSelected = conv;
-              this.conversationWith = conv.uid;
-              this.selectInfoContentTypeComponent();
-            } else {
-              // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
-            }
-          });
-        }
-      });
+  //         this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+  //           console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - GET conv FROM ARCHIVED - CONV FOUND ', conv);
+  //           if (conv) {
+  //             this.conversationSelected = conv;
+  //             this.conversationWith = conv.uid;
+  //             this.selectInfoContentTypeComponent();
+  //           } else {
+  //             // SHOW ERROR --> nessuna conversazione trovata tra attiVe e archiviate
+  //           }
+  //         });
+  //       }
+  //     });
 
-    } else if (this.conv_type === 'archived') {
-      console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED ');
-      this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-        console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED GET conv FROM ARCHIVED - CONV FOUND ', conv);
-        if (conv) {
-          this.conversationSelected = conv
-          this.conversationWith = conv.uid
-          this.selectInfoContentTypeComponent();
-        } else {
-          // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ATTIVE
-          console.log('INFO-CONTENT-COMP initConversationsHandler conv null', conv)
-          console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED - CONV NOT FOUND - get from ARCHIVED');
-      
-          this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-            console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED GET conv FROM ACTIVE - CONV FOUND ', conv);
-            if (conv) {
-              this.conversationSelected = conv;
-              this.conversationWith = conv.uid;
-              this.selectInfoContentTypeComponent();
-            } else {
-              // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
-            }
-          });
-        }
-      });
-    } else {
-      // use case conversation new (write to)
-      // this.selectInfoContentTypeComponent()
-    }
-  }
+  //   } else if (this.conv_type === 'archived') {
+  //     console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED ');
+  //     this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+  //       console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED GET conv FROM ARCHIVED - CONV FOUND ', conv);
+  //       if (conv) {
+  //         this.conversationSelected = conv
+  //         this.conversationWith = conv.uid
+  //         this.selectInfoContentTypeComponent();
+  //       } else {
+  //         // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ATTIVE
+  //         console.log('INFO-CONTENT-COMP initConversationsHandler conv null', conv)
+  //         console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED - CONV NOT FOUND - get from ARCHIVED');
+
+  //         this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+  //           console.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED GET conv FROM ACTIVE - CONV FOUND ', conv);
+  //           if (conv) {
+  //             this.conversationSelected = conv;
+  //             this.conversationWith = conv.uid;
+  //             this.selectInfoContentTypeComponent();
+  //           } else {
+  //             // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
+  //           }
+  //         });
+  //       }
+  //     });
+  //   } else {
+  //     // use case conversation new (write to)
+  //     // this.selectInfoContentTypeComponent()
+  //   }
+  // }
   // ---------------------------------------------------
   // START SET INFO COMPONENT
   // ---------------------------------------------------
   selectInfoContentTypeComponent() {
-    console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent conversationWith: ', this.conversationWith);
+    // console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent conversationWith: ', this.conversationWith);
+
+
     if (this.conversationWith) {
       // this.channelType = setChannelType(this.conversationWith , 'INFO-CONTENT');
       this.panelType = 'direct-panel'
@@ -187,7 +200,7 @@ export class InfoContentComponent implements OnInit {
   // @ setInfoDirect
   // ---------------------------------------------------
   setInfoDirect() {
-    console.log('INFO-CONTENT-COMP - setInfoDirect ',  this.conversationWith);
+    console.log('INFO-CONTENT-COMP - setInfoDirect ', this.conversationWith);
     console.log('INFO-CONTENT-COMP - setInfoDirect member', this.member);
     this.member = null;
     const that = this;
@@ -198,10 +211,10 @@ export class InfoContentComponent implements OnInit {
         this.member = res
       }, (error) => {
         console.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail - ERROR  ', error);
-        
+
       }, () => {
         console.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail * COMPLETE *');
-       
+
       });
   }
 
@@ -209,6 +222,8 @@ export class InfoContentComponent implements OnInit {
   // @ setInfoGroup
   // ---------------------------------------------------
   setInfoGroup() {
+    console.log('INFO-CONTENT-COMP - setInfoGroup groupDetail ', this.groupDetail);
+    
     // group
   }
 
@@ -217,26 +232,46 @@ export class InfoContentComponent implements OnInit {
   // @ setInfoGroup
   // ---------------------------------------------------
   setInfoSupportGroup() {
-    let projectID = '';
-    const tiledeskToken = this.authService.getTiledeskToken();
-    const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
-    if (this.conversationSelected && this.conversationSelected.attributes) {
-      projectID = this.conversationSelected.attributes.projectId;
-    }
-    console.log('setInfoSupportGroup conversationSelected ', this.conversationSelected)
-    console.log('setInfoSupportGroup projectID ', projectID)
-    if (projectID && this.conversationWith) {
-      console.log('setInfoSupportGroup HERE YES ')
-      let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
-      urlPanel += '?token=' + tiledeskToken;
-      console.log('setInfoSupportGroup urlPanel ', urlPanel)
-      const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
-      this.urlConversationSupportGroup = urlConversationTEMP;
-    } else {
-      this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
-    }
-    console.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
+  //   let projectID = '';
+  //   const tiledeskToken = this.authService.getTiledeskToken();
+  //   const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
+  //   if (this.conversationSelected && this.conversationSelected.attributes) {
+  //     projectID = this.conversationSelected.attributes.projectId;
+  //   }
+  //   console.log('INFO-CONTENT-COMP setInfoSupportGroup conversationSelected ', this.conversationSelected)
+  //   console.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', projectID)
+  //   if (projectID && this.conversationWith) {
+  //     console.log('INFO-CONTENT-COMP setInfoSupportGroup HERE YES ')
+  //     let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
+  //     urlPanel += '?token=' + tiledeskToken;
+  //     console.log('INFO-CONTENT-COMP setInfoSupportGroup urlPanel ', urlPanel)
+  //     const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
+  //     this.urlConversationSupportGroup = urlConversationTEMP;
+  //   } else {
+  //     this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
+  //   }
+  //   console.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
+  // }
+
+
+ 
+  const tiledeskToken = this.authService.getTiledeskToken();
+  const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
+  
+  console.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', this.project_id)
+  if (this.conversationWith) {
+   
+    let urlPanel = DASHBOARD_URL + '#/project/' + this.project_id + '/request-for-panel/' + this.conversationWith;
+    urlPanel += '?token=' + tiledeskToken;
+   
+    const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
+    this.urlConversationSupportGroup = urlConversationTEMP;
+    console.log('INFO-CONTENT-COMP setInfoSupportGroup urlConversationSupportGroup ', this.urlConversationSupportGroup)
+  } else {
+    this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
   }
+  console.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
+}
 
 
 
