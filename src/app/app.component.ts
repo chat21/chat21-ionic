@@ -33,7 +33,7 @@ import { ConversationListPage } from './pages/conversations-list/conversations-l
 
 // utils
 import { createExternalSidebar, checkPlatformIsMobile } from '../chat21-core/utils/utils';
-import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE, AUTH_STATE_ONLINE } from '../chat21-core/utils/constants';
+import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE, AUTH_STATE_ONLINE, URL_SOUND } from '../chat21-core/utils/constants';
 import { environment } from '../environments/environment';
 import { UserModel } from '../chat21-core/models/user';
 
@@ -54,6 +54,7 @@ export class AppComponent implements OnInit {
   private platformIs: string;
   private doitResize: any;
   private timeModalLogin: any;
+  private audio: any;
   public tenant: string;
   public authModal: any;
 
@@ -124,6 +125,7 @@ export class AppComponent implements OnInit {
       this.typingService.initialize();
       this.uploadService.initialize();
       this.initSubscriptions();
+      this.initAudio()
 
       console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
       this.listenToLogoutEvent()
@@ -291,6 +293,14 @@ export class AppComponent implements OnInit {
     // this.events.subscribe('firebase-send-password-reset-email', this.firebaseSendPasswordResetEmail);
     // this.events.subscribe('firebase-sign-out', this.firebaseSignOut);
     this.events.subscribe('uidConvSelected:changed', this.subscribeChangedConversationSelected);
+  }
+
+
+  private initAudio(){
+    // SET AUDIO
+    this.audio = new Audio();
+    this.audio.src = URL_SOUND;
+    this.audio.load();
   }
 
   authenticate() {
