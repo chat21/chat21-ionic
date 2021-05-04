@@ -286,12 +286,14 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
                 const childData: ConversationModel = childSnapshot.val();
-                childData.uid = childSnapshot.key;
-                const conversation = this.completeConversation(childData);
-                if(conversation){
-                    callback(conversation)
-                }else {
-                    callback(null)
+                if(childSnapshot.key && childSnapshot.key !== null){
+                    childData.uid = childSnapshot.key;
+                    const conversation = this.completeConversation(childData);
+                    if(conversation){
+                        callback(conversation)
+                    }else {
+                        callback(null)
+                    }
                 }
                 // this.BSConversationDetail.next(conversation);
             });
@@ -437,6 +439,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      */
     //TODO-GAB: ora emit singola conversation e non dell'intero array di conversations
     private removed(childSnapshot: any) {
+        console.log('convvvvvvv REMOVEDDDD', childSnapshot)
         const index = searchIndexInArrayForUid(this.conversations, childSnapshot.key);
         if (index > -1) {
             const conversationRemoved = this.conversations[index]

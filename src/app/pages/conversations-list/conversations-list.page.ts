@@ -306,17 +306,19 @@ export class ConversationListPage implements OnInit {
     });
 
     const that = this;
-    this.conversationsHandlerService.conversationAdded.subscribe((conversations: any) => {
-      console.log('***** conversationsAdded *****', conversations);
+    this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
+      console.log('***** conversationsAdded *****', conversation);
       // that.conversationsChanged(conversations);
     });
-    this.conversationsHandlerService.conversationChanged.subscribe((conversations: any) => {
-      console.log('***** conversationsChanged *****', conversations);
+    this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
+      console.log('***** conversationsChanged *****', conversation);
       // that.conversationsChanged(conversations);
     });
-    this.conversationsHandlerService.conversationRemoved.subscribe((conversations: any) => {
-      console.log('***** conversationsRemoved *****', conversations);
-      // that.conversationsChanged(conversations);
+    this.conversationsHandlerService.conversationRemoved.subscribe((conversation: ConversationModel) => {
+      console.log('***** conversationsRemoved *****', conversation);
+      if(conversation && conversation.uid === this.conversationSelected.uid){
+        this.router.navigate(['conversation-detail/']);
+      }
     });
 
   }

@@ -1,3 +1,4 @@
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
@@ -40,7 +41,8 @@ export class ProfileInfoPage implements OnInit {
     private translateService: CustomTranslateService,
     public presenceService: PresenceService,
     public events: EventsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private imageRepo: ImageRepoService
   ) { }
 
   /** */
@@ -69,8 +71,9 @@ export class ProfileInfoPage implements OnInit {
   private setUser() {
     // width and height NON sono obbligatori
     this.loggedUser = this.chatManager.getCurrentUser();
+    console.log('loggeduserrrr', this.loggedUser)
     this.itemAvatar = {
-      imageurl: this.loggedUser.imageurl,
+      imageurl: this.imageRepo.getImagePhotoUrl(this.loggedUser.uid),
       avatar: this.loggedUser.avatar,
       color: this.loggedUser.color,
       online: this.loggedUser.online,

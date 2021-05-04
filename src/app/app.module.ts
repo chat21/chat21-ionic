@@ -80,6 +80,8 @@ import { LocalSessionStorage } from 'src/chat21-core/providers/localSessionStora
 import { NativeUploadService } from 'src/chat21-core/providers/native/native-upload-service';
 import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
 import { FirebaseGroupsHandler } from 'src/chat21-core/providers/firebase/firebase-group-handler';
+import { MQTTImageRepoService } from 'src/chat21-core/providers/mqtt/mqtt-image-repo';
+import { MQTTConversationHandler } from 'src/chat21-core/providers/mqtt/mqtt-conversation-handler';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -136,10 +138,10 @@ export function conversationHandlerBuilderFactory(chat21Service: Chat21Service, 
   }
 }
 
-export function conversationHandlerFactory(appConfig: AppConfigProvider) {
+export function conversationHandlerFactory(chat21Service: Chat21Service, appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    return new FirebaseConversationHandler(false);
+    return new MQTTConversationHandler(chat21Service);
   } else {
     return new FirebaseConversationHandler(false);
   }
@@ -177,10 +179,7 @@ export function imageRepoFactory(appConfig: AppConfigProvider) {
   console.log('imageRepoFactory: ');
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    const imageService = new FirebaseImageRepoService();
-    FirebaseInitService.initFirebase(config.firebaseConfig)
-    imageService.setImageBaseUrl(config.baseImageUrl)
-    return imageService
+    return new MQTTImageRepoService()
   } else {
     const imageService = new FirebaseImageRepoService();
     FirebaseInitService.initFirebase(config.firebaseConfig)
@@ -300,7 +299,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     {
       provide: ConversationHandlerService,
       useFactory: conversationHandlerFactory,
-      deps: [AppConfigProvider]
+      deps: [Chat21Service, AppConfigProvider]
     },
     {
       provide: GroupsHandlerService,
