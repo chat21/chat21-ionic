@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularDelegate, ModalController } from '@ionic/angular';
+import { ConversationModel } from '../models/conversation';
 
 import {
   MAX_WIDTH_IMAGES,
@@ -861,4 +862,12 @@ export function createExternalSidebar(renderer, srcIframe?, urlIcons?) {
   divSidebar.innerHTML = dataString;
   renderer.setProperty(divSidebar, 'id', 'tld-sidebar');
   renderer.appendChild(document.body, divSidebar);
+}
+
+
+export function isGroup(conv: ConversationModel) {
+  if (conv.uid.startsWith('group-') || conv.uid.startsWith('support-group')) {
+      return true
+  };
+  return false
 }

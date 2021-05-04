@@ -18,7 +18,7 @@ import { ConversationsHandlerService } from '../abstract/conversations-handler.s
 // utils
 import { TYPE_GROUP, URL_SOUND } from '../../utils/constants';
 import { avatarPlaceholder, getColorBck } from '../../utils/utils-user';
-import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid, archivedConversationsPathForUserId } from '../../utils/utils';
+import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid, isGroup } from '../../utils/utils';
 import { ImageRepoService } from '../abstract/image-repo.service';
 import { FirebaseImageRepoService } from './firebase-image-repo';
 import { CustomLogger } from '../logger/customLogger';
@@ -106,16 +106,16 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
     // }
 
-        /**
-     * mi connetto al nodo conversations
-     * creo la reference
-     * mi sottoscrivo a change, removed, added
-     */
+    /**
+ * mi connetto al nodo conversations
+ * creo la reference
+ * mi sottoscrivo a change, removed, added
+ */
 
-     // ---------------------------------------------------------------------------------
-     // New connect - renamed subscribeToConversation
-     //----------------------------------------------------------------------------------
-     subscribeToConversations(callback) {
+    // ---------------------------------------------------------------------------------
+    // New connect - renamed subscribeToConversation
+    //----------------------------------------------------------------------------------
+    subscribeToConversations(callback) {
         const that = this;
         const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUserId);
         this.logger.printDebug('SubscribeToConversations (firebase-convs-handler) - conversations::ACTIVE urlNodeFirebase', urlNodeFirebase)
@@ -130,11 +130,11 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             that.added(childSnapshot);
         });
 
-        console.log('SubscribeToConversations (firebase-convs-handler) - conversations' , that.conversations )
+        console.log('SubscribeToConversations (firebase-convs-handler) - conversations', that.conversations)
 
         setTimeout(() => {
-            callback() 
-          }, 2000);
+            callback()
+        }, 2000);
         // SET AUDIO
         // this.audio = new Audio();
         // this.audio.src = URL_SOUND;
@@ -199,7 +199,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         // fare chiamata delete per rimuoverle la conversazione da remoto
         this.deleteConversation(conversationId, function (response) {
             console.log('FIREBASE-CONVERSATION-HANDLER ARCHIVE-CONV response', response)
-           
+
             if (response === 'success') {
                 if (index > -1) {
                     that.conversations.splice(index, 1);
@@ -235,13 +235,13 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
                 console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV - URL:', url);
 
                 this.http.delete(url, httpOptions).subscribe(res => {
-                        console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV - RES', res);
-                        callback('success')
+                    console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV - RES', res);
+                    callback('success')
                 }, (error) => {
-                        console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV ERROR ', error);
-                        callback('error')
+                    console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV ERROR ', error);
+                    callback('error')
                 }, () => {
-                        console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV * COMPLETE *');
+                    console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV * COMPLETE *');
 
                 });
             } else {
@@ -270,7 +270,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     // -------->>>> ARCHIVE CONVERSATION SECTION END <<<<---------------//
 
 
-    public getConversationDetail(conversationId: string, callback: (conv: ConversationModel)=>void): void {
+    public getConversationDetail(conversationId: string, callback: (conv: ConversationModel) => void): void {
         // fare promise o callback ??
         const conversation = this.conversations.find(item => item.uid === conversationId);
         this.logger.printDebug('SubscribeToConversations >>>>>>>>>>>>>> conversations *****: ', this.conversations)
@@ -286,12 +286,12 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
                 const childData: ConversationModel = childSnapshot.val();
-                if(childSnapshot.key && childSnapshot.key !== null){
+                if (childSnapshot.key && childSnapshot.key !== null) {
                     childData.uid = childSnapshot.key;
                     const conversation = this.completeConversation(childData);
-                    if(conversation){
+                    if (conversation) {
                         callback(conversation)
-                    }else {
+                    } else {
                         callback(null)
                     }
                 }
@@ -467,7 +467,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * @param conv
      */
     private completeConversation(conv): ConversationModel {
-        this.logger.printDebug('completeConversation', conv)
+        console.log('XXXX completeConversation' + JSON.stringify(conv))
         conv.selected = false;
         if (!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === '') {
             conv.sender_fullname = conv.sender;
@@ -481,21 +481,29 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.sender_fullname = this.translationMap.get('YOU')
+            console.log('XXXX conv.sender === this.loggedUserId) ', conversation_with, conversation_with_fullname)
             // conv.last_message_text = LABEL_TU + conv.last_message_text;
-        } else if (conv.channel_type === TYPE_GROUP) {
+        // } else if (conv.channel_type === TYPE_GROUP) {
+        } else if (isGroup(conv)) {
             conversation_with = conv.recipient;
-            conversation_with_fullname = conv.sender_fullname;
+            // conversation_with_fullname = conv.sender_fullname;
+            conversation_with_fullname = conv.recipient_fullname;
             // conv.last_message_text = conv.last_message_text;
+            console.log('XXXX conv) ', conversation_with, conversation_with_fullname)
         }
+        conv.conversation_with = conversation_with;
         conv.conversation_with_fullname = conversation_with_fullname;
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
+
         //conv.image = this.imageRepo.getImagePhotoUrl(conversation_with);
         // getImageUrlThumbFromFirebasestorage(conversation_with, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
         return conv;
     }
+
+ 
 
     /** */
     private setStatusConversation(sender: string, uid: string): string {
