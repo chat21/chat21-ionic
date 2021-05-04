@@ -316,9 +316,6 @@ export class ConversationListPage implements OnInit {
     });
     this.conversationsHandlerService.conversationRemoved.subscribe((conversation: ConversationModel) => {
       console.log('***** conversationsRemoved *****', conversation);
-      if(conversation && conversation.uid === this.conversationSelected.uid){
-        this.router.navigate(['conversation-detail/']);
-      }
     });
 
   }
