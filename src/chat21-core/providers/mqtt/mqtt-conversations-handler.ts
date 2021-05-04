@@ -498,7 +498,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.last_message_text = conv.last_message_text;
-        } else if (conv.channel_type === TYPE_GROUP) {
+        } else if (this.isGroup(conv)) {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.last_message_text = conv.last_message_text;
@@ -513,6 +513,13 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
             conv.last_message_text = conv.text; // building conv with a message
         }
         return conv;
+    }
+
+    private isGroup(conv: ConversationModel) {
+        if (conv.uid.startsWith('group-') || conv.uid.startsWith('support-group')) {
+            return true;
+        };
+        return false;
     }
 
     // /**
