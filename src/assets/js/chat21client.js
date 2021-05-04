@@ -331,11 +331,12 @@ class Chat21Client {
                 // }
 
                 if (this.onConversationUpdatedCallbacks) {
+                    // example topic: apps.tilechat.users.ME.conversations.CONVERS-WITH.clientdeleted
                     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTUPDATED)) {
                         console.log("conversation updated! /conversations/, topic:", topic)
                         // map.forEach((value, key, map) =>)
                         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-                            callback(JSON.parse(message.toString()), _topic)
+                            callback(JSON.parse(message.toString()), topic)
                         });
                     }
                 }
@@ -343,8 +344,9 @@ class Chat21Client {
                 if (this.onConversationDeletedCallbacks) {
                     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTDELETED)) {
                         // map.forEach((value, key, map) =>)
+                        console.log("conversation deleted! /conversations/, topic:", topic, message.toString() );
                         this.onConversationDeletedCallbacks.forEach((callback, handler, map) => {
-                            callback(JSON.parse(message.toString()), _topic)
+                            callback(JSON.parse(message.toString()), topic)
                         });
                     }
                 }
@@ -353,7 +355,7 @@ class Chat21Client {
                     if (topic.includes("/archived_conversations/") && topic.endsWith(_CLIENTADDED)) {
                         // map.forEach((value, key, map) =>)
                         this.onArchivedConversationAddedCallbacks.forEach((callback, handler, map) => {
-                            callback(JSON.parse(message.toString()), _topic)
+                            callback(JSON.parse(message.toString()), topic)
                         });
                     }
                 }
@@ -362,7 +364,7 @@ class Chat21Client {
                     if (topic.includes("/archived_conversations/") && topic.endsWith(_CLIENTDELETED)) {
                         // map.forEach((value, key, map) =>)
                         this.onArchivedConversationDeletedCallbacks.forEach((callback, handler, map) => {
-                            callback(JSON.parse(message.toString()), _topic)
+                            callback(JSON.parse(message.toString()), topic)
                         });
                     }
                 }
