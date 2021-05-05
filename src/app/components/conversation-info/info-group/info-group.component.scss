@@ -1,0 +1,54 @@
+.group-profile {
+
+
+    ion-card {
+        width: 100%;
+        padding: 10px 20px;
+        margin: 0px 0 1px 0;
+        border-radius: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        border-bottom: 1px solid rgba(169, 169, 169, 0.2);
+    }
+
+    .image-profile {
+        padding: 0 0 0 0;
+        width: 100px;
+        height: 100px;
+        margin: auto;
+        line-height: 100px;
+        font-size: 40px;
+        color: white;
+    }
+
+    .user-presence {
+        position: absolute;
+        top: 88px;
+        height: 12px;
+        left: calc(50% + 30px);
+        width: 100px;
+    }
+    
+    .info-profile {
+        padding: 10px 0 0 0;
+        text-align: center;
+        .name {
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            text-size-adjust: none;
+            user-select: text;
+            font-family: "Roboto", "Helvetica Neue", sans-serif;
+            -webkit-box-direction: normal;
+            color: #333333;
+            font-weight: 500;
+            font-size: 17px;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            display: block;
+            font-size: large;
+            font-weight: bold;
+        }
+    }
+
+  
+}

@@ -1,3 +1,42 @@
-<p>
-  info-group works!
-</p>
+<!-- <pre style="font-size: 12px;"> {{ groupDetail | json }} </pre>  -->
+
+
+<!-- *ngIf="groupDetail" -->
+<ion-content  class="group-profile">
+  <ion-card class="first-card">
+    <div class="chat21-box-profile chat21-box">
+
+      <div class="chat21-content">
+
+        <div class="image-profile">
+          <app-avatar-profile [itemAvatar]="groupDetail"></app-avatar-profile>
+        </div>
+
+    
+       
+        <div class="info-profile">
+          <div class="name">
+            <span class="read">{{groupDetail.name}}</span>
+          </div>
+        </div>
+
+        <!-- <div class="member-email">
+          <a [href]="'mailto:' + member.email + '?Subject='">
+            {{member.email}}
+          </a>
+        </div> -->
+
+      </div>
+
+    </div>
+  </ion-card>
+
+
+
+  <!-- <app-advanced-info-accordion 
+  [advancedAttributes]="advancedAttributes"
+  [translationMap]="translationMap">
+
+  </app-advanced-info-accordion> -->
+
+</ion-content>
