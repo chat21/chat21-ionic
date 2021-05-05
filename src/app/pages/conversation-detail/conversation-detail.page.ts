@@ -1128,6 +1128,36 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // ----------------------------------------------------------
 
 
+ 
+/**
+   * regola sound message:
+   * se lo invio io -> NO SOUND
+   * se non sono nella conversazione -> SOUND
+   * se sono nella conversazione in fondo alla pagina -> NO SOUND
+   * altrimenti -> SOUND
+   */
+  soundMessage() {
+    const that = this;
+    this.audio = new Audio();
+    this.audio.src = 'src/assets/sounds/justsaying.mp3';
+    this.audio.load();
+    // console.log('conversation play');
+    clearTimeout(this.setTimeoutSound);
+    this.setTimeoutSound = setTimeout(function () {
+      that.audio.play().then(() => {
+        // Audio is playing.
+        console.log('****** soundMessage 1 *****', that.audio.src);
+      }).catch(error => {
+        console.log(error);
+      });
+    }, 1000);
+  }
+
+
+//SOUND
+  setTimeoutSound: any;
+  audio: any
+
 
   /** */
   returnSendMessage(e: any) {
@@ -1278,10 +1308,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   /**
    * Scroll to bottom of page after a short delay.
    */
-  public actionScrollBottom() {
+   public actionScrollBottom() {
     console.log('actionScrollBottom ---> ', this.ionContentChatArea);
     // const that = this;
     this.showButtonToBottom = false;
+    this.updateConversationBadge()
     this.NUM_BADGES = 0;
     setTimeout(() => {
       this.ionContentChatArea.scrollToBottom(0);
