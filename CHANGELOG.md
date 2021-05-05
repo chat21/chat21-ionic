@@ -12,6 +12,7 @@
 - Enhances right sidebar for "direct" conversations
 - Implements the right sidebar for group type conversations (in progerss)
 - Improves "actionScrollBottom" method
+- Fixes the bug: "startsWith" of undefined in the method "isGroup"
 
 ### 3.0.22
 - Fixes the bug: the modal login window opens even if the user is logged in
