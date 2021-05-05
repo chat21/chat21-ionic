@@ -1,50 +1,16 @@
-<ion-list no-lines style="display: none;">
+<!-- <ion-list no-lines style="display: none;">
   <div *ngFor="let message of messages; let i = index">
-    <!-- <ion-item *ngIf="messageType(MESSAGE_TYPE_DATE, message)" class="ion-no-padding" text-wrap lines="none"> -->
-    <!-- <ion-item *ngIf="message.timestamp" class="ion-no-padding" text-wrap lines="none">
-      <app-bubble-day-message
-        messageDate = {{message.timestamp}}
-      ></app-bubble-day-message>
-    </ion-item>
-
-    <ion-item class="ion-no-padding" text-wrap lines="none">
-      
-      <app-bubble-system-message
-        *ngIf="messageType(MESSAGE_TYPE_INFO, message)"
-        messageText = {{message.text}}
-      ></app-bubble-system-message>
-      
-      <app-bubble-my-message 
-        *ngIf="messageType(MESSAGE_TYPE_MINE, message)"
-        [message] = message
-        [isFirstMessage] = "isFirstMessage(i)"
-      ></app-bubble-my-message>
-
-      <app-bubble-others-message 
-        *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)"
-        [message] = message
-        [isFirstMessage] = "isFirstMessage(i)"
-        [channelType] = channelType
-      ></app-bubble-others-message>
-
-    </ion-item> -->
-
-    <!-- message INFO/SUPPORT:: -->
-    <!-- <div  *ngIf="messageType(MESSAGE_TYPE_INFO, message)" class="msg_info_container">
-      <tiledeskwidget-info-message class="messages"
-          [message]="message">
-      </tiledeskwidget-info-message>
-    </div> -->
+ 
     <ion-item class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)" class="msg_info_container">
       <tiledeskwidget-info-message class="messages"
           [message]="message">
       </tiledeskwidget-info-message>
     </ion-item>
 
-    <!-- message SENDER:: -->
+    <!- - message SENDER:: - ->
     <ion-item role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
                           
-      <!--backgroundColor non viene ancora usato -->
+      <!- -backgroundColor non viene ancora usato - ->
       <tiledeskwidget-bubble-message class="messages msg_sent slide-in-right"
           [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}"
           [message]="message"
@@ -53,24 +19,24 @@
           (onAfterMessageRender)="returnOnAfterMessageRender($event)">
       </tiledeskwidget-bubble-message>
 
-        <!-- icon status message -->
+        <!- - icon status message - ->
       <tiledeskwidget-return-receipt class="slide-in-right"
           [status]="message.status">
       </tiledeskwidget-return-receipt>
 
     </ion-item>
 
-    <!-- message RECIPIENT:: -->
+    <!- - message RECIPIENT:: - ->
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message) && isChannelTypeGroup(channelType)" class="message_sender_fullname slide-in-left">{{message.sender_fullname}}</div>
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)" class="msg_container base_receive">
                           
-      <!-- <tiledeskwidget-avatar-image class="slide-in-left"  
+      <!- - <tiledeskwidget-avatar-image class="slide-in-left"  
           [senderID]="message.sender"
           [senderFullname]="message.sender_fullname"
           [baseLocation]="baseLocation">
-      </tiledeskwidget-avatar-image> -->
+      </tiledeskwidget-avatar-image> - ->
 
-      <!--backgroundColor non viene ancora usato -->
+      <!- -backgroundColor non viene ancora usato - ->
       <tiledeskwidget-bubble-message class="messages msg_receive slide-in-left"
           [message]="message"
           [textColor]="'black'"
@@ -81,7 +47,7 @@
     </div>
 
   </div>
-</ion-list>
+</ion-list> -->
 
 <!-- ----------------------------------------------------------- -->
 <!--  nk - no tag ionic -->
