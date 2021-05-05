@@ -35,6 +35,8 @@ import { DatabaseProvider } from '../../services/database';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
 import { ChatManager } from 'src/chat21-core/providers/chat-manager';
 import { NavProxyService } from '../../services/nav-proxy.service';
+import { TiledeskService } from '../../services/tiledesk/tiledesk.service';
+
 
 import { ConversationDetailPage } from '../conversation-detail/conversation-detail.page';
 import { ContactsDirectoryPage } from '../contacts-directory/contacts-directory.page';
@@ -43,6 +45,8 @@ import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+
+
 
 @Component({
   selector: 'app-conversations-list',
@@ -93,7 +97,8 @@ export class ConversationListPage implements OnInit {
     public authService: AuthService,
     public imageRepoService: ImageRepoService,
     private translateService: CustomTranslateService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    public tiledeskService: TiledeskService
   ) {
     // console.log('constructor ConversationListPage');
 
@@ -831,9 +836,39 @@ export class ConversationListPage implements OnInit {
    * https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
    */
   onCloseConversation(conversation: ConversationModel) {
-    var conversationId = conversation.uid;
-    console.log('archive conv::::', conversation)
-    this.conversationsHandlerService.archiveConversation(conversationId)
+
+    console.log('CONV-LIST-PAGE onCloseConversation conv: ', conversation)
+
+    const conversationId = conversation.uid;
+   
+    console.log('CONV-LIST-PAGE onCloseConversation conversationId: ', conversationId)
+    
+
+    if (conversationId.startsWith("support-group")) {
+
+      const projectId = conversation.attributes.projectId
+      const tiledeskToken = this.authService.getTiledeskToken();
+      console.log('CONV-LIST-PAGE onCloseConversation projectId: ', projectId)
+    // console.log('CONV-LIST-PAGE onCloseConversation tiledeskToken: ', tiledeskToken)
+      this.tiledeskService.closeSupportGroup(tiledeskToken, projectId, conversationId).subscribe(res => {
+        console.log('CONV-LIST-PAGE onCloseConversation closeSupportGroup RES', res);
+  
+  
+      }, (error) => {
+        console.log('CONV-LIST-PAGE onCloseConversation closeSupportGroup - ERROR  ', error);
+  
+      }, () => {
+        console.log('CONV-LIST-PAGE onCloseConversation closeSupportGroup * COMPLETE *');
+  
+      });
+    } else {
+
+      // questo se è direct o group-
+      this.conversationsHandlerService.archiveConversation(conversationId)
+    }
+
+
+
     // var isSupportConversation = conversationId.startsWith("support-group");
     // if (!isSupportConversation) {
     //   this.deleteConversation(conversationId, function (result, data) {
