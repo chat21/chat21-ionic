@@ -1,4 +1,3 @@
-
 <!-- <div id='c21-app-list-conversations'>
   <div *ngFor="let conversation of listConversations | slice:0:limit">
     <button tabindex="1103" class="c21-item-conversation" (click)="openConversationByID(conversation)">
@@ -24,26 +23,39 @@
 </div> -->
 
 
-<ion-item button="true" lines="none" class="ion-no-padding"  *ngFor="let conversation of listConversations" (click)="openConversationByID(conversation)"> 
+<ion-item button="true" lines="none" class="ion-no-padding" *ngFor="let conversation of listConversations"
+  (click)="openConversationByID(conversation)">
   <!-- (mouseup)="openMessageList()" -->
   <div [class.selected]="conversation.uid === uidConvSelected"></div>
   <ion-avatar item-start>
-    <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
-    <div *ngIf="conversation.image" #avatarImage class="avatar-profile" [style.background-image]="'url(' + conversation.image + ')'"></div>
+    <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color"
+      [innerHTML]="conversation.avatar"></div>
+    <div *ngIf="conversation.image" #avatarImage class="avatar-profile"
+      [style.background-image]="'url(' + conversation.image + ')'"></div>
     <!-- <div *ngIf="getImageAvatar(conversation.sender)" #avatarImage class="avatar-profile" [style.background-image]="'url(' + getImageAvatar(conversation.sender) + ')'"></div> -->
   </ion-avatar>
   <ion-label>
     <div class="conversation_with truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
     <div class="conversation_message">
-      <p [class.not-read]="conversation.is_new" class="truncate"  [ngClass]="{'truncate-on-desktop': !isApp}" [innerHTML]="conversation.last_message_text"></p>
+    
+      <!-- -------------------------------------------------------------------------- -->
+      <!-- if conversation type is image display the image icon before the message -->
+      <!-- -------------------------------------------------------------------------- -->
+      <div *ngIf="conversation.type === 'image'" class="icon-image-before-msg-wpr">
+        <ion-icon name="image-outline" class="icon-image-before-msg"></ion-icon>
+      </div>
+      <p [class.not-read]="conversation.is_new" class="truncate" [ngClass]="{'truncate-on-desktop': !isApp}"
+        [innerHTML]="conversation.last_message_text"></p>
     </div>
   </ion-label>
   <ion-note *ngIf="!conversation.archived" class="conversation_time">{{conversation.time_last_message}}</ion-note>
- 
+
   <ion-buttons slot="end">
-    <ion-button  *ngIf="!conversation.archived" [ngClass]="{'hide': !isApp, 'button-on-desktop': !isApp  }" id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" 
-      ion-button clear item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
-      <ion-icon slot="icon-only"  style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="archive-outline" item-end></ion-icon>
+    <ion-button *ngIf="!conversation.archived" [ngClass]="{'hide': !isApp, 'button-on-desktop': !isApp  }"
+      id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear
+      item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
+      <ion-icon slot="icon-only" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}"
+        color="close-conversation" name="archive-outline" item-end></ion-icon>
     </ion-button>
     <!-- <ion-button *ngIf="conversation.archived" class="close-conversation-button" ion-button clear item-end disabled padding>
       <!- - <ion-icon  style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="archive-outline" item-end></ion-icon> - ->
@@ -51,11 +63,13 @@
       <!- - <div item-end *ngIf="conversation.archived">{{ translationMap.get('CLOSED') }}</div> - ->
     </ion-button> -->
   </ion-buttons>
- 
+
   <div item-end *ngIf="conversation?.archived" class="achived-icon-wpr">
-    <i class="material-icons"  item-end style="font-size: 18px;font-weight: 400;color: #aaa;"> history </i>
+    <i class="material-icons" item-end style="font-size: 18px;font-weight: 400;color: #aaa;"> history </i>
   </div>
 
-  <div item-end class="notification_point" [ngClass]="{'notification_point-on-desktop': !isApp && !conversation?.archived}" *ngIf="conversation.is_new">&nbsp;</div>
-  
+  <div item-end class="notification_point"
+    [ngClass]="{'notification_point-on-desktop': !isApp && !conversation?.archived}" *ngIf="conversation.is_new">&nbsp;
+  </div>
+
 </ion-item>
