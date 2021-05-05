@@ -1,7 +1,17 @@
 # chat21-ionic ver 1.0
 
-
-
+### 3.0.23
+- Fixes the bug: the avatar image of the logged in user is not displayed in the left menu "profile-info"
+- Fixes the bug: the group names are incorrect (for active and archived conversations)
+- Adds the component "advanced-info-accordion"
+- Adds the "closeSupportGroup" method to archive support group conversations
+- Modify the "deleteConversation" method to archive conversations of type "direct" and "group" (deleted the query string "forall = true")
+- Adds the "generateGroupAvatar" method in the conversation-detail.page
+- Adds the input "groupDetails" to the "app-info-content" component
+- Displays an image icon in the conversation list if the conversation type is image
+- Enhances right sidebar for "direct" conversations
+- Implements the right sidebar for group type conversations (in progerss)
+- Improves "actionScrollBottom" method
 
 ### 3.0.22
 - Fixes the bug: the modal login window opens even if the user is logged in
