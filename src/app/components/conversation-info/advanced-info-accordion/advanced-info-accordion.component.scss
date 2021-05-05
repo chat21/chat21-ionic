@@ -1,0 +1,136 @@
+/* Style the buttons that are used to open and close the accordion panel */
+.advanced-info-accordion {
+    transition: 0.4s;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.advanced-info-panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+// .advanced-info-accordion:after {
+//     // content: '\02795'; /* Unicode character for "plus" sign (+) */
+//     content: "\f123";
+//     font-family: "Ionicons";
+//     font-size: 13px;
+//     color: #039be5;
+//     float: right;
+//     margin-left: 5px;
+// }
+
+// .advanced-info-active:after {
+//     // content: "\2796"; /* Unicode character for "minus" sign (-) */
+//     content: "\f126";
+//     font-family: "Ionicons";
+//     color: #039be5;
+// }
+
+.absolute-icon {
+    position: absolute;
+    right: 0px !important;
+    transition: all 0.3s linear;
+}
+.absolute-icon.active {
+    -ms-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.absolute-text {
+    position: absolute;
+    left: 0px;
+    text-transform: none;
+    color: #050505;
+}
+.icon-with-background {
+    vertical-align: middle;
+    color: rgb(22, 24, 27);
+    font-size: 24px;
+    padding: 6px;
+    background: rgb(221, 221, 230);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+
+
+.attributes-wpr {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.attributes-icon-wpr-1 {
+    align-self: flex-start;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.attributes-icon-wpr-2 {
+    height: 36px;
+    width: 36px;
+    background-color: #e4e6eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.attributes-title-subtitle-wpr-1 {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+}
+
+.attributes-title-subtitle-wpr-2 {
+    flex-direction: column;
+    padding-bottom: 12px;
+    flex-direction: column;
+    flex-grow: 1;
+    padding-left: 0;
+}
+.attributes-title-subtitle-wpr-3 {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+}
+
+.attributes-title {
+    text-align: left;
+    word-break: break-word;
+    color: #050505;
+    font-size: 0.9375rem;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 500;
+    max-width: 100%;
+    word-wrap: break-word;
+    line-height: 1.3333;
+
+    text-transform: lowercase; // da eliminare quando traduco
+}
+
+.attributes-subtitle-wpr {
+    margin-top: -2px;
+}
+
+.attributes-subtitle {
+    color: #65676b;
+    word-break: break-word;
+    font-weight: normal;
+    line-height: 1.2308;
+    -webkit-font-smoothing: antialiased;
+    text-align: left;
+    max-width: 100%;
+    font-size: 0.8125rem;
+}

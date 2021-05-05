@@ -866,7 +866,7 @@ export function createExternalSidebar(renderer, srcIframe?, urlIcons?) {
 
 
 export function isGroup(conv: ConversationModel) {
-  if (conv.uid.startsWith('group-') || conv.uid.startsWith('support-group')) {
+  if (conv.recipient.startsWith('group-') || conv.recipient.startsWith('support-group')) {
       return true
   };
   return false

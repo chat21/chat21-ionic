@@ -28,7 +28,7 @@ export class InfoContentComponent implements OnInit {
   // @Input() member: UserModel;
   @Input() loggedUser: UserModel
   @Input() tenant: string
-  @Input() groupDetail: string
+  @Input() groupDetail: any
 
   public member: UserModel;
   public urlConversation: any;
@@ -202,6 +202,8 @@ export class InfoContentComponent implements OnInit {
   setInfoDirect() {
     console.log('INFO-CONTENT-COMP - setInfoDirect ', this.conversationWith);
     console.log('INFO-CONTENT-COMP - setInfoDirect member', this.member);
+   
+    
     this.member = null;
     const that = this;
     const tiledeskToken = this.authService.getTiledeskToken();

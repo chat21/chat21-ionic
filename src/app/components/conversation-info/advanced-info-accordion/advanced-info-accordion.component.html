@@ -1,0 +1,62 @@
+<ion-button expand="full" fill="clear" text-left class="advanced-info-accordion" (click)="openAdvancedInfoAccordion()">
+  <span class="absolute-text">
+
+    <!-- {{ translationMap.get('LABEL_INFO_ADVANCED') }} -->
+    Advanced
+  </span>
+
+  <ion-icon slot="end" name="chevron-down-outline" class="absolute-icon"></ion-icon>
+</ion-button>
+
+
+<div class="advanced-info-panel">
+  <div *ngFor="let attr of advancedAttributes">
+
+    <!-- <span [tooltip]="HtmlContent" [options]="tooltipOptions" placement="top" content-type="template">
+      <span class="material-icons icon-with-background">
+        {{ attr.icon }}
+      </span>
+    </span>
+    <ng-template #HtmlContent>
+      <span>{{ attr.key }}</span>
+    </ng-template>
+    {{ attr.value}} -->
+
+
+
+
+    <div class="attributes-wpr">
+      <div class="attributes-icon-wpr-1">
+        <div class="attributes-icon-wpr-2">
+          <span class="material-icons">
+            {{ attr.icon }}
+          </span>
+        </div>
+      </div>
+  
+      <div class="attributes-title-subtitle-wpr-1">
+        <div class="attributes-title-subtitle-wpr-2">
+  
+          <div class="attributes-title-subtitle-wpr-3">
+            <div class="attributes-title-wpr">
+              <span class="attributes-title">
+                {{ attr.key }}
+              </span>
+            </div>
+  
+  
+            <div class="attributes-subtitle-wpr">
+              <span class="attributes-subtitle">
+                {{ attr.value}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+</div>

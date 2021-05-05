@@ -30,6 +30,7 @@ import { BubbleSystemMessageComponent } from '../components/conversation-detail/
 import { InfoContentComponent } from '../components/conversation-info/info-content/info-content.component';
 import { InfoSupportGroupComponent } from '../components/conversation-info/info-support-group/info-support-group.component';
 import { InfoDirectComponent } from '../components/conversation-info/info-direct/info-direct.component';
+import { AdvancedInfoAccordionComponent } from '../components/conversation-info/advanced-info-accordion/advanced-info-accordion.component';
 import { InfoGroupComponent } from '../components/conversation-info/info-group/info-group.component';
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { OptionHeaderComponent } from '../components/conversation-detail/option-header/option-header.component';
@@ -64,7 +65,7 @@ import { OptionHeaderComponent } from '../components/conversation-detail/option-
     InfoSupportGroupComponent,
     InfoDirectComponent,
     InfoGroupComponent,
-
+    AdvancedInfoAccordionComponent,
     MarkedPipe,
 
     OptionHeaderComponent

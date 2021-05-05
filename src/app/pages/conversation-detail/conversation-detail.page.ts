@@ -36,6 +36,7 @@ import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/c
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 import { CannedResponsesService } from '../../services/canned-responses/canned-responses.service';
 import { compareValues } from '../../../chat21-core/utils/utils';
+
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
 // import { GroupService } from '../../services/group';
 
@@ -76,11 +77,7 @@ import {
   setChannelType
 } from '../../../chat21-core/utils/utils';
 
-import {
-  getColorBck,
-  avatarPlaceholder,
-  getImageUrlThumbFromFirebasestorage,
-} from '../../../chat21-core/utils/utils-user';
+import { getColorBck, avatarPlaceholder} from '../../../chat21-core/utils/utils-user';
 
 import {
   isFirstMessage,
@@ -758,6 +755,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (!subscribtion) {
       subscribtion = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
         this.groupDetail = groupDetail;
+    
+        this.generateGroupAvatar(groupDetail) 
+    
+
         console.log('CONVERSATION-DETAIL group detail INFO CONTENT ....-->', this.groupDetail)
         let memberStr = JSON.stringify(this.groupDetail.members);
         console.log('arraymembersss', memberStr)
@@ -772,6 +773,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.subscriptions.push(subscribe);
     }
   }
+
+  generateGroupAvatar(groupDetail) {
+    groupDetail.color = getColorBck(groupDetail.name);
+    groupDetail.avatar = avatarPlaceholder(groupDetail.name);
+  }
+
 
   /**
    * addEventsKeyboard
@@ -895,7 +902,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.typingService.setTyping(this.conversationWith, message, idCurrentUser, userFullname);
 
       // ----------------------------------------------------------
-      // START CANNED RESPONSES 
+      // DISPLAY CANNED RESPONSES if message.lastIndexOf("/")
       // ----------------------------------------------------------
 
       setTimeout(() => {
@@ -922,7 +929,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-
+  // ----------------------------------------------------------
+  //  @ CANNED RESPONSES methods
+  // ----------------------------------------------------------
   loadTagsCanned(strSearch) {
     console.log("CONVERSATION-DETAIL loadTagsCanned strSearch ", strSearch);
 
@@ -1114,8 +1123,40 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       }
     }
   }
+  // ----------------------------------------------------------
+  // ./end CANNED RESPONSES methods
+  // ----------------------------------------------------------
 
 
+ 
+/**
+   * regola sound message:
+   * se lo invio io -> NO SOUND
+   * se non sono nella conversazione -> SOUND
+   * se sono nella conversazione in fondo alla pagina -> NO SOUND
+   * altrimenti -> SOUND
+   */
+  soundMessage() {
+    const that = this;
+    this.audio = new Audio();
+    this.audio.src = 'src/assets/sounds/justsaying.mp3';
+    this.audio.load();
+    // console.log('conversation play');
+    clearTimeout(this.setTimeoutSound);
+    this.setTimeoutSound = setTimeout(function () {
+      that.audio.play().then(() => {
+        // Audio is playing.
+        console.log('****** soundMessage 1 *****', that.audio.src);
+      }).catch(error => {
+        console.log(error);
+      });
+    }, 1000);
+  }
+
+
+//SOUND
+  setTimeoutSound: any;
+  audio: any
 
 
   /** */
@@ -1267,10 +1308,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   /**
    * Scroll to bottom of page after a short delay.
    */
-  public actionScrollBottom() {
+   public actionScrollBottom() {
     console.log('actionScrollBottom ---> ', this.ionContentChatArea);
     // const that = this;
     this.showButtonToBottom = false;
+    this.updateConversationBadge()
     this.NUM_BADGES = 0;
     setTimeout(() => {
       this.ionContentChatArea.scrollToBottom(0);
