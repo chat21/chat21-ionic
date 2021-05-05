@@ -19,12 +19,12 @@
     <ion-grid class="grid_content">
       <ion-row class="row_content">
         <ion-col id="chatArea" [class.mobile]="isMobile" [class.open]="openInfoConversation">
-          
+
           <ion-row class="row_chat_area" [style.height]="'calc(100% - '+heightMessageTextArea+'px)'">
             <span *ngIf="showMessageWelcome && messages.length == 0; then content_welcome else content_messages">here is
               ignored</span>
-              
-              <div class="overlay" *ngIf="tagsCannedFilter.length > 0;"></div>
+
+            <div class="overlay" *ngIf="tagsCannedFilter.length > 0;"></div>
 
             <ng-template #content_welcome>
               <div class="messageFirst">
@@ -36,7 +36,7 @@
               <ion-content #ionContentChatArea class="ionContentChatArea" [scrollEvents]="true"
                 (ionScrollStart)="logScrollStart($event)" (ionScroll)="logScrolling($event)"
                 (ionScrollEnd)="logScrollEnd($event)" [class.active]="showIonContent">
- 
+
                 <!-- <ion-list no-lines>
                   <div *ngFor="let message of messages; let i = index">
                     
@@ -96,26 +96,30 @@
             <!-- ----------------------------------------------------------- -->
             <div id="canned" *ngIf="tagsCannedFilter.length > 0;">
               <ion-list class="canned-list">
-                  <ion-item button="true" [ngClass]="{'is_active_item': i == arrowkeyLocation}" lines="none" class="canned-item" id="{{'canned-item_'+ i }}" *ngFor="let canned of tagsCannedFilter; let i = index;" [innerHtml]="canned.title" (click)="replaceTagInMessage(canned)">
-                  </ion-item>
+                <ion-item button="true" [ngClass]="{'is_active_item': i == arrowkeyLocation}" lines="none"
+                  class="canned-item" id="{{'canned-item_'+ i }}"
+                  *ngFor="let canned of tagsCannedFilter; let i = index;" [innerHtml]="canned.title"
+                  (click)="replaceTagInMessage(canned)">
+                </ion-item>
               </ion-list>
             </div>
             <!-- (eventReplaceMessageWithCanned)="replaceTagInMessage($event)" -->
             <!-- [tagsCannedFilter]="tagsCannedFilter" -->
-            <app-message-text-area 
-              (eventChangeTextArea)="returnChangeTextArea($event)"
-              (eventSendMessage)="returnSendMessage($event)" 
-              [conversationWith]="conversationWith"
-              [tagsCannedFilter]="tagsCannedFilter"
-              ></app-message-text-area>
-              <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
+            <app-message-text-area (eventChangeTextArea)="returnChangeTextArea($event)"
+              (eventSendMessage)="returnSendMessage($event)" [conversationWith]="conversationWith"
+              [tagsCannedFilter]="tagsCannedFilter"></app-message-text-area>
+            <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
           </ion-row>
 
         </ion-col>
 
         <ion-col id="chat21-info-conversation" [class.mobile]="isMobile" [class.open]="openInfoConversation">
-          <app-info-content [openInfoConversation]="openInfoConversation" [translationMap]="translationMap"
-            [loggedUser]="loggedUser" [tenant]="tenant">
+          <app-info-content 
+          [openInfoConversation]="openInfoConversation" 
+          [translationMap]="translationMap"
+          [loggedUser]="loggedUser" 
+          [tenant]="tenant"  
+          [groupDetail]="groupDetail">
             <!-- [member] = member -->
           </app-info-content>
         </ion-col>
