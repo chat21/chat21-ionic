@@ -199,7 +199,6 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         // fare chiamata delete per rimuoverle la conversazione da remoto
         this.deleteConversation(conversationId, function (response) {
             console.log('FIREBASE-CONVERSATION-HANDLER ARCHIVE-CONV response', response)
-
             if (response === 'success') {
                 if (index > -1) {
                     that.conversations.splice(index, 1);
@@ -214,11 +213,11 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
     deleteConversation(conversationId, callback) {
         console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV conversationId', conversationId)
-        let queryString = ''
-        let isSupportConversation = conversationId.startsWith("support-group");
-        if (isSupportConversation) {
-            queryString = '?forall=true'
-        }
+        // let queryString = ''
+        // let isSupportConversation = conversationId.startsWith("support-group");
+        // if (isSupportConversation) {
+        //     queryString = '?forall=true'
+        // }
 
         this.getFirebaseToken((error, idToken) => {
             console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV idToken', idToken)
@@ -231,7 +230,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
                         'Authorization': 'Bearer ' + idToken,
                     })
                 }
-                const url = this.BASE_URL + '/api/' + this.tenant + '/conversations/' + conversationId + queryString;
+                const url = this.BASE_URL + '/api/' + this.tenant + '/conversations/' + conversationId // + queryString;
                 console.log('FIREBASE-CONVERSATION-HANDLER DELETE CONV - URL:', url);
 
                 this.http.delete(url, httpOptions).subscribe(res => {
@@ -481,7 +480,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.sender_fullname = this.translationMap.get('YOU')
-            console.log('XXXX conv.sender === this.loggedUserId) ', conversation_with, conversation_with_fullname)
+            // console.log('XXXX conv.sender === this.loggedUserId) ', conversation_with, conversation_with_fullname)
             // conv.last_message_text = LABEL_TU + conv.last_message_text;
         // } else if (conv.channel_type === TYPE_GROUP) {
         } else if (isGroup(conv)) {
@@ -489,7 +488,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             // conversation_with_fullname = conv.sender_fullname;
             conversation_with_fullname = conv.recipient_fullname;
             // conv.last_message_text = conv.last_message_text;
-            console.log('XXXX conv) ', conversation_with, conversation_with_fullname)
+            // console.log('XXXX conv) ', conversation_with, conversation_with_fullname)
         }
         conv.conversation_with = conversation_with;
         conv.conversation_with_fullname = conversation_with_fullname;
