@@ -1,80 +1,76 @@
-              
-        <ion-content *ngIf="member" class="member-profile">
-                <ion-card class="first-card">
-                  <div class="chat21-box-profile chat21-box">
-                    
-                    <div class="chat21-content">
+<!-- {{ member | json}} -->
+<ion-content *ngIf="member" class="member-profile">
+  <ion-card class="first-card">
+    <div class="chat21-box-profile chat21-box">
 
-                      <div class="image-profile">
-                        <app-avatar-profile
-                          [itemAvatar] = member
-                        ></app-avatar-profile>
-                      </div>
+      <div class="chat21-content">
 
-                      <div class="user-presence">
-                        <app-user-presence
-                          [idUser] = member.uid
-                          [translationMap] = translationMap
-                          [borderColor] = borderColor
-                          [fontColor] = fontColor
-                        ></app-user-presence>
-                      </div>
+        <div class="image-profile">
+          <app-avatar-profile [itemAvatar]=member></app-avatar-profile>
+        </div>
 
-                      <div class="info-profile">
-                        <div class="name">
-                          <span class="read">{{member.fullname}}</span>
-                        </div>
-                      </div>
+        <div class="user-presence">
+          <app-user-presence 
+            [idUser]=member.uid 
+            [translationMap]=translationMap 
+            [borderColor]=borderColor
+            [fontColor]=fontColor>
+          </app-user-presence>
+        </div>
+        <!-- -> {{member |json}} -->
+        <div class="info-profile">
+          <div class="name">
+            <span class="read">{{member.fullname}}</span>
+          </div>
+        </div>
 
-                    </div>
+        <div class="member-email">
+          <a [href]="'mailto:' + member.email + '?Subject='">
+            {{member.email}}
+          </a>
+        </div>
 
-                  </div>
-                </ion-card>
+      </div>
 
-                <ion-card>
-                    <div class="chat21-box-info chat21-box" >
-                        <div class="chat21-content" >
-                            <!-- <div class="chat21-conf">
-                                <button *ngIf="profileYourself" class="icon_modify" icon-only (click)="presentPopover($event)">
-                                    <ion-icon name="create"></ion-icon>
-                                </button>
-                            </div> -->
-                            <div class="chat21-email" class="chat21-row">
-                              <a [href]="'mailto:' + member.email + '?Subject='">
-                                  {{member.email}}
-                              </a>
-                            </div>
-                        </div>
-                    </div>
-                </ion-card>
+    </div>
+  </ion-card>
 
-
-                <ion-card>
-                  
-
-                  <ion-row class="chat21-box-buttons chat21-box" style="padding: 0px 0px 0px 10px;" (click)="openInfoAdvancedPage()">
-                      
-                      <ion-col size="10" class="c21-link" class="col-xs-10">
-                          <span class="c21-button-label" style="line-height: 24px;">Avanzate</span>
-                          <ion-icon class="ios-arrow-forward" name="ios-arrow-forward"></ion-icon> 
-                      </ion-col>
-
-                      <ion-col size="2" style="text-align: right;">
-                        <i class="material-icons rotate up" id="request_id_arrow_down" style="cursor: pointer; color: #039be5; font-size:18px;position:relative; top:2px">
-                          keyboard_arrow_down
-                        </i>
-                      </ion-col>
-
-                      
-                  </ion-row>
+  <!-- <ion-card>
+    <div class="chat21-box-info chat21-box">
+      <div class="chat21-content">
+        <div class="chat21-email" class="chat21-row">
+          <a [href]="'mailto:' + member.email + '?Subject='">
+            {{member.email}}
+          </a>
+        </div>
+      </div>
+    </div>
+  </ion-card> -->
 
 
-                  
+  <app-advanced-info-accordion 
+  [advancedAttributes]="advancedAttributes"
+  [translationMap]="translationMap">
 
+  </app-advanced-info-accordion>
 
-              </ion-card>
+  <!-- <ion-card>
+    <ion-row class="chat21-box-buttons chat21-box" style="padding: 0px 0px 0px 10px;" (click)="openInfoAdvancedPage()">
+      <ion-col size="10" class="c21-link" class="col-xs-10">
+        <span class="c21-button-label" style="line-height: 24px;">Avanzate</span>
+        <ion-icon class="ios-arrow-forward" name="ios-arrow-forward"></ion-icon>
+      </ion-col>
 
-                <!-- <div _ngcontent-c6="" class="row" style="margin-top:5px">
+      <ion-col size="2" style="text-align: right;">
+        <i class="material-icons rotate up" id="request_id_arrow_down"
+          style="cursor: pointer; color: #039be5; font-size:18px;position:relative; top:2px">
+          keyboard_arrow_down
+        </i>
+      </ion-col>
+    </ion-row>
+  </ion-card> -->
+
+  <!-- <div _ngcontent-c6="" class="row" style="margin-top:5px">
                   <div _ngcontent-c6="" class="col-sm-12">
                     <p _ngcontent-c6="" style="margin-bottom:0px">
                       <span _ngcontent-c6="" style="position: relative;top: 1px;">
@@ -103,4 +99,4 @@
                   </div>
                 </div> -->
 
-        </ion-content>
+</ion-content>

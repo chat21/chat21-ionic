@@ -1,22 +1,18 @@
+<ion-content [style.display]="openInfoConversation ? 'block' : 'none'">
 
+  <app-info-direct *ngIf="panelType === 'direct-panel'" 
+  [member]=member 
+  [translationMap]=translationMap
+  [conversationWith]= "conversationWith">
+  </app-info-direct>
 
-<ion-content  [style.display]="openInfoConversation ? 'block' : 'none'">
- 
-  <app-info-direct 
-    *ngIf="panelType === 'direct-panel'"
-    [member] = member
-    [translationMap] = translationMap
-  ></app-info-direct>
-
-  <app-info-group 
-    *ngIf="panelType === 'group-panel'"
+  <app-info-group *ngIf="panelType === 'group-panel'"
+  [groupDetail]="groupDetail"
   ></app-info-group>
 
-  <app-info-support-group 
-  *ngIf="panelType === 'support-group-panel'"
-   
-    [urlConversationSupportGroup] = urlConversationSupportGroup
-  ></app-info-support-group>
+  <app-info-support-group *ngIf="panelType === 'support-group-panel'"
+    [urlConversationSupportGroup]=urlConversationSupportGroup>
+  </app-info-support-group>
 
- 
+
 </ion-content>

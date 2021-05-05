@@ -8,26 +8,32 @@ import { Component, OnInit, AfterViewInit, Input, EventEmitter } from '@angular/
 export class InfoDirectComponent implements OnInit, AfterViewInit {
   @Input() member: any;
   @Input() translationMap: Map<string, string>;
+  @Input() conversationWith: string;
 
   borderColor = '#ffffff';
   fontColor = '#949494';
-
+  advancedAttributes: Array<any> = [];
+  
   constructor() {
     console.log('InfoDirectComponent - constructor');
    }
 
   ngOnInit() {
     console.log('InfoDirectComponent - ngOnInit');
+  
     this.initialize();
   }
 
   ngAfterViewInit() {
     console.log('InfoDirectComponent - ngAfterViewInit');
+    console.log('InfoDirectComponent member', this.member);
+    console.log('InfoDirectComponent conversationWith', this.conversationWith);
   }
   /** */
   initialize() {
     console.log('InfoDirectComponent - initialize');
-    console.log(this.member);
+    this.advancedAttributes.push({key: "ID_CONVERSATION", value: this.conversationWith, icon: 'code'})
+    console.log('InfoDirectComponent - advancedAttributes' , this.advancedAttributes);
   }
 
   openInfoAdvancedPage() {
