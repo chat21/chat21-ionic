@@ -837,31 +837,35 @@ export class ConversationListPage implements OnInit {
    * @param conversation 
    * https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
    */
+
   onCloseConversation(conversation: ConversationModel) {
 
     console.log('CONV-LIST-PAGE onCloseConversation conv: ', conversation)
 
     const conversationId = conversation.uid;
-   
+
     console.log('CONV-LIST-PAGE onCloseConversation conversationId: ', conversationId)
-    
+    const conversationId_segments = conversationId.split('-');
+    console.log('ConversationListPage - conversationId_segments: ', conversationId_segments);
+    const project_id = conversationId_segments[2]
+    console.log('ConversationListPage - conversationWith_segments project_id: ', project_id);
 
     if (conversationId.startsWith("support-group")) {
 
-      const projectId = conversation.attributes.projectId
+      // const projectId = conversation.attributes.projectId
       const tiledeskToken = this.authService.getTiledeskToken();
-      console.log('CONV-LIST-PAGE onCloseConversation projectId: ', projectId)
-    // console.log('CONV-LIST-PAGE onCloseConversation tiledeskToken: ', tiledeskToken)
-      this.tiledeskService.closeSupportGroup(tiledeskToken, projectId, conversationId).subscribe(res => {
+      console.log('CONV-LIST-PAGE onCloseConversation projectId: ', project_id)
+      // console.log('CONV-LIST-PAGE onCloseConversation tiledeskToken: ', tiledeskToken)
+      this.tiledeskService.closeSupportGroup(tiledeskToken, project_id, conversationId).subscribe(res => {
         console.log('CONV-LIST-PAGE onCloseConversation closeSupportGroup RES', res);
-  
-  
+
+
       }, (error) => {
         console.log('CONV-LIST-PAGE onCloseConversation closeSupportGroup - ERROR  ', error);
-  
+
       }, () => {
         console.log('CONV-LIST-PAGE onCloseConversation closeSupportGroup * COMPLETE *');
-  
+
       });
     } else {
 
