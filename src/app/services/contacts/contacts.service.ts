@@ -153,13 +153,13 @@ export class ContactsService {
       const fullname = (firstname + ' ' + lastname).trim();
       const avatar = avatarPlaceholder(fullname);
       const color = getColorBck(fullname);
-      const imageurl = getImageUrlThumbFromFirebasestorage(user.uid, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
+      // const imageurl = getImageUrlThumbFromFirebasestorage(user.uid, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
       member.uid = uid;
       member.email = email;
       member.firstname = firstname;
       member.lastname = lastname;
       member.fullname = fullname;
-      member.imageurl = imageurl;
+      // member.imageurl = imageurl;
       member.avatar = avatar;
       member.color = color;
       console.log('createCompleteUser: ', member);
