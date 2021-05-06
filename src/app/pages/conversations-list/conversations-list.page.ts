@@ -18,7 +18,8 @@ import {
   closeModal,
   getParameterByName,
   convertMessage,
-  windowsMatchMedia
+  windowsMatchMedia,
+  isGroup
 } from '../../../chat21-core/utils/utils';
 import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE, TYPE_GROUP } from '../../../chat21-core/utils/constants';
 import { EventsService } from '../../services/events-service';
@@ -630,10 +631,11 @@ export class ConversationListPage implements OnInit {
     if (conversation.sender === this.loggedUserUid) {
       conversation_with = conversation.recipient;
       conversation_with_fullname = conversation.recipient_fullname;
-    } else if (conversation.channel_type === TYPE_GROUP) {
-      conversation_with = conversation.recipient;
-      conversation_with_fullname = conversation.sender_fullname;
+    } else if (isGroup(conversation)) {
+      // conversation_with_fullname = conv.sender_fullname;
       // conv.last_message_text = conv.last_message_text;
+      conversation_with = conversation.recipient;
+      conversation_with_fullname = conversation.recipient_fullname;
     }
     conversation.image = this.imageRepoService.getImagePhotoUrl(conversation_with)
   }
