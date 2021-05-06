@@ -755,6 +755,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (!subscribtion) {
       subscribtion = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
         this.groupDetail = groupDetail;
+        this.groupDetail.members.forEach(key => {
+          // chiamare servizio contact per completare singolo membro --> loadContactDetail(key) _> user
+          // al ritorno chiamare servizio image-repo per aggiungere l'immagine di profilo all'utente
+          // user.image = this.imageRepoService.getImageFromUId(user.uid)
+
+        })
     
         this.generateGroupAvatar(groupDetail) 
     

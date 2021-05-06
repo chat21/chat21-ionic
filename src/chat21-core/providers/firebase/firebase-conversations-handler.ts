@@ -480,15 +480,14 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.sender_fullname = this.translationMap.get('YOU')
-            // console.log('XXXX conv.sender === this.loggedUserId) ', conversation_with, conversation_with_fullname)
             // conv.last_message_text = LABEL_TU + conv.last_message_text;
         // } else if (conv.channel_type === TYPE_GROUP) {
         } else if (isGroup(conv)) {
-            conversation_with = conv.recipient;
             // conversation_with_fullname = conv.sender_fullname;
-            conversation_with_fullname = conv.recipient_fullname;
             // conv.last_message_text = conv.last_message_text;
-            // console.log('XXXX conv) ', conversation_with, conversation_with_fullname)
+            conversation_with = conv.recipient;
+            conversation_with_fullname = conv.recipient_fullname;
+            
         }
         conv.conversation_with = conversation_with;
         conv.conversation_with_fullname = conversation_with_fullname;

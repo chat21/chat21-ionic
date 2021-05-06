@@ -20,6 +20,7 @@ import { CustomLogger } from '../logger/customLogger';
 import { AppConfigProvider } from '../../../app/services/app-config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GroupModel } from 'src/chat21-core/models/group';
+import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user';
 
 
 // @Injectable({ providedIn: 'root' })
@@ -120,18 +121,33 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
         const ref = firebase.database().ref(urlNodeGroupById)
         ref.off()
         ref.on('value', (childSnapshot) => {
-            console.log('group detail::', childSnapshot.val(), childSnapshot)
-            const group: GroupModel = childSnapshot.val();
-            console.log('FIREBASE-GROUP-HANDLER group ', group)
-            if (group) {
-                group.uid = childSnapshot.key
-                // that.BSgroupDetail.next(group)
-                that.SgroupDetail.next(group)
-            } 
+            this.groupValue(childSnapshot)
+            
         });
         // return that.BSgroupDetail
         return this.SgroupDetail
 
+    }
+
+    private groupValue(childSnapshot: any){
+        const that = this;
+        console.log('group detail::', childSnapshot.val(), childSnapshot)
+        const group: GroupModel = childSnapshot.val();
+        console.log('FIREBASE-GROUP-HANDLER group ', group)
+        if (group) {
+            group.uid = childSnapshot.key
+            // that.BSgroupDetail.next(group)
+            let groupCompleted = this.completeGroup(group)
+            this.SgroupDetail.next(groupCompleted)
+            
+        } 
+    }
+
+    private completeGroup(group: any): GroupModel{
+        group.avatar = avatarPlaceholder(group.name);
+        group.color = getColorBck(group.name);
+        return group
+        
     }
 
     create(groupName: string, members: [string], callback?: (res: any, error: any) => void): Promise<any> {

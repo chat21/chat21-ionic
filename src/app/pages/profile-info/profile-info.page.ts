@@ -71,7 +71,6 @@ export class ProfileInfoPage implements OnInit {
   private setUser() {
     // width and height NON sono obbligatori
     this.loggedUser = this.chatManager.getCurrentUser();
-    console.log('loggeduserrrr', this.loggedUser)
     this.itemAvatar = {
       imageurl: this.imageRepo.getImagePhotoUrl(this.loggedUser.uid),
       avatar: this.loggedUser.avatar,
