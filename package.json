@@ -1,6 +1,6 @@
 {
     "name": "chat-ionic-v4",
-    "version": "3.0.22",
+    "version": "3.0.23",
     "author": "Ionic Framework",
     "homepage": "https://ionicframework.com/",
     "scripts": {
@@ -96,9 +96,9 @@
             "cordova-plugin-chooser": {}
         },
         "platforms": [
+            "android",
             "browser",
-            "ios",
-            "android"
+            "ios"
         ]
     }
 }
