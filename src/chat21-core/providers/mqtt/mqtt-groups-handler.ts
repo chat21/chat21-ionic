@@ -7,7 +7,7 @@ import { Chat21Service } from './chat-service';
 @Injectable({
     providedIn: 'root'
   })
-  export class MQTTGroupsHanlder extends GroupsHandlerService {
+  export class MQTTGroupsHandler extends GroupsHandlerService {
     
     // BehaviorSubject
     BSgroupDetail: BehaviorSubject<GroupModel>;

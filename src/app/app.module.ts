@@ -1,4 +1,3 @@
-import { MQTTGroupsHanlder } from './../chat21-core/providers/mqtt/mqtt-groups-hanlder';
 import { MomentModule } from 'angular2-moment';
 import { CustomLogger } from 'src/chat21-core/providers/logger/customLogger';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
@@ -59,6 +58,7 @@ import { MQTTConversationHandlerBuilderService } from 'src/chat21-core/providers
 import { MQTTTypingService } from 'src/chat21-core/providers/mqtt/mqtt-typing.service';
 import { MQTTPresenceService } from 'src/chat21-core/providers/mqtt/mqtt-presence.service';
 import { MQTTArchivedConversationsHandler } from 'src/chat21-core/providers/mqtt/mqtt-archivedconversations-handler';
+import { MQTTGroupsHandler } from '../chat21-core/providers/mqtt/mqtt-groups-handler';
 
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -150,7 +150,7 @@ export function conversationHandlerFactory(chat21Service: Chat21Service, appConf
 export function groupsHandlerFactory(http: HttpClient, chat21Service: Chat21Service, appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    return new MQTTGroupsHanlder(chat21Service)
+    return new MQTTGroupsHandler(chat21Service)
   } else {
     return new FirebaseGroupsHandler(http, appConfig);
   }
