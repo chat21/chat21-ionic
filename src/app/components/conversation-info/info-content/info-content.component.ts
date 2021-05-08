@@ -66,6 +66,8 @@ export class InfoContentComponent implements OnInit {
       const conversationWith_segments = this.conversationWith.split('-');
       console.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent conversationWith_segments: ', conversationWith_segments);
       this.project_id = conversationWith_segments[2]
+
+      // this.project_id = this.groupDetail['attributes']['projectId']
     });
   }
 
