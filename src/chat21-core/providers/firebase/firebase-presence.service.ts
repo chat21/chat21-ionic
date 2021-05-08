@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 // firebase
 import * as firebase from 'firebase/app';
@@ -20,8 +20,10 @@ import { CustomLogger } from '../logger/customLogger';
 export class FirebasePresenceService extends PresenceService {
 
   // BehaviorSubject
+  // BSIsOnline: BehaviorSubject<any>;
   BSIsOnline: BehaviorSubject<any>;
   BSLastOnline: BehaviorSubject<any>;
+
 
   // public params
   public tenant: string;
@@ -32,7 +34,7 @@ export class FirebasePresenceService extends PresenceService {
   private lastOnlineConnectionsRef: any;
   private keyConnectionRef: any;
   private logger: CustomLogger = new CustomLogger(true)
-
+  online_member = []
   constructor() {
     super();
   }
@@ -48,21 +50,52 @@ export class FirebasePresenceService extends PresenceService {
    * userIsOnline
    * @param userid
    */
-  public userIsOnline(userid: string) {
+  // public userIsOnline(userid: string) {
+  //   this.logger.printDebug('userIsOnline', userid);
+  //   console.log('CONVERSATION-DETAIL group detail userIsOnline', userid);
+  //   const that = this;
+  //   const urlNodeConnections = this.urlNodePresence + userid + '/connections';
+  //   this.logger.printDebug('userIsOnline: ', urlNodeConnections);
+  //   const connectionsRef = firebase.database().ref().child(urlNodeConnections);
+  //   connectionsRef.on('value', (child) => {
+  //     this.logger.printDebug('is-online-' + userid);
+  //     if (child.val()) {
+  //       console.log('CONVERSATION-DETAIL group detail userIsOnline id user', userid, '- child.val: ', child.val());
+  //       this.BSIsOnline.next({uid: userid, isOnline: true});
+  //       console.log('CONVERSATION-DETAIL group detail userIsOnline 1', userid);
+  //     } else {
+  //       this.BSIsOnline.next({uid: userid, isOnline: false});
+  //       console.log('CONVERSATION-DETAIL group detail userIsOnline 2', userid);
+  //     }
+  //   });
+  // }
+
+  public userIsOnline(userid: string): Observable<any> {
+    let local_BSIsOnline = new BehaviorSubject<any>(null);
     this.logger.printDebug('userIsOnline', userid);
+    console.log('CONVERSATION-DETAIL group detail userIsOnline', userid);
     const that = this;
     const urlNodeConnections = this.urlNodePresence + userid + '/connections';
     this.logger.printDebug('userIsOnline: ', urlNodeConnections);
     const connectionsRef = firebase.database().ref().child(urlNodeConnections);
+    connectionsRef.off()
     connectionsRef.on('value', (child) => {
       this.logger.printDebug('is-online-' + userid);
       if (child.val()) {
-        this.BSIsOnline.next({uid: userid, isOnline: true});
+        console.log('CONVERSATION-DETAIL group detail userIsOnline id user', userid, '- child.val: ', child.val());
+        this.BSIsOnline.next({ uid: userid, isOnline: true });
+        local_BSIsOnline.next({ uid: userid, isOnline: true });
+        console.log('CONVERSATION-DETAIL group detail userIsOnline 1', userid);
       } else {
-        this.BSIsOnline.next({uid: userid, isOnline: false});
+        this.BSIsOnline.next({ uid: userid, isOnline: false });
+        local_BSIsOnline.next({ uid: userid, isOnline: false });
+        console.log('CONVERSATION-DETAIL group detail userIsOnline 2', userid);
       }
     });
+
+    return local_BSIsOnline
   }
+
 
   /**
    * lastOnlineForUser
@@ -74,9 +107,9 @@ export class FirebasePresenceService extends PresenceService {
     const lastOnlineRef = this.referenceLastOnlineForUser(userid);
     lastOnlineRef.on('value', (child) => {
       if (child.val()) {
-        this.BSLastOnline.next({uid: userid, lastOnline: child.val()});
+        this.BSLastOnline.next({ uid: userid, lastOnline: child.val() });
       } else {
-        this.BSLastOnline.next({uid: userid, lastOnline: null});
+        this.BSLastOnline.next({ uid: userid, lastOnline: null });
       }
     });
   }
@@ -94,7 +127,7 @@ export class FirebasePresenceService extends PresenceService {
    *  https://firebase.google.com/docs/database/web/offline-capabilities?hl=it
    * @param userid
    */
-  public setPresence(userid: string): void  {
+  public setPresence(userid: string): void {
     //console.log(' setPresence: ', userid);
     this.onlineConnectionsRef = this.referenceOnlineForUser(userid);
     this.lastOnlineConnectionsRef = this.referenceLastOnlineForUser(userid);
