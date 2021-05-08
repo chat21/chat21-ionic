@@ -36,7 +36,10 @@ import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/c
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 import { CannedResponsesService } from '../../services/canned-responses/canned-responses.service';
 import { compareValues } from '../../../chat21-core/utils/utils';
-
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
+import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
 // import { GroupService } from '../../services/group';
 
@@ -47,21 +50,8 @@ import { compareValues } from '../../../chat21-core/utils/utils';
 
 // utils
 import {
-  SYSTEM,
-  TYPE_SUPPORT_GROUP,
-  TYPE_POPUP_DETAIL_MESSAGE,
-  TYPE_DIRECT, MAX_WIDTH_IMAGES,
-  TYPE_MSG_TEXT, TYPE_MSG_IMAGE,
-  MIN_HEIGHT_TEXTAREA,
-  MSG_STATUS_SENDING,
-  MSG_STATUS_SENT,
-  MSG_STATUS_RETURN_RECEIPT,
-  TYPE_GROUP,
-  MESSAGE_TYPE_INFO,
-  MESSAGE_TYPE_MINE,
-  MESSAGE_TYPE_OTHERS,
-  MESSAGE_TYPE_DATE,
-  AUTH_STATE_OFFLINE
+  SYSTEM, TYPE_SUPPORT_GROUP, TYPE_POPUP_DETAIL_MESSAGE, TYPE_DIRECT, MAX_WIDTH_IMAGES, TYPE_MSG_TEXT, TYPE_MSG_IMAGE, MIN_HEIGHT_TEXTAREA, MSG_STATUS_SENDING,
+  MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, TYPE_GROUP, MESSAGE_TYPE_INFO, MESSAGE_TYPE_MINE, MESSAGE_TYPE_OTHERS, MESSAGE_TYPE_DATE, AUTH_STATE_OFFLINE
 } from '../../../chat21-core/utils/constants';
 
 import {
@@ -77,7 +67,7 @@ import {
   setChannelType
 } from '../../../chat21-core/utils/utils';
 
-import { getColorBck, avatarPlaceholder} from '../../../chat21-core/utils/utils-user';
+import { getColorBck, avatarPlaceholder } from '../../../chat21-core/utils/utils-user';
 
 import {
   isFirstMessage,
@@ -170,7 +160,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       url: '_blank'
     }
   };
-
+  private unsubscribe$: Subject<any> = new Subject<any>();
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -198,7 +188,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public conversationHandlerBuilderService: ConversationHandlerBuilderService,
     public linkifyService: NgxLinkifyjsService,
     private logger: LoggerService,
-    public cannedResponsesService: CannedResponsesService
+    public cannedResponsesService: CannedResponsesService,
+    public imageRepoService: ImageRepoService,
+    public presenceService: PresenceService
   ) {
   }
 
@@ -227,6 +219,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   ngOnDestroy() {
     // console.log('ngOnDestroy ConversationDetailPage: ');
+    
+    console.log('CONVERSATION-DETAIL ngOnDestroy');
+    // this.unsubscribe$.next();
+    // this.unsubscribe$.complete();
   }
 
   /** */
@@ -755,15 +751,69 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (!subscribtion) {
       subscribtion = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
         this.groupDetail = groupDetail;
-        this.groupDetail.members.forEach(key => {
-          // chiamare servizio contact per completare singolo membro --> loadContactDetail(key) _> user
-          // al ritorno chiamare servizio image-repo per aggiungere l'immagine di profilo all'utente
-          // user.image = this.imageRepoService.getImageFromUId(user.uid)
+        // this.groupDetail.members.forEach(key => {
+        //   // chiamare servizio contact per completare singolo membro --> loadContactDetail(key) _> user
+        //   // al ritorno chiamare servizio image-repo per aggiungere l'immagine di profilo all'utente
+        //   // user.image = this.imageRepoService.getImageFromUId(user.uid)
 
-        })
-    
-        this.generateGroupAvatar(groupDetail) 
-    
+        // })
+
+        // this.generateGroupAvatar(groupDetail) 
+        // console.log('CONVERSATION-DETAIL group detail UID', this.groupDetail.uid)
+        // if (this.groupDetail.uid.startsWith('group-')) {
+        //   const tiledeskToken = this.authService.getTiledeskToken();
+
+        //   const member_array = []
+
+        //   for (const [key, value] of Object.entries(this.groupDetail.membersinfo)) {
+        //     console.log('CONVERSATION-DETAIL group detail Key:', key, ' -Value: ', value);
+
+        //     // this.presenceService.BSIsOnline.subscribe((data: any) => {
+        //     //   console.log('CONVERSATION-DETAIL group detail BSIsOnline data', data)
+
+        //     // })
+
+        //     this.presenceService.userIsOnline(key)
+        //     .pipe(
+        //       takeUntil(this.unsubscribe$)
+        //     )
+        //     .subscribe((data: any) => {
+        //       console.log('CONVERSATION-DETAIL group detail BSIsOnline data', data)
+
+        //     })
+
+
+        //     this.contactsService.loadContactDetail(tiledeskToken, key)
+        //       .subscribe(user => {
+        //         console.log('CONVERSATION-DETAIL group detail loadContactDetail RES', user);
+
+
+        //         user.imageurl = this.imageRepoService.getImagePhotoUrl(key)
+        //         member_array.push([{ avatar: user.avatar, color: user.color, email: user.email, fullname: user.fullname, imageurl: user.imageurl }])
+        //         // if (key === user.uid) {
+        //         // this.groupDetail.membersinfo[key].avatar = user.avatar;
+        //         // this.groupDetail.membersinfo[key].color = user.color;
+        //         // this.groupDetail.membersinfo[key].email = user.email;
+        //         // this.groupDetail.membersinfo[key].fullname = user.fullname;
+        //         // this.groupDetail.membersinfo[key].imageurl = user.imageurl;
+        //         this.groupDetail['member_array'] = member_array
+
+        //         // }
+
+
+
+        //       }, (error) => {
+        //         console.log('CONVERSATION-DETAIL group detail loadContactDetail - ERROR  ', error);
+
+        //       }, () => {
+        //         console.log('CONVERSATION-DETAIL group detail loadContactDetail * COMPLETE *');
+
+        //       });
+
+        //   }
+
+        // }
+
 
         console.log('CONVERSATION-DETAIL group detail INFO CONTENT ....-->', this.groupDetail)
         let memberStr = JSON.stringify(this.groupDetail.members);
@@ -780,10 +830,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  generateGroupAvatar(groupDetail) {
-    groupDetail.color = getColorBck(groupDetail.name);
-    groupDetail.avatar = avatarPlaceholder(groupDetail.name);
-  }
+  // generateGroupAvatar(groupDetail) {
+  //   groupDetail.color = getColorBck(groupDetail.name);
+  //   groupDetail.avatar = avatarPlaceholder(groupDetail.name);
+  // }
 
 
   /**
@@ -936,7 +986,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   // ----------------------------------------------------------
-  //  @ CANNED RESPONSES methods
+  // @ CANNED RESPONSES methods
   // ----------------------------------------------------------
   loadTagsCanned(strSearch) {
     console.log("CONVERSATION-DETAIL loadTagsCanned strSearch ", strSearch);
@@ -970,9 +1020,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   showTagsCanned(strSearch) {
-
     console.log('CONVERSATION-DETAIL showTagsCanned strSearch ', strSearch);
-
     this.tagsCannedFilter = [];
     var tagsCannedClone = JSON.parse(JSON.stringify(this.tagsCanned));
     console.log('CONVERSATION-DETAIL showTagsCanned tagsCannedClone ', tagsCannedClone);
@@ -1134,14 +1182,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // ----------------------------------------------------------
 
 
- 
-/**
-   * regola sound message:
-   * se lo invio io -> NO SOUND
-   * se non sono nella conversazione -> SOUND
-   * se sono nella conversazione in fondo alla pagina -> NO SOUND
-   * altrimenti -> SOUND
-   */
+
+  /**
+     * regola sound message:
+     * se lo invio io -> NO SOUND
+     * se non sono nella conversazione -> SOUND
+     * se sono nella conversazione in fondo alla pagina -> NO SOUND
+     * altrimenti -> SOUND
+     */
   soundMessage() {
     const that = this;
     this.audio = new Audio();
@@ -1160,7 +1208,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
-//SOUND
+  //SOUND
   setTimeoutSound: any;
   audio: any
 
@@ -1314,7 +1362,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   /**
    * Scroll to bottom of page after a short delay.
    */
-   public actionScrollBottom() {
+  public actionScrollBottom() {
     console.log('actionScrollBottom ---> ', this.ionContentChatArea);
     // const that = this;
     this.showButtonToBottom = false;
