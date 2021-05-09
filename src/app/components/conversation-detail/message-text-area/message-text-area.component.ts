@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit , ViewChild, ElementRef } from '@angular/core';
 import { IonTextarea } from '@ionic/angular';
 import { Chooser } from '@ionic-native/chooser/ngx';
 import { ModalController } from '@ionic/angular';
@@ -18,7 +18,19 @@ import { Observable } from 'rxjs';
   templateUrl: './message-text-area.component.html',
   styleUrls: ['./message-text-area.component.scss'],
 })
-export class MessageTextAreaComponent implements OnInit {
+export class MessageTextAreaComponent implements OnInit, AfterViewInit {
+
+  // @ViewChild('focusInput') myInput;
+  @ViewChild('textArea', { static: false }) messageTextArea
+
+  // set textArea(element: ElementRef<HTMLInputElement>) {
+  //   if(element) {
+  //     console.log('MessageTextAreaComponent element',element)
+  //     // element.nativeElement.focus()
+  //     element.nativeElement.focus()
+  //   }
+  //  }
+
   @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
 
@@ -44,6 +56,15 @@ export class MessageTextAreaComponent implements OnInit {
     // this.events.subscribe((cannedmessage) => {
     //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) events.subscribe cannedmessage ", cannedmessage);
     // })
+  }
+
+  ngAfterViewInit() {
+
+    setTimeout(() => {
+      console.log("MESSAGE-TEXT-AREA set focus on ", this.messageTextArea);
+      // Keyboard.show() // for android
+      this.messageTextArea.setFocus();
+    }, 300); //a least 150ms.
   }
 
   // ngDoCheck() {
@@ -235,9 +256,11 @@ export class MessageTextAreaComponent implements OnInit {
       let messageString = detail.data.messageString;
       let metadata = detail.data.metadata;
       // let type = detail.data.type;
-      console.log('The result: CHIUDI!!!!!', detail.data);
+      console.log('presentModal onDidDismiss detail.data', detail.data);
+      console.log('presentModal onDidDismiss fileSelected', fileSelected);
       if (detail !== null) {
         const currentUpload = new UploadModel(fileSelected);
+        console.log('The result: CHIUDI!!!!!', detail.data);
         that.uploadService.upload(currentUpload).then(downloadURL => {
           metadata.src = downloadURL;
           console.log('presentModal invio msg metadata::: ', metadata);
