@@ -21,6 +21,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
   member_is_online;
   member_array: any
   private unsubscribe$: Subject<any> = new Subject<any>();
+  
   constructor(
     public imageRepoService: ImageRepoService,
     public presenceService: PresenceService,
@@ -47,6 +48,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
 
           this.presenceService.userIsOnline(key)
+            .pipe(takeUntil(this.unsubscribe$))
             .pipe(filter((isOnline) => isOnline !== null))
             .subscribe((isOnline: any) => {
               console.log('InfoGroupComponent group detail BSIsOnline isOnline', isOnline)
