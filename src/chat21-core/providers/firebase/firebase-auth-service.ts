@@ -85,13 +85,7 @@ export class FirebaseAuthService extends AuthService {
     if (this.tiledeskToken) {
       this.logger.printLog(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
       this.createFirebaseCustomToken();
-    } else if(localStorage.getItem('user')){
-      const user = JSON.parse(localStorage.getItem('user'))
-      this.tiledeskToken = user.token
-      this.createCompleteUser(user);
-      this.logger.printLog(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE DALLA DASHBOARD ---------------- ')
-      this.createFirebaseCustomToken();
-    } else {
+    }  else {
       this.logger.printLog(' ---------------- NON sono loggato ---------------- ')
       // this.BSAuthStateChanged.next('offline');
     }
