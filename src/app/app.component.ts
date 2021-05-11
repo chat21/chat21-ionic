@@ -1,3 +1,4 @@
+import { URL_SOUND_LIST_CONVERSATION } from './../chat21-core/utils/constants';
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2, } from '@angular/core';
@@ -33,9 +34,10 @@ import { ConversationListPage } from './pages/conversations-list/conversations-l
 
 // utils
 import { createExternalSidebar, checkPlatformIsMobile } from '../chat21-core/utils/utils';
-import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE, AUTH_STATE_ONLINE, URL_SOUND } from '../chat21-core/utils/constants';
+import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE, AUTH_STATE_ONLINE } from '../chat21-core/utils/constants';
 import { environment } from '../environments/environment';
 import { UserModel } from '../chat21-core/models/user';
+import { ConversationModel } from 'src/chat21-core/models/conversation';
 
 @Component({
   selector: 'app-root',
@@ -54,9 +56,14 @@ export class AppComponent implements OnInit {
   private platformIs: string;
   private doitResize: any;
   private timeModalLogin: any;
-  private audio: any;
   public tenant: string;
   public authModal: any;
+
+  private audio: any;
+  private setIntervalTime: any;
+  private setTimeoutSound: any;
+  private isTabVisible: boolean = true;
+  private tabTitle: string; 
 
   constructor(
     private platform: Platform,
@@ -92,9 +99,6 @@ export class AppComponent implements OnInit {
     console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
-    // if (environment.chatEngine === CHAT_ENGINE_FIREBASE) {
-    // this.initFirebase();
-    // }
 
   }
 
@@ -104,6 +108,7 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     console.log('ngOnInit -->', this.route.snapshot.params);
+    this.tabTitle = document.title
     this.initializeApp();
   }
 
@@ -131,24 +136,6 @@ export class AppComponent implements OnInit {
       this.listenToLogoutEvent()
     });
   }
-
-
-
-
-  /**
-   * initFirebase
-   */
-
-  /*
-  initFirebase() {
-    console.log('initFirebase', this.appConfigProvider.getConfig());
-    if (!this.appConfigProvider.getConfig().firebaseConfig || this.appConfigProvider.getConfig().firebaseConfig.apiKey === 'CHANGEIT') {
-      // tslint:disable-next-line: max-line-length
-      throw new Error('firebase config is not defined. Please create your firebase-config.json. See the Chat21-Web_widget Installation Page');
-    }
-    firebase.initializeApp(this.appConfigProvider.getConfig().firebaseConfig);
-  }
-  */
 
   /**
    * ::: initConversationsHandler :::
@@ -247,6 +234,57 @@ export class AppComponent implements OnInit {
   }
   // END MY FUNCTIONS //
 
+  @HostListener('document:visibilitychange', ['$event'])
+  visibilitychange() {
+    console.log("document TITLE", document.hidden, document.title);
+    if (document.hidden) { 
+        console.log("document is hidden");
+        this.isTabVisible = false
+    } else {
+        // TAB IS ACTIVE --> restore title and DO NOT SOUND
+        clearInterval(this.setIntervalTime)
+        this.isTabVisible = true;
+        console.log("document is showing",this.isTabVisible);
+        document.title = this.tabTitle;
+    }
+  }
+
+  private manageTabNotification(){
+    if(!this.isTabVisible){
+        // TAB IS HIDDEN --> manage title and SOUND
+
+        let badgeNewConverstionNumber = this.conversationsHandlerService.countIsNew()
+        // document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
+
+        const that = this
+        this.setIntervalTime = setInterval(function(){
+            if(document.title.charAt(0)==='('){
+                document.title = that.tabTitle
+            } else {
+                document.title = "(" + badgeNewConverstionNumber + ") " + that.tabTitle;
+            }
+        }, 1000);
+
+        this.soundMessage()
+    }
+  }
+
+  soundMessage() {
+    const that = this;
+    // this.audio = new Audio();
+    // // this.audio.src = '/assets/sounds/pling.mp3';
+    // this.audio.src = URL_SOUND_LIST_CONVERSATION;
+    // this.audio.load();
+    console.log('conversation play', this.audio);
+    clearTimeout(this.setTimeoutSound);
+    this.setTimeoutSound = setTimeout(function () {
+      that.audio.play().then(() => {
+        console.log('****** soundMessage played *****');
+      }).catch((error: any) => {
+          console.log('***soundMessage error*', error);
+      });
+    }, 1000);
+  }
 
 
 
@@ -293,13 +331,24 @@ export class AppComponent implements OnInit {
     // this.events.subscribe('firebase-send-password-reset-email', this.firebaseSendPasswordResetEmail);
     // this.events.subscribe('firebase-sign-out', this.firebaseSignOut);
     this.events.subscribe('uidConvSelected:changed', this.subscribeChangedConversationSelected);
+
+    this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
+      console.log('***** conversationsAdded *****', conversation);
+      // that.conversationsChanged(conversations);
+      this.manageTabNotification()
+    });
+    this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
+      console.log('***** conversationsChanged *****', conversation);
+      // that.conversationsChanged(conversations);
+      this.manageTabNotification()
+    });
   }
 
 
   private initAudio(){
     // SET AUDIO
     this.audio = new Audio();
-    this.audio.src = URL_SOUND;
+    this.audio.src = URL_SOUND_LIST_CONVERSATION;
     this.audio.load();
   }
 
