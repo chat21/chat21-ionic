@@ -182,9 +182,9 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
 }
 
 export function setHeaderDate(translate, timestamp): string {
-  const LABEL_TODAY = translate.get('LABEL_TODAY');
-  const LABEL_TOMORROW = translate.get('LABEL_TOMORROW');
- 
+  // const LABEL_TODAY = translate.get('LABEL_TODAY');
+  // const LABEL_TOMORROW = translate.get('LABEL_TOMORROW');
+
   const date = new Date(timestamp);
   const now: Date = new Date();
   let labelDays = '';
@@ -198,10 +198,12 @@ export function setHeaderDate(translate, timestamp): string {
     labelDays = date.getDay() + '/' + month + '/' + date.getFullYear();
   } else if (now.getDay() === date.getDay()) {
     // oggi: oggi
-    labelDays = LABEL_TODAY;
+    labelDays = moment().calendar(timestamp).split(' ')[0].toLocaleLowerCase();
+    // labelDays = LABEL_TODAY;
   } else if (now.getDay() - date.getDay() === 1) {
     // ieri: ieri
-    labelDays = LABEL_TOMORROW;
+    labelDays = moment().calendar(timestamp).split(' ')[0].toLocaleLowerCase();
+    // labelDays = LABEL_TOMORROW;
   } else {
     // questa settimana: giorno
     labelDays = convertDayToString(translate, date.getDay());
@@ -209,7 +211,6 @@ export function setHeaderDate(translate, timestamp): string {
   // se le date sono diverse o la data di riferimento non è impostata
   // ritorna la data calcolata
   // altrimenti torna null
-  console.log('>>>>>>>>>>>>>> setHeaderDate: ', date, now, timestamp, labelDays);
   return labelDays;
 }
 
