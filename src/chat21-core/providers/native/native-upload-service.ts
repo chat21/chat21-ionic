@@ -56,7 +56,6 @@ export class NativeUploadService extends UploadService {
                 that.http.post(url, formData, requestOptions).subscribe(data => {
                     console.log("data:", data);
                     const downloadURL = this.URL_TILEDESK_IMAGES + '?path='+ data['filename'];
-                    console.log("downloadURL:", downloadURL);
                     resolve(downloadURL)
                     // that.BSStateUpload.next({upload: upload});
                 }, (error) => {
@@ -70,7 +69,6 @@ export class NativeUploadService extends UploadService {
                 that.http.post(url, formData, requestOptions).subscribe(data => {
                     console.log("data:", data);
                     const downloadURL = this.URL_TILEDESK_FILE + '?path='+ data['filename']
-                    console.log("downloadURL:", downloadURL);
                     resolve(downloadURL)
                     // that.BSStateUpload.next({upload: upload});
                 }, (error) => {
