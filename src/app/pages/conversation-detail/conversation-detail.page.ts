@@ -106,13 +106,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   COLOR_RED = '#db4437'; // colore presence none da spostare nelle costanti
 
   private subscriptions: Array<any>;
-  private tenant: string;
+  public tenant: string;
   public loggedUser: UserModel;
   public conversationWith: string;
   public conversationWithFullname: string;
   public messages: Array<MessageModel> = [];
   private conversationSelected: any;
-  private groupDetail: GroupModel;
+  public groupDetail: GroupModel;
   // public attributes: any;
   public messageSelected: any;
   public channelType: string;
@@ -139,6 +139,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   public tagsCanned: any = [];
   public tagsCannedFilter: any = [];
+
+  public window: any = window;
+  public styleMap: Map<string, string> = new Map();
   // eventsReplaceTexareaText: Subject<void> = new Subject<void>();
 
   MESSAGE_TYPE_INFO = MESSAGE_TYPE_INFO;
@@ -216,6 +219,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   //
   ngOnInit() {
     // console.log('ngOnInit ConversationDetailPage: ');
+    
+    console.log('ngOnInit ConversationDetailPage window.location: ', window.location);
   }
 
   ngAfterViewInit() {

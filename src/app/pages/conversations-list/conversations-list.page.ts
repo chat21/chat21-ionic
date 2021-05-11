@@ -451,7 +451,7 @@ export class ConversationListPage implements OnInit {
     }
   }
 
-  onBackButtonFN() {
+  onBackButtonFN(event) {
     this.conversationType = 'active'
 
     // let storedActiveConv = localStorage.getItem('activeConversationSelected');

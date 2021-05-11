@@ -234,7 +234,8 @@ export class AppComponent implements OnInit {
   }
   // END MY FUNCTIONS //
 
-  @HostListener('document:visibilitychange', ['$event'])
+  // @HostListener('document:visibilitychange', ['$event'])
+  @HostListener('document:visibilitychange', [])
   visibilitychange() {
     console.log("document TITLE", document.hidden, document.title);
     if (document.hidden) { 
