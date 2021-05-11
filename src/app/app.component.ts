@@ -123,6 +123,7 @@ export class AppComponent implements OnInit {
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
       this.appStorageService.initialize(environment.storage_prefix, environment.authPersistence, '')
+      this.checkJWTtoken();
       this.authService.initialize();
       // this.currentUserService.initialize();
       this.chatManager.initialize();
@@ -137,6 +138,32 @@ export class AppComponent implements OnInit {
     });
   }
 
+
+  private checkJWTtoken(){
+    let tiledeskToken = this.appStorageService.getItem('tiledeskToken')
+    let tildeskTokenFromURL= '';
+    this.route.queryParams.subscribe(params => {
+      tildeskTokenFromURL = params.jwt
+      if(tildeskTokenFromURL){
+        this.authService.initialize();
+        console.log('params from URL:::', tildeskTokenFromURL)
+        this.authService.signInWithCustomToken(tildeskTokenFromURL).then(resp => {
+          console.log('userlogged customtoken', resp)
+        }).catch(error => {
+            console.log(['> Error :' + error]);
+        });
+      }
+    });
+
+    if(tiledeskToken){
+      this.authService.initialize();
+      this.authService.signInWithCustomToken(tiledeskToken).then(resp => {
+        console.log('userlogged customtoken', resp)
+      }).catch(error => {
+          console.log(['> Error :' + error]);
+      });
+    }
+  }
   /**
    * ::: initConversationsHandler :::
    * inizializzo chatConversationsHandler e archviedConversationsHandler
