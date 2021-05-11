@@ -1,3 +1,4 @@
+import { URL_SOUND_LIST_CONVERSATION } from './../../../chat21-core/utils/constants';
 import { IonConversationDetailComponent } from './../../temp/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Directive, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -146,6 +147,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   // arrowkeyLocation: number;
   arrowkeyLocation = -1;
+
+  //SOUND
+  setTimeoutSound: any;
+  audio: any
 
   // functions utils
   isMine = isMine;
@@ -625,7 +630,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         this.channelType,
         this.setAttributes()
       );
-      this.chatManager.conversationsHandlerService.uidConvSelected = this.conversationWith;
+      // this.chatManager.conversationsHandlerService.uidConvSelected = this.conversationWith;
     }
   }
 
@@ -1193,9 +1198,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   soundMessage() {
     const that = this;
     this.audio = new Audio();
-    this.audio.src = 'src/assets/sounds/justsaying.mp3';
+    // this.audio.src = '/assets/sounds/pling.mp3';
+    this.audio.src = URL_SOUND_LIST_CONVERSATION;
     this.audio.load();
-    // console.log('conversation play');
+    console.log('conversation play', this.audio);
     clearTimeout(this.setTimeoutSound);
     this.setTimeoutSound = setTimeout(function () {
       that.audio.play().then(() => {
@@ -1207,10 +1213,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }, 1000);
   }
 
-
-  //SOUND
-  setTimeoutSound: any;
-  audio: any
 
 
   /** */

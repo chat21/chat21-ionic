@@ -417,7 +417,7 @@ export class ConversationListPage implements OnInit {
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
     console.log('ConversationListPage  ************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
     this.uidConvSelected = user.uid;
-    this.conversationsHandlerService.uidConvSelected = user.uid;
+    // this.conversationsHandlerService.uidConvSelected = user.uid;
     const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
     if (conversationSelected) {
       console.log('--> uidConvSelected: ', this.conversationSelected, this.uidConvSelected);
@@ -591,7 +591,7 @@ export class ConversationListPage implements OnInit {
   setUidConvSelected(uidConvSelected: string, conversationType?: string,) {
     console.log('setuidCOnvSelected', uidConvSelected)
     this.uidConvSelected = uidConvSelected;
-    this.conversationsHandlerService.uidConvSelected = uidConvSelected;
+    // this.conversationsHandlerService.uidConvSelected = uidConvSelected;
     if (uidConvSelected) {
       let conversationSelected;
       if (conversationType === 'active') {
