@@ -867,10 +867,10 @@ export function createExternalSidebar(renderer, srcIframe?, urlIcons?) {
 
 
 export function isGroup(conv: ConversationModel) {
-  console.log('isGroup conv', conv) 
-  console.log('isGroup conv recipient', conv.recipient) 
+  // console.log('isGroup conv', conv) 
+  // console.log('isGroup conv recipient', conv.recipient) 
   if (conv.recipient && conv.recipient.startsWith('group-') || conv.recipient && conv.recipient.startsWith('support-group')) {
-    console.log('isGroup conv HERE Y conv.recipient', conv.recipient) 
+    // console.log('isGroup conv HERE Y conv.recipient', conv.recipient) 
       return true
   };
   return false
