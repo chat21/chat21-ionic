@@ -1,18 +1,20 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { UserModel } from 'src/chat21-core/models/user';
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 
 @Component({
   selector: 'component-contacts-directory',
   templateUrl: './contacts-directory.component.html',
   styleUrls: ['./contacts-directory.component.scss'],
 })
-export class ContactsDirectoryComponent implements OnInit {
+export class ContactsDirectoryComponent implements OnInit, OnChanges {
   @Input() contacts: Array<UserModel>;
   @Output() onOpenNewChat = new EventEmitter<UserModel>();
 
   private contactsOrig: Array<UserModel>;
   uidUserSelected: string;
   constructor(
+    public imageRepoService: ImageRepoService
   ) { }
 
   /**
@@ -20,6 +22,13 @@ export class ContactsDirectoryComponent implements OnInit {
    */
   ngOnInit() {
     this.initialize();
+  }
+
+  ngOnChanges() {
+    console.log('ContactsDirectoryComponent contacts', this.contacts)
+    this.contacts.forEach(contact => {
+      contact.imageurl = this.imageRepoService.getImagePhotoUrl(contact.uid)
+    });
   }
 
   initialize() {
@@ -36,13 +45,15 @@ export class ContactsDirectoryComponent implements OnInit {
     console.log('onSearchInput::: ', ev);
     const searchTerm = ev.target.value;
     if (searchTerm && searchTerm.trim() !== '') {
-        const searchKey = 'fullname';
-        this.contacts = this.filterItems(this.contactsOrig, searchTerm, searchKey);
-        this.contacts.sort(this.compareValues(searchKey, 'asc'));
+      const searchKey = 'fullname';
+      this.contacts = this.filterItems(this.contactsOrig, searchTerm, searchKey);
+      this.contacts.sort(this.compareValues(searchKey, 'asc'));
     } else {
-        this.contacts = this.contactsOrig;
+      this.contacts = this.contactsOrig;
     }
   }
+
+
 
   /**
    *
