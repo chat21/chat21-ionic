@@ -123,8 +123,8 @@ export class AppComponent implements OnInit {
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
       this.appStorageService.initialize(environment.storage_prefix, environment.authPersistence, '')
-      this.checkJWTtoken();
       this.authService.initialize();
+      this.checkJWTtoken();
       // this.currentUserService.initialize();
       this.chatManager.initialize();
       this.presenceService.initialize();
@@ -138,25 +138,26 @@ export class AppComponent implements OnInit {
     });
   }
 
-
   private checkJWTtoken(){
+    // let tildeskTokenFromURL= '';
+    // this.route.queryParams.subscribe(params => {
+    //   tildeskTokenFromURL = params.jwt
+    //   if(tildeskTokenFromURL){
+    //     this.authService.initialize();
+    //     console.log('params from URL:::', tildeskTokenFromURL)
+    //     this.authService.signInWithCustomToken(tildeskTokenFromURL).then(resp => {
+    //       console.log('userlogged customtoken', resp)
+    //     }).catch(error => {
+    //       console.log(['> Error :' + error]);
+    //     });
+    //   }
+    // });
+    
     let tiledeskToken = this.appStorageService.getItem('tiledeskToken')
-    let tildeskTokenFromURL= '';
-    this.route.queryParams.subscribe(params => {
-      tildeskTokenFromURL = params.jwt
-      if(tildeskTokenFromURL){
-        this.authService.initialize();
-        console.log('params from URL:::', tildeskTokenFromURL)
-        this.authService.signInWithCustomToken(tildeskTokenFromURL).then(resp => {
-          console.log('userlogged customtoken', resp)
-        }).catch(error => {
-            console.log(['> Error :' + error]);
-        });
-      }
-    });
-
-    if(tiledeskToken){
-      this.authService.initialize();
+    let currentUser = this.appStorageService.getItem('currentUser')
+    if(tiledeskToken && !currentUser){
+      // this.authService.initialize();
+      console.log('tildeskToken exist but NO currentUser EXIST --> signInWithCustomToken...')
       this.authService.signInWithCustomToken(tiledeskToken).then(resp => {
         console.log('userlogged customtoken', resp)
       }).catch(error => {
@@ -282,16 +283,16 @@ export class AppComponent implements OnInit {
         // TAB IS HIDDEN --> manage title and SOUND
 
         let badgeNewConverstionNumber = this.conversationsHandlerService.countIsNew()
-        // document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
+        document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
 
         const that = this
-        this.setIntervalTime = setInterval(function(){
-            if(document.title.charAt(0)==='('){
-                document.title = that.tabTitle
-            } else {
-                document.title = "(" + badgeNewConverstionNumber + ") " + that.tabTitle;
-            }
-        }, 1000);
+        // this.setIntervalTime = setInterval(function(){
+        //     if(document.title.charAt(0)==='('){
+        //         document.title = that.tabTitle
+        //     } else {
+        //         document.title = "(" + badgeNewConverstionNumber + ") " + that.tabTitle;
+        //     }
+        // }, 1000);
 
         this.soundMessage()
     }
