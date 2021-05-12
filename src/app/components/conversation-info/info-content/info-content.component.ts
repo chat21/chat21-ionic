@@ -38,7 +38,7 @@ export class InfoContentComponent implements OnInit {
   public conversationWithFullname: string;
   public conv_type: string;
   private channelType: string;
-  private urlConversationSupportGroup: any;
+  public urlConversationSupportGroup: any;
   public conversations: Array<ConversationModel> = [];
   public conversationSelected: any;
   public panelType: string;
