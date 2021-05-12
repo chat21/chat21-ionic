@@ -1,5 +1,14 @@
 # chat21-ionic ver 3.0
 
+### 3.0.29
+- Fixes the bug: "Cannot read property 'forEach' of undefined" when subscriptions are undefined
+- Fixes the bug: user's profile photo is not displayed in the right side panel of "direct" type conversations
+- Fixes the bug: user's profile photo is not displayed in the conversation header
+- Fixes the bug: users' profile pictures are not displayed in the left panel "write to"
+
+### 3.0.28
+- Minor improvements
+
 ### 3.0.27
 - Fixes the bug: the call to get the contact details is not made on mqtt environment
 
