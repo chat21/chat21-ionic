@@ -1,11 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 
 @Component({
   selector: 'app-header-conversation-detail',
   templateUrl: './header-conversation-detail.component.html',
   styleUrls: ['./header-conversation-detail.component.scss'],
 })
-export class HeaderConversationDetailComponent implements OnInit {
+export class HeaderConversationDetailComponent implements OnInit ,OnChanges {
   @Input() conversationAvatar: any;
   @Input() idLoggedUser: string;
   @Input() isMobile: boolean;
@@ -23,6 +24,7 @@ export class HeaderConversationDetailComponent implements OnInit {
   membersConversation = ['SYSTEM'];
 
   constructor(
+    public imageRepoService: ImageRepoService
     // private translateService: CustomTranslateService
   ) {
   }
@@ -31,6 +33,11 @@ export class HeaderConversationDetailComponent implements OnInit {
     console.log('HeaderConversationDetailComponent', this.idLoggedUser);
     console.log(this.conversationAvatar);
     this.initialize();
+  }
+
+  ngOnChanges() {
+    console.log('HeaderConversationDetailComponent', this.conversationAvatar);
+    this.conversationAvatar.imageurl = this.imageRepoService.getImagePhotoUrl(this.conversationAvatar.uid)
   }
 
   /** */
