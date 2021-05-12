@@ -219,7 +219,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   //
   ngOnInit() {
     // console.log('ngOnInit ConversationDetailPage: ');
-    
+
     console.log('ngOnInit ConversationDetailPage window.location: ', window.location);
   }
 
@@ -229,7 +229,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   ngOnDestroy() {
     // console.log('ngOnDestroy ConversationDetailPage: ');
-    
+
     console.log('CONVERSATION-DETAIL ngOnDestroy');
     // this.unsubscribe$.next();
     // this.unsubscribe$.complete();
@@ -868,17 +868,20 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    * unsubscribe all subscribe events
    */
   unsubescribeAll() {
-    console.log('||------------> unsubescribeAll: ', this.subscriptions);
-    this.subscriptions.forEach(subscription => {
-      subscription.value.unsubscribe(); // vedere come fare l'unsubscribe!!!!
-    });
-    this.subscriptions = [];
+    console.log('||------------> unsubescribeAll 1: ', this.subscriptions);
+    if (this.subscriptions) {
+      console.log('||------------> unsubescribeAll 2: ', this.subscriptions);
+      this.subscriptions.forEach(subscription => {
+        subscription.value.unsubscribe(); // vedere come fare l'unsubscribe!!!!
+      });
+      this.subscriptions = [];
 
-    // https://www.w3schools.com/jsref/met_element_removeeventlistener.asp
-    window.removeEventListener('keyboardWillShow', null);
-    window.removeEventListener('keyboardDidShow', null);
-    window.removeEventListener('keyboardWillHide', null);
-    window.removeEventListener('keyboardDidHide', null);
+      // https://www.w3schools.com/jsref/met_element_removeeventlistener.asp
+      window.removeEventListener('keyboardWillShow', null);
+      window.removeEventListener('keyboardDidShow', null);
+      window.removeEventListener('keyboardWillHide', null);
+      window.removeEventListener('keyboardDidHide', null);
+    }
     // this.conversationHandlerService.dispose();
   }
   // -------------- END SUBSCRIBTIONS functions -------------- //
