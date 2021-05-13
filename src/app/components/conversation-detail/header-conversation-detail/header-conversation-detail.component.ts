@@ -37,7 +37,9 @@ export class HeaderConversationDetailComponent implements OnInit ,OnChanges {
 
   ngOnChanges() {
     console.log('HeaderConversationDetailComponent', this.conversationAvatar);
-    this.conversationAvatar.imageurl = this.imageRepoService.getImagePhotoUrl(this.conversationAvatar.uid)
+    if(this.conversationAvatar){
+      this.conversationAvatar.imageurl = this.imageRepoService.getImagePhotoUrl(this.conversationAvatar.uid)
+    }
   }
 
   /** */

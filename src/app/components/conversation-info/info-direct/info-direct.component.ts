@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 
 @Component({
@@ -35,9 +35,11 @@ export class InfoDirectComponent implements OnInit, AfterViewInit, OnChanges {
 
 
   ngOnChanges(){
-    this.member.imageurl = this.imageRepoService.getImagePhotoUrl(this.conversationWith)
-
+    if(this.member){
+      this.member.imageurl = this.imageRepoService.getImagePhotoUrl(this.conversationWith)
+    }
   }
+
   /** */
   initialize() {
     console.log('InfoDirectComponent - initialize');

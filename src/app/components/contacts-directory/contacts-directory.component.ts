@@ -26,9 +26,11 @@ export class ContactsDirectoryComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     console.log('ContactsDirectoryComponent contacts', this.contacts)
-    this.contacts.forEach(contact => {
-      contact.imageurl = this.imageRepoService.getImagePhotoUrl(contact.uid)
-    });
+    if(this.contacts){
+      this.contacts.forEach(contact => {
+        contact.imageurl = this.imageRepoService.getImagePhotoUrl(contact.uid)
+      });
+    }
   }
 
   initialize() {
