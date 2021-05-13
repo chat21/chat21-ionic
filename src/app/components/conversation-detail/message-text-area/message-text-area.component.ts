@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit , ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { IonTextarea } from '@ionic/angular';
 import { Chooser } from '@ionic-native/chooser/ngx';
 import { ModalController } from '@ionic/angular';
@@ -22,6 +22,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
 
   // @ViewChild('focusInput') myInput;
   @ViewChild('textArea', { static: false }) messageTextArea
+  @ViewChild('fileInput', { static: false }) fileInput: any;
+
+ 
 
   // set textArea(element: ElementRef<HTMLInputElement>) {
   //   if(element) {
@@ -216,11 +219,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   onFileSelected(e: any) {
     console.log('Message-text-area - onFileSelected event', e);
     this.presentModal(e);
+    
   }
-
-
-
-
 
   /**
    * 
@@ -231,7 +231,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     console.log('presentModal e', e);
     console.log('presentModal e.target ', e.target);
     console.log('presentModal e.target.files', e.target.files);
-    console.log('presentModal e.target.files.length', e.target.files.length);
+    // console.log('presentModal e.target.files.length', e.target.files.length);
     const dataFiles = e.target.files;
     const attributes = { files: dataFiles, enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
@@ -242,6 +242,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
         backdropDismiss: true
       });
     modal.onDidDismiss().then((detail: any) => {
+      
       console.log('presentModal onDidDismiss detail', detail);
       console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
       let type = ''
@@ -269,13 +270,15 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
           console.log('presentModal invio msg message::: ', messageString);
           // send message
           that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
+          this.fileInput.nativeElement.value = '';
         }).catch(error => {
           // Use to signal error if something goes wrong.
-          console.error(`MessageTextArea component::uploadSingle:: Failed to upload file and get link `, error);
+          console.error(`MessageTextArea uploa Failed to upload file and get link `, error);
         });
 
       }
     });
+    
     return await modal.present();
   }
 
