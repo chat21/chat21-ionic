@@ -1,3 +1,29 @@
+:host .base_sent .msg_sent ::ng-deep div > div > div > tiledeskwidget-text > p > p > a {
+    color: lightblue
+}
+
+:host .base_sent .msg_sent ::ng-deep > div > div > tiledeskwidget-image > div  {
+    // display: none !important;
+    // border-radius: unset !important;
+    img, .loader { 
+        border-top-right-radius: 6px !important;
+        border-top-left-radius: 16px !important;
+        border-bottom-left-radius: 16px !important;
+        border-bottom-right-radius: 0px;
+    }
+    
+}
+
+:host .base_receive .msg_receive ::ng-deep > div > div > tiledeskwidget-image > div > img {
+    // display: none !important;
+    // border-radius: unset !important;
+    img, .loader { 
+        border-top-left-radius: 6px !important;
+        border-top-right-radius: 16px !important;
+        border-bottom-right-radius: 16px !important;
+        border-bottom-left-radius: 0px;
+    }
+}
 
 ion-item {
     --padding-end: 0px;
@@ -56,9 +82,10 @@ ion-item {
         max-width: calc(100% - 70px);
         min-width: 14px;
         border-top-right-radius: 8px;
-        border-bottom-right-radius: 0px;
-        
+        border-bottom-right-radius: 0px; 
+     
     }
+
     
 }
     

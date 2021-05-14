@@ -211,11 +211,6 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
       });
   }
 
-
-  hasClickedUploadImage() {
-    console.log('Message-text-area - hasClickedUploadImage conversationWith', this.conversationWith);
-  }
-
   onFileSelected(e: any) {
     console.log('Message-text-area - onFileSelected event', e);
     this.presentModal(e);
