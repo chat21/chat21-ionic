@@ -1,7 +1,7 @@
 {
     "name": "chat-ionic-v4",
-    "version": "3.0.29",
-    "author": "Ionic Framework",
+    "version": "3.0.30",
+    "author": "Lanzilotto Nicola, Panico Gabriele - Frontiere21 SRL",
     "homepage": "https://ionicframework.com/",
     "scripts": {
         "ng": "ng",

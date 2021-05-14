@@ -1,5 +1,10 @@
 # chat21-ionic ver 3.0
 
+### 3.0.30
+- Added image skeleton while load image
+- Improved uploaded images styles 
+- Added Native-Image-repo service
+
 ### 3.0.29
 - Fixes the bug: "Cannot read property 'forEach' of undefined" when subscriptions are undefined
 - Fixes the bug: user's profile photo is not displayed in the right side panel of "direct" type conversations
