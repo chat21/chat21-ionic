@@ -28,7 +28,6 @@ import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE, UPLOAD_ENGINE_NATIVE } from '..
 import { AppConfigProvider } from './services/app-config';
 import { EventsService } from './services/events-service';
 import { DatabaseProvider } from './services/database';
-import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 
 // ABSTRACT SERVICES
 import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
@@ -340,7 +339,6 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     DatabaseProvider,
     Chooser,
     Chat21Service,
-    TiledeskAuthService
   ]
 })
 export class AppModule {}
