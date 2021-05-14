@@ -1,4 +1,3 @@
-
 import { MomentModule } from 'angular2-moment';
 import { CustomLogger } from 'src/chat21-core/providers/logger/customLogger';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
@@ -29,6 +28,7 @@ import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE, UPLOAD_ENGINE_NATIVE } from '..
 import { AppConfigProvider } from './services/app-config';
 import { EventsService } from './services/events-service';
 import { DatabaseProvider } from './services/database';
+import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 
 // ABSTRACT SERVICES
 import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
@@ -66,10 +66,11 @@ import { MQTTConversationHandler } from 'src/chat21-core/providers/mqtt/mqtt-con
 import { MQTTTypingService } from 'src/chat21-core/providers/mqtt/mqtt-typing.service';
 import { MQTTPresenceService } from 'src/chat21-core/providers/mqtt/mqtt-presence.service';
 import { MQTTGroupsHandler } from '../chat21-core/providers/mqtt/mqtt-groups-handler';
-import { MQTTImageRepoService } from 'src/chat21-core/providers/mqtt/mqtt-image-repo';
 
-//UPLOAD SERVICE
+//NATIVE 
 import { NativeUploadService } from 'src/chat21-core/providers/native/native-upload-service';
+import { NativeImageRepoService } from './../chat21-core/providers/native/native-image-repo';
+
 //LOGGER SERVICES
 import { LocalSessionStorage } from 'src/chat21-core/providers/localSessionStorage';
 //APP_STORAGE
@@ -146,7 +147,7 @@ export function conversationHandlerBuilderFactory(chat21Service: Chat21Service, 
 export function conversationHandlerFactory(chat21Service: Chat21Service, appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    return new MQTTConversationHandler(chat21Service);
+    return new MQTTConversationHandler(chat21Service, false);
   } else {
     return new FirebaseConversationHandler(false);
   }
@@ -183,8 +184,10 @@ export function presenceFactory(appConfig: AppConfigProvider) {
 export function imageRepoFactory(appConfig: AppConfigProvider) {
   console.log('imageRepoFactory: ');
   const config = appConfig.getConfig()
-  if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    return new MQTTImageRepoService()
+  if (config.uploadEngine === UPLOAD_ENGINE_NATIVE) {
+    const imageService = new NativeImageRepoService()
+    imageService.setImageBaseUrl(config.baseImageUrl)
+    return imageService
   } else {
     const imageService = new FirebaseImageRepoService();
     FirebaseInitService.initFirebase(config.firebaseConfig)
@@ -200,7 +203,6 @@ export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, ap
     const nativeUploadService = new NativeUploadService(http, appStorage)
     nativeUploadService.setBaseUrl(config.apiUrl)
     return nativeUploadService
-    // return new FirebaseUploadService();
   } else {
     return new FirebaseUploadService();
   }
@@ -338,6 +340,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     DatabaseProvider,
     Chooser,
     Chat21Service,
+    TiledeskAuthService
   ]
 })
 export class AppModule {}
