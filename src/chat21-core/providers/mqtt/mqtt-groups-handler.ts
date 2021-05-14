@@ -44,6 +44,7 @@ import { Chat21Service } from './chat-service';
      */
     connect(): void {
 //        throw new Error('Method not implemented.');
+// Ignorare connect di firebase
          console.log('Method not implemented.');
     }
 
@@ -54,28 +55,37 @@ import { Chat21Service } from './chat-service';
      */
     getDetail(groupId: string, callback?: (group: GroupModel) => void): Promise<GroupModel> {
         //throw new Error('Method not implemented.');
+        // Ignorare versione firebase
           console.log('Method not implemented.');
           return;
     }
 
     onGroupChange(groupId: string): Observable<GroupModel> {
+        // QUI TODO
         return this.SgroupDetail
     }
 
     create(groupName: string, members: [string], callback?: (res: any, error: any) => void): Promise<any> {
         // throw new Error('Method not implemented.');
+        // Ignorare versione firebase
         console.log('Method not implemented.');
         return;
     }
 
+    // create(groupName: string, members: [string], callback?:(res: any, error: any)=>void): Promise<any> {
+
+    // }
+
     leave(groupId: string, callback?: (res: any, error: any) => void): Promise<any> {
         // throw new Error('Method not implemented.');
+        // Ignorare versione firebase
         console.log('Method not implemented.');
         return;
     }
 
     join(groupId: string, member: string, callback?: (res: any, error: any) => void) {
         // throw new Error('Method not implemented.');
+        // Ignorare versione firebase
         console.log('Method not implemented.');
         return;
     }
