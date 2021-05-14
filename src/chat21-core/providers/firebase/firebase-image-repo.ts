@@ -21,7 +21,7 @@ export class FirebaseImageRepoService extends ImageRepoService {
     }
 
     /**
-     *
+     * @param uid
      */
     getImagePhotoUrl(uid: string): string {
         this.baseImageURL = this.getImageBaseUrl()

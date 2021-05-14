@@ -10,10 +10,15 @@ export class ImageComponent implements OnInit {
   @Input() metadata: any;
   @Input() width: string;
   @Input() height: number;
+  loading: boolean = true
 
   constructor(private cdref: ChangeDetectorRef) { }
 
   ngOnInit() {
+  }
+
+  onLoaded(){
+    this.loading = false
   }
 
 
