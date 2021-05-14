@@ -21,6 +21,28 @@
         color: white;
     }
 
+    .member-profile {
+        padding: 0 0 0 0;
+        width: 55px;
+        height: 55px;
+        margin: auto;
+        line-height: 57px;
+        font-size: 25px;
+        color: white;
+        position:relative;
+
+    }
+
+    .user-online {
+        height: 11px;
+        width: 11px;
+        border-radius: 50%;
+        position: absolute;
+        top: 44px;
+        left: 40px;
+        border: 0.5px solid #fff;
+    }
+
     .user-presence {
         position: absolute;
         top: 88px;

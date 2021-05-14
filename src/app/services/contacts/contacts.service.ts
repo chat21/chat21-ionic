@@ -114,7 +114,7 @@ export class ContactsService {
     this.contacts = [];
     console.log('INFO-CONTENT-COMP setInfoDirect (contact-service) - loadContactDetail:: uid ', uid);
     const urlRemoteContactDetail = this.urlRemoteContacts + '/' + uid;
-    if (urlRemoteContactDetail.startsWith('http') && token) {
+    // if (urlRemoteContactDetail.startsWith('http') && token) {
 
       const httpOptions = {
         headers: new HttpHeaders({
@@ -134,7 +134,7 @@ export class ContactsService {
           }
         }))
 
-    }
+    // }
   }
 
 

@@ -1,3 +1,4 @@
+
 import { MomentModule } from 'angular2-moment';
 import { CustomLogger } from 'src/chat21-core/providers/logger/customLogger';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
@@ -26,39 +27,53 @@ import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE, UPLOAD_ENGINE_NATIVE } from '..
 
 // SERVICES
 import { AppConfigProvider } from './services/app-config';
-
 import { EventsService } from './services/events-service';
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
-import { FirebaseAuthService } from 'src/chat21-core/providers/firebase/firebase-auth-service';
-import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
-import { FirebasePresenceService } from 'src/chat21-core/providers/firebase/firebase-presence.service';
-import { TypingService } from 'src/chat21-core/providers/abstract/typing.service';
-import { FirebaseTypingService } from 'src/chat21-core/providers/firebase/firebase-typing.service';
-import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
-import { ConversationHandlerService } from '../chat21-core/providers/abstract/conversation-handler.service';
-
-import { FirebaseConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-conversations-handler';
-import { FirebaseConversationHandler } from 'src/chat21-core/providers/firebase/firebase-conversation-handler';
-
 import { DatabaseProvider } from './services/database';
-import { FirebaseImageRepoService } from 'src/chat21-core/providers/firebase/firebase-image-repo';
-import { FirebaseArchivedConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-archivedconversations-handler';
-import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
-import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
+
+// ABSTRACT SERVICES
+import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
 import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
-import { FirebaseConversationHandlerBuilderService } from 'src/chat21-core/providers/firebase/firebase-conversation-handler-builder.service';
+import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
+import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
+import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/conversation-handler.service';
+import { TypingService } from 'src/chat21-core/providers/abstract/typing.service';
+import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { UploadService } from 'src/chat21-core/providers/abstract/upload.service';
+import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+
+// FIREBASE
+import { FirebaseInitService } from 'src/chat21-core/providers/firebase/firebase-init-service';
+import { FirebaseAuthService } from 'src/chat21-core/providers/firebase/firebase-auth-service';
+import { FirebaseConversationHandlerBuilderService } from 'src/chat21-core/providers/firebase/firebase-conversation-handler-builder.service';
+import { FirebaseConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-conversations-handler';
+import { FirebaseArchivedConversationsHandler } from 'src/chat21-core/providers/firebase/firebase-archivedconversations-handler';
+import { FirebaseConversationHandler } from 'src/chat21-core/providers/firebase/firebase-conversation-handler';
+import { FirebaseTypingService } from 'src/chat21-core/providers/firebase/firebase-typing.service';
+import { FirebasePresenceService } from 'src/chat21-core/providers/firebase/firebase-presence.service';
+import { FirebaseImageRepoService } from 'src/chat21-core/providers/firebase/firebase-image-repo';
 import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/firebase-upload.service';
+import { FirebaseGroupsHandler } from 'src/chat21-core/providers/firebase/firebase-group-handler';
 
 // MQTT
 import { Chat21Service } from 'src/chat21-core/providers/mqtt/chat-service';
 import { MQTTAuthService } from 'src/chat21-core/providers/mqtt/mqtt-auth-service';
-import { MQTTConversationsHandler } from 'src/chat21-core/providers/mqtt/mqtt-conversations-handler';
 import { MQTTConversationHandlerBuilderService } from 'src/chat21-core/providers/mqtt/mqtt-conversation-handler-builder.service';
+import { MQTTArchivedConversationsHandler } from 'src/chat21-core/providers/mqtt/mqtt-archivedconversations-handler';
+import { MQTTConversationsHandler } from 'src/chat21-core/providers/mqtt/mqtt-conversations-handler';
+import { MQTTConversationHandler } from 'src/chat21-core/providers/mqtt/mqtt-conversation-handler';
 import { MQTTTypingService } from 'src/chat21-core/providers/mqtt/mqtt-typing.service';
 import { MQTTPresenceService } from 'src/chat21-core/providers/mqtt/mqtt-presence.service';
-import { MQTTArchivedConversationsHandler } from 'src/chat21-core/providers/mqtt/mqtt-archivedconversations-handler';
 import { MQTTGroupsHandler } from '../chat21-core/providers/mqtt/mqtt-groups-handler';
+import { MQTTImageRepoService } from 'src/chat21-core/providers/mqtt/mqtt-image-repo';
+
+//UPLOAD SERVICE
+import { NativeUploadService } from 'src/chat21-core/providers/native/native-upload-service';
+//LOGGER SERVICES
+import { LocalSessionStorage } from 'src/chat21-core/providers/localSessionStorage';
+//APP_STORAGE
+import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
@@ -69,19 +84,9 @@ import {LoaderPreviewPageModule} from './pages/loader-preview/loader-preview.mod
 // UTILS
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
 // Directives
 import { TooltipModule } from 'ng2-tooltip-directive';
-import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
-import { FirebaseInitService } from 'src/chat21-core/providers/firebase/firebase-init-service';
-import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
-import { LocalSessionStorage } from 'src/chat21-core/providers/localSessionStorage';
-import { NativeUploadService } from 'src/chat21-core/providers/native/native-upload-service';
-import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
-import { FirebaseGroupsHandler } from 'src/chat21-core/providers/firebase/firebase-group-handler';
-import { MQTTImageRepoService } from 'src/chat21-core/providers/mqtt/mqtt-image-repo';
-import { MQTTConversationHandler } from 'src/chat21-core/providers/mqtt/mqtt-conversation-handler';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -332,7 +337,7 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
     EventsService,
     DatabaseProvider,
     Chooser,
-    Chat21Service
+    Chat21Service,
   ]
 })
 export class AppModule {}

@@ -1,4 +1,28 @@
-# chat21-ionic ver 1.0
+# chat21-ionic ver 3.0
+
+### 3.0.29
+- Fixes the bug: "Cannot read property 'forEach' of undefined" when subscriptions are undefined
+- Fixes the bug: user's profile photo is not displayed in the right side panel of "direct" type conversations
+- Fixes the bug: user's profile photo is not displayed in the conversation header
+- Fixes the bug: users' profile pictures are not displayed in the left panel "write to"
+
+### 3.0.28
+- Minor improvements
+
+### 3.0.27
+- Fixes the bug: the call to get the contact details is not made on mqtt environment
+
+### 3.0.26
+- Minor improvements
+
+### 3.0.25
+- Bug fixing
+
+### 3.0.24 
+- Adds in "group" conversations the display of members belonging to the group type (avatar, name and online / offline status)
+- Fixes the bug: in the setInfoSupportGroup method the project ID is taken from the detail attributes of the group which may not be available (now it is taken from 'conversatioWith')
+- Adds autofocus in the "send message" text area
+- Fixes the bug: files in the mqtt environment are not loaded
 
 ### 3.0.23
 - Fixes the bug: the avatar image of the logged in user is not displayed in the left menu "profile-info"

@@ -1,11 +1,12 @@
-import { Component, OnInit, AfterViewInit, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 
 @Component({
   selector: 'app-info-direct',
   templateUrl: './info-direct.component.html',
   styleUrls: ['./info-direct.component.scss'],
 })
-export class InfoDirectComponent implements OnInit, AfterViewInit {
+export class InfoDirectComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() member: any;
   @Input() translationMap: Map<string, string>;
   @Input() conversationWith: string;
@@ -14,7 +15,9 @@ export class InfoDirectComponent implements OnInit, AfterViewInit {
   fontColor = '#949494';
   advancedAttributes: Array<any> = [];
   
-  constructor() {
+  constructor(
+    public imageRepoService: ImageRepoService
+  ) {
     console.log('InfoDirectComponent - constructor');
    }
 
@@ -29,6 +32,14 @@ export class InfoDirectComponent implements OnInit, AfterViewInit {
     console.log('InfoDirectComponent member', this.member);
     console.log('InfoDirectComponent conversationWith', this.conversationWith);
   }
+
+
+  ngOnChanges(){
+    if(this.member){
+      this.member.imageurl = this.imageRepoService.getImagePhotoUrl(this.conversationWith)
+    }
+  }
+
   /** */
   initialize() {
     console.log('InfoDirectComponent - initialize');

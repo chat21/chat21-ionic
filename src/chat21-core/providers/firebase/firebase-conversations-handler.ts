@@ -16,7 +16,6 @@ import { ConversationsHandlerService } from '../abstract/conversations-handler.s
 //import { DatabaseProvider } from '../database';
 
 // utils
-import { TYPE_GROUP, URL_SOUND } from '../../utils/constants';
 import { avatarPlaceholder, getColorBck } from '../../utils/utils-user';
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid, isGroup } from '../../utils/utils';
 import { ImageRepoService } from '../abstract/image-repo.service';
@@ -466,7 +465,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
      * @param conv
      */
     private completeConversation(conv): ConversationModel {
-        console.log('XXXX completeConversation' + JSON.stringify(conv))
+        // console.log('XXXX completeConversation' + JSON.stringify(conv))
         conv.selected = false;
         if (!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === '') {
             conv.sender_fullname = conv.sender;
@@ -480,14 +479,13 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.sender_fullname = this.translationMap.get('YOU')
-            // conv.last_message_text = LABEL_TU + conv.last_message_text;
+            // conv.last_message_text = YOU + conv.last_message_text;
         // } else if (conv.channel_type === TYPE_GROUP) {
         } else if (isGroup(conv)) {
             // conversation_with_fullname = conv.sender_fullname;
             // conv.last_message_text = conv.last_message_text;
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
-            
         }
         conv.conversation_with = conversation_with;
         conv.conversation_with_fullname = conversation_with_fullname;

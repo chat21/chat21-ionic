@@ -122,32 +122,10 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
         ref.off()
         ref.on('value', (childSnapshot) => {
             this.groupValue(childSnapshot)
-            
         });
         // return that.BSgroupDetail
         return this.SgroupDetail
 
-    }
-
-    private groupValue(childSnapshot: any){
-        const that = this;
-        console.log('group detail::', childSnapshot.val(), childSnapshot)
-        const group: GroupModel = childSnapshot.val();
-        console.log('FIREBASE-GROUP-HANDLER group ', group)
-        if (group) {
-            group.uid = childSnapshot.key
-            // that.BSgroupDetail.next(group)
-            let groupCompleted = this.completeGroup(group)
-            this.SgroupDetail.next(groupCompleted)
-            
-        } 
-    }
-
-    private completeGroup(group: any): GroupModel{
-        group.avatar = avatarPlaceholder(group.name);
-        group.color = getColorBck(group.name);
-        return group
-        
     }
 
     create(groupName: string, members: [string], callback?: (res: any, error: any) => void): Promise<any> {
@@ -285,6 +263,26 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
                     callback(error, null);
                 });
         }
+    }
+
+    private groupValue(childSnapshot: any){
+        const that = this;
+        console.log('group detail::', childSnapshot.val(), childSnapshot)
+        const group: GroupModel = childSnapshot.val();
+        console.log('FIREBASE-GROUP-HANDLER group ', group)
+        if (group) {
+            group.uid = childSnapshot.key
+            // that.BSgroupDetail.next(group)
+            let groupCompleted = this.completeGroup(group)
+            this.SgroupDetail.next(groupCompleted)
+            
+        } 
+    }
+
+    private completeGroup(group: any): GroupModel{
+        group.avatar = avatarPlaceholder(group.name);
+        group.color = getColorBck(group.name);
+        return group 
     }
     // // -------->>>> PRIVATE METHOD SECTION SECTION END <<<<---------------//
 

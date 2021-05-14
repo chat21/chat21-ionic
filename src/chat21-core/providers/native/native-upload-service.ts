@@ -32,14 +32,14 @@ export class NativeUploadService extends UploadService {
 
     initialize(): void {
         console.log('initialize NATIVE-UPLOAD storage')
-        this.URL_TILEDESK_FILE = this.getBaseUrl() + 'file'
+        this.URL_TILEDESK_FILE = this.getBaseUrl() + 'files'
         this.URL_TILEDESK_IMAGES = this.getBaseUrl() + 'images'
         this.tiledeskToken = this.appStorage.getItem('tiledeskToken')
     }
 
 
     upload(upload: UploadModel): Promise<any>  {
-        console.log('NATIVE UPLOAD - upload new image/file ...')
+        console.log('NATIVE UPLOAD - upload new image/file ... upload', upload )
         const headers = new HttpHeaders({
             Authorization: this.tiledeskToken,
             //'Content-Type': 'multipart/form-data',
@@ -55,7 +55,7 @@ export class NativeUploadService extends UploadService {
             return new Promise ((resolve, reject)=> {
                 that.http.post(url, formData, requestOptions).subscribe(data => {
                     console.log("data:", data);
-                    const downloadURL = this.URL_TILEDESK_IMAGES + '?path='+ data['filename']
+                    const downloadURL = this.URL_TILEDESK_IMAGES + '?path='+ data['filename'];
                     resolve(downloadURL)
                     // that.BSStateUpload.next({upload: upload});
                 }, (error) => {

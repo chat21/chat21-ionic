@@ -150,6 +150,19 @@ export class LoaderPreviewPage implements OnInit {
     this.fileSelected = file;
   }
 
+  pressedOnKeyboard(e: any, text: string) {
+    console.log('pressedOnKeyboard ************** event:: ', e);
+    // const message = e.target.textContent.trim();
+    // if (e.inputType === 'insertLineBreak' && message === '') {
+    //   this.messageString = '';
+    //   return;
+    // } else {
+    //   this.messageString = '';
+      
+    // }
+    this.onSendMessage()
+  }
+
   /** */
   onSendMessage() {
     console.log('onSendMessage testo::', this.messageString);

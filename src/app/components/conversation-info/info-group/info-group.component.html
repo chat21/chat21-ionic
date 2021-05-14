@@ -2,7 +2,7 @@
 
 
 <!-- *ngIf="groupDetail" -->
-<ion-content  class="group-profile">
+<ion-content class="group-profile">
   <ion-card class="first-card">
     <div class="chat21-box-profile chat21-box">
 
@@ -12,11 +12,11 @@
           <app-avatar-profile [itemAvatar]="groupDetail"></app-avatar-profile>
         </div>
 
-    
-       
+
+
         <div class="info-profile">
           <div class="name">
-            <span class="read">{{groupDetail.name}}</span>
+            <span class="read">{{groupDetail?.name}}</span>
           </div>
         </div>
 
@@ -31,6 +31,76 @@
     </div>
   </ion-card>
 
+  <!-- {{groupDetail?.membersinfo | json }} -->
+  <!-- <div *ngFor="let item of groupDetail?.membersinfo  | keyvalue">
+    {{item.key}}:{{item.value}}
+  </div> -->
+  <!-- <div *ngIf="groupDetail?.membersinfo">
+    <div *ngFor="let key of Object.keys(groupDetail?.membersinfo)">
+      my key: {{key}}
+      <!- - my object {{objs[key] | json}}   hier I could use ngFor again with Object.keys(objs[key]) - ->
+      <div *ngFor="let subkey of Object.keys(groupDetail?.membersinfo[key])">
+        <p>{{subkey}} </p>
+        <p>{{subkey}} </p>
+      </div>
+    </div>
+  </div> -->
+  <!-- <div *ngIf="groupDetail?.membersinfo">
+    <div *ngFor='let key of objectKeys(groupDetail?.membersinfo)'>
+      Key: {{key}}
+   {{ groupDetail?.membersinfo[key] | json}}   
+      <!- - <div *ngFor='let obj of groupDetail?.membersinfo[key]'>
+        {{ obj | json }}
+       
+      </div> - ->
+
+    </div>
+  </div> -->
+
+  <div *ngIf="groupDetail">
+    <div *ngFor='let member of groupDetail?.member_array'>
+
+     <!-- {{ member | json }}  -->
+      <!-- <ion-item>
+        <ion-avatar slot="start"> -->
+      <!-- <div class="image-profile"> -->
+      <!-- <div class="image-profile">
+        <app-avatar-profile [itemAvatar]="member"></app-avatar-profile>
+   
+      </div> -->
+
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col size="3">
+            <div class="member-profile">
+              <app-avatar-profile [itemAvatar]="member"></app-avatar-profile>
+
+              <div class="user-online" [ngStyle]="{ 'background-color':(member.userOnline)?'#24d066':'#db4437' }"></div>
+            </div>
+
+
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              {{ member.fullname }}
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <!-- </ion-avatar>
+      </ion-item> -->
+      <!-- {{member | json}}
+    
+    >>>  {{member?.avatar}} -->
+    </div>
+  </div>
+
+  <!-- <ion-list> 
+
+
+  </ion-list> -->
+
+  <!-- </div> -->
 
 
   <!-- <app-advanced-info-accordion 
