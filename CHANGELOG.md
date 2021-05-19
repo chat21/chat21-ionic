@@ -10,6 +10,7 @@
 - Fixes the bug: user's profile photo is not displayed in the right side panel of "direct" type conversations
 - Fixes the bug: user's profile photo is not displayed in the conversation header
 - Fixes the bug: users' profile pictures are not displayed in the left panel "write to"
+- Fixes the bug: the same image cannot be loaded twice
 
 ### 3.0.28
 - Minor improvements
