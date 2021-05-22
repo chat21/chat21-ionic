@@ -36,16 +36,22 @@
   </ion-avatar>
   <ion-label>
     <div class="conversation_with truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
-    <div class="conversation_message">
-    
+    <div class="conversation_message truncate-conv-msg" [ngClass]="{'truncate-on-desktop': !isApp}">
+
       <!-- -------------------------------------------------------------------------- -->
       <!-- if conversation type is image display the image icon before the message -->
       <!-- -------------------------------------------------------------------------- -->
-      <div *ngIf="conversation.type === 'image'" class="icon-image-before-msg-wpr">
+      <!-- <div *ngIf="conversation.type === 'image'" class="icon-image-before-msg-wpr">
         <ion-icon name="image-outline" class="icon-image-before-msg"></ion-icon>
       </div>
       <p [class.not-read]="conversation.is_new" class="truncate" [ngClass]="{'truncate-on-desktop': !isApp}"
-        [innerHTML]="conversation.last_message_text"></p>
+        [innerHTML]="conversation.last_message_text"></p> -->
+
+      <!-- <div *ngIf="conversation.type === 'image'" class="icon-image-before-msg-wpr"> -->
+      <ion-icon *ngIf="conversation.type === 'image'" name="image-outline" class="icon-image-before-msg"></ion-icon>
+      <!-- </div> -->
+      <span [class.not-read]="conversation.is_new" 
+        [innerHTML]="conversation.last_message_text"></span>
     </div>
   </ion-label>
   <ion-note *ngIf="!conversation.archived" class="conversation_time">{{conversation.time_last_message}}</ion-note>

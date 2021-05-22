@@ -16,18 +16,26 @@ export class IonListConversationsComponent extends ListConversationsComponent im
   @Output() onCloseConversation = new EventEmitter<ConversationModel>();
 
   public convertMessage = convertMessage;
-  isApp: boolean;
+  isApp: boolean = false;
   constructor(
     public iterableDiffers: IterableDiffers,
     public imageRepoService: ImageRepoService,
     public platform: Platform
   ) {
     super(iterableDiffers, imageRepoService)
+    console.log('ION-LIST-CONV IS-APP (constructor)',this.isApp )
   }
 
   ngOnInit() {
-    this.isApp = this.platform.is('cordova')
+    this.isApp = this.platform.is('ios') || this.platform.is('android')
     console.log('ION-LIST-CONV IS-APP ',this.isApp )
+    console.log('ION-LIST-CONV Platform', this.platform.platforms());
+    // if(this.platform.is('mobileweb')) {
+    //   console.log('ION-LIST-CONV this.platform.is(mobileweb)', this.platform.is('mobileweb'));
+    //   this.isApp = false;
+    // } else {
+    //   this.isApp = true;
+    // }
    }
 
   closeConversation(conversation: ConversationModel) {
