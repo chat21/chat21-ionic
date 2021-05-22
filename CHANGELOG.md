@@ -1,5 +1,17 @@
 # chat21-ionic ver 3.0
 
+### 3.0.34
+- Fixed bug: in the right side panel of "direct" conversations the "Advanced" accordion opens only once
+
+### 3.0.33
+- Changes dashboard url
+
+### 3.0.32
+- Changes dashboard url
+
+### 3.0.31
+- test Native uploadEngine 
+
 ### 3.0.30
 - Added image skeleton while load image
 - Improved uploaded images styles 
