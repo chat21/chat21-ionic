@@ -1,7 +1,14 @@
 # chat21-ionic ver 3.0
 
+### 3.0.35
+- Adds a tooltip in the logged user profile panel that displays the user's id and the ability to copy it by clicking on the avatar
+- Replaces in the list of conversations (active and archived) the text 'loading' with a skeleton placeholder
+- Replaces in the detail of the conversation the image and the text "text new conversation + button" with the text "Please select a chat to start messaging"
+
 ### 3.0.34
-- Fixed bug: in the right side panel of "direct" conversations the "Advanced" accordion opens only once
+- Fixes the bug: in the right side panel of "direct" conversations the "Advanced" accordion opens only once
+- Fixes the bug: in the conversation list message text goes on a new line when there is the image icon
+- Fixes the bug: in the list of conversations the 'archive conversation' button is displayed fixed on the right and not on mouseover
 
 ### 3.0.33
 - Changes dashboard url
