@@ -1,4 +1,3 @@
-
 <!-- <span *ngIf="isShowMenuPage;then contentShowMenu else contentConversations">here is ignored</span>
 <ng-template #contentShowMenu>
   <app-menu-home
@@ -7,26 +6,22 @@
 </ng-template> -->
 
 <!-- <ng-template #contentConversations> -->
-  <ion-header no-border class="ion-no-border">
-    <app-ddp-header *ngIf="conversationType ==='active'"
-      [numberOpenConv] = numberOpenConv
-      [supportMode] = supportMode
-      (openContactsDirectory) = openContactsDirectory($event)
-      (openProfileInfo) = openProfileInfo($event)>
-    </app-ddp-header>
+<ion-header no-border class="ion-no-border">
+  <app-ddp-header *ngIf="conversationType ==='active'" [numberOpenConv]=numberOpenConv [supportMode]=supportMode
+    (openContactsDirectory)=openContactsDirectory($event) (openProfileInfo)=openProfileInfo($event)>
+  </app-ddp-header>
 
-    <app-option-header *ngIf="conversationType !=='active'"
-      [headerTitle] = headerTitle
-      (onBackButton) = onBackButtonFN($event)>
-    </app-option-header>
-  </ion-header>
-  
-  <ion-content class="list-avatar-page" appScrollbarTheme>
-    <div id="scrollbar2">
+  <app-option-header *ngIf="conversationType !=='active'" [headerTitle]=headerTitle
+    (onBackButton)=onBackButtonFN($event)>
+  </app-option-header>
+</ion-header>
+
+<ion-content class="list-avatar-page" appScrollbarTheme>
+  <div id="scrollbar2">
     <ion-list>
-      
-      <span *ngIf="conversations.length > 0;then contentConversations else contentMessageWelcome">here is ignored</span>
-      
+
+      <span *ngIf="(conversations.length > 0 && conversationType ==='active') || (archivedConversations.length > 0  && conversationType ==='archived');then contentConversations else contentMessageWelcome">here is ignored</span>
+
       <ng-template #contentConversations>
         <!-- <ion-item lines="none" class="ion-no-padding" *ngFor="let conversation of conversations"
           (mousedown)="navigateByUrl(conversation.uid)"> 
@@ -53,51 +48,65 @@
         </ion-item> -->
 
         <!-- ACTIVE CONVERSATION LIST -->
-        <ion-list-conversations *ngIf="conversationType ==='active'"
-          [uidConvSelected]="uidConvSelected" 
-          [listConversations]="conversations"
-          [styleMap]="styleMap"
+        <ion-list-conversations *ngIf="conversationType ==='active'" 
+        [uidConvSelected]="uidConvSelected"
+          [listConversations]="conversations" 
+          [styleMap]="styleMap" 
           [translationMap]="translationMapConversation"
           (onConversationSelected)=onConversationSelected($event)
-          (onImageLoaded)="onImageLoaded($event)"
+           (onImageLoaded)="onImageLoaded($event)"
           (onConversationLoaded)="onConversationLoaded($event)"
-          (onCloseConversation)="onCloseConversation($event)">
+           (onCloseConversation)="onCloseConversation($event)">
         </ion-list-conversations>
 
-        <ion-list-conversations *ngIf="conversationType ==='archived'"
-          [listConversations]="archivedConversations"
-          [styleMap]="styleMap"
+        <ion-list-conversations *ngIf="conversationType ==='archived'" 
+        [listConversations]="archivedConversations"
+          [styleMap]="styleMap" 
           [translationMap]="translationMapConversation"
-          (onConversationSelected)=onConversationSelected($event)
+          (onConversationSelected)=onConversationSelected($event) 
           (onImageLoaded)="onImageLoaded($event)"
           (onConversationLoaded)="onConversationLoaded($event)">
         </ion-list-conversations>
 
-        
+      
+
+
 
       </ng-template>
-  
+
       <ng-template #contentMessageWelcome>
         <div [class.active]="loadingIsActive" class="chat21-spinner" id="chat21-spinner">
-          <div class="chat21-bounce1"></div>
+          <!-- <div class="chat21-bounce1"></div>
           <div class="chat21-bounce2"></div>
           <div class="chat21-bounce3"></div>
-          <span>loading</span>
+          <span>loading ...</span> -->
+          <!-- --------------------------------------------- -->
+          <!-- skeleton loading -->
+          <!-- --------------------------------------------- -->
+          <ion-list>
+            <ion-item lines="none" *ngFor="let fake of generateFake(10)"> 
+              <ion-avatar slot="start" style="margin-left: 0 !important;">
+                <ion-skeleton-text animated></ion-skeleton-text>
+              </ion-avatar>
+              <ion-label>
+                <h3 style="height: 21px;">
+                  <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+                </h3>
+                <p style="height: 15px;">
+                  <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
         </div>
         <div *ngIf="!loadingIsActive && conversations.length == 0" id="content_message_wellcome">
           <div class="messaggio">{{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}</div>
         </div>
       </ng-template>
-    
-    
-   
+
+
+
     </ion-list>
-    </div>
-  </ion-content>
+  </div>
+</ion-content>
 <!-- </ng-template> -->
-
-
-
-
-
-
