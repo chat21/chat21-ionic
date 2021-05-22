@@ -5,11 +5,11 @@
     Advanced
   </span>
 
-  <ion-icon slot="end" name="chevron-down-outline" class="absolute-icon"></ion-icon>
+  <ion-icon id="{{'absolute-icon_'+ teammateID}}" slot="end" name="chevron-down-outline" class="absolute-icon"></ion-icon>
 </ion-button>
 
 
-<div class="advanced-info-panel">
+<div id="{{'advanced-info-panel_'+ teammateID}}" class="advanced-info-panel">
   <div *ngFor="let attr of advancedAttributes">
 
     <!-- <span [tooltip]="HtmlContent" [options]="tooltipOptions" placement="top" content-type="template">
