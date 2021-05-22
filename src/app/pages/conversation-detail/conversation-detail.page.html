@@ -1,10 +1,17 @@
 <span *ngIf="conversationWith && loggedUser; then showConversation else showPlaceholder"></span>
 <ng-template #showPlaceholder>
-  <ion-content class="splash-page">
-    <div padding class="image-splash-page"></div>
+  <!-- class="splash-page" -->
+  <ion-content padding>
+    <!-- <div padding class="image-splash-page"></div>
     <div padding class="title-splash-page">
       text new conversation + button
-    </div>
+    </div> -->
+   
+    <ion-grid style="height: 100%">
+      <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%; flex-direction: column">
+       <span style="color: #999; font-size: 16px;line-height: 18px;margin-top: -160px;">Please select a chat to start messaging </span> 
+      </ion-row>
+    </ion-grid>
   </ion-content>
 </ng-template>
 
@@ -114,12 +121,8 @@
         </ion-col>
 
         <ion-col id="chat21-info-conversation" [class.mobile]="isMobile" [class.open]="openInfoConversation">
-          <app-info-content 
-          [openInfoConversation]="openInfoConversation" 
-          [translationMap]="translationMap"
-          [loggedUser]="loggedUser" 
-          [tenant]="tenant"  
-          [groupDetail]="groupDetail">
+          <app-info-content [openInfoConversation]="openInfoConversation" [translationMap]="translationMap"
+            [loggedUser]="loggedUser" [tenant]="tenant" [groupDetail]="groupDetail">
             <!-- [member] = member -->
           </app-info-content>
         </ion-col>
