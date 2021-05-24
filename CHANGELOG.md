@@ -1,9 +1,15 @@
 # chat21-ionic ver 3.0
 
+### 3.0.36
+- Fixes the bug: in the list of conversations user last messsagge is showed more times
+- Adds in the list of conversations (active and archived) the placeholder 'No conversation yet' displayed when there aren't conversation
+- Manages the title on the browser tab when new messages are received: indication of the number of new messages that are received when the tab is not active
+
 ### 3.0.35
 - Adds a tooltip in the logged user profile panel that displays the user's id and the ability to copy it by clicking on the avatar
 - Replaces in the list of conversations (active and archived) the text 'loading' with a skeleton placeholder
 - Replaces in the detail of the conversation the image and the text "text new conversation + button" with the text "Please select a chat to start messaging"
+- Fixes the bug: in the list of conversations user last messsagge is showed more times
 
 ### 3.0.34
 - Fixes the bug: in the right side panel of "direct" conversations the "Advanced" accordion opens only once
