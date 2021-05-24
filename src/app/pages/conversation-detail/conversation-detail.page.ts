@@ -976,11 +976,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
       setTimeout(() => {
         var pos = message.lastIndexOf("/");
-        console.log("CONVERSATION-DETAIL returnChangeTextArea message ", message);
+        console.log("CONVERSATION-DETAIL canned responses pos of / ", pos);
         console.log("pos:: ", pos);
-        if (pos >= 0) {
+        // if (pos >= 0) {
+          if (pos === 0) {
           // && that.tagsCanned.length > 0
           var strSearch = message.substr(pos + 1);
+          console.log("CONVERSATION-DETAIL canned responses strSearch ", strSearch);
           this.loadTagsCanned(strSearch);
           //that.showTagsCanned(strSearch);
           //that.loadTagsCanned(strSearch);
@@ -1009,9 +1011,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // if(!this.conversationSelected || !this.conversationSelected.attributes || !this.conversationSelected.attributes.projectId || !this.appConfig.getConfig().SERVER_BASE_URL){
     //   return;
     // }
-    console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail', this.groupDetail);
-    console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail project id', this.groupDetail['attributes']['projectId']);
-    const projectId = this.groupDetail['attributes']['projectId']
+    let projectId = ""
+    if (this.groupDetail) {
+      projectId = this.groupDetail['attributes']['projectId']
+
+      console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail', this.groupDetail);
+      console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail project id', this.groupDetail['attributes']['projectId']);
+    }
+
     const tiledeskToken = this.authService.getTiledeskToken();
     console.log('CONVERSATION-DETAIL tagsCanned.length', this.tagsCanned.length);
     //if(this.tagsCanned.length <= 0 ){
