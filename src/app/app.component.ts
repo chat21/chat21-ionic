@@ -281,6 +281,7 @@ export class AppComponent implements OnInit {
         // TAB IS HIDDEN --> manage title and SOUND
 
         let badgeNewConverstionNumber = this.conversationsHandlerService.countIsNew()
+        badgeNewConverstionNumber > 0 ? badgeNewConverstionNumber : 1
         document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
         
         clearInterval(this.setIntervalTime)
