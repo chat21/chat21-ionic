@@ -106,8 +106,9 @@ export class ConversationListPage implements OnInit {
     // this.getUrlParams();
 
     this.listenToAppCompConvsLengthOnInitConvs()
-
+    this.listenToLogoutEvent();
   }
+ 
 
 
   // getUrlParams() {
@@ -241,6 +242,15 @@ export class ConversationListPage implements OnInit {
     this.events.subscribe('appcompSubscribeToConvs:loadingIsActive', (loadingIsActive) => {
       console.log('CONVS - CONVERSATION-LIST-PAGE CONVS loadingIsActive', loadingIsActive);
       if (loadingIsActive === false) {
+        this.loadingIsActive = false
+      }
+    });
+  }
+
+  listenToLogoutEvent() {
+    this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
+      console.log('CONVS - CONVERSATION-LIST-PAGE CONVS loadingIsActive hasclickedlogout', hasclickedlogout);
+      if (hasclickedlogout === true) {
         this.loadingIsActive = false
       }
     });
