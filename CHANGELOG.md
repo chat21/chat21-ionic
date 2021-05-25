@@ -5,6 +5,7 @@
 - Adds in the list of conversations (active and archived) the placeholder 'No conversation yet' displayed when there aren't conversation
 - Manages the title on the browser tab when new messages are received: indication of the number of new messages that are received when the tab is not active
 - Fixes the bug: canned responses are called even if the slash ('/') is not at the beginning of the sentence
+- Conditions the canned responses call to the existence of the project id
 - Centers the placeholder message "Still no message here..."
 
 ### 3.0.35
