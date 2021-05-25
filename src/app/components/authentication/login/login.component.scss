@@ -71,4 +71,9 @@
       display: block;
     }
   }
+
+  .signin-button-is-disabled {
+    opacity: 0.8 !important;
+    cursor: not-allowed !important; 
+  }
 }

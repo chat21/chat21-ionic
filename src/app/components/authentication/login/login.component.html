@@ -29,8 +29,8 @@
         (change)="passwordChanged(password)"
         ></ion-input>
 
-        
-        <button type="submit" class="btn signin-button ion-activatable ripple-parent" [disabled]="!userForm.valid">
+     
+        <button type="submit" class="btn signin-button ion-activatable ripple-parent" [ngClass]="{'signin-button-is-disabled': !userForm.valid}" [disabled]="!userForm.valid">
           <span class="signin-button-label" [class.active]="!showSpinnerInLoginBtn">
             {{ translationMap.get('LABEL_SIGNIN') }}
           </span>
