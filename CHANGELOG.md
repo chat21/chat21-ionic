@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.37
+- Fixes the bug: the skeleton placeholder remains active after logout 
+
 ### 3.0.36
 - Fixes the bug: in the list of conversations user last messsagge is showed more times
 - Adds in the list of conversations (active and archived) the placeholder 'No conversation yet' displayed when there aren't conversation
