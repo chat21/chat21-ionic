@@ -10,12 +10,10 @@ export class LoggerInstance  {
     private static instance: LoggerService;
     
     static getInstance() {
-        console.log('loggerrr getttt', this.instance)
         return LoggerInstance.instance;
     }
 
     static setInstance(loggerService: LoggerService) {
-        console.log('loggerrr', loggerService)
         LoggerInstance.instance = loggerService
     }
 
