@@ -1,5 +1,5 @@
+import { TiledeskAuthService } from './../../../../chat21-core/providers/tiledesk/tiledesk-auth.service';
 import { Component, OnInit, AfterViewInit, Input, OnChanges, OnDestroy } from '@angular/core';
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
@@ -25,7 +25,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
   constructor(
     public imageRepoService: ImageRepoService,
     public presenceService: PresenceService,
-    public authService: AuthService,
+    public tiledeskAuthService: TiledeskAuthService,
     public contactsService: ContactsService
   ) {
 
@@ -38,7 +38,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
     if (this.groupDetail) {
       if (this.groupDetail.uid.startsWith('group-')) {
-        const tiledeskToken = this.authService.getTiledeskToken();
+        const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
 
         this.member_array = []
         const members_isonline_array = []

@@ -1,8 +1,10 @@
+
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 
 // services
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
+import { TiledeskAuthService } from './../../../../chat21-core/providers/tiledesk/tiledesk-auth.service';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { EventsService } from '../../../services/events-service';
 
@@ -28,7 +30,8 @@ export class LoginPage implements OnInit {
 
 
   constructor(
-    public authService: AuthService,
+    public tiledeskAuthService: TiledeskAuthService,
+    public messagingAuthService: MessagingAuthService,
     private translateService: CustomTranslateService,
     private events: EventsService,
     private loginComponent: LoginComponent,
@@ -65,9 +68,6 @@ export class LoginPage implements OnInit {
       this.subscriptions.push(keySubscription);
       this.events.subscribe(keySubscription, this.signIn);
     }
-    const subAuthStateChanged = this.authService.BSAuthStateChanged.subscribe(state => {
-      console.log('BSAuthStateChanged:::', state);
-    });
   }
 
   /**
@@ -113,7 +113,10 @@ export class LoginPage implements OnInit {
    */
   returnSignInWithEmailAndPassword(auth: any) {
     console.log('returnSignInWithEmailAndPassword', auth, auth.email, auth.password );
-    this.authService.signInWithEmailAndPassword(auth.email, auth.password);
+    this.tiledeskAuthService.signInWithEmailAndPassword(auth.email, auth.password).then(tiledeskToken => {
+      this.messagingAuthService.createCustomToken(tiledeskToken)
+    });
+    // this.authService.signInWithEmailAndPassword(auth.email, auth.password);
   }
 
   /** */

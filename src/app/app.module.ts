@@ -30,7 +30,7 @@ import { EventsService } from './services/events-service';
 import { DatabaseProvider } from './services/database';
 
 // ABSTRACT SERVICES
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
 import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
@@ -87,6 +87,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 // Directives
 import { TooltipModule } from 'ng2-tooltip-directive';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -108,7 +109,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
   } else {
 
     FirebaseInitService.initFirebase(config.firebaseConfig)
-    const auth= new FirebaseAuthService(http, appSorage);
+    const auth= new FirebaseAuthService(http);
     auth.setBaseUrl(config.apiUrl)
     return auth
   }
@@ -207,16 +208,10 @@ export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, ap
   }
 }
 
-export function loggerFactory(logger: NGXLogger) {
-    // let customLogger = new CustomLogger(true, logger)
-    // console.log('loggggggg', customLogger)
-    // LoggerInstance.setInstance(customLogger)
-    // return customLogger
-    return new CustomLogger(true)
-}
-
-const appInitializerFn = (appConfig: AppConfigProvider) => {
+const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
   return () => {
+    let customLogger = new CustomLogger(true, logger) //aggiungere level in input
+    LoggerInstance.setInstance(customLogger)
     if (environment.remoteConfig) {
       return appConfig.loadAppConfig();
     }
@@ -265,15 +260,10 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
       provide: APP_INITIALIZER,
       useFactory: appInitializerFn,
       multi: true,
-      deps: [AppConfigProvider]
+      deps: [AppConfigProvider, NGXLogger]
     },
-    // {
-    //   provide: AuthService,
-    //   useFactory: authenticationFactory,
-    //   deps: [HttpClient, AppConfigService ]
-    // },
     {
-      provide: AuthService,
+      provide: MessagingAuthService,
       useFactory: authenticationFactory,
       deps: [HttpClient, AppConfigProvider, Chat21Service, AppStorageService ]
      },
@@ -321,11 +311,6 @@ const appInitializerFn = (appConfig: AppConfigProvider) => {
       provide: ConversationHandlerBuilderService,
       useFactory: conversationHandlerBuilderFactory,
       deps: [Chat21Service, AppConfigProvider]
-    },
-    {
-      provide: LoggerService,
-      useFactory: loggerFactory,
-      deps: [NGXLogger]
     },
     {
       provide: AppStorageService,

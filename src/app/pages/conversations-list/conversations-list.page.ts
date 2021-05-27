@@ -42,10 +42,11 @@ import { TiledeskService } from '../../services/tiledesk/tiledesk.service';
 import { ConversationDetailPage } from '../conversation-detail/conversation-detail.page';
 import { ContactsDirectoryPage } from '../contacts-directory/contacts-directory.page';
 import { ProfileInfoPage } from '../profile-info/profile-info.page';
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 
 
 
@@ -95,11 +96,12 @@ export class ConversationListPage implements OnInit {
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     public chatManager: ChatManager,
-    public authService: AuthService,
+    public messagingAuthService: MessagingAuthService,
     public imageRepoService: ImageRepoService,
     private translateService: CustomTranslateService,
     private logger: LoggerService,
-    public tiledeskService: TiledeskService
+    public tiledeskService: TiledeskService,
+    public tiledeskAuthService: TiledeskAuthService
   ) {
     // console.log('constructor ConversationListPage');
 
@@ -531,7 +533,7 @@ export class ConversationListPage implements OnInit {
    */
   initialize() {
     this.tenant = environment.tenant;
-    this.loggedUserUid = this.authService.getCurrentUser().uid;
+    this.loggedUserUid = this.tiledeskAuthService.getCurrentUser().uid;
     this.subscriptions = [];
     this.initConversationsHandler();
     this.databaseProvider.initialize(this.loggedUserUid, this.tenant);
@@ -678,7 +680,7 @@ export class ConversationListPage implements OnInit {
     const translationMap = this.translateService.translateLanguage(keys);
     if (conversation.sender === this.loggedUserUid && !conversation.last_message_text.includes(': ')) {
       console.log('onConversationLoaded', conversation)
-      conversation.last_message_text = convertMessage(translationMap.get('YOU') + ': ' + conversation.last_message_text)
+      conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text
     }
   }
 
@@ -718,7 +720,7 @@ export class ConversationListPage implements OnInit {
    * (metodo richiamato da html)
    */
   openContactsDirectory(event: any) {
-    const TOKEN = this.authService.getTiledeskToken();
+    const TOKEN = this.tiledeskAuthService.getTiledeskToken();
     console.log('openContactsDirectory', TOKEN);
     if (checkPlatformIsMobile()) {
       presentModal(this.modalController, ContactsDirectoryPage, { token: TOKEN });
@@ -742,7 +744,7 @@ export class ConversationListPage implements OnInit {
    * (metodo richiamato da html)
    */
   openProfileInfo(event: any) {
-    const TOKEN = this.authService.getToken();
+    const TOKEN = this.messagingAuthService.getToken();
     console.log('open ProfileInfoPage', TOKEN);
     if (checkPlatformIsMobile()) {
       presentModal(this.modalController, ProfileInfoPage, { token: TOKEN })
@@ -899,7 +901,7 @@ export class ConversationListPage implements OnInit {
     if (conversationId.startsWith("support-group")) {
 
       // const projectId = conversation.attributes.projectId
-      const tiledeskToken = this.authService.getTiledeskToken();
+      const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
       console.log('CONV-LIST-PAGE onCloseConversation projectId: ', project_id)
       // console.log('CONV-LIST-PAGE onCloseConversation tiledeskToken: ', tiledeskToken)
       this.tiledeskService.closeSupportGroup(tiledeskToken, project_id, conversationId).subscribe(res => {

@@ -8,7 +8,6 @@ import { ChatManager } from 'src/chat21-core/providers/chat-manager';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
 // import { EventsService } from '../../services/events-service';
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
 
 // models
 import { UserModel } from 'src/chat21-core/models/user';
@@ -54,7 +53,6 @@ export class ProfileInfoPage implements OnInit {
     private translateService: CustomTranslateService,
     public presenceService: PresenceService,
     public events: EventsService,
-    private authService: AuthService,
     private imageRepo: ImageRepoService,
     public renderer: Renderer2
   ) { }

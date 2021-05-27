@@ -17,7 +17,7 @@ import { AppConfigProvider } from './services/app-config';
 // import { UserService } from './services/user.service';
 // import { CurrentUserService } from './services/current-user/current-user.service';
 import { EventsService } from './services/events-service';
-import { AuthService } from '../chat21-core/providers/abstract/auth.service';
+import { MessagingAuthService } from '../chat21-core/providers/abstract/messagingAuth.service';
 import { PresenceService } from '../chat21-core/providers/abstract/presence.service';
 import { TypingService } from '../chat21-core/providers/abstract/typing.service';
 import { UploadService } from '../chat21-core/providers/abstract/upload.service';
@@ -38,6 +38,9 @@ import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE
 import { environment } from '../environments/environment';
 import { UserModel } from '../chat21-core/models/user';
 import { ConversationModel } from 'src/chat21-core/models/conversation';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 
 @Component({
   selector: 'app-root',
@@ -79,7 +82,8 @@ export class AppComponent implements OnInit {
     // public userService: UserService,
     // public currentUserService: CurrentUserService,
     public modalController: ModalController,
-    public authService: AuthService,
+    public messagingAuthService: MessagingAuthService,
+    public tiledeskAuthService: TiledeskAuthService,
     public presenceService: PresenceService,
     private router: Router,
     private route: ActivatedRoute,
@@ -93,13 +97,14 @@ export class AppComponent implements OnInit {
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
-    private translateService: CustomTranslateService
+    private translateService: CustomTranslateService,
+    private logger: LoggerService
   ) {
     console.log('AppComponent');
     console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
-
+    this.logger = LoggerInstance.getInstance()
   }
 
 
@@ -123,8 +128,9 @@ export class AppComponent implements OnInit {
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
       this.appStorageService.initialize(environment.storage_prefix, environment.authPersistence, '')
-      this.authService.initialize();
-      this.checkJWTtoken();
+      this.tiledeskAuthService.initialize(this.appConfigProvider.getConfig().apiUrl);
+      this.messagingAuthService.initialize();
+      this.initAuthentication();
       // this.currentUserService.initialize();
       this.chatManager.initialize();
       this.presenceService.initialize();
@@ -138,33 +144,90 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private checkJWTtoken() {
-    // let tildeskTokenFromURL= '';
-    // this.route.queryParams.subscribe(params => {
-    //   tildeskTokenFromURL = params.jwt
-    //   if(tildeskTokenFromURL){
-    //     this.authService.initialize();
-    //     console.log('params from URL:::', tildeskTokenFromURL)
-    //     this.authService.signInWithCustomToken(tildeskTokenFromURL).then(resp => {
-    //       console.log('userlogged customtoken', resp)
-    //     }).catch(error => {
-    //       console.log(['> Error :' + error]);
-    //     });
-    //   }
-    // });
+  /***************************************************+*/
+  /**------- AUTHENTICATION FUNCTIONS --> START <--- +*/
+  private initAuthentication(){
+    const tiledeskToken = this.appStorageService.getItem('tiledeskToken')
+    const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
+    if (tiledeskToken) {
+      this.logger.printLog(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
+      this.tiledeskAuthService.signInWithCustomToken(tiledeskToken).then(user => {
+        this.messagingAuthService.createCustomToken(tiledeskToken)
+      }).catch(error => { this.logger.printError('SIGNINWITHCUSTOMTOKEN error::' + error)})
+    }  else {
+      this.logger.printLog(' ---------------- NON sono loggato ---------------- ')
+      const that = this;
+      clearTimeout(this.timeModalLogin);
+      this.timeModalLogin = setTimeout(() => {
+        this.authModal = this.presentModal();
+      }, 1000);
+    }
 
-    let tiledeskToken = this.appStorageService.getItem('tiledeskToken')
-    let currentUser = this.appStorageService.getItem('currentUser')
-    if (tiledeskToken && !currentUser) {
-      // this.authService.initialize();
-      console.log('tildeskToken exist but NO currentUser EXIST --> signInWithCustomToken...')
-      this.authService.signInWithCustomToken(tiledeskToken).then(resp => {
-        console.log('userlogged customtoken', resp)
-      }).catch(error => {
-        console.log(['> Error :' + error]);
-      });
+    this.route.queryParams.subscribe(params => {
+      if(params.jwt){
+        this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
+          this.messagingAuthService.createCustomToken(params.jwt)
+        }).catch(error => { this.logger.printError('SIGNINWITHCUSTOMTOKEN error::' + error)})
+      }
+    });
+  }
+
+  authenticate() {
+    let token = this.appStorageService.getItem('tiledeskToken');
+    console.log('APP-COMPONENT ***** authenticate - stored token *****', token);
+    if (!token) {
+      this.goOffLine()
     }
   }
+
+  /**
+   * goOnLine:
+   * 1 - nascondo splashscreen
+   * 2 - recupero il tiledeskToken e lo salvo in chat manager
+   * 3 - carico in d
+   * @param user
+   */
+  goOnLine = () => {
+    clearTimeout(this.timeModalLogin);
+    const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
+    const currentUser = this.tiledeskAuthService.getCurrentUser();
+    console.log('APP-COMP - goOnLine****', currentUser);
+    this.chatManager.setTiledeskToken(tiledeskToken);
+    if (currentUser) {
+      this.chatManager.setCurrentUser(currentUser);
+      this.presenceService.setPresence(currentUser.uid);
+      this.initConversationsHandler(currentUser.uid);
+      this.initArchivedConversationsHandler(currentUser.uid);
+    }
+    this.checkPlatform();
+    try {
+      console.log('************** closeModal', this.authModal);
+      if (this.authModal) {
+        this.closeModal();
+      }
+    } catch (err) {
+      console.error('-> error:', err);
+    }
+    this.chatManager.startApp();
+  }
+
+  goOffLine = () => {
+    console.log('************** goOffLine:', this.authModal);
+    
+    this.chatManager.setTiledeskToken(null);
+    this.chatManager.setCurrentUser(null);
+    this.chatManager.goOffLine();
+
+    this.router.navigateByUrl('conversation-detail/'); //redirect to basePage
+    const that = this;
+    clearTimeout(this.timeModalLogin);
+    this.timeModalLogin = setTimeout(() => {
+      this.authModal = this.presentModal();
+    }, 1000);
+  }
+  /**------- AUTHENTICATION FUNCTIONS --> END <--- +*/
+  /***************************************************+*/
+
   /**
    * ::: initConversationsHandler :::
    * inizializzo chatConversationsHandler e archviedConversationsHandler
@@ -240,40 +303,25 @@ export class AppComponent implements OnInit {
     }
   }
 
-
-
-
-  // BEGIN MY FUNCTIONS //
-
-
-
   /** */
   // showNavbar() {
   //   let TEMP = location.search.split('navBar=')[1];
   //   if (TEMP) { this.isNavBar = TEMP.split('&')[0]; }
   // }
 
-
-
   /** */
   hideAlert() {
     console.log('hideAlert');
     this.notificationsEnabled = true;
   }
-  // END MY FUNCTIONS //
 
-  // @HostListener('document:visibilitychange', ['$event'])
-  @HostListener('document:visibilitychange', [])
-  visibilitychange() {
-    // console.log("document TITLE", document.hidden, document.title);
-    if (document.hidden) { 
-        this.isTabVisible = false
-    } else {
-        // TAB IS ACTIVE --> restore title and DO NOT SOUND
-        clearInterval(this.setIntervalTime)
-        this.isTabVisible = true;
-        document.title = this.tabTitle;
-    }
+  /***************************************************+*/
+  /**---------------- SOUND FUNCTIONS --> START <--- +*/
+  private initAudio(){
+    // SET AUDIO
+    this.audio = new Audio();
+    this.audio.src = URL_SOUND_LIST_CONVERSATION;
+    this.audio.load();
   }
 
   private manageTabNotification(){
@@ -281,7 +329,6 @@ export class AppComponent implements OnInit {
         // TAB IS HIDDEN --> manage title and SOUND
 
         let badgeNewConverstionNumber = this.conversationsHandlerService.countIsNew()
-        badgeNewConverstionNumber > 0 ? badgeNewConverstionNumber : 1
         document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
         
         clearInterval(this.setIntervalTime)
@@ -309,11 +356,12 @@ export class AppComponent implements OnInit {
       that.audio.play().then(() => {
         console.log('****** soundMessage played *****');
       }).catch((error: any) => {
-        console.log('***soundMessage error*', error);
+          console.log('***soundMessage error*', error);
       });
     }, 1000);
   }
-
+  /**---------------- SOUND FUNCTIONS --> END <--- +*/
+  /***************************************************+*/
 
 
   // BEGIN SUBSCRIPTIONS //
@@ -321,10 +369,10 @@ export class AppComponent implements OnInit {
   initSubscriptions() {
     const that = this;
 
-    this.authService.BSAuthStateChanged.subscribe((state: any) => {
+    this.messagingAuthService.BSAuthStateChanged.subscribe((state: any) => {
       console.log('APP-COMPONENT ***** BSAuthStateChanged ***** state', state);
       if (state && state === AUTH_STATE_ONLINE) {
-        const user = that.authService.getCurrentUser();
+        const user = that.messagingAuthService.getCurrentUser();
         that.goOnLine();
       } else if (state === AUTH_STATE_OFFLINE) {
         // that.goOffLine();
@@ -359,6 +407,7 @@ export class AppComponent implements OnInit {
     // this.events.subscribe('firebase-send-password-reset-email', this.firebaseSendPasswordResetEmail);
     // this.events.subscribe('firebase-sign-out', this.firebaseSignOut);
     this.events.subscribe('uidConvSelected:changed', this.subscribeChangedConversationSelected);
+    this.events.subscribe('profileInfoButtonClick:logout', this.subscribeProfileInfoButtonLogOut);
 
     this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
       console.log('***** conversationsAdded *****', conversation);
@@ -372,27 +421,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-
-  private initAudio() {
-    // SET AUDIO
-    this.audio = new Audio();
-    this.audio.src = URL_SOUND_LIST_CONVERSATION;
-    this.audio.load();
-  }
-
-  authenticate() {
-    let token = this.appStorageService.getItem('tiledeskToken');
-    console.log('APP-COMPONENT ***** authenticate - stored token *****', token);
-    if (token) {
-      console.log('APP-COMPONENT ***** authenticate user is logged in');
-      console.log('----------- sono già loggato -------');
-    } else {
-      console.log('APP-COMPONENT ***** authenticate user is NO logged in call goOffLine');
-      this.goOffLine()
-    }
-  }
-
-
   /**
    * ::: subscribeChangedConversationSelected :::
    * evento richiamato quando si seleziona un utente nell'elenco degli user
@@ -404,7 +432,11 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname + '/' + type);
   }
 
-
+  subscribeProfileInfoButtonLogOut = (hasClickedLogout) => {
+    if (hasClickedLogout === true) {
+      this.removePresenceAndLogout()
+    }
+  }
 
   private async presentModal(): Promise<any> {
     console.log('presentModal');
@@ -441,40 +473,6 @@ export class AppComponent implements OnInit {
   }
 
 
-
-  /**
-   * goOnLine:
-   * 1 - nascondo splashscreen
-   * 2 - recupero il tiledeskToken e lo salvo in chat manager
-   * 3 - carico in d
-   * @param user
-   */
-  goOnLine = () => {
-    clearTimeout(this.timeModalLogin);
-    console.log('APP-COMP - goOnLine****');
-    const tiledeskToken = this.authService.getTiledeskToken();
-    const currentUser = this.authService.getCurrentUser();
-    console.log('APP-COMP currentUser', currentUser);
-    this.chatManager.setTiledeskToken(tiledeskToken);
-    if (currentUser) {
-      this.chatManager.setCurrentUser(currentUser);
-      this.presenceService.setPresence(currentUser.uid);
-      this.initConversationsHandler(currentUser.uid);
-      this.initArchivedConversationsHandler(currentUser.uid);
-    }
-    this.checkPlatform();
-    try {
-      console.log('************** closeModal', this.authModal);
-      if (this.authModal) {
-        this.closeModal();
-      }
-    } catch (err) {
-      console.error('-> error:', err);
-    }
-    this.chatManager.startApp();
-  }
-
-
   listenToLogoutEvent() {
     this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
       console.log('APP-COMP hasclickedlogout', hasclickedlogout);
@@ -486,26 +484,9 @@ export class AppComponent implements OnInit {
 
   removePresenceAndLogout() {
     this.presenceService.removePresence();
-    this.authService.logout()
+    this.tiledeskAuthService.logOut()
+    this.messagingAuthService.logout()
   }
-  /**
-   *
-   */
-  goOffLine = () => {
-    console.log('************** goOffLine:', this.authModal);
-
-    this.chatManager.setTiledeskToken(null);
-    this.chatManager.setCurrentUser(null);
-    this.chatManager.goOffLine();
-
-    this.router.navigateByUrl('conversation-detail/'); //redirect to basePage
-    const that = this;
-    clearTimeout(this.timeModalLogin);
-    this.timeModalLogin = setTimeout(() => {
-      this.authModal = this.presentModal();
-    }, 1000);
-  }
-
 
   private initConversationsHandler(userId: string) {
     const keys = ['YOU'];
@@ -540,33 +521,7 @@ export class AppComponent implements OnInit {
     // 1 - init  archviedConversationsHandler
     this.archivedConversationsHandlerService.initialize(this.tenant, userId, translationMap);
   }
-  /** */
-  // signIn = (user: any, error: any) => {
-  //   console.log('************** signIn:: user:' + user + '  - error: ' + error);
-  //   if (error) {
-  //     localStorage.removeItem('tiledeskToken');
-  //   }
-  // }
-
-
-
-
-  /**
-   *
-   */
-  // firebaseSignInWithCustomToken = (response: any, error) => {
-  //   console.log('************** firebaseSignInWithCustomToken: ' + response + ' error: ' + error);
-  //   try {
-  //     closeModal(this.modalController);
-  //     this.checkPlatform();
-  //   } catch (err) {
-  //     console.error('-> error:', err);
-  //   }
-  // }
-
-
-  // END SUBSCRIPTIONS //
-
+  
   // BEGIN RESIZE FUNCTIONS //
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -589,5 +544,26 @@ export class AppComponent implements OnInit {
     }, 500);
   }
   // END RESIZE FUNCTIONS //
+
+  @HostListener('document:visibilitychange', [])
+  visibilitychange() {
+    // console.log("document TITLE", document.hidden, document.title);
+    if (document.hidden) { 
+        this.isTabVisible = false
+    } else {
+        // TAB IS ACTIVE --> restore title and DO NOT SOUND
+        clearInterval(this.setIntervalTime)
+        this.isTabVisible = true;
+        document.title = this.tabTitle;
+    }
+  }
+
+  @HostListener('window:storage', ['$event'])
+  onStorageChanged(event: any){
+    if (this.appStorageService.getItem('tiledeskToken') === null) {
+      this.tiledeskAuthService.logOut()
+      this.messagingAuthService.logout();
+    }
+  }
 
 }

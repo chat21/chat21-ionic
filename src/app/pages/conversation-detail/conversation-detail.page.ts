@@ -21,14 +21,15 @@ import { ConversationModel } from 'src/chat21-core/models/conversation';
 import { GroupModel } from 'src/chat21-core/models/group';
 
 // services
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
 import { ChatManager } from 'src/chat21-core/providers/chat-manager';
 import { AppConfigProvider } from '../../services/app-config';
 import { DatabaseProvider } from '../../services/database';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { TypingService } from 'src/chat21-core/providers/abstract/typing.service';
 import { ConversationHandlerBuilderService } from 'src/chat21-core/providers/abstract/conversation-handler-builder.service';
-
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
+import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 // import { ChatConversationsHandler } from '../../services/chat-conversations-handler';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
@@ -85,8 +86,6 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NgxLinkifyjsService, Link, LinkType, NgxLinkifyOptions } from 'ngx-linkifyjs';
-import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
-import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -184,7 +183,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public modalController: ModalController,
     public typingService: TypingService,
     private sanitizer: DomSanitizer,
-    public authService: AuthService,
+    // public authService: AuthService,
+    public tiledeskAuthService: TiledeskAuthService,
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
@@ -237,7 +237,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   /** */
   ionViewWillEnter() {
-    this.loggedUser = this.authService.getCurrentUser();
+    this.loggedUser = this.tiledeskAuthService.getCurrentUser();
     console.log('ConversationDetailPage ionViewWillEnter loggedUser: ', this.loggedUser);
     this.listnerStart();
     // if (this.loggedUser) {
@@ -265,7 +265,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // -------------- START MY functions -------------- //
   /** */
   initialize() {
-    this.loggedUser = this.authService.getCurrentUser();
+    this.loggedUser = this.tiledeskAuthService.getCurrentUser();
     this.translations();
     // this.conversationSelected = localStorage.getItem('conversationSelected');
     this.showButtonToBottom = false;
@@ -827,12 +827,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
         console.log('CONVERSATION-DETAIL group detail INFO CONTENT ....-->', this.groupDetail)
         let memberStr = JSON.stringify(this.groupDetail.members);
-        console.log('arraymembersss', memberStr)
         let arrayMembers = [];
         JSON.parse(memberStr, (key, value) => {
           arrayMembers.push(key);
         });
-        console.log('arraymembersss', arrayMembers)
 
       });
       const subscribe = { key: subscribtionKey, value: subscribtion };
@@ -1019,7 +1017,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail project id', this.groupDetail['attributes']['projectId']);
 
 
-      const tiledeskToken = this.authService.getTiledeskToken();
+      const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
       console.log('CONVERSATION-DETAIL tagsCanned.length', this.tagsCanned.length);
       //if(this.tagsCanned.length <= 0 ){
       this.tagsCanned = [];
@@ -1300,6 +1298,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     //     }
     //   default: return;
     // }
+  }
+
+  onImageRenderedFN(event){
+    const imageRendered = event;
+    if(this.showButtonToBottom){
+      this.scrollBottom(0)
+    }
   }
 
   // -------------- END OUTPUT-EVENT handler functions -------------- //
