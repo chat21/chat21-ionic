@@ -1,3 +1,4 @@
+import { LogLevel } from './../chat21-core/utils/constants';
 import { MomentModule } from 'angular2-moment';
 import { CustomLogger } from 'src/chat21-core/providers/logger/customLogger';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
@@ -210,7 +211,7 @@ export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, ap
 
 const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
   return () => {
-    let customLogger = new CustomLogger(true, logger) //aggiungere level in input
+    let customLogger = new CustomLogger(true, logger, LogLevel.All)
     LoggerInstance.setInstance(customLogger)
     if (environment.remoteConfig) {
       return appConfig.loadAppConfig();

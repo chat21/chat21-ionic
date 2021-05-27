@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UploadModel } from '../../models/upload';
 import { AppStorageService } from '../abstract/app-storage.service';
+import { LoggerService } from '../abstract/logger.service';
+import { LoggerInstance } from '../logger/loggerInstance';
 
 // @Injectable({ providedIn: 'root' })
 @Injectable()
@@ -21,7 +23,8 @@ export class NativeUploadService extends UploadService {
 
     private URL_TILEDESK_IMAGES: string;
     private URL_TILEDESK_FILE: string;
-
+    private logger: LoggerService = LoggerInstance.getInstance()
+    
     constructor(
         public http: HttpClient,
         public appStorage: AppStorageService
@@ -31,7 +34,7 @@ export class NativeUploadService extends UploadService {
 
 
     initialize(): void {
-        console.log('initialize NATIVE-UPLOAD storage')
+        this.logger.printDebug('initialize NATIVE-UPLOAD storage')
         this.URL_TILEDESK_FILE = this.getBaseUrl() + 'files'
         this.URL_TILEDESK_IMAGES = this.getBaseUrl() + 'images'
         this.tiledeskToken = this.appStorage.getItem('tiledeskToken')
@@ -39,7 +42,7 @@ export class NativeUploadService extends UploadService {
 
 
     upload(upload: UploadModel): Promise<any>  {
-        console.log('NATIVE UPLOAD - upload new image/file ... upload', upload )
+        this.logger.printDebug('NATIVE UPLOAD - upload new image/file ... upload', upload )
         const headers = new HttpHeaders({
             Authorization: this.tiledeskToken,
             //'Content-Type': 'multipart/form-data',
@@ -54,7 +57,6 @@ export class NativeUploadService extends UploadService {
             const url = this.URL_TILEDESK_IMAGES + '/users'
             return new Promise ((resolve, reject)=> {
                 that.http.post(url, formData, requestOptions).subscribe(data => {
-                    console.log("data:", data);
                     const downloadURL = this.URL_TILEDESK_IMAGES + '?path='+ data['filename'];
                     resolve(downloadURL)
                     // that.BSStateUpload.next({upload: upload});
@@ -67,7 +69,6 @@ export class NativeUploadService extends UploadService {
             const url = this.URL_TILEDESK_FILE + '/users'
             return new Promise ((resolve, reject)=> {
                 that.http.post(url, formData, requestOptions).subscribe(data => {
-                    console.log("data:", data);
                     const downloadURL = this.URL_TILEDESK_FILE + '?path='+ data['filename']
                     resolve(downloadURL)
                     // that.BSStateUpload.next({upload: upload});
@@ -77,37 +78,5 @@ export class NativeUploadService extends UploadService {
             });
         }
         
-    }
-
-
-    get(filename: string, type): string {
-        const headers = new HttpHeaders({
-            Authorization: this.tiledeskToken,
-        });
-        const requestOptions = { headers: headers };
-        
-        let queryString= '?path='+ filename
-        if(type.startsWith('image')){
-            //USE IMAGE API
-            const url = this.URL_TILEDESK_IMAGES + queryString
-            // this.http.get(url, requestOptions).subscribe((data: any) => {
-            //     console.log("data:", data);
-            //     // that.BSStateUpload.next({upload: upload});
-            // }, (error) => {
-            //     console.error(error);
-            // });
-            return url
-        }else {
-            //USE FILE API
-            const url = this.URL_TILEDESK_FILE + queryString
-            // this.http.get(url, requestOptions).subscribe(data => {
-            //     console.log("data:", data);
-            //     // that.BSStateUpload.next({upload: upload});
-            // }, (error) => {
-            //     console.error(error);
-            // });
-            return url
-        }
- 
     }
 }

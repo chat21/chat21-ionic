@@ -67,6 +67,7 @@ export class AppComponent implements OnInit {
   private setTimeoutSound: any;
   private isTabVisible: boolean = true;
   private tabTitle: string;
+  private logger = LoggerInstance.getInstance();
 
   constructor(
     private platform: Platform,
@@ -97,14 +98,12 @@ export class AppComponent implements OnInit {
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
-    private translateService: CustomTranslateService,
-    private logger: LoggerService
+    private translateService: CustomTranslateService
   ) {
     console.log('AppComponent');
     console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
     this.splashScreen.show();
-    this.logger = LoggerInstance.getInstance()
   }
 
 
@@ -112,7 +111,7 @@ export class AppComponent implements OnInit {
   /**
    */
   ngOnInit() {
-    console.log('ngOnInit -->', this.route.snapshot.params);
+    this.logger.printInfo('ngOnInit -->', this.route.snapshot.params);
     this.tabTitle = document.title
     this.initializeApp();
   }
@@ -150,12 +149,12 @@ export class AppComponent implements OnInit {
     const tiledeskToken = this.appStorageService.getItem('tiledeskToken')
     const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
     if (tiledeskToken) {
-      this.logger.printLog(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
+      this.logger.printDebug(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
       this.tiledeskAuthService.signInWithCustomToken(tiledeskToken).then(user => {
         this.messagingAuthService.createCustomToken(tiledeskToken)
       }).catch(error => { this.logger.printError('SIGNINWITHCUSTOMTOKEN error::' + error)})
     }  else {
-      this.logger.printLog(' ---------------- NON sono loggato ---------------- ')
+      this.logger.printWarn(' ---------------- NON sono loggato ---------------- ')
       const that = this;
       clearTimeout(this.timeModalLogin);
       this.timeModalLogin = setTimeout(() => {
@@ -174,7 +173,7 @@ export class AppComponent implements OnInit {
 
   authenticate() {
     let token = this.appStorageService.getItem('tiledeskToken');
-    console.log('APP-COMPONENT ***** authenticate - stored token *****', token);
+    this.logger.printDebug('APP-COMPONENT ***** authenticate - stored token *****', token);
     if (!token) {
       this.goOffLine()
     }
@@ -191,7 +190,7 @@ export class AppComponent implements OnInit {
     clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     const currentUser = this.tiledeskAuthService.getCurrentUser();
-    console.log('APP-COMP - goOnLine****', currentUser);
+    this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
     this.chatManager.setTiledeskToken(tiledeskToken);
     if (currentUser) {
       this.chatManager.setCurrentUser(currentUser);
@@ -201,18 +200,18 @@ export class AppComponent implements OnInit {
     }
     this.checkPlatform();
     try {
-      console.log('************** closeModal', this.authModal);
+      this.logger.printDebug('************** closeModal', this.authModal);
       if (this.authModal) {
         this.closeModal();
       }
     } catch (err) {
-      console.error('-> error:', err);
+      this.logger.printError('-> error:', err);
     }
     this.chatManager.startApp();
   }
 
   goOffLine = () => {
-    console.log('************** goOffLine:', this.authModal);
+    this.logger.printDebug('************** goOffLine:', this.authModal);
     
     this.chatManager.setTiledeskToken(null);
     this.chatManager.setCurrentUser(null);
@@ -410,12 +409,12 @@ export class AppComponent implements OnInit {
     this.events.subscribe('profileInfoButtonClick:logout', this.subscribeProfileInfoButtonLogOut);
 
     this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
-      console.log('***** conversationsAdded *****', conversation);
+      this.logger.printInfo('***** conversationsAdded *****', conversation);
       // that.conversationsChanged(conversations);
       this.manageTabNotification()
     });
     this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
-      console.log('***** conversationsChanged *****', conversation);
+      this.logger.printInfo('***** conversationsChanged *****', conversation);
       // that.conversationsChanged(conversations);
       this.manageTabNotification()
     });
@@ -427,7 +426,7 @@ export class AppComponent implements OnInit {
    * apro dettaglio conversazione
    */
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
-    console.log('************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
+    this.logger.printInfo('APP-COMP::subscribeUidConvSelectedChanged navigateByUrl', user, type);
     // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
     this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname + '/' + type);
   }

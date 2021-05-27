@@ -40,7 +40,7 @@ export class TiledeskAuthService {
    * @param password
    */
   signInWithEmailAndPassword(email: string, password: string): Promise<string> {
-    console.log('TILEDESK-AUTH-SERV - signInWithEmailAndPassword', email, password);
+    this.logger.printDebug('TILEDESK-AUTH-SERV - signInWithEmailAndPassword', email, password);
     const httpHeaders = new HttpHeaders();
 
     httpHeaders.append('Accept', 'application/json');
@@ -54,14 +54,14 @@ export class TiledeskAuthService {
     return new Promise((resolve, reject) => {
       this.http.post(this.URL_TILEDESK_SIGNIN, postData, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
-          console.log('TILEDESK-AUTH-SERV - signInWithEmailAndPassword data ', data);
+          that.logger.printDebug('TILEDESK-AUTH-SERV - signInWithEmailAndPassword data ', data);
           that.tiledeskToken = data['token'];
-          this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
+          that.createCompleteUser(data['user']);
+          that.appStorage.setItem('tiledeskToken', that.tiledeskToken);
           resolve(that.tiledeskToken)
         }
       }, (error) => {
-        this.logger.printError('TILEDESK-AUTH-SERV - signInWithEmailAndPassword ERR ',error);
+        that.logger.printError('TILEDESK-AUTH-SERV - signInWithEmailAndPassword ERR ',error);
         reject(error)
       });
     });
@@ -72,7 +72,7 @@ export class TiledeskAuthService {
    * @param projectID
    */
   signInAnonymously(projectID: string): Promise<any> {
-    this.logger.printLog('TILEDESK-AUTH-SERV - signInAnonymously - projectID', projectID);
+    this.logger.printDebug('TILEDESK-AUTH-SERV - signInAnonymously - projectID', projectID);
     const httpHeaders = new HttpHeaders();
 
     httpHeaders.append('Accept', 'application/json');
@@ -86,12 +86,12 @@ export class TiledeskAuthService {
       this.http.post(this.URL_TILEDESK_SIGNIN_ANONYMOUSLY, postData, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
-          this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
+          that.createCompleteUser(data['user']);
+          that.appStorage.setItem('tiledeskToken', that.tiledeskToken);
           resolve(that.tiledeskToken)
         }
       }, (error) => {
-        this.logger.printError('TILEDESK-AUTH-SERV - signInAnonymously ERR ',error);
+        that.logger.printError('TILEDESK-AUTH-SERV - signInAnonymously ERR ',error);
         reject(error)
       });
     })
@@ -112,12 +112,12 @@ export class TiledeskAuthService {
       this.http.post(this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN, null, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
           that.tiledeskToken = data['token'];
-          this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', that.tiledeskToken); // salvarlo esternamente nell'app.component
+          that.createCompleteUser(data['user']);
+          that.appStorage.setItem('tiledeskToken', that.tiledeskToken); // salvarlo esternamente nell'app.component
           resolve(this.currentUser)
         }
       }, (error) => {
-        this.logger.printError('TILEDESK-AUTH-SERV - signInWithCustomToken ERR ',error);
+        that.logger.printError('TILEDESK-AUTH-SERV - signInWithCustomToken ERR ',error);
         reject(error)
       });
     });
@@ -151,7 +151,7 @@ export class TiledeskAuthService {
       member.fullname = fullname;
       member.avatar = avatar;
       member.color = color;
-      this.logger.printLog('TILEDESK-AUTH - createCompleteUser member ', member) 
+      this.logger.printDebug('TILEDESK-AUTH - createCompleteUser member ', member) 
     } catch (err) {
       this.logger.printError('TILEDESK-AUTH- createCompleteUser ERR ', err) 
     }

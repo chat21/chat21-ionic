@@ -443,7 +443,8 @@ export function htmlEntities(str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    .replace(/\n/g, '<br>');
 }
 
 export function isExistInArray(members, currentUid) {

@@ -18,7 +18,7 @@ import { ConversationsHandlerService } from '../abstract/conversations-handler.s
 
 // utils
 import { avatarPlaceholder, getColorBck } from '../../utils/utils-user';
-import { compareValues, getFromNow, searchIndexInArrayForUid, archivedConversationsPathForUserId, isGroup } from '../../utils/utils';
+import { compareValues, getFromNow, searchIndexInArrayForUid, archivedConversationsPathForUserId, isGroup, htmlEntities } from '../../utils/utils';
 import { ImageRepoService } from '../abstract/image-repo.service';
 import { FirebaseImageRepoService } from './firebase-image-repo';
 import { ArchivedConversationsHandlerService } from '../abstract/archivedconversations-handler.service';
@@ -116,8 +116,6 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
             that.added(childSnapshot);
         });
 
-        console.log('SubscribeToConversations (firebase-convs-handler) - archivedConversations' , that.archivedConversations )
-
         setTimeout(() => {
             callback() 
           }, 2000);
@@ -125,7 +123,6 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
         // this.audio = new Audio();
         // this.audio.src = URL_SOUND;
         // this.audio.load();
-
     }
 
 
@@ -175,7 +172,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
      * @param conversationId the id of the conversation of which is wants to delete
      */
     deleteClosingConversation(conversationId: string) {
-    this.isConversationClosingMap.delete(conversationId);
+        this.isConversationClosingMap.delete(conversationId);
     }
 
 
@@ -394,6 +391,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
+        conv.last_message_text = htmlEntities(conv.last_message_text)
         conv.archived = true;
         //conv.image = this.imageRepo.getImagePhotoUrl(conversation_with);
         return conv;

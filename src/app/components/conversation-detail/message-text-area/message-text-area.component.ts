@@ -193,7 +193,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     console.log('sendMessage', text);
     console.log('sendMessage conve width', this.conversationWith);
     this.messageString = '';
-    text = text.replace(/(\r\n|\n|\r)/gm, '');
+    // text = text.replace(/(\r\n|\n|\r)/gm, '');
     if (text.trim() !== '') {
       this.eventSendMessage.emit({ message: text, type: TYPE_MSG_TEXT });
     }
