@@ -1,3 +1,12 @@
+
+:host .conversation_message span ::ng-deep > a {
+    pointer-events: none;
+    img {
+        display: none;
+        // max-width: 36% !important;
+        // vertical-align: bottom;
+    }      
+}
 ion-item {
     cursor: pointer;
     height: 64px;

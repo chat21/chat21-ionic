@@ -1,5 +1,5 @@
 import { ConversationContentComponent } from './../conversation-content/conversation-content.component';
-import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
 import { MESSAGE_TYPE_INFO, MESSAGE_TYPE_MINE, MESSAGE_TYPE_OTHERS } from 'src/chat21-core/utils/constants';
@@ -13,7 +13,7 @@ import { isChannelTypeGroup, isFirstMessage, isInfo, isMine, messageType } from 
 export class IonConversationDetailComponent extends ConversationContentComponent implements OnInit {
 
   @Input() channelType: string;
-
+  @Output() onImageRendered = new EventEmitter<boolean>() 
   // functions utils
   isMine = isMine;
   isInfo = isInfo;
@@ -32,7 +32,10 @@ export class IonConversationDetailComponent extends ConversationContentComponent
 
   ngOnInit() {}
 
-
+  onImageRenderedFN(event){
+    console.log('onImageRenderedFN:::ionic', event)
+    this.onImageRendered.emit(event)
+  }
 
 
 }

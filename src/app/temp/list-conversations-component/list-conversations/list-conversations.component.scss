@@ -1,4 +1,8 @@
 //@import '../../../sass/variables';
+:host .c21-msg ::ng-deep > a > img {
+    max-width: 24% !important;
+    position: absolute;
+}
 
 #c21-app-list-conversations{
     position: relative;

@@ -70,7 +70,8 @@
           [message]="message"
           [textColor]="'col-msg-sent'"
           (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-          (onAfterMessageRender)="returnOnAfterMessageRender($event)">
+          (onAfterMessageRender)="returnOnAfterMessageRender($event)"
+          (onImageRendered)="onImageRenderedFN($event)">
       </tiledeskwidget-bubble-message>
 
         <!-- icon status message -->
@@ -97,7 +98,8 @@
           [message]="message"
           [textColor]="'black'"
           (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-          (onAfterMessageRender)="returnOnAfterMessageRender($event)">
+          (onAfterMessageRender)="returnOnAfterMessageRender($event)"
+          (onImageRendered)="onImageRenderedFN($event)">
       </tiledeskwidget-bubble-message>
 
     </div>

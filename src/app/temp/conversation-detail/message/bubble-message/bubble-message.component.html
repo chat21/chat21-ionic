@@ -15,7 +15,8 @@
     <tiledeskwidget-image *ngIf="isImage(message)"
       [metadata]="message.metadata"
       [width]="getMetadataSize(message.metadata).width"
-      [height]="getMetadataSize(message.metadata).height">
+      [height]="getMetadataSize(message.metadata).height"
+      (onImageRendered)="onImageRenderedFN($event)">
     </tiledeskwidget-image>
 
     <tiledeskwidget-frame *ngIf="isFrame(message)"

@@ -238,6 +238,18 @@ export class ConversationContentComponent implements OnInit {
     this.onAfterMessageRender.emit(event)
   }
 
+  onImageRenderedFN(event){
+    const imageRendered = event;
+    if (imageRendered && this.scrollMe) {
+      const divScrollMe = this.scrollMe.nativeElement;
+      const checkContentScrollPosition = this.checkContentScrollPosition(divScrollMe);
+      if (!checkContentScrollPosition) { // SE NON SONO ALLA FINE, SCROLLO CONTENT
+        this.scrollToBottom()
+      }
+ 
+    }
+  }
+
   // printMessage(message, messageEl, component) {
   //   const messageOBJ = { message: message, sanitizer: this.sanitizer, messageEl: messageEl, component: component}
   //   this.onBeforeMessageRender.emit(messageOBJ)

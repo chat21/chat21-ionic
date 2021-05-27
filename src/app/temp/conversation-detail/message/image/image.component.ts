@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'tiledeskwidget-image',
@@ -10,6 +10,7 @@ export class ImageComponent implements OnInit {
   @Input() metadata: any;
   @Input() width: string;
   @Input() height: number;
+  @Output() onImageRendered = new EventEmitter<boolean>();
   loading: boolean = true
 
   constructor(private cdref: ChangeDetectorRef) { }
@@ -19,6 +20,7 @@ export class ImageComponent implements OnInit {
 
   onLoaded(){
     this.loading = false
+    this.onImageRendered.emit(true)
   }
 
 

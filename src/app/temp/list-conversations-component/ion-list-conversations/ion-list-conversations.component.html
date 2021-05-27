@@ -51,7 +51,8 @@
       <ion-icon *ngIf="conversation.type === 'image'" name="image-outline" class="icon-image-before-msg"></ion-icon>
       <!-- </div> -->
       <span [class.not-read]="conversation.is_new" 
-        [innerHTML]="conversation.last_message_text"></span>
+        [innerHTML]="conversation.last_message_text">
+      </span>
     </div>
   </ion-label>
   <ion-note *ngIf="!conversation.archived" class="conversation_time">{{conversation.time_last_message}}</ion-note>
