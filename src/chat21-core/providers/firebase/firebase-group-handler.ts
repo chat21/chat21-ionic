@@ -61,7 +61,7 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
      * inizializzo groups handler
      */
     initialize(tenant: string, loggedUserId: string) {
-        this.logger.printLog('initialize GROUP-HANDLER');
+        this.logger.printDebug('initialize GROUP-HANDLER');
         this.tenant = tenant;
         this.loggedUserId = loggedUserId;
     }

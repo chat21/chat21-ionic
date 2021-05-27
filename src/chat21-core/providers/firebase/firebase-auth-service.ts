@@ -86,14 +86,14 @@ export class FirebaseAuthService extends MessagingAuthService {
    * checkIsAuth
    */
   // checkIsAuth() {
-  //   this.logger.printLog(' ---------------- AuthService checkIsAuth ---------------- ')
+  //   this.logger.printDebug(' ---------------- AuthService checkIsAuth ---------------- ')
   //   this.tiledeskToken = this.appStorage.getItem('tiledeskToken')
   //   this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
   //   if (this.tiledeskToken) {
-  //     this.logger.printLog(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
+  //     this.logger.printDebug(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
   //     this.createFirebaseCustomToken();
   //   }  else {
-  //     this.logger.printLog(' ---------------- NON sono loggato ---------------- ')
+  //     this.logger.printDebug(' ---------------- NON sono loggato ---------------- ')
   //     // this.BSAuthStateChanged.next('offline');
   //   }
 
@@ -138,10 +138,10 @@ export class FirebaseAuthService extends MessagingAuthService {
     firebase.auth().onAuthStateChanged(user => {
       this.logger.printDebug(' onAuthStateChanged', user)
       if (!user) {
-        this.logger.printLog(' 1 - PASSO OFFLINE AL CHAT MANAGER')
+        this.logger.printDebug(' 1 - PASSO OFFLINE AL CHAT MANAGER')
         that.BSAuthStateChanged.next('offline');
       } else {
-        this.logger.printLog(' 2 - PASSO ONLINE AL CHAT MANAGER')
+        this.logger.printDebug(' 2 - PASSO ONLINE AL CHAT MANAGER')
         that.BSAuthStateChanged.next('online');
       }
     });
@@ -203,7 +203,7 @@ export class FirebaseAuthService extends MessagingAuthService {
   createUserWithEmailAndPassword(email: string, password: string): any {
     const that = this;
     return firebase.auth().createUserWithEmailAndPassword(email, password).then((response) => {
-      this.logger.printLog('FIREBASE-AUTH-SERV - CRATE USER WITH EMAIL: ', email, ' & PSW: ', password);
+      this.logger.printDebug('FIREBASE-AUTH-SERV - CRATE USER WITH EMAIL: ', email, ' & PSW: ', password);
       // that.firebaseCreateUserWithEmailAndPassword.next(response);
       return response;
     }).catch((error) => {
@@ -219,7 +219,7 @@ export class FirebaseAuthService extends MessagingAuthService {
   sendPasswordResetEmail(email: string): any {
     const that = this;
     return firebase.auth().sendPasswordResetEmail(email).then(() => {
-      this.logger.printLog('firebase-send-password-reset-email');
+      this.logger.printDebug('firebase-send-password-reset-email');
       // that.firebaseSendPasswordResetEmail.next(email);
     }).catch((error) => {
       this.logger.printError('error: ', error);
@@ -232,7 +232,7 @@ export class FirebaseAuthService extends MessagingAuthService {
   private signOut() {
     const that = this;
     firebase.auth().signOut().then(() => {
-      this.logger.printLog('firebase-sign-out');
+      this.logger.printDebug('firebase-sign-out');
       // cancello token
       // this.appStorage.removeItem('tiledeskToken');
       //localStorage.removeItem('firebaseToken');
@@ -249,7 +249,7 @@ export class FirebaseAuthService extends MessagingAuthService {
     const that = this;
     const user = firebase.auth().currentUser;
     user.delete().then(() => {
-      this.logger.printLog('firebase-current-user-delete');
+      this.logger.printDebug('firebase-current-user-delete');
       // that.firebaseCurrentUserDelete.next();
     }).catch((error) => {
       this.logger.printError('error: ', error);
@@ -268,7 +268,7 @@ export class FirebaseAuthService extends MessagingAuthService {
    * @param password
    */
   // signInWithEmailAndPassword(email: string, password: string) {
-  //   this.logger.printLog('FIREBASE-AUTH-SERV - signInWithEmailAndPassword', email, password);
+  //   this.logger.printDebug('FIREBASE-AUTH-SERV - signInWithEmailAndPassword', email, password);
   //   const httpHeaders = new HttpHeaders();
 
   //   httpHeaders.append('Accept', 'application/json');
@@ -295,7 +295,7 @@ export class FirebaseAuthService extends MessagingAuthService {
   //  * @param projectID
   //  */
   // signInAnonymously(projectID: string): Promise<any> {
-  //   this.logger.printLog('FIREBASE-AUTH-SERV - signInAnonymously - projectID', projectID);
+  //   this.logger.printDebug('FIREBASE-AUTH-SERV - signInAnonymously - projectID', projectID);
   //   const httpHeaders = new HttpHeaders();
 
   //   httpHeaders.append('Accept', 'application/json');
@@ -400,7 +400,7 @@ export class FirebaseAuthService extends MessagingAuthService {
   //     member.avatar = avatar;
   //     member.color = color;
 
-  //     this.logger.printLog('FIREBASE-AUTH-SERV - createCompleteUser member ', member) 
+  //     this.logger.printDebug('FIREBASE-AUTH-SERV - createCompleteUser member ', member) 
   //   } catch (err) {
   //     this.logger.printError('FIREBASE-AUTH-SERV - createCompleteUser ERR ', err) 
   //   }
@@ -450,7 +450,7 @@ export class FirebaseAuthService extends MessagingAuthService {
 
 
   public logout() {
-    this.logger.printLog('FIREBASE-AUTH-SERV logout');
+    this.logger.printDebug('FIREBASE-AUTH-SERV logout');
     // cancello token firebase dal local storage e da firebase
     // dovrebbe scattare l'evento authchangeStat
     this.BSSignOut.next(true);

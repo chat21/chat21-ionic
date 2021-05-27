@@ -88,7 +88,4 @@ export class FirebaseUploadService extends UploadService {
     
   }
 
-  get(filename: string, type: string): string {
-    throw new Error('Method not implemented.');
-  }
 }

@@ -126,9 +126,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         this.ref.on('child_added', (childSnapshot) => {
             that.added(childSnapshot);
         });
-
-        this.logger.printDebug('SubscribeToConversations (firebase-convs-handler) - conversations', that.conversations)
-
+        
         setTimeout(() => {
             callback()
         }, 2000);
@@ -136,7 +134,6 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         // this.audio = new Audio();
         // this.audio.src = URL_SOUND;
         // this.audio.load();
-
     }
 
     /**
@@ -229,13 +226,13 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
                 }
                 const url = this.BASE_URL + '/api/' + this.tenant + '/conversations/' + conversationId // + queryString;
                 this.http.delete(url, httpOptions).subscribe(res => {
-                    this.logger.printLog('FIREBASE-CONVERSATION-HANDLER DELETE CONV - RES', res);
+                    this.logger.printDebug('FIREBASE-CONVERSATION-HANDLER DELETE CONV - RES', res);
                     callback('success')
                 }, (error) => {
                     this.logger.printError('FIREBASE-CONVERSATION-HANDLER DELETE CONV ERROR ', error);
                     callback('error')
                 }, () => {
-                    this.logger.printLog('FIREBASE-CONVERSATION-HANDLER DELETE CONV * COMPLETE *');
+                    this.logger.printDebug('FIREBASE-CONVERSATION-HANDLER DELETE CONV * COMPLETE *');
 
                 });
             } else {
@@ -352,7 +349,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     * @param childSnapshot
     */
     // private conversationGenerate(childSnapshot: any): ConversationModel {
-    //     this.logger.printLog('conversationGenerate: ', childSnapshot.val());
+    //     this.logger.printDebug('conversationGenerate: ', childSnapshot.val());
     //     const childData: ConversationModel = childSnapshot.val();
     //     childData.uid = childSnapshot.key;
     //     const conversation = this.completeConversation(childData);
