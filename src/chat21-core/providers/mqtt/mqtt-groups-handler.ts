@@ -1,9 +1,11 @@
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { GroupModel } from 'src/chat21-core/models/group';
 import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
 import { CustomLogger } from '../logger/customLogger';
 import { Chat21Service } from './chat-service';
+import { LoggerInstance } from '../logger/loggerInstance';
 @Injectable({
     providedIn: 'root'
   })
@@ -19,7 +21,7 @@ import { Chat21Service } from './chat-service';
     // private params
     private tenant: string;
     private loggedUserId: string;
-    private logger: CustomLogger = new CustomLogger(true);
+    private logger: LoggerService = LoggerInstance.getInstance()
     
     constructor(
         public chat21Service: Chat21Service

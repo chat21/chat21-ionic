@@ -1,3 +1,4 @@
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -22,6 +23,7 @@ import { ImageRepoService } from '../abstract/image-repo.service';
 import { FirebaseImageRepoService } from './firebase-image-repo';
 import { ArchivedConversationsHandlerService } from '../abstract/archivedconversations-handler.service';
 import { CustomLogger } from '../logger/customLogger';
+import { LoggerInstance } from '../logger/loggerInstance';
 
 
 
@@ -48,7 +50,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
     private loggedUserId: string;
     private translationMap: Map<string, string>;
     private isConversationClosingMap: Map<string, boolean>;
-    private logger: CustomLogger = new CustomLogger(true);
+    private logger:LoggerService = LoggerInstance.getInstance()
     private ref: firebase.database.Query;
 
     constructor(

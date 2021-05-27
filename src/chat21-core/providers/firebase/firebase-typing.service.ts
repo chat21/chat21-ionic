@@ -1,3 +1,4 @@
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -9,6 +10,7 @@ import 'firebase/database';
 // services
 import { TypingService } from '../abstract/typing.service';
 import { CustomLogger } from '../logger/customLogger';
+import { LoggerInstance } from '../logger/loggerInstance';
 
 export class TypingModel {
   constructor(
@@ -35,7 +37,7 @@ export class FirebaseTypingService extends TypingService {
   // private params
   private urlNodeTypings: string;
   private setTimeoutWritingMessages: any;
-  private logger: CustomLogger= new CustomLogger(true);
+  private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor() {
     super();

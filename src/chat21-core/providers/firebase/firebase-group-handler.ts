@@ -21,6 +21,8 @@ import { AppConfigProvider } from '../../../app/services/app-config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GroupModel } from 'src/chat21-core/models/group';
 import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user';
+import { LoggerService } from '../abstract/logger.service';
+import { LoggerInstance } from '../logger/loggerInstance';
 
 
 // @Injectable({ providedIn: 'root' })
@@ -43,8 +45,7 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
     private loggedUserId: string;
     private ref: firebase.database.Query;
     private BASE_URL = this.appConfig.getConfig().firebaseConfig.chat21ApiUrl;
-
-    private logger: CustomLogger = new CustomLogger(true);
+    private logger:LoggerService = LoggerInstance.getInstance()
 
     // private audio: any;
     // private setTimeoutSound: any;
@@ -100,7 +101,6 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
         return new Promise((resolve) => {
             ref.off()
             ref.on('value', (childSnapshot) => {
-                console.log('group info::', childSnapshot.val())
                 const group: GroupModel = childSnapshot.val();
                 group.uid = childSnapshot.key
                 // that.BSgroupDetail.next(group)
@@ -137,7 +137,7 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
 
         return new Promise((resolve, reject) =>{
             this.getFirebaseToken((error, idToken) => {
-                console.log('FIREBASE-GROUPS-HANDLER CREATE GROUP idToken', idToken, error)
+                that.logger.printDebug('FIREBASE-GROUPS-HANDLER CREATE GROUP idToken', idToken, error)
                 if (idToken) {
                     const httpOptions = {
                         headers: new HttpHeaders({
@@ -151,13 +151,12 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
                         "group_members": listMembers
                     }
                     const url = that.BASE_URL + '/api/' + that.tenant + '/groups'
-                    console.log('createGROUP URL : ', url);
                     that.http.post(url, body, httpOptions).toPromise().then((res) => {
                         callback(res, null);
                         resolve(res)
                     }).catch(function (error) {
                         // Handle error
-                        console.log('createGROUP error: ', error);
+                        that.logger.printError('createGROUP error: ', error);
                         callback(null, error);
                         reject(error);
                     });
@@ -173,7 +172,7 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
         var that = this;
         return new Promise((resolve, reject) =>{
             this.getFirebaseToken((error, idToken) => {
-                console.log('FIREBASE-GROUPS-HANDLER JOIN GROUP idToken', idToken, error)
+                that.logger.printDebug('FIREBASE-GROUPS-HANDLER JOIN GROUP idToken', idToken, error)
                 if (idToken) {
                     const httpOptions = {
                         headers: new HttpHeaders({
@@ -186,13 +185,12 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
                         "member_id": member
                     }
                     const url = that.BASE_URL + '/api/' + that.tenant + '/groups/' + groupId + '/members'
-                    console.log('createGROUP URL : ', url);
                     that.http.post(url, body, httpOptions).toPromise().then((res) => {
                         callback(res, null);
                         resolve(res)
                     }).catch(function (error) {
                         // Handle error
-                        console.log('createGROUP error: ', error);
+                        that.logger.printDebug('createGROUP error: ', error);
                         callback(null, error);
                         reject(error);
                     });
@@ -208,7 +206,7 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
         var that = this;
         return new Promise((resolve, reject) =>{
             this.getFirebaseToken((error, idToken) => {
-                console.log('FIREBASE-GROUPS-HANDLER LEAVE CONV idToken', idToken, error)
+                that.logger.printDebug('FIREBASE-GROUPS-HANDLER LEAVE CONV idToken', idToken, error)
                 if (idToken) {
                     const httpOptions = {
                         headers: new HttpHeaders({
@@ -218,13 +216,12 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
                         })
                     }
                     const url = that.BASE_URL + '/api/' + that.tenant + '/groups/' + groupId + '/members/' + that.loggedUserId
-                    console.log('leaveGROUP URL : ', url);
                     that.http.delete(url, httpOptions).toPromise().then((res) => {
                         callback(res, null);
                         resolve(res)
                     }).catch(function (error) {
                         // Handle error
-                        console.log('idToken error: ', error);
+                        that.logger.printError('idToken error: ', error);
                         callback(null, error);
                         reject(error);
                     });
@@ -250,16 +247,16 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
     // // -------->>>> PRIVATE METHOD SECTION START <<<<---------------//
     private getFirebaseToken(callback) {
         const firebase_currentUser = firebase.auth().currentUser;
-        console.log(' // firebase current user ', firebase_currentUser);
+        this.logger.printDebug(' // firebase current user ', firebase_currentUser);
         if (firebase_currentUser) {
+            const that = this;
             firebase_currentUser.getIdToken(/* forceRefresh */ true)
                 .then(function (idToken) {
                     // qui richiama la callback
                     callback(null, idToken);
-
                 }).catch(function (error) {
                     // Handle error
-                    console.log('idToken.', error);
+                    that.logger.printError(' ERROR -> idToken.', error);
                     callback(error, null);
                 });
         }
@@ -267,15 +264,14 @@ export class FirebaseGroupsHandler extends GroupsHandlerService {
 
     private groupValue(childSnapshot: any){
         const that = this;
-        console.log('group detail::', childSnapshot.val(), childSnapshot)
+        this.logger.printDebug('group detail::', childSnapshot.val(), childSnapshot)
         const group: GroupModel = childSnapshot.val();
-        console.log('FIREBASE-GROUP-HANDLER group ', group)
+        this.logger.printDebug('FIREBASE-GROUP-HANDLER group ', group)
         if (group) {
             group.uid = childSnapshot.key
             // that.BSgroupDetail.next(group)
             let groupCompleted = this.completeGroup(group)
-            this.SgroupDetail.next(groupCompleted)
-            
+            this.SgroupDetail.next(groupCompleted) 
         } 
     }
 

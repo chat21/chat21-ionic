@@ -11,7 +11,7 @@ import 'firebase/auth';
 
 // services
 // import { EventsService } from '../events-service';
-import { AuthService } from '../abstract/auth.service';
+import { MessagingAuthService } from '../abstract/messagingAuth.service';
 import { Chat21Service } from './chat-service';
 // models
 import { UserModel } from '../../models/user';
@@ -23,7 +23,8 @@ import { AppStorageService } from '../abstract/app-storage.service';
 
 @Injectable({ providedIn: 'root' })
 
-export class MQTTAuthService extends AuthService {
+export class MQTTAuthService extends MessagingAuthService {
+  
 
   // authStateChanged: BehaviorSubject<any>; // = new BehaviorSubject<any>([]);
 
@@ -150,6 +151,10 @@ export class MQTTAuthService extends AuthService {
       }
     }, false);
 
+  }
+
+  createCustomToken(tiledeskToken: any): void {
+    throw new Error('Method not implemented.');
   }
 
 

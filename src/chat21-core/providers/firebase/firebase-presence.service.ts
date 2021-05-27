@@ -1,3 +1,4 @@
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -10,6 +11,7 @@ import 'firebase/database';
 // import { EventsService } from '../events-service';
 import { PresenceService } from '../abstract/presence.service';
 import { CustomLogger } from '../logger/customLogger';
+import { LoggerInstance } from '../logger/loggerInstance';
 
 // utils
 // import { setLastDate } from '../../utils/utils';
@@ -33,7 +35,7 @@ export class FirebasePresenceService extends PresenceService {
   private onlineConnectionsRef: any;
   private lastOnlineConnectionsRef: any;
   private keyConnectionRef: any;
-  private logger: CustomLogger = new CustomLogger(true)
+  private logger: LoggerService = LoggerInstance.getInstance();
   online_member = []
   constructor() {
     super();
@@ -72,27 +74,22 @@ export class FirebasePresenceService extends PresenceService {
 
   public userIsOnline(userid: string): Observable<any> {
     let local_BSIsOnline = new BehaviorSubject<any>(null);
-    this.logger.printDebug('userIsOnline', userid);
-    console.log('CONVERSATION-DETAIL group detail userIsOnline', userid);
+    this.logger.printDebug('CONVERSATION-DETAIL group detail userIsOnline', userid);
     const that = this;
     const urlNodeConnections = this.urlNodePresence + userid + '/connections';
     this.logger.printDebug('userIsOnline: ', urlNodeConnections);
     const connectionsRef = firebase.database().ref().child(urlNodeConnections);
     connectionsRef.off()
     connectionsRef.on('value', (child) => {
-      this.logger.printDebug('is-online-' + userid);
+      this.logger.printDebug('CONVERSATION-DETAIL group detail userIsOnline id user', userid, '- child.val: ', child.val());
       if (child.val()) {
-        console.log('CONVERSATION-DETAIL group detail userIsOnline id user', userid, '- child.val: ', child.val());
         this.BSIsOnline.next({ uid: userid, isOnline: true });
         local_BSIsOnline.next({ uid: userid, isOnline: true });
-        console.log('CONVERSATION-DETAIL group detail userIsOnline 1', userid);
       } else {
         this.BSIsOnline.next({ uid: userid, isOnline: false });
         local_BSIsOnline.next({ uid: userid, isOnline: false });
-        console.log('CONVERSATION-DETAIL group detail userIsOnline 2', userid);
       }
     });
-
     return local_BSIsOnline
   }
 
