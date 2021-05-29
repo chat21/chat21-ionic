@@ -319,16 +319,16 @@ class Chat21Client {
                 const message_json = JSON.parse(message.toString())
                 
 
-                // TEMPORARILY DISABLED, ADDED-CONVERSATIONS ARE OBSERVED BY NEW MESSAGES.
-                // MOVED TO: this.onMessageAddedCallbacks
-                // if (this.onConversationAddedCallbacks) {
-                //     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTADDED)) {
-                //         // map.forEach((value, key, map) =>)
-                //         this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
-                //             callback(message_json, _topic)
-                //         });
-                //     }
-                // }
+                // ADDED-CONVERSATIONS ARE OBSERVED BY NEW MESSAGES. (this.onMessageAddedCallbacks())
+                // ACTUALLY ONLY (UN)ARCHIVED CONVERSATIONS ARE OBSERVED ON THIS TOPIC
+                if (this.onConversationAddedCallbacks) {
+                    if (topic.includes("/conversations/") && topic.endsWith(_CLIENTADDED)) {
+                        // map.forEach((value, key, map) =>)
+                        this.onConversationAddedCallbacks.forEach((callback, handler, map) => {
+                            callback(message_json, _topic)
+                        });
+                    }
+                }
 
                 if (this.onConversationUpdatedCallbacks) {
                     // example topic: apps.tilechat.users.ME.conversations.CONVERS-WITH.clientdeleted
