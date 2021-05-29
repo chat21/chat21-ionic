@@ -1,6 +1,6 @@
 {
     "name": "chat-ionic-v4",
-    "version": "3.0.30",
+    "version": "3.0.37",
     "author": "Lanzilotto Nicola, Panico Gabriele - Frontiere21 SRL",
     "homepage": "https://ionicframework.com/",
     "scripts": {
@@ -11,7 +11,7 @@
         "lint": "ng lint",
         "e2e": "ng e2e"
     },
-    "private": true,
+    "private": false,
     "dependencies": {
         "@angular/common": "~8.2.14",
         "@angular/core": "~8.2.14",

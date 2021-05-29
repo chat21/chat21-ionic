@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
   private setIntervalTime: any;
   private setTimeoutSound: any;
   private isTabVisible: boolean = true;
-  private tabTitle: string; 
+  private tabTitle: string;
 
   constructor(
     private platform: Platform,
@@ -138,7 +138,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private checkJWTtoken(){
+  private checkJWTtoken() {
     // let tildeskTokenFromURL= '';
     // this.route.queryParams.subscribe(params => {
     //   tildeskTokenFromURL = params.jwt
@@ -152,16 +152,16 @@ export class AppComponent implements OnInit {
     //     });
     //   }
     // });
-    
+
     let tiledeskToken = this.appStorageService.getItem('tiledeskToken')
     let currentUser = this.appStorageService.getItem('currentUser')
-    if(tiledeskToken && !currentUser){
+    if (tiledeskToken && !currentUser) {
       // this.authService.initialize();
       console.log('tildeskToken exist but NO currentUser EXIST --> signInWithCustomToken...')
       this.authService.signInWithCustomToken(tiledeskToken).then(resp => {
         console.log('userlogged customtoken', resp)
       }).catch(error => {
-          console.log(['> Error :' + error]);
+        console.log(['> Error :' + error]);
       });
     }
   }
@@ -265,15 +265,13 @@ export class AppComponent implements OnInit {
   // @HostListener('document:visibilitychange', ['$event'])
   @HostListener('document:visibilitychange', [])
   visibilitychange() {
-    console.log("document TITLE", document.hidden, document.title);
+    // console.log("document TITLE", document.hidden, document.title);
     if (document.hidden) { 
-        console.log("document is hidden");
         this.isTabVisible = false
     } else {
         // TAB IS ACTIVE --> restore title and DO NOT SOUND
         clearInterval(this.setIntervalTime)
         this.isTabVisible = true;
-        console.log("document is showing",this.isTabVisible);
         document.title = this.tabTitle;
     }
   }
@@ -283,17 +281,18 @@ export class AppComponent implements OnInit {
         // TAB IS HIDDEN --> manage title and SOUND
 
         let badgeNewConverstionNumber = this.conversationsHandlerService.countIsNew()
+        badgeNewConverstionNumber > 0 ? badgeNewConverstionNumber : 1
         document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
-
+        
+        clearInterval(this.setIntervalTime)
         const that = this
-        // this.setIntervalTime = setInterval(function(){
-        //     if(document.title.charAt(0)==='('){
-        //         document.title = that.tabTitle
-        //     } else {
-        //         document.title = "(" + badgeNewConverstionNumber + ") " + that.tabTitle;
-        //     }
-        // }, 1000);
-
+        this.setIntervalTime = setInterval(function(){
+            if(document.title.charAt(0)==='('){
+                document.title = that.tabTitle
+            } else {
+                document.title = "(" + badgeNewConverstionNumber + ") " + that.tabTitle;
+            }
+        }, 1000);
         this.soundMessage()
     }
   }
@@ -310,7 +309,7 @@ export class AppComponent implements OnInit {
       that.audio.play().then(() => {
         console.log('****** soundMessage played *****');
       }).catch((error: any) => {
-          console.log('***soundMessage error*', error);
+        console.log('***soundMessage error*', error);
       });
     }, 1000);
   }
@@ -374,7 +373,7 @@ export class AppComponent implements OnInit {
   }
 
 
-  private initAudio(){
+  private initAudio() {
     // SET AUDIO
     this.audio = new Audio();
     this.audio.src = URL_SOUND_LIST_CONVERSATION;
@@ -478,9 +477,7 @@ export class AppComponent implements OnInit {
 
   listenToLogoutEvent() {
     this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
-
       console.log('APP-COMP hasclickedlogout', hasclickedlogout);
-
       if (hasclickedlogout === true) {
         this.removePresenceAndLogout()
       }
@@ -496,7 +493,7 @@ export class AppComponent implements OnInit {
    */
   goOffLine = () => {
     console.log('************** goOffLine:', this.authModal);
-    
+
     this.chatManager.setTiledeskToken(null);
     this.chatManager.setCurrentUser(null);
     this.chatManager.goOffLine();
@@ -521,13 +518,15 @@ export class AppComponent implements OnInit {
 
     // this.subscribeToConvs()
     this.conversationsHandlerService.subscribeToConversations(() => {
-      console.log('APP-COMPONENT - INIT CONV')
+      console.log('CONVS - APP-COMPONENT - INIT CONV')
       const conversations = this.conversationsHandlerService.conversations;
-      // console.log('APP-COMPONEN CONVS' , conversations )
+      console.log('CONVS - APP-COMPONENT - INIT CONV CONVS', conversations)
       // this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
-      // if (!this.conversations || this.conversations.length === 0) {
-      //   that.showPlaceholder = true;
-      // }
+      if (!conversations || conversations.length === 0) {
+        // that.showPlaceholder = true;
+        console.log('CONVS - APP-COMPONENT - INIT CONV CONVS 2', conversations)
+        this.events.publish('appcompSubscribeToConvs:loadingIsActive', false);
+      }
     });
 
   }

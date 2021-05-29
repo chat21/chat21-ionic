@@ -91,6 +91,15 @@ app-conversations-list {
     text-overflow: ellipsis !important;
 }
 
+.truncate-conv-msg {
+    width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    color: #999999;
+    font-size: 13px;
+}
+
 // .popover-md .popover-content{
 //     width: auto!important;
 // }
@@ -523,7 +532,7 @@ select:-webkit-autofill:focus {
 }
 
 .highlight-search-string {
-  color: #1877f2 !important;  
+    color: #1877f2 !important;
 }
 
 // #chatArea > ion-row.row_chat_area > ion-content > ion-conversation-detail > div > div > tiledeskwidget-bubble-message.slide-in-right > div > div > div > tiledeskwidget-text > p > p > a{

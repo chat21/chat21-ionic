@@ -976,11 +976,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
       setTimeout(() => {
         var pos = message.lastIndexOf("/");
-        console.log("CONVERSATION-DETAIL returnChangeTextArea message ", message);
+        console.log("CONVERSATION-DETAIL canned responses pos of / ", pos);
         console.log("pos:: ", pos);
-        if (pos >= 0) {
+        // if (pos >= 0) {
+        if (pos === 0) {
           // && that.tagsCanned.length > 0
           var strSearch = message.substr(pos + 1);
+          console.log("CONVERSATION-DETAIL canned responses strSearch ", strSearch);
           this.loadTagsCanned(strSearch);
           //that.showTagsCanned(strSearch);
           //that.loadTagsCanned(strSearch);
@@ -1009,27 +1011,32 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // if(!this.conversationSelected || !this.conversationSelected.attributes || !this.conversationSelected.attributes.projectId || !this.appConfig.getConfig().SERVER_BASE_URL){
     //   return;
     // }
-    console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail', this.groupDetail);
-    console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail project id', this.groupDetail['attributes']['projectId']);
-    const projectId = this.groupDetail['attributes']['projectId']
-    const tiledeskToken = this.authService.getTiledeskToken();
-    console.log('CONVERSATION-DETAIL tagsCanned.length', this.tagsCanned.length);
-    //if(this.tagsCanned.length <= 0 ){
-    this.tagsCanned = [];
-    this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId).subscribe(res => {
-      console.log('CONVERSATION-DETAIL loadTagsCanned getCannedResponses RES', res);
+    let projectId = ""
+    if (this.groupDetail) {
+      projectId = this.groupDetail['attributes']['projectId']
 
-      this.tagsCanned = res
-      this.showTagsCanned(strSearch);
+      console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail', this.groupDetail);
+      console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail project id', this.groupDetail['attributes']['projectId']);
 
-    }, (error) => {
-      console.log('CONVERSATION-DETAIL loadTagsCanned getCannedResponses - ERROR  ', error);
 
-    }, () => {
-      console.log('CONVERSATION-DETAIL loadTagsCanned getCannedResponses * COMPLETE *');
+      const tiledeskToken = this.authService.getTiledeskToken();
+      console.log('CONVERSATION-DETAIL tagsCanned.length', this.tagsCanned.length);
+      //if(this.tagsCanned.length <= 0 ){
+      this.tagsCanned = [];
+      this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId).subscribe(res => {
+        console.log('CONVERSATION-DETAIL loadTagsCanned getCannedResponses RES', res);
 
-    });
+        this.tagsCanned = res
+        this.showTagsCanned(strSearch);
 
+      }, (error) => {
+        console.log('CONVERSATION-DETAIL loadTagsCanned getCannedResponses - ERROR  ', error);
+
+      }, () => {
+        console.log('CONVERSATION-DETAIL loadTagsCanned getCannedResponses * COMPLETE *');
+
+      });
+    }
   }
 
   showTagsCanned(strSearch) {

@@ -31,7 +31,7 @@ export class ListConversationsComponent implements OnInit {
     
   }
 
-  private openConversationByID(conversation) {
+  public openConversationByID(conversation) {
     console.log('openConversationByID: ', conversation);
     if ( conversation ) {
       // this.conversationsService.updateIsNew(conversation);

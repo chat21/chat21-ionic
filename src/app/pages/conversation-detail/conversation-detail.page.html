@@ -1,10 +1,17 @@
 <span *ngIf="conversationWith && loggedUser; then showConversation else showPlaceholder"></span>
 <ng-template #showPlaceholder>
-  <ion-content class="splash-page">
-    <div padding class="image-splash-page"></div>
+  <!-- class="splash-page" -->
+  <ion-content padding>
+    <!-- <div padding class="image-splash-page"></div>
     <div padding class="title-splash-page">
       text new conversation + button
-    </div>
+    </div> -->
+   
+    <ion-grid style="height: 100%">
+      <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%; flex-direction: column">
+       <span style="color: #92949c; font-size: 16px;line-height: 18px;margin-top: -160px;">{{'PleaseSelectChatToStartMessaging' | translate }}</span> 
+      </ion-row>
+    </ion-grid>
   </ion-content>
 </ng-template>
 
@@ -21,15 +28,20 @@
         <ion-col id="chatArea" [class.mobile]="isMobile" [class.open]="openInfoConversation">
 
           <ion-row class="row_chat_area" [style.height]="'calc(100% - '+heightMessageTextArea+'px)'">
-            <span *ngIf="showMessageWelcome && messages.length == 0; then content_welcome else content_messages">here is
-              ignored</span>
+            <span *ngIf="showMessageWelcome && messages.length == 0; then content_welcome else content_messages">here is ignored</span>
 
             <div class="overlay" *ngIf="tagsCannedFilter.length > 0;"></div>
 
             <ng-template #content_welcome>
-              <div class="messageFirst">
+              <!-- <div class="messageFirst">
                 {{ 'LABEL_NO_MSG_HERE' | translate }}
-              </div>
+              </div> -->
+
+              <ion-grid style="height: 100%">
+                <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%; flex-direction: column">
+                 <span style="color: #92949c; font-size: 16px;line-height: 18px;margin-top: -160px;"> {{ 'LABEL_NO_MSG_HERE' | translate }}</span> 
+                </ion-row>
+              </ion-grid>
             </ng-template>
 
             <ng-template #content_messages>
@@ -114,12 +126,8 @@
         </ion-col>
 
         <ion-col id="chat21-info-conversation" [class.mobile]="isMobile" [class.open]="openInfoConversation">
-          <app-info-content 
-          [openInfoConversation]="openInfoConversation" 
-          [translationMap]="translationMap"
-          [loggedUser]="loggedUser" 
-          [tenant]="tenant"  
-          [groupDetail]="groupDetail">
+          <app-info-content [openInfoConversation]="openInfoConversation" [translationMap]="translationMap"
+            [loggedUser]="loggedUser" [tenant]="tenant" [groupDetail]="groupDetail">
             <!-- [member] = member -->
           </app-info-content>
         </ion-col>

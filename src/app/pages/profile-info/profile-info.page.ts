@@ -1,5 +1,5 @@
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, Renderer2 } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // services
@@ -18,12 +18,15 @@ import { isInArray, setLastDateWithLabels } from 'src/chat21-core/utils/utils';
 import * as PACKAGE from 'package.json';
 import { EventsService } from 'src/app/services/events-service';
 
+
 @Component({
   selector: 'app-profile-info',
   templateUrl: './profile-info.page.html',
   styleUrls: ['./profile-info.page.scss'],
 })
 export class ProfileInfoPage implements OnInit {
+  @ViewChild('useruidTooltip', { static: false }) useruidTooltip: any;
+
   loggedUser: UserModel;
   version: string;
   itemAvatar: any;
@@ -33,6 +36,16 @@ export class ProfileInfoPage implements OnInit {
   private subscriptions = [];
   borderColor = '#2d323e';
   fontColor = '#949494';
+  tooltip: HTMLElement;
+  tooltipOptions = {
+    'show-delay': 100,
+    'tooltip-class': 'chat-tooltip',
+    'theme': 'light',
+    'shadow': false,
+    'hide-delay-mobile': 0,
+    'hideDelayAfterClick': 3000,
+    'hide-delay': 200
+  };
 
   constructor(
     private modalController: ModalController,
@@ -42,7 +55,8 @@ export class ProfileInfoPage implements OnInit {
     public presenceService: PresenceService,
     public events: EventsService,
     private authService: AuthService,
-    private imageRepo: ImageRepoService
+    private imageRepo: ImageRepoService,
+    public renderer: Renderer2
   ) { }
 
   /** */
@@ -120,7 +134,7 @@ export class ProfileInfoPage implements OnInit {
 
 
     const that = this;
-    const subscribeBSIsOnline =  this.presenceService.BSIsOnline.subscribe((data: any) => {
+    const subscribeBSIsOnline = this.presenceService.BSIsOnline.subscribe((data: any) => {
       console.log('***** BSIsOnline *****', data);
       if (data) {
         const userId = data.uid;
@@ -131,7 +145,7 @@ export class ProfileInfoPage implements OnInit {
       }
     });
 
-    const subscribeBSLastOnline =  this.presenceService.BSLastOnline.subscribe((data: any) => {
+    const subscribeBSLastOnline = this.presenceService.BSLastOnline.subscribe((data: any) => {
       console.log('***** BSLastOnline *****', data);
       if (data) {
         const userId = data.uid;
@@ -172,8 +186,8 @@ export class ProfileInfoPage implements OnInit {
     }
   }
 
-  onClickArchivedConversation(){   
-    this.onClose().then(()=> {
+  onClickArchivedConversation() {
+    this.onClose().then(() => {
       this.events.publish('profileInfoButtonClick:changed', 'displayArchived');
     })
   }
@@ -205,5 +219,20 @@ export class ProfileInfoPage implements OnInit {
     this.onClose()
     // pubblico evento
     this.events.publish('profileInfoButtonClick:logout', true);
+  }
+
+  copyLoggedUserUID() {
+    var copyText = document.createElement("input");                  
+    copyText.setAttribute("type", "text");
+    copyText.setAttribute("value", this.loggedUser.uid);
+     
+    document.body.appendChild(copyText); 
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+    document.execCommand("copy");
+    console.log("Copied the text: " + copyText.value);
+    const tootipElem = <HTMLElement>document.querySelector('.chat-tooltip');
+    this.renderer.appendChild(tootipElem, this.renderer.createText('Copied!'))
+
   }
 }

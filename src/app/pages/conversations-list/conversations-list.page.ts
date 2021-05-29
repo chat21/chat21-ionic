@@ -104,7 +104,13 @@ export class ConversationListPage implements OnInit {
     // console.log('constructor ConversationListPage');
 
     // this.getUrlParams();
+
+    this.listenToAppCompConvsLengthOnInitConvs()
+    this.listenToLogoutEvent();
   }
+ 
+
+
   // getUrlParams() {
   //   this.route.paramMap.subscribe(params => {
   //     console.log('ConversationListPage get params: ', params);
@@ -212,7 +218,7 @@ export class ConversationListPage implements OnInit {
     // });
 
     this.conversations = this.conversationsHandlerService.conversations;
-    console.log('CONVERSATION-LIST-PAGE CONVS', this.conversations)
+    console.log('CONVS - CONVERSATION-LIST-PAGE CONVS ++++', this.conversations)
 
     // 6 - save conversationHandler in chatManager
     this.chatManager.setConversationsHandler(this.conversationsHandlerService);
@@ -224,6 +230,33 @@ export class ConversationListPage implements OnInit {
     //   }
     // }, 2000);
   }
+
+  // ----------------------------------------------------------------------------------------------------
+  // To display "No conversation yet" MESSAGE in conversazion list 
+  // this.loadingIsActive is set to false only if on init there are not conversation
+  // otherwise loadingIsActive remains set to true and the message "No conversation yet" is not displayed
+  // to fix this
+  // - for the direct conversation  
+  // ---------------------------------------------------------------------------------------------------- 
+  listenToAppCompConvsLengthOnInitConvs() {
+    this.events.subscribe('appcompSubscribeToConvs:loadingIsActive', (loadingIsActive) => {
+      console.log('CONVS - CONVERSATION-LIST-PAGE CONVS loadingIsActive', loadingIsActive);
+      if (loadingIsActive === false) {
+        this.loadingIsActive = false
+      }
+    });
+  }
+
+  listenToLogoutEvent() {
+    this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
+      console.log('CONVS - CONVERSATION-LIST-PAGE CONVS loadingIsActive hasclickedlogout', hasclickedlogout);
+      if (hasclickedlogout === true) {
+        this.loadingIsActive = false
+      }
+    });
+  }
+
+
 
   /**
    * ::: initArchivedConversationsHandler :::
@@ -249,28 +282,29 @@ export class ConversationListPage implements OnInit {
     // this.archivedConversationsHandlerService.subscribeToConversations();
 
     this.archivedConversationsHandlerService.subscribeToConversations(() => {
-      this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations archived')
-      if (!this.archivedConversations || this.archivedConversations.length === 0) {
-        that.showPlaceholder = true;
-      }
+      console.log('CONVS SubscribeToConversations (convs-list-page) - conversations archived length ', this.archivedConversations.length)
+      // if (!this.archivedConversations || this.archivedConversations.length === 0) {
+      //   this.loadingIsActive = false;
+      // }
     });
 
     this.archivedConversations = this.archivedConversationsHandlerService.archivedConversations;
-    this.logger.printDebug("archived conversation", this.archivedConversations)
+    console.log("archived conversation", this.archivedConversations)
     // 6 - save archivedConversationsHandlerService in chatManager
     this.chatManager.setArchivedConversationsHandler(this.archivedConversationsHandlerService);
-    const that = this;
-    this.showPlaceholder = false;
-    setTimeout(() => {
-      if (!that.archivedConversations || that.archivedConversations.length === 0) {
-        this.showPlaceholder = true;
-      }
-    }, 2000);
+    // const that = this;
+    // this.showPlaceholder = false;
+    // setTimeout(() => {
+    //   if (!that.archivedConversations || that.archivedConversations.length === 0) {
+    //     this.showPlaceholder = true;
+    //   }
+    // }, 2000);
+    console.log('CONVS SubscribeToConversations (convs-list-page) - conversations archived length ', this.archivedConversations.length)
+    if (!this.archivedConversations || this.archivedConversations.length === 0) {
+      this.loadingIsActive = false;
+    }
 
   }
-
-
-
 
 
   /** */
@@ -438,9 +472,6 @@ export class ConversationListPage implements OnInit {
       this.conversationType = 'archived'
 
       // let storedArchivedConv = localStorage.getItem('activeConversationSelected');
-
-
-
       const keys = ['LABEL_ARCHIVED'];
       this.headerTitle = this.translateService.translateLanguage(keys).get(keys[0]);
 
@@ -477,6 +508,8 @@ export class ConversationListPage implements OnInit {
     this.onConversationSelectedHandler.subscribe(conversation => {
       console.log('archived conversaation selectedddd', conversation)
       this.onConversationSelected(conversation)
+
+
     })
 
     this.onImageLoadedHandler.subscribe(conversation => {
@@ -643,13 +676,11 @@ export class ConversationListPage implements OnInit {
   onConversationLoaded(conversation: ConversationModel) {
     const keys = ['YOU'];
     const translationMap = this.translateService.translateLanguage(keys);
-    if (conversation.sender === this.loggedUserUid) {
+    if (conversation.sender === this.loggedUserUid && !conversation.last_message_text.includes(': ')) {
+      console.log('onConversationLoaded', conversation)
       conversation.last_message_text = convertMessage(translationMap.get('YOU') + ': ' + conversation.last_message_text)
-
     }
   }
-
-
 
   // ?????? 
   navigateByUrl(converationType: string, uidConvSelected: string) {
@@ -840,7 +871,22 @@ export class ConversationListPage implements OnInit {
 
   onCloseConversation(conversation: ConversationModel) {
 
-    console.log('CONV-LIST-PAGE onCloseConversation conv: ', conversation)
+    // -------------------------------------------------------------------------------------
+    // Fix the display of the message "No conversation yet" when a conversation is archived 
+    // but there are others in the list (happens when loadingIsActive is set to false because 
+    // when is called the initConversationsHandler method there is not conversations)
+    // -------------------------------------------------------------------------------------
+    this.loadingIsActive = false;
+    // console.log('CONVS - CONV-LIST-PAGE onCloseConversation CONVS: ', conversation)
+    console.log('CONVS - CONV-LIST-PAGE onCloseConversation loadingIsActive: ', this.loadingIsActive)
+
+    // --------------------------------------------------------------
+    // To display "No conversation yet" MESSAGE in conversazion list
+    // -------------------------------------------------------------- 
+    // if (this.conversations.length === 0) {
+    //   this.loadingIsActive = false;
+    // }
+
 
     const conversationId = conversation.uid;
 
@@ -865,13 +911,31 @@ export class ConversationListPage implements OnInit {
 
       }, () => {
         console.log('CONV-LIST-PAGE onCloseConversation closeSupportGroup * COMPLETE *');
-
+        console.log('CONVS - onCloseConversation (closeSupportGroup) CONVS ', this.conversations)
+        console.log('CONVS - onCloseConversation (closeSupportGroup) CONVS LENGHT ', this.conversations.length)
       });
     } else {
-
+      const that = this
       // questo se è direct o group-
+      // this.conversationsHandlerService.archiveConversation(conversationId, function (response) {
+      //   console.log('CONVS archiveConversation (direct o group-) response ', response);
+
+      //   if (response == 'success') {
+      //     console.log('CONVS - CONVERSATION-LIST-PAGE CONVS (archiveConversation) ++++', that.conversations)
+      //     console.log('CONVS - CONVERSATION-LIST-PAGE CONVS LENGHT (archiveConversation) ++++', that.conversations.length)
+      //   }
+      // });
+
       this.conversationsHandlerService.archiveConversation(conversationId)
+
+
     }
+
+
+
+
+
+
 
 
 
@@ -918,4 +982,14 @@ export class ConversationListPage implements OnInit {
     this.initialize();
 
   }
+
+  public generateFake(count: number): Array<number> {
+    const indexes = [];
+    for (let i = 0; i < count; i++) {
+      indexes.push(i);
+    }
+    return indexes;
+  }
+
+
 }

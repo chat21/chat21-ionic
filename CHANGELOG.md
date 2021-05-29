@@ -1,5 +1,36 @@
 # chat21-ionic ver 3.0
 
+### 3.0.37
+- Fixes the bug: the skeleton placeholder remains active after logout 
+
+### 3.0.36
+- Fixes the bug: in the list of conversations user last messsagge is showed more times
+- Adds in the list of conversations (active and archived) the placeholder 'No conversation yet' displayed when there aren't conversation
+- Manages the title on the browser tab when new messages are received: indication of the number of new messages that are received when the tab is not active
+- Fixes the bug: canned responses are called even if the slash ('/') is not at the beginning of the sentence
+- Conditions the canned responses call to the existence of the project id
+- Centers the placeholder message "Still no message here..."
+
+### 3.0.35
+- Adds a tooltip in the logged user profile panel that displays the user's id and the ability to copy it by clicking on the avatar
+- Replaces in the list of conversations (active and archived) the text 'loading' with a skeleton placeholder
+- Replaces in the detail of the conversation the image and the text "text new conversation + button" with the text "Please select a chat to start messaging"
+- Fixes the bug: in the list of conversations user last messsagge is showed more times
+
+### 3.0.34
+- Fixes the bug: in the right side panel of "direct" conversations the "Advanced" accordion opens only once
+- Fixes the bug: in the conversation list message text goes on a new line when there is the image icon
+- Fixes the bug: in the list of conversations the 'archive conversation' button is displayed fixed on the right and not on mouseover
+
+### 3.0.33
+- Changes dashboard url
+
+### 3.0.32
+- Changes dashboard url
+
+### 3.0.31
+- test Native uploadEngine 
+
 ### 3.0.30
 - Added image skeleton while load image
 - Improved uploaded images styles 
@@ -10,6 +41,7 @@
 - Fixes the bug: user's profile photo is not displayed in the right side panel of "direct" type conversations
 - Fixes the bug: user's profile photo is not displayed in the conversation header
 - Fixes the bug: users' profile pictures are not displayed in the left panel "write to"
+- Fixes the bug: the same image cannot be loaded twice
 
 ### 3.0.28
 - Minor improvements

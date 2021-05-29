@@ -75,6 +75,18 @@ ion-item {
                 font-size: 13px;
                 font-weight: 400;
                 height: 18px;
+                vertical-align: middle;
+                &.not-read {
+                    font-weight: 600;
+                    color: #1876f2;
+                }
+            }
+
+            span {
+                color: rgba(153, 153, 153, 1);
+                font-size: 13px;
+                font-weight: 400;
+                height: 18px;
                 &.not-read {
                     font-weight: 600;
                     color: #1876f2;
@@ -166,6 +178,7 @@ ion-item:hover {
 }
 .icon-image-before-msg {
     vertical-align: middle;
-    margin-bottom: 2px;
-    color: #999999
+    // margin-bottom: 2px;
+    color: #999999;
+    padding-right: 3px;
 }

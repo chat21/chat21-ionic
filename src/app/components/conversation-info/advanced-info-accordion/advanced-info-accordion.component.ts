@@ -1,14 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-advanced-info-accordion',
   templateUrl: './advanced-info-accordion.component.html',
   styleUrls: ['./advanced-info-accordion.component.scss'],
 })
-export class AdvancedInfoAccordionComponent implements OnInit {
+export class AdvancedInfoAccordionComponent implements OnInit, OnChanges {
   @Input() advancedAttributes: string;
   @Input() translationMap: Map<string, string>;
-  
+  public teammateID: string;
 
   tooltipOptions = {
     'show-delay': 100,
@@ -22,36 +22,47 @@ export class AdvancedInfoAccordionComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  openAdvancedInfoAccordion () {
+  openAdvancedInfoAccordion() {
+    console.log('Has clicked  openAdvancedInfoAccordion')
 
-    // var acc = document.getElementsByClassName("accordion");
-    // var acc = <HTMLElement>document.querySelector('.advanced-info-accordion')
-    // acc.classList.toggle("active");
-    var acc = <HTMLElement>document.querySelector('.absolute-icon')
+
+
+
+
+    var acc = <HTMLElement>document.querySelector('#absolute-icon_' + this.teammateID)
+    console.log('Has clicked  openAdvancedInfoAccordion absolute-icon', acc)
     acc.classList.toggle("active");
-    var panel = <HTMLElement>document.querySelector('.advanced-info-panel')
+    var panel = <HTMLElement>document.querySelector('#advanced-info-panel_' + this.teammateID)
+    console.log('Has clicked  openAdvancedInfoAccordion panel', panel)
     if (panel.style.maxHeight) {
       panel.style.maxHeight = null;
     } else {
       panel.style.maxHeight = panel.scrollHeight + "px";
     }
 
- 
-    // var i;
-    
-    // for (i = 0; i < acc.length; i++) {
-    //   acc[i].addEventListener("click", function() {
-    //     this.classList.toggle("active");
-    //     var panel = this.nextElementSibling;
-    //     if (panel.style.maxHeight) {
-    //       panel.style.maxHeight = null;
-    //     } else {
-    //       panel.style.maxHeight = panel.scrollHeight + "px";
-    //     }
-    //   });
+
+
+    // var acc = <HTMLElement>document.querySelector('.absolute-icon')
+    // console.log('Has clicked  openAdvancedInfoAccordion absolute-icon', acc)
+    // acc.classList.toggle("active");
+    // var panel = <HTMLElement>document.querySelector('.advanced-info-panel')
+    // console.log('Has clicked  openAdvancedInfoAccordion panel', panel)
+    // if (panel.style.maxHeight) {
+    //   panel.style.maxHeight = null;
+    // } else {
+    //   panel.style.maxHeight = panel.scrollHeight + "px";
     // }
+
+
+
+  }
+
+  ngOnChanges() {
+    console.log('ADVANCED-INFO-ACCORDION  advancedAttributes ', this.advancedAttributes)
+    this.teammateID = this.advancedAttributes[0]['value'];
+    console.log('ADVANCED-INFO-ACCORDION  teammateID ', this.teammateID)
   }
 
 
