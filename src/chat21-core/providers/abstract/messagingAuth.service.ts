@@ -51,9 +51,9 @@ export abstract class MessagingAuthService {
   abstract createCustomToken(tiledeskToken): void;
   abstract logout(): void;
 
-  abstract getCurrentUser(): UserModel;
-  abstract getTiledeskToken(): string;
-  abstract signInWithEmailAndPassword(email: string, password: string): void;
-  abstract signInWithCustomToken(tiledeskToken: string): Promise<any>;
-  abstract signInAnonymously(projectID: string): Promise<any>;
+  // abstract getCurrentUser(): UserModel;
+  // abstract getTiledeskToken(): string;
+  // abstract signInWithEmailAndPassword(email: string, password: string): void;
+  // abstract signInWithCustomToken(tiledeskToken: string): Promise<any>;
+  // abstract signInAnonymously(projectID: string): Promise<any>;
 }

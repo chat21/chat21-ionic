@@ -371,7 +371,7 @@ export class AppComponent implements OnInit {
     this.messagingAuthService.BSAuthStateChanged.subscribe((state: any) => {
       console.log('APP-COMPONENT ***** BSAuthStateChanged ***** state', state);
       if (state && state === AUTH_STATE_ONLINE) {
-        const user = that.messagingAuthService.getCurrentUser();
+        const user = that.tiledeskAuthService.getCurrentUser();
         that.goOnLine();
       } else if (state === AUTH_STATE_OFFLINE) {
         // that.goOffLine();
