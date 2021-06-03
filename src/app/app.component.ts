@@ -98,7 +98,11 @@ export class AppComponent implements OnInit {
     console.log('AppComponent');
     console.log('environment  -----> ', environment);
     this.tenant = environment.tenant;
-    this.splashScreen.show();
+
+    if (!this.platform.is('desktop')) {
+      this.splashScreen.show();
+    }
+
 
   }
 
@@ -119,7 +123,10 @@ export class AppComponent implements OnInit {
     this.zone = new NgZone({}); // a cosa serve?
     this.platform.ready().then(() => {
       this.setLanguage();
-      this.splashScreen.hide();
+
+      if (this.splashScreen) {
+        this.splashScreen.hide();
+      }
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
       this.appStorageService.initialize(environment.storage_prefix, environment.authPersistence, '')
@@ -266,34 +273,34 @@ export class AppComponent implements OnInit {
   @HostListener('document:visibilitychange', [])
   visibilitychange() {
     // console.log("document TITLE", document.hidden, document.title);
-    if (document.hidden) { 
-        this.isTabVisible = false
+    if (document.hidden) {
+      this.isTabVisible = false
     } else {
-        // TAB IS ACTIVE --> restore title and DO NOT SOUND
-        clearInterval(this.setIntervalTime)
-        this.isTabVisible = true;
-        document.title = this.tabTitle;
+      // TAB IS ACTIVE --> restore title and DO NOT SOUND
+      clearInterval(this.setIntervalTime)
+      this.isTabVisible = true;
+      document.title = this.tabTitle;
     }
   }
 
-  private manageTabNotification(){
-    if(!this.isTabVisible){
-        // TAB IS HIDDEN --> manage title and SOUND
+  private manageTabNotification() {
+    if (!this.isTabVisible) {
+      // TAB IS HIDDEN --> manage title and SOUND
 
-        let badgeNewConverstionNumber = this.conversationsHandlerService.countIsNew()
-        badgeNewConverstionNumber > 0 ? badgeNewConverstionNumber : 1
-        document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
-        
-        clearInterval(this.setIntervalTime)
-        const that = this
-        this.setIntervalTime = setInterval(function(){
-            if(document.title.charAt(0)==='('){
-                document.title = that.tabTitle
-            } else {
-                document.title = "(" + badgeNewConverstionNumber + ") " + that.tabTitle;
-            }
-        }, 1000);
-        this.soundMessage()
+      let badgeNewConverstionNumber = this.conversationsHandlerService.countIsNew()
+      badgeNewConverstionNumber > 0 ? badgeNewConverstionNumber : 1
+      document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
+
+      clearInterval(this.setIntervalTime)
+      const that = this
+      this.setIntervalTime = setInterval(function () {
+        if (document.title.charAt(0) === '(') {
+          document.title = that.tabTitle
+        } else {
+          document.title = "(" + badgeNewConverstionNumber + ") " + that.tabTitle;
+        }
+      }, 1000);
+      this.soundMessage()
     }
   }
 
@@ -521,6 +528,7 @@ export class AppComponent implements OnInit {
       console.log('CONVS - APP-COMPONENT - INIT CONV')
       const conversations = this.conversationsHandlerService.conversations;
       console.log('CONVS - APP-COMPONENT - INIT CONV CONVS', conversations)
+
       // this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
       if (!conversations || conversations.length === 0) {
         // that.showPlaceholder = true;
