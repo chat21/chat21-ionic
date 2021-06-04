@@ -64,7 +64,7 @@ export class MQTTAuthService extends MessagingAuthService {
     this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'chat21/native/auth/createCustomToken';
     // this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'auth/signinWithCustomToken';
     console.log(' ---------------- login con token url ---------------- ');
-    this.checkIsAuth();
+    // this.checkIsAuth();
     this.onAuthStateChanged();
   }
 
@@ -84,28 +84,6 @@ export class MQTTAuthService extends MessagingAuthService {
       //   callback();
       // }
     });
-  }
-
-  getCurrentUser(): UserModel {
-    // return firebase.auth().currentUser;
-    console.log("user returned", this.currentUser);
-    return this.currentUser;
-  }
-
-  getTiledeskToken() : string{
-    return ""
-  }
-
-  checkIsAuth() {
-    console.log('**** checkIsAuth ---------------- ');
-    this.tiledeskToken = this.appStorage.getItem('tiledeskToken');
-    this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
-    if (this.tiledeskToken && this.tiledeskToken !== undefined) {
-      console.log('**** this.tiledeskToken !== undefined ---------------- ');
-      this.connectWithCustomToken(this.tiledeskToken);
-    } else {
-      console.log('**** NON sono loggato ---------------- ');
-    }
   }
 
   /**
@@ -173,45 +151,6 @@ z
   //   });
   // }
 
-
-  // /**
-  //  * @param projectID
-  //  */
-  signInAnonymously(projectID: string): Promise<any> {
-    // console.log('signInAnonymously', projectID);
-    // const httpHeaders = new HttpHeaders();
-    
-    // httpHeaders.append('Accept', 'application/json');
-    // httpHeaders.append('Content-Type', 'application/json' );
-    // const requestOptions = { headers: httpHeaders };
-    // const postData = {
-    //   id_project: projectID
-    // };
-    // // const that = this;
-    // return new Promise((resolve, reject)=> {
-    //   this.http.post(this.URL_TILEDESK_SIGNIN_ANONYMOUSLY, postData, requestOptions).subscribe((data) => {
-    //     if (data['success'] && data['token']) {
-    //       this.tiledeskToken = data['token'];
-    //       this.createCompleteUser(data['user']);
-    //       this.appStorage.setItem('tiledeskToken', this.tiledeskToken);
-    //       this.connectWithCustomToken(this.tiledeskToken);
-    //       resolve(this.currentUser)
-    //     }
-    // }, (error) => {
-    //   console.log(error);
-    //   reject(error)
-    // });
-    // })
-    return null
-  }
-
-  
-
-  
-  signInWithEmailAndPassword(email: string, password: string): void {
-
-  }
-
   // ********************* NATIVE AUTH (NO TILEDESK) ********************* //
   // private signinMQTT(url: string, username: string, password: string) {
   //   console.log("signinMQTT...")
@@ -243,28 +182,28 @@ z
   /**
    * @param tiledeskToken
    */
-  signInWithCustomToken(tiledeskToken: string): Promise<any>{
-    const headers = new HttpHeaders({
-      'Content-type': 'application/json',
-      Authorization: tiledeskToken
-    });
-    const requestOptions = { headers: headers };
-    // const that = this;
-    return new Promise((resolve, reject)=> {
-      this.http.post(this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN, null, requestOptions).subscribe((data) => {
-        if (data['success'] && data['token']) {
-          this.tiledeskToken = data['token'];
-          // this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', this.tiledeskToken);
-          this.connectWithCustomToken(this.tiledeskToken);
-          resolve(this.currentUser)
-        }
-      }, (error) => {
-        console.log(error);
-        reject(error)
-      });
-    });
-  }
+  // signInWithCustomToken(tiledeskToken: string): Promise<any>{
+  //   const headers = new HttpHeaders({
+  //     'Content-type': 'application/json',
+  //     Authorization: tiledeskToken
+  //   });
+  //   const requestOptions = { headers: headers };
+  //   // const that = this;
+  //   return new Promise((resolve, reject)=> {
+  //     this.http.post(this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN, null, requestOptions).subscribe((data) => {
+  //       if (data['success'] && data['token']) {
+  //         this.tiledeskToken = data['token'];
+  //         // this.createCompleteUser(data['user']);
+  //         this.appStorage.setItem('tiledeskToken', this.tiledeskToken);
+  //         this.connectWithCustomToken(this.tiledeskToken);
+  //         resolve(this.currentUser)
+  //       }
+  //     }, (error) => {
+  //       console.log(error);
+  //       reject(error)
+  //     });
+  //   });
+  // }
 
 
 
