@@ -53,53 +53,61 @@
 <!--  nk - no tag ionic -->
 <!-- ----------------------------------------------------------- -->
 
-  <div *ngFor="let message of messages; let i = index">
+<div *ngFor="let message of messages; let i = index">
 
-    <div class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)" class="msg_info_container">
-      <tiledeskwidget-info-message class="messages"
-          [message]="message">
-      </tiledeskwidget-info-message>
-    </div>
+  <div class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)"
+    class="msg_info_container">
+    <tiledeskwidget-info-message class="messages" [message]="message">
+    </tiledeskwidget-info-message>
+  </div>
 
-    <!-- message SENDER:: -->
-    <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
-                          
-      <!--backgroundColor non viene ancora usato -->
-      <tiledeskwidget-bubble-message class="messages msg_sent slide-in-right"
-          [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}"
-          [message]="message"
-          [textColor]="'col-msg-sent'"
-          (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-          (onAfterMessageRender)="returnOnAfterMessageRender($event)">
-      </tiledeskwidget-bubble-message>
+  <!-- message SENDER:: -->
+  <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
 
-        <!-- icon status message -->
-      <tiledeskwidget-return-receipt class="slide-in-right"
-          [status]="message.status">
-      </tiledeskwidget-return-receipt>
+    <!--backgroundColor non viene ancora usato -->
+    <tiledeskwidget-bubble-message class="messages msg_sent slide-in-right"
+      [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" [message]="message"
+      [textColor]="'col-msg-sent'" (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+      (onAfterMessageRender)="returnOnAfterMessageRender($event)">
+    </tiledeskwidget-bubble-message>
 
-    </div>
+    <!-- icon status message -->
+    <tiledeskwidget-return-receipt class="slide-in-right" [status]="message.status" [message]="message"
+      [senderId]="senderId">
+    </tiledeskwidget-return-receipt>
 
-    <!-- message RECIPIENT:: -->
-    <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message) && isChannelTypeGroup(channelType)" class="message_sender_fullname slide-in-left">
-      {{message.sender_fullname}}
-    </div>
-    <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)" class="msg_container base_receive">
-                          
-      <!-- <tiledeskwidget-avatar-image class="slide-in-left"  
+  </div>
+
+  <!-- message RECIPIENT:: -->
+  <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message) && isChannelTypeGroup(channelType)"
+    class="message_sender_fullname slide-in-left">
+    {{message.sender_fullname}}
+  </div>
+  <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)" class="msg_container base_receive">
+
+    <!-- <tiledeskwidget-avatar-image class="slide-in-left"  
           [senderID]="message.sender"
           [senderFullname]="message.sender_fullname"
           [baseLocation]="baseLocation">
       </tiledeskwidget-avatar-image> -->
 
-      <!--backgroundColor non viene ancora usato -->
-      <tiledeskwidget-bubble-message class="messages msg_receive slide-in-left"
-          [message]="message"
-          [textColor]="'black'"
-          (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-          (onAfterMessageRender)="returnOnAfterMessageRender($event)">
-      </tiledeskwidget-bubble-message>
-
-    </div>
+    <!--backgroundColor non viene ancora usato -->
+    <tiledeskwidget-bubble-message class="messages msg_receive slide-in-left" [message]="message" [textColor]="'black'"
+      (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+      (onAfterMessageRender)="returnOnAfterMessageRender($event)">
+    </tiledeskwidget-bubble-message>
 
   </div>
+
+</div>
+
+
+<div *ngIf="fileType === 'file' && uploadProgress !== 100" class="msg_container base_sent" style="margin-right: 24px;">
+  <div class="messages msg_sent slide-in-right">
+    <div class="spinner">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+  </div>
+</div>
