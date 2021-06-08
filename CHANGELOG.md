@@ -1,5 +1,27 @@
 # chat21-ionic ver 3.0
 
+### 3.0.41
+- Sets in pre environment the key "uploadEngine" to "firebase"
+- Fixes the bug: when is pressed enter in the textarea "send message" is added a new line
+- Fixes the bug: the text of the message is always written on a single line, ignoring line breaks
+- Adds a bubble with an upload spinner to the in-conversation-detail page when uploading a file using uploadEngine = 'firebase'
+- Displays in the loader-preview page a placeholder image when a file is selected to be loaded
+- Removes from the services "firebase-conversation-handler",  "firebase-conversations-handler", "firebase-archivedconversations-handler" and mqtt-conversation-handler the HTML entities encode
+- Improves the "htmlEntities" function and adds the "replaceEndOfLine" function
+
+### 3.0.40
+- Improves the methods implemented for the correct display of messages in the conversation list when a snippet of code is pasted
+
+### 3.0.39
+- Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the chat
+- Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the convesations list 
+
+### 3.0.38
+- Conditions the display of the splash screen only on platforms other than "desktop" (on the desktop platforms the splash screen is not supported)
+- Fixes the bug: signin button is not disable when the form is invalid
+- Fixes the bug: markdown doen't work when the page is refreshed
+- Adds the encode of the HTML entities
+
 ### 3.0.37
 - Fixes the bug: the skeleton placeholder remains active after logout 
 

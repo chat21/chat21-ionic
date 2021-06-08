@@ -20,7 +20,7 @@ import {
   avatarPlaceholder,
   getColorBck,
   getImageUrlThumbFromFirebasestorage
- } from './utils-user';
+} from './utils-user';
 /**
  * Shortest description  for phone and tablet
  * Nota: eseguendo un test su desktop in realtà lo switch avviene a 921px 767px
@@ -147,10 +147,10 @@ export function setHeaderDate_old(translate, timestamp, lastDate?): string {
   let now: Date = new Date();
   var LABEL_TODAY;// = translate.get('LABEL_TODAY')['value'];
   var LABEL_TOMORROW;// = translate.get('LABEL_TOMORROW')['value'];
-  translate.get('LABEL_TODAY').subscribe((res: string) => {      
+  translate.get('LABEL_TODAY').subscribe((res: string) => {
     LABEL_TODAY = res;
   });
-  translate.get('LABEL_TOMORROW').subscribe((res: string) => {      
+  translate.get('LABEL_TOMORROW').subscribe((res: string) => {
     LABEL_TOMORROW = res;
   });
   var labelDays: string = LABEL_TODAY;
@@ -270,7 +270,7 @@ export function setLastDateWithLabels(translationMap: Map<string, string>, times
     labelDays = translationMap.get('LABEL_TOMORROW');
   } else {
     const days = translationMap.get('ARRAY_DAYS');
-    labelDays =  days[date.getDay()];
+    labelDays = days[date.getDay()];
   }
   const orario = date.getHours() + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
   return translationMap.get('LABEL_LAST_ACCESS') + ' ' + labelDays + ' ' + translationMap.get('LABEL_TO') + ' ' + orario;
@@ -288,7 +288,7 @@ export function convertDayToString(translate, day) {
 
 export function supports_html5_storage() {
   try {
-      return 'localStorage' in window && window['localStorage'] !== null;
+    return 'localStorage' in window && window['localStorage'] !== null;
   } catch (e) {
     this.g.wdLog(['> Error :' + e]);
     return false;
@@ -297,21 +297,21 @@ export function supports_html5_storage() {
 
 export function supports_html5_session() {
   try {
-      return 'sessionStorage' in window && window['sessionStorage'] !== null;
+    return 'sessionStorage' in window && window['sessionStorage'] !== null;
   } catch (e) {
     this.g.wdLog(['> Error :' + e]);
     return false;
   }
 }
 
-export function setStoragePrefix(): string{
+export function setStoragePrefix(): string {
   let prefix = STORAGE_PREFIX;
   try {
-      // const sv = 'sv' + environment.shemaVersion + '_';
-      // prefix = prefix + sv;
-      prefix = environment.storage_prefix + '_';
+    // const sv = 'sv' + environment.shemaVersion + '_';
+    // prefix = prefix + sv;
+    prefix = environment.storage_prefix + '_';
   } catch (e) {
-      this.g.wdLog(['> Error :' + e]);
+    this.g.wdLog(['> Error :' + e]);
   }
   return prefix + this.g.projectid + '_';
 }
@@ -444,15 +444,29 @@ export function htmlEntities(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/\n/g, '<br>');
+    // .replace(/\n/g, '<br>')
+
 }
+
+export function  replaceEndOfLine(text) {
+  // const newText =   text.replace(/\n/g, '<br>')
+  const newText = text.replace(/[\n\r]/g, '<br>');
+  // const newText = text.replace(/<br\s*[\/]?>/gi, '\n')
+  return newText;
+ 
+}
+
+
+
+
+
 
 export function isExistInArray(members, currentUid) {
   return members.includes(currentUid);
 }
 
 export function isInArray(key: string, array: Array<string>) {
-  if (array && array !== undefined && array.indexOf(key) > -1 ) {
+  if (array && array !== undefined && array.indexOf(key) > -1) {
     return true;
   }
   return false;
@@ -462,10 +476,10 @@ export function createConfirm(translate, alertCtrl, events, title, message, acti
 
   var LABEL_ANNULLA;// = translate.get('CLOSE_ALERT_CANCEL_LABEL')['value'];
   var LABEL_OK;// = translate.get('CLOSE_ALERT_CONFIRM_LABEL')['value'];
-  translate.get('LABEL_ANNULLA').subscribe((res: string) => {      
+  translate.get('LABEL_ANNULLA').subscribe((res: string) => {
     LABEL_ANNULLA = res;
   });
-  translate.get('LABEL_OK').subscribe((res: string) => {      
+  translate.get('LABEL_OK').subscribe((res: string) => {
     LABEL_OK = res;
   });
   var buttons;
@@ -537,10 +551,7 @@ function convert(str) {
   return str;
 }
 
-export function replaceBr(text) {
-  const newText = text.replace(/[\n\r]/g, '<br>');
-  return newText;
-}
+
 
 
 
@@ -553,11 +564,11 @@ export function replaceBr(text) {
  * @param height
  */
 export function setConversationAvatar(
-    conversationWith: string,
-    conversationWithFullname: string,
-    conversationChannelType: string,
-    width?: string,
-    height?: string
+  conversationWith: string,
+  conversationWithFullname: string,
+  conversationChannelType: string,
+  width?: string,
+  height?: string
 ): any {
   // const FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
   const urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
@@ -607,12 +618,12 @@ export function bypassSecurityTrustResourceUrl(url: string) {
 }
 
 // getImageUrlThumb(uid: string){
-    //     try {
-    //         let imageurl = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE + environment['firebaseConfig'].storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
-    //         return imageurl;
-    //     }
-    //     
-    // }
+//     try {
+//         let imageurl = this.appConfig.getConfig().FIREBASESTORAGE_BASE_URL_IMAGE + environment['firebaseConfig'].storageBucket + '/o/profiles%2F' + uid + '%2Fthumb_photo.jpg?alt=media';
+//         return imageurl;
+//     }
+//     
+// }
 // export function urlExists(url) {
 //   console.log("imageExists::::::"+url);
 //   url = "https://firebasestorage.googleapis.com/v0/b/chat-v2-dev.appspot.com/o/profiles%2F5ad5bd40c975820014ba9009%2Fthumb_photo.jpg?alt=media";
@@ -664,10 +675,10 @@ export function isURL(str: string) {
 }
 
 // export function isHostname() {
-  
+
 
 //   if (environment.supportMode === true) {
-    
+
 //     return true
 //   }
 //   return false
@@ -696,18 +707,18 @@ export function getParameterByName(name: string) {
 export async function presentModal(modalController, page, attributes) {
   console.log('presentModal');
   const modal: HTMLIonModalElement =
-     await modalController.create({
-        component: page,
-        componentProps: attributes,
-        swipeToClose: false,
-        backdropDismiss: false
-  });
+    await modalController.create({
+      component: page,
+      componentProps: attributes,
+      swipeToClose: false,
+      backdropDismiss: false
+    });
   await modal.present();
   modal.onDidDismiss().then((detail: any) => {
-     if (detail !== null) {
-       console.log('The result:', detail.data);
-       return 'CHIUDI!!!!!';
-     }
+    if (detail !== null) {
+      console.log('The result:', detail.data);
+      return 'CHIUDI!!!!!';
+    }
   });
 }
 
@@ -730,7 +741,7 @@ export function createTranslateLoader(http: HttpClient) {
 export function redirect2(router, IDConv, conversationSelected) {
   if (window.innerWidth < 768) {
     // mobile
-    console.log('mobile::::', window.innerWidth,IDConv, conversationSelected, router);
+    console.log('mobile::::', window.innerWidth, IDConv, conversationSelected, router);
     if (!IDConv) {
       router.navigateByUrl('/conversations-list');
     }
@@ -777,9 +788,18 @@ export function redirect2(router, IDConv, conversationSelected) {
 // }
 
 /** */
-export function  checkPlatformIsMobile() {
+export function checkPlatformIsMobile() {
   console.log('checkPlatformIsMobile:: ', window.innerWidth);
   if (window.innerWidth < 768) {
+    return true;
+  }
+  return false;
+}
+
+
+export function checkWindowWithIsLessThan991px() {
+  console.log('checkPlatformIsMobile:: ', window.innerWidth);
+  if (window.innerWidth < 991) {
     return true;
   }
   return false;
@@ -818,31 +838,31 @@ export function createExternalSidebar(renderer, srcIframe?, urlIcons?) {
   // aggiungo js alla pagina
   let sidebarFunctions = '';
   sidebarFunctions += 'function toggleSidebar() {';
-  sidebarFunctions +=   'var element = document.getElementById("tld-sidebar");';
-  sidebarFunctions +=   'element.classList.toggle("open");';
-  sidebarFunctions +=   'var elementApp = document.getElementsByTagName("app-root")[0];';
+  sidebarFunctions += 'var element = document.getElementById("tld-sidebar");';
+  sidebarFunctions += 'element.classList.toggle("open");';
+  sidebarFunctions += 'var elementApp = document.getElementsByTagName("app-root")[0];';
   // sidebarFunctions += 'elementApp.classList.toggle("open");';
-  sidebarFunctions +=   'if(elementApp.classList.contains("open")){';
-  sidebarFunctions +=     'elementApp.classList.remove("open");';
-  sidebarFunctions +=     'elementApp.classList.add("close");';
-  sidebarFunctions +=   '} else {';
-  sidebarFunctions +=     'elementApp.classList.remove("close");';
-  sidebarFunctions +=     'elementApp.classList.add("open");';
-  sidebarFunctions +=   '}';
+  sidebarFunctions += 'if(elementApp.classList.contains("open")){';
+  sidebarFunctions += 'elementApp.classList.remove("open");';
+  sidebarFunctions += 'elementApp.classList.add("close");';
+  sidebarFunctions += '} else {';
+  sidebarFunctions += 'elementApp.classList.remove("close");';
+  sidebarFunctions += 'elementApp.classList.add("open");';
+  sidebarFunctions += '}';
   sidebarFunctions += '}';
   sidebarFunctions += 'function openSidebar() {';
-  sidebarFunctions +=   'var element = document.getElementById("tld-sidebar");';
-  sidebarFunctions +=   'element.classList.add("open");';
-  sidebarFunctions +=   'var elementApp = document.getElementsByTagName("app-root")[0];';
-  sidebarFunctions +=   'elementApp.classList.remove("close");';
-  sidebarFunctions +=   'elementApp.classList.add("open");';
+  sidebarFunctions += 'var element = document.getElementById("tld-sidebar");';
+  sidebarFunctions += 'element.classList.add("open");';
+  sidebarFunctions += 'var elementApp = document.getElementsByTagName("app-root")[0];';
+  sidebarFunctions += 'elementApp.classList.remove("close");';
+  sidebarFunctions += 'elementApp.classList.add("open");';
   sidebarFunctions += '}';
-  sidebarFunctions  += 'window.onmessage = function(e){';
+  sidebarFunctions += 'window.onmessage = function(e){';
   // sidebarFunctions += 'window.addEventListener("message", (e) => {';
   // sidebarFunctions +=   'alert("It works!", e);';
-  sidebarFunctions +=   'if (e.data === "open") {';
-  sidebarFunctions +=     'openSidebar();';
-  sidebarFunctions +=   '}';
+  sidebarFunctions += 'if (e.data === "open") {';
+  sidebarFunctions += 'openSidebar();';
+  sidebarFunctions += '}';
   sidebarFunctions += '};';
 
   const divScript = renderer.createElement('script');
@@ -872,7 +892,7 @@ export function isGroup(conv: ConversationModel) {
   // console.log('isGroup conv recipient', conv.recipient) 
   if (conv.recipient && conv.recipient.startsWith('group-') || conv.recipient && conv.recipient.startsWith('support-group')) {
     // console.log('isGroup conv HERE Y conv.recipient', conv.recipient) 
-      return true
+    return true
   };
   return false
 }

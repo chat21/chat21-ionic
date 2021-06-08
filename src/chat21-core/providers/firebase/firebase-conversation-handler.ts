@@ -18,7 +18,9 @@ import { LoggerService } from '../abstract/logger.service';
 import { LoggerInstance } from '../logger/loggerInstance';
 // utils
 import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT, MESSAGE_TYPE_INFO } from '../../utils/constants';
-import { compareValues,searchIndexInArrayForUid,conversationMessagesRef, htmlEntities } from '../../utils/utils';
+import { compareValues,searchIndexInArrayForUid,conversationMessagesRef } from '../../utils/utils';
+
+
 import { messageType } from 'src/chat21-core/utils/utils-message';
 
 
@@ -243,6 +245,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
             return;
         }
         this.addRepalceMessageInArray(childSnapshot.key, msg);
+       
         this.messageAdded.next(msg);
     }
 
@@ -279,7 +282,10 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         }
         // bonifico messaggio da url
         if (msg.type === 'text') {
-            msg.text = htmlEntities(msg.text);
+            // console.log('CONVERSATION-DETAIL FIREBASE CONV HANDLER msg ++++ ', msg.text)
+            
+            // msg.text = htmlEntities(msg.text)
+            // msg.text = replaceEndOfLine(msg.text)
         }
         // verifico che il sender è il logged user
         msg.isSender = this.isSender(msg.sender, this.loggedUser.uid);
