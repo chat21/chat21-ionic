@@ -89,7 +89,8 @@
                   (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
                   (onAfterMessageRender)="returnOnAfterMessageRender($event)"
                   (onAttachmentButtonClicked)="returnOnAttachmentButtonClicked($event)"
-                  (onScrollContent)="returnOnScrollContent($event)" (onMenuOptionShow)="returnOnMenuOption($event)">
+                  (onScrollContent)="returnOnScrollContent($event)" (onMenuOptionShow)="returnOnMenuOption($event)"
+                  (addUploadingBubbleEvent)="addUploadingBubbleEvent($event)">
                 </ion-conversation-detail>
 
               </ion-content>
@@ -126,8 +127,12 @@
         </ion-col>
 
         <ion-col id="chat21-info-conversation" [class.mobile]="isMobile" [class.open]="openInfoConversation">
-          <app-info-content [openInfoConversation]="openInfoConversation" [translationMap]="translationMap"
-            [loggedUser]="loggedUser" [tenant]="tenant" [groupDetail]="groupDetail">
+          <app-info-content 
+          [openInfoConversation]="openInfoConversation" 
+          [translationMap]="translationMap"
+            [loggedUser]="loggedUser" 
+            [tenant]="tenant" 
+            [groupDetail]="groupDetail">
             <!-- [member] = member -->
           </app-info-content>
         </ion-col>
