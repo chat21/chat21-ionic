@@ -1,7 +1,7 @@
 
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { MessageModel } from 'src/chat21-core/models/message';
-import { htmlEntities } from 'src/chat21-core/utils/utils';
+import { replaceEndOfLine } from 'src/chat21-core/utils/utils';
 
 @Component({
   selector: 'tiledeskwidget-info-message',
@@ -26,7 +26,7 @@ export class InfoMessageComponent implements OnInit, OnChanges {
          if (this.message && this.message.text) {
           var regex = /<br\s*[\/]?>/gi;
           this.message.text = this.message.text.replace(regex, "\n")
-          this.message_text = this.message.text
+          // this.message.text = replaceEndOfLine(this.message.text);
           console.log('InfoMessageComponent message .text  ', this.message.text )
         }
   }
