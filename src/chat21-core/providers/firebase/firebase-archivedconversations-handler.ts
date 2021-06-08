@@ -17,7 +17,7 @@ import { ConversationsHandlerService } from '../abstract/conversations-handler.s
 
 // utils
 import { avatarPlaceholder, getColorBck } from '../../utils/utils-user';
-import { compareValues, getFromNow, searchIndexInArrayForUid, archivedConversationsPathForUserId, isGroup } from '../../utils/utils';
+import { compareValues, getFromNow, searchIndexInArrayForUid, archivedConversationsPathForUserId, isGroup, htmlEntities } from '../../utils/utils';
 import { ImageRepoService } from '../abstract/image-repo.service';
 import { FirebaseImageRepoService } from './firebase-image-repo';
 import { ArchivedConversationsHandlerService } from '../abstract/archivedconversations-handler.service';
@@ -387,6 +387,8 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
         }
+        // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the archived convesations list
+        // conv.last_message_text = htmlEntities(conv.last_message_text)
         conv.conversation_with_fullname = conversation_with_fullname;
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);

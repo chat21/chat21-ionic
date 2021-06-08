@@ -19,11 +19,12 @@ import { ConversationHandlerService } from '../abstract/conversation-handler.ser
 // utils
 import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT, MESSAGE_TYPE_INFO } from '../../utils/constants';
 import {
-  htmlEntities,
   compareValues,
   searchIndexInArrayForUid,
   setHeaderDate,
-  conversationMessagesRef
+  conversationMessagesRef,
+  htmlEntities,
+  replaceEndOfLine
 } from '../../utils/utils';
 import { timestamp } from 'rxjs/operators';
 import { MessageModel } from '../../models/message';
@@ -268,6 +269,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         }
         // console.log('>>>>>>>>>>>>>> added headerDate: ', msg);
         this.addRepalceMessageInArray(childSnapshot.key, msg);
+       
         this.messageAdded.next(msg);
     }
 
@@ -305,7 +307,10 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         }
         // bonifico messaggio da url
         if (msg.type === 'text') {
-            // msg.text = htmlEntities(msg.text);
+            // console.log('CONVERSATION-DETAIL FIREBASE CONV HANDLER msg ++++ ', msg.text)
+            
+            // msg.text = htmlEntities(msg.text)
+            // msg.text = replaceEndOfLine(msg.text)
         }
         // verifico che il sender è il logged user
         msg.isSender = this.isSender(msg.sender, this.loggedUser.uid);
