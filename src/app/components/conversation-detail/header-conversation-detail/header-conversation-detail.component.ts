@@ -9,6 +9,7 @@ import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.
 export class HeaderConversationDetailComponent implements OnInit ,OnChanges {
   @Input() conversationAvatar: any;
   @Input() idLoggedUser: string;
+  @Input() isOpenInfoConversation: boolean;
   @Input() isMobile: boolean;
   @Input() translationMap: Map<string, string>;
   @Output() eventOpenCloseInfoConversation = new EventEmitter<boolean>();
@@ -40,6 +41,9 @@ export class HeaderConversationDetailComponent implements OnInit ,OnChanges {
     if(this.conversationAvatar){
       this.conversationAvatar.imageurl = this.imageRepoService.getImagePhotoUrl(this.conversationAvatar.uid)
     }
+
+    console.log('HeaderConversationDetailComponent isOpenInfoConversation', this.isOpenInfoConversation);
+    this.openInfoConversation =  this.isOpenInfoConversation;
   }
 
   /** */

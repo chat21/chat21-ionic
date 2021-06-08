@@ -798,7 +798,7 @@ export function checkPlatformIsMobile() {
 
 
 export function checkWindowWithIsLessThan991px() {
-  console.log('checkPlatformIsMobile:: ', window.innerWidth);
+  console.log('checkWindowWithIsLessThan991px:: ', window.innerWidth);
   if (window.innerWidth < 991) {
     return true;
   }

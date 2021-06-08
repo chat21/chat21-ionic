@@ -156,7 +156,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   //SOUND
   setTimeoutSound: any;
   audio: any
-
+  isOpenInfoConversation: boolean;
+  USER_HAS_OPENED_CLOSE_INFO_CONV: boolean = false
   // functions utils
   isMine = isMine;
   isInfo = isInfo;
@@ -297,12 +298,25 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     if (checkPlatformIsMobile()) {
       this.isMobile = true;
-      this.openInfoConversation = false; // indica se è aperto il box info conversazione
+      // this.openInfoConversation = false; // indica se è aperto il box info conversazione
       console.log('CONV-DETAIL-PAGE')
     } else {
       this.isMobile = false;
-      this.openInfoConversation = true;
+      // this.openInfoConversation = true;
     }
+
+
+    if (checkWindowWithIsLessThan991px()) {
+      console.log('CONV-DETAIL-PAGE checkWindowWithIsLessThan991px ', checkWindowWithIsLessThan991px())
+      this.openInfoConversation = false; // indica se è aperto il box info conversazione
+      this.isOpenInfoConversation = false;
+      console.log('CONV-DETAIL-PAGE')
+    } else {
+      console.log('CONV-DETAIL-PAGE checkWindowWithIsLessThan991px ', checkWindowWithIsLessThan991px())
+      this.openInfoConversation = true;
+      this.isOpenInfoConversation = true;
+    }
+
 
 
 
@@ -320,6 +334,30 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.startConversation();
     this.updateConversationBadge(); // AGGIORNO STATO DELLA CONVERSAZIONE A 'LETTA' (is_new = false)
   }
+
+  returnOpenCloseInfoConversation(openInfoConversation: boolean) {
+    console.log('CONVERSATION-DETAIL returnOpenCloseInfoConversation **************', openInfoConversation);
+    this.resizeTextArea();
+    this.openInfoMessage = false;
+    this.openInfoConversation = openInfoConversation;
+    this.isOpenInfoConversation = openInfoConversation
+    this.USER_HAS_OPENED_CLOSE_INFO_CONV = true;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    // this.newInnerWidth = event.target.innerWidth;
+    const newInnerWidth = event.target.innerWidth;
+    console.log('CONV-DETAIL-PAGE checkWindowWithIsLessThan991px on resize ', newInnerWidth);
+    if (newInnerWidth < 991) {
+      if (this.USER_HAS_OPENED_CLOSE_INFO_CONV === false) {
+        this.openInfoConversation = false;
+        this.isOpenInfoConversation = false;
+      }
+    }
+
+  }
+
 
 
   /**
@@ -1357,13 +1395,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // }
   }
 
-  onImageRenderedFN(event){
+  onImageRenderedFN(event) {
     const imageRendered = event;
-    if(this.showButtonToBottom){
+    if (this.showButtonToBottom) {
       this.scrollBottom(0)
     }
   }
-  
+
   addUploadingBubbleEvent(event: boolean) {
     console.log('ION-CONVERSATION-DETAIL (CONVERSATION-DETAIL-PAGE) addUploadingBubbleEvent event', event);
     if (event === true) {
@@ -1375,14 +1413,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // -------------- END OUTPUT-EVENT handler functions -------------- //
 
 
-  // -------------- START CLICK functions -------------- //
-  /** */
-  returnOpenCloseInfoConversation(openInfoConversation: boolean) {
-    console.log('returnOpenCloseInfoConversation **************', openInfoConversation);
-    this.resizeTextArea();
-    this.openInfoMessage = false;
-    this.openInfoConversation = openInfoConversation;
-  }
+
 
   /** */
   // pushPage(pageName: string ) {
@@ -1400,14 +1431,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       const that = this;
       setTimeout(() => {
         const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
-        console.log('messageTextArea.ngAfterViewInit ', textArea);
-        const txtValue = textArea.value;
-        textArea.value = ' ';
-        textArea.value = txtValue;
+        if (textArea) {
+          console.log('messageTextArea.ngAfterViewInit ', textArea);
+          const txtValue = textArea.value;
+          textArea.value = ' ';
+          textArea.value = txtValue;
+        }
       }, 0);
       setTimeout(() => {
-        console.log('text_area.nativeElement ', elTextArea.offsetHeight);
-        that.heightMessageTextArea = elTextArea.offsetHeight;
+        if (elTextArea) {
+          console.log('text_area.nativeElement ', elTextArea.offsetHeight);
+          that.heightMessageTextArea = elTextArea.offsetHeight;
+        }
       }, 100);
     } catch (err) {
       console.log('error: ', err);
