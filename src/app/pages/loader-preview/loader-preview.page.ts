@@ -8,8 +8,8 @@ import { NavParams, ModalController } from '@ionic/angular';
   styleUrls: ['./loader-preview.page.scss'],
 })
 export class LoaderPreviewPage implements OnInit {
-  @ViewChild('thumbnailsPreview', {static: false}) thumbnailsPreview: ElementRef;
-  @ViewChild('messageTextArea', {static: false}) messageTextArea: ElementRef;
+  @ViewChild('thumbnailsPreview', { static: false }) thumbnailsPreview: ElementRef;
+  @ViewChild('messageTextArea', { static: false }) messageTextArea: ElementRef;
   // @Output() eventSendMessage = new EventEmitter<object>();
   @Input() files: [any];
 
@@ -19,40 +19,73 @@ export class LoaderPreviewPage implements OnInit {
   public heightPreviewArea = '183';
   private selectedFiles: any;
 
-  
+
   constructor(
     public viewCtrl: ModalController
   ) { }
 
   ngOnInit() {
-    console.log('LoaderPreviewPage' );
+    console.log('LoaderPreviewPage');
     // tslint:disable-next-line: prefer-for-of
-     this.selectedFiles = this.files;
-    for ( let i = 0; i < this.files.length; i++ ) {
+    this.selectedFiles = this.files;
+    for (let i = 0; i < this.files.length; i++) {
       this.readAsDataURL(this.files[i]);
       //this.fileChange(this.files[i]);
     }
   }
 
   ionViewDidEnter() {
-    console.log('ionViewDidEnter LoaderPreviewPage', this.thumbnailsPreview.nativeElement.offsetHeight );
+    console.log('ionViewDidEnter LoaderPreviewPage', this.thumbnailsPreview.nativeElement.offsetHeight);
     this.calculateHeightPreviewArea();
   }
 
   readAsDataURL(file: any) {
-    const reader = new FileReader();
-    reader.onloadend = (evt) => {
+    console.log('LoaderPreviewPage readAsDataURL file', file);
+    if (file.type.startsWith("image")) {
+
+      console.log('LoaderPreviewPage readAsDataURL file TYPE', file);
+      const reader = new FileReader();
+      reader.onloadend = (evt) => {
         const img = reader.result.toString();
-        console.log('FileReader success');
+        console.log('FileReader success ', img);
         this.arrayFiles.push(img);
         if (!this.fileSelected) {
           this.fileSelected = img;
         }
+      };
+      reader.readAsDataURL(file);
+    } else {
+      console.log('LoaderPreviewPage HERE YES');
+      this.createFile();
+
+      // let file =  new File(["https://homepages.cae.wisc.edu/~ece533/images/airplane.png"], "test.jpg");
+      // console.log('LoaderPreviewPage HERE YES', file);
+      // reader.readAsDataURL(file)
+    }
+  }
+  // file-alt-solid.png
+  async createFile() {
+    let response = await fetch('./assets/images/file-alt-solid.png');
+    let data = await response.blob();
+    let metadata = {
+      type: 'image/png'
+    };
+    let file = new File([data], "test.png", metadata);
+    console.log('LoaderPreviewPage createFile file', file);
+    const reader = new FileReader();
+    reader.onloadend = (evt) => {
+      const img = reader.result.toString();
+      console.log('FileReader success ', img);
+      this.arrayFiles.push(img);
+      if (!this.fileSelected) {
+        this.fileSelected = img;
+      }
     };
     reader.readAsDataURL(file);
   }
 
 
+  // NOT USED    
   fileChange(file) {
     console.log('fileChange');
     const that = this;
@@ -70,7 +103,7 @@ export class LoaderPreviewPage implements OnInit {
         if (!that.fileSelected) {
           that.fileSelected = img;
         }
-        
+
         if (typeFile.indexOf('image') !== -1) {
           const file4Load = new Image;
           file4Load.src = reader.result.toString();
@@ -94,7 +127,7 @@ export class LoaderPreviewPage implements OnInit {
             // 2 - carico immagine
             //that.uploadSingle(metadata, type_msg);
           };
-        } 
+        }
         /*
         else if (typeFile.indexOf('application') !== -1) {
           const type_msg = 'file';
@@ -127,7 +160,7 @@ export class LoaderPreviewPage implements OnInit {
     console.log('heightPreviewArea', this.heightPreviewArea);
   }
 
-  uploadImages(){}
+  uploadImages() { }
 
 
   /** */
@@ -158,7 +191,7 @@ export class LoaderPreviewPage implements OnInit {
     //   return;
     // } else {
     //   this.messageString = '';
-      
+
     // }
     this.onSendMessage()
   }
@@ -182,7 +215,7 @@ export class LoaderPreviewPage implements OnInit {
       'type': typeFile,
       'uid': uid
     };
-    this.viewCtrl.dismiss({fileSelected: file, messageString: this.messageString, metadata: metadata, type: TYPE_MSG_IMAGE});
+    this.viewCtrl.dismiss({ fileSelected: file, messageString: this.messageString, metadata: metadata, type: TYPE_MSG_IMAGE });
   }
 
   async onClose() {
