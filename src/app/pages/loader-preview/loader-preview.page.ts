@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 import { TYPE_MSG_IMAGE } from 'src/chat21-core/utils/constants';
 import { NavParams, ModalController } from '@ionic/angular';
-
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-loader-preview',
   templateUrl: './loader-preview.page.html',
@@ -18,10 +18,11 @@ export class LoaderPreviewPage implements OnInit {
   public messageString: string;
   public heightPreviewArea = '183';
   private selectedFiles: any;
-
+  srcData : SafeResourceUrl;
 
   constructor(
-    public viewCtrl: ModalController
+    public viewCtrl: ModalController,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -43,7 +44,7 @@ export class LoaderPreviewPage implements OnInit {
     console.log('LoaderPreviewPage readAsDataURL file', file);
     if (file.type.startsWith("image")) {
 
-      console.log('LoaderPreviewPage readAsDataURL file TYPE', file);
+      console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
       const reader = new FileReader();
       reader.onloadend = (evt) => {
         const img = reader.result.toString();
@@ -53,6 +54,13 @@ export class LoaderPreviewPage implements OnInit {
           this.fileSelected = img;
         }
       };
+
+      // const blob = new Blob([file], {type: 'image/svg+xml'});
+      // const url = URL.createObjectURL(blob);
+      // console.log('LoaderPreviewPage urlToBlob', url);
+      // this.srcData = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      
+      // file = this.srcData
       reader.readAsDataURL(file);
     } else {
       console.log('LoaderPreviewPage HERE YES');
