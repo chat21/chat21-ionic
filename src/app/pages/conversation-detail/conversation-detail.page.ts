@@ -37,9 +37,10 @@ import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/c
 // import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 import { CannedResponsesService } from '../../services/canned-responses/canned-responses.service';
-import { compareValues } from '../../../chat21-core/utils/utils';
+import { compareValues, htmlEntities, replaceEndOfLine } from '../../../chat21-core/utils/utils';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
+
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 // import { CannedResponsesServiceProvider } from '../../services/canned-responses-service';
@@ -64,6 +65,7 @@ import {
   urlify,
   convertMessageAndUrlify,
   checkPlatformIsMobile,
+  checkWindowWithIsLessThan991px,
   closeModal,
   setConversationAvatar,
   setChannelType
@@ -121,6 +123,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public openInfoConversation = false;
   public openInfoMessage: boolean;              /** check is open info message */
   public isMobile = false;
+  public isLessThan991px = false; // nk added
   public isTyping = false;
   public nameUserTypingNow: string;
 
@@ -153,7 +156,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   //SOUND
   setTimeoutSound: any;
   audio: any
-
+  isOpenInfoConversation: boolean;
+  USER_HAS_OPENED_CLOSE_INFO_CONV: boolean = false
   // functions utils
   isMine = isMine;
   isInfo = isInfo;
@@ -198,8 +202,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     private logger: LoggerService,
     public cannedResponsesService: CannedResponsesService,
     public imageRepoService: ImageRepoService,
-    public presenceService: PresenceService
+    public presenceService: PresenceService,
+
   ) {
+
+
   }
 
   // -------------- SYSTEM FUNCTIONS -------------- //
@@ -288,13 +295,31 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.messages = []; // list messages of conversation
     this.isFileSelected = false; // indica se è stato selezionato un file (image da uplodare)
     this.openInfoMessage = false; // indica se è aperto il box info message
+
     if (checkPlatformIsMobile()) {
       this.isMobile = true;
-      this.openInfoConversation = false; // indica se è aperto il box info conversazione
+      // this.openInfoConversation = false; // indica se è aperto il box info conversazione
+      console.log('CONV-DETAIL-PAGE')
     } else {
       this.isMobile = false;
-      this.openInfoConversation = true;
+      // this.openInfoConversation = true;
     }
+
+
+    if (checkWindowWithIsLessThan991px()) {
+      console.log('CONV-DETAIL-PAGE checkWindowWithIsLessThan991px ', checkWindowWithIsLessThan991px())
+      this.openInfoConversation = false; // indica se è aperto il box info conversazione
+      this.isOpenInfoConversation = false;
+      console.log('CONV-DETAIL-PAGE')
+    } else {
+      console.log('CONV-DETAIL-PAGE checkWindowWithIsLessThan991px ', checkWindowWithIsLessThan991px())
+      this.openInfoConversation = true;
+      this.isOpenInfoConversation = true;
+    }
+
+
+
+
     this.online = false;
     this.lastConnectionDate = '';
 
@@ -309,6 +334,30 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.startConversation();
     this.updateConversationBadge(); // AGGIORNO STATO DELLA CONVERSAZIONE A 'LETTA' (is_new = false)
   }
+
+  returnOpenCloseInfoConversation(openInfoConversation: boolean) {
+    console.log('CONVERSATION-DETAIL returnOpenCloseInfoConversation **************', openInfoConversation);
+    this.resizeTextArea();
+    this.openInfoMessage = false;
+    this.openInfoConversation = openInfoConversation;
+    this.isOpenInfoConversation = openInfoConversation
+    this.USER_HAS_OPENED_CLOSE_INFO_CONV = true;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    // this.newInnerWidth = event.target.innerWidth;
+    const newInnerWidth = event.target.innerWidth;
+    console.log('CONV-DETAIL-PAGE checkWindowWithIsLessThan991px on resize ', newInnerWidth);
+    if (newInnerWidth < 991) {
+      if (this.USER_HAS_OPENED_CLOSE_INFO_CONV === false) {
+        this.openInfoConversation = false;
+        this.isOpenInfoConversation = false;
+      }
+    }
+
+  }
+
 
 
   /**
@@ -592,6 +641,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   //   });
   // }
 
+
+
   /**
    * se il messaggio non è vuoto
    * 1 - ripristino l'altezza del box input a quella di default
@@ -599,7 +650,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    * 3 - se l'invio è andato a buon fine mi posiziono sull'ultimo messaggio
    */
   sendMessage(msg: string, type: string, metadata?: any) {
-    console.log('sendMessage msg: ', msg);
+    console.log('CONVERSATION-DETAIL SEND MESSAGE - MSG: ', msg);
+
+    if (msg) {
+
+      msg = htmlEntities(msg)
+      msg = replaceEndOfLine(msg)
+      // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the chat
+      msg = msg.trim()
+      console.log("CONVERSATION-DETAIL SEND MESSAGE trimmed message ", msg);
+    }
 
     let fullname = this.loggedUser.uid;
     if (this.loggedUser.fullname) {
@@ -611,15 +671,31 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     //   senderFullname = this.conversationSelected.recipient_fullname;
     // }
 
-    console.log('SEND MESSAGE loggedUserID: ', this.loggedUser.uid);
-    console.log('SEND MESSAGE conversationWith: ', this.conversationWith);
-    console.log('SEND MESSAGE conversationWithFullname: ', this.conversationWithFullname);
-    console.log('SEND MESSAGE metadata: ', metadata);
-    console.log('SEND MESSAGE type: ', type);
+    console.log('CONVERSATION-DETAIL SEND MESSAGE loggedUserID: ', this.loggedUser.uid);
+    console.log('CONVERSATION-DETAIL SEND MESSAGE conversationWith: ', this.conversationWith);
+    console.log('CONVERSATION-DETAIL SEND MESSAGE conversationWithFullname: ', this.conversationWithFullname);
+    console.log('CONVERSATION-DETAIL SEND MESSAGE metadata: ', metadata);
+    console.log('CONVERSATION-DETAIL SEND MESSAGE type: ', type);
 
     if (type === 'file') {
-      msg = msg + ' - ' + 'File: ' + metadata.src;
+
+      if (msg) {
+        // msg = msg + '<br>' + 'File: ' + metadata.src;
+        msg = msg + '<br>' + `[${metadata.name}](${metadata.src})`
+
+      } else {
+        // msg = 'File: ' + metadata.src;
+        // msg =  `<a href=${metadata.src} download>
+        //   ${metadata.name}
+        // </a>`
+
+        // msg = `![file-image-placehoder](./assets/images/file-alt-solid.png)` + `[${metadata.name}](${metadata.src})`
+        msg = `[${metadata.name}](${metadata.src})`
+      }
     }
+    //     <a href="/images/myw3schoolsimage.jpg" download>
+    //   <img src="/images/myw3schoolsimage.jpg" alt="W3Schools" width="104" height="142">
+    // </a>
 
     (metadata) ? metadata = metadata : metadata = '';
     console.log('SEND MESSAGE: ', msg, this.messages, this.loggedUser);
@@ -726,8 +802,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (!subscribtion) {
       console.log('***** add messageAdded *****', this.conversationHandlerService);
       subscribtion = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
-        console.log('***** DATAIL messageAdded *****', msg);
+        console.log('CONVERSATION-DETAIL subs to  messageAdded *****', msg);
+
+
         if (msg) {
+
+          // msg.text = htmlEntities(msg.text)
+          // msg.text = replaceEndOfLine(msg.text)
+
           that.newMessageAdded(msg);
         }
       });
@@ -885,14 +967,24 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // -------------- END SUBSCRIBTIONS functions -------------- //
 
 
-  x/**
+
+
+
+  /**
    * newMessageAdded 
    * @param message
    */
   newMessageAdded(message: MessageModel) {
-    message.text = this.linkifyService.linkify(message.text, this.linkifyOptions);
+    // message.text = this.linkifyService.linkify(message.text, this.linkifyOptions);
+    // message.text = message.text.trim()
     if (message) {
-      console.log('newMessageAdded', message);
+      console.log('newMessageAdded ++', message);
+      // message.text = htmlEntities(message.text)
+      // message.text = replaceEndOfLine(message.text)
+
+      // var imageElem = this.getImagesByAlt("file-image-placehoder")[0];
+      // var imageElem  =  document.getElementsByTagName("img");
+      // console.log('newMessageAdded imageElem', imageElem ) 
       // console.log('message.isSender', message.isSender);
       // console.log('message.status', message.status);
       if (message.isSender) {
@@ -1230,8 +1322,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   /** */
   returnSendMessage(e: any) {
-    console.log('returnSendMessage::: ', e, this.conversationWith);
-    console.log('returnSendMessage::: ', e, this.conversationWith);
+    console.log('CONVERSATION-DETAIL returnSendMessage::: ', e, this.conversationWith);
+    console.log('CONVERSATION-DETAIL returnSendMessage::: ', e, this.conversationWith);
+    console.log('CONVERSATION-DETAIL returnSendMessage::: message', e.message);
     try {
       let message = '';
       if (e.message) {
@@ -1239,7 +1332,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       }
       const type = e.type;
       const metadata = e.metadata;
+
       this.sendMessage(message, type, metadata);
+
     } catch (err) {
       console.log('error: ', err);
     }
@@ -1300,24 +1395,25 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // }
   }
 
-  onImageRenderedFN(event){
+  onImageRenderedFN(event) {
     const imageRendered = event;
-    if(this.showButtonToBottom){
+    if (this.showButtonToBottom) {
       this.scrollBottom(0)
     }
+  }
+
+  addUploadingBubbleEvent(event: boolean) {
+    console.log('ION-CONVERSATION-DETAIL (CONVERSATION-DETAIL-PAGE) addUploadingBubbleEvent event', event);
+    if (event === true) {
+      this.scrollBottom(0);
+    }
+
   }
 
   // -------------- END OUTPUT-EVENT handler functions -------------- //
 
 
-  // -------------- START CLICK functions -------------- //
-  /** */
-  returnOpenCloseInfoConversation(openInfoConversation: boolean) {
-    console.log('returnOpenCloseInfoConversation **************', openInfoConversation);
-    this.resizeTextArea();
-    this.openInfoMessage = false;
-    this.openInfoConversation = openInfoConversation;
-  }
+
 
   /** */
   // pushPage(pageName: string ) {
@@ -1335,14 +1431,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       const that = this;
       setTimeout(() => {
         const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
-        console.log('messageTextArea.ngAfterViewInit ', textArea);
-        const txtValue = textArea.value;
-        textArea.value = ' ';
-        textArea.value = txtValue;
+        if (textArea) {
+          console.log('messageTextArea.ngAfterViewInit ', textArea);
+          const txtValue = textArea.value;
+          textArea.value = ' ';
+          textArea.value = txtValue;
+        }
       }, 0);
       setTimeout(() => {
-        console.log('text_area.nativeElement ', elTextArea.offsetHeight);
-        that.heightMessageTextArea = elTextArea.offsetHeight;
+        if (elTextArea) {
+          console.log('text_area.nativeElement ', elTextArea.offsetHeight);
+          that.heightMessageTextArea = elTextArea.offsetHeight;
+        }
       }, 100);
     } catch (err) {
       console.log('error: ', err);

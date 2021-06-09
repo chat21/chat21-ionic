@@ -107,7 +107,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange event ", e);
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange detail.value ", e.detail.value);
     const message = e.detail.value
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange message ", message);
     const height = e.target.offsetHeight;
+  
     try {
       if (message.trim().length > 0) {
         this.conversationEnabled = true;
@@ -188,10 +190,16 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+
   /** */
   sendMessage(text: string) {
-    console.log('sendMessage', text);
-    console.log('sendMessage conve width', this.conversationWith);
+    console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) sendMessage', text);
+    console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) sendMessage conve width', this.conversationWith);
+    // text.replace(/\s/g, "")
+
+    
+   
     this.messageString = '';
     // text = text.replace(/(\r\n|\n|\r)/gm, '');
     if (text.trim() !== '') {
@@ -245,7 +253,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
         type = 'image'
       } else if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application"))) {
         type = 'file'
-
+       
       }
 
       let fileSelected = e.target.files.item(0);//detail.data.fileSelected;

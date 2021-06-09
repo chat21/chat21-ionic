@@ -17,9 +17,14 @@
 
 <ng-template #showConversation>
 
-  <app-header-conversation-detail [isMobile]=isMobile [idLoggedUser]=loggedUser.uid
-    [conversationAvatar]=conversationAvatar [translationMap]=translationMap
-    (eventOpenCloseInfoConversation)="returnOpenCloseInfoConversation($event)">
+  <app-header-conversation-detail 
+    [isMobile]=isMobile 
+    [idLoggedUser]=loggedUser.uid
+    [conversationAvatar]=conversationAvatar 
+    [translationMap]=translationMap
+    (eventOpenCloseInfoConversation)="returnOpenCloseInfoConversation($event)"
+    [isOpenInfoConversation]="isOpenInfoConversation"
+    >
   </app-header-conversation-detail>
 
   <ion-content>
@@ -90,7 +95,8 @@
                   (onAfterMessageRender)="returnOnAfterMessageRender($event)"
                   (onAttachmentButtonClicked)="returnOnAttachmentButtonClicked($event)"
                   (onScrollContent)="returnOnScrollContent($event)" (onMenuOptionShow)="returnOnMenuOption($event)"
-                  (onImageRendered)="onImageRenderedFN($event)">
+                  (onImageRendered)="onImageRenderedFN($event)"
+                  (addUploadingBubbleEvent)="addUploadingBubbleEvent($event)">
                 </ion-conversation-detail>
 
               </ion-content>
@@ -118,17 +124,25 @@
             </div>
             <!-- (eventReplaceMessageWithCanned)="replaceTagInMessage($event)" -->
             <!-- [tagsCannedFilter]="tagsCannedFilter" -->
-            <app-message-text-area (eventChangeTextArea)="returnChangeTextArea($event)"
-              (eventSendMessage)="returnSendMessage($event)" [conversationWith]="conversationWith"
-              [tagsCannedFilter]="tagsCannedFilter"></app-message-text-area>
+            <!-- openInfoConversation   {{openInfoConversation}} - isMobile {{isMobile}} -->
+            <app-message-text-area *ngIf="(openInfoConversation === false && isMobile === true) || (openInfoConversation === true && isMobile === false) || (openInfoConversation === false && isMobile === false)"
+             (eventChangeTextArea)="returnChangeTextArea($event)"
+              (eventSendMessage)="returnSendMessage($event)" 
+              [conversationWith]="conversationWith"
+              [tagsCannedFilter]="tagsCannedFilter">
+            </app-message-text-area>
             <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
           </ion-row>
 
         </ion-col>
-
+        
         <ion-col id="chat21-info-conversation" [class.mobile]="isMobile" [class.open]="openInfoConversation">
-          <app-info-content [openInfoConversation]="openInfoConversation" [translationMap]="translationMap"
-            [loggedUser]="loggedUser" [tenant]="tenant" [groupDetail]="groupDetail">
+          <app-info-content 
+          [openInfoConversation]="openInfoConversation" 
+          [translationMap]="translationMap"
+            [loggedUser]="loggedUser" 
+            [tenant]="tenant" 
+            [groupDetail]="groupDetail">
             <!-- [member] = member -->
           </app-info-content>
         </ion-col>

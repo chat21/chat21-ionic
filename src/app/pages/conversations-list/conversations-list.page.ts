@@ -19,7 +19,10 @@ import {
   getParameterByName,
   convertMessage,
   windowsMatchMedia,
-  isGroup
+  isGroup,
+  htmlEntities,
+  replaceEndOfLine,
+  
 } from '../../../chat21-core/utils/utils';
 import { TYPE_POPUP_LIST_CONVERSATIONS, AUTH_STATE_OFFLINE, TYPE_GROUP } from '../../../chat21-core/utils/constants';
 import { EventsService } from '../../services/events-service';
@@ -110,7 +113,7 @@ export class ConversationListPage implements OnInit {
     this.listenToAppCompConvsLengthOnInitConvs()
     this.listenToLogoutEvent();
   }
- 
+
 
 
   // getUrlParams() {
@@ -222,6 +225,8 @@ export class ConversationListPage implements OnInit {
     this.conversations = this.conversationsHandlerService.conversations;
     console.log('CONVS - CONVERSATION-LIST-PAGE CONVS ++++', this.conversations)
 
+  
+
     // 6 - save conversationHandler in chatManager
     this.chatManager.setConversationsHandler(this.conversationsHandlerService);
     const that = this;
@@ -288,6 +293,16 @@ export class ConversationListPage implements OnInit {
       // if (!this.archivedConversations || this.archivedConversations.length === 0) {
       //   this.loadingIsActive = false;
       // }
+
+     
+      // this.archivedConversations.forEach(conv => {
+      //   console.log('CONVS SubscribeToConversations (convs-list-page) - conversations archived COV ', conv.last_message_text);
+      //   // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the archived convesations list
+      //   if (conv && conv.last_message_text) {
+      //     var regex = /<br\s*[\/]?>/gi;
+      //     conv.last_message_text = conv.last_message_text.replace(regex, "\n")
+      //   }
+      // });
     });
 
     this.archivedConversations = this.archivedConversationsHandlerService.archivedConversations;
@@ -678,9 +693,16 @@ export class ConversationListPage implements OnInit {
   onConversationLoaded(conversation: ConversationModel) {
     const keys = ['YOU'];
     const translationMap = this.translateService.translateLanguage(keys);
+    // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the convesations list
+    // conversation.last_message_text = htmlEntities(conversation.last_message_text);
+    var regex = /<br\s*[\/]?>/gi;
+    // conversation.last_message_text =  conversation.last_message_text.replace(regex, "\n")
+    conversation.last_message_text =  conversation.last_message_text.replace(regex, "")
+
+    // conversation.last_message_text = replaceEndOfLine(conversation.last_message_text);
     if (conversation.sender === this.loggedUserUid && !conversation.last_message_text.includes(': ')) {
       console.log('onConversationLoaded', conversation)
-      conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text
+      conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text;
     }
   }
 
