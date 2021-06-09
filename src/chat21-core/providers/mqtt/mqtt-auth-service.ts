@@ -105,10 +105,10 @@ z
    */
   onAuthStateChanged() {
     console.log('UserService::onAuthStateChanged');
-    if (this.appStorage.getItem('tiledeskToken') == null) {
-      this.currentUser = null;
-      this.BSAuthStateChanged.next('offline');
-    }
+    // if (this.appStorage.getItem('tiledeskToken') == null) {
+    //   this.currentUser = null;
+    this.BSAuthStateChanged.next('offline');
+    // }
     // const that = this;
     console.log("STORAGE CHANGED: added listner")
     window.addEventListener('storage', (e) => {
