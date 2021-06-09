@@ -393,7 +393,6 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
-        conv.last_message_text = htmlEntities(conv.last_message_text)
         conv.archived = true;
         //conv.image = this.imageRepo.getImagePhotoUrl(conversation_with);
         return conv;
