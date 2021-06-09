@@ -768,12 +768,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     subscribtionKey = 'BSConversationsChanged';
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
-      subscribtion = this.conversationsHandlerService.conversationChanged.subscribe((data: any) => {
+      subscribtion = this.conversationsHandlerService.conversationChanged.subscribe((data: ConversationModel) => {
         console.log('***** DATAIL subscribeConversationChanged*****', data, this.loggedUser.uid);
         if (data && data.sender !== this.loggedUser.uid) {
           // AGGIORNO LA CONVERSAZIONE A 'LETTA' SE SONO IO CHE HA SCRITTO L'ULTIMO MESSAGGIO DELLA CONVERSAZIONE
           // E SE LA POSIZIONE DELLO SCROLL E' ALLA FINE
-          if (!this.showButtonToBottom) { //SONO ALLA FINE
+          if (!this.showButtonToBottom && data.is_new) { //SONO ALLA FINE
             this.updateConversationBadge()
           }
         }
