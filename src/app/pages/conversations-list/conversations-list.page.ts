@@ -50,6 +50,7 @@ import { CustomTranslateService } from 'src/chat21-core/providers/custom-transla
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 
 
@@ -75,7 +76,7 @@ export class ConversationListPage implements OnInit {
 
   public convertMessage = convertMessage;
   private isShowMenuPage = false;
-
+  private logger: LoggerService = LoggerInstance.getInstance()
   translationMapConversation: Map<string, string>;
   styleMap: Map<string, string>;
 
@@ -102,7 +103,6 @@ export class ConversationListPage implements OnInit {
     public messagingAuthService: MessagingAuthService,
     public imageRepoService: ImageRepoService,
     private translateService: CustomTranslateService,
-    private logger: LoggerService,
     public tiledeskService: TiledeskService,
     public tiledeskAuthService: TiledeskAuthService
   ) {
