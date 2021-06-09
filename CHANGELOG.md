@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.0
+- Minor improvements
+
 ### 3.0.42
 - Fixes the bug: in mobile mode in the right side panel "Conversation info" the textarea 'send message' is displayed
 - Fixes the bug: the button open/close the right side panel 'Info conversation' does not work correctly
