@@ -642,6 +642,24 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // }
 
 
+  returnSendMessage(e: any) {
+    console.log('CONVERSATION-DETAIL returnSendMessage::: ', e, this.conversationWith);
+    console.log('CONVERSATION-DETAIL returnSendMessage::: ', e, this.conversationWith);
+    console.log('CONVERSATION-DETAIL returnSendMessage::: message', e.message);
+    try {
+      let message = '';
+      if (e.message) {
+        message = e.message;
+      }
+      const type = e.type;
+      const metadata = e.metadata;
+
+      this.sendMessage(message, type, metadata);
+
+    } catch (err) {
+      console.log('error: ', err);
+    }
+  }
 
   /**
    * se il messaggio non è vuoto
@@ -1321,24 +1339,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
   /** */
-  returnSendMessage(e: any) {
-    console.log('CONVERSATION-DETAIL returnSendMessage::: ', e, this.conversationWith);
-    console.log('CONVERSATION-DETAIL returnSendMessage::: ', e, this.conversationWith);
-    console.log('CONVERSATION-DETAIL returnSendMessage::: message', e.message);
-    try {
-      let message = '';
-      if (e.message) {
-        message = e.message;
-      }
-      const type = e.type;
-      const metadata = e.metadata;
 
-      this.sendMessage(message, type, metadata);
-
-    } catch (err) {
-      console.log('error: ', err);
-    }
-  }
 
   returnOnBeforeMessageRender(event) {
     //this.onBeforeMessageRender.emit(event)
