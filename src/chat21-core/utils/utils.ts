@@ -448,6 +448,15 @@ export function htmlEntities(str) {
 
 }
 
+export function htmlEntitiesDecode(str) {
+  return String(str)
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+   
+    // .replace(/\n/g, '<br>')
+
+}
+
 export function  replaceEndOfLine(text) {
   // const newText =   text.replace(/\n/g, '<br>')
   const newText = text.replace(/[\n\r]/g, '<br>');
