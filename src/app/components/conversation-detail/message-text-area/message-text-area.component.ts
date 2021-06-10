@@ -249,9 +249,10 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
       console.log('presentModal onDidDismiss detail', detail);
       console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
       let type = ''
-      if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image")) {
+      if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg'))) {
         type = 'image'
-      } else if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application"))) {
+        // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
+      } else  {
         type = 'file'
        
       }
@@ -264,6 +265,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
       console.log('presentModal onDidDismiss fileSelected', fileSelected);
       if (detail !== null) {
         const currentUpload = new UploadModel(fileSelected);
+        console.log('The result: currentUpload', currentUpload);
         console.log('The result: CHIUDI!!!!!', detail.data);
         that.uploadService.upload(currentUpload).then(downloadURL => {
           metadata.src = downloadURL;
