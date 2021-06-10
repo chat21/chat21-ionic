@@ -1,16 +1,17 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, SimpleChanges } from '@angular/core';
 import { MessageModel } from '../../../../chat21-core/models/message';
 import { isPopupUrl, popupUrl } from '../../../../chat21-core/utils/utils';
-import { MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, MSG_STATUS_SENT_SERVER, MAX_WIDTH_IMAGES} from './../../../../chat21-core/utils/constants';
+import { MSG_STATUS_SENT, MSG_STATUS_RETURN_RECEIPT, MSG_STATUS_SENT_SERVER, MAX_WIDTH_IMAGES } from './../../../../chat21-core/utils/constants';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 @Component({
   selector: 'tiledeskwidget-conversation-content',
   templateUrl: './conversation-content.component.html',
   styleUrls: ['./conversation-content.component.scss']
 })
 export class ConversationContentComponent implements OnInit {
-  @ViewChild('scrollMe', {static: false}) private scrollMe: ElementRef;
-  
+  @ViewChild('scrollMe', { static: false }) private scrollMe: ElementRef;
+
   @Input() messages: MessageModel[]
   @Input() senderId: string;
   @Input() baseLocation: string;
@@ -51,9 +52,9 @@ export class ConversationContentComponent implements OnInit {
   };
 
   urlBOTImage = 'https://s3.eu-west-1.amazonaws.com/tiledesk-widget/dev/2.0.4-beta.7/assets/images/avatar_bot_tiledesk.svg'
-
-  constructor(public logger: LoggerService,
-              public cdref: ChangeDetectorRef) { }
+  private logger: LoggerService = LoggerInstance.getInstance();
+  constructor(
+    public cdref: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
@@ -69,30 +70,30 @@ export class ConversationContentComponent implements OnInit {
    * @param message
    */
   getMetadataSize(metadata): any {
-    
-    if(metadata.width === undefined){
-      metadata.width= MAX_WIDTH_IMAGES
+
+    if (metadata.width === undefined) {
+      metadata.width = MAX_WIDTH_IMAGES
     }
-    if(metadata.height === undefined){
+    if (metadata.height === undefined) {
       metadata.height = MAX_WIDTH_IMAGES
     }
     // const MAX_WIDTH_IMAGES = 300;
     const sizeImage = {
-        width: metadata.width,
-        height: metadata.height
+      width: metadata.width,
+      height: metadata.height
     };
     //   that.g.wdLog(['message::: ', metadata);
     if (metadata.width && metadata.width > MAX_WIDTH_IMAGES) {
-        const rapporto = (metadata['width'] / metadata['height']);
-        sizeImage.width = MAX_WIDTH_IMAGES;
-        sizeImage.height = MAX_WIDTH_IMAGES / rapporto;
+      const rapporto = (metadata['width'] / metadata['height']);
+      sizeImage.width = MAX_WIDTH_IMAGES;
+      sizeImage.height = MAX_WIDTH_IMAGES / rapporto;
     }
     return sizeImage; // h.toString();
   }
 
 
   // ========= begin:: functions scroll position ======= //
- 
+
   // LISTEN TO SCROLL POSITION
   onScroll(event): void {
     // console.log('************** SCROLLLLLLLLLL *****************');
@@ -115,15 +116,15 @@ export class ConversationContentComponent implements OnInit {
    *
    */
   checkContentScrollPosition(divScrollMe?): boolean {
-    if(!divScrollMe){
+    if (!divScrollMe) {
       divScrollMe = this.scrollMe.nativeElement
     }
     if (divScrollMe.scrollHeight - divScrollMe.scrollTop <= (divScrollMe.clientHeight + 40)) {
       this.logger.printLog('SONO ALLA FINE');
-        return true;
+      return true;
     } else {
       this.logger.printLog(' NON SONO ALLA FINE');
-        return false;
+      return false;
     }
   }
 
@@ -132,65 +133,65 @@ export class ConversationContentComponent implements OnInit {
    * chiamato in maniera ricorsiva sino a quando non risponde correttamente
   */
 
-//  scrollToBottomStart() {
-//   const that = this;
-//   if ( this.isScrolling === false ) {
-//     setTimeout(function () {
-//       try {
-//         that.isScrolling = true;
-//         const objDiv = document.getElementById(that.idDivScroll);
-//         setTimeout(function () {
-//           that.g.wdLog(['objDiv::', objDiv.scrollHeight]);
-//           //objDiv.scrollIntoView(false);
-//           objDiv.style.opacity = '1';
-//         }, 200);
-//         that.isScrolling = false;
-//       } catch (err) {
-//         that.g.wdLog(['> Error :' + err]);
-//       }
-//     }, 0);
-//   }
-// }
+  //  scrollToBottomStart() {
+  //   const that = this;
+  //   if ( this.isScrolling === false ) {
+  //     setTimeout(function () {
+  //       try {
+  //         that.isScrolling = true;
+  //         const objDiv = document.getElementById(that.idDivScroll);
+  //         setTimeout(function () {
+  //           that.g.wdLog(['objDiv::', objDiv.scrollHeight]);
+  //           //objDiv.scrollIntoView(false);
+  //           objDiv.style.opacity = '1';
+  //         }, 200);
+  //         that.isScrolling = false;
+  //       } catch (err) {
+  //         that.g.wdLog(['> Error :' + err]);
+  //       }
+  //     }, 0);
+  //   }
+  // }
 
   /**
    * scrollo la lista messaggi all'ultimo
    * chiamato in maniera ricorsiva sino a quando non risponde correttamente
   */
 
- scrollToBottom(withoutAnimation?: boolean) {
-  const that = this;
-  try {
-    that.isScrolling = true;
-    const objDiv = document.getElementById(that.idDivScroll) as HTMLElement;
-    // const element = objDiv[0] as HTMLElement;
-    setTimeout(function () {
+  scrollToBottom(withoutAnimation?: boolean) {
+    const that = this;
+    try {
+      that.isScrolling = true;
+      const objDiv = document.getElementById(that.idDivScroll) as HTMLElement;
+      // const element = objDiv[0] as HTMLElement;
+      setTimeout(function () {
 
-      if (that.isIE === true || withoutAnimation === true || that.firstScroll === true) {
-        objDiv.parentElement.classList.add('withoutAnimation');
-      } else {
-        objDiv.parentElement.classList.remove('withoutAnimation');
-      }
-      objDiv.parentElement.scrollTop = objDiv.scrollHeight;
-      objDiv.style.opacity = '1';
-      that.firstScroll = false;
-    }, 0);
-  } catch (err) {
-    that.logger.printLog('> Error :' + err);
+        if (that.isIE === true || withoutAnimation === true || that.firstScroll === true) {
+          objDiv.parentElement.classList.add('withoutAnimation');
+        } else {
+          objDiv.parentElement.classList.remove('withoutAnimation');
+        }
+        objDiv.parentElement.scrollTop = objDiv.scrollHeight;
+        objDiv.style.opacity = '1';
+        that.firstScroll = false;
+      }, 0);
+    } catch (err) {
+      that.logger.printLog('> Error :' + err);
+    }
+    that.isScrolling = false;
   }
-  that.isScrolling = false;
- }
 
   // ========= END:: functions scroll position ======= //
 
   /**
   * function customize tooltip
   */
-   handleTooltipEvents(event) {
+  handleTooltipEvents(event) {
     const that = this;
     const showDelay = this.tooltipOptions['show-delay'];
     setTimeout(function () {
       try {
-        
+
         const domRepresentation = document.getElementsByClassName('chat-tooltip');
         if (domRepresentation) {
           const item = domRepresentation[0] as HTMLInputElement;
@@ -204,7 +205,7 @@ export class ConversationContentComponent implements OnInit {
           }, that.tooltipOptions['hideDelayAfterClick']);
         }
       } catch (err) {
-          that.logger.printError('> Error :' + err);
+        that.logger.printError('> Error :' + err);
       }
     }, showDelay);
   }
@@ -217,28 +218,28 @@ export class ConversationContentComponent implements OnInit {
     return false;
   }
 
-  hideMenuOption(){
+  hideMenuOption() {
     this.onMenuOptionShow.emit(false)
   }
 
 
   // ========= begin:: event emitter function ============//
 
-  returnOnAttachmentButtonClicked(event: any){
+  returnOnAttachmentButtonClicked(event: any) {
     this.onAttachmentButtonClicked.emit(event)
   }
 
-  returnOnBeforeMessageRender(event){
+  returnOnBeforeMessageRender(event) {
     //decommentare se in html c'è solamente component tiledesk-text
     //const messageOBJ = { message: this.message, sanitizer: this.sanitizer, messageEl: event.messageEl, component: event.component}
     this.onBeforeMessageRender.emit(event)
   }
 
-  returnOnAfterMessageRender(event){
+  returnOnAfterMessageRender(event) {
     this.onAfterMessageRender.emit(event)
   }
 
-  onImageRenderedFN(event){
+  onImageRenderedFN(event) {
     const imageRendered = event;
     if (imageRendered && this.scrollMe) {
       const divScrollMe = this.scrollMe.nativeElement;
@@ -246,7 +247,7 @@ export class ConversationContentComponent implements OnInit {
       if (!checkContentScrollPosition) { // SE NON SONO ALLA FINE, SCROLLO CONTENT
         this.scrollToBottom()
       }
- 
+
     }
   }
 
