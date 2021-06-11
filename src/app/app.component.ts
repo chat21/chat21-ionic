@@ -279,31 +279,42 @@ export class AppComponent implements OnInit {
 
   checkPlatform() {
     console.log('checkPlatform');
-    let pageUrl = '';
-    try {
-      const pathPage = this.route.snapshot.firstChild.routeConfig.path;
-      this.route.snapshot.firstChild.url.forEach(element => {
-        pageUrl += '/' + element.path;
-      });
-    } catch (error) {
-      console.log('error', error);
-    }
-    console.log('checkPlatform pathPage: ', pageUrl);
-    if (!pageUrl || pageUrl === '') {
-      pageUrl = '/conversations-list';
-    }
+    // let pageUrl = '';
+    // try {
+    //   const pathPage = this.route.snapshot.firstChild.routeConfig.path;
+    //   this.route.snapshot.firstChild.url.forEach(element => {
+    //     pageUrl += '/' + element.path;
+    //   });
+    // } catch (error) {
+    //   console.log('error', error);
+    // }
+    // console.log('checkPlatform pathPage: ', pageUrl);
+    // if (!pageUrl || pageUrl === '') {
+    //   pageUrl = '/conversations-list';
+    // }
 
     if (checkPlatformIsMobile()) {
       this.platformIs = PLATFORM_MOBILE;
-      console.log('PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE);
+      const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
+      console.log('PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE, this.route.snapshot);
+      if(!IDConv){
+        this.router.navigateByUrl('conversations-list')
+      }
       // this.router.navigateByUrl(pageUrl);
       // this.navService.setRoot(ConversationListPage, {});
     } else {
-      console.log('PLATFORM_DESKTOP ', this.navService, pageUrl);
+      console.log('PLATFORM_DESKTOP ', this.navService);
+      const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
+      const FullNameConv = this.route.snapshot.firstChild.paramMap.get('FullNameConv');
+      const Convtype = this.route.snapshot.firstChild.paramMap.get('Convtype');
       this.platformIs = PLATFORM_DESKTOP;
+      
+      let pageUrl = 'conversation-detail/'
+      if (IDConv && FullNameConv) {
+        pageUrl += IDConv + '/' + FullNameConv + '/' + Convtype
+      }
       this.navService.setRoot(ConversationListPage, {});
-      console.log('checkPlatform navigateByUrl', pageUrl);
-      // this.router.navigateByUrl(pageUrl);
+      this.router.navigateByUrl(pageUrl);
 
       // const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
       // createExternalSidebar(this.renderer, dashboardUrl);
