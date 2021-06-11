@@ -392,7 +392,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
                 this.conversationAdded.next(conversationAdded);
             }
         } else {
-            this.logger.printError('ChatConversationsHandler::ADDED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
+            this.logger.printError('FIREBASE-CONVERSATION-HANDLER ChatConversationsHandler::ADDED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
         }
     }
 
@@ -415,7 +415,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
                 this.conversationChanged.next(conversationChanged);
             }
         } else {
-            this.logger.printError('ChatConversationsHandler::CHANGED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
+            this.logger.printError('FIREBASE-CONVERSATION-HANDLER ChatConversationsHandler::CHANGED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
         }
     }
 
