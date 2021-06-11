@@ -374,7 +374,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'LABEL_LAST_ACCESS',
       'ARRAY_DAYS',
       'LABEL_ACTIVE_NOW',
-      'LABEL_IS_WRITING'
+      'LABEL_IS_WRITING',
+      'LABEL_INFO_ADVANCED',
+      'ID_CONVERSATION'
     ];
     this.translationMap = this.customTranslateService.translateLanguage(keys);
   }

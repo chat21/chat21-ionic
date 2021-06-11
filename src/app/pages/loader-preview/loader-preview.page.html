@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Anteprima</ion-title>
+    <ion-title>{{'Preview' | translate}}</ion-title>
     <ion-buttons slot="end">
       <ion-button ion-button fill="clear" (click)="onClose()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -9,56 +9,46 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content 
-[forceOverscroll] = "false"
-[scrollY] = "false"
-[scrollX] = "false"
->
-        <div class="previewSelected" [style.height]="'calc(100% - '+heightPreviewArea+'px)'">
-          <img src="{{fileSelected}}" class="center">
+<ion-content [forceOverscroll]="false" [scrollY]="false" [scrollX]="false">
+  <div class="previewSelected" [style.height]="'calc(100% - '+heightPreviewArea+'px)'">
+    <img src="{{fileSelected}}" class="center">
+  </div>
+
+
+  <div class="messageTextArea" #messageTextArea>
+
+    <ion-item>
+      <ion-label color="primary" position="floating" floating> {{'AddACaption' | translate}}...</ion-label>
+      <!-- <ion-input clearInput></ion-input> -->
+      <ion-textarea #messageTextArea rows="1" autosize="false" auto-grow="true" [(ngModel)]="messageString"
+        (ionInput)="onChangeTextArea($event);" (keyup.enter)="pressedOnKeyboard($event, messageString);">
+      </ion-textarea>
+    </ion-item>
+
+  </div>
+
+  <div class="thumbnailsPreview" #thumbnailsPreview>
+
+    <div class="thumbnailsScroll">
+      <div class="thumbnailsContent">
+        <div *ngFor="let file  of arrayFiles; let i = index" class="centerCropped" (click)="onSelectImage(file)">
+          <img src="{{file}}">
         </div>
-      
-        
-        <div class="messageTextArea" #messageTextArea>
+      </div>
+    </div>
 
-          <ion-item>
-            <ion-label color="primary" position="floating" floating> Aggiungi una didascalia...</ion-label>
-            <!-- <ion-input clearInput></ion-input> -->
-            <ion-textarea 
-              #messageTextArea
-              rows = "1" 
-              autosize = "false"
-              auto-grow = "true"
-              [(ngModel)]="messageString"
-              (ionInput)="onChangeTextArea($event);"
-              (keyup.enter)="pressedOnKeyboard($event, messageString);" >
-            </ion-textarea>
-          </ion-item>
-
-        </div>
-
-        <div class="thumbnailsPreview" #thumbnailsPreview>
-
-          <div class="thumbnailsScroll">
-            <div class="thumbnailsContent">
-              <div *ngFor="let file  of arrayFiles; let i = index" class="centerCropped" (click)="onSelectImage(file)">
-                <img src="{{file}}">
-              </div>
-            </div>
-          </div>
-
-        </div>
+  </div>
 
 
 
-    <!-- fab placed to the (vertical) center and end -->
-    <ion-fab vertical="end" horizontal="end" slot="fixed" class="sendButton">
-      <ion-fab-button color="primary" (click)="onSendMessage()">
-        <ion-icon name="send"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+  <!-- fab placed to the (vertical) center and end -->
+  <ion-fab vertical="end" horizontal="end" slot="fixed" class="sendButton">
+    <ion-fab-button color="primary" (click)="onSendMessage()">
+      <ion-icon name="send"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
-  
+
 
 
 

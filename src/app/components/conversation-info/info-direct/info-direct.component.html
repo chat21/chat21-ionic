@@ -6,15 +6,15 @@
       <div class="chat21-content">
 
         <div class="image-profile">
-          <app-avatar-profile [itemAvatar]=member></app-avatar-profile>
+          <app-avatar-profile [itemAvatar]='member'></app-avatar-profile>
         </div>
 
         <div class="user-presence">
           <app-user-presence 
-            [idUser]=member.uid 
-            [translationMap]=translationMap 
-            [borderColor]=borderColor
-            [fontColor]=fontColor>
+            [idUser]='member.uid '
+            [translationMap]='translationMap' 
+            [borderColor]='borderColor'
+            [fontColor]='fontColor'>
           </app-user-presence>
         </div>
         <!-- -> {{member |json}} -->

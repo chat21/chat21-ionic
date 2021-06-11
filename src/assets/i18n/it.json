@@ -165,6 +165,8 @@
     "WAITING_TIME_FOUND": "Il team tipicamente risponde in $reply_time",
     "WAITING_TIME_NOT_FOUND": "Vi risponderemo appena possibile",
     "CLOSED": "CHIUSA",
-    "PleaseSelectChatToStartMessaging": "Seleziona una chat per iniziare a messaggiare"
-
+    "PleaseSelectChatToStartMessaging": "Seleziona una chat per iniziare a messaggiare",
+    "FromThisAreNew": "------------------",
+    "Preview":"Anteprima",
+    "AddACaption":"Aggiungi una didascalia"
 }
