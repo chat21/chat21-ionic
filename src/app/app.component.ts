@@ -303,17 +303,20 @@ export class AppComponent implements OnInit {
       // this.router.navigateByUrl(pageUrl);
       // this.navService.setRoot(ConversationListPage, {});
     } else {
-      console.log('PLATFORM_DESKTOP ', this.navService);
+      this.platformIs = PLATFORM_DESKTOP;
+        console.log('PLATFORM_DESKTOP ', this.navService);
+      this.navService.setRoot(ConversationListPage, {});
+    
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
       const FullNameConv = this.route.snapshot.firstChild.paramMap.get('FullNameConv');
       const Convtype = this.route.snapshot.firstChild.paramMap.get('Convtype');
-      this.platformIs = PLATFORM_DESKTOP;
+      
       
       let pageUrl = 'conversation-detail/'
       if (IDConv && FullNameConv) {
         pageUrl += IDConv + '/' + FullNameConv + '/' + Convtype
       }
-      this.navService.setRoot(ConversationListPage, {});
+     
       this.router.navigateByUrl(pageUrl);
 
       // const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
