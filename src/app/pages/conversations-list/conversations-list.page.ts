@@ -523,10 +523,8 @@ export class ConversationListPage implements OnInit {
   // ::::: vedi ARCHIVED-CONVERSATION-LIST --> MODALE
   initHandlerEventEmitter() {
     this.onConversationSelectedHandler.subscribe(conversation => {
-      console.log('archived conversaation selectedddd', conversation)
+      console.log('conversaation selectedddd', conversation)
       this.onConversationSelected(conversation)
-
-
     })
 
     this.onImageLoadedHandler.subscribe(conversation => {
@@ -666,7 +664,7 @@ export class ConversationListPage implements OnInit {
   }
 
   onConversationSelected(conversation: ConversationModel) {
-    //console.log('returnSelectedConversation::', conversation)
+    console.log('returnSelectedConversation::', conversation)
     if (conversation.archived) {
       this.navigateByUrl('archived', conversation.uid)
     } else {
@@ -721,17 +719,8 @@ export class ConversationListPage implements OnInit {
       if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
         pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname + '/' + converationType;
       }
-      // let pageUrl = 'detail/' + this.uidConvSelected;
-      // if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
-      //   pageUrl = 'detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
-      // }
       console.log('setUidConvSelected navigateByUrl--->: ', pageUrl);
       this.router.navigateByUrl(pageUrl);
-
-      // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-      // this.router.onSameUrlNavigation = 'reload';
-      // this.router.navigateByUrl(pageUrl);
-
     }
   }
 
