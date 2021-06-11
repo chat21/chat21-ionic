@@ -85,6 +85,8 @@ import {LoaderPreviewPageModule} from './pages/loader-preview/loader-preview.mod
 // UTILS
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ConversationInfoModule } from 'src/app/components/conversation-info/conversation-info.module';
+
 
 // Directives
 import { TooltipModule } from 'ng2-tooltip-directive';
@@ -250,6 +252,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     }),
     ScrollbarThemeModule,
     SharedModule,
+    ConversationInfoModule,
     NgxLinkifyjsModule.forRoot(),
     LoaderPreviewPageModule
   ],
