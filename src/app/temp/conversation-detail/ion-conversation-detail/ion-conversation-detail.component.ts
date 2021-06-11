@@ -34,11 +34,10 @@ export class IonConversationDetailComponent extends ConversationContentComponent
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS;
 
   constructor(
-    public logger: LoggerService,
     public cdref: ChangeDetectorRef,
     public uploadService: UploadService
   ) {
-    super(logger, cdref)
+    super(cdref)
 
     this.listenToUploadFileProgress()
    
