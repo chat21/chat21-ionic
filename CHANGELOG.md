@@ -1,5 +1,13 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.1
+- Fixes the bug: if the uploadEngine key is set to native the svg images are not uploaded
+- Fixes the bug: "logger.printLog" is not a function in "conversation-content-component"
+- Fixes the bug: with native uploadEgine uploading files or images whose names contain spaces return broken URLs
+- Fixes the bug: when switching from mobile to desktop mode, if a conversation is selected in the conversation details, the list of conversations is displayed
+- Fixes the bug: when switching from desktop mode to mobile mode, if no conversation is selected, the conversation list is not displayed
+- Fixes the bug: remove the dependency of the "LoggerService" from the 'ion-conversation-detail' component constructor
+
 ### 3.0.42-beta.1.0
 - Minor improvements
 
