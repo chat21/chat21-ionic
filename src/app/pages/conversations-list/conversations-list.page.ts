@@ -664,7 +664,7 @@ export class ConversationListPage implements OnInit {
   }
 
   onConversationSelected(conversation: ConversationModel) {
-    console.log('returnSelectedConversation::', conversation)
+    //console.log('returnSelectedConversation::', conversation)
     if (conversation.archived) {
       this.navigateByUrl('archived', conversation.uid)
     } else {
