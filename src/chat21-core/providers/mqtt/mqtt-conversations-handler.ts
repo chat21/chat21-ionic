@@ -34,7 +34,6 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     conversations: Array<ConversationModel> = [];
     uidConvSelected: string;
     tenant: string;
-    // FIREBASESTORAGE_BASE_URL_IMAGE: string;
     // urlStorageBucket: string;
 
     // private variables
@@ -42,7 +41,6 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     private translationMap: Map<string, string>;
     private isConversationClosingMap: Map<string, boolean>;
 
-    private ref: firebase.database.Query;
     private audio: any;
     private setTimeoutSound: any;
 
@@ -192,23 +190,6 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
                     loaded();
                 }
             });
-            // SET AUDIO
-            // this.audio = new Audio();
-            // this.audio.src = URL_SOUND;
-            // this.audio.load();
-        // const that = this;
-        // const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUserId);
-        // console.log('connect -------> conversations', urlNodeFirebase);
-        // this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
-        // this.ref.on('child_changed', (childSnapshot) => {
-        //     that.changed(childSnapshot);
-        // });
-        // this.ref.on('child_removed', (childSnapshot) => {
-        //     that.removed(childSnapshot);
-        // });
-        // this.ref.on('child_added', (childSnapshot) => {
-        //     that.added(childSnapshot);
-        // });
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
