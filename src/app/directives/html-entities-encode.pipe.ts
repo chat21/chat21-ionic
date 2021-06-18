@@ -5,7 +5,7 @@ import { htmlEntities, replaceEndOfLine } from 'src/chat21-core/utils/utils';
   name: 'htmlEntiesEncode'
 })
 
-export class HtmlEntiesEncodePipe implements PipeTransform {
+export class HtmlEntitiesEncodePipe implements PipeTransform {
 
   transform(text: any, args?: any): any { 
     text = htmlEntities(text);
