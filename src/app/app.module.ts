@@ -1,4 +1,4 @@
-import { LogLevel } from './../chat21-core/utils/constants';
+import { LogLevel, PUSH_ENGINE_NATIVE } from './../chat21-core/utils/constants';
 import { MomentModule } from 'angular2-moment';
 import { CustomLogger } from 'src/chat21-core/providers/logger/customLogger';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
@@ -9,9 +9,9 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ActivatedRoute } from '@angular/router';
-import {TranslateLoader, TranslateModule, TranslatePipe} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { Chooser } from '@ionic-native/chooser/ngx';
@@ -41,6 +41,7 @@ import { PresenceService } from 'src/chat21-core/providers/abstract/presence.ser
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { UploadService } from 'src/chat21-core/providers/abstract/upload.service';
 import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-handler.service';
+import { NotificationsService } from 'src/chat21-core/providers/abstract/notifications.service';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
 // FIREBASE
@@ -55,6 +56,7 @@ import { FirebasePresenceService } from 'src/chat21-core/providers/firebase/fire
 import { FirebaseImageRepoService } from 'src/chat21-core/providers/firebase/firebase-image-repo';
 import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/firebase-upload.service';
 import { FirebaseGroupsHandler } from 'src/chat21-core/providers/firebase/firebase-group-handler';
+import { FirebaseNotifications } from 'src/chat21-core/providers/firebase/firebase-notifications';
 
 // MQTT
 import { Chat21Service } from 'src/chat21-core/providers/mqtt/chat-service';
@@ -66,6 +68,7 @@ import { MQTTConversationHandler } from 'src/chat21-core/providers/mqtt/mqtt-con
 import { MQTTTypingService } from 'src/chat21-core/providers/mqtt/mqtt-typing.service';
 import { MQTTPresenceService } from 'src/chat21-core/providers/mqtt/mqtt-presence.service';
 import { MQTTGroupsHandler } from '../chat21-core/providers/mqtt/mqtt-groups-handler';
+import { MQTTNotifications } from 'src/chat21-core/providers/mqtt/mqtt-notifications';
 
 //NATIVE 
 import { NativeUploadService } from 'src/chat21-core/providers/native/native-upload-service';
@@ -79,8 +82,8 @@ import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storag
 // PAGES
 import { ConversationListPageModule } from './pages/conversations-list/conversations-list.module';
 import { ConversationDetailPageModule } from './pages/conversation-detail/conversation-detail.module';
-import {LoginPageModule} from './pages/authentication/login/login.module';
-import {LoaderPreviewPageModule} from './pages/loader-preview/loader-preview.module';
+import { LoginPageModule } from './pages/authentication/login/login.module';
+import { LoaderPreviewPageModule } from './pages/loader-preview/loader-preview.module';
 
 // UTILS
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
@@ -98,27 +101,27 @@ export function createTranslateLoader(http: HttpClient) {
 
 }
 
-export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service, appSorage: AppStorageService  ) {
+export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service, appSorage: AppStorageService) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    
+
     chat21Service.config = config.chat21Config;
     chat21Service.initChat();
     console.log("appConfig.getConfig()", config);
     const auth = new MQTTAuthService(http, chat21Service, appSorage);
-    
+
     auth.setBaseUrl(appConfig.getConfig().apiUrl)
     return auth
   } else {
 
     FirebaseInitService.initFirebase(config.firebaseConfig)
-    const auth= new FirebaseAuthService(http);
+    const auth = new FirebaseAuthService(http);
     auth.setBaseUrl(config.apiUrl)
     return auth
   }
 }
 
-export function conversationsHandlerFactory(chat21Service: Chat21Service, httpClient: HttpClient, appConfig: AppConfigProvider ) {
+export function conversationsHandlerFactory(chat21Service: Chat21Service, httpClient: HttpClient, appConfig: AppConfigProvider) {
   console.log('conversationsHandlerFactory: ');
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
@@ -200,7 +203,7 @@ export function imageRepoFactory(appConfig: AppConfigProvider) {
 }
 
 export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, appStorage: AppStorageService) {
-  
+
   const config = appConfig.getConfig()
   if (config.uploadEngine === UPLOAD_ENGINE_NATIVE) {
     const nativeUploadService = new NativeUploadService(http, appStorage)
@@ -208,6 +211,21 @@ export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, ap
     return nativeUploadService
   } else {
     return new FirebaseUploadService();
+  }
+}
+
+export function notificationsServiceFactory(appConfig: AppConfigProvider) {
+  const config = appConfig.getConfig()
+  
+  if (config.pushEngine === PUSH_ENGINE_NATIVE) {
+    const notifications = new MQTTNotifications();
+    // notifications.setTenant(config.tenant)
+    return notifications
+  } else {
+    console.log('APP_MODULE - running FirebaseNotifications')
+    const notifications = new FirebaseNotifications(appConfig);
+    notifications.setTenant(config.tenant)
+    return notifications
   }
 }
 
@@ -245,7 +263,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
       }
     }),
     LoggerModule.forRoot({
-      level: NgxLoggerLevel.DEBUG, 
+      level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.ERROR,
       timestampFormat: 'HH:mm:ss.SSS',
       enableSourceMaps: true
@@ -269,8 +287,8 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     {
       provide: MessagingAuthService,
       useFactory: authenticationFactory,
-      deps: [HttpClient, AppConfigProvider, Chat21Service, AppStorageService ]
-     },
+      deps: [HttpClient, AppConfigProvider, Chat21Service, AppStorageService]
+    },
     {
       provide: PresenceService,
       useFactory: presenceFactory,
@@ -284,7 +302,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     {
       provide: UploadService,
       useFactory: uploadFactory,
-      deps: [HttpClient, AppConfigProvider, AppStorageService ]
+      deps: [HttpClient, AppConfigProvider, AppStorageService]
     },
     {
       provide: ConversationsHandlerService,
@@ -306,6 +324,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
       useFactory: groupsHandlerFactory,
       deps: [HttpClient, Chat21Service, AppConfigProvider]
     },
+
     {
       provide: ImageRepoService,
       useFactory: imageRepoFactory,
@@ -315,6 +334,11 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
       provide: ConversationHandlerBuilderService,
       useFactory: conversationHandlerBuilderFactory,
       deps: [Chat21Service, AppConfigProvider]
+    },
+    {
+      provide: NotificationsService,
+      useFactory: notificationsServiceFactory,
+      deps: [AppConfigProvider]
     },
     {
       provide: AppStorageService,
@@ -330,5 +354,5 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     Chat21Service,
   ]
 })
-export class AppModule {}
+export class AppModule { }
 
