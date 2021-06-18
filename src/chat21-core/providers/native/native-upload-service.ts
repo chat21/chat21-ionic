@@ -58,7 +58,7 @@ export class NativeUploadService extends UploadService {
             const url = this.URL_TILEDESK_IMAGES + '/users'
             return new Promise((resolve, reject) => {
                 that.http.post(url, formData, requestOptions).subscribe(data => {
-                    const downloadURL = this.URL_TILEDESK_IMAGES + '?path=' + encodeURI(data['filename']);
+                    const downloadURL = this.URL_TILEDESK_IMAGES + '?path=' + data['filename'];
                     resolve(downloadURL)
                     // that.BSStateUpload.next({upload: upload});
                 }, (error) => {
