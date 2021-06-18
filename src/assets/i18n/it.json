@@ -168,5 +168,6 @@
     "PleaseSelectChatToStartMessaging": "Seleziona una chat per iniziare a messaggiare",
     "FromThisAreNew": "------------------",
     "Preview":"Anteprima",
-    "AddACaption":"Aggiungi una didascalia"
+    "AddACaption":"Aggiungi una didascalia",
+    "AnErrorOccurredWhileUnsubscribingFromNotifications":"Ops! Si è verificato un errore durante l'annullamento dell'iscrizione alle notifiche"
 }

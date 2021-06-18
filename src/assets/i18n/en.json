@@ -159,5 +159,6 @@
   "PleaseSelectChatToStartMessaging": "Please select a chat to start messaging",
   "FromThisAreNew": "------------------",
   "Preview": "Preview",
-  "AddACaption":"Add a caption"
+  "AddACaption":"Add a caption",
+  "AnErrorOccurredWhileUnsubscribingFromNotifications":"Oops! An error occurred while unsubscribing from notifications"
 }
