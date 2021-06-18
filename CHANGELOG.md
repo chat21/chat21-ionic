@@ -1,5 +1,26 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.7
+- Adds the Html entities encode pipe and removes the Html entities encode from the sendMessage method
+
+### 3.0.42-beta.1.6
+- Disables the dark mode
+- Fixed the bug: in pre environment the the uploadEngine key is set to 'native'
+
+### 3.0.42-beta.1.5
+- Sets in pre: the value of the key chatEngine to 'firebase', the value of the key uploadEngine to 'firebase' and the value of the key pushEngine to 'firebase'
+
+### 3.0.42-beta.1.4
+- Updated in pre enviroment the endpoints of "dashboardUrl" to the Dashboard latest versions (2.1.70-beta.1.6)
+
+### 3.0.42-beta.1.3
+- Fixes the bug: if the uploadEngine key is set to native images and files are not upload
+- Sets in pre: the value of the key chatEngine to 'mqtt', the value of the key uploadEngine to 'native' and the value of the key pushEngine to 'none'
+
+### 3.0.42-beta.1.2
+- Adds push notifications
+- Updates firebase SDK to the 8.6.7 version
+
 ### 3.0.42-beta.1.1
 - Fixes the bug: if the uploadEngine key is set to native the svg images are not uploaded
 - Fixes the bug: "logger.printLog" is not a function in "conversation-content-component"
