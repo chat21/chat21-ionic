@@ -23,6 +23,8 @@
               "src/chat-config-pre.json",
               "src/chat-config-mqtt.json",
               "src/chat-config-pre-test.json",
+              "src/firebase-messaging-sw.js",
+              "src/manifest.json",
               {
                 "glob": "**/*",
                 "input": "src/assets",
@@ -163,7 +165,9 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "e2e": {
