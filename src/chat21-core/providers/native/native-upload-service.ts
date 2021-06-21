@@ -42,7 +42,7 @@ export class NativeUploadService extends UploadService {
 
 
     upload(upload: UploadModel): Promise<any> {
-        console.log('NATIVE UPLOAD - upload new image/file ... upload', upload)
+        // console.log('NATIVE UPLOAD - upload new image/file ... upload', upload)
         const headers = new HttpHeaders({
             Authorization: this.tiledeskToken,
             //'Content-Type': 'multipart/form-data',
@@ -53,7 +53,7 @@ export class NativeUploadService extends UploadService {
 
         const that = this;
         if ((upload.file.type.startsWith('image') && (!upload.file.type.includes('svg')))) {
-            console.log('NATIVE UPLOAD - upload new image')
+            // console.log('NATIVE UPLOAD - upload new image upload.file', upload.file)
             //USE IMAGE API
             const url = this.URL_TILEDESK_IMAGES + '/users'
             return new Promise((resolve, reject) => {
@@ -66,7 +66,7 @@ export class NativeUploadService extends UploadService {
                 });
             });
         } else {
-            console.log('NATIVE UPLOAD - upload new file')
+            // console.log('NATIVE UPLOAD - upload new file')
             //USE FILE API
             const url = this.URL_TILEDESK_FILE + '/users'
             return new Promise((resolve, reject) => {
