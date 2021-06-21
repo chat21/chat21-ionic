@@ -20,7 +20,6 @@ import {
   convertMessage,
   windowsMatchMedia,
   isGroup,
-  htmlEntities,
   replaceEndOfLine,
   
 } from '../../../chat21-core/utils/utils';
@@ -51,7 +50,7 @@ import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
-
+import { AppConfigProvider } from '../../services/app-config';
 
 
 @Component({
@@ -104,7 +103,8 @@ export class ConversationListPage implements OnInit {
     public imageRepoService: ImageRepoService,
     private translateService: CustomTranslateService,
     public tiledeskService: TiledeskService,
-    public tiledeskAuthService: TiledeskAuthService
+    public tiledeskAuthService: TiledeskAuthService,
+    public appConfigProvider: AppConfigProvider,
   ) {
     // console.log('constructor ConversationListPage');
 
@@ -545,7 +545,9 @@ export class ConversationListPage implements OnInit {
    * ::: initialize :::
    */
   initialize() {
-    this.tenant = environment.tenant;
+    // this.tenant = environment.tenant;
+    this.tenant =  this.appConfigProvider.getConfig().tenant
+   console.log('ConversationListPage this.tenant',  this.tenant)
     this.loggedUserUid = this.tiledeskAuthService.getCurrentUser().uid;
     this.subscriptions = [];
     this.initConversationsHandler();
@@ -692,7 +694,7 @@ export class ConversationListPage implements OnInit {
     const keys = ['YOU'];
     const translationMap = this.translateService.translateLanguage(keys);
     // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the convesations list
-    // conversation.last_message_text = htmlEntities(conversation.last_message_text);
+
     var regex = /<br\s*[\/]?>/gi;
     // conversation.last_message_text =  conversation.last_message_text.replace(regex, "\n")
     conversation.last_message_text =  conversation.last_message_text.replace(regex, "")
