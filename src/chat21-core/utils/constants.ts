@@ -7,7 +7,8 @@
 export const CHAT_ENGINE_MQTT = 'mqtt';
 export const CHAT_ENGINE_FIREBASE = 'firebase';
 export const UPLOAD_ENGINE_NATIVE = 'native';
-export const PUSH_ENGINE_NATIVE = 'none';
+export const PUSH_ENGINE_NONE = 'none';
+export const PUSH_ENGINE_FIREBASE = 'firebase';
 
 // AUTH
 export const AUTH_STATE_OFFLINE = 'offline';
