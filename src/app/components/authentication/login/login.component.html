@@ -18,29 +18,33 @@
         <ion-label stacked for="email">{{ translationMap.get('LABEL_EMAIL') }}</ion-label>
         <ion-input #email formControlName="email" type="email" id="email" required autocapitalize="off" spellcheck="false"
         placeholder="{{ translationMap.get('LABEL_PLACEHOLDER_EMAIL') }}"
-        [class.invalid]="!userForm.controls.email.valid"
-        (change)="emailChanged(email)"
-        ></ion-input>
+        [class.invalid]="!userForm.controls.email.valid" ></ion-input>
+        <div *ngIf="formErrors.email" class="is-danger">
+          {{ formErrors.email }}
+        </div>
+
        
         <ion-label stacked for="password">{{ translationMap.get('LABEL_PASSWORD') }}</ion-label>
         <ion-input #password formControlName="password" type="password" id="password" required
         placeholder="{{ translationMap.get('LABEL_PLACEHOLDER_PASSWORD') }}"
-        [class.invalid]="!userForm.controls.password.valid"
-        (change)="passwordChanged(password)"
-        ></ion-input>
+        [class.invalid]="!userForm.controls.password.valid"></ion-input>
 
-     
+        <div *ngIf="formErrors.password" class="is-danger">
+          {{ formErrors.password }}
+        </div>
+
+        
         <button type="submit" class="btn signin-button ion-activatable ripple-parent" [ngClass]="{'signin-button-is-disabled': !userForm.valid}" [disabled]="!userForm.valid">
-          <span class="signin-button-label" [class.active]="!showSpinnerInLoginBtn">
+          <span class="signin-button-label" *ngIf="showSpinnerInLoginBtn === false" >
             {{ translationMap.get('LABEL_SIGNIN') }}
           </span>
           <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-          <!-- <ion-spinner [class.active]="showSpinnerInLoginBtn" name="bubbles" color="white" duration="2" ></ion-spinner> -->
+          <ion-spinner *ngIf="showSpinnerInLoginBtn === true" name="bubbles" color="white" duration="2" ></ion-spinner>
         </button>
 
         <p style="color: #666666; font-size: 1.1em; text-align: center; margin-top: 16px;">
           {{ translationMap.get('LABEL_DONT_HAVE_AN_ACCOUNT_YET') }}
-          <span style="color: #03a5e8; cursor:pointer" (click)="goToResetPsw()">
+          <span style="color: #03a5e8; cursor:pointer" (click)="goToSignupPage()">
               {{ translationMap.get('LABEL_SIGNUP') }}
           </span>
         </p>
