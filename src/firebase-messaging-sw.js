@@ -2,10 +2,18 @@
 // These scripts are made available when the app is served or deployed on Firebase Hosting
 // If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup
 
-importScripts('https://www.gstatic.com/firebasejs/5.8.6/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/5.8.6/firebase-messaging.js');
-importScripts('https://www.gstatic.com/firebasejs/5.8.6/firebase.js');
+// ------ old ------
+// importScripts('https://www.gstatic.com/firebasejs/5.8.6/firebase-app.js');
+// importScripts('https://www.gstatic.com/firebasejs/5.8.6/firebase-messaging.js');
+// importScripts('https://www.gstatic.com/firebasejs/5.8.6/firebase.js');
 
+// ------ new ------
+// import * as firebase from 'firebase/app';
+// import '@firebase/messaging';
+
+importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-messaging.js');
+// importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase.js');
 
 
 
@@ -27,9 +35,22 @@ importScripts('https://www.gstatic.com/firebasejs/5.8.6/firebase.js');
  //importScripts('https://www.gstatic.com/firebasejs/3.9.0/firebase-messaging.js');
  // Initialize the Firebase app in the service worker by passing in the
  // messagingSenderId.
+//  firebase.initializeApp({
+//    'messagingSenderId': '77360455507' // old
+// //  'messagingSenderId': '269505353043'
+  
+//  });
+
+
  firebase.initializeApp({
-   'messagingSenderId': '77360455507'
- });
+  apiKey: 'AIzaSyCoWXHNvP1-qOllCpTshhC6VjPXeRTK0T4"',
+  authDomain: 'chat21-pre-01.firebaseapp.com',
+  databaseURL: 'https://chat21-pre-01.firebaseio.com',
+  projectId: 'chat21-pre-01',
+  storageBucket: 'chat21-pre-01.appspot.com',
+  messagingSenderId: '269505353043',
+  appId: '1:269505353043:web:b82af070572669e3707da6'
+});
  // Retrieve an instance of Firebase Messaging so that it can handle background
  // messages.
  const messaging = firebase.messaging();//.useServiceWorker(registration);
@@ -42,16 +63,44 @@ importScripts('https://www.gstatic.com/firebasejs/5.8.6/firebase.js');
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 // [START background_handler]
-messaging.setBackgroundMessageHandler(function(payload) {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  // Customize notification here
-  const notificationTitle = 'Background Message Title';
-  const notificationOptions = {
-    body: 'Background Message body.',
-    icon: '/firebase-logo.png'
-  };
 
-  return self.registration.showNotification(notificationTitle,
-      notificationOptions);
-});
+// ----- old -------
+// messaging.setBackgroundMessageHandler(function(payload) {
+//   console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) Received background message ', payload);
+//   // Customize notification here
+//   const notificationTitle = payload.notification.title;
+//   const notificationOptions = {
+//     body: payload.notification.body,
+//     // icon: '/firebase-logo.png'
+//   };
+
+//   return self.registration.showNotification(notificationTitle,
+//       notificationOptions);
+// });
+
+// Handle incoming messages. Called when:
+// - a message is received while the app has focus
+// - the user clicks on an app notification created by a service worker
+//   `messaging.onBackgroundMessage` handler.
+// messaging.onMessage((payload) => {
+//   console.log('FIREBASE-NOTIFICATION FIREBASE-MESSAGING-SW) Message received. ', payload);
+//   // ...
+// });
+
+
+// ----- new -------
+messaging.onBackgroundMessage(function(payload) {
+  console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) Received background message ', payload);
+  
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+  body: payload.notification.body,
+  icon: './assets/images/tiledesk_logo_50x50.png',
+  data: { url:payload.data.click_action }, //the url which we gonna use later
+  actions: [{action: "open_url", title: "Read Now"}]
+  };
+  // /Users/nicola/CHAT21_IONIC/src/assets/images/tiledesk_logo_no_text_72x72.png
+  self.registration.showNotification(notificationTitle,
+  notificationOptions);
+  });
 // [END background_handler]
