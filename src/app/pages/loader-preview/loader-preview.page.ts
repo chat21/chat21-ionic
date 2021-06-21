@@ -18,7 +18,7 @@ export class LoaderPreviewPage implements OnInit {
   public messageString: string;
   public heightPreviewArea = '183';
   private selectedFiles: any;
-  srcData : SafeResourceUrl;
+  srcData: SafeResourceUrl;
 
   constructor(
     public viewCtrl: ModalController,
@@ -42,7 +42,10 @@ export class LoaderPreviewPage implements OnInit {
 
   readAsDataURL(file: any) {
     console.log('LoaderPreviewPage readAsDataURL file', file);
-    if (file.type.startsWith("image")) {
+    // ---------------------------------------------------------------------
+    // USE CASE IMAGE
+    // ---------------------------------------------------------------------
+    if (file.type.startsWith("image") && (!file.type.includes('svg'))) {
 
       console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
       const reader = new FileReader();
@@ -55,20 +58,49 @@ export class LoaderPreviewPage implements OnInit {
         }
       };
 
-      // const blob = new Blob([file], {type: 'image/svg+xml'});
-      // const url = URL.createObjectURL(blob);
-      // console.log('LoaderPreviewPage urlToBlob', url);
-      // this.srcData = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      
-      // file = this.srcData
       reader.readAsDataURL(file);
-    } else {
-      console.log('LoaderPreviewPage HERE YES');
+      // ---------------------------------------------------------------------
+      // USE CASE SVG 
+      // ---------------------------------------------------------------------
+    } else if (file.type.startsWith("image") && (file.type.includes('svg'))) {
+      // this.previewFiles(file)
+
+      console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
+      console.log('LoaderPreviewPage readAsDataURL file ', file);
+      const preview = document.querySelector('#img-preview') as HTMLImageElement;
+
+
+      const reader = new FileReader();
+      const that = this;
+      reader.addEventListener("load", function () {
+        // convert image file to base64 string
+        // const img = reader.result as string;
+        const img = reader.result.toString();
+        console.log('LoaderPreviewPage readAsDataURL img ', img);
+
+        // that.fileSelected = that.sanitizer.bypassSecurityTrustResourceUrl(img);
+
+        that.arrayFiles.push(that.sanitizer.bypassSecurityTrustResourceUrl(img));
+        if (!that.fileSelected) {
+          that.fileSelected = that.sanitizer.bypassSecurityTrustResourceUrl(img);
+        }
+      }, false);
+
+      if (file) {
+
+        reader.readAsDataURL(file);
+      }
+
+
+
+      // ---------------------------------------------------------------------
+      // USE CASE FILE
+      // ---------------------------------------------------------------------
+    } else if (file.type.startsWith("application")) {
+      console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
+
       this.createFile();
 
-      // let file =  new File(["https://homepages.cae.wisc.edu/~ece533/images/airplane.png"], "test.jpg");
-      // console.log('LoaderPreviewPage HERE YES', file);
-      // reader.readAsDataURL(file)
     }
   }
   // file-alt-solid.png
@@ -90,6 +122,46 @@ export class LoaderPreviewPage implements OnInit {
       }
     };
     reader.readAsDataURL(file);
+  }
+
+
+  // for svg
+
+  previewFiles(file) {
+
+    console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
+    console.log('LoaderPreviewPage readAsDataURL file ', file);
+    const preview = document.querySelector('#img-preview');
+    console.log('LoaderPreviewPage readAsDataURL preview ', preview);
+
+    this.readAndPreview(file, preview)
+  }
+
+
+  readAndPreview(file, preview) {
+    console.log('LoaderPreviewPage readAsDataURL preview HERE 1');
+    // Make sure `file.name` matches our extensions criteria
+    if (/\.(jpe?g|png|gif|svg)$/i.test(file.name)) {
+      var reader = new FileReader();
+
+      reader.addEventListener("load", function () {
+        var image = new Image();
+        image.height = 100;
+        image.title = file.name;
+        image.src = this.result.toString();
+        console.log('LoaderPreviewPage readAsDataURL preview image.src ', image.src);
+        // preview.appendChild(image);
+
+        preview.src(image);
+      }, false);
+
+      reader.readAsDataURL(file);
+    }
+
+    if (file) {
+      [].forEach.call(file, this.readAndPreview);
+    }
+
   }
 
 

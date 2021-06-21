@@ -11,7 +11,7 @@
 
 <ion-content [forceOverscroll]="false" [scrollY]="false" [scrollX]="false">
   <div class="previewSelected" [style.height]="'calc(100% - '+heightPreviewArea+'px)'">
-    <img src="{{fileSelected}}" class="center">
+    <img id="img-preview" [src]="fileSelected" class="center">
   </div>
 
 
@@ -32,7 +32,7 @@
     <div class="thumbnailsScroll">
       <div class="thumbnailsContent">
         <div *ngFor="let file  of arrayFiles; let i = index" class="centerCropped" (click)="onSelectImage(file)">
-          <img src="{{file}}">
+          <img [src]="file">
         </div>
       </div>
     </div>
