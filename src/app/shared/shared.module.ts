@@ -23,7 +23,6 @@ import { ListConversationsComponent } from '../temp/list-conversations-component
 import { MomentModule } from 'angular2-moment';
 import { AvatarComponent } from '../temp/conversation-detail/message/avatar/avatar.component';
 import { MarkedPipe } from '../directives/marked.pipe';
-import { SafeHtmlPipe } from '../directives/safe-html.pipe';
 import { HtmlEntitiesEncodePipe } from '../directives/html-entities-encode.pipe';
 import { IonConversationDetailComponent } from '../temp/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
 import { BubbleMyMessageComponent } from '../components/conversation-detail/bubble-my-message/bubble-my-message.component';
@@ -69,7 +68,6 @@ import { OptionHeaderComponent } from '../components/conversation-detail/option-
     InfoGroupComponent,
     AdvancedInfoAccordionComponent,
     MarkedPipe,
-    SafeHtmlPipe,
     HtmlEntitiesEncodePipe,
     OptionHeaderComponent
   ],
