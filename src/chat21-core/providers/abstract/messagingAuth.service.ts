@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { environment } from '../../../environments/environment';
+
 
 // models
 import { UserModel } from '../../models/user';
