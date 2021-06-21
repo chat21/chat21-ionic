@@ -4,7 +4,8 @@ import { BehaviorSubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 // firebase
-import * as firebase from 'firebase/app';
+// import * as firebase from 'firebase/app';
+import firebase from "firebase/app";
 import 'firebase/messaging';
 import 'firebase/database';
 import 'firebase/auth';

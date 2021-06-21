@@ -8,7 +8,8 @@ import { Config } from '@ionic/angular';
 // models
 import { UserModel } from 'src/chat21-core/models/user';
 // firebase
-import * as firebase from 'firebase/app';
+// import * as firebase from 'firebase/app';
+import firebase from "firebase/app";
 import 'firebase/messaging';
 import 'firebase/database';
 //utils
