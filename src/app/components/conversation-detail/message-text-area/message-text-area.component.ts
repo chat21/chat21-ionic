@@ -24,7 +24,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   @ViewChild('textArea', { static: false }) messageTextArea
   @ViewChild('fileInput', { static: false }) fileInput: any;
 
- 
+
 
   // set textArea(element: ElementRef<HTMLInputElement>) {
   //   if(element) {
@@ -109,7 +109,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     const message = e.detail.value
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange message ", message);
     const height = e.target.offsetHeight;
-  
+
     try {
       if (message.trim().length > 0) {
         this.conversationEnabled = true;
@@ -198,8 +198,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) sendMessage conve width', this.conversationWith);
     // text.replace(/\s/g, "")
 
-    
-   
+
+
     this.messageString = '';
     // text = text.replace(/(\r\n|\n|\r)/gm, '');
     if (text.trim() !== '') {
@@ -222,7 +222,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   onFileSelected(e: any) {
     console.log('Message-text-area - onFileSelected event', e);
     this.presentModal(e);
-    
+
   }
 
   /**
@@ -245,45 +245,49 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
         backdropDismiss: true
       });
     modal.onDidDismiss().then((detail: any) => {
-      
+
       console.log('presentModal onDidDismiss detail', detail);
-      console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
-      let type = ''
-      if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg'))) {
-        type = 'image'
-        // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
-      } else  {
-        type = 'file'
-       
-      }
+      if (detail.data !== undefined) {
+        let type = ''
+        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg'))) {
+          console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+          type = 'image'
+          // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
+        } else {
+          console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+          type = 'file'
 
-      let fileSelected = e.target.files.item(0);//detail.data.fileSelected;
-      let messageString = detail.data.messageString;
-      let metadata = detail.data.metadata;
-      // let type = detail.data.type;
-      console.log('presentModal onDidDismiss detail.data', detail.data);
-      console.log('presentModal onDidDismiss fileSelected', fileSelected);
-      if (detail !== null) {
-        const currentUpload = new UploadModel(fileSelected);
-        console.log('The result: currentUpload', currentUpload);
-        console.log('The result: CHIUDI!!!!!', detail.data);
-        that.uploadService.upload(currentUpload).then(downloadURL => {
-          metadata.src = downloadURL;
-          console.log('presentModal invio msg metadata::: ', metadata);
-          console.log('presentModal invio msg metadata downloadURL::: ', downloadURL);
-          console.log('presentModal invio msg type::: ', type);
-          console.log('presentModal invio msg message::: ', messageString);
-          // send message
-          that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
-          this.fileInput.nativeElement.value = '';
-        }).catch(error => {
-          // Use to signal error if something goes wrong.
-          console.error(`MessageTextArea uploa Failed to upload file and get link `, error);
-        });
+        }
 
+        let fileSelected = e.target.files.item(0);//detail.data.fileSelected;
+        let messageString = detail.data.messageString;
+        let metadata = detail.data.metadata;
+        // let type = detail.data.type;
+        console.log('presentModal onDidDismiss detail.data', detail.data);
+        console.log('presentModal onDidDismiss fileSelected', fileSelected);
+
+        if (detail !== null) {
+          const currentUpload = new UploadModel(fileSelected);
+          console.log('The result: currentUpload', currentUpload);
+          console.log('The result: CHIUDI!!!!!', detail.data);
+          that.uploadService.upload(currentUpload).then(downloadURL => {
+            metadata.src = downloadURL;
+            console.log('presentModal invio msg metadata::: ', metadata);
+            console.log('presentModal invio msg metadata downloadURL::: ', downloadURL);
+            console.log('presentModal invio msg type::: ', type);
+            console.log('presentModal invio msg message::: ', messageString);
+            // send message
+            that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
+            this.fileInput.nativeElement.value = '';
+          }).catch(error => {
+            // Use to signal error if something goes wrong.
+            console.error(`MessageTextArea uploa Failed to upload file and get link `, error);
+          });
+
+        }
       }
     });
-    
+
     return await modal.present();
   }
 
