@@ -144,3 +144,12 @@ Example:
 docker run -p 8080:80 --env-file .env --mount source=chat21-ionic-assets-vol,destination=/usr/share/nginx/html/assets  chat21/chat21-ionic
 ```
 
+# Autologin 
+To auto login pass the JWT token as a query parameter of your Chat url as in the following example:
+
+```typescript
+
+"http://localhost:8100/#/conversation-detail?jwt=<JWT_TOKEN>"
+
+```
+
