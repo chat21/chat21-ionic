@@ -4,7 +4,7 @@
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{
-    "src": "assets/img/icon.png",
+    "src": "https://tiledesk.com/wp-content/uploads/2020/08/tiledesk-logo_x4_vpadding.png",
     "sizes": "512x512",
     "type": "image/png"
   }],
