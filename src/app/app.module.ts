@@ -94,6 +94,7 @@ import { ConversationInfoModule } from 'src/app/components/conversation-info/con
 // Directives
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+import { ReturnStatement } from '@angular/compiler';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -216,8 +217,9 @@ export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, ap
 
 export function notificationsServiceFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
-  
-  if (config.pushEngine === PUSH_ENGINE_NATIVE) {
+  if (config.pushEngine === 'none') {
+    return;
+  } else if (config.pushEngine === PUSH_ENGINE_NATIVE) {
     const notifications = new MQTTNotifications();
     // notifications.setTenant(config.tenant)
     return notifications
