@@ -1,8 +1,9 @@
 import { URL_SOUND_LIST_CONVERSATION } from './../chat21-core/utils/constants';
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
+
 import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2, } from '@angular/core';
-import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav } from '@ionic/angular';
+import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav, ToastController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ModalController } from '@ionic/angular';
@@ -41,7 +42,8 @@ import { ConversationModel } from 'src/chat21-core/models/conversation';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
-
+// FCM
+import { NotificationsService } from 'src/chat21-core/providers/abstract/notifications.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -68,7 +70,9 @@ export class AppComponent implements OnInit {
   private isTabVisible: boolean = true;
   private tabTitle: string;
   private logger = LoggerInstance.getInstance();
-
+  public toastMsg: string;
+  private modalOpen: boolean = false;
+  private hadBeenCalledOpenModal: boolean = false;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -98,17 +102,19 @@ export class AppComponent implements OnInit {
     // public chatConversationsHandler: ChatConversationsHandler,
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
-    private translateService: CustomTranslateService
+    private translateService: CustomTranslateService,
+    public notificationsService: NotificationsService,
+    public toastController: ToastController
   ) {
-    console.log('AppComponent');
-    console.log('environment  -----> ', environment);
-    this.tenant = environment.tenant;
+   
+    const appconfig = appConfigProvider.getConfig()
+    // this.tenant = environment.tenant;
+    this.tenant = appconfig.tenant;
+    console.log('APP-COMP tenant ', this.tenant);
 
     if (!this.platform.is('desktop')) {
       this.splashScreen.show();
     }
-
-
   }
 
 
@@ -148,33 +154,50 @@ export class AppComponent implements OnInit {
 
       console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
       this.listenToLogoutEvent()
+      this.translateToastMessage();
     });
+  }
+
+  translateToastMessage() {
+
+    this.translate.get('AnErrorOccurredWhileUnsubscribingFromNotifications')
+      .subscribe((text: string) => {
+        // this.deleteContact_msg = text;
+        // console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) text: ', text)
+
+        this.toastMsg = text;
+        // console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT): this.toastMsg', this.toastMsg)
+
+      });
   }
 
   /***************************************************+*/
   /**------- AUTHENTICATION FUNCTIONS --> START <--- +*/
-  private initAuthentication(){
+  private initAuthentication() {
     const tiledeskToken = this.appStorageService.getItem('tiledeskToken')
     const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
     if (tiledeskToken) {
       this.logger.printDebug(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
       this.tiledeskAuthService.signInWithCustomToken(tiledeskToken).then(user => {
         this.messagingAuthService.createCustomToken(tiledeskToken)
-      }).catch(error => { this.logger.printError('SIGNINWITHCUSTOMTOKEN error::' + error)})
-    }  else {
+      }).catch(error => { this.logger.printError('SIGNINWITHCUSTOMTOKEN error::' + error) })
+    } else {
       this.logger.printWarn(' ---------------- NON sono loggato ---------------- ')
       const that = this;
       clearTimeout(this.timeModalLogin);
       this.timeModalLogin = setTimeout(() => {
-        this.authModal = this.presentModal();
+        // if (!this.hadBeenCalledOpenModal) {
+          this.authModal = this.presentModal('initAuthentication');
+          this.hadBeenCalledOpenModal = true;
+        // }
       }, 1000);
     }
 
     this.route.queryParams.subscribe(params => {
-      if(params.jwt){
+      if (params.jwt) {
         this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
           this.messagingAuthService.createCustomToken(params.jwt)
-        }).catch(error => { this.logger.printError('SIGNINWITHCUSTOMTOKEN error::' + error)})
+        }).catch(error => { this.logger.printError('SIGNINWITHCUSTOMTOKEN error::' + error) })
       }
     });
   }
@@ -198,8 +221,18 @@ export class AppComponent implements OnInit {
     clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     const currentUser = this.tiledeskAuthService.getCurrentUser();
-    this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
+    // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
+    console.log('APP-COMP - goOnLine****', currentUser);
     this.chatManager.setTiledeskToken(tiledeskToken);
+
+    // ----------------------------------------------
+    // PUSH NOTIFICATIONS
+    // ----------------------------------------------
+    this.notificationsService.getNotificationPermissionAndSaveToken(currentUser.uid);
+
+
+
+
     if (currentUser) {
       this.chatManager.setCurrentUser(currentUser);
       this.presenceService.setPresence(currentUser.uid);
@@ -220,7 +253,7 @@ export class AppComponent implements OnInit {
 
   goOffLine = () => {
     this.logger.printDebug('************** goOffLine:', this.authModal);
-    
+
     this.chatManager.setTiledeskToken(null);
     this.chatManager.setCurrentUser(null);
     this.chatManager.goOffLine();
@@ -229,7 +262,10 @@ export class AppComponent implements OnInit {
     const that = this;
     clearTimeout(this.timeModalLogin);
     this.timeModalLogin = setTimeout(() => {
-      this.authModal = this.presentModal();
+      // if (!this.hadBeenCalledOpenModal) {
+        this.authModal = this.presentModal('goOffLine');
+        this.hadBeenCalledOpenModal = true
+      // }
     }, 1000);
   }
   /**------- AUTHENTICATION FUNCTIONS --> END <--- +*/
@@ -297,26 +333,26 @@ export class AppComponent implements OnInit {
       this.platformIs = PLATFORM_MOBILE;
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
       console.log('PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE, this.route.snapshot);
-      if(!IDConv){
+      if (!IDConv) {
         this.router.navigateByUrl('conversations-list')
       }
       // this.router.navigateByUrl(pageUrl);
       // this.navService.setRoot(ConversationListPage, {});
     } else {
       this.platformIs = PLATFORM_DESKTOP;
-        console.log('PLATFORM_DESKTOP ', this.navService);
+      console.log('PLATFORM_DESKTOP ', this.navService);
       this.navService.setRoot(ConversationListPage, {});
-    
+
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
       const FullNameConv = this.route.snapshot.firstChild.paramMap.get('FullNameConv');
       const Convtype = this.route.snapshot.firstChild.paramMap.get('Convtype');
-      
-      
+
+
       let pageUrl = 'conversation-detail/'
       if (IDConv && FullNameConv) {
         pageUrl += IDConv + '/' + FullNameConv + '/' + Convtype
       }
-     
+
       this.router.navigateByUrl(pageUrl);
 
       // const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
@@ -336,7 +372,7 @@ export class AppComponent implements OnInit {
     this.notificationsEnabled = true;
   }
 
-  private initAudio(){
+  private initAudio() {
     // SET AUDIO
     this.audio = new Audio();
     this.audio.src = URL_SOUND_LIST_CONVERSATION;
@@ -376,7 +412,7 @@ export class AppComponent implements OnInit {
       that.audio.play().then(() => {
         console.log('****** soundMessage played *****');
       }).catch((error: any) => {
-          console.log('***soundMessage error*', error);
+        console.log('***soundMessage error*', error);
       });
     }, 1000);
   }
@@ -458,8 +494,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private async presentModal(): Promise<any> {
-    console.log('presentModal');
+  private async presentModal(calledby): Promise<any> {
+    console.log('presentModal calledby', calledby);
     const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
       await this.modalController.create({
@@ -469,6 +505,7 @@ export class AppComponent implements OnInit {
         backdropDismiss: false
       });
     modal.onDidDismiss().then((detail: any) => {
+      // this.modalOpen = false
       console.log('The result: CHIUDI!!!!!', detail.data);
       // this.checkPlatform();
       if (detail !== null) {
@@ -488,6 +525,7 @@ export class AppComponent implements OnInit {
 
   private async closeModal() {
     console.log('closeModal', this.modalController);
+    console.log('closeModal .getTop()', this.modalController.getTop());
     await this.modalController.getTop();
     this.modalController.dismiss({ confirmed: true });
   }
@@ -497,12 +535,36 @@ export class AppComponent implements OnInit {
     this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
       console.log('APP-COMP hasclickedlogout', hasclickedlogout);
       if (hasclickedlogout === true) {
-        this.removePresenceAndLogout()
+        // ----------------------------------------------
+        // PUSH NOTIFICATIONS
+        // ----------------------------------------------
+        const that = this;
+        this.notificationsService.removeNotificationsInstance(function (res) {
+          console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) removeNotificationsInstance > CALLBACK RES', res);
+
+          if (res === 'success') {
+            that.removePresenceAndLogout();
+          } else {
+            that.removePresenceAndLogout();
+            that.presentToast();
+          }
+        })
+
       }
     });
   }
 
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: this.toastMsg,
+      duration: 2000
+    });
+    toast.present();
+  }
+
   removePresenceAndLogout() {
+    console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) calling removePresenceAndLogout');
     this.presenceService.removePresence();
     this.tiledeskAuthService.logOut()
     this.messagingAuthService.logout()
@@ -542,11 +604,12 @@ export class AppComponent implements OnInit {
     // 1 - init  archviedConversationsHandler
     this.archivedConversationsHandlerService.initialize(this.tenant, userId, translationMap);
   }
-  
+
   // BEGIN RESIZE FUNCTIONS //
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     const that = this;
+    console.log('this.doitResize)', this.doitResize)
     clearTimeout(this.doitResize);
     this.doitResize = setTimeout(() => {
       let platformIsNow = PLATFORM_DESKTOP;
@@ -569,18 +632,18 @@ export class AppComponent implements OnInit {
   @HostListener('document:visibilitychange', [])
   visibilitychange() {
     // console.log("document TITLE", document.hidden, document.title);
-    if (document.hidden) { 
-        this.isTabVisible = false
+    if (document.hidden) {
+      this.isTabVisible = false
     } else {
-        // TAB IS ACTIVE --> restore title and DO NOT SOUND
-        clearInterval(this.setIntervalTime)
-        this.isTabVisible = true;
-        document.title = this.tabTitle;
+      // TAB IS ACTIVE --> restore title and DO NOT SOUND
+      clearInterval(this.setIntervalTime)
+      this.isTabVisible = true;
+      document.title = this.tabTitle;
     }
   }
 
   @HostListener('window:storage', ['$event'])
-  onStorageChanged(event: any){
+  onStorageChanged(event: any) {
     if (this.appStorageService.getItem('tiledeskToken') === null) {
       this.tiledeskAuthService.logOut()
       this.messagingAuthService.logout();

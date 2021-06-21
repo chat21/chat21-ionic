@@ -210,23 +210,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   // -------------- SYSTEM FUNCTIONS -------------- //
-  private listnerStart() {
-    const that = this;
-    this.chatManager.BSStart.subscribe((data: any) => {
-      console.log('***** BSStart ConversationDetailPage *****', data);
-      if (data) {
-        that.initialize();
-      }
-    });
-  }
+
 
   /** */
   // con il routing la gestione delle pagine è automatica (da indagare),
   // non sempre passa da ngOnInit/ngOnDestroy! Evitare di aggiungere logica qui
   //
   ngOnInit() {
-    // console.log('ngOnInit ConversationDetailPage: ');
-
     console.log('ngOnInit ConversationDetailPage window.location: ', window.location);
   }
 
@@ -235,28 +225,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnDestroy() {
-    // console.log('ngOnDestroy ConversationDetailPage: ');
-
-    console.log('CONVERSATION-DETAIL ngOnDestroy');
-    // this.unsubscribe$.next();
-    // this.unsubscribe$.complete();
   }
 
-  /** */
+
   ionViewWillEnter() {
     this.loggedUser = this.tiledeskAuthService.getCurrentUser();
     console.log('ConversationDetailPage ionViewWillEnter loggedUser: ', this.loggedUser);
     this.listnerStart();
-    // if (this.loggedUser) {
-    //   this.initialize();
-    // } else {
-    //   this.listnerUserLogged();
-    // }
   }
 
 
-
-  /** */
   ionViewDidEnter() {
   }
 
@@ -269,15 +247,30 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.unsubescribeAll();
   }
 
+  private listnerStart() {
+    const that = this;
+    this.chatManager.BSStart.subscribe((data: any) => {
+      console.log('***** BSStart ConversationDetailPage *****', data);
+      if (data) {
+        that.initialize();
+      }
+    });
+  }
+
   // -------------- START MY functions -------------- //
   /** */
   initialize() {
     this.loggedUser = this.tiledeskAuthService.getCurrentUser();
+    console.log('ConversationDetailPage initialize loggedUser: ', this.loggedUser);
     this.translations();
     // this.conversationSelected = localStorage.getItem('conversationSelected');
     this.showButtonToBottom = false;
     this.showMessageWelcome = false;
-    this.tenant = environment.tenant;
+    // this.tenant = environment.tenant;
+
+    const appconfig = this.appConfigProvider.getConfig()
+    this.tenant = appconfig.tenant;
+    console.log('ConversationDetailPage tenant ', this.tenant);
 
 
     // Change list on date change
@@ -674,10 +667,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     if (msg) {
 
-      msg = htmlEntities(msg)
-      msg = replaceEndOfLine(msg)
-      // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the chat
-      msg = msg.trim()
+      // moved in the pipe htmlEntiesEncode
+      // msg = htmlEntities(msg)
+      // msg = replaceEndOfLine(msg)
+      // // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the chat
+      // msg = msg.trim()
       console.log("CONVERSATION-DETAIL SEND MESSAGE trimmed message ", msg);
     }
 
@@ -701,7 +695,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
       if (msg) {
         // msg = msg + '<br>' + 'File: ' + metadata.src;
-        msg = msg + '<br>' + `[${metadata.name}](${metadata.src})`
+        msg = msg + '\n' + `[${metadata.name}](${metadata.src})`
 
       } else {
         // msg = 'File: ' + metadata.src;

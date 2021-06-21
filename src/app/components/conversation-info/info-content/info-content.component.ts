@@ -6,7 +6,7 @@ import { ConversationModel } from 'src/chat21-core/models/conversation';
 
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
-import { environment } from 'src/environments/environment';
+
 import { ActivatedRoute } from '@angular/router';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 import { AppConfigProvider } from '../../../services/app-config';
@@ -56,7 +56,10 @@ export class InfoContentComponent implements OnInit {
     console.log('INFO-CONTENT-COMP HELLO (CONSTUCTOR) !!!!!');
     // this.loggedUser = this.authService.getCurrentUser();
     // console.log('INFO-CONTENT-COMP loggedUser: ', this.loggedUser);
-    this.tenant = environment.tenant;
+  
+    const appconfig = appConfigProvider.getConfig()
+    this.tenant = appconfig.tenant;
+    console.log('INFO-CONTENT-COMP tenant ', this.tenant);
 
     this.route.paramMap.subscribe(params => {
       console.log('INFO-CONTENT-COMP initialize params: ', params);

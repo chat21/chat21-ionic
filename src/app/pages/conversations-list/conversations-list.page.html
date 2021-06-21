@@ -7,8 +7,11 @@
 
 <!-- <ng-template #contentConversations> -->
 <ion-header no-border class="ion-no-border">
-  <app-ddp-header *ngIf="conversationType ==='active'" [numberOpenConv]=numberOpenConv [supportMode]=supportMode
-    (openContactsDirectory)=openContactsDirectory($event) (openProfileInfo)=openProfileInfo($event)>
+  <app-ddp-header *ngIf="conversationType ==='active'" 
+  [numberOpenConv]=numberOpenConv 
+  [supportMode]=supportMode
+    (openContactsDirectory)=openContactsDirectory($event)
+     (openProfileInfo)=openProfileInfo($event)>
   </app-ddp-header>
 
   <app-option-header *ngIf="conversationType !=='active'" [headerTitle]=headerTitle
