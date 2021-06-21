@@ -159,6 +159,12 @@
   "PleaseSelectChatToStartMessaging": "Please select a chat to start messaging",
   "FromThisAreNew": "------------------",
   "Preview": "Preview",
-  "AddACaption":"Add a caption",
-  "AnErrorOccurredWhileUnsubscribingFromNotifications":"Oops! An error occurred while unsubscribing from notifications"
+  "AddACaption": "Add a caption",
+  "AnErrorOccurredWhileUnsubscribingFromNotifications": "Oops! An error occurred while unsubscribing from notifications",
+  "SIGNIN_ERROR_USER_NOT_FOUND": "Authentication failed. User not found.",
+  "SIGNIN_ERROR_USER_WRONG_PSW": "Authentication failed. Wrong password.",
+  "Email is required": "Email is required.",
+  "Email must be a valid email": "Email must be a valid email.",
+  "Password is required": "Password is required.",
+  "Password must be at least 6 characters long": "Password must be at least 6 characters long."
 }
