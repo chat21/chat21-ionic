@@ -1,7 +1,20 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.8
+- Handles the responses of the 'signInWithEmailAndPassword' method: displays a toast in case of error and a spinner waiting for the response
+- Adds in the "login component" the links to the dashboard's pages "reset password" and "signup"
+- Adds in the "login component" the display of validation errors of the authentication form 
+- Adds the preview of the selected SVG image in image/file preview popup 
+- Fixes the bug: "fileSelected of undefined" when the image/file preview popup is closed without any image or file being selected
+- Adds the check of the pushEngine key set to "none" in the "notificationsServiceFactory" function of app.module
+- Changes occurrences where "tenant" is obtained from "environment" by getting it from "appConfig" (app.component.ts, info.content.component.ts, conversation-detail.page, conversation-list.page)
+- Adds in info-message.component.html the pipe htmlEntiesEncode
+- Updates in the firebase-messaging-sw.js the version of Firebase SDK imported and replaces the deprecated method "setBackgroundMessageHandler()" with the new onBackgroundMessage()
+
+
 ### 3.0.42-beta.1.7
-- Adds the Html entities encode pipe and removes the Html entities encode from the sendMessage method
+- Adds the Html entities encode pipe and removes the entities encode from the sendMessage method
+- Adds the abstract class "notification.service" and the classes "firebase-notifications" and "mqtt-notifications"
 
 ### 3.0.42-beta.1.6
 - Disables the dark mode
@@ -11,7 +24,7 @@
 - Sets in pre: the value of the key chatEngine to 'firebase', the value of the key uploadEngine to 'firebase' and the value of the key pushEngine to 'firebase'
 
 ### 3.0.42-beta.1.4
-- Updated in pre enviroment the endpoints of "dashboardUrl" to the Dashboard latest versions (2.1.70-beta.1.6)
+- Updated in pre environment the endpoints of "dashboardUrl" to the Dashboard latest versions (2.1.70-beta.1.6)
 
 ### 3.0.42-beta.1.3
 - Fixes the bug: if the uploadEngine key is set to native images and files are not upload
@@ -20,6 +33,7 @@
 ### 3.0.42-beta.1.2
 - Adds push notifications
 - Updates firebase SDK to the 8.6.7 version
+- Changes the import of firebase 'import * as firebase from "firebase/app"' with 'import firebase from "firebase/app"'
 
 ### 3.0.42-beta.1.1
 - Fixes the bug: if the uploadEngine key is set to native the svg images are not uploaded
