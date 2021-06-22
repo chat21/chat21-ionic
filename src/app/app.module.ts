@@ -183,8 +183,14 @@ export function presenceFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTPresenceService();
+    // const presence = new MQTTPresenceService(appConfig);
+    // presence.setTenant(config.tenant)
+    // return presence
   } else {
     return new FirebasePresenceService();
+    // const presence = new FirebasePresenceService(appConfig);
+    // presence.setTenant(config.tenant);
+    // return presence
   }
 }
 
