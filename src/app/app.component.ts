@@ -44,6 +44,7 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 // FCM
 import { NotificationsService } from 'src/chat21-core/providers/abstract/notifications.service';
+import { getImageUrlThumbFromFirebasestorage } from 'src/chat21-core/utils/utils-user';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -228,7 +229,9 @@ export class AppComponent implements OnInit {
     // ----------------------------------------------
     // PUSH NOTIFICATIONS
     // ----------------------------------------------
-    this.notificationsService.getNotificationPermissionAndSaveToken(currentUser.uid);
+    if(this.appConfigProvider.getConfig().pushEngine !== 'none'){
+      this.notificationsService.getNotificationPermissionAndSaveToken(currentUser.uid);
+    }
 
 
 
@@ -539,16 +542,18 @@ export class AppComponent implements OnInit {
         // PUSH NOTIFICATIONS
         // ----------------------------------------------
         const that = this;
-        this.notificationsService.removeNotificationsInstance(function (res) {
-          console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) removeNotificationsInstance > CALLBACK RES', res);
-
-          if (res === 'success') {
-            that.removePresenceAndLogout();
-          } else {
-            that.removePresenceAndLogout();
-            that.presentToast();
-          }
-        })
+        if(this.appConfigProvider.getConfig().pushEngine !== 'none'){
+          this.notificationsService.removeNotificationsInstance(function (res) {
+            console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) removeNotificationsInstance > CALLBACK RES', res);
+  
+            if (res === 'success') {
+              that.removePresenceAndLogout();
+            } else {
+              that.removePresenceAndLogout();
+              that.presentToast();
+            }
+          })
+        }
 
       }
     });
