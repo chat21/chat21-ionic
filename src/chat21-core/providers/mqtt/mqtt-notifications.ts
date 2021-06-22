@@ -7,7 +7,7 @@ import { NotificationsService } from '../abstract/notifications.service';
     providedIn: 'root'
   })
   export class MQTTNotifications extends NotificationsService {
-    public tenant: string;
+    
     public BUILD_VERSION: string;
     constructor( ) {
         super();
@@ -15,13 +15,14 @@ import { NotificationsService } from '../abstract/notifications.service';
 
     
     getNotificationPermissionAndSaveToken(currentUser: string) { 
-
-
+      console.log('Method not implemented.');
+      return;
     }
 
 
     removeNotificationsInstance(callback: (string) => void) {
-        
+      console.log('Method not implemented.');
+      return;
     }
       
   }

@@ -174,8 +174,14 @@ export function typingFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTTypingService();
+    // const typing = new MQTTTypingService();
+    // typing.setTenant(config.tenant)
+    // return typing
   } else {
-    return new FirebaseTypingService();
+    return new FirebaseTypingService();    
+    // const typing = new FirebaseTypingService();
+    // typing.setTenant(config.tenant)
+    // return typing 
   }
 }
 
@@ -183,19 +189,19 @@ export function presenceFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTPresenceService();
-    // const presence = new MQTTPresenceService(appConfig);
+    // const presence = new MQTTPresenceService();
     // presence.setTenant(config.tenant)
     // return presence
   } else {
     return new FirebasePresenceService();
-    // const presence = new FirebasePresenceService(appConfig);
+    // const presence = new FirebasePresenceService();
     // presence.setTenant(config.tenant);
     // return presence
   }
 }
 
 export function imageRepoFactory(appConfig: AppConfigProvider) {
-  console.log('imageRepoFactory: ');
+
   const config = appConfig.getConfig()
   if (config.uploadEngine === UPLOAD_ENGINE_NATIVE) {
     const imageService = new NativeImageRepoService()
@@ -227,11 +233,10 @@ export function notificationsServiceFactory(appConfig: AppConfigProvider) {
     return;
   } else if (config.pushEngine === PUSH_ENGINE_NATIVE) {
     const notifications = new MQTTNotifications();
-    // notifications.setTenant(config.tenant)
+    notifications.setTenant(config.tenant)
     return notifications
   } else {
-    console.log('APP_MODULE - running FirebaseNotifications')
-    const notifications = new FirebaseNotifications(appConfig);
+    const notifications = new FirebaseNotifications();
     notifications.setTenant(config.tenant)
     return notifications
   }

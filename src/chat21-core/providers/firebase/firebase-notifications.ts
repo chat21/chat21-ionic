@@ -8,10 +8,6 @@ import firebase from "firebase/app";
 import 'firebase/messaging';
 import 'firebase/auth';
 
-import { AppConfigProvider } from 'src/app/services/app-config';
-// import 'firebase/storage';
-// import 'firebase/messaging';
-
 @Injectable({ providedIn: 'root' })
 
 export class FirebaseNotifications extends NotificationsService {
@@ -20,7 +16,7 @@ export class FirebaseNotifications extends NotificationsService {
     public FCMcurrentToken: string;
     public userId: string;
 
-    constructor(public appConfig: AppConfigProvider) {
+    constructor() {
         super();
 
         // this.tenant = appConfig.getConfig().tenant
@@ -34,7 +30,6 @@ export class FirebaseNotifications extends NotificationsService {
 
 
     getNotificationPermissionAndSaveToken(currentUserUid) {
-        this.tenant = this.getTenant()
         console.log('FIREBASE-NOTIFICATIONS calling requestPermission - tenant ', this.tenant)
         console.log('FIREBASE-NOTIFICATIONS calling requestPermission - currentUserUid ', currentUserUid)
         this.userId = currentUserUid;
