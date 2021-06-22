@@ -23,6 +23,7 @@
               "src/chat-config-pre.json",
               "src/chat-config-mqtt.json",
               "src/chat-config-pre-test.json",
+              "src/chat-config-mqtt-localhost.json",
               "src/firebase-messaging-sw.js",
               "src/manifest.json",
               {
