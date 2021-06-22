@@ -4,6 +4,7 @@ import { MessageModel } from 'src/chat21-core/models/message';
 import { MAX_WIDTH_IMAGES} from 'src/chat21-core/utils/constants';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { isFile, isFrame, isImage } from 'src/chat21-core/utils/utils-message';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 @Component({
   selector: 'tiledeskwidget-bubble-message',
   templateUrl: './bubble-message.component.html',
@@ -30,8 +31,8 @@ export class BubbleMessageComponent implements OnInit {
     'hide-delay': 200
   };
 
-  constructor(private logger: LoggerService,
-              public sanitizer: DomSanitizer) { }
+  private logger: LoggerService = LoggerInstance.getInstance()
+  constructor(public sanitizer: DomSanitizer) { }
 
   ngOnInit() {
   }
