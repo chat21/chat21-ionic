@@ -2,6 +2,7 @@
     "chatEngine": "mqtt",
     "updateEngine": "native",
     "pushEngine":"none",
+    "tenant":"tilechat",
     "firebaseConfig": {
         "apiKey": "CHANGEIT",
         "authDomain": "CHANGEIT",
