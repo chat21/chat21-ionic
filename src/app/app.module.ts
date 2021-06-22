@@ -170,7 +170,7 @@ export function groupsHandlerFactory(http: HttpClient, chat21Service: Chat21Serv
 }
 
 export function typingFactory(appConfig: AppConfigProvider) {
-  console.log('typingFactory: ');
+  // console.log('typingFactory: ');
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTTypingService();
