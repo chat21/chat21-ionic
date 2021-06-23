@@ -7,22 +7,18 @@ import * as PACKAGE from '../../../../package.json';
 })
 export abstract class NotificationsService {
   
-  public tenant: string;
+  private _tenant: string;
+  abstract BUILD_VERSION = PACKAGE.version
 
   public setTenant(tenant): void {
-    console.log('FIREBASE-NOTIFICATIONS (SERVICE) tenant ',  this.tenant)
-    this.tenant = tenant;
+    this._tenant = tenant;
   }
   public getTenant(): string {
-    if (this.tenant) {
-      return this.tenant;
+    if (this._tenant) {
+      return this._tenant;
     } 
   }
 
-  abstract BUILD_VERSION = PACKAGE.version
-  // abstract initMessaging(): void;
-
-  
   abstract getNotificationPermissionAndSaveToken(currentUserUid: string): void;
   abstract removeNotificationsInstance(callback: (string) => void): void;
 

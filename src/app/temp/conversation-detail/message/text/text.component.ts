@@ -5,7 +5,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Sanitizer } 
   templateUrl: './text.component.html',
   styleUrls: ['./text.component.scss']
 })
-export class TextComponent implements OnInit, OnChanges {
+export class TextComponent implements OnInit {
 
   @Input() text: string;
   @Input() color: string;
@@ -19,7 +19,6 @@ export class TextComponent implements OnInit, OnChanges {
 
 
   printMessage(text, messageEl, component) {
-    // console.log('TEXT-COMP text', text) 
     const messageOBJ = { messageEl: messageEl, component: component}
     this.onBeforeMessageRender.emit(messageOBJ)
     const messageText = text;
@@ -28,11 +27,6 @@ export class TextComponent implements OnInit, OnChanges {
     // const messageText = message.text;
     // this.triggerAfterMessageRender(message, messageEl, component);
     return messageText;
-  }
-
-  ngOnChanges() {
- console.log('TEXT-COMP text', this.text) 
-
   }
 
 }

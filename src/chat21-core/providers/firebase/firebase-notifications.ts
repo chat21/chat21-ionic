@@ -11,25 +11,18 @@ import 'firebase/auth';
 @Injectable({ providedIn: 'root' })
 
 export class FirebaseNotifications extends NotificationsService {
-
+    
     public BUILD_VERSION: string;
-    public FCMcurrentToken: string;
-    public userId: string;
+    private FCMcurrentToken: string;
+    private userId: string;
+    private tenant: string;
 
     constructor() {
         super();
-
-        // this.tenant = appConfig.getConfig().tenant
-        // console.log('FIREBASE-NOTIFICATIONS calling requestPermission - tenant ', this.tenant)
-
-        // this.tenant = this.getTenant()
-        // console.log('FIREBASE-NOTIFICATIONS calling requestPermission - tenant ', this.tenant)
     }
 
-
-
-
     getNotificationPermissionAndSaveToken(currentUserUid) {
+        this.tenant = this.getTenant();
         console.log('FIREBASE-NOTIFICATIONS calling requestPermission - tenant ', this.tenant)
         console.log('FIREBASE-NOTIFICATIONS calling requestPermission - currentUserUid ', currentUserUid)
         this.userId = currentUserUid;
@@ -52,35 +45,6 @@ export class FirebaseNotifications extends NotificationsService {
                 });
         }
     }
-
-
-    updateToken(FCMcurrentToken, currentUserUid) {
-        console.log('FIREBASE-NOTIFICATION >>>> getPermission > updateToken ', FCMcurrentToken);
-        // this.afAuth.authState.take(1).subscribe(user => {
-        if (!currentUserUid || !FCMcurrentToken) {
-            return
-        };
-
-        const connection = FCMcurrentToken;
-        const updates = {};
-        const urlNodeFirebase = '/apps/' + this.tenant
-        const connectionsRefinstancesId = urlNodeFirebase + '/users/' + currentUserUid + '/instances/';
-
-        // this.connectionsRefinstancesId = this.urlNodeFirebase + "/users/" + userUid + "/instances/";
-        const device_model = {
-            device_model: navigator.userAgent,
-            language: navigator.language,
-            platform: 'ionic',
-            platform_version: this.BUILD_VERSION
-        }
-
-        updates[connectionsRefinstancesId + connection] = device_model;
-
-        console.log('FIREBASE-NOTIFICATION >>>> getPermission > updateToken in DB', updates);
-        firebase.database().ref().update(updates)
-    }
-
-    //   removeInstance() su evento pubblcatato da app.componnent
 
     removeNotificationsInstance(callback: (string) => void) {
         firebase.auth().onAuthStateChanged(function (user) {
@@ -128,6 +92,35 @@ export class FirebaseNotifications extends NotificationsService {
     //     })
     //     return promise;
     // }
+
+
+    // ********** PRIVATE METHOD - START ****************//
+    private updateToken(FCMcurrentToken, currentUserUid) {
+        console.log('FIREBASE-NOTIFICATION >>>> getPermission > updateToken ', FCMcurrentToken);
+        // this.afAuth.authState.take(1).subscribe(user => {
+        if (!currentUserUid || !FCMcurrentToken) {
+            return
+        };
+
+        const connection = FCMcurrentToken;
+        const updates = {};
+        const urlNodeFirebase = '/apps/' + this.tenant
+        const connectionsRefinstancesId = urlNodeFirebase + '/users/' + currentUserUid + '/instances/';
+
+        // this.connectionsRefinstancesId = this.urlNodeFirebase + "/users/" + userUid + "/instances/";
+        const device_model = {
+            device_model: navigator.userAgent,
+            language: navigator.language,
+            platform: 'ionic',
+            platform_version: this.BUILD_VERSION
+        }
+
+        updates[connectionsRefinstancesId + connection] = device_model;
+
+        console.log('FIREBASE-NOTIFICATION >>>> getPermission > updateToken in DB', updates);
+        firebase.database().ref().update(updates)
+    }
+    // ********** PRIVATE METHOD - END ****************//
 
 
 
