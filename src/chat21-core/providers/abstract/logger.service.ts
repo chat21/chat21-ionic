@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 export abstract class LoggerService {
 
   constructor() { }
-
+  
+  abstract setLoglevel(logLevel: number);
   abstract printLog(...message: any[])
   abstract printDebug(...message: any[])
   abstract printWarn(...message: any[])

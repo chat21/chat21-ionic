@@ -111,8 +111,7 @@ export class AppComponent implements OnInit {
     const appconfig = appConfigProvider.getConfig()
     // this.tenant = environment.tenant;
     this.tenant = appconfig.tenant;
-    console.log('APP-COMP tenant ', this.tenant);
-
+    this.logger.setLoglevel(appconfig.logLevel)
     if (!this.platform.is('desktop')) {
       this.splashScreen.show();
     }
