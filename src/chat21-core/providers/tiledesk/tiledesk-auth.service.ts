@@ -54,14 +54,12 @@ export class TiledeskAuthService {
     return new Promise((resolve, reject) => {
       this.http.post(this.URL_TILEDESK_SIGNIN, postData, requestOptions).subscribe((data) => {
         if (data['success'] && data['token']) {
-          that.logger.printDebug('TILEDESK-AUTH-SERV - signInWithEmailAndPassword data ', data);
           that.tiledeskToken = data['token'];
           that.createCompleteUser(data['user']);
           that.appStorage.setItem('tiledeskToken', that.tiledeskToken);
           resolve(that.tiledeskToken)
         }
       }, (error) => {
-        that.logger.printError('TILEDESK-AUTH-SERV - signInWithEmailAndPassword ERR ',error);
         reject(error)
       });
     });
@@ -91,7 +89,6 @@ export class TiledeskAuthService {
           resolve(that.tiledeskToken)
         }
       }, (error) => {
-        that.logger.printError('TILEDESK-AUTH-SERV - signInAnonymously ERR ',error);
         reject(error)
       });
     })
@@ -117,13 +114,13 @@ export class TiledeskAuthService {
           resolve(this.currentUser)
         }
       }, (error) => {
-        that.logger.printError('TILEDESK-AUTH-SERV - signInWithCustomToken ERR ',error);
         reject(error)
       });
     });
   }
 
   logOut(){
+    this.logger.printDebug('TiledeskAUTHSERVICE::: logOut()')
     this.appStorage.removeItem('tiledeskToken')
     this.appStorage.removeItem('currentUser')
   }
@@ -151,13 +148,13 @@ export class TiledeskAuthService {
       member.fullname = fullname;
       member.avatar = avatar;
       member.color = color;
-      this.logger.printDebug('TILEDESK-AUTH - createCompleteUser member ', member) 
+      this.currentUser = member;
+      this.appStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+      this.logger.printDebug('TILEDESK-AUTH - createCompleteUser member ', member)
     } catch (err) {
       this.logger.printError('TILEDESK-AUTH- createCompleteUser ERR ', err) 
     }
-    this.currentUser = member;
-    // salvo nel local storage e sollevo l'evento
-    this.appStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+    
   }
 
 

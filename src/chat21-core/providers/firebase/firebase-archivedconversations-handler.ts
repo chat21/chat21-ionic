@@ -105,7 +105,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
      subscribeToConversations(callback: any) {
         const that = this;
         const urlNodeFirebase = archivedConversationsPathForUserId(this.tenant, this.loggedUserId);
-        this.logger.printDebug('SubscribeToConversations (firebase-convs-handler) - conversations::ARCHIVED urlNodeFirebase', urlNodeFirebase)
+        this.logger.printDebug('FIREBASEArchivedConversationsHandlerSERVICE:: SubscribeToConversations conversations::ARCHIVED urlNodeFirebase', urlNodeFirebase)
         this.ref = firebase.database().ref(urlNodeFirebase).orderByChild('timestamp').limitToLast(200);
         this.ref.on('child_changed', (childSnapshot) => {
             that.changed(childSnapshot);
@@ -179,14 +179,14 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
 
     getConversationDetail(conversationId: string, callback:(conv: ConversationModel)=>void) {
         const conversation = this.archivedConversations.find(item => item.uid === conversationId);
-        this.logger.printDebug('SubscribeToConversations  (firebase-archivded-convs-handler) getConversationDetail::ARCHIVED *****: ', conversation)
+        this.logger.printDebug('FIREBASEArchivedConversationsHandlerSERVICE:: SubscribeToConversations getConversationDetail::ARCHIVED *****: ', conversation)
         if (conversation) {
             callback(conversation)
             // this.BSConversationDetail.next(conversationSelected);
         } else {
             // const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/archived_conversations/' + conversationId;
             const urlNodeFirebase = archivedConversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversationId;
-            this.logger.printDebug('urlNodeFirebase conversationDetail *****', urlNodeFirebase)
+            this.logger.printDebug('FIREBASEArchivedConversationsHandlerSERVICE:: urlNodeFirebase conversationDetail *****', urlNodeFirebase)
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
                 const childData: ConversationModel = childSnapshot.val();
@@ -201,6 +201,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
             });
         }
     }
+
     /**
      * dispose reference di conversations
      */
@@ -211,7 +212,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
         // this.ref.off("child_changed");
         // this.ref.off("child_removed");
         // this.ref.off("child_added");
-        this.logger.printDebug('DISPOSE::: ', this.ref)
+        this.logger.printDebug('FIREBASEArchivedConversationsHandlerSERVICE:: DISPOSE::: ', this.ref)
     }
 
 
@@ -303,7 +304,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
                 this.archivedConversationAdded.next(conversationAdded);
             }
         } else {
-            this.logger.printError('ChatArchivedConversationsHandler::ADDED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
+            this.logger.printError('FIREBASEArchivedConversationsHandlerSERVICE:: ADDED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
         }
     }
 
@@ -326,7 +327,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
                 this.archivedConversationChanged.next(conversationChanged);
             }
         } else {
-            this.logger.printError('ChatArchivedConversationsHandler::CHANGED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
+            this.logger.printError('FIREBASEArchivedConversationsHandlerSERVICE:: CHANGED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
         }
     }
 
@@ -365,7 +366,6 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
      * @param conv
      */
     private completeConversation(conv): ConversationModel {
-        this.logger.printDebug('completeConversation::ARCHIVED', conv)
         conv.selected = false;
         if (!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === '') {
             conv.sender_fullname = conv.sender;
@@ -387,7 +387,8 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
         }
-    
+        // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the archived convesations list
+        // conv.last_message_text = htmlEntities(conv.last_message_text)
         conv.conversation_with_fullname = conversation_with_fullname;
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
         conv.time_last_message = this.getTimeLastMessage(conv.timestamp);
