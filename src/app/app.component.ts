@@ -228,7 +228,8 @@ export class AppComponent implements OnInit {
     // ----------------------------------------------
     // PUSH NOTIFICATIONS
     // ----------------------------------------------
-    if(this.appConfigProvider.getConfig().pushEngine !== 'none'){
+    const pushEngine = this.appConfigProvider.getConfig().pushEngine
+    if( pushEngine && pushEngine !== 'none'){
       this.notificationsService.getNotificationPermissionAndSaveToken(currentUser.uid);
     }
 
@@ -541,7 +542,8 @@ export class AppComponent implements OnInit {
         // PUSH NOTIFICATIONS
         // ----------------------------------------------
         const that = this;
-        if(this.appConfigProvider.getConfig().pushEngine !== 'none'){
+        const pushEngine = this.appConfigProvider.getConfig().pushEngine
+        if( pushEngine && pushEngine !== 'none'){
           this.notificationsService.removeNotificationsInstance(function (res) {
             console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) removeNotificationsInstance > CALLBACK RES', res);
   
