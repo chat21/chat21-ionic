@@ -1,5 +1,4 @@
-import { LogLevel, PUSH_ENGINE_NATIVE } from './../chat21-core/utils/constants';
-import { MomentModule } from 'angular2-moment';
+import { LogLevel, PUSH_ENGINE_FIREBASE, PUSH_ENGINE_MQTT } from './../chat21-core/utils/constants';
 import { CustomLogger } from 'src/chat21-core/providers/logger/customLogger';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
@@ -229,16 +228,16 @@ export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, ap
 
 export function notificationsServiceFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
-  if (config.pushEngine === 'none') {
-    return;
-  } else if (config.pushEngine === PUSH_ENGINE_NATIVE) {
+  if (config.pushEngine === PUSH_ENGINE_FIREBASE) {
+    const notifications = new FirebaseNotifications();
+    notifications.setTenant(config.tenant)
+    return notifications
+  } else if (config.pushEngine === PUSH_ENGINE_MQTT) {
     const notifications = new MQTTNotifications();
     notifications.setTenant(config.tenant)
     return notifications
   } else {
-    const notifications = new FirebaseNotifications();
-    notifications.setTenant(config.tenant)
-    return notifications
+    return;
   }
 }
 
