@@ -87,8 +87,8 @@ event.waitUntil(self.clients.matchAll(
       console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  notification  actions ', event.notification.actions[0]['action']);
        const  actioObjct = JSON.parse(event.notification.actions[0]['action']);
       console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  notification  actioObjct ', actioObjct);
-      // '#/conversation-detail/' +
-      const url = event.notification.data.url +  actioObjct.recipient + "/" + actioObjct.recipient_fullname + '/active'
+      // 
+      const url = event.notification.data.url + '#/conversation-detail/' +  actioObjct.recipient + "/" + actioObjct.recipient_fullname + '/active'
       console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  built url ', url);
 
    
