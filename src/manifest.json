@@ -1,14 +1,3 @@
 {
-  "name": "tilechat",
-  "short_name": "tilechat",
-  "start_url": "index.html",
-  "display": "standalone",
-  "icons": [{
-    "src": "https://tiledesk.com/wp-content/uploads/2020/08/tiledesk-logo_x4_vpadding.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }],
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
   "gcm_sender_id": "103953800507"
 }

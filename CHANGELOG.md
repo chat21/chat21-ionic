@@ -10,7 +10,12 @@
 - Changes occurrences where "tenant" is obtained from "environment" by getting it from "appConfig" (app.component.ts, info.content.component.ts, conversation-detail.page, conversation-list.page)
 - Adds in info-message.component.html the pipe htmlEntiesEncode
 - Updates in the firebase-messaging-sw.js the version of Firebase SDK imported and replaces the deprecated method "setBackgroundMessageHandler()" with the new onBackgroundMessage()
-
+- Removes the dependecies of the "appConfig" from the "notifications classes"
+- Removes imageUrl from setConversationAvatar utils function 
+- Fixed the bug: if pushEngine is setted to none are called the method getNotificationPermissionAndSaveToken()
+- Adds the "tenant" property in chat-config and chat-config-template
+- Improved logger Service
+- Adds the ability by clicking on a push notification to open the chat, that is in background or that is closed, directly to the conversation to which the push notification refers
 
 ### 3.0.42-beta.1.7
 - Adds the Html entities encode pipe and removes the entities encode from the sendMessage method
