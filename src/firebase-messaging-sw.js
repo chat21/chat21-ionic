@@ -46,13 +46,13 @@ messaging.onBackgroundMessage(function (payload) {
 
 
 self.addEventListener('notificationclick', function (event) {
-  // console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  +++ event ', event);
+  console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  +++ event ', event);
 
   let url = event.notification.data.url;
   // let url = "http://localhost:8101/#/conversation-detail/support-group-60aa0ffd1482fe00346854be-8ff54a0e11674e269fab981603b16745/WALTER/active"
   event.preventDefault();
-  // console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  ++++ event url', url);
-  // console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  ++++ event notification actions > action', event.notification.actions[0]['action']);
+  console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  ++++ event url', url);
+  console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  ++++ event notification actions > action', event.notification.actions[0]['action']);
   
   // Android doesn’t close the notification when you click on it
   // See: http://crbug.com/463146
