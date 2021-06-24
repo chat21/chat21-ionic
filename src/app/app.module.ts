@@ -54,7 +54,7 @@ import { FirebaseTypingService } from 'src/chat21-core/providers/firebase/fireba
 import { FirebasePresenceService } from 'src/chat21-core/providers/firebase/firebase-presence.service';
 import { FirebaseImageRepoService } from 'src/chat21-core/providers/firebase/firebase-image-repo';
 import { FirebaseUploadService } from 'src/chat21-core/providers/firebase/firebase-upload.service';
-import { FirebaseGroupsHandler } from 'src/chat21-core/providers/firebase/firebase-group-handler';
+import { FirebaseGroupsHandler } from 'src/chat21-core/providers/firebase/firebase-groups-handler';
 import { FirebaseNotifications } from 'src/chat21-core/providers/firebase/firebase-notifications';
 
 // MQTT

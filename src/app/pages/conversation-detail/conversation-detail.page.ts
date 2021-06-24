@@ -453,110 +453,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
-  // ------------------------------------------------------------
-  // START SET INFO COMPONENT - moved in info-content.component.ts 
-  // -------------------------------------------------------------
-  // initConversationsHandler() {
-  //   console.log('initConversationsHandler ------------->:::', this.tenant, this.loggedUser.uid, this.conversationWith);
-  //   if (this.conv_type === 'active') {
-  //     // qui al refresh array conv è null
-
-  //     this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
-  //       if (conv){
-  //         this.conversationWith = conv.uid
-  //         this.selectInfoContentTypeComponent();
-  //       }else {
-  //         // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ARCHIVIATE
-  //         console.log('nullllll', conv)
-  //         this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
-  //           if (conv){
-  //             this.conversationWith = conv.uid
-  //             this.selectInfoContentTypeComponent();
-  //           }else {
-  //             // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
-  //           }
-  //         });
-  //       }
-  //     });
-
-  //   } else if (this.conv_type === 'archived') {
-
-  //     this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
-  //       if (conv){
-  //         this.conversationWith = conv.uid
-  //         this.selectInfoContentTypeComponent();
-  //       }else {
-  //         // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ATTIVE
-  //         console.log('nullllll', conv)
-  //         this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv)=> {
-  //           if (conv){
-  //             this.conversationWith = conv.uid
-  //             this.selectInfoContentTypeComponent();
-  //           }else {
-  //             // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
-  //           }
-  //         });
-  //       }
-  //     });
-  //   }
-  // }
-
-  // ------------------------------------------------------------
-  // START SET INFO COMPONENT - moved in info-content.component.ts 
-  // -------------------------------------------------------------
-  // selectInfoContentTypeComponent() {
-  //   console.log('SubscribeToConversations - selectInfoContentTypeComponent: ', this.conversationWith);
-  //   if (this.conversationWith) {
-  //     this.channelType = setChannelType(this.conversationWith);
-  //     if (this.channelType === TYPE_DIRECT) {
-  //       this.setInfoDirect();
-  //     } else if (this.channelType === TYPE_GROUP) {
-  //       this.setInfoGroup();
-  //     } else if (this.channelType === TYPE_SUPPORT_GROUP) {
-  //       this.urlConversationSupportGroup = '';
-  //       this.setInfoSupportGroup();
-  //     }
-  //   }
-  // }
-
-  // ---------------------------------------------------------------
-  // setInfoDirect - moved in info-content.component.ts da cmmentare
-  // ---------------------------------------------------------------
-  // setInfoDirect() {
-  //   console.log('setInfoDirect:::: ', this.contactsService, this.conversationWith);
-  //   this.member = null;
-  //   const that = this;
-  //   const tiledeskToken = this.authService.getTiledeskToken();
-  //   this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith);
-  // }
-
-  // // ---------------------------------------------------------------
-  // // setInfoGroup - moved in info-content.component.ts da cmmentare
-  // // ---------------------------------------------------------------
-  // setInfoGroup() {
-  //   // group
-  // }
-
-  // ---------------------------------------------------------------------
-  // @ setInfoSupportGroup - moved in info-content.component.ts da cmmentare
-  // ---------------------------------------------------------------------
-  // setInfoSupportGroup() {
-  //   let projectID = '';
-  //   const tiledeskToken = this.authService.getTiledeskToken();
-  //   const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
-  //   if (this.conversationSelected) {
-  //     projectID = this.conversationSelected.attributes.projectId;
-  //   }
-  //   if (projectID && this.conversationWith) {
-  //     let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
-  //     urlPanel += '?token=' + tiledeskToken;
-  //     const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
-  //     this.urlConversationSupportGroup = urlConversationTEMP;
-  //   } else {
-  //     this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
-  //   }
-  //   console.log('this.urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
-  // }
+  
   // -------------- END SET INFO COMPONENT -------------- //
 
   private setAttributes(): any {
@@ -601,42 +498,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log('this.conversationAvatar: ', this.conversationAvatar);
   }
 
-
-
-
-
-
-
-  /**
-   *
-   */
-  // connectConversation(conversationId: string) {
-  //   const that = this;
-  //   console.log('-----> connectConversation: ', conversationId);
-  //   this.conversationHandler.connectConversation(conversationId)
-  //   .then((snapshot) => {
-  //     console.log('-----> conversation snapshot: ', snapshot.val());
-  //     if (snapshot.val()) {
-  //       console.log('-----> conversation snapshot.val(): ', snapshot.val());
-  //       const childData: ConversationModel = snapshot.val();
-  //       console.log('-----> conversation childData: ', childData);
-  //       childData.uid = snapshot.key;
-  //       const conversation = that.conversationHandler.completeConversation(childData);
-  //       console.log('-----> conversation conversation: ', conversation);
-  //       that.conversationSelected = conversation; // childData;
-  //       console.log('-----> conversation: ', that.conversationSelected);
-  //       that.startConversation();
-  //     } else {
-  //       // è una nuova conversazione
-  //       console.log('-----> conversation childData: NEW');
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.log('connectConversation Error:', err);
-  //   });
-  // }
-
-
   returnSendMessage(e: any) {
     console.log('CONVERSATION-DETAIL returnSendMessage::: ', e, this.conversationWith);
     console.log('CONVERSATION-DETAIL returnSendMessage::: ', e, this.conversationWith);
@@ -665,25 +526,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   sendMessage(msg: string, type: string, metadata?: any) {
     console.log('CONVERSATION-DETAIL SEND MESSAGE - MSG: ', msg);
 
-    if (msg) {
-
-      // moved in the pipe htmlEntiesEncode
-      // msg = htmlEntities(msg)
-      // msg = replaceEndOfLine(msg)
-      // // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the chat
-      // msg = msg.trim()
-      console.log("CONVERSATION-DETAIL SEND MESSAGE trimmed message ", msg);
-    }
-
     let fullname = this.loggedUser.uid;
     if (this.loggedUser.fullname) {
       fullname = this.loggedUser.fullname;
     }
-    // const sender = this.loggedUser.uid;
-    // let senderFullname = this.loggedUser.fullname; // this.conversationSelected.sender_fullname;
-    // if (this.conversationSelected.recipient === this.loggedUser.uid) {
-    //   senderFullname = this.conversationSelected.recipient_fullname;
-    // }
 
     console.log('CONVERSATION-DETAIL SEND MESSAGE loggedUserID: ', this.loggedUser.uid);
     console.log('CONVERSATION-DETAIL SEND MESSAGE conversationWith: ', this.conversationWith);
@@ -737,7 +583,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // -------------- END MY functions -------------- //
 
 
-  // -------------- START SUBSCRIBTIONS functions -------------- //
+  // -------------- START subscriptionS functions -------------- //
   /**
    * subscriptions list
    */
@@ -745,44 +591,44 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log('||------------> initSubscriptions: ', this.subscriptions);
 
     const that = this;
-    let subscribtion: any;
-    let subscribtionKey: string;
+    let subscription: any;
+    let subscriptionKey: string;
 
-    // subscribtionKey = 'BSConversationDetail';
-    // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    // if (!subscribtion) {
-    //   subscribtion = this.conversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
+    // subscriptionKey = 'BSConversationDetail';
+    // subscription = this.subscriptions.find(item => item.key === subscriptionKey);
+    // if (!subscription) {
+    //   subscription = this.conversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
     //     console.log('***** DATAIL subscribeConversationDetail *****', data);
     //     if (data) {
     //       that.conversationSelected = data;
     //       that.selectInfoContentTypeComponent();
     //     }
     //   });
-    //   const subscribe = { key: subscribtionKey, value: subscribtion };
+    //   const subscribe = { key: subscriptionKey, value: subscription };
     //   this.subscriptions.push(subscribe);
     // }
 
     // ---------------------------------------------------------------------------------
     // FOR THE ARCHIVED
     // ---------------------------------------------------------------------------------
-    // subscribtionKey = 'BSArchivedConversationDetail';
-    // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    // if (!subscribtion) {
-    //   subscribtion = this.archivedConversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
+    // subscriptionKey = 'BSArchivedConversationDetail';
+    // subscription = this.subscriptions.find(item => item.key === subscriptionKey);
+    // if (!subscription) {
+    //   subscription = this.archivedConversationsHandlerService.BSConversationDetail.subscribe((data: any) => {
     //     console.log('***** DATAIL ARCHIVED subscribeConversationDetail *****', data);
     //     if (data) {
     //       that.conversationSelected = data;
     //       that.selectInfoContentTypeComponent();
     //     }
     //   });
-    //   const subscribe = { key: subscribtionKey, value: subscribtion };
+    //   const subscribe = { key: subscriptionKey, value: subscription };
     //   this.subscriptions.push(subscribe);
     // }
 
-    subscribtionKey = 'BSConversationsChanged';
-    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    if (!subscribtion) {
-      subscribtion = this.conversationsHandlerService.conversationChanged.subscribe((data: ConversationModel) => {
+    subscriptionKey = 'BSConversationsChanged';
+    subscription = this.subscriptions.find(item => item.key === subscriptionKey);
+    if (!subscription) {
+      subscription = this.conversationsHandlerService.conversationChanged.subscribe((data: ConversationModel) => {
         console.log('***** DATAIL subscribeConversationChanged*****', data, this.loggedUser.uid);
         if (data && data.sender !== this.loggedUser.uid) {
           // AGGIORNO LA CONVERSAZIONE A 'LETTA' SE SONO IO CHE HA SCRITTO L'ULTIMO MESSAGGIO DELLA CONVERSAZIONE
@@ -792,134 +638,65 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
           }
         }
       });
-      const subscribe = { key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscriptionKey, value: subscription };
       this.subscriptions.push(subscribe);
     }
 
 
-    // subscribtionKey = 'BScontactDetail';
-    // subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    // if (!subscribtion) {
-    //   subscribtion = this.contactsService.BScontactDetail.subscribe((contact: UserModel) => {
+    // subscriptionKey = 'BScontactDetail';
+    // subscription = this.subscriptions.find(item => item.key === subscriptionKey);
+    // if (!subscription) {
+    //   subscription = this.contactsService.BScontactDetail.subscribe((contact: UserModel) => {
     //     console.log('***** DATAIL subscribeBScontactDetail *****BScontactDetail', this.conversationWith, contact);
     //     if (contact && this.conversationWith === contact.uid) {
     //       that.member = contact;
     //     }
     //   });
-    //   const subscribe = { key: subscribtionKey, value: subscribtion };
+    //   const subscribe = { key: subscriptionKey, value: subscription };
     //   this.subscriptions.push(subscribe);
     // }
 
 
-    subscribtionKey = 'messageAdded';
-    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    if (!subscribtion) {
+    subscriptionKey = 'messageAdded';
+    subscription = this.subscriptions.find(item => item.key === subscriptionKey);
+    if (!subscription) {
       console.log('***** add messageAdded *****', this.conversationHandlerService);
-      subscribtion = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
+      subscription = this.conversationHandlerService.messageAdded.subscribe((msg: any) => {
         console.log('CONVERSATION-DETAIL subs to  messageAdded *****', msg);
-
-
         if (msg) {
-
-          // msg.text = htmlEntities(msg.text)
-          // msg.text = replaceEndOfLine(msg.text)
-
           that.newMessageAdded(msg);
         }
       });
-      const subscribe = { key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscriptionKey, value: subscription };
       this.subscriptions.push(subscribe);
     }
 
-    subscribtionKey = 'messageChanged';
-    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    if (!subscribtion) {
-      subscribtion = this.conversationHandlerService.messageChanged.subscribe((msg: any) => {
+    subscriptionKey = 'messageChanged';
+    subscription = this.subscriptions.find(item => item.key === subscriptionKey);
+    if (!subscription) {
+      subscription = this.conversationHandlerService.messageChanged.subscribe((msg: any) => {
         // console.log('***** DATAIL messageChanged *****', msg);
       });
-      const subscribe = { key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscriptionKey, value: subscription };
       this.subscriptions.push(subscribe);
     }
 
 
-    subscribtionKey = 'messageRemoved';
-    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    if (!subscribtion) {
-      subscribtion = this.conversationHandlerService.messageRemoved.subscribe((messageId: any) => {
+    subscriptionKey = 'messageRemoved';
+    subscription = this.subscriptions.find(item => item.key === subscriptionKey);
+    if (!subscription) {
+      subscription = this.conversationHandlerService.messageRemoved.subscribe((messageId: any) => {
         // console.log('***** DATAIL messageRemoved *****', messageId);
       });
-      const subscribe = { key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscriptionKey, value: subscription };
       this.subscriptions.push(subscribe);
     }
 
-    subscribtionKey = 'onGroupChange';
-    subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
-    if (!subscribtion) {
-      subscribtion = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
+    subscriptionKey = 'onGroupChange';
+    subscription = this.subscriptions.find(item => item.key === subscriptionKey);
+    if (!subscription) {
+      subscription = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
         this.groupDetail = groupDetail;
-        // this.groupDetail.members.forEach(key => {
-        //   // chiamare servizio contact per completare singolo membro --> loadContactDetail(key) _> user
-        //   // al ritorno chiamare servizio image-repo per aggiungere l'immagine di profilo all'utente
-        //   // user.image = this.imageRepoService.getImageFromUId(user.uid)
-
-        // })
-
-        // this.generateGroupAvatar(groupDetail) 
-        // console.log('CONVERSATION-DETAIL group detail UID', this.groupDetail.uid)
-        // if (this.groupDetail.uid.startsWith('group-')) {
-        //   const tiledeskToken = this.authService.getTiledeskToken();
-
-        //   const member_array = []
-
-        //   for (const [key, value] of Object.entries(this.groupDetail.membersinfo)) {
-        //     console.log('CONVERSATION-DETAIL group detail Key:', key, ' -Value: ', value);
-
-        //     // this.presenceService.BSIsOnline.subscribe((data: any) => {
-        //     //   console.log('CONVERSATION-DETAIL group detail BSIsOnline data', data)
-
-        //     // })
-
-        //     this.presenceService.userIsOnline(key)
-        //     .pipe(
-        //       takeUntil(this.unsubscribe$)
-        //     )
-        //     .subscribe((data: any) => {
-        //       console.log('CONVERSATION-DETAIL group detail BSIsOnline data', data)
-
-        //     })
-
-
-        //     this.contactsService.loadContactDetail(tiledeskToken, key)
-        //       .subscribe(user => {
-        //         console.log('CONVERSATION-DETAIL group detail loadContactDetail RES', user);
-
-
-        //         user.imageurl = this.imageRepoService.getImagePhotoUrl(key)
-        //         member_array.push([{ avatar: user.avatar, color: user.color, email: user.email, fullname: user.fullname, imageurl: user.imageurl }])
-        //         // if (key === user.uid) {
-        //         // this.groupDetail.membersinfo[key].avatar = user.avatar;
-        //         // this.groupDetail.membersinfo[key].color = user.color;
-        //         // this.groupDetail.membersinfo[key].email = user.email;
-        //         // this.groupDetail.membersinfo[key].fullname = user.fullname;
-        //         // this.groupDetail.membersinfo[key].imageurl = user.imageurl;
-        //         this.groupDetail['member_array'] = member_array
-
-        //         // }
-
-
-
-        //       }, (error) => {
-        //         console.log('CONVERSATION-DETAIL group detail loadContactDetail - ERROR  ', error);
-
-        //       }, () => {
-        //         console.log('CONVERSATION-DETAIL group detail loadContactDetail * COMPLETE *');
-
-        //       });
-
-        //   }
-
-        // }
-
 
         console.log('CONVERSATION-DETAIL group detail INFO CONTENT ....-->', this.groupDetail)
         let memberStr = JSON.stringify(this.groupDetail.members);
@@ -929,7 +706,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         });
 
       });
-      const subscribe = { key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscriptionKey, value: subscription };
       this.subscriptions.push(subscribe);
     }
   }
@@ -978,7 +755,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
     // this.conversationHandlerService.dispose();
   }
-  // -------------- END SUBSCRIBTIONS functions -------------- //
+  // -------------- END subscriptionS functions -------------- //
 
 
 
@@ -993,8 +770,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // message.text = message.text.trim()
     if (message) {
       console.log('newMessageAdded ++', message);
-      // message.text = htmlEntities(message.text)
-      // message.text = replaceEndOfLine(message.text)
 
       // var imageElem = this.getImagesByAlt("file-image-placehoder")[0];
       // var imageElem  =  document.getElementsByTagName("img");
@@ -1013,14 +788,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       }
     }
   }
-
-  // updateConversationBadge() {
-  //   if (this.conversationSelected && this.conversationsHandlerService && this.conv_type === 'active') {
-  //     this.conversationsHandlerService.setConversationRead(this.conversationSelected)
-  //   } else if (this.conversationSelected && this.archivedConversationsHandlerService && this.conv_type === 'archived') {
-  //     this.archivedConversationsHandlerService.setConversationRead(this.conversationSelected)
-  //   }
-  // }
 
   updateConversationBadge() {
     if (this.conversationWith && this.conversationsHandlerService && this.conv_type === 'active') {
@@ -1110,11 +877,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   loadTagsCanned(strSearch) {
     console.log("CONVERSATION-DETAIL loadTagsCanned strSearch ", strSearch);
 
-    // console.log('projectId--->XXXX--->> ', this.conversationSelected);//attributes.projectId);
-    // console.log('this.appConfig.getConfig().SERVER_BASE_URL--->> ', this.appConfig.getConfig().SERVER_BASE_URL);
-    // if(!this.conversationSelected || !this.conversationSelected.attributes || !this.conversationSelected.attributes.projectId || !this.appConfig.getConfig().SERVER_BASE_URL){
-    //   return;
-    // }
     let projectId = ""
     if (this.groupDetail) {
       projectId = this.groupDetail['attributes']['projectId']
@@ -1179,12 +941,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     console.log('CONVERSATION-DETAIL replacePlaceholderInCanned str ', str);
 
-    // if (this.groupDetailAttributes && this.groupDetailAttributes.userEmail) {
-    //   str = str.replace('$email',this.groupDetailAttributes.userEmail);
-    // }
-    // if (this.groupDetailAttributes && this.groupDetailAttributes.website) {
-    //   str = str.replace('$website',this.groupDetailAttributes.website);
-    // }
     if (this.groupDetail && this.groupDetail['attributes'] && this.groupDetail['attributes']['userFullname']) {
       str = str.replace('$recipient_name', this.groupDetail['attributes']['userFullname']);
     }
@@ -1193,41 +949,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
     return str;
   }
-
-
-  // _replaceTagInMessage(event) {
-  //   console.log("CONVERSATION-DETAIL replaceTagInMessage  event ", event);
-  //   console.log("CONVERSATION-DETAIL replaceTagInMessage  canned text ", event.cannedSelected.text);
-  //   console.log("CONVERSATION-DETAIL replaceTagInMessage  message ", event.message);
-  //   const elTextArea = this.rowTextArea['el'];
-  //   const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
-  //   console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea ", textArea);
-  //   if (textArea && textArea.value) {
-  //     console.log("CONVERSATION-DETAIL replaceTagInMessage  textArea value", textArea.value);
-  //     // replace text
-  //     var pos = textArea.value.lastIndexOf("/");
-  //     var strSearch = textArea.value.substr(pos);
-  //     console.log("CONVERSATION-DETAIL replaceTagInMessage  strSearch ", strSearch);
-
-  //     var strTEMP = textArea.value.replace(strSearch, event.cannedSelected.text);
-  //     console.log("CONVERSATION-DETAIL replaceTagInMessage  strTEMP ", strTEMP);
-  //   }
-  //   // strTEMP = this.replacePlaceholderInCanned(strTEMP);
-  //   // textArea.value = '';
-  //   // that.messageString = strTEMP;
-  //   // this.eventsReplaceTexareaText.next(strTEMP);
-  //   //text_area.value = strTEMP;
-  //   //  event.message = strTEMP;
-  //   textArea.value = strTEMP;
-  //   this.tagsCannedFilter = [];
-
-  //   setTimeout(() => {
-  //     textArea.focus();
-  //     this.resizeTextArea();
-  //   }, 200);
-
-  // }
-
 
   replaceTagInMessage(canned) {
     this.arrowkeyLocation = -1
@@ -1265,28 +986,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (this.tagsCannedFilter.length > 0) {
 
       if (event.key === 'ArrowDown') {
-
-        // console.log("CONVERSATION-DETAIL handleKeyboardEvent  tagsCannedFilter ", this.tagsCannedFilter);
-        // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown tagsCannedFilter length", this.tagsCannedFilter.length);
         this.arrowkeyLocation++;
-        // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown arrowkeyLocation ", this.arrowkeyLocation);
         if (this.arrowkeyLocation === this.tagsCannedFilter.length) {
-
           this.arrowkeyLocation--
-          // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowDown qui entro arrowkeyLocation ", this.arrowkeyLocation, ' tagsCannedFilter.length ', this.tagsCannedFilter.length);
         }
       }
       else if (event.key === 'ArrowUp') {
-
-        // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowUp tagsCannedFilter length", this.tagsCannedFilter.length);
-        // console.log("CONVERSATION-DETAIL handleKeyboardEvent ArrowUp  this.arrowkeyLocation",  this.arrowkeyLocation);
+      
         if (this.arrowkeyLocation > 0) {
           this.arrowkeyLocation--;
         } else
           if (this.arrowkeyLocation < 0) {
             this.arrowkeyLocation++;
-
-            // console.log("CONVERSATION-DETAIL handleKeyboardEvent QUI ENTRO arrowkeyLocation ", this.arrowkeyLocation);
           }
       }
 
@@ -1411,11 +1122,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
 
-
-  /** */
-  // pushPage(pageName: string ) {
-  //   this.router.navigateByUrl(pageName);
-  // }
   // -------------- END CLICK functions -------------- //
 
 

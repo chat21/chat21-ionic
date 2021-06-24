@@ -1,4 +1,4 @@
-import { GroupsHandlerService } from './../abstract/groups-handler.service';
+import { GroupsHandlerService } from '../abstract/groups-handler.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
