@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
   private setTimeoutSound: any;
   private isTabVisible: boolean = true;
   private tabTitle: string;
-  private logger = LoggerInstance.getInstance();
+  private logger: LoggerService = LoggerInstance.getInstance();
   public toastMsg: string;
   private modalOpen: boolean = false;
   private hadBeenCalledOpenModal: boolean = false;

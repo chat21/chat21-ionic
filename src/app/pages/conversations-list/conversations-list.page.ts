@@ -1,4 +1,4 @@
-import { ConversationsArchivedListPage } from './../conversations-archived-list/conversations-archived-list.page';
+
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { Component, OnInit, ViewChild, ElementRef, HostListener, EventEmitter } from '@angular/core';
 import { ModalController, IonRouterOutlet, NavController } from '@ionic/angular';
@@ -77,7 +77,7 @@ export class ConversationListPage implements OnInit {
   private isShowMenuPage = false;
   private logger: LoggerService = LoggerInstance.getInstance()
   translationMapConversation: Map<string, string>;
-  styleMap: Map<string, string>;
+  stylesMap: Map<string, string>;
 
   // --- START:::event Emitter handler functions --- //
   private onConversationSelectedHandler = new EventEmitter();
@@ -793,37 +793,6 @@ export class ConversationListPage implements OnInit {
     }
   }
 
-
-  /**
-   * ::: openArchivedConversationsModal :::
-   * apro pagina chat archiviate
-   * (metodo richiamato da subscribeProfileInfoButtonClicked handler)
-   */
-  openArchivedConversationsModal() {
-    console.log('open ArchivedConversationsModal');
-    // this.presentModal();
-    if (checkPlatformIsMobile()) {
-      presentModal(this.modalController, ConversationsArchivedListPage, {
-        listConversations: this.archivedConversations,
-        styleMap: this.styleMap,
-        translationMap: this.translationMapConversation,
-        onConversationSelected: this.onConversationSelectedHandler,
-        onImageLoaded: this.onImageLoadedHandler,
-        onConversationLoaded: this.onConversationLoadedHandler
-      })
-    } else {
-      this.navService.push(ConversationsArchivedListPage, {
-        listConversations: this.archivedConversations,
-        styleMap: this.styleMap,
-        translationMap: this.translationMapConversation,
-        onConversationSelected: this.onConversationSelectedHandler,
-        onImageLoaded: this.onImageLoadedHandler,
-        onConversationLoaded: this.onConversationLoadedHandler
-      })
-
-
-    }
-  }
 
   // ---------------------------------------------------------------------------------
   // nk Commentanto - nn sembra usato
