@@ -118,21 +118,28 @@ export class ConversationListPage implements OnInit {
   listenToNotificationCLick() {
     const that = this;
     navigator.serviceWorker.addEventListener('message', function (event) {
-      that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event data: ', event.data);
-      // console.log('FIREBASE-NOTIFICATION (conversation list) Received a message from service worker event data data: ', event.data['data']);
-      // console.log('FIREBASE-NOTIFICATION (conversation list) Received a message from service worker event data data typeof: ', typeof event.data['data']);
-      const dataObjct = JSON.parse(event.data['data']);
-      that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page)) Received a message from service worker event dataObjct : ', dataObjct);
-      const uidConvSelected = dataObjct.recipient
-      that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
-      that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page)) Received a message from service worker that.conversations: ',  that.conversations);
+      console.log('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event data: ', event.data);
+      console.log('FIREBASE-NOTIFICATION (conversation list) Received a message from service worker event data data: ', event.data['data']);
+      console.log('FIREBASE-NOTIFICATION (conversation list) Received a message from service worker event data data typeof: ', typeof event.data['data']);
+      let uidConvSelected = ''
+      if (typeof event.data['data'] === 'string') {
+        uidConvSelected = event.data['data']
+      } else {
+        uidConvSelected = event.data['data']['recipient']
+      }
+      // const dataObjct = JSON.parse(event.data['data']);
+      // console.log('FIREBASE-NOTIFICATION (conversation list page)) Received a message from service worker event dataObjct : ', dataObjct);
+      // const uidConvSelected = dataObjct.recipient
+
+      console.log('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
+      console.log('FIREBASE-NOTIFICATION (conversation list page)) Received a message from service worker that.conversations: ', that.conversations);
       const conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
-      if (conversationSelected){
-      
+      if (conversationSelected) {
+
         that.conversationSelected = conversationSelected;
-        that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event conversationSelected: ', that.conversationSelected);
-        
-        
+        console.log('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event conversationSelected: ', that.conversationSelected);
+
+
         that.navigateByUrl('active', uidConvSelected)
       }
     });
@@ -188,7 +195,7 @@ export class ConversationListPage implements OnInit {
     // else {
     //   this.router.navigateByUrl('detail');
     // }
- 
+
     const navigationExtras: NavigationExtras = {
       state: {
         conversationSelected: this.conversationSelected
@@ -731,6 +738,7 @@ export class ConversationListPage implements OnInit {
 
   // ?????? 
   navigateByUrl(converationType: string, uidConvSelected: string) {
+    console.log('FIREBASE-NOTIFICATION (conversation list page) uidConvSelected: ', uidConvSelected);
     console.log('ConversationListPage navigateByUrl run  this.setUidConvSelected');
     console.log('ConversationListPage navigateByUrl this.uidConvSelected ', this.uidConvSelected);
     // console.log('ConversationListPage navigateByUrl this.conversationSelected.conversation_with_fullname ' , this.conversationSelected.conversation_with_fullname);
