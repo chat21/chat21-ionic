@@ -1,5 +1,5 @@
 import { URL_SOUND_LIST_CONVERSATION } from './../../../chat21-core/utils/constants';
-import { IonConversationDetailComponent } from './../../temp/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
+import { IonConversationDetailComponent } from '../../chatlib/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Directive, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';

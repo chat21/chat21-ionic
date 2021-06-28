@@ -1,4 +1,4 @@
-import { ConversationContentComponent } from './../conversation-content/conversation-content.component';
+import { ConversationContentComponent } from '../conversation-content/conversation-content.component';
 import { ChangeDetectorRef, Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 

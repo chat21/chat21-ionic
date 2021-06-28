@@ -1,4 +1,4 @@
-import { IonConversationDetailComponent } from '../../temp/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
+import { IonConversationDetailComponent } from '../../chatlib/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
