@@ -27,11 +27,12 @@ export class FirebasePresenceService extends PresenceService {
   BSIsOnline: BehaviorSubject<any>;
   BSLastOnline: BehaviorSubject<any>;
 
+  // public tenant: string;
 
-  // public params
-  public tenant: string;
-
+  // -------------------------------
   // private params
+  // -------------------------------
+  private tenant: string;
   private urlNodePresence: string;
   private onlineConnectionsRef: any;
   private lastOnlineConnectionsRef: any;
@@ -45,8 +46,9 @@ export class FirebasePresenceService extends PresenceService {
   /**
    *
    */
-  public initialize() { 
-    this.logger.printDebug('FIREBASEPRESENCE:: this.tenant', this.tenant);
+  public initialize() {
+    this.tenant = this.getTenant();
+    this.logger.printDebug('FIREBASE-PRESENCE this.tenant', this.tenant);
     this.urlNodePresence = '/apps/' + this.tenant + '/presence/';
   }
 

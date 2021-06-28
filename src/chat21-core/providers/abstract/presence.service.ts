@@ -13,7 +13,18 @@ export abstract class PresenceService {
   abstract BSLastOnline: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   // params
-  abstract tenant = environment.tenant;
+  // abstract tenant = environment.tenant;
+
+  private _tenant: string;
+  public setTenant(tenant): void {
+    this._tenant = tenant;
+    console.log('FIREBASE-PRESENCE (PRESENCE.SERV) this.tenant', this._tenant);
+  }
+  public getTenant(): string {
+    if (this._tenant) {
+      return this._tenant;
+    } 
+  }
 
   // functions
   abstract initialize(): void;
