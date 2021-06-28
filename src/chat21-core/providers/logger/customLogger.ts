@@ -37,7 +37,7 @@ export class CustomLogger implements LoggerService {
         }
     }
     printDebug(...message: any[]) {
-        console.log('logggggggg', this.logLevel)
+        // console.log('logggggggg', this.logLevel)
         if (this.isLogEnabled && this.logLevel >= LogLevel.Debug) {
             this.logger.debug(message)
             // console.log(message)
