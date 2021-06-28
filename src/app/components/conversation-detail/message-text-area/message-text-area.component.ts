@@ -231,9 +231,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
    */
   private async presentModal(e: any): Promise<any> {
     const that = this;
-    console.log('presentModal e', e);
-    console.log('presentModal e.target ', e.target);
-    console.log('presentModal e.target.files', e.target.files);
+    console.log('FIREBASE-UPLOAD presentModal e', e);
+    console.log('FIREBASE-UPLOAD presentModal e.target ', e.target);
+    console.log('FIREBASE-UPLOAD presentModal e.target.files', e.target.files);
     // console.log('presentModal e.target.files.length', e.target.files.length);
     const dataFiles = e.target.files;
     const attributes = { files: dataFiles, enableBackdropDismiss: false };
@@ -249,12 +249,12 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
       console.log('presentModal onDidDismiss detail', detail);
       if (detail.data !== undefined) {
         let type = ''
-        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg'))) {
-          console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg') && (!detail.data.fileSelected.type.startsWith("video") ))) {
+          console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
           type = 'image'
           // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
         } else {
-          console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+          console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
           type = 'file'
 
         }
@@ -263,25 +263,25 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
         let messageString = detail.data.messageString;
         let metadata = detail.data.metadata;
         // let type = detail.data.type;
-        console.log('presentModal onDidDismiss detail.data', detail.data);
-        console.log('presentModal onDidDismiss fileSelected', fileSelected);
+        console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss detail.data', detail.data);
+        console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss fileSelected', fileSelected);
 
         if (detail !== null) {
           const currentUpload = new UploadModel(fileSelected);
-          console.log('The result: currentUpload', currentUpload);
-          console.log('The result: CHIUDI!!!!!', detail.data);
+          console.log('FIREBASE-UPLOAD (MessageTextArea) The result: currentUpload', currentUpload);
+          console.log('FIREBASE-UPLOAD (MessageTextArea) The result: CHIUDI!!!!!', detail.data);
           that.uploadService.upload(currentUpload).then(downloadURL => {
             metadata.src = downloadURL;
-            console.log('presentModal invio msg metadata::: ', metadata);
-            console.log('presentModal invio msg metadata downloadURL::: ', downloadURL);
-            console.log('presentModal invio msg type::: ', type);
-            console.log('presentModal invio msg message::: ', messageString);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg downloadURL::: ', metadata);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg metadata downloadURL::: ', downloadURL);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg type::: ', type);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg message::: ', messageString);
             // send message
             that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
             this.fileInput.nativeElement.value = '';
           }).catch(error => {
             // Use to signal error if something goes wrong.
-            console.error(`MessageTextArea uploa Failed to upload file and get link `, error);
+            console.error(`FIREBASE-UPLOAD (MessageTextArea) MessageTextArea upload Failed to upload file and get link `, error);
           });
 
         }
