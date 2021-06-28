@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 // services
 import { NotificationsService } from '../abstract/notifications.service';
-
+import { LoggerInstance } from '../logger/loggerInstance';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 // firebase
 // import * as firebase from 'firebase/app';
 import firebase from "firebase/app";
@@ -16,15 +17,15 @@ export class FirebaseNotifications extends NotificationsService {
     private FCMcurrentToken: string;
     private userId: string;
     private tenant: string;
-
+    private logger: LoggerService = LoggerInstance.getInstance();
     constructor() {
         super();
     }
 
     getNotificationPermissionAndSaveToken(currentUserUid) {
         this.tenant = this.getTenant();
-        console.log('FIREBASE-NOTIFICATIONS calling requestPermission - tenant ', this.tenant)
-        console.log('FIREBASE-NOTIFICATIONS calling requestPermission - currentUserUid ', currentUserUid)
+        this.logger.printLog('FIREBASE-NOTIFICATIONS calling getNotificationPermissionAndSaveToken - tenant ', this.tenant)
+        this.logger.printLog('FIREBASE-NOTIFICATIONS calling getNotificationPermissionAndSaveToken - currentUserUid ', currentUserUid)
         this.userId = currentUserUid;
         const messaging = firebase.messaging();
         if (firebase.messaging.isSupported()) {
