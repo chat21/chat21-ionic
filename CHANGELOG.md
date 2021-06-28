@@ -1,5 +1,14 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.11
+- Improves the "push notifications service worker" and in conversations-list-page the method listenToNotificationCLick()
+
+### 3.0.42-beta.1.10
+- Improves the "push notifications service worker"
+
+### 3.0.42-beta.1.9
+- Adds logs in "firebase-messaging-sw.js" and in "conversations-list.page.ts" for push notification test
+
 ### 3.0.42-beta.1.8
 - Handles the responses of the 'signInWithEmailAndPassword' method: displays a toast in case of error and a spinner waiting for the response
 - Adds in the "login component" the links to the dashboard's pages "reset password" and "signup"
@@ -14,8 +23,10 @@
 - Removes imageUrl from setConversationAvatar utils function 
 - Fixed the bug: if pushEngine is setted to none are called the method getNotificationPermissionAndSaveToken()
 - Adds the "tenant" property in chat-config and chat-config-template
-- Improved logger Service
+- Fixed the bug: the logger is not displayed
 - Adds the ability by clicking on a push notification to open the chat, that is in background or that is closed, directly to the conversation to which the push notification refers
+- Renames FirebaseGroupHandler in FirebaseGroupsHandler,
+- Removes unused components (conversation-archived-list and current-user-service)
 
 ### 3.0.42-beta.1.7
 - Adds the Html entities encode pipe and removes the entities encode from the sendMessage method
