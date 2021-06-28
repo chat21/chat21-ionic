@@ -84,16 +84,23 @@
   }
 
   .upload-image-btn {
-    margin-bottom: 0px;
-    margin-top: 5px;
-    margin-left: 0px;
-    margin-right: 0px;
-    --border-radius: 50%;
-    --padding-end: 6px;
-    --padding-start: 6px;
-    --padding-top: 0px;
+    // margin-bottom: 0px;
+    // margin-top: 5px;
+    // margin-left: 0px;
+    // margin-right: 0px;
+    // --border-radius: 50%;
+    // --padding-end: 6px;
+    // --padding-start: 6px;
+    // --padding-top: 0px;
+    // --padding-bottom: 0px;
+    // height: 30px !important;
     --padding-bottom: 0px;
-    height: 30px !important;
+    --padding-top: 0px;
+    --border-radius: 50%;
+    --padding-end: 1px;
+    --padding-start: 1px;
+  
+    height: 33px !important;
   }
 
   .upload-image-btn .button-native {
