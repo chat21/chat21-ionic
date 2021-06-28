@@ -65,8 +65,8 @@ export class LoaderPreviewPage implements OnInit {
     } else if (file.type.startsWith("image") && (file.type.includes('svg'))) {
       // this.previewFiles(file)
 
-      console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
-      console.log('LoaderPreviewPage readAsDataURL file ', file);
+      console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL file TYPE', file.type);
+      console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL file ', file);
       const preview = document.querySelector('#img-preview') as HTMLImageElement;
 
 
@@ -76,7 +76,7 @@ export class LoaderPreviewPage implements OnInit {
         // convert image file to base64 string
         // const img = reader.result as string;
         const img = reader.result.toString();
-        console.log('LoaderPreviewPage readAsDataURL img ', img);
+        console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL img ', img);
 
         // that.fileSelected = that.sanitizer.bypassSecurityTrustResourceUrl(img);
 
@@ -96,8 +96,8 @@ export class LoaderPreviewPage implements OnInit {
       // ---------------------------------------------------------------------
       // USE CASE FILE
       // ---------------------------------------------------------------------
-    } else if (file.type.startsWith("application")) {
-      console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
+    } else if (file.type.startsWith("application") || file.type.startsWith("video") || file.type.startsWith("audio") ) {
+      console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL file TYPE', file.type);
 
       this.createFile();
 
