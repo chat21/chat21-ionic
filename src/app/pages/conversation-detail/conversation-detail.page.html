@@ -125,10 +125,11 @@
             <!-- [tagsCannedFilter]="tagsCannedFilter" -->
             <!-- openInfoConversation   {{openInfoConversation}} - isMobile {{isMobile}} -->
             <app-message-text-area *ngIf="(openInfoConversation === false && isMobile === true) || (openInfoConversation === true && isMobile === false) || (openInfoConversation === false && isMobile === false)"
-             (eventChangeTextArea)="returnChangeTextArea($event)"
-              (eventSendMessage)="returnSendMessage($event)" 
+              [loggedUser]="loggedUser"
               [conversationWith]="conversationWith"
-              [tagsCannedFilter]="tagsCannedFilter">
+              [tagsCannedFilter]="tagsCannedFilter"  
+              (eventChangeTextArea)="returnChangeTextArea($event)"
+              (eventSendMessage)="returnSendMessage($event)">
             </app-message-text-area>
             <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
           </ion-row>
