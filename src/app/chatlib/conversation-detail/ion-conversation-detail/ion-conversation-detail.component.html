@@ -65,15 +65,14 @@
   <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
 
     <!--backgroundColor non viene ancora usato -->
-    <tiledeskwidget-bubble-message class="messages msg_sent"
+    <tiledeskwidget-bubble-message class="messages msg_sent" id="{{'message'+'_'+ i}}"
       [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" [message]="message"
       [textColor]="'col-msg-sent'" (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
       (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
     </tiledeskwidget-bubble-message>
 
     <!-- icon status message -->
-    <tiledeskwidget-return-receipt [status]="message.status" [message]="message"
-      [senderId]="senderId">
+    <tiledeskwidget-return-receipt [status]="message.status" [message]="message" [senderId]="senderId">
     </tiledeskwidget-return-receipt>
 
   </div>
@@ -92,18 +91,19 @@
       </tiledeskwidget-avatar-image> -->
 
     <!--backgroundColor non viene ancora usato -->
-      <tiledeskwidget-bubble-message class="messages msg_receive" [message]="message"
-        [textColor]="'black'" (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-        (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
-      </tiledeskwidget-bubble-message>
-    
+    <tiledeskwidget-bubble-message class="messages msg_receive" [message]="message" [textColor]="'black'"
+      (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+      (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
+    </tiledeskwidget-bubble-message>
+
 
   </div>
 
 </div>
 
 
-<div *ngIf="fileType === 'file' && uploadProgress !== 100" class="msg_container base_sent" style="margin-right: 24px;">
+<div *ngIf="(fileType === 'file' && uploadProgress !== 100)" class="msg_container base_sent"
+  style="margin-right: 20px;">
   <div class="messages msg_sent">
     <div class="spinner">
       <div class="bounce1"></div>
