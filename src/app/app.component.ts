@@ -118,7 +118,6 @@ export class AppComponent implements OnInit {
   }
 
 
-
   /**
    */
   ngOnInit() {
@@ -159,15 +158,12 @@ export class AppComponent implements OnInit {
   }
 
   translateToastMessage() {
-
     this.translate.get('AnErrorOccurredWhileUnsubscribingFromNotifications')
       .subscribe((text: string) => {
         // this.deleteContact_msg = text;
         // console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) text: ', text)
-
         this.toastMsg = text;
         // console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT): this.toastMsg', this.toastMsg)
-
       });
   }
 
