@@ -1,7 +1,7 @@
 .center-cropped {
     width: 50px;
     height: 50px;
-    overflow:hidden;
+    overflow: hidden;
 }
 .center-cropped img {
     height: 100%;
@@ -11,11 +11,11 @@
     transform: translateX(-50%);
 }
 
-
-.previewSelected{
+.previewSelected {
     width: 100%;
     height: auto;
-    padding: 20px;
+    // padding: 20px;
+    padding: 15px;
     position: relative;
     // background-color: gainsboro;
     max-height: calc(100% - 170px);
@@ -38,7 +38,7 @@
     }
 }
 
-.messageTextArea{
+.messageTextArea {
     // background-color: grey;
     // margin-bottom: 20px;
     padding: 10px 10px 30px 10px;
@@ -54,7 +54,6 @@
     }
 }
 
-
 .thumbnailsPreview {
     background-color: #efefef;
     padding: 20px;
@@ -65,8 +64,8 @@
     bottom: 0;
     // background-color: bisque;
 
-    // ion-content, 
-    .thumbnailsScroll{
+    // ion-content,
+    .thumbnailsScroll {
         max-width: calc(100% - 60px);
         height: 70px;
         overflow-x: auto;
@@ -82,12 +81,7 @@
         display: inline-flex;
         // background-color: goldenrod;
     }
-
-    
 }
-
-
-
 
 .centerCropped {
     width: 50px;
@@ -107,4 +101,17 @@
 
 .sendButton {
     bottom: 72px;
+}
+
+#img-preview-file-extension {
+    text-align: center;
+    position: relative;
+    text-transform: uppercase;
+    color: #fff;
+    top: -35px;
+    font-weight: 500;
+}
+
+#img-preview-file-name {
+    text-align: center;
 }
