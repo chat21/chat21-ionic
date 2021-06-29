@@ -1,3 +1,4 @@
+import { UserModel } from 'src/chat21-core/models/user';
 import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { IonTextarea } from '@ionic/angular';
 import { Chooser } from '@ionic-native/chooser/ngx';
@@ -24,23 +25,12 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   @ViewChild('textArea', { static: false }) messageTextArea
   @ViewChild('fileInput', { static: false }) fileInput: any;
 
-
-
-  // set textArea(element: ElementRef<HTMLInputElement>) {
-  //   if(element) {
-  //     console.log('MessageTextAreaComponent element',element)
-  //     // element.nativeElement.focus()
-  //     element.nativeElement.focus()
-  //   }
-  //  }
-
-  @Output() eventChangeTextArea = new EventEmitter<object>();
-  @Output() eventSendMessage = new EventEmitter<object>();
-
-
+  @Input() loggedUser: UserModel;
   @Input() conversationWith: string;
   @Input() tagsCannedFilter: any = [];
   @Input() events: Observable<void>;
+  @Output() eventChangeTextArea = new EventEmitter<object>();
+  @Output() eventSendMessage = new EventEmitter<object>();
 
   public conversationEnabled = false;
   public messageString: string;
@@ -70,38 +60,6 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     }, 300); //a least 150ms.
   }
 
-  // ngDoCheck() {
-  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) tagsCannedFilter ", this.tagsCannedFilter);
-  // }
-
-  // !!!!! NOT used
-  // onChange(e: any) {
-  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange event ", e);
-  //   const codeChar = e.detail.data;
-
-  //   let message = e.detail.target.innerHTML;
-  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.target.innerHTML) ", message);
-  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.data) ", e.detail.data);
-  //   if (e.detail.data) {
-  //     message += e.detail.data;
-  //   }
-  //   const height = e.detail.target.offsetHeight;
-  //   // console.log('onChange ************** event:: ', message);
-  //   if (codeChar === 10) {
-  //     console.log('premuto invio ');
-  //   } else {
-  //     try {
-  //       if (message.trim().length > 0) {
-  //         this.conversationEnabled = true;
-  //       } else {
-  //         this.conversationEnabled = false;
-  //       }
-  //     } catch (err) {
-  //       this.conversationEnabled = false;
-  //     }
-  //     this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
-  //   }
-  // }
 
   ionChange(e: any) {
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange event ", e);
@@ -143,38 +101,6 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param event
-   */
-  // public messageChange(event) {
-  //   const that = this;
-  //   try {
-  //     if (event) {
-  //       console.log("event.value:: ", event);
-  //       var str = event.value;
-  //       that.setWritingMessages(str);
-  //       setTimeout(function () {
-  //         var pos = str.lastIndexOf("/");
-  //         console.log("str:: ", str);
-  //         console.log("pos:: ", pos);
-  //         if(pos >= 0 ) {
-  //           // && that.tagsCanned.length > 0
-  //           var strSearch = str.substr(pos+1);
-  //           that.loadTagsCanned(strSearch);
-  //           //that.showTagsCanned(strSearch);
-  //           //that.loadTagsCanned(strSearch);
-  //         } else {
-  //           that.tagsCannedFilter = [];
-  //         }
-  //       }, 300);
-  //       that.resizeTextArea();
-  //     }
-  //   } catch (err) {
-  //     console.log("error: ", err)
-  //   }    
-  // }
-
-  /**
    * invocata dalla pressione del tasto invio sul campo di input messaggio
    * se il messaggio non è vuoto lo passo al metodo di controllo
    */
@@ -190,16 +116,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
   /** */
   sendMessage(text: string) {
     console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) sendMessage', text);
     console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) sendMessage conve width', this.conversationWith);
     // text.replace(/\s/g, "")
-
-
-
     this.messageString = '';
     // text = text.replace(/(\r\n|\n|\r)/gm, '');
     if (text.trim() !== '') {
@@ -270,7 +191,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
           const currentUpload = new UploadModel(fileSelected);
           console.log('FIREBASE-UPLOAD (MessageTextArea) The result: currentUpload', currentUpload);
           console.log('FIREBASE-UPLOAD (MessageTextArea) The result: CHIUDI!!!!!', detail.data);
-          that.uploadService.upload(currentUpload).then(downloadURL => {
+          that.uploadService.upload(that.loggedUser.uid ,currentUpload).then(downloadURL => {
             metadata.src = downloadURL;
             console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg downloadURL::: ', metadata);
             console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg metadata downloadURL::: ', downloadURL);
@@ -278,7 +199,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
             console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg message::: ', messageString);
             // send message
             that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
-            this.fileInput.nativeElement.value = '';
+            that.fileInput.nativeElement.value = '';
           }).catch(error => {
             // Use to signal error if something goes wrong.
             console.error(`FIREBASE-UPLOAD (MessageTextArea) MessageTextArea upload Failed to upload file and get link `, error);
