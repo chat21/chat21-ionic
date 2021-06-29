@@ -31,9 +31,8 @@ export class TypingModel {
 
 export class MQTTTypingService extends TypingService {
 
-  // tenant: string;
+  // private params
   private tenant: string;
-
   private urlNodeTypings: string;
   private setTimeoutWritingMessages: any;
   private logger: LoggerService = LoggerInstance.getInstance();
@@ -47,7 +46,7 @@ export class MQTTTypingService extends TypingService {
   /** */
   initialize() {
     this.tenant = this.getTenant();
-    this.logger.printLog('FIREBASE-TYPINGS (MQTT) initialize - tenant ', this.tenant)
+    this.logger.printLog('MQTTTYPING::initialize this.tenant', this.tenant);
     this.urlNodeTypings = '/apps/' + this.tenant + '/typings/';
   }
 

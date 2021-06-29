@@ -13,7 +13,6 @@ export abstract class TypingService {
   BSSetTyping: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   // params
-  // abstract tenant = environment.tenant;
   private _tenant: string;
   public setTenant(tenant): void {
     this._tenant = tenant;

@@ -24,7 +24,7 @@ export class MQTTPresenceService extends PresenceService {
   BSIsOnline: BehaviorSubject<any>;
   BSLastOnline: BehaviorSubject<any>;
 
-  // tenant: string;
+  // private params
   private tenant: string;
   private urlNodePresence: string;
   private logger: LoggerService = LoggerInstance.getInstance();
@@ -36,7 +36,7 @@ export class MQTTPresenceService extends PresenceService {
 
   initialize() {
     this.tenant = this.getTenant();
-    this.logger.printLog('FIREBASE-PRESENCE (MQTT) this.tenant', this.tenant);
+    this.logger.printLog('MQTTPRESENCE::initialize this.tenant', this.tenant);
     this.urlNodePresence = '/apps/' + this.tenant + '/presence/';
   }
 

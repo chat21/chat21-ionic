@@ -18,15 +18,15 @@ export class CustomLogger implements LoggerService {
         this.logLevel = logLevel;
     }
 
-    printLog(...message: any[]) {
-        if (this.isLogEnabled && this.logLevel >= LogLevel.All) {
-            this.logger.log(message)
-            // console.log(message)
-        }
-    }
     printInfo(...message: any[]) {
         if (this.isLogEnabled && this.logLevel >= LogLevel.Info) {
             this.logger.info(message)
+            // console.log(message)
+        }
+    }
+    printDebug(...message: any[]) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.Debug) {
+            this.logger.debug(message)
             // console.log(message)
         }
     }
@@ -36,16 +36,15 @@ export class CustomLogger implements LoggerService {
             // console.log(message)
         }
     }
-    printDebug(...message: any[]) {
-        // console.log('logggggggg', this.logLevel)
-        if (this.isLogEnabled && this.logLevel >= LogLevel.Debug) {
-            this.logger.debug(message)
-            // console.log(message)
-        }
-    }
     printError(...message: any[]) {
         if (this.isLogEnabled && this.logLevel >= LogLevel.Error) {
             this.logger.error(message)
+            // console.log(message)
+        }
+    }
+    printLog(...message: any[]) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.All) {
+            this.logger.log(message)
             // console.log(message)
         }
     }

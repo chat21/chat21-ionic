@@ -169,15 +169,12 @@ export function groupsHandlerFactory(http: HttpClient, chat21Service: Chat21Serv
 }
 
 export function typingFactory(appConfig: AppConfigProvider) {
-  // console.log('typingFactory: ');
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    // return new MQTTTypingService();
     const typing = new MQTTTypingService();
     typing.setTenant(config.tenant)
     return typing
-  } else {
-    // return new FirebaseTypingService();    
+  } else {  
     const typing = new FirebaseTypingService();
     typing.setTenant(config.tenant)
     return typing 
@@ -187,12 +184,10 @@ export function typingFactory(appConfig: AppConfigProvider) {
 export function presenceFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    // return new MQTTPresenceService();
     const presence = new MQTTPresenceService();
     presence.setTenant(config.tenant)
     return presence
   } else {
-    // return new FirebasePresenceService();
     const presence = new FirebasePresenceService();
     presence.setTenant(config.tenant);
     return presence

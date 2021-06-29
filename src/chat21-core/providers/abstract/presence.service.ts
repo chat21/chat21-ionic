@@ -18,7 +18,6 @@ export abstract class PresenceService {
   private _tenant: string;
   public setTenant(tenant): void {
     this._tenant = tenant;
-    console.log('FIREBASE-PRESENCE (PRESENCE.SERV) this.tenant', this._tenant);
   }
   public getTenant(): string {
     if (this._tenant) {
