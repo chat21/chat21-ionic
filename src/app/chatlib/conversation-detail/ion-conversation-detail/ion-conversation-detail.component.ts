@@ -46,21 +46,22 @@ export class IonConversationDetailComponent extends ConversationContentComponent
 
   listenToUploadFileProgress() {
     this.uploadService.BSStateUpload.subscribe((data: any) => {
-      console.log('ION-CONVERSATION-DETAIL BSStateUpload', data);
+      console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload', data);
       if (data) {
         this.uploadProgress = data.upload
-        if (data.type.startsWith("application")) {
+        // if (data.type.startsWith("application")) {
+        if (!data.type.startsWith("image")) {
+         
           this.fileType = 'file'
 
           this.addUploadingBubblePlaceholder(true)
 
-          console.log('ION-CONVERSATION-DETAIL BSStateUpload this.fileType', this.fileType);
+          console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload this.fileType', this.fileType);
         }
 
       }
     });
   }
-
 
 
   addUploadingBubblePlaceholder(value: boolean) {
