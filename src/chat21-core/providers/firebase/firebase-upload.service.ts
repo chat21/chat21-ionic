@@ -28,7 +28,7 @@ export class FirebaseUploadService extends UploadService {
 
   //private
   private url: string;
-  private logger:LoggerService = LoggerInstance.getInstance()
+  private logger: LoggerService = LoggerInstance.getInstance()
 
   constructor() {
     super();
@@ -47,35 +47,52 @@ export class FirebaseUploadService extends UploadService {
   }
 
 
-  public upload(userId: string,upload: UploadModel): Promise<any> {
+  public upload(userId: string, upload: UploadModel): Promise<any> {
     const that = this;
     const uid = this.createGuid();
-    const urlImagesNodeFirebase = '/public/images/' + userId +'/'+ uid + '/' + upload.file.name;
+    const urlImagesNodeFirebase = '/public/images/' + userId + '/' + uid + '/' + upload.file.name;
     this.logger.printDebug('FIREBASEUploadSERVICE::pushUpload ', urlImagesNodeFirebase, upload.file);
+    
+   
+
+
     // Create a root reference
     const storageRef = firebase.storage().ref();
     this.logger.printDebug('FIREBASEUploadSERVICE::storageRef', storageRef);
+    
     // Create a reference to 'mountains.jpg'
     const mountainsRef = storageRef.child(urlImagesNodeFirebase);
     this.logger.printDebug('FIREBASEUploadSERVICE::mountainsRef ', mountainsRef);
-    const metadata = {};
+ 
+    // const metadata = {};
+
+    const metadata = { name: upload.file.name, contentType: upload.file.type, contentDisposition: 'attachment' };
+
+
     let uploadTask = mountainsRef.put(upload.file, metadata);
-    console.log('uploadTask upload.file type', upload.file.type);
+   
     return new Promise((resolve, reject) => {
       uploadTask.on('state_changed', function progress(snapshot) {
         // Observe state change events such as progress, pause, and resume
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         that.logger.printDebug('FIREBASEUploadSERVICE::Upload is ' + progress + '% done');
+        
 
-        that.BSStateUpload.next({ upload: progress, type: upload.file.type });
-
+        // ----------------------------------------------------------------------------------------------------------------------------------------------
+        // BehaviorSubject publish the upload progress state - the subscriber is in ion-conversastion-detail.component.ts > listenToUploadFileProgress()
+        // ----------------------------------------------------------------------------------------------------------------------------------------------
+      
+          that.BSStateUpload.next({ upload: progress, type: upload.file.type });
+        
         switch (snapshot.state) {
           case firebase.storage.TaskState.PAUSED: // or 'paused'
             that.logger.printDebug('FIREBASEUploadSERVICE::Upload is paused');
+            
             break;
           case firebase.storage.TaskState.RUNNING: // or 'running'
             that.logger.printDebug('FIREBASEUploadSERVICE::Upload is running');
+            
             break;
         }
       }, function error(error) {
@@ -84,6 +101,7 @@ export class FirebaseUploadService extends UploadService {
       }, function complete() {
         // Handle successful uploads on complete
         that.logger.printDebug('FIREBASEUploadSERVICE::Upload is complete', upload);
+       
         resolve(uploadTask.snapshot.ref.getDownloadURL())
         // that.BSStateUpload.next({upload: upload});
 
