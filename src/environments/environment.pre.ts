@@ -6,6 +6,7 @@ export const environment = {
     remoteContactsUrl: '',
     chatEngine: 'CHANGEIT',
     uploadEngine: 'CHANGEIT',
+    pushEngine: 'CHANGEIT',
     firebaseConfig: {
         apiKey: 'pre-CHANGEIT',
         authDomain: 'CHANGEIT',
@@ -26,5 +27,6 @@ export const environment = {
     dashboardUrl: 'CHANGEIT', 
     storage_prefix : 'chat_sv5',
     authPersistence: 'LOCAL',
+    logLevel: 0,
     supportMode: false,
 };
