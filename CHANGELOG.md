@@ -1,7 +1,17 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.12
+- Renames the 'temp' folder in 'chatib'
+- Changes the upload input to accept audio and video file
+- Improves the button to attach files / images 
+- Changes the endpoint where images and files are saved in the 'firebase-upload' service
+- Adds the ability to upload any file type
+- Adds the extension and name of the file that will be uploaded into the popup modal preview
+- Displays an error message if the file upload failed
+
 ### 3.0.42-beta.1.11
 - Improves the "push notifications service worker" and in conversations-list-page the method listenToNotificationCLick()
+- Changes in the "precence.service" and "typing.service" the occurrences where the "tenant" property is obtained from the environment rather than from 'appConfig'
 
 ### 3.0.42-beta.1.10
 - Improves the "push notifications service worker"
