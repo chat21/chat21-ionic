@@ -1,8 +1,8 @@
 import { UserModel } from 'src/chat21-core/models/user';
-import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import { IonTextarea } from '@ionic/angular';
 import { Chooser } from '@ionic-native/chooser/ngx';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController  } from '@ionic/angular';
 
 // pages
 import { LoaderPreviewPage } from 'src/app/pages/loader-preview/loader-preview.page';
@@ -29,18 +29,21 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   @Input() conversationWith: string;
   @Input() tagsCannedFilter: any = [];
   @Input() events: Observable<void>;
+  @Input() translationMap: Map<string, string>;
   @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
 
+
   public conversationEnabled = false;
   public messageString: string;
-
+  public toastMsg: string;
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
 
   constructor(
     public chooser: Chooser,
     public modalController: ModalController,
-    public uploadService: UploadService
+    public uploadService: UploadService,
+    public toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -84,21 +87,21 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
 
   // attualmente non usata
   // dovrebbe scattare quando termina il caricamento dell'immagine per inviare il messaggio
-  private setSubscriptions() {
-    const that = this;
-    const subscribeBSStateUpload = this.uploadService.BSStateUpload.subscribe((data: any) => {
-      console.log('***** BSStateUpload *****', data);
-      if (data) {
-        let message = data.message;
-        let type_message = data.type_message;
-        let metadata = data.metadata;
-        console.log('***** message *****', message);
-        console.log('***** type_message *****', type_message);
-        console.log('***** metadata *****', metadata);
-        //this.eventSendMessage.emit({ message: messageString, type: TYPE_MSG_TEXT });
-      }
-    });
-  }
+  // private setSubscriptions() {
+  //   const that = this;
+  //   const subscribeBSStateUpload = this.uploadService.BSStateUpload.subscribe((data: any) => {
+  //     console.log('***** BSStateUpload *****', data);
+  //     if (data) {
+  //       let message = data.message;
+  //       let type_message = data.type_message;
+  //       let metadata = data.metadata;
+  //       console.log('***** message *****', message);
+  //       console.log('***** type_message *****', type_message);
+  //       console.log('***** metadata *****', metadata);
+  //       //this.eventSendMessage.emit({ message: messageString, type: TYPE_MSG_TEXT });
+  //     }
+  //   });
+  // }
 
   /**
    * invocata dalla pressione del tasto invio sul campo di input messaggio
@@ -170,7 +173,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
       console.log('presentModal onDidDismiss detail', detail);
       if (detail.data !== undefined) {
         let type = ''
-        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg') && (!detail.data.fileSelected.type.startsWith("video") ))) {
+        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg') )) {
           console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
           type = 'image'
           // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
@@ -203,6 +206,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
           }).catch(error => {
             // Use to signal error if something goes wrong.
             console.error(`FIREBASE-UPLOAD (MessageTextArea) MessageTextArea upload Failed to upload file and get link `, error);
+
+            that.presentToast();
           });
 
         }
@@ -210,6 +215,16 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     });
 
     return await modal.present();
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: this.translationMap.get('UPLOAD_FILE_ERROR'),
+      duration: 3000,
+      color: "danger",
+      cssClass: 'toast-custom-class',
+    });
+    toast.present();
   }
 
   /**
