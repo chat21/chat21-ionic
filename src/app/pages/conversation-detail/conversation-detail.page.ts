@@ -532,11 +532,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       fullname = this.loggedUser.fullname;
     }
 
-    console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE loggedUserID: ', this.loggedUser.uid);
-    console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE conversationWith: ', this.conversationWith);
-    console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE conversationWithFullname: ', this.conversationWithFullname);
-    console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE metadata: ', metadata);
-    console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE type: ', type);
+    // console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE loggedUserID: ', this.loggedUser.uid);
+    // console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE conversationWith: ', this.conversationWith);
+    // console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE conversationWithFullname: ', this.conversationWithFullname);
+    // console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE metadata: ', metadata);
+    // console.log('FIREBASE-UPLOAD CONVERSATION-DETAIL SEND MESSAGE type: ', type);
 
     if (type === 'file') {
 
