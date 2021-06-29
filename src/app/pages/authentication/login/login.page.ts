@@ -157,7 +157,7 @@ export class LoginPage implements OnInit {
       message: errormsg,
       duration: 3000,
       color: "danger",
-      cssClass: 'login-toast-custom-class',
+      cssClass: 'toast-custom-class',
     });
     toast.present();
   }
