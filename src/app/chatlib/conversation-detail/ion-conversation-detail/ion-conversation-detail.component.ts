@@ -45,10 +45,19 @@ export class IonConversationDetailComponent extends ConversationContentComponent
   }
 
   listenToUploadFileProgress() {
+    console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL calling BSStateUpload ');
     this.uploadService.BSStateUpload.subscribe((data: any) => {
-      console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload', data);
+      console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload data', data);
+     
       if (data) {
+        console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload data.upload', data.upload);
+        console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload data.upload typeof', typeof data.upload);
         this.uploadProgress = data.upload
+
+        if (isNaN(data.upload))  {
+          console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload data.upload IS NaN (e.g. file size is 0)');
+          this.uploadProgress = 100
+        }
         // if (data.type.startsWith("application")) {
         if (!data.type.startsWith("image")) {
          
