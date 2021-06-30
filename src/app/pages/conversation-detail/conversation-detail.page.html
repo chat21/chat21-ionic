@@ -135,7 +135,9 @@
               [tagsCannedFilter]="tagsCannedFilter"  
               (eventChangeTextArea)="returnChangeTextArea($event)"
               (eventSendMessage)="returnSendMessage($event)"
-              [translationMap]="translationMap">
+              [translationMap]="translationMap"
+              [fileUploadAccept]="appConfigProvider.getConfig().fileUploadAccept"
+              >
             </app-message-text-area>
             <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
           </ion-row>
