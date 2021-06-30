@@ -22,7 +22,7 @@ export class BubbleMessageComponent implements OnInit {
   isFrame = isFrame;
   
   tooltipOptions = {
-    'show-delay': 1500,
+    'show-delay': 500,
     'tooltip-class': 'chat-tooltip',
     'theme': 'light',
     'shadow': false,
