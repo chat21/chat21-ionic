@@ -12,8 +12,9 @@ import { UploadService } from 'src/chat21-core/providers/abstract/upload.service
 import { TYPE_MSG_TEXT } from 'src/chat21-core/utils/constants';
 // models
 import { UploadModel } from 'src/chat21-core/models/upload';
-
 import { Observable } from 'rxjs';
+
+
 @Component({
   selector: 'app-message-text-area',
   templateUrl: './message-text-area.component.html',
@@ -29,6 +30,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   @Input() conversationWith: string;
   @Input() tagsCannedFilter: any = [];
   @Input() events: Observable<void>;
+  @Input() fileUploadAccept: string
   @Input() translationMap: Map<string, string>;
   @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
@@ -38,7 +40,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   public messageString: string;
   public toastMsg: string;
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
-
+  
   constructor(
     public chooser: Chooser,
     public modalController: ModalController,
