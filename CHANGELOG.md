@@ -14,7 +14,7 @@
 - Changes the Log Level number values
 - Decreases the display delay of the message tooltips (from 1500ms to 500ms)
 - Adds in chat-config-template.json, chat-config.json and env.sample the keys "fileUploadAccept" and "logLevel"
-- Changes in the enviroments the log level default value to 1 and adds the key "fileUploadAccept"
+- Changes in the environments the default value of the log level to 1  and adds the "fileUploadAccept" key with the default value that allows the upload of any type of file
 - Updates the mqtt library to the latest version (4.2.8) 
 
 ### 3.0.42-beta.1.11
