@@ -8,6 +8,14 @@
 - Adds the ability to upload any file type
 - Adds the extension and name of the file that will be uploaded into the popup modal preview
 - Displays an error message if the file upload failed
+- Fixes the bug: if the uploaded file has a size of 0 bytes, the "bubble spinner" is displayed twice and the second remains visible
+- Fixes the bug: the user ID and uiid are added to the downloaded file name
+- Adds in the environments the 'fileUploadAccept' key set by default to accept the upload of any type of file and binds the value in message-text-area
+- Changes the Log Level number values
+- Decreases the display delay of the message tooltips (from 1500ms to 500ms)
+- Adds in chat-config-template.json, chat-config.json and env.sample the keys "fileUploadAccept" and "logLevel"
+- Changes in the enviroments the log level default value to 1 and adds the key "fileUploadAccept"
+- Updates the mqtt library to the latest version (4.2.8) 
 
 ### 3.0.42-beta.1.11
 - Improves the "push notifications service worker" and in conversations-list-page the method listenToNotificationCLick()
@@ -186,7 +194,7 @@
 - Fixes the bug: the selected active conversation is no longer selected when the user returns to active conversations from archived conversations
 - Deletes the persistence of the last open conversation from the local storage
 - Restores the button 'open conversation detail'
-- Changes the mqtt library loading: from external loaded in index.html to local loaded in angular.json
+- Changes the mqtt library (v4.2.6) loading: from external loaded in index.html to local loaded in angular.json
 - Adds checking for user existence before running "setPresence" in the goOnLine method of app.component
 - Adds a path to "Conversation-detail" with only the conversation ID parameter
 - Renames (and improves) the method connect in subscribeToConversations and removes the subscriptions to the conversation detail
