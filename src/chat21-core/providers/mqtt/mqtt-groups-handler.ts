@@ -6,6 +6,8 @@ import { GroupsHandlerService } from 'src/chat21-core/providers/abstract/groups-
 import { CustomLogger } from '../logger/customLogger';
 import { Chat21Service } from './chat-service';
 import { LoggerInstance } from '../logger/loggerInstance';
+import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user';
+
 @Injectable({
     providedIn: 'root'
   })
@@ -36,7 +38,6 @@ import { LoggerInstance } from '../logger/loggerInstance';
         this.logger.printLog('initialize GROUP-HANDLER MQTT');
         this.tenant = tenant;
         this.loggedUserId = loggedUserId;
-
     }
 
     /**
@@ -45,9 +46,7 @@ import { LoggerInstance } from '../logger/loggerInstance';
      * mi sottoscrivo a change, removed, added
      */
     connect(): void {
-//        throw new Error('Method not implemented.');
-// Ignorare connect di firebase
-         console.log('Method not implemented.');
+        // TODO deprecated method.
     }
 
     /**
@@ -63,8 +62,44 @@ import { LoggerInstance } from '../logger/loggerInstance';
     }
 
     onGroupChange(groupId: string): Observable<GroupModel> {
-        // QUI TODO
+        if (this.isGroup(groupId)) {
+            this.chat21Service.chatClient.getGroup(groupId, (err, group) => {
+                console.log('subscribing to group updates...', group);
+                const handler_group_updated = this.chat21Service.chatClient.onGroupUpdated( (group, topic) => {
+                    if (topic.conversWith === groupId) {
+                        console.log('group updated:', group);
+                        //this.groupValue(group);
+                    }
+                });
+            });
+        }
         return this.SgroupDetail
+    }
+
+    isGroup(groupId) {
+        if (groupId.indexOf('group-') >= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private groupValue(childSnapshot: any){
+        const that = this;
+        this.logger.printDebug('FIREBASEGroupHandlerSERVICE::group detail::', childSnapshot.val(), childSnapshot)
+        const group: GroupModel = childSnapshot.val();
+        this.logger.printDebug('FIREBASEGroupHandlerSERVICE:: groupValue ', group)
+        if (group) {
+            group.uid = childSnapshot.key
+            // that.BSgroupDetail.next(group)
+            let groupCompleted = this.completeGroup(group)
+            this.SgroupDetail.next(groupCompleted) 
+        } 
+    }
+
+    private completeGroup(group: any): GroupModel {
+        group.avatar = avatarPlaceholder(group.name);
+        group.color = getColorBck(group.name);
+        return group 
     }
 
     create(groupName: string, members: [string], callback?: (res: any, error: any) => void): Promise<any> {
