@@ -1,8 +1,8 @@
 import { UserModel } from 'src/chat21-core/models/user';
-import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { IonTextarea } from '@ionic/angular';
 import { Chooser } from '@ionic-native/chooser/ngx';
-import { ModalController, ToastController  } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 
 // pages
 import { LoaderPreviewPage } from 'src/app/pages/loader-preview/loader-preview.page';
@@ -38,9 +38,10 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
 
   public conversationEnabled = false;
   public messageString: string;
+  public HAS_PASTED: boolean = false;
   public toastMsg: string;
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
-  
+
   constructor(
     public chooser: Chooser,
     public modalController: ModalController,
@@ -69,12 +70,22 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   ionChange(e: any) {
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange event ", e);
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange detail.value ", e.detail.value);
-    const message = e.detail.value
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange this.HAS_PASTED ", this.HAS_PASTED);
+    let message = ""
+    if (this.HAS_PASTED === false) {
+      message = e.detail.value
+    }
+    let value = this.messageTextArea.value 
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange value ", value);
+   value = ''
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange message ", message);
-    const height = e.target.offsetHeight;
+    // console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange  this.messageString ", this.messageString);
+    const height = e.target.offsetHeight + 20; // nk added +20
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange text-area height ", height);
 
     try {
       if (message.trim().length > 0) {
+
         this.conversationEnabled = true;
       } else {
         this.conversationEnabled = false;
@@ -84,6 +95,33 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     }
 
     this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
+
+  }
+
+  onPaste(event: any) {
+    this.HAS_PASTED = true
+    
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste event ", event);
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    let file = null;
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste items ", items);
+    for (const item of items) {
+      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item ", item);
+      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type ", item.type);
+      if (item.type.startsWith("image")) {
+        const value = this.messageTextArea.value 
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste value ", value);
+      
+
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type  ", item.type);
+        file = item.getAsFile();
+        const data = new ClipboardEvent('').clipboardData || new DataTransfer();
+        data.items.add(new File([file], file.name, { type: file.type }));
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste data ", data);
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste file ", file);
+        this.presentModal(data);
+      }
+    }
   }
 
 
@@ -157,12 +195,23 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
    */
   private async presentModal(e: any): Promise<any> {
     const that = this;
-    console.log('FIREBASE-UPLOAD presentModal e', e);
-    console.log('FIREBASE-UPLOAD presentModal e.target ', e.target);
-    console.log('FIREBASE-UPLOAD presentModal e.target.files', e.target.files);
+    let dataFiles = " "
+    if (e.type === 'change') {
+
+      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal e', e);
+      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal e.target ', e.target);
+      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal e.target.files', e.target.files);
+      dataFiles = e.target.files;
+    } else {
+      // paste use case
+      dataFiles = e.files
+      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal dataFiles when paste', dataFiles);
+
+    }
     // console.log('presentModal e.target.files.length', e.target.files.length);
-    const dataFiles = e.target.files;
+
     const attributes = { files: dataFiles, enableBackdropDismiss: false };
+    console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) attributes', attributes);
     const modal: HTMLIonModalElement =
       await this.modalController.create({
         component: LoaderPreviewPage,
@@ -175,7 +224,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
       console.log('presentModal onDidDismiss detail', detail);
       if (detail.data !== undefined) {
         let type = ''
-        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg') )) {
+        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg'))) {
           console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
           type = 'image'
           // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
@@ -185,7 +234,12 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
 
         }
 
-        let fileSelected = e.target.files.item(0);//detail.data.fileSelected;
+        let fileSelected = null;
+        if (e.type === 'change') {
+          fileSelected = e.target.files.item(0);
+        } else {
+          fileSelected = e.files.item(0)
+        }
         let messageString = detail.data.messageString;
         let metadata = detail.data.metadata;
         // let type = detail.data.type;
@@ -196,7 +250,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
           const currentUpload = new UploadModel(fileSelected);
           console.log('FIREBASE-UPLOAD (MessageTextArea) The result: currentUpload', currentUpload);
           console.log('FIREBASE-UPLOAD (MessageTextArea) The result: CHIUDI!!!!!', detail.data);
-          that.uploadService.upload(that.loggedUser.uid ,currentUpload).then(downloadURL => {
+          that.uploadService.upload(that.loggedUser.uid, currentUpload).then(downloadURL => {
             metadata.src = downloadURL;
             console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg downloadURL::: ', metadata);
             console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg metadata downloadURL::: ', downloadURL);
