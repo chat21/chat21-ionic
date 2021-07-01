@@ -4,8 +4,10 @@ export const environment = {
     remoteConfig: true,
     remoteConfigUrl: './chat-config.json',
     remoteContactsUrl: '',
-    chatEngine: 'CHANGEIT',
-    uploadEngine: 'CHANGEIT',
+    chatEngine: 'mqtt',
+    uploadEngine: 'native',
+    pushEngine: 'none',
+    fileUploadAccept:"*/*",
     firebaseConfig: {
         apiKey: 'pre-CHANGEIT',
         authDomain: 'CHANGEIT',
@@ -26,5 +28,6 @@ export const environment = {
     dashboardUrl: 'CHANGEIT', 
     storage_prefix : 'chat_sv5',
     authPersistence: 'LOCAL',
+    logLevel: 1,
     supportMode: false,
 };

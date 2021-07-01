@@ -35,5 +35,5 @@ export abstract class UploadService {
 
   // functions
   abstract initialize(): void;
-  abstract upload(upload: UploadModel): Promise<any>;
+  abstract upload(userId: string, upload: UploadModel): Promise<any>;
 }

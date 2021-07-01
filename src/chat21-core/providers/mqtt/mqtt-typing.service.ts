@@ -8,13 +8,16 @@ import 'firebase/database';
 // services
 // import { EventsService } from './abstract/events-service';
 import { PresenceService } from '../abstract/presence.service';
-
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from '../logger/loggerInstance';
 // utils
 import { setLastDate } from '../../utils/utils';
 import { environment } from '../../../environments/environment';
 import { TypingService } from '../abstract/typing.service';
 
 export class TypingModel {
+
+
   constructor(
       public timestamp: any,
       public message: string,
@@ -28,11 +31,12 @@ export class TypingModel {
 
 export class MQTTTypingService extends TypingService {
 
-  tenant: string;
-
+  // private params
+  private tenant: string;
   private urlNodeTypings: string;
   private setTimeoutWritingMessages: any;
-
+  private logger: LoggerService = LoggerInstance.getInstance();
+  
   constructor(
     // private events: EventsService
   ) {
@@ -41,7 +45,8 @@ export class MQTTTypingService extends TypingService {
 
   /** */
   initialize() {
-    console.log('FirebaseTypingService', this.tenant);
+    this.tenant = this.getTenant();
+    this.logger.printLog('MQTTTYPING::initialize this.tenant', this.tenant);
     this.urlNodeTypings = '/apps/' + this.tenant + '/typings/';
   }
 

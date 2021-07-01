@@ -1,4 +1,4 @@
-import { ConversationContentComponent } from './../conversation-content/conversation-content.component';
+import { ConversationContentComponent } from '../conversation-content/conversation-content.component';
 import { ChangeDetectorRef, Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 
@@ -45,22 +45,32 @@ export class IonConversationDetailComponent extends ConversationContentComponent
   }
 
   listenToUploadFileProgress() {
+    console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL calling BSStateUpload ');
     this.uploadService.BSStateUpload.subscribe((data: any) => {
-      console.log('ION-CONVERSATION-DETAIL BSStateUpload', data);
+      console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload data', data);
+     
       if (data) {
+        console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload data.upload', data.upload);
+        console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload data.upload typeof', typeof data.upload);
         this.uploadProgress = data.upload
-        if (data.type.startsWith("application")) {
+
+        if (isNaN(data.upload))  {
+          console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload data.upload IS NaN (e.g. file size is 0)');
+          this.uploadProgress = 100
+        }
+        // if (data.type.startsWith("application")) {
+        if (!data.type.startsWith("image")) {
+         
           this.fileType = 'file'
 
           this.addUploadingBubblePlaceholder(true)
 
-          console.log('ION-CONVERSATION-DETAIL BSStateUpload this.fileType', this.fileType);
+          console.log('FIREBASE-UPLOAD ION-CONVERSATION-DETAIL BSStateUpload this.fileType', this.fileType);
         }
 
       }
     });
   }
-
 
 
   addUploadingBubblePlaceholder(value: boolean) {

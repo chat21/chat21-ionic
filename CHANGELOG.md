@@ -1,5 +1,31 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.12
+- Renames the 'temp' folder in 'chatib'
+- Improves the button to attach files / images 
+- Changes the endpoint where images and files are saved in the 'firebase-upload' service
+- Adds the ability to upload any file type
+- Adds the extension and name of the file that will be uploaded into the popup modal preview
+- Displays an error message if the file upload failed
+- Fixes the bug: if the uploaded file has a size of 0 bytes, the "bubble spinner" is displayed twice and the second remains visible
+- Fixes the bug: the user ID and uiid are added to the downloaded file name
+- Adds in the environments the 'fileUploadAccept' key set by default to accept the upload of any type of file and binds the value in message-text-area
+- Changes the Log Level number values
+- Decreases the display delay of the message tooltips (from 1500ms to 500ms)
+- Adds in chat-config-template.json, chat-config.json and env.sample the keys "fileUploadAccept" and "logLevel"
+- Changes in the environments the default value of the log level to 1
+- Updates the mqtt library to the latest version (4.2.8) 
+
+### 3.0.42-beta.1.11
+- Improves the "push notifications service worker" and in conversations-list-page the method listenToNotificationCLick()
+- Changes in the "precence.service" and "typing.service" the occurrences where the "tenant" property is obtained from the environment rather than from 'appConfig'
+
+### 3.0.42-beta.1.10
+- Improves the "push notifications service worker"
+
+### 3.0.42-beta.1.9
+- Adds logs in "firebase-messaging-sw.js" and in "conversations-list.page.ts" for push notification test
+
 ### 3.0.42-beta.1.8
 - Handles the responses of the 'signInWithEmailAndPassword' method: displays a toast in case of error and a spinner waiting for the response
 - Adds in the "login component" the links to the dashboard's pages "reset password" and "signup"
@@ -14,8 +40,10 @@
 - Removes imageUrl from setConversationAvatar utils function 
 - Fixed the bug: if pushEngine is setted to none are called the method getNotificationPermissionAndSaveToken()
 - Adds the "tenant" property in chat-config and chat-config-template
-- Improved logger Service
+- Fixed the bug: the logger is not displayed
 - Adds the ability by clicking on a push notification to open the chat, that is in background or that is closed, directly to the conversation to which the push notification refers
+- Renames FirebaseGroupHandler in FirebaseGroupsHandler,
+- Removes unused components (conversation-archived-list and current-user-service)
 
 ### 3.0.42-beta.1.7
 - Adds the Html entities encode pipe and removes the entities encode from the sendMessage method
@@ -165,7 +193,7 @@
 - Fixes the bug: the selected active conversation is no longer selected when the user returns to active conversations from archived conversations
 - Deletes the persistence of the last open conversation from the local storage
 - Restores the button 'open conversation detail'
-- Changes the mqtt library loading: from external loaded in index.html to local loaded in angular.json
+- Changes the mqtt library (v4.2.6) loading: from external loaded in index.html to local loaded in angular.json
 - Adds checking for user existence before running "setPresence" in the goOnLine method of app.component
 - Adds a path to "Conversation-detail" with only the conversation ID parameter
 - Renames (and improves) the method connect in subscribeToConversations and removes the subscriptions to the conversation detail

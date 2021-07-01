@@ -1,56 +1,50 @@
 <ion-grid>
   <ion-row id="message-text-area">
-    
+
     <ion-col col-auto>
-      
+
       <div class="buttons-left">
-        <!-- <ion-button class="attach-button" ion-button fill="clear" (click)="controlOfMessage(messageString)">
-          <ion-icon slot="icon-only" name="attach"></ion-icon>
-        </ion-button> -->
-        <ion-button class="attach-button" ion-button fill="clear" style="display: none;">
-          <!-- <input type="file" multiple accept="image/*" capture="camera" (change)="onFileSelectedMobile($event)" id="fileInput"/> -->
-          <input type="file" accept="image/*" capture="camera" (change)="onFileSelected($event)" id="fileInput"/>
+    
+        <!-- <ion-button class="attach-button" ion-button fill="clear" style="display: none;">
+          <input type="file" accept="image/*" capture="camera" (change)="onFileSelected($event)" id="fileInput" />
           <label for="fileInput" icon-only ion-button>
             <ion-icon slot="icon-only" name="attach"></ion-icon>
           </label>
-        </ion-button>
+        </ion-button> -->
 
-        <ion-button  ion-button class="upload-image-btn">
-          <ion-icon slot="icon-only" lazy="true" name="image" style="font-size: 18px;"></ion-icon>
+        <ion-button ion-button fill="clear" class="upload-image-btn">
+          
+          <ion-icon slot="icon-only" lazy="true" name="attach-outline" style="font-size: 30px;transform: rotate(42deg);"></ion-icon>
           <!-- <ion-label slot="end">Upload Image</ion-label> -->
-          <input #fileInput type="file" (change)="onFileSelected($event)" capture="camera" id="file-input" accept="image/*, .pdf,.zip">
+          <!-- <input #fileInput type="file" (change)="onFileSelected($event)" capture="camera" id="file-input" accept="image/*, .pdf,.zip"> -->
+          <!-- https://stackoverflow.com/questions/11832930/html-input-file-accept-attribute-file-type-csv?rq=1 -->
+          <!-- <input #fileInput type="file" (change)="onFileSelected($event)" capture="camera" id="file-input" accept="image/*, audio/* ,video/*, text/html, text/plain, .csv, .pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, .scss, .css, .json"> -->
+          <input #fileInput type="file" (change)="onFileSelected($event)" capture="camera" id="file-input"
+            [accept]="fileUploadAccept">
+
         </ion-button>
       </div>
 
 
       <div class="text-message">
-        <ion-textarea 
-          #messageTextArea 
-          #textArea
-          rows="1" 
-          placeholder="{{ 'LABEL_ENTER_MSG' | translate }}"
-          autofocus 
-          autosize = "false"
-          auto-grow = "true"
-          [value] = ""
-          [(ngModel)]="messageString"
-          (ionChange)="ionChange($event);"
-          (keydown.enter)="pressedOnKeyboard($event, messageString);false" 
-          >
+        <ion-textarea #messageTextArea #textArea rows="1" placeholder="{{ 'LABEL_ENTER_MSG' | translate }}" autofocus
+          autosize="false" auto-grow="true" [value]="" [(ngModel)]="messageString" (ionChange)="ionChange($event);"
+          (keydown.enter)="pressedOnKeyboard($event, messageString);false">
         </ion-textarea>
         <!-- (ionInput)="onChange($event);" -->
       </div>
 
       <div class="buttons-right">
-        <ion-button [disabled]="!conversationEnabled"  class="send-button right active" ion-button fill="clear" (click)="sendMessage(messageString)">
+        <ion-button [disabled]="!conversationEnabled" class="send-button right active" ion-button fill="clear"
+          (click)="sendMessage(messageString)">
           <ion-icon slot="icon-only" name="send"></ion-icon>
         </ion-button>
       </div>
     </ion-col>
 
-  
 
-    
+
+
   </ion-row>
 
 </ion-grid>

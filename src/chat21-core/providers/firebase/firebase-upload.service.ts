@@ -28,14 +28,14 @@ export class FirebaseUploadService extends UploadService {
 
   //private
   private url: string;
-  private logger:LoggerService = LoggerInstance.getInstance()
+  private logger: LoggerService = LoggerInstance.getInstance()
 
   constructor() {
     super();
   }
 
   public initialize() {
-    this.logger.printLog('FirebaseUploadService');
+    this.logger.printLog('FIREBASEUploadSERVICE::initialize()');
   }
 
   private createGuid() {
@@ -47,35 +47,49 @@ export class FirebaseUploadService extends UploadService {
   }
 
 
-  public upload(upload: UploadModel): Promise<any> {
+  public upload(userId: string, upload: UploadModel): Promise<any> {
     const that = this;
     const uid = this.createGuid();
-    const urlImagesNodeFirebase = '/public/images/' + uid + '/';
-    this.logger.printDebug('pushUpload::::::::::::: ', urlImagesNodeFirebase, upload.file);
+    const urlImagesNodeFirebase = '/public/images/' + userId + '/' + uid + '/' + upload.file.name;
+    this.logger.printDebug('FIREBASEUploadSERVICE::pushUpload ', urlImagesNodeFirebase, upload.file);
+
+
+
+
     // Create a root reference
     const storageRef = firebase.storage().ref();
-    this.logger.printDebug('storageRef::::::::::::: ', storageRef);
+    this.logger.printDebug('FIREBASEUploadSERVICE::storageRef', storageRef);
+
     // Create a reference to 'mountains.jpg'
     const mountainsRef = storageRef.child(urlImagesNodeFirebase);
-    this.logger.printDebug('mountainsRef::::::::::::: ', mountainsRef);
-    const metadata = {};
+    this.logger.printDebug('FIREBASEUploadSERVICE::mountainsRef ', mountainsRef);
+
+    // const metadata = {};
+    // const metadata = { name: upload.file.name, contentType: upload.file.type, contentDisposition: 'attachment' };
+    const metadata = { name: upload.file.name, contentType: upload.file.type, contentDisposition: 'attachment; filename=' + upload.file.name };
+
     let uploadTask = mountainsRef.put(upload.file, metadata);
-    console.log('uploadTask upload.file type', upload.file.type);
+
     return new Promise((resolve, reject) => {
       uploadTask.on('state_changed', function progress(snapshot) {
         // Observe state change events such as progress, pause, and resume
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        that.logger.printDebug('Upload is ' + progress + '% done');
+        that.logger.printDebug('FIREBASEUploadSERVICE::Upload is ' + progress + '% done');
+
+        // console.log('FIREBASE-UPLOAD progress ', progress)
+        // console.log('FIREBASE-UPLOAD typeof progress ', typeof progress)
 
         that.BSStateUpload.next({ upload: progress, type: upload.file.type });
 
         switch (snapshot.state) {
           case firebase.storage.TaskState.PAUSED: // or 'paused'
-            that.logger.printDebug('Upload is paused');
+            that.logger.printDebug('FIREBASEUploadSERVICE::Upload is paused');
+
             break;
           case firebase.storage.TaskState.RUNNING: // or 'running'
-            that.logger.printDebug('Upload is running');
+            that.logger.printDebug('FIREBASEUploadSERVICE::Upload is running');
+
             break;
         }
       }, function error(error) {
@@ -83,7 +97,8 @@ export class FirebaseUploadService extends UploadService {
         reject(error)
       }, function complete() {
         // Handle successful uploads on complete
-        that.logger.printDebug('Upload is complete', upload);
+        that.logger.printDebug('FIREBASEUploadSERVICE::Upload is complete', upload);
+
         resolve(uploadTask.snapshot.ref.getDownloadURL())
         // that.BSStateUpload.next({upload: upload});
 

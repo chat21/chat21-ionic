@@ -1,4 +1,4 @@
-import { ConversationsArchivedListPage } from './../conversations-archived-list/conversations-archived-list.page';
+
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { Component, OnInit, ViewChild, ElementRef, HostListener, EventEmitter } from '@angular/core';
 import { ModalController, IonRouterOutlet, NavController } from '@ionic/angular';
@@ -77,7 +77,7 @@ export class ConversationListPage implements OnInit {
   private isShowMenuPage = false;
   private logger: LoggerService = LoggerInstance.getInstance()
   translationMapConversation: Map<string, string>;
-  styleMap: Map<string, string>;
+  stylesMap: Map<string, string>;
 
   // --- START:::event Emitter handler functions --- //
   private onConversationSelectedHandler = new EventEmitter();
@@ -118,21 +118,28 @@ export class ConversationListPage implements OnInit {
   listenToNotificationCLick() {
     const that = this;
     navigator.serviceWorker.addEventListener('message', function (event) {
-      that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event data: ', event.data);
-      // console.log('FIREBASE-NOTIFICATION (conversation list) Received a message from service worker event data data: ', event.data['data']);
-      // console.log('FIREBASE-NOTIFICATION (conversation list) Received a message from service worker event data data typeof: ', typeof event.data['data']);
-      const dataObjct = JSON.parse(event.data['data']);
-      that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page)) Received a message from service worker event dataObjct : ', dataObjct);
-      const uidConvSelected = dataObjct.recipient
-      that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
-      that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page)) Received a message from service worker that.conversations: ',  that.conversations);
+      console.log('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event data: ', event.data);
+      console.log('FIREBASE-NOTIFICATION (conversation list) Received a message from service worker event data data: ', event.data['data']);
+      console.log('FIREBASE-NOTIFICATION (conversation list) Received a message from service worker event data data typeof: ', typeof event.data['data']);
+      let uidConvSelected = ''
+      if (typeof event.data['data'] === 'string') {
+        uidConvSelected = event.data['data']
+      } else {
+        uidConvSelected = event.data['data']['recipient']
+      }
+      // const dataObjct = JSON.parse(event.data['data']);
+      // console.log('FIREBASE-NOTIFICATION (conversation list page)) Received a message from service worker event dataObjct : ', dataObjct);
+      // const uidConvSelected = dataObjct.recipient
+
+      console.log('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
+      console.log('FIREBASE-NOTIFICATION (conversation list page)) Received a message from service worker that.conversations: ', that.conversations);
       const conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
-      if (conversationSelected){
-      
+      if (conversationSelected) {
+
         that.conversationSelected = conversationSelected;
-        that.logger.printDebug('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event conversationSelected: ', that.conversationSelected);
-        
-        
+        console.log('FIREBASE-NOTIFICATION (conversation list page) Received a message from service worker event conversationSelected: ', that.conversationSelected);
+
+
         that.navigateByUrl('active', uidConvSelected)
       }
     });
@@ -188,7 +195,7 @@ export class ConversationListPage implements OnInit {
     // else {
     //   this.router.navigateByUrl('detail');
     // }
- 
+
     const navigationExtras: NavigationExtras = {
       state: {
         conversationSelected: this.conversationSelected
@@ -731,6 +738,7 @@ export class ConversationListPage implements OnInit {
 
   // ?????? 
   navigateByUrl(converationType: string, uidConvSelected: string) {
+    console.log('FIREBASE-NOTIFICATION (conversation list page) uidConvSelected: ', uidConvSelected);
     console.log('ConversationListPage navigateByUrl run  this.setUidConvSelected');
     console.log('ConversationListPage navigateByUrl this.uidConvSelected ', this.uidConvSelected);
     // console.log('ConversationListPage navigateByUrl this.conversationSelected.conversation_with_fullname ' , this.conversationSelected.conversation_with_fullname);
@@ -793,37 +801,6 @@ export class ConversationListPage implements OnInit {
     }
   }
 
-
-  /**
-   * ::: openArchivedConversationsModal :::
-   * apro pagina chat archiviate
-   * (metodo richiamato da subscribeProfileInfoButtonClicked handler)
-   */
-  openArchivedConversationsModal() {
-    console.log('open ArchivedConversationsModal');
-    // this.presentModal();
-    if (checkPlatformIsMobile()) {
-      presentModal(this.modalController, ConversationsArchivedListPage, {
-        listConversations: this.archivedConversations,
-        styleMap: this.styleMap,
-        translationMap: this.translationMapConversation,
-        onConversationSelected: this.onConversationSelectedHandler,
-        onImageLoaded: this.onImageLoadedHandler,
-        onConversationLoaded: this.onConversationLoadedHandler
-      })
-    } else {
-      this.navService.push(ConversationsArchivedListPage, {
-        listConversations: this.archivedConversations,
-        styleMap: this.styleMap,
-        translationMap: this.translationMapConversation,
-        onConversationSelected: this.onConversationSelectedHandler,
-        onImageLoaded: this.onImageLoadedHandler,
-        onConversationLoaded: this.onConversationLoadedHandler
-      })
-
-
-    }
-  }
 
   // ---------------------------------------------------------------------------------
   // nk Commentanto - nn sembra usato

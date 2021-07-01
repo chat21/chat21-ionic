@@ -13,7 +13,10 @@ import { TypingService } from '../abstract/typing.service';
 import { CustomLogger } from '../logger/customLogger';
 import { LoggerInstance } from '../logger/loggerInstance';
 
+
 export class TypingModel {
+ 
+
   constructor(
       public uid: string,
       public timestamp: any,
@@ -33,7 +36,8 @@ export class FirebaseTypingService extends TypingService {
   BSSetTyping: BehaviorSubject<any>;
 
   // public params
-  public tenant: string;
+  // public tenant: string;
+  private tenant: string;
 
   // private params
   private urlNodeTypings: string;
@@ -46,6 +50,8 @@ export class FirebaseTypingService extends TypingService {
 
   /** */
   public initialize() {
+    this.tenant = this.getTenant();
+    this.logger.printLog('FIREBASETypingSERVICE::initialize - tenant ', this.tenant)
     this.urlNodeTypings = '/apps/' + this.tenant + '/typings/';
   }
 

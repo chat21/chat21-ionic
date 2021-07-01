@@ -54,7 +54,7 @@
         <ion-list-conversations *ngIf="conversationType ==='active'" 
           [uidConvSelected]="uidConvSelected"
           [listConversations]="conversations" 
-          [styleMap]="styleMap" 
+          [stylesMap]="stylesMap" 
           [translationMap]="translationMapConversation"
           (onConversationSelected)=onConversationSelected($event)
           (onImageLoaded)="onImageLoaded($event)"
@@ -64,7 +64,7 @@
 
         <ion-list-conversations *ngIf="conversationType ==='archived'" 
           [listConversations]="archivedConversations"
-          [styleMap]="styleMap" 
+          [stylesMap]="stylesMap" 
           [translationMap]="translationMapConversation"
           (onConversationSelected)=onConversationSelected($event) 
           (onImageLoaded)="onImageLoaded($event)"

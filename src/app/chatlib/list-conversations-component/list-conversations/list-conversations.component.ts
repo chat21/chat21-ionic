@@ -12,7 +12,7 @@ export class ListConversationsComponent implements OnInit {
   // ========= begin:: Input/Output values ============//
   @Input() listConversations: Array<ConversationModel>;
   @Input() limit?: number
-  @Input() styleMap: Map<string, string>;
+  @Input() stylesMap: Map<string, string>;
   @Input() translationMap: Map< string, string>;
   @Output() onConversationSelected = new EventEmitter<ConversationModel>();
   @Output() onImageLoaded = new EventEmitter<ConversationModel>();

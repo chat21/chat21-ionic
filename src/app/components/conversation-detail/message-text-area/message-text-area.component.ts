@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { UserModel } from 'src/chat21-core/models/user';
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import { IonTextarea } from '@ionic/angular';
 import { Chooser } from '@ionic-native/chooser/ngx';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController  } from '@ionic/angular';
 
 // pages
 import { LoaderPreviewPage } from 'src/app/pages/loader-preview/loader-preview.page';
@@ -11,8 +12,9 @@ import { UploadService } from 'src/chat21-core/providers/abstract/upload.service
 import { TYPE_MSG_TEXT } from 'src/chat21-core/utils/constants';
 // models
 import { UploadModel } from 'src/chat21-core/models/upload';
-
 import { Observable } from 'rxjs';
+
+
 @Component({
   selector: 'app-message-text-area',
   templateUrl: './message-text-area.component.html',
@@ -24,33 +26,26 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   @ViewChild('textArea', { static: false }) messageTextArea
   @ViewChild('fileInput', { static: false }) fileInput: any;
 
-
-
-  // set textArea(element: ElementRef<HTMLInputElement>) {
-  //   if(element) {
-  //     console.log('MessageTextAreaComponent element',element)
-  //     // element.nativeElement.focus()
-  //     element.nativeElement.focus()
-  //   }
-  //  }
-
+  @Input() loggedUser: UserModel;
+  @Input() conversationWith: string;
+  @Input() tagsCannedFilter: any = [];
+  @Input() events: Observable<void>;
+  @Input() fileUploadAccept: string
+  @Input() translationMap: Map<string, string>;
   @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
 
 
-  @Input() conversationWith: string;
-  @Input() tagsCannedFilter: any = [];
-  @Input() events: Observable<void>;
-
   public conversationEnabled = false;
   public messageString: string;
-
+  public toastMsg: string;
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
-
+  
   constructor(
     public chooser: Chooser,
     public modalController: ModalController,
-    public uploadService: UploadService
+    public uploadService: UploadService,
+    public toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -70,38 +65,6 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     }, 300); //a least 150ms.
   }
 
-  // ngDoCheck() {
-  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) tagsCannedFilter ", this.tagsCannedFilter);
-  // }
-
-  // !!!!! NOT used
-  // onChange(e: any) {
-  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange event ", e);
-  //   const codeChar = e.detail.data;
-
-  //   let message = e.detail.target.innerHTML;
-  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.target.innerHTML) ", message);
-  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onChange message  (e.detail.data) ", e.detail.data);
-  //   if (e.detail.data) {
-  //     message += e.detail.data;
-  //   }
-  //   const height = e.detail.target.offsetHeight;
-  //   // console.log('onChange ************** event:: ', message);
-  //   if (codeChar === 10) {
-  //     console.log('premuto invio ');
-  //   } else {
-  //     try {
-  //       if (message.trim().length > 0) {
-  //         this.conversationEnabled = true;
-  //       } else {
-  //         this.conversationEnabled = false;
-  //       }
-  //     } catch (err) {
-  //       this.conversationEnabled = false;
-  //     }
-  //     this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
-  //   }
-  // }
 
   ionChange(e: any) {
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange event ", e);
@@ -126,52 +89,20 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
 
   // attualmente non usata
   // dovrebbe scattare quando termina il caricamento dell'immagine per inviare il messaggio
-  private setSubscriptions() {
-    const that = this;
-    const subscribeBSStateUpload = this.uploadService.BSStateUpload.subscribe((data: any) => {
-      console.log('***** BSStateUpload *****', data);
-      if (data) {
-        let message = data.message;
-        let type_message = data.type_message;
-        let metadata = data.metadata;
-        console.log('***** message *****', message);
-        console.log('***** type_message *****', type_message);
-        console.log('***** metadata *****', metadata);
-        //this.eventSendMessage.emit({ message: messageString, type: TYPE_MSG_TEXT });
-      }
-    });
-  }
-
-  /**
-   * 
-   * @param event
-   */
-  // public messageChange(event) {
+  // private setSubscriptions() {
   //   const that = this;
-  //   try {
-  //     if (event) {
-  //       console.log("event.value:: ", event);
-  //       var str = event.value;
-  //       that.setWritingMessages(str);
-  //       setTimeout(function () {
-  //         var pos = str.lastIndexOf("/");
-  //         console.log("str:: ", str);
-  //         console.log("pos:: ", pos);
-  //         if(pos >= 0 ) {
-  //           // && that.tagsCanned.length > 0
-  //           var strSearch = str.substr(pos+1);
-  //           that.loadTagsCanned(strSearch);
-  //           //that.showTagsCanned(strSearch);
-  //           //that.loadTagsCanned(strSearch);
-  //         } else {
-  //           that.tagsCannedFilter = [];
-  //         }
-  //       }, 300);
-  //       that.resizeTextArea();
+  //   const subscribeBSStateUpload = this.uploadService.BSStateUpload.subscribe((data: any) => {
+  //     console.log('***** BSStateUpload *****', data);
+  //     if (data) {
+  //       let message = data.message;
+  //       let type_message = data.type_message;
+  //       let metadata = data.metadata;
+  //       console.log('***** message *****', message);
+  //       console.log('***** type_message *****', type_message);
+  //       console.log('***** metadata *****', metadata);
+  //       //this.eventSendMessage.emit({ message: messageString, type: TYPE_MSG_TEXT });
   //     }
-  //   } catch (err) {
-  //     console.log("error: ", err)
-  //   }    
+  //   });
   // }
 
   /**
@@ -190,16 +121,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
   /** */
   sendMessage(text: string) {
     console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) sendMessage', text);
     console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) sendMessage conve width', this.conversationWith);
     // text.replace(/\s/g, "")
-
-
-
     this.messageString = '';
     // text = text.replace(/(\r\n|\n|\r)/gm, '');
     if (text.trim() !== '') {
@@ -231,9 +157,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
    */
   private async presentModal(e: any): Promise<any> {
     const that = this;
-    console.log('presentModal e', e);
-    console.log('presentModal e.target ', e.target);
-    console.log('presentModal e.target.files', e.target.files);
+    console.log('FIREBASE-UPLOAD presentModal e', e);
+    console.log('FIREBASE-UPLOAD presentModal e.target ', e.target);
+    console.log('FIREBASE-UPLOAD presentModal e.target.files', e.target.files);
     // console.log('presentModal e.target.files.length', e.target.files.length);
     const dataFiles = e.target.files;
     const attributes = { files: dataFiles, enableBackdropDismiss: false };
@@ -249,12 +175,12 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
       console.log('presentModal onDidDismiss detail', detail);
       if (detail.data !== undefined) {
         let type = ''
-        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg'))) {
-          console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg') )) {
+          console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
           type = 'image'
           // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
         } else {
-          console.log('presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+          console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
           type = 'file'
 
         }
@@ -263,25 +189,27 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
         let messageString = detail.data.messageString;
         let metadata = detail.data.metadata;
         // let type = detail.data.type;
-        console.log('presentModal onDidDismiss detail.data', detail.data);
-        console.log('presentModal onDidDismiss fileSelected', fileSelected);
+        console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss detail.data', detail.data);
+        console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss fileSelected', fileSelected);
 
         if (detail !== null) {
           const currentUpload = new UploadModel(fileSelected);
-          console.log('The result: currentUpload', currentUpload);
-          console.log('The result: CHIUDI!!!!!', detail.data);
-          that.uploadService.upload(currentUpload).then(downloadURL => {
+          console.log('FIREBASE-UPLOAD (MessageTextArea) The result: currentUpload', currentUpload);
+          console.log('FIREBASE-UPLOAD (MessageTextArea) The result: CHIUDI!!!!!', detail.data);
+          that.uploadService.upload(that.loggedUser.uid ,currentUpload).then(downloadURL => {
             metadata.src = downloadURL;
-            console.log('presentModal invio msg metadata::: ', metadata);
-            console.log('presentModal invio msg metadata downloadURL::: ', downloadURL);
-            console.log('presentModal invio msg type::: ', type);
-            console.log('presentModal invio msg message::: ', messageString);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg downloadURL::: ', metadata);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg metadata downloadURL::: ', downloadURL);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg type::: ', type);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg message::: ', messageString);
             // send message
             that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
-            this.fileInput.nativeElement.value = '';
+            that.fileInput.nativeElement.value = '';
           }).catch(error => {
             // Use to signal error if something goes wrong.
-            console.error(`MessageTextArea uploa Failed to upload file and get link `, error);
+            console.error(`FIREBASE-UPLOAD (MessageTextArea) MessageTextArea upload Failed to upload file and get link `, error);
+
+            that.presentToast();
           });
 
         }
@@ -289,6 +217,16 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     });
 
     return await modal.present();
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: this.translationMap.get('UPLOAD_FILE_ERROR'),
+      duration: 3000,
+      color: "danger",
+      cssClass: 'toast-custom-class',
+    });
+    toast.present();
   }
 
   /**
