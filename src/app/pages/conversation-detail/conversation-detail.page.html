@@ -49,9 +49,12 @@
             </ng-template>
 
             <ng-template #content_messages>
-              <ion-content #ionContentChatArea class="ionContentChatArea" [scrollEvents]="true"
-                (ionScrollStart)="logScrollStart($event)" (ionScroll)="logScrolling($event)"
-                (ionScrollEnd)="logScrollEnd($event)" [class.active]="showIonContent">
+              <ion-content #ionContentChatArea class="ionContentChatArea" 
+                [scrollEvents]="true"
+                (ionScrollStart)="logScrollStart($event)" 
+                (ionScroll)="logScrolling($event)"
+                (ionScrollEnd)="logScrollEnd($event)" 
+                [class.active]="showIonContent">
 
                 <!-- <ion-list no-lines>
                   <div *ngFor="let message of messages; let i = index">
@@ -137,6 +140,7 @@
               (eventSendMessage)="returnSendMessage($event)"
               [translationMap]="translationMap"
               [fileUploadAccept]="appConfigProvider.getConfig().fileUploadAccept"
+              [isOpenInfoConversation]="isOpenInfoConversation"
               >
             </app-message-text-area>
             <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
