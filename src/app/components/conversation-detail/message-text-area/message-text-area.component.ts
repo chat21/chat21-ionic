@@ -72,12 +72,10 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange detail.value ", e.detail.value);
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange this.HAS_PASTED ", this.HAS_PASTED);
     let message = ""
-    if (this.HAS_PASTED === false) {
+    // if (this.HAS_PASTED === false) {
       message = e.detail.value
-    }
-    let value = this.messageTextArea.value 
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange value ", value);
-   value = ''
+    // }
+
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange message ", message);
     // console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange  this.messageString ", this.messageString);
     const height = e.target.offsetHeight + 20; // nk added +20
@@ -99,8 +97,10 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   }
 
   onPaste(event: any) {
-    this.HAS_PASTED = true
     
+
+
+
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste event ", event);
     const items = (event.clipboardData || event.originalEvent.clipboardData).items;
     let file = null;
@@ -109,9 +109,13 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item ", item);
       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type ", item.type);
       if (item.type.startsWith("image")) {
-        const value = this.messageTextArea.value 
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste value ", value);
-      
+       
+        let content = event.clipboardData.getData('text/plain');
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste content ", content);
+        setTimeout(() => {
+          this.messageString = "";
+        }, 0);
+
 
         console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type  ", item.type);
         file = item.getAsFile();
