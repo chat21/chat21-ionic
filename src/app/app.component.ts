@@ -611,7 +611,7 @@ export class AppComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     const that = this;
-    console.log('this.doitResize)', this.doitResize)
+    // console.log('this.doitResize)', this.doitResize)
     clearTimeout(this.doitResize);
     this.doitResize = setTimeout(() => {
       let platformIsNow = PLATFORM_DESKTOP;
