@@ -85,7 +85,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
       // this.TEXAREA_PLACEHOLDER = '';
     
-    } else if (this.currentWindowWidth < 1045 && this.isOpenInfoConversation === false) {
+    } else {
       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY LONG_TEXAREA_PLACEHOLDER ");
       this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
       // this.TEXAREA_PLACEHOLDER = '';
