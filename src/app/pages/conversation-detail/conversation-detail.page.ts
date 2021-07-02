@@ -341,7 +341,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   onResize(event: any) {
     // this.newInnerWidth = event.target.innerWidth;
     const newInnerWidth = event.target.innerWidth;
-    console.log('CONV-DETAIL-PAGE checkWindowWithIsLessThan991px on resize ', newInnerWidth);
+    // console.log('CONV-DETAIL-PAGE checkWindowWithIsLessThan991px on resize ', newInnerWidth);
     if (newInnerWidth < 991) {
       if (this.USER_HAS_OPENED_CLOSE_INFO_CONV === false) {
         this.openInfoConversation = false;
@@ -370,7 +370,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'LABEL_IS_WRITING',
       'LABEL_INFO_ADVANCED',
       'ID_CONVERSATION',
-      'UPLOAD_FILE_ERROR'
+      'UPLOAD_FILE_ERROR',
+      'LABEL_ENTER_MSG',
+      'LABEL_ENTER_MSG_SHORT',
+      'LABEL_ENTER_MSG_SHORTER'
     ];
     this.translationMap = this.customTranslateService.translateLanguage(keys);
   }

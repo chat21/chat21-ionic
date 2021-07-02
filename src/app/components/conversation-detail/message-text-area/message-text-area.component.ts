@@ -1,5 +1,5 @@
 import { UserModel } from 'src/chat21-core/models/user';
-import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef, OnChanges, HostListener } from '@angular/core';
 import { IonTextarea } from '@ionic/angular';
 import { Chooser } from '@ionic-native/chooser/ngx';
 import { ModalController, ToastController } from '@ionic/angular';
@@ -13,6 +13,7 @@ import { TYPE_MSG_TEXT } from 'src/chat21-core/utils/constants';
 // models
 import { UploadModel } from 'src/chat21-core/models/upload';
 import { Observable } from 'rxjs';
+import { checkPlatformIsMobile } from 'src/chat21-core/utils/utils';
 
 
 @Component({
@@ -20,7 +21,7 @@ import { Observable } from 'rxjs';
   templateUrl: './message-text-area.component.html',
   styleUrls: ['./message-text-area.component.scss'],
 })
-export class MessageTextAreaComponent implements OnInit, AfterViewInit {
+export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChanges {
 
   // @ViewChild('focusInput') myInput;
   @ViewChild('textArea', { static: false }) messageTextArea
@@ -31,6 +32,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   @Input() tagsCannedFilter: any = [];
   @Input() events: Observable<void>;
   @Input() fileUploadAccept: string
+  @Input() isOpenInfoConversation: boolean;
   @Input() translationMap: Map<string, string>;
   @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
@@ -40,6 +42,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
   public messageString: string;
   public HAS_PASTED: boolean = false;
   public toastMsg: string;
+  public TEXAREA_PLACEHOLDER: string;
+  public LONG_TEXAREA_PLACEHOLDER: string;
+  public SHORT_TEXAREA_PLACEHOLDER: string;
+  public SHORTER_TEXAREA_PLACEHOLDER : string;
+  public currentWindowWidth: any
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
 
   constructor(
@@ -55,9 +62,56 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     // this.events.subscribe((cannedmessage) => {
     //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) events.subscribe cannedmessage ", cannedmessage);
     // })
+    this.LONG_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG')
+    this.SHORT_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
+    this. SHORTER_TEXAREA_PLACEHOLDER =  this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) LONG_TEXAREA_PLACEHOLDER ", this.LONG_TEXAREA_PLACEHOLDER);
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) SHORT_TEXAREA_PLACEHOLDER ", this.SHORT_TEXAREA_PLACEHOLDER);
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) SHORTER_TEXAREA_PLACEHOLDER ", this.SHORTER_TEXAREA_PLACEHOLDER);
+    this.getWindowWidth();
   }
 
+
+
+  getWindowWidth(): any {
+    this.currentWindowWidth = window.innerWidth;
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) currentWindowWidth ", this.currentWindowWidth);
+    if ((this.currentWindowWidth < 1045 && this.currentWindowWidth > 835 ) && this.isOpenInfoConversation === true) {
+      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY SHORT_TEXAREA_PLACEHOLDER ");
+      // this.TEXAREA_PLACEHOLDER = '';
+      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    } else if (this.currentWindowWidth < 835 && this.isOpenInfoConversation === true) {
+      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY SHORTER_TEXAREA_PLACEHOLDER ");
+      this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
+      // this.TEXAREA_PLACEHOLDER = '';
+    
+    } else if (this.currentWindowWidth < 1045 && this.isOpenInfoConversation === false) {
+      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY LONG_TEXAREA_PLACEHOLDER ");
+      this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+      // this.TEXAREA_PLACEHOLDER = '';
+    }
+
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) checkPlatformIsMobile() ", checkPlatformIsMobile());
+    if (checkPlatformIsMobile() === true) {
+
+      if (this.currentWindowWidth <= 430) {
+        this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+      } else {
+        this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+      }
+
+    }
+    // if (checkPlatformIsMobile &&  this.currentWindowWidth <= 430) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // } else if (checkPlatformIsMobile &&  this.currentWindowWidth > 430) { 
+    //   this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+    // }
+  }
+
+
   ngAfterViewInit() {
+
+    // this.getIfTexareaIsEmpty('ngAfterViewInit')
 
     setTimeout(() => {
       console.log("MESSAGE-TEXT-AREA set focus on ", this.messageTextArea);
@@ -66,21 +120,25 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     }, 300); //a least 150ms.
   }
 
+  ngOnChanges() {
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ngOnChanges  this.isOpenInfoConversation ", this.isOpenInfoConversation);
+    // if (this.isOpenInfoConversation === true) {
+    // this.getIfTexareaIsEmpty('ngOnChanges')
+    this.getWindowWidth();
+    // }
+  }
 
   ionChange(e: any) {
+
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange event ", e);
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange detail.value ", e.detail.value);
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange this.HAS_PASTED ", this.HAS_PASTED);
-    let message = ""
-    // if (this.HAS_PASTED === false) {
-      message = e.detail.value
-    // }
 
+    const message = e.detail.value
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange message ", message);
     // console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange  this.messageString ", this.messageString);
     const height = e.target.offsetHeight + 20; // nk added +20
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange text-area height ", height);
-
+    // this.getIfTexareaIsEmpty('ionChange')
     try {
       if (message.trim().length > 0) {
 
@@ -93,14 +151,61 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
     }
 
     this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
+  }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    // this.getIfTexareaIsEmpty('onResize')
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA)  event.target.innerWidth; ", event.target.innerWidth);
+    if ((event.target.innerWidth < 1045 && event.target.innerWidth > 835 ) && this.isOpenInfoConversation === true) {
+      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA)  ON RESIZE DISPAY SHORT_TEXAREA_PLACEHOLDER");
+      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    } else if (event.target.innerWidth < 835 && this.isOpenInfoConversation === true) {
+      this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
+    } else {
+      this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+    }
+
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) checkPlatformIsMobile() ", checkPlatformIsMobile());
+    if (checkPlatformIsMobile() === true) {
+
+      if (event.target.innerWidth <= 430) {
+        this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+      } else {
+        this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+      }
+
+    }
+
+    // if (checkPlatformIsMobile && event.target.innerWidth <= 430) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // } else if (checkPlatformIsMobile && event.target.innerWidth > 430) { 
+    //   this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+    // }
+  }
+
+  getIfTexareaIsEmpty(calledby: string) {
+    let elemTexarea = <HTMLElement>document.querySelector('#ion-textarea');
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) elemTexarea ", elemTexarea)
+    if (this.messageString == null || this.messageString == '') {
+
+
+      if (elemTexarea) {
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) messageString is empty - called By ", calledby)
+        elemTexarea.style.height = "30px !important";
+        elemTexarea.style.overflow = "hidden !important";
+      }
+    } else {
+
+      if (elemTexarea) {
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) messageString not empty - called By ", calledby)
+        elemTexarea.style.height = null;
+        elemTexarea.style.overflow = null;
+      }
+    }
   }
 
   onPaste(event: any) {
-    
-
-
-
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste event ", event);
     const items = (event.clipboardData || event.originalEvent.clipboardData).items;
     let file = null;
@@ -109,7 +214,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit {
       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item ", item);
       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type ", item.type);
       if (item.type.startsWith("image")) {
-       
+
         let content = event.clipboardData.getData('text/plain');
         console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste content ", content);
         setTimeout(() => {

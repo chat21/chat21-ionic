@@ -99,6 +99,8 @@
   "LABEL_IAT": "Iat",
   "LABEL_REQUEST_DETAIL": "Request detail",
   "LABEL_ENTER_MSG": "Enter a message or press / for canned responses",
+  "LABEL_ENTER_MSG_SHORT": "Enter a message or...",
+  "LABEL_ENTER_MSG_SHORTER": "Enter...",
   "LABEL_MSG_LOGIN_TILEDESK": "Go to login to start chatting",
   "LABEL_ARCHIVED": "Archived",
   "LABEL_INFO_CONVERSATION": "Info conversation",

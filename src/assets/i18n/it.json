@@ -104,7 +104,8 @@
     "LABEL_IAT": "Iat",
     "LABEL_REQUEST_DETAIL": "Dettaglio richiesta",
     "LABEL_ENTER_MSG": "Immettere un messaggio o premere / per le risposte predefinite",
-
+    "LABEL_ENTER_MSG_SHORT": "Immettere un messaggio o...",
+    "LABEL_ENTER_MSG_SHORTER": "Immettere...",
     "LABEL_MSG_LOGIN_TILEDESK": "Effettua il login per iniziare a chattare",
     "LABEL_ARCHIVED": "Archiviate",
 
