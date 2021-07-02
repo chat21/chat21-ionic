@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.14
+- Minor improvements
+
 ### 3.0.42-beta.1.13
 - Fixes the bug: if the message inserted in the textarea has more lines of text, that textarea overlaps the chat content
 - Adds the ability to attach an image by paste it in the 'send message' textarea
