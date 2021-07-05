@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, HostListener } from '@angular/core';
 import { TYPE_MSG_IMAGE } from 'src/chat21-core/utils/constants';
 import { NavParams, ModalController } from '@ionic/angular';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -257,7 +257,7 @@ export class LoaderPreviewPage implements OnInit {
 
   /** */
   onChangeTextArea(e: any) {
-    console.log('onChangeTextArea', e.target.clientHeight);
+    // console.log('onChangeTextArea', e.target.clientHeight);
     this.calculateHeightPreviewArea();
     // try {
     //   let height: number = e.target.offsetHeight;
@@ -275,6 +275,15 @@ export class LoaderPreviewPage implements OnInit {
     this.fileSelected = file;
   }
 
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+      this.onSendMessage()
+    }
+
+  }
+
   pressedOnKeyboard(e: any, text: string) {
     console.log('pressedOnKeyboard ************** event:: ', e);
     // const message = e.target.textContent.trim();
@@ -287,6 +296,8 @@ export class LoaderPreviewPage implements OnInit {
     // }
     this.onSendMessage()
   }
+
+
 
   /** */
   onSendMessage() {
