@@ -34,6 +34,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Input() fileUploadAccept: string
   @Input() isOpenInfoConversation: boolean;
   @Input() translationMap: Map<string, string>;
+  @Input() dropEvent: any;
   @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
 
@@ -45,7 +46,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   public TEXAREA_PLACEHOLDER: string;
   public LONG_TEXAREA_PLACEHOLDER: string;
   public SHORT_TEXAREA_PLACEHOLDER: string;
-  public SHORTER_TEXAREA_PLACEHOLDER : string;
+  public SHORTER_TEXAREA_PLACEHOLDER: string;
   public currentWindowWidth: any
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
 
@@ -64,7 +65,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     // })
     this.LONG_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG')
     this.SHORT_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
-    this. SHORTER_TEXAREA_PLACEHOLDER =  this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
+    this.SHORTER_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) LONG_TEXAREA_PLACEHOLDER ", this.LONG_TEXAREA_PLACEHOLDER);
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) SHORT_TEXAREA_PLACEHOLDER ", this.SHORT_TEXAREA_PLACEHOLDER);
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) SHORTER_TEXAREA_PLACEHOLDER ", this.SHORTER_TEXAREA_PLACEHOLDER);
@@ -76,7 +77,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   getWindowWidth(): any {
     this.currentWindowWidth = window.innerWidth;
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) currentWindowWidth ", this.currentWindowWidth);
-    if ((this.currentWindowWidth < 1045 && this.currentWindowWidth > 835 ) && this.isOpenInfoConversation === true) {
+    if ((this.currentWindowWidth < 1045 && this.currentWindowWidth > 835) && this.isOpenInfoConversation === true) {
       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY SHORT_TEXAREA_PLACEHOLDER ");
       // this.TEXAREA_PLACEHOLDER = '';
       this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
@@ -84,7 +85,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY SHORTER_TEXAREA_PLACEHOLDER ");
       this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
       // this.TEXAREA_PLACEHOLDER = '';
-    
+
     } else {
       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY LONG_TEXAREA_PLACEHOLDER ");
       this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
@@ -122,6 +123,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
   ngOnChanges() {
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ngOnChanges  this.isOpenInfoConversation ", this.isOpenInfoConversation);
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ngOnChanges  DROP EVENT ", this.dropEvent);
+
+    if (this.dropEvent) {
+      this.presentModal(this.dropEvent)
+    }
     // if (this.isOpenInfoConversation === true) {
     // this.getIfTexareaIsEmpty('ngOnChanges')
     this.getWindowWidth();
@@ -157,7 +163,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   onResize(event) {
     // this.getIfTexareaIsEmpty('onResize')
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA)  event.target.innerWidth; ", event.target.innerWidth);
-    if ((event.target.innerWidth < 1045 && event.target.innerWidth > 835 ) && this.isOpenInfoConversation === true) {
+    if ((event.target.innerWidth < 1045 && event.target.innerWidth > 835) && this.isOpenInfoConversation === true) {
       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA)  ON RESIZE DISPAY SHORT_TEXAREA_PLACEHOLDER");
       this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
     } else if (event.target.innerWidth < 835 && this.isOpenInfoConversation === true) {
@@ -307,10 +313,13 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     let dataFiles = " "
     if (e.type === 'change') {
 
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal e', e);
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal e.target ', e.target);
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal e.target.files', e.target.files);
+      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e', e);
+      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e.target ', e.target);
+      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e.target.files', e.target.files);
       dataFiles = e.target.files;
+    } else if (e.type === 'drop') {
+      dataFiles = e.dataTransfer.files
+      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal drop e.dataTransfer.files', e.dataTransfer.files);
     } else {
       // paste use case
       dataFiles = e.files
@@ -346,9 +355,22 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         let fileSelected = null;
         if (e.type === 'change') {
           fileSelected = e.target.files.item(0);
+        } else if (e.type === 'drop') {
+          console.log('FIREBASE-UPLOAD (MessageTextArea) DROP dataFiles[0]', dataFiles[0])
+          fileSelected = dataFiles[0]
+          // const fileList = e.dataTransfer.files;
+          // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP fileList', fileList)
+          // const file: File = fileList[0];
+          // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP FILE', file)
+          // const data = new ClipboardEvent('').clipboardData || new DataTransfer(); 
+          // data.items.add(new File([file], file.name, { type: file.type }));
+          // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP DATA', data)
         } else {
+          // PASTE USE CASE 
+          console.log('FIREBASE-UPLOAD (MessageTextArea) PASTE  e', e)
           fileSelected = e.files.item(0)
         }
+
         let messageString = detail.data.messageString;
         let metadata = detail.data.metadata;
         // let type = detail.data.type;

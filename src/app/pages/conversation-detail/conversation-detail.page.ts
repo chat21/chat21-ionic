@@ -158,7 +158,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   audio: any
   isOpenInfoConversation: boolean;
   USER_HAS_OPENED_CLOSE_INFO_CONV: boolean = false
-  // functions utils
+  isHovering: boolean = false;
+
+  dropEvent:any
   isMine = isMine;
   isInfo = isInfo;
   isFirstMessage = isFirstMessage;
@@ -457,7 +459,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
-  
+
   // -------------- END SET INFO COMPONENT -------------- //
 
   private setAttributes(): any {
@@ -882,7 +884,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log("CONVERSATION-DETAIL loadTagsCanned strSearch ", strSearch);
 
     let projectId = ""
-    if (this.groupDetail) {
+    if (this.groupDetail && this.groupDetail['attributes']) {
+      console.log("CONVERSATION-DETAIL loadTagsCanned groupDetail ", this.groupDetail);
       projectId = this.groupDetail['attributes']['projectId']
 
       console.log('CONVERSATION-DETAIL loadTagsCanned groupDetail', this.groupDetail);
@@ -996,7 +999,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         }
       }
       else if (event.key === 'ArrowUp') {
-      
+
         if (this.arrowkeyLocation > 0) {
           this.arrowkeyLocation--;
         } else
@@ -1222,7 +1225,63 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
   // -------------- END SCROLL/RESIZE functions -------------- //
 
+  // -------------------------------------------------------------
+  // DRAG FILE 
+  // -------------------------------------------------------------
 
+    // DROP (WHEN THE FILE IS RELEASED ON THE DROP ZONE)
+    drop(ev: any) {
+      ev.preventDefault();
+      ev.stopPropagation();
+  
+      console.log('CONVERSATION-DETAIL ----> FILE - DROP ev ', ev);
+      const fileList = ev.dataTransfer.files;
+      console.log('CONVERSATION-DETAIL ----> FILE - DROP ev.dataTransfer.files ', fileList);
+      this.isHovering = false;
+      console.log('CONVERSATION-DETAIL ----> FILE - DROP isHovering ',  this.isHovering);
+      if (fileList.length > 0) {
+        const file: File = fileList[0];
+        console.log('CONVERSATION-DETAIL ----> FILE - DROP file ', file);
+  
+        var mimeType = fileList[0].type;
+        console.log('CONVERSATION-DETAIL ----> FILE - drop mimeType files ', mimeType);
+  
+        if (mimeType.startsWith("image")) {
+  
+          this.handleDropEvent(ev);
+          // this.uploadedFileName = this.uploadedFile.name
+          // console.log('Create Faq Kb - drop uploadedFileName ', this.uploadedFileName);
+  
+          // this.handleFileUploading(file);
+          // this.doFormData(file)
+        } else {
+          console.log('CONVERSATION-DETAIL ----> FILE - drop mimeType files ', mimeType, 'NOT SUPPORTED FILE TYPE');
+        }
+      }
+    }
+
+    handleDropEvent(ev)  {
+      console.log('CONVERSATION-DETAIL ----> FILE - HANDLE DRAGGED FILE-LIST ', ev);
+      this.dropEvent = ev
+    }
+
+      // DRAG OVER (WHEN HOVER OVER ON THE "DROP ZONE")
+  allowDrop(ev: any) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    console.log('CONVERSATION-DETAIL----> FILE - (dragover) allowDrop ev ', ev);
+    this.isHovering = true;
+    console.log('CONVERSATION-DETAIL----> FILE - (dragover) allowDrop isHovering ',  this.isHovering);
+  }
+
+    // DRAG LEAVE (WHEN LEAVE FROM THE DROP ZONE)
+    drag(ev: any) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      console.log('CONVERSATION-DETAIL----> FILE - (dragleave) drag ev ', ev);
+      this.isHovering = false;
+      console.log('CONVERSATION-DETAIL ----> FILE - FILE - (dragleave) drag his.isHovering ',  this.isHovering);
+    }
 
 }
 // END ALL //
