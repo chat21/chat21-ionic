@@ -177,5 +177,6 @@
     "Email must be a valid email":"L'email deve essere un'email valida",
     "Password is required": "La password è richiesta.",
     "Password must be at least 6 characters long":"La password deve essere lunga almeno 6 caratteri.",
-    "UPLOAD_FILE_ERROR":"Si è verificato un errore imprevisto durante il caricamento del file"
+    "UPLOAD_FILE_ERROR":"Si è verificato un errore imprevisto durante il caricamento del file",
+    "DROP_IMAGE_HERE_TO_SEND_IT":"Trascina qui l'immagine per inviarla"
 }

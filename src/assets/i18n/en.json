@@ -169,5 +169,6 @@
   "Email must be a valid email": "Email must be a valid email.",
   "Password is required": "Password is required.",
   "Password must be at least 6 characters long": "Password must be at least 6 characters long.",
-  "UPLOAD_FILE_ERROR":"An unexpected error occurred while uploading the file"
+  "UPLOAD_FILE_ERROR":"An unexpected error occurred while uploading the file",
+  "DROP_IMAGE_HERE_TO_SEND_IT":"Drop image here to send it"
 }
