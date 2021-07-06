@@ -178,5 +178,7 @@
     "Password is required": "La password è richiesta.",
     "Password must be at least 6 characters long":"La password deve essere lunga almeno 6 caratteri.",
     "UPLOAD_FILE_ERROR":"Si è verificato un errore imprevisto durante il caricamento del file",
-    "DROP_IMAGE_HERE_TO_SEND_IT":"Trascina qui l'immagine per inviarla"
+    "DROP_IMAGE_HERE_TO_SEND_IT":"Trascina qui l'immagine per inviarla",
+    "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE": "Possono essere incollati solo file di tipo immagine e testo",
+    "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG": "È consentito trascinare solo file di tipo immagine"
 }
