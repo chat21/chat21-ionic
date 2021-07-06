@@ -4,11 +4,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Dir
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import {
-  ModalController,
-  PopoverController,
-  Platform, ActionSheetController, NavController, IonContent, IonTextarea
-} from '@ionic/angular';
+import { ModalController, ToastController, PopoverController, Platform, ActionSheetController, NavController, IonContent, IonTextarea } from '@ionic/angular';
 
 
 // translate
@@ -160,7 +156,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   USER_HAS_OPENED_CLOSE_INFO_CONV: boolean = false
   isHovering: boolean = false;
 
-  dropEvent:any
+  dropEvent: any
   isMine = isMine;
   isInfo = isInfo;
   isFirstMessage = isFirstMessage;
@@ -205,6 +201,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public cannedResponsesService: CannedResponsesService,
     public imageRepoService: ImageRepoService,
     public presenceService: PresenceService,
+    public toastController: ToastController
 
   ) {
 
@@ -375,8 +372,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'UPLOAD_FILE_ERROR',
       'LABEL_ENTER_MSG',
       'LABEL_ENTER_MSG_SHORT',
-      'LABEL_ENTER_MSG_SHORTER'
+      'LABEL_ENTER_MSG_SHORTER',
+      'ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE',
+      'ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG'
     ];
+
     this.translationMap = this.customTranslateService.translateLanguage(keys);
   }
 
@@ -1228,60 +1228,71 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // -------------------------------------------------------------
   // DRAG FILE 
   // -------------------------------------------------------------
+  // DROP (WHEN THE FILE IS RELEASED ON THE DROP ZONE)
+  drop(ev: any) {
+    ev.preventDefault();
+    ev.stopPropagation();
 
-    // DROP (WHEN THE FILE IS RELEASED ON THE DROP ZONE)
-    drop(ev: any) {
-      ev.preventDefault();
-      ev.stopPropagation();
-  
-      console.log('CONVERSATION-DETAIL ----> FILE - DROP ev ', ev);
-      const fileList = ev.dataTransfer.files;
-      console.log('CONVERSATION-DETAIL ----> FILE - DROP ev.dataTransfer.files ', fileList);
-      this.isHovering = false;
-      console.log('CONVERSATION-DETAIL ----> FILE - DROP isHovering ',  this.isHovering);
-      if (fileList.length > 0) {
-        const file: File = fileList[0];
-        console.log('CONVERSATION-DETAIL ----> FILE - DROP file ', file);
-  
-        var mimeType = fileList[0].type;
-        console.log('CONVERSATION-DETAIL ----> FILE - drop mimeType files ', mimeType);
-  
-        if (mimeType.startsWith("image")) {
-  
-          this.handleDropEvent(ev);
-          // this.uploadedFileName = this.uploadedFile.name
-          // console.log('Create Faq Kb - drop uploadedFileName ', this.uploadedFileName);
-  
-          // this.handleFileUploading(file);
-          // this.doFormData(file)
-        } else {
-          console.log('CONVERSATION-DETAIL ----> FILE - drop mimeType files ', mimeType, 'NOT SUPPORTED FILE TYPE');
-        }
+    console.log('CONVERSATION-DETAIL ----> FILE - DROP ev ', ev);
+    const fileList = ev.dataTransfer.files;
+    console.log('CONVERSATION-DETAIL ----> FILE - DROP ev.dataTransfer.files ', fileList);
+    this.isHovering = false;
+    console.log('CONVERSATION-DETAIL ----> FILE - DROP isHovering ', this.isHovering);
+    if (fileList.length > 0) {
+      const file: File = fileList[0];
+      console.log('CONVERSATION-DETAIL ----> FILE - DROP file ', file);
+
+      var mimeType = fileList[0].type;
+      console.log('CONVERSATION-DETAIL ----> FILE - drop mimeType files ', mimeType);
+
+      if (mimeType.startsWith("image")) {
+
+        this.handleDropEvent(ev);
+        // this.uploadedFileName = this.uploadedFile.name
+        // console.log('Create Faq Kb - drop uploadedFileName ', this.uploadedFileName);
+
+        // this.handleFileUploading(file);
+        // this.doFormData(file)
+      } else {
+        console.log('CONVERSATION-DETAIL ----> FILE - drop mimeType files ', mimeType, 'NOT SUPPORTED FILE TYPE');
+        this.presentToastOnlyImageFilesAreAllowedToDrag()
       }
     }
+  }
 
-    handleDropEvent(ev)  {
-      console.log('CONVERSATION-DETAIL ----> FILE - HANDLE DRAGGED FILE-LIST ', ev);
-      this.dropEvent = ev
-    }
+  handleDropEvent(ev) {
+    console.log('CONVERSATION-DETAIL ----> FILE - HANDLE DRAGGED FILE-LIST ', ev);
+    this.dropEvent = ev
+  }
 
-      // DRAG OVER (WHEN HOVER OVER ON THE "DROP ZONE")
+  // DRAG OVER (WHEN HOVER OVER ON THE "DROP ZONE")
   allowDrop(ev: any) {
     ev.preventDefault();
     ev.stopPropagation();
     console.log('CONVERSATION-DETAIL----> FILE - (dragover) allowDrop ev ', ev);
     this.isHovering = true;
-    console.log('CONVERSATION-DETAIL----> FILE - (dragover) allowDrop isHovering ',  this.isHovering);
+    console.log('CONVERSATION-DETAIL----> FILE - (dragover) allowDrop isHovering ', this.isHovering);
   }
 
-    // DRAG LEAVE (WHEN LEAVE FROM THE DROP ZONE)
-    drag(ev: any) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      console.log('CONVERSATION-DETAIL----> FILE - (dragleave) drag ev ', ev);
-      this.isHovering = false;
-      console.log('CONVERSATION-DETAIL ----> FILE - FILE - (dragleave) drag his.isHovering ',  this.isHovering);
-    }
+  // DRAG LEAVE (WHEN LEAVE FROM THE DROP ZONE)
+  drag(ev: any) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    console.log('CONVERSATION-DETAIL----> FILE - (dragleave) drag ev ', ev);
+    this.isHovering = false;
+    console.log('CONVERSATION-DETAIL ----> FILE - FILE - (dragleave) drag his.isHovering ', this.isHovering);
+  }
+
+  async presentToastOnlyImageFilesAreAllowedToDrag() {
+    const toast = await this.toastController.create({
+      message: this.translationMap.get('ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG'),
+      duration: 3000,
+      color: "danger",
+      cssClass: 'toast-custom-class',
+    });
+    toast.present();
+  }
+
 
 }
 // END ALL //
