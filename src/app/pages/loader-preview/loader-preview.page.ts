@@ -247,9 +247,9 @@ export class LoaderPreviewPage implements OnInit {
     const heightThumbnailsPreview = this.thumbnailsPreview.nativeElement.offsetHeight;
     const heightMessageTextArea = this.messageTextArea.nativeElement.offsetHeight;
     this.heightPreviewArea = (heightMessageTextArea + heightThumbnailsPreview).toString();
-    console.log('heightThumbnailsPreview', heightThumbnailsPreview);
-    console.log('heightMessageTextArea', this.messageTextArea);
-    console.log('heightPreviewArea', this.heightPreviewArea);
+    // console.log('heightThumbnailsPreview', heightThumbnailsPreview);
+    // console.log('heightMessageTextArea', this.messageTextArea);
+    // console.log('heightPreviewArea', this.heightPreviewArea);
   }
 
   uploadImages() { }
