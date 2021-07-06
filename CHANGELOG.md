@@ -1,5 +1,11 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.16
+- Bug fixed: the selected image preview popup window opens twice if after selecting the image dragging it in the chat area, the image is selected pasting it in the 'send message' texarea,
+- Prevents the user from pasting non-image files into the 'send message' textarea 
+- Displays an error message when files that are not of type image are pasted in the "send message" text area
+- Displays an error message when files that are not of type image are dragged into the chat area
+
 ### 3.0.42-beta.1.15
 - Adds the ability to select an image to upload by drag it in the chat area
 - Adds the ability to upload an image or file by pressing the "Enter" keyboard key
