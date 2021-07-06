@@ -125,6 +125,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ngOnChanges  this.isOpenInfoConversation ", this.isOpenInfoConversation);
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ngOnChanges  DROP EVENT ", this.dropEvent);
 
+    // use case drop
     if (this.dropEvent) {
       this.presentModal(this.dropEvent)
     }
@@ -134,8 +135,165 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     // }
   }
 
-  ionChange(e: any) {
+  onPaste(event: any) {
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste DROP EVENT ", this.dropEvent);
+    
+    this.dropEvent = undefined
 
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste event ", event);
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    let file = null;
+    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste items ", items);
+    for (const item of items) {
+      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item ", item);
+      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type ", item.type);
+     
+      if (item.type.startsWith("image")) {
+
+        let content = event.clipboardData.getData('text/plain');
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste content ", content);
+        setTimeout(() => {
+          this.messageString = "";
+        }, 100);
+
+
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type  ", item.type);
+        file = item.getAsFile();
+        const data = new ClipboardEvent('').clipboardData || new DataTransfer();
+        data.items.add(new File([file], file.name, { type: file.type }));
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste data ", data);
+        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste file ", file);
+        this.presentModal(data);
+      } else if (item.type.startsWith("application")) {
+
+        event.preventDefault(); 
+
+        this.presentToastOnlyImageFilesAreAllowed();
+        // let content = event.clipboardData.getData('text/plain');
+        // console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste else content ", content);
+        // setTimeout(() => {
+        //   this.messageString = "";
+        // }, 0)
+
+        console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste file NOT SUPPORTED FILE TYPE');
+      }
+    }
+  }
+
+  onFileSelected(e: any) {
+    console.log('Message-text-area - onFileSelected event', e);
+    this.presentModal(e);
+
+  }
+
+
+    /**
+   * 
+   * @param e 
+   */
+     private async presentModal(e: any): Promise<any> {
+      const that = this;
+      let dataFiles = " "
+      if (e.type === 'change') {
+  
+        console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e', e);
+        console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e.target ', e.target);
+        console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e.target.files', e.target.files);
+        dataFiles = e.target.files;
+      } else if (e.type === 'drop') {
+        dataFiles = e.dataTransfer.files
+        console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal drop e.dataTransfer.files', e.dataTransfer.files);
+      } else {
+        // paste use case
+        dataFiles = e.files
+        console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal dataFiles when paste', dataFiles);
+        const elemTexarea= <HTMLElement>document.querySelector('#ion-textarea .textarea-wrapper textarea')
+        console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal elemTexarea when paste', elemTexarea);
+        // console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal elemTexarea VALUE when paste', elemTexarea.value);
+
+        elemTexarea.textContent = ""
+       
+      }
+      // console.log('presentModal e.target.files.length', e.target.files.length);
+  
+      const attributes = { files: dataFiles, enableBackdropDismiss: false };
+      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) attributes', attributes);
+      const modal: HTMLIonModalElement =
+        await this.modalController.create({
+          component: LoaderPreviewPage,
+          componentProps: attributes,
+          swipeToClose: false,
+          backdropDismiss: true
+        });
+      modal.onDidDismiss().then((detail: any) => {
+  
+        console.log('presentModal onDidDismiss detail', detail);
+        if (detail.data !== undefined) {
+          let type = ''
+          if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg'))) {
+            console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+            type = 'image'
+            // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
+          } else {
+            console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+            type = 'file'
+  
+          }
+  
+          let fileSelected = null;
+          if (e.type === 'change') {
+            fileSelected = e.target.files.item(0);
+          } else if (e.type === 'drop') {
+            console.log('FIREBASE-UPLOAD (MessageTextArea) DROP dataFiles[0]', dataFiles[0])
+            fileSelected = dataFiles[0]
+            // const fileList = e.dataTransfer.files;
+            // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP fileList', fileList)
+            // const file: File = fileList[0];
+            // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP FILE', file)
+            // const data = new ClipboardEvent('').clipboardData || new DataTransfer(); 
+            // data.items.add(new File([file], file.name, { type: file.type }));
+            // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP DATA', data)
+          } else {
+            // PASTE USE CASE 
+            console.log('FIREBASE-UPLOAD (MessageTextArea) PASTE  e', e)
+            fileSelected = e.files.item(0)
+          }
+  
+          let messageString = detail.data.messageString;
+          let metadata = detail.data.metadata;
+          // let type = detail.data.type;
+          console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss detail.data', detail.data);
+          console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss fileSelected', fileSelected);
+  
+          if (detail !== null) {
+            const currentUpload = new UploadModel(fileSelected);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) The result: currentUpload', currentUpload);
+            console.log('FIREBASE-UPLOAD (MessageTextArea) The result: CHIUDI!!!!!', detail.data);
+            that.uploadService.upload(that.loggedUser.uid, currentUpload).then(downloadURL => {
+              metadata.src = downloadURL;
+              console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg downloadURL::: ', metadata);
+              console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg metadata downloadURL::: ', downloadURL);
+              console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg type::: ', type);
+              console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg message::: ', messageString);
+              // send message
+              that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
+              that.fileInput.nativeElement.value = '';
+            }).catch(error => {
+              // Use to signal error if something goes wrong.
+              console.error(`FIREBASE-UPLOAD (MessageTextArea) MessageTextArea upload Failed to upload file and get link `, error);
+  
+              that.presentToastFailedToUploadFile();
+            });
+  
+          }
+        }
+      });
+  
+      return await modal.present();
+    }
+  
+
+  ionChange(e: any) {
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange event ", e);
     console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange detail.value ", e.detail.value);
 
@@ -159,6 +317,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
   }
 
+  // -------------------------------------------------------------------------------------------
+  // Change the placeholder of the 'send message' textarea according to the width of the window  
+  // -------------------------------------------------------------------------------------------
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     // this.getIfTexareaIsEmpty('onResize')
@@ -190,54 +351,29 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     // }
   }
 
-  getIfTexareaIsEmpty(calledby: string) {
-    let elemTexarea = <HTMLElement>document.querySelector('#ion-textarea');
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) elemTexarea ", elemTexarea)
-    if (this.messageString == null || this.messageString == '') {
+  /* NOT USED */
+  // getIfTexareaIsEmpty(calledby: string) {
+  //   let elemTexarea = <HTMLElement>document.querySelector('#ion-textarea');
+  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) elemTexarea ", elemTexarea)
+  //   if (this.messageString == null || this.messageString == '') {
 
 
-      if (elemTexarea) {
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) messageString is empty - called By ", calledby)
-        elemTexarea.style.height = "30px !important";
-        elemTexarea.style.overflow = "hidden !important";
-      }
-    } else {
+  //     if (elemTexarea) {
+  //       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) messageString is empty - called By ", calledby)
+  //       elemTexarea.style.height = "30px !important";
+  //       elemTexarea.style.overflow = "hidden !important";
+  //     }
+  //   } else {
 
-      if (elemTexarea) {
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) messageString not empty - called By ", calledby)
-        elemTexarea.style.height = null;
-        elemTexarea.style.overflow = null;
-      }
-    }
-  }
-
-  onPaste(event: any) {
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste event ", event);
-    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-    let file = null;
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste items ", items);
-    for (const item of items) {
-      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item ", item);
-      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type ", item.type);
-      if (item.type.startsWith("image")) {
-
-        let content = event.clipboardData.getData('text/plain');
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste content ", content);
-        setTimeout(() => {
-          this.messageString = "";
-        }, 0);
+  //     if (elemTexarea) {
+  //       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) messageString not empty - called By ", calledby)
+  //       elemTexarea.style.height = null;
+  //       elemTexarea.style.overflow = null;
+  //     }
+  //   }
+  // }
 
 
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type  ", item.type);
-        file = item.getAsFile();
-        const data = new ClipboardEvent('').clipboardData || new DataTransfer();
-        data.items.add(new File([file], file.name, { type: file.type }));
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste data ", data);
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste file ", file);
-        this.presentModal(data);
-      }
-    }
-  }
 
 
   // attualmente non usata
@@ -298,113 +434,22 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       });
   }
 
-  onFileSelected(e: any) {
-    console.log('Message-text-area - onFileSelected event', e);
-    this.presentModal(e);
 
-  }
 
-  /**
-   * 
-   * @param e 
-   */
-  private async presentModal(e: any): Promise<any> {
-    const that = this;
-    let dataFiles = " "
-    if (e.type === 'change') {
 
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e', e);
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e.target ', e.target);
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e.target.files', e.target.files);
-      dataFiles = e.target.files;
-    } else if (e.type === 'drop') {
-      dataFiles = e.dataTransfer.files
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal drop e.dataTransfer.files', e.dataTransfer.files);
-    } else {
-      // paste use case
-      dataFiles = e.files
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal dataFiles when paste', dataFiles);
-
-    }
-    // console.log('presentModal e.target.files.length', e.target.files.length);
-
-    const attributes = { files: dataFiles, enableBackdropDismiss: false };
-    console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) attributes', attributes);
-    const modal: HTMLIonModalElement =
-      await this.modalController.create({
-        component: LoaderPreviewPage,
-        componentProps: attributes,
-        swipeToClose: false,
-        backdropDismiss: true
-      });
-    modal.onDidDismiss().then((detail: any) => {
-
-      console.log('presentModal onDidDismiss detail', detail);
-      if (detail.data !== undefined) {
-        let type = ''
-        if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg'))) {
-          console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
-          type = 'image'
-          // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
-        } else {
-          console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
-          type = 'file'
-
-        }
-
-        let fileSelected = null;
-        if (e.type === 'change') {
-          fileSelected = e.target.files.item(0);
-        } else if (e.type === 'drop') {
-          console.log('FIREBASE-UPLOAD (MessageTextArea) DROP dataFiles[0]', dataFiles[0])
-          fileSelected = dataFiles[0]
-          // const fileList = e.dataTransfer.files;
-          // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP fileList', fileList)
-          // const file: File = fileList[0];
-          // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP FILE', file)
-          // const data = new ClipboardEvent('').clipboardData || new DataTransfer(); 
-          // data.items.add(new File([file], file.name, { type: file.type }));
-          // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP DATA', data)
-        } else {
-          // PASTE USE CASE 
-          console.log('FIREBASE-UPLOAD (MessageTextArea) PASTE  e', e)
-          fileSelected = e.files.item(0)
-        }
-
-        let messageString = detail.data.messageString;
-        let metadata = detail.data.metadata;
-        // let type = detail.data.type;
-        console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss detail.data', detail.data);
-        console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss fileSelected', fileSelected);
-
-        if (detail !== null) {
-          const currentUpload = new UploadModel(fileSelected);
-          console.log('FIREBASE-UPLOAD (MessageTextArea) The result: currentUpload', currentUpload);
-          console.log('FIREBASE-UPLOAD (MessageTextArea) The result: CHIUDI!!!!!', detail.data);
-          that.uploadService.upload(that.loggedUser.uid, currentUpload).then(downloadURL => {
-            metadata.src = downloadURL;
-            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg downloadURL::: ', metadata);
-            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg metadata downloadURL::: ', downloadURL);
-            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg type::: ', type);
-            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg message::: ', messageString);
-            // send message
-            that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
-            that.fileInput.nativeElement.value = '';
-          }).catch(error => {
-            // Use to signal error if something goes wrong.
-            console.error(`FIREBASE-UPLOAD (MessageTextArea) MessageTextArea upload Failed to upload file and get link `, error);
-
-            that.presentToast();
-          });
-
-        }
-      }
+  
+  async presentToastOnlyImageFilesAreAllowed() {
+    const toast = await this.toastController.create({
+      message: this.translationMap.get('ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE'),
+      duration: 3000,
+      color: "danger",
+      cssClass: 'toast-custom-class',
     });
-
-    return await modal.present();
+    toast.present();
   }
 
-  async presentToast() {
+
+  async presentToastFailedToUploadFile() {
     const toast = await this.toastController.create({
       message: this.translationMap.get('UPLOAD_FILE_ERROR'),
       duration: 3000,
