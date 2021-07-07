@@ -34,6 +34,7 @@
           autosize="false" 
           auto-grow="true" 
           autofocus="true" 
+          [value]=""
           [(ngModel)]="messageString" 
           (ionChange)="ionChange($event);"
           (keydown.enter)="pressedOnKeyboard($event, messageString);false"
