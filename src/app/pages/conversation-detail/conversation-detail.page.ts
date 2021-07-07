@@ -1117,8 +1117,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  addUploadingBubbleEvent(event: boolean) {
-    console.log('ION-CONVERSATION-DETAIL (CONVERSATION-DETAIL-PAGE) addUploadingBubbleEvent event', event);
+  onAddUploadingBubble(event: boolean) {
+    console.log('ION-CONVERSATION-DETAIL (CONVERSATION-DETAIL-PAGE) onAddUploadingBubble event', event);
     if (event === true) {
       this.scrollBottom(0);
     }
