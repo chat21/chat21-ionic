@@ -27,10 +27,14 @@
 
 
       <div class="text-message">
-        <ion-textarea id="ion-textarea" #messageTextArea #textArea rows="1" placeholder="{{ 'LABEL_ENTER_MSG' | translate }}"
+        <!-- [value]=""  -->
+        <!-- placeholder="{{ 'LABEL_ENTER_MSG' | translate }}" -->
+        <ion-textarea id="ion-textarea" #messageTextArea #textArea rows="1" 
+          [placeholder]="TEXAREA_PLACEHOLDER"
           autosize="false" 
           auto-grow="true" 
-          [value]="" 
+          autofocus="true" 
+          [value]=""
           [(ngModel)]="messageString" 
           (ionChange)="ionChange($event);"
           (keydown.enter)="pressedOnKeyboard($event, messageString);false"

@@ -20,6 +20,14 @@
 </ion-header>
 
 <ion-content class="list-avatar-page" appScrollbarTheme>
+
+  <!-- <iframe width="100%"
+  height="100%"
+  src="http://localhost:4203/#/projects-for-panel"
+  frameborder="0"
+  allowfullscreen>
+  </iframe>    -->
+  
   <div id="scrollbar2">
     <ion-list>
 
@@ -50,6 +58,8 @@
           <div item-end class="notification_point" *ngIf="conversation.is_new">&nbsp;</div>
         </ion-item> -->
         <!-- >>>  2  conversations.length    {{conversations.length}} -->
+
+       
         <!-- ACTIVE CONVERSATION LIST -->
         <ion-list-conversations *ngIf="conversationType ==='active'" 
           [uidConvSelected]="uidConvSelected"
@@ -62,7 +72,7 @@
           (onCloseConversation)="onCloseConversation($event)">
         </ion-list-conversations>
 
-        <ion-list-conversations *ngIf="conversationType ==='archived'" 
+        <ion-list-conversations  *ngIf="conversationType ==='archived'" 
           [listConversations]="archivedConversations"
           [stylesMap]="stylesMap" 
           [translationMap]="translationMapConversation"

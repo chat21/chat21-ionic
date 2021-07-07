@@ -15,7 +15,7 @@ export class IonConversationDetailComponent extends ConversationContentComponent
   @Input() senderId: string;
   @Input() channelType: string;
   @Output() onImageRendered = new EventEmitter<boolean>() 
-  @Output() addUploadingBubbleEvent = new EventEmitter<boolean>();
+  @Output() onAddUploadingBubble = new EventEmitter<boolean>();
  
 
   public uploadProgress: number
@@ -74,7 +74,7 @@ export class IonConversationDetailComponent extends ConversationContentComponent
 
 
   addUploadingBubblePlaceholder(value: boolean) {
-    this.addUploadingBubbleEvent.emit(value);
+    this.onAddUploadingBubble.emit(value);
   }
 
 

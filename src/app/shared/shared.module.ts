@@ -23,6 +23,7 @@ import { ListConversationsComponent } from '../chatlib/list-conversations-compon
 import { MomentModule } from 'angular2-moment';
 import { AvatarComponent } from '../chatlib/conversation-detail/message/avatar/avatar.component';
 import { MarkedPipe } from '../directives/marked.pipe';
+import { AutofocusDirective } from '../directives/autofocus.directive';
 import { HtmlEntitiesEncodePipe } from '../directives/html-entities-encode.pipe';
 import { IonConversationDetailComponent } from '../chatlib/conversation-detail/ion-conversation-detail/ion-conversation-detail.component';
 import { BubbleMyMessageComponent } from '../components/conversation-detail/bubble-my-message/bubble-my-message.component';
@@ -68,6 +69,7 @@ import { OptionHeaderComponent } from '../components/conversation-detail/option-
     InfoGroupComponent,
     AdvancedInfoAccordionComponent,
     MarkedPipe,
+    AutofocusDirective,
     HtmlEntitiesEncodePipe,
     OptionHeaderComponent
   ],

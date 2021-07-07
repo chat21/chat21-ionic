@@ -1,5 +1,25 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.16
+- Bug fixed: the selected image preview popup window opens twice if after selecting the image dragging it in the chat area, the image is selected pasting it in the 'send message' texarea,
+- Prevents the user from pasting non-image files into the 'send message' textarea 
+- Displays an error message when files that are not of type image are pasted in the "send message" text area
+- Displays an error message when files that are not of type image are dragged into the chat area
+
+### 3.0.42-beta.1.15
+- Adds the ability to select an image to upload by drag it in the chat area
+- Adds the ability to upload an image or file by pressing the "Enter" keyboard key
+- Fixes the bug: the placeholder in the textarea 'send message' isn't responsive and when it is on two lines of text it overlaps the chat content
+- Fixes the bug: if the canned responses are called on group type or direct type conversations, an error is thrown as the project id is not available
+
+### 3.0.42-beta.1.14
+- Minor improvements
+
+### 3.0.42-beta.1.13
+- Fixes the bug: if the message inserted in the textarea has more lines of text, that textarea overlaps the chat content
+- Adds the ability to select an image to upload by paste it in the 'send message' textarea
+- Fixes the bug: the placeholder in the textarea 'send message' isn't responsive and when it is on two lines of text it overlaps the chat content
+
 ### 3.0.42-beta.1.12
 - Renames the 'temp' folder in 'chatib'
 - Improves the button to attach files / images 

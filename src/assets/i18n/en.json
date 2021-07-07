@@ -99,6 +99,8 @@
   "LABEL_IAT": "Iat",
   "LABEL_REQUEST_DETAIL": "Request detail",
   "LABEL_ENTER_MSG": "Enter a message or press / for canned responses",
+  "LABEL_ENTER_MSG_SHORT": "Enter a message or...",
+  "LABEL_ENTER_MSG_SHORTER": "Enter...",
   "LABEL_MSG_LOGIN_TILEDESK": "Go to login to start chatting",
   "LABEL_ARCHIVED": "Archived",
   "LABEL_INFO_CONVERSATION": "Info conversation",
@@ -167,5 +169,9 @@
   "Email must be a valid email": "Email must be a valid email.",
   "Password is required": "Password is required.",
   "Password must be at least 6 characters long": "Password must be at least 6 characters long.",
-  "UPLOAD_FILE_ERROR":"An unexpected error occurred while uploading the file"
+  "UPLOAD_FILE_ERROR":"An unexpected error occurred while uploading the file",
+  "DROP_IMAGE_HERE_TO_SEND_IT":"Drop image here to send it",
+  "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE": "Only image files and text are allowed to be pasted",
+  "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG": "Only image files are allowed to be dragged"
+  
 }

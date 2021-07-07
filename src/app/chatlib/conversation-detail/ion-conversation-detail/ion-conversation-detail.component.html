@@ -57,7 +57,8 @@
 
   <div class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)"
     class="msg_info_container">
-    <tiledeskwidget-info-message class="messages" [message]="message">
+    <tiledeskwidget-info-message class="messages" 
+      [message]="message">
     </tiledeskwidget-info-message>
   </div>
 
@@ -66,9 +67,12 @@
 
     <!--backgroundColor non viene ancora usato -->
     <tiledeskwidget-bubble-message class="messages msg_sent" id="{{'message'+'_'+ i}}"
-      [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" [message]="message"
-      [textColor]="'col-msg-sent'" (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-      (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
+      [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" 
+      [message]="message"
+      [textColor]="'col-msg-sent'" 
+      (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+      (onAfterMessageRender)="returnOnAfterMessageRender($event)" 
+      (onImageRendered)="onImageRenderedFN($event)">
     </tiledeskwidget-bubble-message>
 
     <!-- icon status message -->
@@ -82,6 +86,8 @@
     class="message_sender_fullname">
     {{message.sender_fullname}}
   </div>
+
+  
   <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)" class="msg_container base_receive">
 
     <!-- <tiledeskwidget-avatar-image class="slide-in-left"  
@@ -91,9 +97,13 @@
       </tiledeskwidget-avatar-image> -->
 
     <!--backgroundColor non viene ancora usato -->
-    <tiledeskwidget-bubble-message class="messages msg_receive" [message]="message" [textColor]="'black'"
+   
+    <tiledeskwidget-bubble-message class="messages msg_receive"   
+      [message]="message" 
+      [textColor]="'black'"
       (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-      (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
+      (onAfterMessageRender)="returnOnAfterMessageRender($event)" 
+      (onImageRendered)="onImageRenderedFN($event)">
     </tiledeskwidget-bubble-message>
 
 
