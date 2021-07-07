@@ -354,8 +354,13 @@ export class AppComponent implements OnInit {
 
       this.router.navigateByUrl(pageUrl);
 
-      // const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
-      // createExternalSidebar(this.renderer, dashboardUrl);
+    
+      // const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
+      // // createExternalSidebar(this.renderer, DASHBOARD_URL);
+
+      // // FOR REALTIME TESTING
+      // createExternalSidebar(this.renderer, 'http://localhost:4203');
+     
     }
   }
 
