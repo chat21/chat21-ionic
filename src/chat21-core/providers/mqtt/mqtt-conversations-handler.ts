@@ -297,6 +297,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
             if (k === 'text') {
                 console.log("aggiorno key:" + k);
                 conv.last_message_text = snap[k];
+                conv.text = snap[k];
             }
             if (k === 'recipient') {
                 console.log("aggiorno key:" + k);
