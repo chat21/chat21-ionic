@@ -74,8 +74,8 @@ export class MQTTAuthService extends MessagingAuthService {
     this.chat21Service.chatClient.close(() => {
       console.log("mqtt connection closed. OK");
       // remove
-      this.appStorage.removeItem('tiledeskToken');
-      this.appStorage.removeItem('currentUser');
+      // this.appStorage.removeItem('tiledeskToken');
+      // this.appStorage.removeItem('currentUser');
       this.currentUser = null;
       console.log("user removed.");
       // this.BSSignOut.next(true);
