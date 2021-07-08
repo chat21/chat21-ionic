@@ -109,25 +109,25 @@ z
     //   this.currentUser = null;
     this.BSAuthStateChanged.next('offline');
     // }
-    // const that = this;
-    console.log("STORAGE CHANGED: added listner")
-    window.addEventListener('storage', (e) => {
-      console.log('STORAGE CHANGED:', e.key);
-      if (this.appStorage.getItem('tiledeskToken') == null && this.appStorage.getItem('currentUser') == null) {
-        console.log('STORAGE CHANGED: CASO TOKEN NULL');
-        this.currentUser = null;
-        // that.logout(() => {
-        //   that.BSAuthStateChanged.next('offline');
-        // });
-        this.logout();
-      }
-      else if (this.currentUser == null && this.appStorage.getItem('tiledeskToken') != null && this.appStorage.getItem('currentUser') != null) {
-        console.log('STORAGE CHANGED: CASO LOGGED OUTSIDE');
-        this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
-        const tiledeskToken = this.appStorage.getItem('tiledeskToken');
-        this.connectWithCustomToken(tiledeskToken);
-      }
-    }, false);
+
+    // console.log("STORAGE CHANGED: added listner")
+    // window.addEventListener('storage', (e) => {
+    //   console.log('STORAGE CHANGED:', e.key);
+    //   if (this.appStorage.getItem('tiledeskToken') == null && this.appStorage.getItem('currentUser') == null) {
+    //     console.log('STORAGE CHANGED: CASO TOKEN NULL');
+    //     this.currentUser = null;
+    //     // that.logout(() => {
+    //     //   that.BSAuthStateChanged.next('offline');
+    //     // });
+    //     this.logout();
+    //   }
+    //   else if (this.currentUser == null && this.appStorage.getItem('tiledeskToken') != null && this.appStorage.getItem('currentUser') != null) {
+    //     console.log('STORAGE CHANGED: CASO LOGGED OUTSIDE');
+    //     this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
+    //     const tiledeskToken = this.appStorage.getItem('tiledeskToken');
+    //     this.connectWithCustomToken(tiledeskToken);
+    //   }
+    // }, false);
 
   }
 
