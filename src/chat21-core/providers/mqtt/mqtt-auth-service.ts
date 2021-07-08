@@ -78,7 +78,7 @@ export class MQTTAuthService extends MessagingAuthService {
       // this.appStorage.removeItem('currentUser');
       this.currentUser = null;
       console.log("user removed.");
-      // this.BSSignOut.next(true);
+      this.BSSignOut.next(true);
       this.BSAuthStateChanged.next('offline');
       // if (callback) {
       //   callback();
