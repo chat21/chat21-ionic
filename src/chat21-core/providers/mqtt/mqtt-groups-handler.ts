@@ -35,7 +35,7 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
      * inizializzo groups handler
      */
     initialize(tenant: string, loggedUserId: string): void {
-        this.logger.printLog('initialize GROUP-HANDLER MQTT');
+        console.log('initialize GROUP-HANDLER MQTT');
         this.tenant = tenant;
         this.loggedUserId = loggedUserId;
     }
@@ -85,21 +85,21 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
 
     private groupValue(childSnapshot: any){
         const that = this;
-        this.logger.printDebug('FIREBASEGroupHandlerSERVICE::group detail::', childSnapshot.val(), childSnapshot)
+        console.log('FIREBASEGroupHandlerSERVICE::group detail::', childSnapshot.val(), childSnapshot)
         const group: GroupModel = childSnapshot.val();
-        this.logger.printDebug('FIREBASEGroupHandlerSERVICE:: groupValue ', group)
+        console.log('FIREBASEGroupHandlerSERVICE:: groupValue ', group)
         if (group) {
             group.uid = childSnapshot.key
             // that.BSgroupDetail.next(group)
             let groupCompleted = this.completeGroup(group)
-            this.SgroupDetail.next(groupCompleted) 
-        } 
+            this.SgroupDetail.next(groupCompleted)
+        }
     }
 
     private completeGroup(group: any): GroupModel {
         group.avatar = avatarPlaceholder(group.name);
         group.color = getColorBck(group.name);
-        return group 
+        return group
     }
 
     create(groupName: string, members: [string], callback?: (res: any, error: any) => void): Promise<any> {
