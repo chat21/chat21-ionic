@@ -636,7 +636,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (!subscription) {
       subscription = this.conversationsHandlerService.conversationChanged.subscribe((data: ConversationModel) => {
         console.log('***** DATAIL subscribeConversationChanged*****', data, this.loggedUser.uid);
+        console.log('CONV-CHANGED - CONVS-DTL-PAGE ', data)
         if (data && data.sender !== this.loggedUser.uid) {
+          console.log('CONV-CHANGED - CONVS-DTL-PAGE sender ', data.sender)
+          console.log('CONV-CHANGED - CONVS-DTL-PAGE this.loggedUser.uid ', this.loggedUser.uid)
+          console.log('CONV-CHANGED - CONVS-DTL-PAGE is_new ', data.is_new)
           // AGGIORNO LA CONVERSAZIONE A 'LETTA' SE SONO IO CHE HA SCRITTO L'ULTIMO MESSAGGIO DELLA CONVERSAZIONE
           // E SE LA POSIZIONE DELLO SCROLL E' ALLA FINE
           if (!this.showButtonToBottom && data.is_new) { //SONO ALLA FINE
@@ -1117,7 +1121,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  onAddUploadingBubble(event: boolean) {
+  addUploadingBubbleEvent(event: boolean) {
     console.log('ION-CONVERSATION-DETAIL (CONVERSATION-DETAIL-PAGE) onAddUploadingBubble event', event);
     if (event === true) {
       this.scrollBottom(0);

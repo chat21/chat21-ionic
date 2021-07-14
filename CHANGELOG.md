@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.17
+- Adds the right side panel that allows the selection of projects to which the current user belongs and the display of unassigned conversations
+- Fixes the bug: Property 'addUploadingBubbleEvent' does not exist on type 'ConversationDetailPage'.
+
 ### 3.0.42-beta.1.16
 - Bug fixed: the selected image preview popup window opens twice if after selecting the image dragging it in the chat area, the image is selected pasting it in the 'send message' texarea,
 - Prevents the user from pasting non-image files into the 'send message' textarea 
