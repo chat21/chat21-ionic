@@ -1,6 +1,10 @@
 /*
     Chat21Client
-    v. 0.1.3
+    v. 0.1.4
+    - added basicMessageBuilder()
+    - added sendMessageRaw()
+    - added leaveGroup()
+
     (c) Tiledesk 2020
 */
 
@@ -14,9 +18,7 @@ const CALLBACK_TYPE_ON_MESSAGE_UPDATED_FOR_CONVERSATION = "onMessageUpdatedForCo
 const CALLBACK_TYPE_ON_MESSAGE_ADDED_FOR_CONVERSATION = "onMessageAddedForConversation"
 
 class Chat21Client {
-    
     constructor(options) {
-
         // console.log('CHAT21-CLIENT.JS  HELLO ', mqtt)
         this.client = null;
         this.reconnections = 0 // just to check how many reconnections
@@ -46,8 +48,9 @@ class Chat21Client {
         else {
             this.endpoint = "ws://34.253.207.0:15675/ws"
         }
-        this.APIendpoint = options.APIendpoint
-        this.appid = options.appId
+        this.log = options.log ? true : false;
+        this.APIendpoint = options.APIendpoint;
+        this.appid = options.appId;
         console.log("final endpoint:", this.endpoint)
         this.user_id = null;
         this.jwt = null;
@@ -106,6 +109,40 @@ class Chat21Client {
             metadata: metadata,
             channel_type: channel_type
         }
+        // console.log("outgoing_message:", outgoing_message)
+        const payload = JSON.stringify(outgoing_message)
+        this.client.publish(dest_topic, payload, null, (err) => {
+            callback(err, outgoing_message)
+        })
+    }
+
+    basicMessageBuilder(text, type, recipient_fullname, sender_fullname, attributes, metadata, channel_type) {
+        let outgoing_message = {
+            text: text,
+            type: type,
+            recipient_fullname: recipient_fullname,
+            sender_fullname: sender_fullname,
+            attributes: attributes,
+            metadata: metadata,
+            channel_type: channel_type
+        }
+        return outgoing_message;
+    }
+
+    sendMessageRaw(outgoing_message, recipient_id, callback) {
+        // callback - function (err) 
+        // console.log("recipient_id:", recipient_id)
+        let dest_topic = `apps/${this.appid}/users/${this.user_id}/messages/${recipient_id}/outgoing`
+        // console.log("dest_topic:", dest_topic)
+        // let outgoing_message = {
+        //     text: text,
+        //     type: type,
+        //     recipient_fullname: recipient_fullname,
+        //     sender_fullname: sender_fullname,
+        //     attributes: attributes,
+        //     metadata: metadata,
+        //     channel_type: channel_type
+        // }
         // console.log("outgoing_message:", outgoing_message)
         const payload = JSON.stringify(outgoing_message)
         this.client.publish(dest_topic, payload, null, (err) => {
@@ -201,7 +238,7 @@ class Chat21Client {
             else if (json && callback) {
                 callback(null, json);
             }
-        }, true);
+        }, this.log);
         // var xmlhttp = new XMLHttpRequest();
         // xmlhttp.open("POST", URL, true);
         // xmlhttp.setRequestHeader("authorization", this.jwt);
@@ -219,6 +256,53 @@ class Chat21Client {
         //     }
         // };
         // xmlhttp.send(JSON.stringify(data));
+    }
+
+    leaveGroup(group_id, member_id, callback) {
+        console.log("leaving group:", group_id);
+        const URL = `${this.APIendpoint}/${this.appid}/groups/${group_id}/members/${member_id}`
+        console.log("leaving group:", URL)
+        let options = {
+            url: URL,
+            headers: {
+                "Authorization": this.jwt,
+                "Content-Type": "application/json;charset=UTF-8"
+            },
+            method: 'DELETE'
+        }
+        Chat21Client.myrequest(options, (err, response, json) => {
+            if (err) {
+                callback(err, null);
+            }
+            else if (callback) {
+                callback(null, json);
+            }
+        }, this.log);
+    }
+
+    joinGroup(group_id, member_id, callback) {
+        console.log("leaving group:", group_id);
+        const URL = `${this.APIendpoint}/${this.appid}/groups/${group_id}/members`
+        console.log("joining group:", URL)
+        let options = {
+            url: URL,
+            headers: {
+                "Authorization": this.jwt,
+                "Content-Type": "application/json;charset=UTF-8"
+            },
+            data: {
+                member_id: member_id
+            },
+            method: 'POST'
+        }
+        Chat21Client.myrequest(options, (err, response, json) => {
+            if (err) {
+                callback(err, null);
+            }
+            else if (callback) {
+                callback(null, json);
+            }
+        }, this.log);
     }
 
     archiveConversation(conversWith, callback) {
@@ -683,7 +767,6 @@ class Chat21Client {
                 }
               })
               .catch(function (error) {
-                console.error(error);
                 if (callback) {
                     callback(error, null, null);
                 }
@@ -814,8 +897,8 @@ class Chat21Client {
 }
 
 function isBrowser() {
-    return true;
-    // return false;
+    // return true;
+    return false;
 }
 
 export { Chat21Client }; // Browser

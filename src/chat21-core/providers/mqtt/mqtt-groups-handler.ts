@@ -65,10 +65,11 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
         if (this.isGroup(groupId)) {
             this.chat21Service.chatClient.getGroup(groupId, (err, group) => {
                 console.log('subscribing to group updates...', group);
+                this.groupValue(group);
                 const handler_group_updated = this.chat21Service.chatClient.onGroupUpdated( (group, topic) => {
                     if (topic.conversWith === groupId) {
                         console.log('group updated:', group);
-                        //this.groupValue(group);
+                        this.groupValue(group);
                     }
                 });
             });
@@ -84,13 +85,10 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
     }
 
     private groupValue(childSnapshot: any){
-        const that = this;
-        console.log('FIREBASEGroupHandlerSERVICE::group detail::', childSnapshot.val(), childSnapshot)
-        const group: GroupModel = childSnapshot.val();
-        console.log('FIREBASEGroupHandlerSERVICE:: groupValue ', group)
+        console.log('groupValue > childSnapshot:', childSnapshot)
+        const group: GroupModel = childSnapshot;
+        console.log('groupValue > GroupModel by childSnapshot:', group)
         if (group) {
-            group.uid = childSnapshot.key
-            // that.BSgroupDetail.next(group)
             let groupCompleted = this.completeGroup(group)
             this.SgroupDetail.next(groupCompleted)
         }
@@ -99,6 +97,7 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
     private completeGroup(group: any): GroupModel {
         group.avatar = avatarPlaceholder(group.name);
         group.color = getColorBck(group.name);
+        group.membersinfo = group.members;
         return group
     }
 
