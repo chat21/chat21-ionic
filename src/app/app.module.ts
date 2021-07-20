@@ -171,26 +171,18 @@ export function groupsHandlerFactory(http: HttpClient, chat21Service: Chat21Serv
 export function typingFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    const typing = new MQTTTypingService();
-    typing.setTenant(config.tenant)
-    return typing
+    return new MQTTTypingService();
   } else {  
-    const typing = new FirebaseTypingService();
-    typing.setTenant(config.tenant)
-    return typing 
+    return new FirebaseTypingService(); 
   }
 }
 
 export function presenceFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
-    const presence = new MQTTPresenceService();
-    presence.setTenant(config.tenant)
-    return presence
+    return new MQTTPresenceService();
   } else {
-    const presence = new FirebasePresenceService();
-    presence.setTenant(config.tenant);
-    return presence
+    return new FirebasePresenceService();
   }
 }
 
@@ -224,13 +216,9 @@ export function uploadFactory(http: HttpClient, appConfig: AppConfigProvider, ap
 export function notificationsServiceFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.pushEngine === PUSH_ENGINE_FIREBASE) {
-    const notifications = new FirebaseNotifications();
-    notifications.setTenant(config.tenant)
-    return notifications
+    return new FirebaseNotifications();
   } else if (config.pushEngine === PUSH_ENGINE_MQTT) {
-    const notifications = new MQTTNotifications();
-    notifications.setTenant(config.tenant)
-    return notifications
+    return new MQTTNotifications();
   } else {
     return;
   }
