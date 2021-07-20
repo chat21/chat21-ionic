@@ -6,12 +6,12 @@
   
       <!-- CONTENT !isNewConversation && [class.active]="isShowSpinner"  -->
       <span *ngIf="messages && this.messages.length === 0">
-          <div class="chat21-spinner active" id="chat21-spinner">
-              <div class="chat21-bounce1"></div>
-              <div class="chat21-bounce2"></div>
-              <div class="chat21-bounce3"></div>
-              <span>loading</span>
-          </div>
+        <div class="chat21-spinner active" id="chat21-spinner">
+            <div class="chat21-bounce1" [ngStyle]="{'background-color': stylesMap.get('themeColor')}"></div>
+            <div class="chat21-bounce2" [ngStyle]="{'background-color': stylesMap.get('themeColor')}"></div>
+            <div class="chat21-bounce3" [ngStyle]="{'background-color': stylesMap.get('themeColor')}"></div>
+            <span>{{translationMap.get('LABEL_LOADING')}}</span>
+        </div>
       </span>
       
     

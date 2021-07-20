@@ -37,7 +37,7 @@ export class IonConversationDetailComponent extends ConversationContentComponent
     public cdref: ChangeDetectorRef,
     public uploadService: UploadService
   ) {
-    super(cdref)
+    super(cdref, uploadService)
 
     this.listenToUploadFileProgress()
    
