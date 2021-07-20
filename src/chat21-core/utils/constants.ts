@@ -95,11 +95,8 @@ export const IMG_PROFILE_DEFAULT = '/assets/images/avatar_male_tiledesk.svg';
 
 //LOG LEVEL
 export enum LogLevel {
-    Info = 1,
-    Debug = 2,
-    Warn = 3,
-    Error = 4,
-    Fatal = 5,
-    All = 6,
-    Off = 7
+    Error = 0,
+    Warn = 1,
+    Info = 2,
+    Debug = 3
 }
