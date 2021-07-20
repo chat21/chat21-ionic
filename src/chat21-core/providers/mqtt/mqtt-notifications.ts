@@ -13,6 +13,10 @@ import { NotificationsService } from '../abstract/notifications.service';
         super();
     }
 
+    initialize(tenant: string): void {
+      console.log('Method not implemented.');
+      return;
+    }
     
     getNotificationPermissionAndSaveToken(currentUser: string) { 
       console.log('Method not implemented.');
