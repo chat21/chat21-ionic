@@ -641,6 +641,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
           console.log('CONV-CHANGED - CONVS-DTL-PAGE sender ', data.sender)
           console.log('CONV-CHANGED - CONVS-DTL-PAGE this.loggedUser.uid ', this.loggedUser.uid)
           console.log('CONV-CHANGED - CONVS-DTL-PAGE is_new ', data.is_new)
+          console.log('CONV-CHANGED - CONVS-DTL-PAGE showButtonToBottom ', this.showButtonToBottom)
           // AGGIORNO LA CONVERSAZIONE A 'LETTA' SE SONO IO CHE HA SCRITTO L'ULTIMO MESSAGGIO DELLA CONVERSAZIONE
           // E SE LA POSIZIONE DELLO SCROLL E' ALLA FINE
           if (!this.showButtonToBottom && data.is_new) { //SONO ALLA FINE
@@ -725,7 +726,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   //   groupDetail.color = getColorBck(groupDetail.name);
   //   groupDetail.avatar = avatarPlaceholder(groupDetail.name);
   // }
-
+  
 
   /**
    * addEventsKeyboard
@@ -766,9 +767,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // this.conversationHandlerService.dispose();
   }
   // -------------- END subscriptionS functions -------------- //
-
-
-
 
 
   /**
@@ -1173,6 +1171,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // this.showButtonToBottom = false;
       // this.NUM_BADGES = 0;
       // this.conversationsHandlerService.readAllMessages.next(this.conversationWith);
+      // this.updateConversationBadge();
       setTimeout(() => {
         this.ionContentChatArea.scrollToBottom(time);
       }, 0);
@@ -1197,6 +1196,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   /**
    * Scroll to bottom of page after a short delay.
+   * FIREBY BY: click event ScrollToBottom bottom-right icon button
    */
   public actionScrollBottom() {
     console.log('actionScrollBottom ---> ', this.ionContentChatArea);
