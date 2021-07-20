@@ -34,7 +34,7 @@ import { LoginPage } from './pages/authentication/login/login.page';
 import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 
 // utils
-import { createExternalSidebar, checkPlatformIsMobile } from '../chat21-core/utils/utils';
+import { createExternalSidebar, checkPlatformIsMobile, isGroup } from '../chat21-core/utils/utils';
 import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE, AUTH_STATE_ONLINE } from '../chat21-core/utils/constants';
 import { environment } from '../environments/environment';
 import { UserModel } from '../chat21-core/models/user';
@@ -111,7 +111,7 @@ export class AppComponent implements OnInit {
     const appconfig = appConfigProvider.getConfig()
     // this.tenant = environment.tenant;
     this.tenant = appconfig.tenant;
-    this.logger.setLoglevel(appconfig.logLevel)
+    this.logger.setLoggerConfig(true, appconfig.logLevel)
     if (!this.platform.is('desktop')) {
       this.splashScreen.show();
     }
@@ -121,7 +121,7 @@ export class AppComponent implements OnInit {
   /**
    */
   ngOnInit() {
-    this.logger.printInfo('ngOnInit -->', this.route.snapshot.params);
+    this.logger.info('[APP-COMP] ngOnInit -->', this.route.snapshot.params);
     this.tabTitle = document.title
     this.initializeApp();
   }
@@ -145,13 +145,13 @@ export class AppComponent implements OnInit {
       this.initAuthentication();
       // this.currentUserService.initialize();
       this.chatManager.initialize();
-      this.presenceService.initialize();
-      this.typingService.initialize();
+      this.presenceService.initialize(this.tenant);
+      this.typingService.initialize(this.tenant);
       this.uploadService.initialize();
       this.initSubscriptions();
       this.initAudio()
 
-      console.log('initializeApp:: ', this.sidebarNav, this.detailNav);
+      this.logger.debug('[APP-COMP] initializeApp:: ', this.sidebarNav, this.detailNav);
       this.listenToLogoutEvent()
       this.translateToastMessage();
     });
@@ -161,9 +161,9 @@ export class AppComponent implements OnInit {
     this.translate.get('AnErrorOccurredWhileUnsubscribingFromNotifications')
       .subscribe((text: string) => {
         // this.deleteContact_msg = text;
-        // console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) text: ', text)
+        // this.logger.debug('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) text: ', text)
         this.toastMsg = text;
-        // console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT): this.toastMsg', this.toastMsg)
+        // this.logger.debug('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT): this.toastMsg', this.toastMsg)
       });
   }
 
@@ -173,12 +173,12 @@ export class AppComponent implements OnInit {
     const tiledeskToken = this.appStorageService.getItem('tiledeskToken')
     const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
     if (tiledeskToken) {
-      this.logger.printDebug(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
+      this.logger.debug('[APP-COMP]  ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
       this.tiledeskAuthService.signInWithCustomToken(tiledeskToken).then(user => {
         this.messagingAuthService.createCustomToken(tiledeskToken)
-      }).catch(error => { this.logger.printError('SIGNINWITHCUSTOMTOKEN error::' + error) })
+      }).catch(error => { this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::' + error) })
     } else {
-      this.logger.printWarn(' ---------------- NON sono loggato ---------------- ')
+      this.logger.warn(' [APP-COMP]---------------- NON sono loggato ---------------- ')
       const that = this;
       clearTimeout(this.timeModalLogin);
       this.timeModalLogin = setTimeout(() => {
@@ -193,14 +193,14 @@ export class AppComponent implements OnInit {
       if (params.jwt) {
         this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
           this.messagingAuthService.createCustomToken(params.jwt)
-        }).catch(error => { this.logger.printError('SIGNINWITHCUSTOMTOKEN error::' + error) })
+        }).catch(error => { this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::' + error) })
       }
     });
   }
 
   authenticate() {
     let token = this.appStorageService.getItem('tiledeskToken');
-    this.logger.printDebug('APP-COMPONENT ***** authenticate - stored token *****', token);
+    this.logger.debug('[APP-COMP] ***** authenticate - stored token *****', token);
     if (!token) {
       this.goOffLine()
     }
@@ -218,7 +218,7 @@ export class AppComponent implements OnInit {
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     const currentUser = this.tiledeskAuthService.getCurrentUser();
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
-    console.log('APP-COMP - goOnLine****', currentUser);
+    this.logger.debug('[APP-COMP] - goOnLine****', currentUser);
     this.chatManager.setTiledeskToken(tiledeskToken);
 
     // ----------------------------------------------
@@ -229,9 +229,6 @@ export class AppComponent implements OnInit {
       this.notificationsService.getNotificationPermissionAndSaveToken(currentUser.uid);
     }
 
-
-
-
     if (currentUser) {
       this.chatManager.setCurrentUser(currentUser);
       this.presenceService.setPresence(currentUser.uid);
@@ -240,18 +237,18 @@ export class AppComponent implements OnInit {
     }
     this.checkPlatform();
     try {
-      this.logger.printDebug('************** closeModal', this.authModal);
+      this.logger.debug('[APP-COMP] ************** closeModal', this.authModal);
       if (this.authModal) {
         this.closeModal();
       }
     } catch (err) {
-      this.logger.printError('-> error:', err);
+      this.logger.error('[APP-COMP] -> error:', err);
     }
     this.chatManager.startApp();
   }
 
   goOffLine = () => {
-    this.logger.printDebug('************** goOffLine:', this.authModal);
+    this.logger.debug('[APP-COMP] ************** goOffLine:', this.authModal);
 
     this.chatManager.setTiledeskToken(null);
     this.chatManager.setCurrentUser(null);
@@ -284,7 +281,7 @@ export class AppComponent implements OnInit {
   //   ];
   //   const translationMap = this.translateService.translateLanguage(keys);
 
-  //   console.log('initConversationsHandler ------------->', userId);
+  //   this.logger.debug('initConversationsHandler ------------->', userId);
   //   // 1 - init chatConversationsHandler and  archviedConversationsHandler
   //   this.conversationsHandlerService.initialize(userId, translationMap);
   //   // 2 - get conversations from storage
@@ -299,7 +296,7 @@ export class AppComponent implements OnInit {
   setLanguage() {
     this.translate.setDefaultLang('en');
     this.translate.use('en');
-    console.log('navigator.language: ', navigator.language);
+    this.logger.debug('[APP-COMP] navigator.language: ', navigator.language);
     let language;
     if (navigator.language.indexOf('-') !== -1) {
       language = navigator.language.substring(0, navigator.language.indexOf('-'));
@@ -309,11 +306,10 @@ export class AppComponent implements OnInit {
       language = navigator.language;
     }
     this.translate.use(language);
-    console.log('language: ', language);
   }
 
   checkPlatform() {
-    console.log('checkPlatform');
+    this.logger.debug('[APP-COMP] checkPlatform');
     // let pageUrl = '';
     // try {
     //   const pathPage = this.route.snapshot.firstChild.routeConfig.path;
@@ -321,9 +317,9 @@ export class AppComponent implements OnInit {
     //     pageUrl += '/' + element.path;
     //   });
     // } catch (error) {
-    //   console.log('error', error);
+    //   this.logger.debug('error', error);
     // }
-    // console.log('checkPlatform pathPage: ', pageUrl);
+    // this.logger.debug('checkPlatform pathPage: ', pageUrl);
     // if (!pageUrl || pageUrl === '') {
     //   pageUrl = '/conversations-list';
     // }
@@ -331,7 +327,7 @@ export class AppComponent implements OnInit {
     if (checkPlatformIsMobile()) {
       this.platformIs = PLATFORM_MOBILE;
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
-      console.log('PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE, this.route.snapshot);
+      this.logger.debug('[APP-COMP] PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE, this.route.snapshot);
       if (!IDConv) {
         this.router.navigateByUrl('conversations-list')
       }
@@ -339,7 +335,7 @@ export class AppComponent implements OnInit {
       // this.navService.setRoot(ConversationListPage, {});
     } else {
       this.platformIs = PLATFORM_DESKTOP;
-      console.log('PLATFORM_DESKTOP ', this.navService);
+      this.logger.debug('[APP-COMP] PLATFORM_DESKTOP ', this.navService);
       this.navService.setRoot(ConversationListPage, {});
 
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
@@ -372,7 +368,7 @@ export class AppComponent implements OnInit {
 
   /** */
   hideAlert() {
-    console.log('hideAlert');
+    this.logger.debug('[APP-COMP] hideAlert');
     this.notificationsEnabled = true;
   }
 
@@ -410,13 +406,13 @@ export class AppComponent implements OnInit {
     // // this.audio.src = '/assets/sounds/pling.mp3';
     // this.audio.src = URL_SOUND_LIST_CONVERSATION;
     // this.audio.load();
-    console.log('conversation play', this.audio);
+    this.logger.debug('[APP-COMP] conversation play', this.audio);
     clearTimeout(this.setTimeoutSound);
     this.setTimeoutSound = setTimeout(function () {
       that.audio.play().then(() => {
-        console.log('****** soundMessage played *****');
+        that.logger.debug('[APP-COMP] ****** soundMessage played *****');
       }).catch((error: any) => {
-        console.log('***soundMessage error*', error);
+        that.logger.debug('[APP-COMP] ***soundMessage error*', error);
       });
     }, 1000);
   }
@@ -430,7 +426,7 @@ export class AppComponent implements OnInit {
     const that = this;
 
     this.messagingAuthService.BSAuthStateChanged.subscribe((state: any) => {
-      console.log('APP-COMPONENT ***** BSAuthStateChanged ***** state', state);
+      this.logger.debug('[APP-COMP] ***** BSAuthStateChanged ***** state', state);
       if (state && state === AUTH_STATE_ONLINE) {
         const user = that.tiledeskAuthService.getCurrentUser();
         that.goOnLine();
@@ -441,7 +437,7 @@ export class AppComponent implements OnInit {
     });
 
     // this.authService.BSSignOut.subscribe((data: any) => {
-    //   console.log('***** BSSignOut *****', data);
+    //   this.logger.debug('***** BSSignOut *****', data);
     //   if (data) {
     //     that.presenceService.removePresence();
     //   }
@@ -449,7 +445,7 @@ export class AppComponent implements OnInit {
 
 
     // this.currentUserService.BScurrentUser.subscribe((currentUser: any) => {
-    //   console.log('***** app comp BScurrentUser *****', currentUser);
+    //   this.logger.debug('***** app comp BScurrentUser *****', currentUser);
     //   if (currentUser) {
     //     that.chatManager.setCurrentUser(currentUser);
     //   }
@@ -470,14 +466,14 @@ export class AppComponent implements OnInit {
     this.events.subscribe('profileInfoButtonClick:logout', this.subscribeProfileInfoButtonLogOut);
 
     this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
-      this.logger.printInfo('***** conversationsAdded *****', conversation);
+      this.logger.info(' [APP-COMP] ***** conversationsAdded *****', conversation);
       // that.conversationsChanged(conversations);
       this.manageTabNotification()
     });
     this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
-      this.logger.printInfo('***** conversationsChanged *****', conversation);
+      this.logger.info('[APP-COMP] ***** subscribeConversationChanged *****', conversation);
       // that.conversationsChanged(conversations);
-      this.manageTabNotification()
+      this.manageTabNotification();
     });
   }
 
@@ -487,7 +483,7 @@ export class AppComponent implements OnInit {
    * apro dettaglio conversazione
    */
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
-    this.logger.printInfo('APP-COMP::subscribeUidConvSelectedChanged navigateByUrl', user, type);
+    this.logger.info('[APP-COMP] subscribeUidConvSelectedChanged navigateByUrl', user, type);
     // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
     this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname + '/' + type);
   }
@@ -499,7 +495,7 @@ export class AppComponent implements OnInit {
   }
 
   private async presentModal(calledby): Promise<any> {
-    console.log('presentModal calledby', calledby);
+    this.logger.debug('[APP-COMP] presentModal calledby', calledby);
     const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
       await this.modalController.create({
@@ -510,26 +506,26 @@ export class AppComponent implements OnInit {
       });
     modal.onDidDismiss().then((detail: any) => {
       // this.modalOpen = false
-      console.log('The result: CHIUDI!!!!!', detail.data);
+      this.logger.debug('[APP-COMP] The result: CHIUDI!!!!!', detail.data);
       // this.checkPlatform();
       if (detail !== null) {
-        //  console.log('The result: CHIUDI!!!!!', detail.data);
+        //  this.logger.debug('The result: CHIUDI!!!!!', detail.data);
       }
     });
     // await modal.present();
     // modal.onDidDismiss().then((detail: any) => {
-    //    console.log('The result: CHIUDI!!!!!', detail.data);
+    //    this.logger.debug('The result: CHIUDI!!!!!', detail.data);
     //   //  this.checkPlatform();
     //    if (detail !== null) {
-    //     //  console.log('The result: CHIUDI!!!!!', detail.data);
+    //     //  this.logger.debug('The result: CHIUDI!!!!!', detail.data);
     //    }
     // });
     return await modal.present();
   }
 
   private async closeModal() {
-    console.log('closeModal', this.modalController);
-    console.log('closeModal .getTop()', this.modalController.getTop());
+    this.logger.debug('[APP-COMP] closeModal', this.modalController);
+    this.logger.debug('[APP-COMP] closeModal .getTop()', this.modalController.getTop());
     await this.modalController.getTop();
     this.modalController.dismiss({ confirmed: true });
   }
@@ -537,7 +533,7 @@ export class AppComponent implements OnInit {
 
   listenToLogoutEvent() {
     this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
-      console.log('APP-COMP hasclickedlogout', hasclickedlogout);
+      this.logger.debug('[APP-COMP] hasclickedlogout', hasclickedlogout);
       if (hasclickedlogout === true) {
         // ----------------------------------------------
         // PUSH NOTIFICATIONS
@@ -546,7 +542,7 @@ export class AppComponent implements OnInit {
         const pushEngine = this.appConfigProvider.getConfig().pushEngine
         if( pushEngine && pushEngine !== 'none'){
           this.notificationsService.removeNotificationsInstance(function (res) {
-            console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) removeNotificationsInstance > CALLBACK RES', res);
+            this.logger.debug('[APP-COMP] FIREBASE-NOTIFICATION >>>>  removeNotificationsInstance > CALLBACK RES', res);
   
             if (res === 'success') {
               that.removePresenceAndLogout();
@@ -571,7 +567,7 @@ export class AppComponent implements OnInit {
   }
 
   removePresenceAndLogout() {
-    console.log('FIREBASE-NOTIFICATION >>>> (APP-COMPONENT) calling removePresenceAndLogout');
+    this.logger.debug('[APP-COMP] FIREBASE-NOTIFICATION >>>> calling removePresenceAndLogout');
     this.presenceService.removePresence();
     this.tiledeskAuthService.logOut()
     this.messagingAuthService.logout()
@@ -579,23 +575,22 @@ export class AppComponent implements OnInit {
 
   private initConversationsHandler(userId: string) {
     const keys = ['YOU'];
-
     const translationMap = this.translateService.translateLanguage(keys);
 
-    console.log('initConversationsHandler ------------->', userId, this.tenant);
+    this.logger.debug('[APP-COMP] initConversationsHandler ------------->', userId, this.tenant);
     // 1 - init chatConversationsHandler and  archviedConversationsHandler
     this.conversationsHandlerService.initialize(this.tenant, userId, translationMap);
 
     // this.subscribeToConvs()
     this.conversationsHandlerService.subscribeToConversations(() => {
-      console.log('CONVS - APP-COMPONENT - INIT CONV')
+      this.logger.debug('[APP-COMP]-CONVS- INIT CONV')
       const conversations = this.conversationsHandlerService.conversations;
-      console.log('CONVS - APP-COMPONENT - INIT CONV CONVS', conversations)
+      this.logger.debug('[APP-COMP]-CONVS - INIT CONV CONVS', conversations)
 
       // this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
       if (!conversations || conversations.length === 0) {
         // that.showPlaceholder = true;
-        console.log('CONVS - APP-COMPONENT - INIT CONV CONVS 2', conversations)
+        this.logger.debug('[APP-COMP]-CONVS - INIT CONV CONVS 2', conversations)
         this.events.publish('appcompSubscribeToConvs:loadingIsActive', false);
       }
     });
@@ -607,7 +602,7 @@ export class AppComponent implements OnInit {
 
     const translationMap = this.translateService.translateLanguage(keys);
 
-    console.log('initArchivedConversationsHandler ------------->', userId, this.tenant);
+    this.logger.debug('[APP-COMP] initArchivedConversationsHandler ------------->', userId, this.tenant);
     // 1 - init  archviedConversationsHandler
     this.archivedConversationsHandlerService.initialize(this.tenant, userId, translationMap);
   }
@@ -616,7 +611,7 @@ export class AppComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     const that = this;
-    // console.log('this.doitResize)', this.doitResize)
+    // this.logger.debug('this.doitResize)', this.doitResize)
     clearTimeout(this.doitResize);
     this.doitResize = setTimeout(() => {
       let platformIsNow = PLATFORM_DESKTOP;
@@ -626,9 +621,9 @@ export class AppComponent implements OnInit {
       if (!this.platformIs || this.platformIs === '') {
         this.platformIs = platformIsNow;
       }
-      console.log('onResize width::::', window.innerWidth);
-      console.log('onResize width:::: platformIsNow', platformIsNow);
-      console.log('onResize width:::: platformIsNow this.platformIs', this.platformIs);
+      this.logger.debug('[APP-COMP] onResize width::::', window.innerWidth);
+      this.logger.debug('[APP-COMP] onResize width:::: platformIsNow', platformIsNow);
+      this.logger.debug('[APP-COMP] onResize width:::: platformIsNow this.platformIs', this.platformIs);
       if (platformIsNow !== this.platformIs) {
         window.location.reload();
       }
@@ -638,7 +633,7 @@ export class AppComponent implements OnInit {
 
   @HostListener('document:visibilitychange', [])
   visibilitychange() {
-    // console.log("document TITLE", document.hidden, document.title);
+    // this.logger.debug("document TITLE", document.hidden, document.title);
     if (document.hidden) {
       this.isTabVisible = false
     } else {
