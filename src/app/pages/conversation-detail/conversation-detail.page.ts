@@ -768,7 +768,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
   // -------------- END subscriptionS functions -------------- //
 
-
   /**
    * newMessageAdded 
    * @param message
@@ -886,7 +885,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     console.log("CONVERSATION-DETAIL loadTagsCanned strSearch ", strSearch);
 
     let projectId = ""
-    if (this.groupDetail && this.groupDetail['attributes']) {
+    if (this.groupDetail && this.groupDetail['attributes'] && this.groupDetail['attributes']['projectId']) {
       console.log("CONVERSATION-DETAIL loadTagsCanned groupDetail ", this.groupDetail);
       projectId = this.groupDetail['attributes']['projectId']
 

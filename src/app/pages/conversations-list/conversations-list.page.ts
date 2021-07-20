@@ -59,7 +59,6 @@ import { AppConfigProvider } from '../../services/app-config';
 })
 export class ConversationListPage implements OnInit {
   private subscriptions: Array<string>;
-  private subscriptions2 = [];
   public tenant: string;
   public loggedUserUid: string;
   public conversations: Array<ConversationModel> = [];
@@ -122,7 +121,6 @@ export class ConversationListPage implements OnInit {
       that.logger.debug('[CONVERSATION-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event data data: ', event.data['data']);
       that.logger.debug('[CONVERSATION-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event data data typeof: ', typeof event.data['data']);
       let uidConvSelected = ''
-
       if (typeof event.data['data'] === 'string') {
         uidConvSelected = event.data['data']
       } else {
@@ -735,7 +733,6 @@ export class ConversationListPage implements OnInit {
       conversation_with_fullname = conversation.recipient_fullname;
     }
     conversation.image = this.imageRepoService.getImagePhotoUrl(conversation_with)
-    
   }
 
   onConversationLoaded(conversation: ConversationModel) {
@@ -745,16 +742,16 @@ export class ConversationListPage implements OnInit {
     // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the convesations list
 
     var regex = /<br\s*[\/]?>/gi;
-    conversation.last_message_text = conversation.last_message_text.replace(regex, "")
-
-    //FIX-BUG: 'YOU: YOU: YOU: text' on last-message-text in conversation-list
-    if (conversation.sender === this.loggedUserUid && !conversation.last_message_text.includes(': ')) {
-      this.logger.debug('[CONVERSATION-LIST-PAGE] onConversationLoaded', conversation)
-      conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text;
+    if(conversation && conversation.last_message_text){
+      conversation.last_message_text = conversation.last_message_text.replace(regex, "")
+      
+      //FIX-BUG: 'YOU: YOU: YOU: text' on last-message-text in conversation-list
+      if (conversation.sender === this.loggedUserUid && !conversation.last_message_text.includes(': ')) {
+        this.logger.debug('[CONVERSATION-LIST-PAGE] onConversationLoaded', conversation)
+        conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text;
+      }
     }
-
   }
-
   // ?????? 
   navigateByUrl(converationType: string, uidConvSelected: string) {
     this.logger.debug('[CONVERSATION-LIST-PAGE] FIREBASE-NOTIFICATION uidConvSelected: ', uidConvSelected);
@@ -1023,23 +1020,6 @@ export class ConversationListPage implements OnInit {
       indexes.push(i);
     }
     return indexes;
-  }
-
-  ionViewWillLeave() {
-    // console.log('ionViewWillLeave ConversationDetailPage: ');
-    this.unsubescribeAll();
-  }
-
-
-  unsubescribeAll() {
-    console.log('||------------> unsubescribeAll 1: ', this.subscriptions2);
-    if (this.subscriptions2) {
-      console.log('||------------> unsubescribeAll 2: ', this.subscriptions2);
-      this.subscriptions2.forEach(subscription2 => {
-        subscription2.value.unsubscribe(); // vedere come fare l'unsubscribe!!!!
-      });
-      this.subscriptions = [];
-    }
   }
 
 
