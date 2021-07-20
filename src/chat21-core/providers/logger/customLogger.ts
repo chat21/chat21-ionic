@@ -9,42 +9,37 @@ export class CustomLogger implements LoggerService {
 
     //private variables
     // private logger: NGXLogger 
-    private logLevel: number = LogLevel.All
+    private logLevel: number = LogLevel.Debug
 
     constructor(@Inject('isLogEnabled') private isLogEnabled: boolean, private logger: NGXLogger) {
     }
 
-    setLoglevel(logLevel: number){
+    setLoggerConfig(isLogEnabled: boolean, logLevel: number){
+        this.isLogEnabled = isLogEnabled;
         this.logLevel = logLevel;
     }
 
-    printInfo(...message: any[]) {
+    info(...message: any[]) {
         if (this.isLogEnabled && this.logLevel >= LogLevel.Info) {
             this.logger.info(message)
             // console.log(message)
         }
     }
-    printDebug(...message: any[]) {
+    debug(...message: any[]) {
         if (this.isLogEnabled && this.logLevel >= LogLevel.Debug) {
             this.logger.debug(message)
             // console.log(message)
         }
     }
-    printWarn(...message: any[]) {
+    warn(...message: any[]) {
         if (this.isLogEnabled && this.logLevel >= LogLevel.Warn) {
             this.logger.warn(message)
             // console.log(message)
         }
     }
-    printError(...message: any[]) {
+    error(...message: any[]) {
         if (this.isLogEnabled && this.logLevel >= LogLevel.Error) {
             this.logger.error(message)
-            // console.log(message)
-        }
-    }
-    printLog(...message: any[]) {
-        if (this.isLogEnabled && this.logLevel >= LogLevel.All) {
-            this.logger.log(message)
             // console.log(message)
         }
     }
