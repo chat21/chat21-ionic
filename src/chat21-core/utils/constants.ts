@@ -7,6 +7,9 @@
 export const CHAT_ENGINE_MQTT = 'mqtt';
 export const CHAT_ENGINE_FIREBASE = 'firebase';
 export const UPLOAD_ENGINE_NATIVE = 'native';
+export const PUSH_ENGINE_MQTT = 'mqtt';
+export const PUSH_ENGINE_FIREBASE = 'firebase';
+
 
 // AUTH
 export const AUTH_STATE_OFFLINE = 'offline';
@@ -89,3 +92,11 @@ export const STORAGE_PREFIX = 'tiledesk_widget_';
 export const FIREBASESTORAGE_BASE_URL_IMAGE = 'https://firebasestorage.googleapis.com/v0/b/' //+ 'chat-v2-dev.appspot.com/o/';
 export const IMG_PROFILE_BOT = '/assets/images/avatar_bot_tiledesk.svg';
 export const IMG_PROFILE_DEFAULT = '/assets/images/avatar_male_tiledesk.svg';
+
+//LOG LEVEL
+export enum LogLevel {
+    Error = 0,
+    Warn = 1,
+    Info = 2,
+    Debug = 3
+}

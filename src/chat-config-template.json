@@ -1,6 +1,10 @@
 {
     "chatEngine": "${CHAT21_ENGINE}",
     "uploadEngine": "${UPLOAD_ENGINE}",
+    "pushEngine":"${PUSH_ENGINE}",
+    "tenant":"${TENANT}",
+    "fileUploadAccept":"${FILE_UPLOAD_ACCEPT}",
+    "logLevel":"${LOG_LEVEL}",
     "firebaseConfig": {
         "apiKey": "${FIREBASE_APIKEY}",
         "authDomain": "${FIREBASE_AUTHDOMAIN}",

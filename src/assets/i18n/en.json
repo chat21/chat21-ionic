@@ -10,9 +10,16 @@
   "LABEL_TOMORROW": "yesterday",
   "LABEL_LAST_ACCESS": "last access",
   "LABEL_TO": "at",
-  "ARRAY_DAYS": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+  "ARRAY_DAYS": [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+  ],
   "LABEL_SEND": "Send",
-
   "ID_CONVERSATION": "Id conversation",
   "LABEL_CREATED_THE": "group created on",
   "LABEL_INFO_ATTRIBUTE": "Attributes",
@@ -32,13 +39,11 @@
   "LABEL_SENT_THE": "sent on",
   "LABEL_SENT_BY": "from",
   "LABEL_GUEST": "Guest",
-
   "LABEL_CREATE_TICKET": "Create a ticket",
   "LABEL_SEND_BY_EMAIL": "Send by email",
   "LABEL_VIDEO_CHAT": "Video call",
   "LABEL_LEAVE_GROUP": "Leave the group",
   "LABEL_CLOSE_GROUP": "Close",
-
   "ALERT_TITLE": "WARNING",
   "CLOSE_ALERT_CONFIRM_LABEL": "OK",
   "CLOSE_ALERT_CANCEL_LABEL": "CANCEL",
@@ -46,35 +51,25 @@
   "CLOSE_ALERT_MSG": "Close the conversation?",
   "VIDEOCHAT_ALERT_MSG": "Service unavailable",
   "CLOSING_CONVERSATION_SPINNER_MSG": "Please wait.<br> We are closing the conversation",
-  "CONVERSATION_CLOSED_ALERT_MSG" : "The conversation was successfully closed.",
+  "CONVERSATION_CLOSED_ALERT_MSG": "The conversation was successfully closed.",
   "CANNOT_CLOSE_CONVERSATION_ALERT_MSG": "Unable to close the conversation",
-
   "LEAVING_GROUP_SPINNER_MSG": "Please wait.<br> You are leaving the group",
   "CONVERSATION_LEFT_ALERT_MSG": "The group was successfully left.",
   "CANNOT_LEAVE_GROUP_ALERT_MSG": "The group could not be left",
-
   "GREETING": "Hi, {{ value }}",
-
-  "ARCHIVED_CONVERSATIONS_PAGE_NO_CONVERSATIONS_ARCHIVED" : "There is no conversation in the archive", 
-
+  "ARCHIVED_CONVERSATIONS_PAGE_NO_CONVERSATIONS_ARCHIVED": "There is no conversation in the archive",
   "INFO_SUPPORT_USER_ADDED_SUBJECT": "you",
   "INFO_SUPPORT_USER_ADDED_YOU_VERB": "have been added to ",
   "INFO_SUPPORT_USER_ADDED_VERB": "joined",
   "INFO_SUPPORT_USER_ADDED_COMPLEMENT": "the chat",
-  "INFO_SUPPORT_USER_ADDED_MESSAGE" : "{{ subject }} {{ verb }} {{ complement }}",
-
+  "INFO_SUPPORT_USER_ADDED_MESSAGE": "{{ subject }} {{ verb }} {{ complement }}",
   "INFO_SUPPORT_CHAT_REOPENED": "Chat reopened",
   "INFO_SUPPORT_CHAT_CLOSED": "Chat closed",
-
   "LABEL_PROFILE": "Profile",
   "LABEL_CLOSE": "Closed",
   "LABEL_DISCONNECT": "Disconnect",
-
-
   "LABEL_NEW_CHAT": "New chat",
-
   "LABEL_FORGOT_PASSWORD": "Did you forget your password?",
-
   "LABEL_SIGNIN": "Sign in",
   "LABEL_SIGNIN_TO": "Signin to",
   "LABEL_SIGNIN_ERROR": "Sign in error",
@@ -83,15 +78,12 @@
   "LABEL_ERROR_PASSWORD": "The password must be at least 6 characters.",
   "LABEL_LOGIN": "Login",
   "LABEL_LOGOUT": "Logout",
-
   "LABEL_WELCOME_TO": "Welcome to",
   "LABEL_SIGNUP": "Sign up",
   "LABEL_ALREDY_HAVE_AN_ACCOUNT": "Already have an account?",
   "LABEL_DONT_HAVE_AN_ACCOUNT_YET": "Don't have an account yet?",
   "LABEL_FORGOT_YOUR_PASSWORD": "Forgot your password?",
   "LABEL_CLICK_HERE": "Click here",
-
-
   "LABEL_REGISTRATION": "Registration",
   "LABEL_PLACEHOLDER_EMAIL": "Your email",
   "LABEL_PLACEHOLDER_PASSWORD": "Your password",
@@ -99,9 +91,7 @@
   "LABEL_PLACEHOLDER_LAST_NAME": "Your last name",
   "LABEL_LAST_NAME": "Last name",
   "LABEL_FIELD_NOT_EMPTY": "The field can not be empty.",
-
   "LABEL_NEW_PASSWORD": "Generate a new password",
-
   "LABEL_CLOSED": "Closed",
   "LABEL_INFO": "Informations",
   "ALERT_NOTIFICATION": "Warning: sending notifications is disabled, changes the browser settings to allow sending notifications.",
@@ -109,17 +99,15 @@
   "LABEL_IAT": "Iat",
   "LABEL_REQUEST_DETAIL": "Request detail",
   "LABEL_ENTER_MSG": "Enter a message or press / for canned responses",
-
+  "LABEL_ENTER_MSG_SHORT": "Enter a message or...",
+  "LABEL_ENTER_MSG_SHORTER": "Enter...",
   "LABEL_MSG_LOGIN_TILEDESK": "Go to login to start chatting",
   "LABEL_ARCHIVED": "Archived",
-
   "LABEL_INFO_CONVERSATION": "Info conversation",
   "LABEL_INFO_USER": "Info user",
-
   "LABEL_IS_WRITING": "typing",
   "LABEL_VERSION": "version",
   "LABEL_CONTACTS": "contacts",
-
   "LABEL_PLACEHOLDER": "type your message..",
   "LABEL_START_NW_CONV": "New conversation",
   "LABEL_FIRST_MSG": "Describe shortly your problem, you will be contacted by an agent.",
@@ -170,6 +158,20 @@
   "WAITING_TIME_FOUND": "The team typically replies in $reply_time",
   "WAITING_TIME_NOT_FOUND": "The team will reply as soon as possible",
   "CLOSED": "CLOSED",
-"PleaseSelectChatToStartMessaging": "Please select a chat to start messaging"
-
+  "PleaseSelectChatToStartMessaging": "Please select a chat to start messaging",
+  "FromThisAreNew": "------------------",
+  "Preview": "Preview",
+  "AddACaption": "Add a caption",
+  "AnErrorOccurredWhileUnsubscribingFromNotifications": "Oops! An error occurred while unsubscribing from notifications",
+  "SIGNIN_ERROR_USER_NOT_FOUND": "Authentication failed. User not found.",
+  "SIGNIN_ERROR_USER_WRONG_PSW": "Authentication failed. Wrong password.",
+  "Email is required": "Email is required.",
+  "Email must be a valid email": "Email must be a valid email.",
+  "Password is required": "Password is required.",
+  "Password must be at least 6 characters long": "Password must be at least 6 characters long.",
+  "UPLOAD_FILE_ERROR":"An unexpected error occurred while uploading the file",
+  "DROP_IMAGE_HERE_TO_SEND_IT":"Drop image here to send it",
+  "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE": "Only image files and text are allowed to be pasted",
+  "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG": "Only image files are allowed to be dragged"
+  
 }

@@ -60,7 +60,7 @@
   <div *ngIf="groupDetail">
     <div *ngFor='let member of groupDetail?.member_array'>
 
-     <!-- {{ member | json }}  -->
+      <!-- {{ member | json }}  -->
       <!-- <ion-item>
         <ion-avatar slot="start"> -->
       <!-- <div class="image-profile"> -->
@@ -73,7 +73,14 @@
         <ion-row class="ion-align-items-center">
           <ion-col size="3">
             <div class="member-profile">
-              <app-avatar-profile [itemAvatar]="member"></app-avatar-profile>
+              <!-- (click)="copyLoggedUserUID({member.userid)" -->
+              <!-- <div class="avatar-container" [tooltip]="useruidTooltip" [options]="tooltipOptions" placement="top"
+                content-type="template" > -->
+                <app-avatar-profile [itemAvatar]=member></app-avatar-profile>
+              <!-- </div> -->
+              <!-- <ng-template #useruidTooltip>
+                <span> {{member.userid}}</span>
+              </ng-template> -->
 
               <div class="user-online" [ngStyle]="{ 'background-color':(member.userOnline)?'#24d066':'#db4437' }"></div>
             </div>
@@ -84,6 +91,14 @@
             <ion-label>
               {{ member.fullname }}
             </ion-label>
+
+            <div class="info-group-member-email">
+              <a [href]="'mailto:' + member.email + '?Subject='">
+                {{member.email}}
+              </a>
+            </div>
+            <!-- {{ member.email }} -->
+
           </ion-col>
         </ion-row>
       </ion-grid>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-//import { environment } from 'src/environments/environment';
+
 
 // models
 import { UploadModel } from '../../models/upload';
@@ -35,6 +35,5 @@ export abstract class UploadService {
 
   // functions
   abstract initialize(): void;
-  abstract upload(upload: UploadModel): Promise<any>;
-  abstract get(filename: string, type: string): string;
+  abstract upload(userId: string, upload: UploadModel): Promise<any>;
 }

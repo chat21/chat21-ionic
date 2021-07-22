@@ -1,11 +1,11 @@
 <ion-button expand="full" fill="clear" text-left class="advanced-info-accordion" (click)="openAdvancedInfoAccordion()">
   <span class="absolute-text">
 
-    <!-- {{ translationMap.get('LABEL_INFO_ADVANCED') }} -->
-    Advanced
+    {{ translationMap.get('LABEL_INFO_ADVANCED') }}
   </span>
 
-  <ion-icon id="{{'absolute-icon_'+ teammateID}}" slot="end" name="chevron-down-outline" class="absolute-icon"></ion-icon>
+  <ion-icon id="{{'absolute-icon_'+ teammateID}}" slot="end" name="chevron-down-outline" class="absolute-icon">
+  </ion-icon>
 </ion-button>
 
 
@@ -30,21 +30,23 @@
         <div class="attributes-icon-wpr-2">
           <span class="material-icons">
             {{ attr.icon }}
+            
           </span>
         </div>
       </div>
-  
+
       <div class="attributes-title-subtitle-wpr-1">
         <div class="attributes-title-subtitle-wpr-2">
-  
+
           <div class="attributes-title-subtitle-wpr-3">
             <div class="attributes-title-wpr">
               <span class="attributes-title">
-                {{ attr.key }}
+                <!-- {{ attr.key  }} -->
+                {{ translationMap.get(attr.key) }}
               </span>
             </div>
-  
-  
+
+
             <div class="attributes-subtitle-wpr">
               <span class="attributes-subtitle">
                 {{ attr.value}}

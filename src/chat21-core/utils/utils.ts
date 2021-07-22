@@ -445,7 +445,13 @@ export function htmlEntities(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     // .replace(/\n/g, '<br>')
+}
 
+export function htmlEntitiesDecode(str) {
+  return String(str)
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    // .replace(/\n/g, '<br>')
 }
 
 export function  replaceEndOfLine(text) {
@@ -453,7 +459,6 @@ export function  replaceEndOfLine(text) {
   const newText = text.replace(/[\n\r]/g, '<br>');
   // const newText = text.replace(/<br\s*[\/]?>/gi, '\n')
   return newText;
- 
 }
 
 
@@ -570,8 +575,6 @@ export function setConversationAvatar(
   width?: string,
   height?: string
 ): any {
-  // const FIREBASESTORAGE_BASE_URL_IMAGE = environment.FIREBASESTORAGE_BASE_URL_IMAGE;
-  const urlStorageBucket = environment.firebaseConfig.storageBucket + '/o/profiles%2F';
   const conversationWidth = (width) ? width : '40px';
   const conversationHeight = (height) ? height : '40px';
   const conversationAvatar = {
@@ -581,7 +584,6 @@ export function setConversationAvatar(
     channelType: conversationChannelType,
     avatar: avatarPlaceholder(conversationWithFullname),
     color: getColorBck(conversationWithFullname),
-    imageurl: getImageUrlThumbFromFirebasestorage(conversationWith, FIREBASESTORAGE_BASE_URL_IMAGE, urlStorageBucket),
     width: conversationWidth,
     height: conversationHeight
   };
@@ -798,7 +800,7 @@ export function checkPlatformIsMobile() {
 
 
 export function checkWindowWithIsLessThan991px() {
-  console.log('checkPlatformIsMobile:: ', window.innerWidth);
+  console.log('checkWindowWithIsLessThan991px:: ', window.innerWidth);
   if (window.innerWidth < 991) {
     return true;
   }

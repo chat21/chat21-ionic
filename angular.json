@@ -23,6 +23,9 @@
               "src/chat-config-pre.json",
               "src/chat-config-mqtt.json",
               "src/chat-config-pre-test.json",
+              "src/chat-config-mqtt-localhost.json",
+              "src/firebase-messaging-sw.js",
+              "src/manifest.json",
               {
                 "glob": "**/*",
                 "input": "src/assets",
@@ -46,7 +49,7 @@
               }
             ],
             "scripts": [
-              "src/assets/js/mqtt/mqtt.min.js"
+              "src/assets/js/mqtt/4.2.8/mqtt.min.js"
             ]
           },
           "configurations": {
@@ -163,7 +166,9 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "e2e": {

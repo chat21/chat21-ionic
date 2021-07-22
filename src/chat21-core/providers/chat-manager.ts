@@ -10,6 +10,8 @@ import { ConversationsHandlerService } from './../providers/abstract/conversatio
 // import { ChatContactsSynchronizer } from '../app/services/chat-contacts-synchronizer';
 import { environment } from '../../environments/environment';
 import { ArchivedConversationsHandlerService } from './../providers/abstract/archivedconversations-handler.service';
+import { LoggerService } from './abstract/logger.service';
+import { LoggerInstance } from './logger/loggerInstance';
 
 
 @Injectable({ providedIn: 'root' })
@@ -25,10 +27,9 @@ export class ChatManager {
   private tiledeskToken: string;
 
   private handlers: ConversationHandlerService[];
-  // public archivedConversationsHandler: ChatArchivedConversationsHandler;
-  // public contactsSynchronizer: ChatContactsSynchronizer;
   public openInfoConversation: boolean;
-
+  private logger: LoggerService = LoggerInstance.getInstance();
+  
   constructor(
     // public chatContactsSynchronizer: ChatContactsSynchronizer,
     public conversationsHandlerService: ConversationsHandlerService,
@@ -41,7 +42,7 @@ export class ChatManager {
     this.handlers = [];
     this.openInfoConversation = true;
     this.currentUser = null;
-    console.log('************* init chat manager ***', this.handlers);
+    this.logger.info('[CHAT MANAGER]**** init ****', this.handlers);
   }
 
   /**
@@ -55,7 +56,6 @@ export class ChatManager {
    * return tiledeskToken
    */
   public getTiledeskToken(): string {
-    console.log('this.tiledeskToken: ', this.tiledeskToken );
     return this.tiledeskToken;
   }
 
@@ -70,7 +70,6 @@ export class ChatManager {
    * return current user detail
    */
   public getCurrentUser(): UserModel {
-    console.log('currentUser: ', this.currentUser );
     return this.currentUser;
   }
 
@@ -90,15 +89,15 @@ export class ChatManager {
    * dispose reference sincronizzazione contatti
    */
   dispose() {
-    console.log(' 1 - setOffAllReferences');
+    this.logger.debug('[CHAT MANAGER] 1 - setOffAllReferences');
     if (this.handlers) { this.setOffAllReferences(); }
-    console.log(' 2 - disposeConversationsHandler');
+    this.logger.debug('[CHAT MANAGER] 2 - disposeConversationsHandler');
     if (this.conversationsHandlerService) { this.disposeConversationsHandler(); }
-    console.log(' 3 - disposeArchivedConversationsHandler');
+    this.logger.debug('[CHAT MANAGER] 3 - disposeArchivedConversationsHandler');
     if (this.archivedConversationsService) { this.disposeArchivedConversationsHandler(); }
-    console.log(' 4 - disposeContactsSynchronizer');
+    this.logger.debug('[CHAT MANAGER] 4 - disposeContactsSynchronizer');
     // if (this.contactsSynchronizer) { this.disposeContactsSynchronizer(); }
-    console.log(' OKK ');
+    this.logger.debug('[CHAT MANAGER] OKK ');
     this.conversationsHandlerService = null;
     this.archivedConversationsService = null;
     // this.contactsSynchronizer = null;
@@ -115,7 +114,7 @@ export class ChatManager {
   //   if (user) {
   //     const uid = user.uid;
   //     this.loggedUser = new UserModel(uid);
-  //     console.log('goOnLine::: ', this.loggedUser);
+  //     this.logger.('[CHAT MANAGER]goOnLine::: ', this.loggedUser);
   //     this.loadCurrentUserDetail();
   //     if (this.supportMode === false) {
   //       //this.initContactsSynchronizer();
@@ -132,13 +131,13 @@ export class ChatManager {
   //   this.userService.loadCurrentUserDetail()
   //   .then((snapshot: any) => {
   //     if (snapshot.val()) {
-  //       console.log('loadCurrentUserDetail::: ', snapshot.val());
+  //       this.logger.('[CHAT MANAGER]loadCurrentUserDetail::: ', snapshot.val());
   //       that.completeProfile(snapshot.val());
   //       that.events.publish('loaded-current-user', snapshot.val());
   //     }
   //   })
   //   .catch((err: Error) => {
-  //     console.log('Unable to get permission to notify.', err);
+  //     this.logger.('[CHAT MANAGER]Unable to get permission to notify.', err);
   //   });
   // }
 
@@ -150,7 +149,7 @@ export class ChatManager {
   goOffLine() {
     this.currentUser = null;
     // cancello token e user dal localstorage!!!!!
-    console.log(' 1 - CANCELLO TUTTE LE REFERENCES');
+    this.logger.debug('[CHAT MANAGER] 1 - CANCELLO TUTTE LE REFERENCES');
     this.dispose();
   }
 
@@ -161,7 +160,7 @@ export class ChatManager {
    * @param handler
    */
   addConversationHandler(handler: ConversationHandlerService) {
-    console.log('CHAT MANAGER -----> addConversationHandler', this.handlers, handler);
+    this.logger.debug('[CHAT MANAGER] -----> addConversationHandler', this.handlers, handler);
     this.handlers.push(handler);
   }
 
@@ -171,7 +170,7 @@ export class ChatManager {
    * @param conversationId
    */
   removeConversationHandler(conversationId) {
-    console.log(' -----> removeConversationHandler: ', conversationId);
+    this.logger.debug('[CHAT MANAGER] -----> removeConversationHandler: ', conversationId);
     const index = this.handlers.findIndex(i => i.conversationWith === conversationId);
     this.handlers.splice(index, 1);
   }
@@ -185,7 +184,7 @@ export class ChatManager {
   getConversationHandlerByConversationId(conversationId): any {
     let handler = null;
     this.handlers.forEach(conv => {
-      // console.log('forEach ***', conversationId, this.handlers, conv);
+      // this.logger.('[CHAT MANAGER]forEach ***', conversationId, this.handlers, conv);
       if (conv.conversationWith === conversationId) {
         handler = conv;
         return;
@@ -193,7 +192,7 @@ export class ChatManager {
     });
     return handler;
     // const resultArray = this.handlers.filter((handler) => {
-    //   console.log('FILTRO::: ***', conversationId, handler.conversationWith);
+    //   this.logger.('[CHAT MANAGER]FILTRO::: ***', conversationId, handler.conversationWith);
     //   return handler.conversationWith === conversationId;
     // });
 
@@ -232,7 +231,7 @@ export class ChatManager {
    * elimino la reference dell'handler delle conversazioni
    */
   disposeConversationsHandler() {
-    console.log(' 2 - this.conversationsHandler:: ', this.conversationsHandlerService);
+    this.logger.debug('[CHAT MANAGER] 2 - this.conversationsHandler:: ', this.conversationsHandlerService);
     this.conversationsHandlerService.dispose();
   }
 
@@ -240,7 +239,7 @@ export class ChatManager {
    * elimino la reference dell'handler delle conversazioni archiviate
    */
   disposeArchivedConversationsHandler() {
-    console.log(' 3 - this.archivedConversationsService:: ', this.archivedConversationsService);
+    this.logger.debug('[CHAT MANAGER] 3 - this.archivedConversationsService:: ', this.archivedConversationsService);
     this.archivedConversationsService.dispose();
   }
   /// END metodi gestione conversazioni ////
@@ -251,7 +250,7 @@ export class ChatManager {
    * inizio la sincronizzazione
    */
   // initContactsSynchronizer() {
-  //   console.log(' initContactsSynchronizer:: ', this.contactsSynchronizer, this.tenant, this.currentUser);
+  //   this.logger.('[CHAT MANAGER] initContactsSynchronizer:: ', this.contactsSynchronizer, this.tenant, this.currentUser);
   //   if (!this.contactsSynchronizer) {
   //     this.contactsSynchronizer = this.chatContactsSynchronizer.initWithTenant(this.tenant, this.currentUser);
   //     //this.contactsSynchronizer = this.createContactsSynchronizerForUser();

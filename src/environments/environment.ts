@@ -1,10 +1,12 @@
 export const environment = {
     production: false,
-    tenant: 'tilechat',
+    tenant: 'CHANGEIT',
     remoteConfig: true,
     remoteConfigUrl: './chat-config.json',
     chatEngine: 'mqtt',
     uploadEngine: 'native',
+    pushEngine: 'none',
+   fileUploadAccept:"*/*",
     firebaseConfig: {
         apiKey: 'CHANGEIT',
         authDomain: 'CHANGEIT',
@@ -25,5 +27,6 @@ export const environment = {
     dashboardUrl: 'http://localhost:4500/',
     storage_prefix : 'chat_sv5',
     authPersistence: 'LOCAL',
+    logLevel: 1,
     supportMode: false,
 };

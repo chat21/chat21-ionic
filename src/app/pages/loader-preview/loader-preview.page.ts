@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, HostListener } from '@angular/core';
 import { TYPE_MSG_IMAGE } from 'src/chat21-core/utils/constants';
 import { NavParams, ModalController } from '@ionic/angular';
-
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-loader-preview',
   templateUrl: './loader-preview.page.html',
@@ -18,10 +18,13 @@ export class LoaderPreviewPage implements OnInit {
   public messageString: string;
   public heightPreviewArea = '183';
   private selectedFiles: any;
-
+  srcData: SafeResourceUrl;
+  public file_extension: string;
+  public file_name: string;
 
   constructor(
-    public viewCtrl: ModalController
+    public viewCtrl: ModalController,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -41,9 +44,12 @@ export class LoaderPreviewPage implements OnInit {
 
   readAsDataURL(file: any) {
     console.log('LoaderPreviewPage readAsDataURL file', file);
-    if (file.type.startsWith("image")) {
+    // ---------------------------------------------------------------------
+    // USE CASE IMAGE
+    // ---------------------------------------------------------------------
+    if (file.type.startsWith("image") && (!file.type.includes('svg'))) {
 
-      console.log('LoaderPreviewPage readAsDataURL file TYPE', file);
+      console.log('LoaderPreviewPage USE CASE IMAGE readAsDataURL file TYPE', file.type);
       const reader = new FileReader();
       reader.onloadend = (evt) => {
         const img = reader.result.toString();
@@ -53,14 +59,62 @@ export class LoaderPreviewPage implements OnInit {
           this.fileSelected = img;
         }
       };
+
       reader.readAsDataURL(file);
+      // ---------------------------------------------------------------------
+      // USE CASE SVG 
+      // ---------------------------------------------------------------------
+    } else if (file.type.startsWith("image") && (file.type.includes('svg'))) {
+      // this.previewFiles(file)
+
+      console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL file TYPE', file.type);
+      console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL file ', file);
+      const preview = document.querySelector('#img-preview') as HTMLImageElement;
+
+
+      const reader = new FileReader();
+      const that = this;
+      reader.addEventListener("load", function () {
+        // convert image file to base64 string
+        // const img = reader.result as string;
+        const img = reader.result.toString();
+        console.log('FIREBASE-UPLOAD USE CASE SVG LoaderPreviewPage readAsDataURL img ', img);
+
+        // that.fileSelected = that.sanitizer.bypassSecurityTrustResourceUrl(img);
+
+        that.arrayFiles.push(that.sanitizer.bypassSecurityTrustResourceUrl(img));
+        if (!that.fileSelected) {
+          that.fileSelected = that.sanitizer.bypassSecurityTrustResourceUrl(img);
+        }
+      }, false);
+
+      if (file) {
+
+        reader.readAsDataURL(file);
+      }
+
+      // ---------------------------------------------------------------------
+      // USE CASE FILE
+      // ---------------------------------------------------------------------
+      // } else if (file.type.startsWith("application") || file.type.startsWith("video") || file.type.startsWith("audio") ) {
     } else {
-      console.log('LoaderPreviewPage HERE YES');
+      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE ', file);
+      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file TYPE', file.type);
+      this.file_extension = file.name.substring(file.name.lastIndexOf('.')+1, file.name.length) || file.name;
+      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE EXTENSION', this.file_extension);
+      this.file_name = file.name
+      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE NAME', this.file_name);
+      // if (file.type) {
+      //   const file_type_array = file.type.split('/');
+      //   console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file_type_array', file_type_array);
+      //   this.file_type = file_type_array[1]
+      // } else {
+      //   this.file_type = file.name.substring(file.name.lastIndexOf('.')+1, file.name.length) || file.name;
+
+      // }
+
       this.createFile();
 
-      // let file =  new File(["https://homepages.cae.wisc.edu/~ece533/images/airplane.png"], "test.jpg");
-      // console.log('LoaderPreviewPage HERE YES', file);
-      // reader.readAsDataURL(file)
     }
   }
   // file-alt-solid.png
@@ -83,6 +137,44 @@ export class LoaderPreviewPage implements OnInit {
     };
     reader.readAsDataURL(file);
   }
+
+
+  // for svg
+
+  // previewFiles(file) {
+  //   console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
+  //   console.log('LoaderPreviewPage readAsDataURL file ', file);
+  //   const preview = document.querySelector('#img-preview');
+  //   console.log('LoaderPreviewPage readAsDataURL preview ', preview);
+  //   this.readAndPreview(file, preview)
+  // }
+
+
+  // readAndPreview(file, preview) {
+  //   console.log('LoaderPreviewPage readAsDataURL preview HERE 1');
+  //   // Make sure `file.name` matches our extensions criteria
+  //   if (/\.(jpe?g|png|gif|svg)$/i.test(file.name)) {
+  //     var reader = new FileReader();
+
+  //     reader.addEventListener("load", function () {
+  //       var image = new Image();
+  //       image.height = 100;
+  //       image.title = file.name;
+  //       image.src = this.result.toString();
+  //       console.log('LoaderPreviewPage readAsDataURL preview image.src ', image.src);
+  //       // preview.appendChild(image);
+
+  //       preview.src(image);
+  //     }, false);
+
+  //     reader.readAsDataURL(file);
+  //   }
+
+  //   if (file) {
+  //     [].forEach.call(file, this.readAndPreview);
+  //   }
+
+  // }
 
 
   // NOT USED    
@@ -155,9 +247,9 @@ export class LoaderPreviewPage implements OnInit {
     const heightThumbnailsPreview = this.thumbnailsPreview.nativeElement.offsetHeight;
     const heightMessageTextArea = this.messageTextArea.nativeElement.offsetHeight;
     this.heightPreviewArea = (heightMessageTextArea + heightThumbnailsPreview).toString();
-    console.log('heightThumbnailsPreview', heightThumbnailsPreview);
-    console.log('heightMessageTextArea', this.messageTextArea);
-    console.log('heightPreviewArea', this.heightPreviewArea);
+    // console.log('heightThumbnailsPreview', heightThumbnailsPreview);
+    // console.log('heightMessageTextArea', this.messageTextArea);
+    // console.log('heightPreviewArea', this.heightPreviewArea);
   }
 
   uploadImages() { }
@@ -165,7 +257,7 @@ export class LoaderPreviewPage implements OnInit {
 
   /** */
   onChangeTextArea(e: any) {
-    console.log('onChangeTextArea', e.target.clientHeight);
+    // console.log('onChangeTextArea', e.target.clientHeight);
     this.calculateHeightPreviewArea();
     // try {
     //   let height: number = e.target.offsetHeight;
@@ -183,6 +275,15 @@ export class LoaderPreviewPage implements OnInit {
     this.fileSelected = file;
   }
 
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+      this.onSendMessage()
+    }
+
+  }
+
   pressedOnKeyboard(e: any, text: string) {
     console.log('pressedOnKeyboard ************** event:: ', e);
     // const message = e.target.textContent.trim();
@@ -195,6 +296,8 @@ export class LoaderPreviewPage implements OnInit {
     // }
     this.onSendMessage()
   }
+
+
 
   /** */
   onSendMessage() {
