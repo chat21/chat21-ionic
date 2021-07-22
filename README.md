@@ -56,7 +56,7 @@ In progress git
         pushEngine:"none", // OR YOUR CUSTOM PUSH ENGINE
         tenant:"tilechat",
         fileUploadAccept:"*/*",
-        logLevel":"<YOUR-PREFERED-LOG-LEVEL-NUMBER>",
+        logLevel":"<YOUR-PREFERRED-LOG-LEVEL-NUMBER>",
         firebaseConfig: {
             apiKey: '123ABC..',
             authDomain: 'XYZ.firebaseapp.com',
