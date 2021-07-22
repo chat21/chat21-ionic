@@ -1,6 +1,6 @@
 {
     "chatEngine": "mqtt",
-    "updateEngine": "native",
+    "updloaEngine": "native",
     "pushEngine":"none",
     "tenant":"tilechat",
     "fileUploadAccept":"*/*",
