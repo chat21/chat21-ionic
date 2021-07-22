@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.18
+- Improves logger service
+- Fixes the bug: with MQTT enviroment it is not possible to know changes in the conversation
+
 ### 3.0.42-beta.1.17
 - Adds the right side panel that allows the selection of projects to which the current user belongs and the display of unassigned conversations
 - Fixes the bug: Property 'addUploadingBubbleEvent' does not exist on type 'ConversationDetailPage'.
