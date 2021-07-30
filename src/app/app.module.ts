@@ -261,7 +261,8 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.ERROR,
       timestampFormat: 'HH:mm:ss.SSS',
-      enableSourceMaps: true
+      enableSourceMaps: false,
+      colorScheme: ['purple', 'yellow', 'gray', 'gray', 'red', 'red', 'red']
     }),
     ScrollbarThemeModule,
     SharedModule,
