@@ -1,20 +1,23 @@
 import { UserModel } from 'src/chat21-core/models/user';
 import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef, OnChanges, HostListener } from '@angular/core';
-import { IonTextarea } from '@ionic/angular';
+
 import { Chooser } from '@ionic-native/chooser/ngx';
 import { ModalController, ToastController } from '@ionic/angular';
 
-// pages
+// Pages
 import { LoaderPreviewPage } from 'src/app/pages/loader-preview/loader-preview.page';
-// services 
+// Services 
 import { UploadService } from 'src/chat21-core/providers/abstract/upload.service';
 // utils
 import { TYPE_MSG_TEXT } from 'src/chat21-core/utils/constants';
-// models
+// Models
 import { UploadModel } from 'src/chat21-core/models/upload';
 import { Observable } from 'rxjs';
 import { checkPlatformIsMobile } from 'src/chat21-core/utils/utils';
 
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 @Component({
   selector: 'app-message-text-area',
@@ -23,7 +26,6 @@ import { checkPlatformIsMobile } from 'src/chat21-core/utils/utils';
 })
 export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChanges {
 
-  // @ViewChild('focusInput') myInput;
   @ViewChild('textArea', { static: false }) messageTextArea
   @ViewChild('fileInput', { static: false }) fileInput: any;
 
@@ -47,9 +49,18 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   public LONG_TEXAREA_PLACEHOLDER: string;
   public SHORT_TEXAREA_PLACEHOLDER: string;
   public SHORTER_TEXAREA_PLACEHOLDER: string;
-  public currentWindowWidth: any
+  public currentWindowWidth: any;
+  private logger: LoggerService = LoggerInstance.getInstance();
+
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
 
+  /**
+   * Constructor
+   * @param chooser 
+   * @param modalController 
+   * @param uploadService 
+   * @param toastController 
+   */
   constructor(
     public chooser: Chooser,
     public modalController: ModalController,
@@ -59,16 +70,17 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
   ngOnInit() {
     // this.setSubscriptions();
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) HELLO !!!!! ");
+    this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] HELLO !!!!! ");
     // this.events.subscribe((cannedmessage) => {
-    //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) events.subscribe cannedmessage ", cannedmessage);
+    //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] events.subscribe cannedmessage ", cannedmessage);
     // })
     this.LONG_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG')
     this.SHORT_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
     this.SHORTER_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) LONG_TEXAREA_PLACEHOLDER ", this.LONG_TEXAREA_PLACEHOLDER);
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) SHORT_TEXAREA_PLACEHOLDER ", this.SHORT_TEXAREA_PLACEHOLDER);
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) SHORTER_TEXAREA_PLACEHOLDER ", this.SHORTER_TEXAREA_PLACEHOLDER);
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] LONG_TEXAREA_PLACEHOLDER ", this.LONG_TEXAREA_PLACEHOLDER);
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] SHORT_TEXAREA_PLACEHOLDER ", this.SHORT_TEXAREA_PLACEHOLDER);
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] SHORTER_TEXAREA_PLACEHOLDER ", this.SHORTER_TEXAREA_PLACEHOLDER);
+
     this.getWindowWidth();
   }
 
@@ -76,29 +88,56 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
   getWindowWidth(): any {
     this.currentWindowWidth = window.innerWidth;
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) currentWindowWidth ", this.currentWindowWidth);
-    if ((this.currentWindowWidth < 1045 && this.currentWindowWidth > 835) && this.isOpenInfoConversation === true) {
-      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY SHORT_TEXAREA_PLACEHOLDER ");
-      // this.TEXAREA_PLACEHOLDER = '';
-      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-    } else if (this.currentWindowWidth < 835 && this.isOpenInfoConversation === true) {
-      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY SHORTER_TEXAREA_PLACEHOLDER ");
-      this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
-      // this.TEXAREA_PLACEHOLDER = '';
 
-    } else {
-      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) DISPLAY LONG_TEXAREA_PLACEHOLDER ");
+    // if ((this.currentWindowWidth < 1045 && this.currentWindowWidth > 835) && this.isOpenInfoConversation === true) {
+    //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] DISPLAY SHORT_TEXAREA_PLACEHOLDER ");
+    //   // this.TEXAREA_PLACEHOLDER = '';
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // } else if (this.currentWindowWidth < 835 && this.isOpenInfoConversation === true) {
+    //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] DISPLAY SHORTER_TEXAREA_PLACEHOLDER ");
+
+
+    //   this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
+    //   // this.TEXAREA_PLACEHOLDER = '';
+
+    // } else 
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] currentWindowWidth ", this.currentWindowWidth);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] isOpenInfoConversation', this.isOpenInfoConversation);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] this.conversationWith.startsWith("support-group")', this.conversationWith.startsWith("support-group"));
+
+
+    if (this.currentWindowWidth >= 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
+
       this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
-      // this.TEXAREA_PLACEHOLDER = '';
+
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] currentWindowWidth', this.currentWindowWidth, ' - DISPLAY LONG_TEXAREA_PLACEHOLDER ');
+
+
+    } else if (this.currentWindowWidth >= 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
+      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+
+
+    } else if (this.currentWindowWidth < 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
+
+      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+
+    } else if (this.currentWindowWidth < 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
+
+      this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
+
+    } else if (!this.conversationWith.startsWith("support-group")) {
+      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+
     }
 
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) checkPlatformIsMobile() ", checkPlatformIsMobile());
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] checkPlatformIsMobile() ", checkPlatformIsMobile());
     if (checkPlatformIsMobile() === true) {
 
-      if (this.currentWindowWidth <= 430) {
+      if (this.currentWindowWidth <= 430 && this.currentWindowWidth >= 274) {
         this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-      } else {
-        this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+
+      } else if (this.currentWindowWidth <= 273) {
+        this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
       }
 
     }
@@ -109,21 +148,75 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     // }
   }
 
+  // -------------------------------------------------------------------------------------------
+  // Change the placeholder of the 'send message' textarea according to the width of the window  
+  // -------------------------------------------------------------------------------------------
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    // this.getIfTexareaIsEmpty('onResize')
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA]  event.target.innerWidth; ", event.target.innerWidth);
+    // if ((event.target.innerWidth < 1045 && event.target.innerWidth > 835) && this.isOpenInfoConversation === true) {
+    //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA]  ON RESIZE DISPAY SHORT_TEXAREA_PLACEHOLDER");
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // } else if (event.target.innerWidth < 835 && this.isOpenInfoConversation === true) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
+    // } else {
+    //   this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+
+
+    if (event.target.innerWidth >= 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
+      this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - else - DISPLAY LONG_TEXAREA_PLACEHOLDER ');
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - else - this.currentWindowWidth ', this.currentWindowWidth);
+
+    } else if (event.target.innerWidth >= 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
+      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+
+
+    } else if (event.target.innerWidth < 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
+
+      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+
+    } else if (event.target.innerWidth < 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
+
+      this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
+
+    } else if (!this.conversationWith.startsWith("support-group")) {
+      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+
+    }
+
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] checkPlatformIsMobile() ', checkPlatformIsMobile());
+    if (checkPlatformIsMobile() === true) {
+
+      if (event.target.innerWidth <= 430 && event.target.innerWidth >= 274) {
+        this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+      } else if (this.currentWindowWidth <= 273) {
+        this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
+      }
+
+    }
+
+    // if (checkPlatformIsMobile && event.target.innerWidth <= 430) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // } else if (checkPlatformIsMobile && event.target.innerWidth > 430) { 
+    //   this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+    // }
+  }
+
 
   ngAfterViewInit() {
-
-    // this.getIfTexareaIsEmpty('ngAfterViewInit')
-
     setTimeout(() => {
-      console.log("MESSAGE-TEXT-AREA set focus on ", this.messageTextArea);
+      this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] set focus on ", this.messageTextArea);
       // Keyboard.show() // for android
       this.messageTextArea.setFocus();
     }, 300); //a least 150ms.
   }
 
   ngOnChanges() {
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ngOnChanges  this.isOpenInfoConversation ", this.isOpenInfoConversation);
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ngOnChanges  DROP EVENT ", this.dropEvent);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges this.isOpenInfoConversation ", this.isOpenInfoConversation);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
+
 
     // use case drop
     if (this.dropEvent) {
@@ -136,33 +229,33 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   }
 
   onPaste(event: any) {
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste DROP EVENT ", this.dropEvent);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste DROP EVENT ", this.dropEvent);
 
     this.dropEvent = undefined
 
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste event ", event);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste event ", event);
     const items = (event.clipboardData || event.originalEvent.clipboardData).items;
     let file = null;
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste items ", items);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste items ", items);
     for (const item of items) {
-      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item ", item);
-      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type ", item.type);
+      this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste item ", item);
+      this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste item.type ", item.type);
 
       if (item.type.startsWith("image")) {
 
         let content = event.clipboardData.getData('text/plain');
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste content ", content);
+        this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste content ", content);
         setTimeout(() => {
           this.messageString = "";
         }, 100);
 
 
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste item.type  ", item.type);
+        this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste item.type  ", item.type);
         file = item.getAsFile();
         const data = new ClipboardEvent('').clipboardData || new DataTransfer();
         data.items.add(new File([file], file.name, { type: file.type }));
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste data ", data);
-        console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste file ", file);
+        this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste data ", data);
+        this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste file ", file);
         this.presentModal(data);
       } else if (item.type.startsWith("application")) {
 
@@ -170,18 +263,18 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
         this.presentToastOnlyImageFilesAreAllowed();
         // let content = event.clipboardData.getData('text/plain');
-        // console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste else content ", content);
+        // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] onPaste else content ", content);
         // setTimeout(() => {
         //   this.messageString = "";
         // }, 0)
 
-        console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) onPaste file NOT SUPPORTED FILE TYPE');
+        this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onPaste file NOT SUPPORTED FILE TYPE');
       }
     }
   }
 
   onFileSelected(e: any) {
-    console.log('Message-text-area - onFileSelected event', e);
+    this.logger.log('Message-text-area - onFileSelected event', e);
     this.presentModal(e);
 
   }
@@ -196,30 +289,30 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     let dataFiles = " "
     if (e.type === 'change') {
 
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e', e);
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e.target ', e.target);
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal change e.target.files', e.target.files);
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] presentModal change e', e);
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] presentModal change e.target ', e.target);
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] presentModal change e.target.files', e.target.files);
       dataFiles = e.target.files;
     } else if (e.type === 'drop') {
       dataFiles = e.dataTransfer.files
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal drop e.dataTransfer.files', e.dataTransfer.files);
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] presentModal drop e.dataTransfer.files', e.dataTransfer.files);
     } else {
       // paste use case
       dataFiles = e.files
-      console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal dataFiles when paste', dataFiles);
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] presentModal dataFiles when paste', dataFiles);
       // const elemTexarea= <HTMLElement>document.querySelector('#ion-textarea .textarea-wrapper textarea')
       //   const elemTexarea= <HTMLInputElement>document.getElementById('ion-textarea')
-      //   console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal elemTexarea when paste', elemTexarea);
+      //   this.logger.log('[CONVS-DETAIL] [MSG-TEXT-AREA] presentModal elemTexarea when paste', elemTexarea);
 
 
       //  let textarea_value = elemTexarea.value
-      //  console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) presentModal textarea_value when paste', textarea_value);
+      //  this.logger.log('[CONVS-DETAIL] [MSG-TEXT-AREA] presentModal textarea_value when paste', textarea_value);
       //  textarea_value = ""
     }
-    // console.log('presentModal e.target.files.length', e.target.files.length);
+    // this.logger.log('presentModal e.target.files.length', e.target.files.length);
 
     const attributes = { files: dataFiles, enableBackdropDismiss: false };
-    console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) attributes', attributes);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] attributes', attributes);
     const modal: HTMLIonModalElement =
       await this.modalController.create({
         component: LoaderPreviewPage,
@@ -229,15 +322,15 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       });
     modal.onDidDismiss().then((detail: any) => {
 
-      console.log('presentModal onDidDismiss detail', detail);
+      this.logger.log('presentModal onDidDismiss detail', detail);
       if (detail.data !== undefined) {
         let type = ''
         if (detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("image") && (!detail.data.fileSelected.type.includes('svg'))) {
-          console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
           type = 'image'
           // if ((detail.data.fileSelected.type && detail.data.fileSelected.type.startsWith("application")) || (detail.data.fileSelected.type && detail.data.fileSelected.type === 'image/svg+xml'))
         } else {
-          console.log('FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
+          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal onDidDismiss detail type ', detail.data.fileSelected.type);
           type = 'file'
 
         }
@@ -246,43 +339,44 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         if (e.type === 'change') {
           fileSelected = e.target.files.item(0);
         } else if (e.type === 'drop') {
-          console.log('FIREBASE-UPLOAD (MessageTextArea) DROP dataFiles[0]', dataFiles[0])
+          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD [MSG-TEXT-AREA] DROP dataFiles[0]', dataFiles[0])
           fileSelected = dataFiles[0]
           // const fileList = e.dataTransfer.files;
-          // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP fileList', fileList)
+          // this.logger.log('FIREBASE-UPLOAD [MSG-TEXT-AREA] DROP fileList', fileList)
           // const file: File = fileList[0];
-          // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP FILE', file)
+          // this.logger.log('FIREBASE-UPLOAD [MSG-TEXT-AREA] DROP FILE', file)
           // const data = new ClipboardEvent('').clipboardData || new DataTransfer(); 
           // data.items.add(new File([file], file.name, { type: file.type }));
-          // console.log('FIREBASE-UPLOAD (MessageTextArea) DROP DATA', data)
+          // this.logger.log('FIREBASE-UPLOAD [MSG-TEXT-AREA] DROP DATA', data)
         } else {
           // PASTE USE CASE 
-          console.log('FIREBASE-UPLOAD (MessageTextArea) PASTE  e', e)
+          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD PASTE  e', e)
           fileSelected = e.files.item(0)
         }
 
         let messageString = detail.data.messageString;
         let metadata = detail.data.metadata;
         // let type = detail.data.type;
-        console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss detail.data', detail.data);
-        console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal onDidDismiss fileSelected', fileSelected);
+        this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal onDidDismiss detail.data', detail.data);
+        this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal onDidDismiss fileSelected', fileSelected);
 
         if (detail !== null) {
           const currentUpload = new UploadModel(fileSelected);
-          console.log('FIREBASE-UPLOAD (MessageTextArea) The result: currentUpload', currentUpload);
-          console.log('FIREBASE-UPLOAD (MessageTextArea) The result: CHIUDI!!!!!', detail.data);
+          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD The result: currentUpload', currentUpload);
+          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD The result: CHIUDI!!!!!', detail.data);
+
           that.uploadService.upload(that.loggedUser.uid, currentUpload).then(downloadURL => {
             metadata.src = downloadURL;
-            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg downloadURL::: ', metadata);
-            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg metadata downloadURL::: ', downloadURL);
-            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg type::: ', type);
-            console.log('FIREBASE-UPLOAD (MessageTextArea) presentModal invio msg message::: ', messageString);
+            this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg downloadURL::: ', metadata);
+            this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg metadata downloadURL::: ', downloadURL);
+            this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg type::: ', type);
+            this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg message::: ', messageString);
             // send message
             that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
             that.fileInput.nativeElement.value = '';
           }).catch(error => {
             // Use to signal error if something goes wrong.
-            console.error(`FIREBASE-UPLOAD (MessageTextArea) MessageTextArea upload Failed to upload file and get link `, error);
+            this.logger.error(`[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD - upload Failed to upload file and get link `, error);
 
             that.presentToastFailedToUploadFile();
           });
@@ -296,14 +390,14 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   ionChange(e: any) {
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange event ", e);
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange detail.value ", e.detail.value);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange event ", e);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange detail.value ", e.detail.value);
 
     const message = e.detail.value
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange message ", message);
-    // console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange  this.messageString ", this.messageString);
+    this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange message ", message);
+    // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange  this.messageString ", this.messageString);
     const height = e.target.offsetHeight + 20; // nk added +20
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) ionChange text-area height ", height);
+    this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange text-area height ", height);
     // this.getIfTexareaIsEmpty('ionChange')
     try {
       if (message.trim().length > 0) {
@@ -313,95 +407,19 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         this.conversationEnabled = false;
       }
     } catch (err) {
+      this.logger.error("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange err ", err);
       this.conversationEnabled = false;
     }
 
     this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
   }
 
-  // -------------------------------------------------------------------------------------------
-  // Change the placeholder of the 'send message' textarea according to the width of the window  
-  // -------------------------------------------------------------------------------------------
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    // this.getIfTexareaIsEmpty('onResize')
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA)  event.target.innerWidth; ", event.target.innerWidth);
-    if ((event.target.innerWidth < 1045 && event.target.innerWidth > 835) && this.isOpenInfoConversation === true) {
-      console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA)  ON RESIZE DISPAY SHORT_TEXAREA_PLACEHOLDER");
-      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-    } else if (event.target.innerWidth < 835 && this.isOpenInfoConversation === true) {
-      this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
-    } else {
-      this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
-    }
-
-    console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) checkPlatformIsMobile() ", checkPlatformIsMobile());
-    if (checkPlatformIsMobile() === true) {
-
-      if (event.target.innerWidth <= 430) {
-        this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-      } else {
-        this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
-      }
-
-    }
-
-    // if (checkPlatformIsMobile && event.target.innerWidth <= 430) {
-    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-    // } else if (checkPlatformIsMobile && event.target.innerWidth > 430) { 
-    //   this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
-    // }
-  }
-
-  /* NOT USED */
-  // getIfTexareaIsEmpty(calledby: string) {
-  //   let elemTexarea = <HTMLElement>document.querySelector('#ion-textarea');
-  //   console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) elemTexarea ", elemTexarea)
-  //   if (this.messageString == null || this.messageString == '') {
-
-
-  //     if (elemTexarea) {
-  //       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) messageString is empty - called By ", calledby)
-  //       elemTexarea.style.height = "30px !important";
-  //       elemTexarea.style.overflow = "hidden !important";
-  //     }
-  //   } else {
-
-  //     if (elemTexarea) {
-  //       console.log("CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) messageString not empty - called By ", calledby)
-  //       elemTexarea.style.height = null;
-  //       elemTexarea.style.overflow = null;
-  //     }
-  //   }
-  // }
-
-
-
-
-  // attualmente non usata
-  // dovrebbe scattare quando termina il caricamento dell'immagine per inviare il messaggio
-  // private setSubscriptions() {
-  //   const that = this;
-  //   const subscribeBSStateUpload = this.uploadService.BSStateUpload.subscribe((data: any) => {
-  //     console.log('***** BSStateUpload *****', data);
-  //     if (data) {
-  //       let message = data.message;
-  //       let type_message = data.type_message;
-  //       let metadata = data.metadata;
-  //       console.log('***** message *****', message);
-  //       console.log('***** type_message *****', type_message);
-  //       console.log('***** metadata *****', metadata);
-  //       //this.eventSendMessage.emit({ message: messageString, type: TYPE_MSG_TEXT });
-  //     }
-  //   });
-  // }
-
-  /**
-   * invocata dalla pressione del tasto invio sul campo di input messaggio
-   * se il messaggio non è vuoto lo passo al metodo di controllo
-   */
+  // ------------------------------------------------------------------------
+  // invoked by pressing the enter key on the message input field
+  // if the message is not empty it is passed  to the control method
+  // ------------------------------------------------------------------------
   pressedOnKeyboard(e: any, text: string) {
-    console.log('pressedOnKeyboard ************** event:: ', e);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] pressedOnKeyboard - event: ', e);
     const message = e.target.textContent.trim();
     if (e.inputType === 'insertLineBreak' && message === '') {
       this.messageString = '';
@@ -412,10 +430,10 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     }
   }
 
-  /** */
+
   sendMessage(text: string) {
-    console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) sendMessage', text);
-    console.log('CONVERSATION-DETAIL (MESSAGE-TEXT-AREA) sendMessage conve width', this.conversationWith);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage', text);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage conve width', this.conversationWith);
     // text.replace(/\s/g, "")
     this.messageString = '';
     // text = text.replace(/(\r\n|\n|\r)/gm, '');
@@ -424,21 +442,19 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     }
   }
 
-  /** su mobile !!!*/
+  // --------------------------------
+  // on mobile !
+  // --------------------------------
   onFileSelectedMobile(e: any) {
-    console.log('controlOfMessage');
+    this.logger.log('controlOfMessage');
     this.chooser.getFile()
       .then(file => {
-        console.log(file ? file.name : 'canceled');
+        this.logger.log(file ? file.name : 'canceled');
       })
       .catch((error: any) => {
-        console.error(error);
+        this.logger.error(error);
       });
   }
-
-
-
-
 
   async presentToastOnlyImageFilesAreAllowed() {
     const toast = await this.toastController.create({
@@ -461,14 +477,55 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     toast.present();
   }
 
-  /**
-   * 
-   */
+
   private async closeModal() {
-    console.log('closeModal', this.modalController);
+    this.logger.log('closeModal', this.modalController);
     await this.modalController.getTop();
     this.modalController.dismiss({ confirmed: true });
   }
 
+
+  /* NOT USED */
+  // getIfTexareaIsEmpty(calledby: string) {
+  //   let elemTexarea = <HTMLElement>document.querySelector('#ion-textarea');
+  //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] elemTexarea ", elemTexarea)
+  //   if (this.messageString == null || this.messageString == '') {
+
+
+  //     if (elemTexarea) {
+  //       this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] messageString is empty - called By ", calledby)
+  //       elemTexarea.style.height = "30px !important";
+  //       elemTexarea.style.overflow = "hidden !important";
+  //     }
+  //   } else {
+
+  //     if (elemTexarea) {
+  //       this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] messageString not empty - called By ", calledby)
+  //       elemTexarea.style.height = null;
+  //       elemTexarea.style.overflow = null;
+  //     }
+  //   }
+  // }
+
+
+
+
+  // attualmente non usata
+  // dovrebbe scattare quando termina il caricamento dell'immagine per inviare il messaggio
+  // private setSubscriptions() {
+  //   const that = this;
+  //   const subscribeBSStateUpload = this.uploadService.BSStateUpload.subscribe((data: any) => {
+  //     this.logger.log('***** BSStateUpload *****', data);
+  //     if (data) {
+  //       let message = data.message;
+  //       let type_message = data.type_message;
+  //       let metadata = data.metadata;
+  //       this.logger.log('***** message *****', message);
+  //       this.logger.log('***** type_message *****', type_message);
+  //       this.logger.log('***** metadata *****', metadata);
+  //       //this.eventSendMessage.emit({ message: messageString, type: TYPE_MSG_TEXT });
+  //     }
+  //   });
+  // }
 
 }

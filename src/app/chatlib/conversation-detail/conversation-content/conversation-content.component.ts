@@ -17,7 +17,7 @@ export class ConversationContentComponent implements OnInit {
   @Input() messages: MessageModel[]
   @Input() senderId: string;
   @Input() baseLocation: string;
-  @Input() translationMap: Map< string, string>;
+  @Input() translationMap: Map<string, string>;
   @Input() stylesMap: Map<string, string>;
   @Output() onBeforeMessageRender = new EventEmitter();
   @Output() onAfterMessageRender = new EventEmitter();
@@ -69,9 +69,11 @@ export class ConversationContentComponent implements OnInit {
   uploadProgress: number;
   showUploadProgress: boolean = false;
   fileType: string;
-  private logger: LoggerService = LoggerInstance.getInstance();
-  constructor(public cdref: ChangeDetectorRef,
-              public uploadService: UploadService) { }
+  public logger: LoggerService = LoggerInstance.getInstance();
+  constructor(
+    public cdref: ChangeDetectorRef,
+    public uploadService: UploadService
+  ) { }
 
   ngOnInit() {
     this.listenToUploadFileProgress()
@@ -115,17 +117,17 @@ export class ConversationContentComponent implements OnInit {
     this.uploadService.BSStateUpload.subscribe((data: any) => {
       this.logger.debug('[CONV-CONTENT] BSStateUpload', data);
       if (data && data.type.startsWith("application")) {
-          data.upload === 100 || isNaN(data.upload)? this.showUploadProgress = false : this.showUploadProgress = true
-          this.uploadProgress = data.upload
-          this.fileType = 'file'
-          this.scrollToBottom()
-        }
+        data.upload === 100 || isNaN(data.upload) ? this.showUploadProgress = false : this.showUploadProgress = true
+        this.uploadProgress = data.upload
+        this.fileType = 'file'
+        this.scrollToBottom()
+      }
     });
   }
 
 
   // ========= begin:: functions scroll position ======= //
- 
+
   // LISTEN TO SCROLL POSITION
   onScroll(event): void {
     // console.log('************** SCROLLLLLLLLLL *****************');
@@ -148,7 +150,7 @@ export class ConversationContentComponent implements OnInit {
    *
    */
   checkContentScrollPosition(divScrollMe?): boolean {
-    if(!divScrollMe){
+    if (!divScrollMe) {
       divScrollMe = this.scrollMe.nativeElement
     }
     if (divScrollMe.scrollHeight - divScrollMe.scrollTop <= (divScrollMe.clientHeight + 40)) {
@@ -165,53 +167,53 @@ export class ConversationContentComponent implements OnInit {
    * chiamato in maniera ricorsiva sino a quando non risponde correttamente
   */
 
-//  scrollToBottomStart() {
-//   const that = this;
-//   if ( this.isScrolling === false ) {
-//     setTimeout(function () {
-//       try {
-//         that.isScrolling = true;
-//         const objDiv = document.getElementById(that.idDivScroll);
-//         setTimeout(function () {
-//           that.g.wdLog(['objDiv::', objDiv.scrollHeight]);
-//           //objDiv.scrollIntoView(false);
-//           objDiv.style.opacity = '1';
-//         }, 200);
-//         that.isScrolling = false;
-//       } catch (err) {
-//         that.g.wdLog(['> Error :' + err]);
-//       }
-//     }, 0);
-//   }
-// }
+  //  scrollToBottomStart() {
+  //   const that = this;
+  //   if ( this.isScrolling === false ) {
+  //     setTimeout(function () {
+  //       try {
+  //         that.isScrolling = true;
+  //         const objDiv = document.getElementById(that.idDivScroll);
+  //         setTimeout(function () {
+  //           that.g.wdLog(['objDiv::', objDiv.scrollHeight]);
+  //           //objDiv.scrollIntoView(false);
+  //           objDiv.style.opacity = '1';
+  //         }, 200);
+  //         that.isScrolling = false;
+  //       } catch (err) {
+  //         that.g.wdLog(['> Error :' + err]);
+  //       }
+  //     }, 0);
+  //   }
+  // }
 
   /**
    * scrollo la lista messaggi all'ultimo
    * chiamato in maniera ricorsiva sino a quando non risponde correttamente
   */
 
- scrollToBottom(withoutAnimation?: boolean) {
-  const that = this;
-  try {
-    that.isScrolling = true;
-    const objDiv = document.getElementById(that.idDivScroll) as HTMLElement;
-    // const element = objDiv[0] as HTMLElement;
-    setTimeout(function () {
+  scrollToBottom(withoutAnimation?: boolean) {
+    const that = this;
+    try {
+      that.isScrolling = true;
+      const objDiv = document.getElementById(that.idDivScroll) as HTMLElement;
+      // const element = objDiv[0] as HTMLElement;
+      setTimeout(function () {
 
-      if (that.isIE === true || withoutAnimation === true || that.firstScroll === true) {
-        objDiv.parentElement.classList.add('withoutAnimation');
-      } else {
-        objDiv.parentElement.classList.remove('withoutAnimation');
-      }
-      objDiv.parentElement.scrollTop = objDiv.scrollHeight;
-      objDiv.style.opacity = '1';
-      that.firstScroll = false;
-    }, 0);
-  } catch (err) {
-    this.logger.error('[CONV-CONTENT] scrollToBottom > Error :' + err);
+        if (that.isIE === true || withoutAnimation === true || that.firstScroll === true) {
+          objDiv.parentElement.classList.add('withoutAnimation');
+        } else {
+          objDiv.parentElement.classList.remove('withoutAnimation');
+        }
+        objDiv.parentElement.scrollTop = objDiv.scrollHeight;
+        objDiv.style.opacity = '1';
+        that.firstScroll = false;
+      }, 0);
+    } catch (err) {
+      this.logger.error('[CONV-CONTENT] scrollToBottom > Error :' + err);
+    }
+    that.isScrolling = false;
   }
-  that.isScrolling = false;
- }
 
   // ========= END:: functions scroll position ======= //
 
@@ -252,28 +254,28 @@ export class ConversationContentComponent implements OnInit {
     return false;
   }
 
-  hideMenuOption(){
+  hideMenuOption() {
     this.onMenuOptionShow.emit(false)
   }
 
 
   // ========= begin:: event emitter function ============//
 
-  returnOnAttachmentButtonClicked(event: any){
+  returnOnAttachmentButtonClicked(event: any) {
     this.onAttachmentButtonClicked.emit(event)
   }
 
-  returnOnBeforeMessageRender(event){
+  returnOnBeforeMessageRender(event) {
     //decommentare se in html c'è solamente component tiledesk-text
     //const messageOBJ = { message: this.message, sanitizer: this.sanitizer, messageEl: event.messageEl, component: event.component}
     this.onBeforeMessageRender.emit(event)
   }
 
-  returnOnAfterMessageRender(event){
+  returnOnAfterMessageRender(event) {
     this.onAfterMessageRender.emit(event)
   }
 
-  onImageRenderedFN(event){
+  onImageRenderedFN(event) {
     const imageRendered = event;
     if (imageRendered && this.scrollMe) {
       const divScrollMe = this.scrollMe.nativeElement;
@@ -281,7 +283,7 @@ export class ConversationContentComponent implements OnInit {
       this.scrollToBottom() // SCROLLO SEMPRE
       // if (!checkContentScrollPosition) { // SE NON SONO ALLA FINE, SCROLLO CONTENT
       // }
- 
+
     }
   }
 

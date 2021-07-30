@@ -104,4 +104,12 @@
   } 
 
 
+//   input[placeholder] { text-overflow: ellipsis; }
+// ::-moz-placeholder { text-overflow: ellipsis; } /* firefox 19+ */
+// input:-moz-placeholder { text-overflow: ellipsis; }
+
+
  
+// #ion-textarea > div > textarea[placeholder]{ text-overflow: ellipsis; }
+// #ion-textarea > div > textarea:-moz-placeholder  { text-overflow: ellipsis; }
+// ::-moz-placeholder { text-overflow: ellipsis; } /* firefox 19+ */

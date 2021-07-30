@@ -1,12 +1,16 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Component({
   selector: 'app-header-conversation-detail',
   templateUrl: './header-conversation-detail.component.html',
   styleUrls: ['./header-conversation-detail.component.scss'],
 })
-export class HeaderConversationDetailComponent implements OnInit ,OnChanges {
+export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   @Input() conversationAvatar: any;
   @Input() idLoggedUser: string;
   @Input() isOpenInfoConversation: boolean;
@@ -24,29 +28,41 @@ export class HeaderConversationDetailComponent implements OnInit ,OnChanges {
   fontColor = '#949494';
   membersConversation = ['SYSTEM'];
 
+  private logger: LoggerService = LoggerInstance.getInstance();
+
+  /**
+   * Constructor
+   * @param imageRepoService 
+   */
   constructor(
     public imageRepoService: ImageRepoService
-    // private translateService: CustomTranslateService
-  ) {
-  }
 
+  ) { }
+
+  // ----------------------------------------------------
+  // @ Lifehooks
+  // ----------------------------------------------------
   ngOnInit() {
-    console.log('HeaderConversationDetailComponent', this.idLoggedUser);
-    console.log(this.conversationAvatar);
+    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - idLoggedUser', this.idLoggedUser);
+    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - conversationAvatar', this.conversationAvatar);
+
     this.initialize();
   }
 
   ngOnChanges() {
-    console.log('HeaderConversationDetailComponent', this.conversationAvatar);
-    if(this.conversationAvatar){
+    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnChanges) -  conversationAvatar', this.conversationAvatar);
+    if (this.conversationAvatar) {
       this.conversationAvatar.imageurl = this.imageRepoService.getImagePhotoUrl(this.conversationAvatar.uid)
     }
 
-    console.log('HeaderConversationDetailComponent isOpenInfoConversation', this.isOpenInfoConversation);
-    this.openInfoConversation =  this.isOpenInfoConversation;
+    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnChanges) - isOpenInfoConversation', this.isOpenInfoConversation);
+    this.openInfoConversation = this.isOpenInfoConversation;
   }
 
-  /** */
+
+  // ----------------------------------------------------
+  // @ Initialize (called in ngOnInit)
+  // ----------------------------------------------------
   initialize() {
     if (this.conversationAvatar && this.conversationAvatar.channelType === this.DIRECT) {
       this.isDirect = true;
@@ -55,14 +71,14 @@ export class HeaderConversationDetailComponent implements OnInit ,OnChanges {
     }
   }
 
-  /** */
-  pushPage(event) {}
-
-  /** */
   onOpenCloseInfoConversation() {
     this.openInfoMessage = false;
     this.openInfoConversation = !this.openInfoConversation;
-    console.log('onOpenCloseInfoConversation1 **************', this.openInfoConversation);
+    this.logger.log('[CONVS-DETAIL][HEADER] - onOpenCloseInfoConversation - openInfoConversation ', this.openInfoConversation);
     this.eventOpenCloseInfoConversation.emit(this.openInfoConversation);
   }
+
+  /** */
+  pushPage(event) { }
+
 }
