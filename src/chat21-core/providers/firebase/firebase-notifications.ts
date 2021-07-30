@@ -52,12 +52,13 @@ export class FirebaseNotifications extends NotificationsService {
     }
 
     removeNotificationsInstance(callback: (string) => void) {
+        var self = this;
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                this.logger.debug('[FIREBASE-NOTIFICATIONS] - User is signed in. ', user)
+                self.logger.debug('[FIREBASE-NOTIFICATIONS] - User is signed in. ', user)
 
             } else {
-                this.logger.debug('[FIREBASE-NOTIFICATIONS] - No user is signed in. ', user)
+                self.logger.debug('[FIREBASE-NOTIFICATIONS] - No user is signed in. ', user)
             }
         });
 
