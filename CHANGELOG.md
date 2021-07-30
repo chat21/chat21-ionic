@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.19
+- Fixes the bug: uploading images by dragging to the "conversation detail" area does not work if the image is dragged to an area without messages
+
 ### 3.0.42-beta.1.18
 - Improves logger service
 - Fixes the bug: with MQTT enviroment it is not possible to know changes in the conversation
