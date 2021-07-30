@@ -542,7 +542,7 @@ export class AppComponent implements OnInit {
         const pushEngine = this.appConfigProvider.getConfig().pushEngine
         if( pushEngine && pushEngine !== 'none'){
           this.notificationsService.removeNotificationsInstance(function (res) {
-            this.logger.debug('[APP-COMP] FIREBASE-NOTIFICATION >>>>  removeNotificationsInstance > CALLBACK RES', res);
+            that.logger.debug('[APP-COMP] FIREBASE-NOTIFICATION >>>>  removeNotificationsInstance > CALLBACK RES', res);
   
             if (res === 'success') {
               that.removePresenceAndLogout();
