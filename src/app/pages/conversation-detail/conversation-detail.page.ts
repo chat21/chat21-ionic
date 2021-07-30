@@ -1015,9 +1015,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   /** */
   setHeightTextArea() {
     try {
-      // tslint:disable-next-line: no-string-literal
-      this.heightMessageTextArea = this.rowTextArea['el'].offsetHeight;
-      this.logger.log('[CONVS-DETAIL] setHeightTextArea - heightMessageTextArea: ', this.heightMessageTextArea);
+      if (this.rowTextArea) {
+        this.heightMessageTextArea = this.rowTextArea['el'].offsetHeight;
+        this.logger.log('[CONVS-DETAIL] setHeightTextArea - heightMessageTextArea: ', this.heightMessageTextArea);
+      }
     } catch (e) {
       this.logger.error('[CONVS-DETAIL] setHeightTextArea - ERROR ', e)
       this.heightMessageTextArea = '50';
