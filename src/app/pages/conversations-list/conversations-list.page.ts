@@ -59,12 +59,6 @@ export class ConversationListPage implements OnInit {
   translationMapConversation: Map<string, string>;
   stylesMap: Map<string, string>;
 
-  // --- START:::event Emitter handler functions --- //
-  // private onConversationSelectedHandler = new EventEmitter();
-  // private onImageLoadedHandler = new EventEmitter();
-  // private onConversationLoadedHandler = new EventEmitter();
-  // --- END:::event Emitter handler functions --- //
-
   public conversationType = 'active'
   headerTitle: string
 
@@ -90,12 +84,24 @@ export class ConversationListPage implements OnInit {
     this.listenToNotificationCLick()
   }
 
+  // -----------------------------------------------
+  // @ Lifehooks
+  // -----------------------------------------------
+  ngOnInit() { }
+
+  ionViewWillEnter() {
+    this.logger.log('[CONVS-LIST-PAGE] ionViewWillEnter uidConvSelected', this.uidConvSelected);
+    this.listnerStart();
+  }
+
+  ionViewDidEnter() { }
+
   listenToNotificationCLick() {
     const that = this;
     navigator.serviceWorker.addEventListener('message', function (event) {
-      that.logger.debug('[CONVS-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event data: ', event.data);
-      that.logger.debug('[CONVS-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event data data: ', event.data['data']);
-      that.logger.debug('[CONVS-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event data data typeof: ', typeof event.data['data']);
+      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data: ', event.data);
+      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data data: ', event.data['data']);
+      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data data typeof: ', typeof event.data['data']);
       let uidConvSelected = ''
       if (typeof event.data['data'] === 'string') {
         uidConvSelected = event.data['data']
@@ -103,27 +109,19 @@ export class ConversationListPage implements OnInit {
         uidConvSelected = event.data['data']['recipient']
       }
 
-      that.logger.debug('[CONVS-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
-      that.logger.debug('[CONVS-LIST-PAGE] listenToNotificationCLick- Received a message from service worker that.conversations: ', that.conversations);
+      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
+      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker that.conversations: ', that.conversations);
       const conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
       if (conversationSelected) {
 
         that.conversationSelected = conversationSelected;
-        that.logger.debug('[CONVS-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event conversationSelected: ', that.conversationSelected);
+        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event conversationSelected: ', that.conversationSelected);
 
         that.navigateByUrl('active', uidConvSelected)
       }
     });
   }
 
-  // getUrlParams() {
-  //   this.route.paramMap.subscribe(params => {
-  //     console.log('ConversationListPage get params: ', params);
-  //     // this.conversationWith = params.get('IDConv');
-  //     // this.conversationWithFullname = params.get('FullNameConv');
-  //     // this.conv_type = params.get('Convtype');
-  //   });
-  // }
 
   private listnerStart() {
     const that = this;
@@ -135,108 +133,42 @@ export class ConversationListPage implements OnInit {
     });
   }
 
-  ngOnInit() {
-    //console.log('ngOnInit ConversationDetailPage: ');
-  }
-
-  ionViewWillEnter() {
-    this.logger.log('[CONVS-LIST-PAGE] ionViewWillEnter uidConvSelected', this.uidConvSelected);
-    this.listnerStart();
-    // if (this.loggedUserUid) {
-    //   // this.initialize();
-    // } else {
-    //   // this.listnerUserLogged();
-    // }
-  }
-
-
-
-  ionViewDidEnter() {
-    // console.log('ConversationListPage ------------> ionViewDidEnter');
-  }
-
-  private navigatePage() {
-    this.logger.log('[CONVS-LIST-PAGE] navigatePage:: >>>> conversationSelected ', this.conversationSelected);
-    let urlPage = 'detail/';
-    if (this.conversationSelected) {
-      // urlPage = 'conversation-detail/' + this.uidConvSelected;
-      urlPage = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
-      // this.openDetailsWithState(this.conversationSelected);
-    }
-    // else {
-    //   this.router.navigateByUrl('detail');
-    // }
-
-    const navigationExtras: NavigationExtras = {
-      state: {
-        conversationSelected: this.conversationSelected
-      }
-    };
-    this.navService.openPage(urlPage, ConversationDetailPage, navigationExtras);
-  }
-
-  // openDetailsWithState(conversationSelected) {
-  //   console.log('openDetailsWithState:: >>>> conversationSelected ', conversationSelected);
-  //   let navigationExtras: NavigationExtras = {
-  //     state: {
-  //       conversationSelected: conversationSelected
-  //     }
-  //   };
-  //   this.router.navigate(['conversation-detail/' + this.uidConvSelected], navigationExtras);
-  // }
 
   // ------------------------------------------------------------------ //
-  // BEGIN SUBSCRIPTIONS
+  // Init convrsation handler
   // ------------------------------------------------------------------ //
-
-
-  /**
-   * ::: initConversationsHandler :::
-   * inizializzo chatConversationsHandler 
-   * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
-   * imposto uidConvSelected in conversationHandler
-   * e mi sottoscrivo al nodo conversazioni in conversationHandler (connect)
-   * salvo conversationHandler in chatManager
-   */
   initConversationsHandler() {
-    // const keys = ['YOU'];
-
-    // const translationMap = this.translateService.translateLanguage(keys);
-
-    // console.log('initConversationsHandler ------------->', userId, this.tenant);
-    // // 1 - init chatConversationsHandler and  archviedConversationsHandler
-    // this.conversationsHandlerService.initialize(this.tenant, userId, translationMap);
-    // 2 - get conversations from storage
-    // this.chatConversationsHandler.getConversationsFromStorage();
-    // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-
-    // this.conversationsHandlerService.connect(); // old - now renamed in subscribeToConversations
-
-    // ------------------------------------------------------------------------------------------
-    // subscribeToConversations Moved in APP.COMPONENT.ts - to manage that.showPlaceholder = true;
-    // ------------------------------------------------------------------------------------------ 
-    // this.conversationsHandlerService.subscribeToConversations(() => {
-    //   this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
-    //   if (!this.conversations || this.conversations.length === 0) {
-    //     that.showPlaceholder = true;
-    //   }
-    // });
-
     this.conversations = this.conversationsHandlerService.conversations;
-    this.logger.log('[CONVS-LIST-PAGE] CONVS ++++', this.conversations)
-
-
-
-    // 6 - save conversationHandler in chatManager
+    this.logger.log('[CONVS-LIST-PAGE] - CONVERSATIONS ', this.conversations)
+    // save conversationHandler in chatManager
     this.chatManager.setConversationsHandler(this.conversationsHandlerService);
-    const that = this;
     this.showPlaceholder = false;
-    // setTimeout(() => {
-    //   if (!that.conversations || that.conversations.length === 0) {
-    //     that.showPlaceholder = true;
-    //   }
-    // }, 2000);
   }
+
+
+
+  initArchivedConversationsHandler() {
+    const keysConversation = ['CLOSED'];
+    this.translationMapConversation = this.translateService.translateLanguage(keysConversation);
+
+    this.archivedConversationsHandlerService.subscribeToConversations(() => {
+      this.logger.log('[CONVS-LIST-PAGE]-CONVS - conversations archived length ', this.archivedConversations.length)
+
+    });
+
+    this.archivedConversations = this.archivedConversationsHandlerService.archivedConversations;
+    this.logger.log('[CONVS-LIST-PAGE] archived conversation', this.archivedConversations)
+
+    // save archivedConversationsHandlerService in chatManager
+    this.chatManager.setArchivedConversationsHandler(this.archivedConversationsHandlerService);
+
+    this.logger.log('[CONVS-LIST-PAGE]-CONVS SubscribeToConversations - conversations archived length ', this.archivedConversations.length)
+    if (!this.archivedConversations || this.archivedConversations.length === 0) {
+      this.loadingIsActive = false;
+    }
+
+  }
+
 
   // ----------------------------------------------------------------------------------------------------
   // To display "No conversation yet" MESSAGE in conversazion list 
@@ -265,79 +197,14 @@ export class ConversationListPage implements OnInit {
 
 
 
-  /**
-   * ::: initArchivedConversationsHandler :::
-   * inizializzo archviedConversationsHandler
-   * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
-   * imposto uidConvSelected in chatArchivedConversationsHandler
-   * e mi sottoscrivo al nodo conversazioni in chatArchivedConversationsHandler (connect)
-   * salvo conversationHandler in chatManager
-   */
-  initArchivedConversationsHandler(userId: string) {
-    // const keys = ['YOU'];
-    // const translationMap = this.translateService.translateLanguage(keys);
-
-    const keysConversation = ['CLOSED'];
-    this.translationMapConversation = this.translateService.translateLanguage(keysConversation);
-
-    // console.log('initArchivedConversationsHandler ------------->', userId, this.tenant);
-    // // 1 - init  archviedConversationsHandler
-    // this.archivedConversationsHandlerService.initialize(this.tenant, userId, translationMap);
-    // 2 - get conversations from storage
-    // this.chatConversationsHandler.getConversationsFromStorage();
-    // 5 - connect archviedConversationsHandler to firebase event (add, change, remove)
-    // this.archivedConversationsHandlerService.subscribeToConversations();
-
-    this.archivedConversationsHandlerService.subscribeToConversations(() => {
-      this.logger.log('[CONVS-LIST-PAGE]-CONVS - conversations archived length ', this.archivedConversations.length)
-      // if (!this.archivedConversations || this.archivedConversations.length === 0) {
-      //   this.loadingIsActive = false;
-      // }
 
 
-      // this.archivedConversations.forEach(conv => {
-      //   console.log('CONVS SubscribeToConversations (convs-list-page) - conversations archived COV ', conv.last_message_text);
-      //   // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the archived convesations list
-      //   if (conv && conv.last_message_text) {
-      //     var regex = /<br\s*[\/]?>/gi;
-      //     conv.last_message_text = conv.last_message_text.replace(regex, "\n")
-      //   }
-      // });
-    });
-
-    this.archivedConversations = this.archivedConversationsHandlerService.archivedConversations;
-    this.logger.log('[CONVS-LIST-PAGE] archived conversation', this.archivedConversations)
-    // 6 - save archivedConversationsHandlerService in chatManager
-    this.chatManager.setArchivedConversationsHandler(this.archivedConversationsHandlerService);
-    // const that = this;
-    // this.showPlaceholder = false;
-    // setTimeout(() => {
-    //   if (!that.archivedConversations || that.archivedConversations.length === 0) {
-    //     this.showPlaceholder = true;
-    //   }
-    // }, 2000);
-    this.logger.log('[CONVS-LIST-PAGE]-CONVS SubscribeToConversations - conversations archived length ', this.archivedConversations.length)
-    if (!this.archivedConversations || this.archivedConversations.length === 0) {
-      this.loadingIsActive = false;
-    }
-
-  }
-
-
-  /** */
+  // ------------------------------------------------------------------ 
+  //  SUBSCRIPTIONS
+  // ------------------------------------------------------------------
   initSubscriptions() {
     let key = '';
-    // key = 'loggedUser:login';
-    // if (!isInArray(key, this.subscriptions)) {
-    //   this.subscriptions.push(key);
-    //   this.events.subscribe(key, this.subscribeLoggedUserLogin);
-    // }
 
-    // key = 'conversationsChanged';
-    // if (!isInArray(key, this.subscriptions)) {
-    //   this.subscriptions.push(key);
-    //   this.events.subscribe(key, this.conversationsChanged);
-    // }
 
     key = 'loggedUser:logout';
     if (!isInArray(key, this.subscriptions)) {
@@ -345,11 +212,11 @@ export class ConversationListPage implements OnInit {
       this.events.subscribe(key, this.subscribeLoggedUserLogout);
     }
 
-    key = 'readAllMessages';
-    if (!isInArray(key, this.subscriptions)) {
-      this.subscriptions.push(key);
-      this.events.subscribe(key, this.readAllMessages);
-    }
+    // key = 'readAllMessages';
+    // if (!isInArray(key, this.subscriptions)) {
+    //   this.subscriptions.push(key);
+    //   this.events.subscribe(key, this.readAllMessages);
+    // }
 
     key = 'profileInfoButtonClick:changed';
     if (!isInArray(key, this.subscriptions)) {
@@ -357,12 +224,11 @@ export class ConversationListPage implements OnInit {
       this.events.subscribe(key, this.subscribeProfileInfoButtonClicked);
     }
 
-    this.conversationsHandlerService.readAllMessages.subscribe((conversationId: string) => {
-      this.logger.log('[CONVS-LIST-PAGE] ***** readAllMessages *****', conversationId);
-      this.readAllMessages(conversationId);
-    });
+    // this.conversationsHandlerService.readAllMessages.subscribe((conversationId: string) => {
+    //   this.logger.log('[CONVS-LIST-PAGE] ***** readAllMessages *****', conversationId);
+    //   this.readAllMessages(conversationId);
+    // });
 
-    const that = this;
     this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
       this.logger.log('[CONVS-LIST-PAGE] ***** conversationsAdded *****', conversation);
       // that.conversationsChanged(conversations);
@@ -371,115 +237,47 @@ export class ConversationListPage implements OnInit {
         this.onConversationLoaded(conversation)
       }
     });
+
     this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
-      that.logger.debug('[CONVS-LIST-PAGE] ***** subscribeConversationChanged *****', conversation);
+      this.logger.log('[CONVS-LIST-PAGE] ***** subscribeConversationChanged *****', conversation);
       // that.conversationsChanged(conversations)
       if (conversation) {
         this.onImageLoaded(conversation)
         this.onConversationLoaded(conversation)
       }
     });
+
     this.conversationsHandlerService.conversationRemoved.subscribe((conversation: ConversationModel) => {
       this.logger.log('[CONVS-LIST-PAGE] ***** conversationsRemoved *****', conversation);
     });
-
-    // let subscription: any;
-    // let subscriptionKey: string;
-
-    // subscriptionKey = 'BSConversationsChanged';
-    // subscription = this.subscriptions2.find(item => item.key === subscriptionKey);
-    // if (!subscription) {
-    //   subscription = this.conversationsHandlerService.conversationChanged.subscribe((data: ConversationModel) => {
-    //     console.log('***** LIST subscribeConversationChanged*****', data, this.loggedUserUid);
-    //     console.log('CONV-CHANGED - CONVS-LIST-PAGE ', data)
-    //     // this.onConversationLoaded(data);
-    //     // this.onImageLoaded(data);
-    //   });
-    //   const subscribe = { key: subscriptionKey, value: subscription };
-    //   this.subscriptions2.push(subscribe);
-    // }
-
-  }
-  // CALLBACKS //
-
-  /**
-   * ::: readAllMessages :::
-   * quando tutti i messaggi della chat risultano visualizzati,
-   * cioè quando nel dettaglio conversazione mi porto al bottom della pagina,
-   * scatta l'evento readAllMessages che viene intercettato nell'elenco conversazioni
-   * e modifica la conversazione attuale portando is_new a true
-   */
-  readAllMessages = (uid: string) => {
-    this.logger.log('[CONVS-LIST-PAGE] readAllMessages', uid);
-    const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
-    if (conversationSelected) {
-      conversationSelected.is_new = false;
-      conversationSelected.status = '0';
-      conversationSelected.selected = true;
-    }
   }
 
-
-  // /**
-  //  * ::: subscribeLoggedUserLogin :::
-  //  * effettuato il login:
-  //  * 1 - imposto loggedUser
-  //  * 2 - dismetto modale
-  //  * 3 - inizializzo elenco conversazioni
-  //  */
-  // subscribeLoggedUserLogin = (user: any) => {
-  //   console.log('3 ************** subscribeLoggedUserLogin', user);
-  //   this.loggedUser = user;
-  //   try {
-  //     closeModal(this.modalController);
-  //   } catch (err) {
-  //     console.error('-> error:', err);
-  //   }
-  //   this.initialize();
-  // }
-
-  /**
-   * ::: subscribeLoggedUserLogout :::
-   * effettuato il logout:
-   * 1 - resetto array conversazioni
-   * 2 - resetto conversazione selezionata
-   * 3 - mostro modale login
-   */
+  // ------------------------------------------------------------------------------------
+  // @ SUBSCRIBE TO LOGGED USER LOGOUT ??????????? SEEMS NOT USED ?????????????????
+  // ------------------------------------------------------------------------------------
   subscribeLoggedUserLogout = () => {
-    this.logger.log('[CONVS-LIST-PAGE] - subscribeLoggedUserLogout');
     this.conversations = [];
     this.uidConvSelected = null;
-    // presentModal(this.modalController, LoginModal, { tenant: this.tenant, enableBackdropDismiss: false });
+    this.logger.log('[CONVS-LIST-PAGE] - subscribeLoggedUserLogout conversations ', this.conversations);
+    this.logger.log('[CONVS-LIST-PAGE] - subscribeLoggedUserLogout uidConvSelected ', this.uidConvSelected);
   }
 
-  /**
-   * ::: conversationsChanged :::
-   * evento richiamato su add, change, remove dell'elenco delle conversazioni
-   * 1 - aggiorno elenco conversazioni
-   * 2 - aggiorno il conto delle nuove conversazioni
-   * 4 - se esiste un uidReciverFromUrl (passato nell'url)
-   *    e se esiste una conversazione con lo stesso id di uidReciverFromUrl
-   *    imposto questa come conversazione attiva (operazione da fare una sola volta al caricamento delle conversazioni) 
-   *    e la carico nella pagina di dettaglio e azzero la variabile uidReciverFromUrl!!!
-   * 5 - altrimenti se esiste una conversazione con lo stesso id della conversazione attiva
-   *    e la pagina di dettaglio è vuota (placeholder), carico la conversazione attiva (uidConvSelected) nella pagina di dettaglio 
-   *    (operazione da fare una sola volta al caricamento delle conversazioni)
-   */
+
+
+  // ------------------------------------------------------------------------------------
+  // @ SUBSCRIBE TO CONVERSATION CHANGED  ??????????? SEEMS NOT USED ?????????????????
+  // ------------------------------------------------------------------------------------
   conversationsChanged = (conversations: ConversationModel[]) => {
-    const that = this;
-    // this.conversations = conversations;
     this.numberOpenConv = this.conversationsHandlerService.countIsNew();
-    this.logger.log('[CONVS-LIST-PAGE]  »»»»»»»»» conversationsChanged - CONVERSATIONS: ', this.numberOpenConv);
+    this.logger.log('[CONVS-LIST-PAGE] - conversationsChanged - NUMB OF CONVERSATIONS: ', this.numberOpenConv);
     // console.log('conversationsChanged »»»»»»»»» uidConvSelected', that.conversations[0], that.uidConvSelected);
-    if (that.uidConvSelected && !this.conversationSelected) {
-      const conversationSelected = that.conversations.find(item => item.uid === that.uidConvSelected);
+    if (this.uidConvSelected && !this.conversationSelected) {
+      const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
       if (conversationSelected) {
         this.conversationSelected = conversationSelected;
-        that.setUidConvSelected(that.uidConvSelected);
+        this.setUidConvSelected(this.uidConvSelected);
       }
-      // localStorage.setItem('conversationSelected', JSON.stringify(conversationSelected));
     }
-    // }
   }
 
 
@@ -508,7 +306,7 @@ export class ConversationListPage implements OnInit {
   subscribeProfileInfoButtonClicked = (event: string) => {
     this.logger.log('[CONVS-LIST-PAGE] ************** subscribeProfileInfoButtonClicked: ', event);
     if (event === 'displayArchived') {
-      this.initArchivedConversationsHandler(this.loggedUserUid);
+      this.initArchivedConversationsHandler();
       // this.openArchivedConversationsModal()
       this.conversationType = 'archived'
 
@@ -593,11 +391,8 @@ export class ConversationListPage implements OnInit {
    * imposto uidConvSelected recuperando id ultima conversazione aperta dallo storage
    */
   initVariables() {
-    const that = this;
-    // const TEMP = getParameterByName('recipient');
-    // if (TEMP) {
-    //   this.uidReciverFromUrl = TEMP;
-    // }
+
+
     this.logger.log('[CONVS-LIST-PAGE] uidReciverFromUrl:: ' + this.uidReciverFromUrl);
     this.logger.log('[CONVS-LIST-PAGE] loggedUserUid:: ' + this.loggedUserUid);
     this.logger.log('[CONVS-LIST-PAGE] tenant:: ' + this.tenant);
@@ -608,52 +403,12 @@ export class ConversationListPage implements OnInit {
         this.setUidConvSelected(IDConv);
       } else {
 
-        // // da togliere
-        // this.databaseProvider.getUidLastOpenConversation().then((uid: string) => {
-        //   console.log('getUidLastOpenConversation:: ' + uid);
-        //   console.log('33333');
-        //   that.navigateByUrl('active', uid);
-        // })
-        //   .catch((error) => {
-        //     console.log('44444');
-        //     console.log('error::: ', error);
-        //   });
+        this.logger.log('[CONVS-LIST-PAGE] conversationWith: ', IDConv);
       }
     }
   }
 
 
-  // /**
-  //  * ::: initConversationsHandler :::
-  //  * inizializzo chatConversationsHandler e archviedConversationsHandler
-  //  * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
-  //  * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
-  //  * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
-  //  * salvo conversationHandler in chatManager
-  //  */
-  // initConversationsHandler() {
-  //   console.log('initConversationsHandler -------------> initConversationsHandler');
-  //   /// const tenant = this.chatManager.getTenant();
-  //   /// const loggedUser = this.chatManager.getLoggedUser();
-
-  //   // 1 - init chatConversationsHandler and  archviedConversationsHandler
-  //   this.chatConversationsHandler = this.chatConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
-  //   // this.chatArchivedConversationsHandler = this.chatArchivedConversationsHandler.initWithTenant(this.tenant, this.loggedUser);
-
-  //   // 2 - get conversations from storage
-  //   this.chatConversationsHandler.getConversationsFromStorage();
-
-  //   // 3 - set uidConvSelected in conversationHandler
-  //   this.chatConversationsHandler.uidConvSelected = this.uidConvSelected;
-  //   // this.chatArchivedConversationsHandler.uidConvSelected = this.uidConvSelected
-
-  //   // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-  //   this.chatConversationsHandler.connect();
-  //   // this.chatArchivedConversationsHandler.connect();
-
-  //   // 6 - save conversationHandler in chatManager
-  //   this.chatManager.setConversationsHandler(this.chatConversationsHandler);
-  // }
 
   /**
    * ::: setUidConvSelected :::
@@ -674,13 +429,6 @@ export class ConversationListPage implements OnInit {
         this.logger.log('[CONVS-LIST-PAGE] la conv ', this.conversationSelected, ' è già stata caricata');
         this.conversationSelected = conversationSelected;
         this.logger.log('[CONVS-LIST-PAGE] setUidConvSelected: ', this.conversationSelected);
-        // this.databaseProvider.setUidLastOpenConversation(uidConvSelected);
-
-        // if (this.conversationSelected.status === "0") {
-        //   localStorage.setItem('activeConversationSelected', JSON.stringify(this.conversationSelected));
-        // } else if (this.conversationSelected.status === "1") {
-        //   localStorage.setItem('archivedConversationSelected', JSON.stringify(this.conversationSelected));
-        // }
       }
     }
   }
@@ -730,7 +478,7 @@ export class ConversationListPage implements OnInit {
   }
   // ?????? 
   navigateByUrl(converationType: string, uidConvSelected: string) {
-    this.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION uidConvSelected: ', uidConvSelected);
+    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl uidConvSelected: ', uidConvSelected);
     this.logger.log('[CONVS-LIST-PAGE] navigateByUrl run  this.setUidConvSelected');
     this.logger.log('[CONVS-LIST-PAGE] navigateByUrl this.uidConvSelected ', this.uidConvSelected);
     this.logger.log('[CONVS-LIST-PAGE] navigateByUrl this.conversationSelected ', this.conversationSelected)
@@ -753,11 +501,9 @@ export class ConversationListPage implements OnInit {
   }
 
 
-  /**
-   * ::: onOpenContactsDirectory :::
-   * apro pagina elenco users
-   * (metodo richiamato da html)
-   */
+  // ---------------------------------------------------------
+  // Opens the list of contacts for direct convs
+  // ---------------------------------------------------------
   openContactsDirectory(event: any) {
     const TOKEN = this.tiledeskAuthService.getTiledeskToken();
     this.logger.log('[CONVS-LIST-PAGE] openContactsDirectory', TOKEN);
@@ -768,7 +514,6 @@ export class ConversationListPage implements OnInit {
     }
   }
 
-  /** */
   closeContactsDirectory() {
     try {
       closeModal(this.modalController);
@@ -777,14 +522,12 @@ export class ConversationListPage implements OnInit {
     }
   }
 
-  /**
-   * ::: onOpenProfileInfo :::
-   * apro pagina profilo
-   * (metodo richiamato da html)
-   */
+  // ---------------------------------------------------------
+  // Opens logged user profile modal
+  // ---------------------------------------------------------
   openProfileInfo(event: any) {
     const TOKEN = this.messagingAuthService.getToken();
-    this.logger.log('[CONVS-LIST-PAGE] open ProfileInfoPage', TOKEN);
+    this.logger.log('[CONVS-LIST-PAGE] open ProfileInfoPage TOKEN ', TOKEN);
     if (checkPlatformIsMobile()) {
       presentModal(this.modalController, ProfileInfoPage, { token: TOKEN })
     } else {
@@ -821,7 +564,7 @@ export class ConversationListPage implements OnInit {
       // const projectId = conversation.attributes.projectId
       const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
       this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
-   
+
       this.tiledeskService.closeSupportGroup(tiledeskToken, project_id, conversationId).subscribe(res => {
 
         this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup RES', res);
@@ -833,28 +576,12 @@ export class ConversationListPage implements OnInit {
         this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS LENGHT ', this.conversations.length)
       });
     } else {
-  
+
       this.conversationsHandlerService.archiveConversation(conversationId)
     }
   }
 
-  /**
-   * ::: openArchivedConversationsPage :::
-   * Open the archived conversations page
-   * (metodo richiamato da html)
-   */
-  openArchivedConversationsPage() {
-    this.logger.log('[CONVS-LIST-PAGE] openArchivedConversationsPage');
-  }
 
-
-  // info page
-  returnCloseInfoPage() {
-    this.logger.log('[CONVS-LIST-PAGE] returnCloseInfoPage');
-    // this.isShowMenuPage = false;
-    this.initialize();
-
-  }
 
   public generateFake(count: number): Array<number> {
     const indexes = [];
@@ -864,5 +591,110 @@ export class ConversationListPage implements OnInit {
     return indexes;
   }
 
+  // ------------------------------------------------------------------
+  // !!! Not used methods !!!
+  // ------------------------------------------------------------------
 
+  // /**
+  //  * ::: openArchivedConversationsPage :::
+  //  * Open the archived conversations page
+  //  * (metodo richiamato da html)
+  //  */
+  // openArchivedConversationsPage() {
+  //   this.logger.log('[CONVS-LIST-PAGE] openArchivedConversationsPage');
+  // }
+
+
+  // // info page
+  // returnCloseInfoPage() {
+  //   this.logger.log('[CONVS-LIST-PAGE] returnCloseInfoPage');
+  //   // this.isShowMenuPage = false;
+  //   this.initialize();
+
+  // }
+
+
+  // private navigatePage() {
+  //   this.logger.log('[CONVS-LIST-PAGE] navigatePage:: >>>> conversationSelected ', this.conversationSelected);
+  //   let urlPage = 'detail/';
+  //   if (this.conversationSelected) {
+  //     // urlPage = 'conversation-detail/' + this.uidConvSelected;
+  //     urlPage = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname;
+  //     // this.openDetailsWithState(this.conversationSelected);
+  //   }
+  //   // else {
+  //   //   this.router.navigateByUrl('detail');
+  //   // }
+
+  //   const navigationExtras: NavigationExtras = {
+  //     state: {
+  //       conversationSelected: this.conversationSelected
+  //     }
+  //   };
+  //   this.navService.openPage(urlPage, ConversationDetailPage, navigationExtras);
+  // }
+
+
+  // openDetailsWithState(conversationSelected) {
+  //   console.log('openDetailsWithState:: >>>> conversationSelected ', conversationSelected);
+  //   let navigationExtras: NavigationExtras = {
+  //     state: {
+  //       conversationSelected: conversationSelected
+  //     }
+  //   };
+  //   this.router.navigate(['conversation-detail/' + this.uidConvSelected], navigationExtras);
+  // }
+
+  // /**
+  //  * ::: subscribeLoggedUserLogin :::
+  //  * effettuato il login:
+  //  * 1 - imposto loggedUser
+  //  * 2 - dismetto modale
+  //  * 3 - inizializzo elenco conversazioni
+  //  */
+  // subscribeLoggedUserLogin = (user: any) => {
+  //   console.log('3 ************** subscribeLoggedUserLogin', user);
+  //   this.loggedUser = user;
+  //   try {
+  //     closeModal(this.modalController);
+  //   } catch (err) {
+  //     console.error('-> error:', err);
+  //   }
+  //   this.initialize();
+  // }
+
+
+
+  /**
+   * ::: conversationsChanged :::
+   * evento richiamato su add, change, remove dell'elenco delle conversazioni
+   * 1 - aggiorno elenco conversazioni
+   * 2 - aggiorno il conto delle nuove conversazioni
+   * 4 - se esiste un uidReciverFromUrl (passato nell'url)
+   *    e se esiste una conversazione con lo stesso id di uidReciverFromUrl
+   *    imposto questa come conversazione attiva (operazione da fare una sola volta al caricamento delle conversazioni) 
+   *    e la carico nella pagina di dettaglio e azzero la variabile uidReciverFromUrl!!!
+   * 5 - altrimenti se esiste una conversazione con lo stesso id della conversazione attiva
+   *    e la pagina di dettaglio è vuota (placeholder), carico la conversazione attiva (uidConvSelected) nella pagina di dettaglio 
+   *    (operazione da fare una sola volta al caricamento delle conversazioni)
+   */
+
+
+
+    // ------------------------------------------------------------------------------------
+  // ::: readAllMessages :::  ??????????? SEEMS NOT USED ?????????????????
+  // when all chat messages are displayed,
+  // that is when in the conversation detail I go to the bottom of the page,
+  // the readAllMessages event is triggered and is intercepted in the conversation list
+  // and modify the current conversation by bringing is_new to false
+  // ------------------------------------------------------------------------------------
+  // readAllMessages = (uid: string) => {
+  //   this.logger.log('[CONVS-LIST-PAGE] readAllMessages', uid);
+  //   const conversationSelected = this.conversations.find(item => item.uid === this.uidConvSelected);
+  //   if (conversationSelected) {
+  //     conversationSelected.is_new = false;
+  //     conversationSelected.status = '0';
+  //     conversationSelected.selected = true;
+  //   }
+  // }
 }
