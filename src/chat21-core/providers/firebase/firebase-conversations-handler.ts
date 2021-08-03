@@ -31,7 +31,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
     // BehaviorSubject
     BSConversationDetail: BehaviorSubject<ConversationModel>;
-    readAllMessages: BehaviorSubject<string>;
+    // readAllMessages: BehaviorSubject<string>;
     conversationAdded: BehaviorSubject<ConversationModel>;
     conversationChanged: BehaviorSubject<ConversationModel>;
     conversationRemoved: BehaviorSubject<ConversationModel>;
@@ -152,6 +152,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
 
     setConversationRead(conversationrecipient): void {
+        this.logger.log('[CONVS-DETAIL][FB-ACTIVE] updateConversationBadge: ');
         const urlUpdate = conversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversationrecipient;
         const update = {};
         update['/is_new'] = false;

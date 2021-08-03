@@ -35,7 +35,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
 
     // BehaviorSubject
     BSConversationDetail: BehaviorSubject<ConversationModel>;
-    readAllMessages: BehaviorSubject<string>;
+    // readAllMessages: BehaviorSubject<string>;
     archivedConversationAdded: BehaviorSubject<ConversationModel>;
     archivedConversationChanged: BehaviorSubject<ConversationModel>;
     archivedConversationRemoved: BehaviorSubject<ConversationModel>;
@@ -143,6 +143,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
 
     //imposto la conversazione come: letta
     setConversationRead(conversationrecipient): void {
+        this.logger.log('[CONVS-DETAIL][FB-ARCHIVED] updateConversationBadge: ');
         const urlUpdate = archivedConversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversationrecipient;
         const update = {};
         update['/is_new'] = false;
