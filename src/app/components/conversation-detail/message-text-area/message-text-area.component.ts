@@ -101,9 +101,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     //   // this.TEXAREA_PLACEHOLDER = '';
 
     // } else 
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] currentWindowWidth ", this.currentWindowWidth);
-    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] isOpenInfoConversation', this.isOpenInfoConversation);
-    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] this.conversationWith.startsWith("support-group")', this.conversationWith.startsWith("support-group"));
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] currentWindowWidth ", this.currentWindowWidth);
+    // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] isOpenInfoConversation', this.isOpenInfoConversation);
+    // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] this.conversationWith.startsWith("support-group")', this.conversationWith.startsWith("support-group"));
 
 
     if (this.currentWindowWidth >= 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
@@ -130,7 +130,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
     }
 
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] checkPlatformIsMobile() ", checkPlatformIsMobile());
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] checkPlatformIsMobile() ", checkPlatformIsMobile());
     if (checkPlatformIsMobile() === true) {
 
       if (this.currentWindowWidth <= 430 && this.currentWindowWidth >= 274) {
@@ -166,8 +166,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
     if (event.target.innerWidth >= 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
       this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
-      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - else - DISPLAY LONG_TEXAREA_PLACEHOLDER ');
-      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - else - this.currentWindowWidth ', this.currentWindowWidth);
+      // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - else - DISPLAY LONG_TEXAREA_PLACEHOLDER ');
+      // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - else - this.currentWindowWidth ', this.currentWindowWidth);
 
     } else if (event.target.innerWidth >= 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
       this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
@@ -186,7 +186,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
     }
 
-    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] checkPlatformIsMobile() ', checkPlatformIsMobile());
+    // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] checkPlatformIsMobile() ', checkPlatformIsMobile());
     if (checkPlatformIsMobile() === true) {
 
       if (event.target.innerWidth <= 430 && event.target.innerWidth >= 274) {
@@ -214,8 +214,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   }
 
   ngOnChanges() {
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges this.isOpenInfoConversation ", this.isOpenInfoConversation);
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges this.isOpenInfoConversation ", this.isOpenInfoConversation);
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
 
 
     // use case drop
@@ -390,14 +390,14 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   ionChange(e: any) {
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange event ", e);
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange detail.value ", e.detail.value);
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange event ", e);
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange detail.value ", e.detail.value);
 
     const message = e.detail.value
-    this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange message ", message);
+    // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange message ", message);
     // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange  this.messageString ", this.messageString);
     const height = e.target.offsetHeight + 20; // nk added +20
-    this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange text-area height ", height);
+    // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange text-area height ", height);
     // this.getIfTexareaIsEmpty('ionChange')
     try {
       if (message.trim().length > 0) {
