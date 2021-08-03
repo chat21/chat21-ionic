@@ -24,7 +24,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
 
     // BehaviorSubject
     BSConversationDetail: BehaviorSubject<ConversationModel>;
-    readAllMessages: BehaviorSubject<string>;
+    // readAllMessages: BehaviorSubject<string>;
     conversationAdded: BehaviorSubject<ConversationModel>;
     conversationChanged: BehaviorSubject<ConversationModel>;
     conversationRemoved: BehaviorSubject<ConversationModel>;
