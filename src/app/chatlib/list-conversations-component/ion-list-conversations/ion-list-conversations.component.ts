@@ -5,6 +5,9 @@ import { convertMessage } from 'src/chat21-core/utils/utils';
 import { ListConversationsComponent } from '../list-conversations/list-conversations.component';
 import { Platform } from '@ionic/angular';
 
+// import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+// import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Component({
   selector: 'ion-list-conversations',
   templateUrl: './ion-list-conversations.component.html',
@@ -17,29 +20,31 @@ export class IonListConversationsComponent extends ListConversationsComponent im
 
   public convertMessage = convertMessage;
   isApp: boolean = false;
+
+  /**
+   * 
+   * @param iterableDiffers 
+   * @param imageRepoService 
+   * @param platform 
+   */
   constructor(
     public iterableDiffers: IterableDiffers,
     public imageRepoService: ImageRepoService,
     public platform: Platform
   ) {
     super(iterableDiffers, imageRepoService)
-    console.log('ION-LIST-CONV IS-APP (constructor)',this.isApp )
+    console.log('[ION-LIST-CONVS-COMP] IS-APP (constructor)',this.isApp )
   }
 
   ngOnInit() {
     this.isApp = this.platform.is('ios') || this.platform.is('android')
-    console.log('ION-LIST-CONV IS-APP ',this.isApp )
-    console.log('ION-LIST-CONV Platform', this.platform.platforms());
-    // if(this.platform.is('mobileweb')) {
-    //   console.log('ION-LIST-CONV this.platform.is(mobileweb)', this.platform.is('mobileweb'));
-    //   this.isApp = false;
-    // } else {
-    //   this.isApp = true;
-    // }
+    console.log('[ION-LIST-CONVS-COMP] - ngOnInit - IS-APP ',this.isApp )
+    console.log('[ION-LIST-CONVS-COMP] - ngOnInit - Platform', this.platform.platforms());
    }
 
   closeConversation(conversation: ConversationModel) {
     var conversationId = conversation.uid;
+    console.log('[ION-LIST-CONVS-COMP] - closeConversation - conversationId ',conversationId )
     this.onCloseConversation.emit(conversation)
   }
 
