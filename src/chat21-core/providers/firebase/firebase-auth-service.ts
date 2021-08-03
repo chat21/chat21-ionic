@@ -4,13 +4,14 @@ import { BehaviorSubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 // firebase
-import * as firebase from 'firebase/app';
+// import * as firebase from 'firebase/app';
+import firebase from "firebase/app";
 import 'firebase/messaging';
 import 'firebase/database';
 import 'firebase/auth';
 
 // services
-import { AuthService } from '../abstract/auth.service';
+import { MessagingAuthService } from '../abstract/messagingAuth.service';
 // import { ImageRepoService } from '../abstract/image-repo.service';
 // import { FirebaseImageRepoService } from './firebase-image-repo';
 
@@ -25,11 +26,14 @@ import {
 import { resolve } from 'url';
 import { CustomLogger } from '../logger/customLogger';
 import { AppStorageService } from '../abstract/app-storage.service';
+import { LoggerInstance } from '../logger/loggerInstance';
+import { LoggerService } from '../abstract/logger.service';
 
 
 // @Injectable({ providedIn: 'root' })
 @Injectable()
-export class FirebaseAuthService extends AuthService {
+export class FirebaseAuthService extends MessagingAuthService {
+
 
   // BehaviorSubject
   BSAuthStateChanged: BehaviorSubject<any>;
@@ -48,16 +52,10 @@ export class FirebaseAuthService extends AuthService {
   //TODO-GAB
   // private imageRepo: ImageRepoService = new FirebaseImageRepoService();
 
-  private tiledeskToken: string;
   private firebaseToken: string;
-  private currentUser: UserModel;
-  private logger: CustomLogger = new CustomLogger(true);
-
+  private logger:LoggerService = LoggerInstance.getInstance()
   constructor(
-    // private events: EventsService,
-    public http: HttpClient,
-    public appStorage: AppStorageService
-    //public route: ActivatedRoute
+    public http: HttpClient
   ) {
     super();
   }
@@ -67,64 +65,44 @@ export class FirebaseAuthService extends AuthService {
    */
   initialize() {
     this.SERVER_BASE_URL = this.getBaseUrl();
-    this.URL_TILEDESK_SIGNIN = this.SERVER_BASE_URL + 'auth/signin';
-    this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously'
-    this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'auth/signinWithCustomToken';
     this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
-    this.checkIsAuth();
+    // this.URL_TILEDESK_SIGNIN = this.SERVER_BASE_URL + 'auth/signin';
+    // this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously'
+    // this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'auth/signinWithCustomToken';
+    // this.checkIsAuth();
     this.onAuthStateChanged();
   }
 
   /**
    * checkIsAuth
    */
-  checkIsAuth() {
-    this.logger.printLog(' ---------------- AuthService checkIsAuth ---------------- ')
-    this.tiledeskToken = this.appStorage.getItem('tiledeskToken')
-    this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
-    if (this.tiledeskToken) {
-      this.logger.printLog(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
-      this.createFirebaseCustomToken();
-    }  else {
-      this.logger.printLog(' ---------------- NON sono loggato ---------------- ')
-      // this.BSAuthStateChanged.next('offline');
-    }
+  // checkIsAuth() {
+  //   this.logger.printDebug(' ---------------- AuthService checkIsAuth ---------------- ')
+  //   this.tiledeskToken = this.appStorage.getItem('tiledeskToken')
+  //   this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
+  //   if (this.tiledeskToken) {
+  //     this.logger.printDebug(' ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
+  //     this.createFirebaseCustomToken();
+  //   }  else {
+  //     this.logger.printDebug(' ---------------- NON sono loggato ---------------- ')
+  //     // this.BSAuthStateChanged.next('offline');
+  //   }
 
-    // da rifattorizzare il codice seguente!!!
-    // const that = this;
-    // this.route.queryParams.subscribe(params => {
-    //   console.log('queryParams -->', params );
-    //   if (params.tiledeskToken) {
-    //     that.tiledeskToken = params.tiledeskToken;
-    //   }
-    // });
-  }
-
-  /**
-   *
-   */
-  getCurrentUser(): UserModel {
-    // return firebase.auth().currentUser;
-    return this.currentUser;
-  }
-
-  setCurrentUser(user: UserModel) {
-    // return firebase.auth().currentUser;
-    this.currentUser = user;
-  }
+  //   // da rifattorizzare il codice seguente!!!
+  //   // const that = this;
+  //   // this.route.queryParams.subscribe(params => {
+  //   //   if (params.tiledeskToken) {
+  //   //     that.tiledeskToken = params.tiledeskToken;
+  //   //   }
+  //   // });
+  // }
 
 
   /** */
   getToken(): string {
-    // console.log('UserService::getFirebaseToken', this.firebaseToken);
     return this.firebaseToken;
   }
 
-  getTiledeskToken(): string {
-    // console.log('UserService::tiledeskToken', this.tiledeskToken);
-    console.log('FIREBASE-AUTH-SERV - GET TILEDESK TOKEN: ', this.tiledeskToken);
-    return this.tiledeskToken;
-  }
 
   // ********************* START FIREBASE AUTH ********************* //
   /**
@@ -133,33 +111,14 @@ export class FirebaseAuthService extends AuthService {
   onAuthStateChanged() {
     const that = this;
     firebase.auth().onAuthStateChanged(user => {
-      this.logger.printDebug(' onAuthStateChanged', user)
+      this.logger.debug('[FIREBASEAuthSERVICE] onAuthStateChanged', user)
       if (!user) {
-        this.logger.printLog(' 1 - PASSO OFFLINE AL CHAT MANAGER')
+        this.logger.debug('[FIREBASEAuthSERVICE] 1 - PASSO OFFLINE AL CHAT MANAGER')
         that.BSAuthStateChanged.next('offline');
       } else {
-        this.logger.printLog(' 2 - PASSO ONLINE AL CHAT MANAGER')
+        this.logger.debug('[FIREBASEAuthSERVICE] 2 - PASSO ONLINE AL CHAT MANAGER')
         that.BSAuthStateChanged.next('online');
       }
-    });
-    window.addEventListener('storage', (e) => {
-      console.log('Changed:', e.key);
-      if (this.appStorage.getItem('tiledeskToken') == null) {
-        this.currentUser = null;
-        this.BSAuthStateChanged.next('offline');
-      }
-    }, false);
-  }
-
-
-  /** */
-  updateTokenOnAuthStateIsLogin() {
-    const taht = this;
-    firebase.auth().currentUser.getIdToken(false).then((token) => {
-      this.logger.printDebug('firebaseToken.', token);
-      taht.firebaseToken = token;
-    }).catch((error) => {
-      this.logger.printError('idToken error: ', error);
     });
   }
 
@@ -189,15 +148,14 @@ export class FirebaseAuthService extends AuthService {
       }
     }
     return firebase.auth().setPersistence(firebasePersistence).then( async () => {
-      return firebase.auth().signInWithCustomToken(token).then( async (response) => {
-                // that.currentUser = response.user;
+      return firebase.auth().signInWithCustomToken(token).then( async () => {
                 // that.firebaseSignInWithCustomToken.next(response);
               }).catch((error) => {
-                this.logger.printError('Error: ', error);
+                that.logger.error('[FIREBASEAuthSERVICE] signInFirebaseWithCustomToken Error: ', error);
                   // that.firebaseSignInWithCustomToken.next(null);
               });
     }).catch((error) => {
-      this.logger.printError('Error: ', error);
+      that.logger.error('[FIREBASEAuthSERVICE] signInFirebaseWithCustomToken Error: ', error);
     });
   }
 
@@ -211,11 +169,11 @@ export class FirebaseAuthService extends AuthService {
   createUserWithEmailAndPassword(email: string, password: string): any {
     const that = this;
     return firebase.auth().createUserWithEmailAndPassword(email, password).then((response) => {
-      this.logger.printLog('FIREBASE-AUTH-SERV - CRATE USER WITH EMAIL: ', email, ' & PSW: ', password);
+      that.logger.debug('[FIREBASEAuthSERVICE] CRATE USER WITH EMAIL: ', email, ' & PSW: ', password);
       // that.firebaseCreateUserWithEmailAndPassword.next(response);
       return response;
     }).catch((error) => {
-      this.logger.printError('error: ', error.message);
+      that.logger.error('[FIREBASEAuthSERVICE] createUserWithEmailAndPassword error: ', error.message);
       return error;
     });
   }
@@ -227,10 +185,10 @@ export class FirebaseAuthService extends AuthService {
   sendPasswordResetEmail(email: string): any {
     const that = this;
     return firebase.auth().sendPasswordResetEmail(email).then(() => {
-      this.logger.printLog('firebase-send-password-reset-email');
+      that.logger.debug('[FIREBASEAuthSERVICE] firebase-send-password-reset-email');
       // that.firebaseSendPasswordResetEmail.next(email);
     }).catch((error) => {
-      this.logger.printError('error: ', error);
+      that.logger.error('[FIREBASEAuthSERVICE] sendPasswordResetEmail error: ', error);
     });
   }
 
@@ -240,12 +198,13 @@ export class FirebaseAuthService extends AuthService {
   private signOut() {
     const that = this;
     firebase.auth().signOut().then(() => {
-      this.logger.printLog('firebase-sign-out');
+      that.logger.debug('[FIREBASEAuthSERVICE] firebase-sign-out');
       // cancello token
-      this.appStorage.removeItem('tiledeskToken');
+      // this.appStorage.removeItem('tiledeskToken');
       //localStorage.removeItem('firebaseToken');
+      that.BSSignOut.next(true);
     }).catch((error) => {
-      this.logger.printError('error: ', error);
+      that.logger.error('[FIREBASEAuthSERVICE] signOut error: ', error);
     });
   }
 
@@ -255,183 +214,25 @@ export class FirebaseAuthService extends AuthService {
    */
   delete() {
     const that = this;
-    const user = firebase.auth().currentUser;
-    user.delete().then(() => {
-      this.logger.printLog('firebase-current-user-delete');
+    firebase.auth().currentUser.delete().then(() => {
+      that.logger.debug('[FIREBASEAuthSERVICE] firebase-current-user-delete');
       // that.firebaseCurrentUserDelete.next();
     }).catch((error) => {
-      this.logger.printError('error: ', error);
+      that.logger.error('[FIREBASEAuthSERVICE] delete error: ', error);
     });
   }
 
   // ********************* END FIREBASE AUTH ********************* //
 
 
-
-
-
-  // ********************* TILEDESK AUTH ********************* //
-  /**
-   * @param email
-   * @param password
-   */
-  signInWithEmailAndPassword(email: string, password: string) {
-    console.log('FIREBASE-AUTH-SERV - signInWithEmailAndPassword', email, password);
-    const httpHeaders = new HttpHeaders();
-
-    httpHeaders.append('Accept', 'application/json');
-    httpHeaders.append('Content-Type', 'application/json');
-    const requestOptions = { headers: httpHeaders };
-    const postData = {
-      email: email,
-      password: password
-    };
-    const that = this;
-    this.http.post(this.URL_TILEDESK_SIGNIN, postData, requestOptions).subscribe((data) => {
-      if (data['success'] && data['token']) {
-        console.log('FIREBASE-AUTH-SERV - signInWithEmailAndPassword data ', data);
-        that.tiledeskToken = data['token'];
-        this.createCompleteUser(data['user']);
-        this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
-        that.createFirebaseCustomToken();
-      }
-    }, (error) => {
-      this.logger.printError('FIREBASE-AUTH-SERV - signInWithEmailAndPassword ERR ',error);
-    });
-  }
-
-  /**
-   * @param projectID
-   */
-  signInAnonymously(projectID: string): Promise<any> {
-    this.logger.printLog('FIREBASE-AUTH-SERV - signInAnonymously - projectID', projectID);
-    const httpHeaders = new HttpHeaders();
-
-    httpHeaders.append('Accept', 'application/json');
-    httpHeaders.append('Content-Type', 'application/json');
-    const requestOptions = { headers: httpHeaders };
-    const postData = {
-      id_project: projectID
-    };
-    const that = this;
-    return new Promise((resolve, reject) => {
-      this.http.post(this.URL_TILEDESK_SIGNIN_ANONYMOUSLY, postData, requestOptions).subscribe((data) => {
-        if (data['success'] && data['token']) {
-          that.tiledeskToken = data['token'];
-          this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
-          that.createFirebaseCustomToken();
-          resolve(this.currentUser)
-        }
-      }, (error) => {
-        this.logger.printError('FIREBASE-AUTH-SERV - signInAnonymously ERR ',error);
-        reject(error)
-      });
-    })
-
-  }
-
-  /**
-   * @param tiledeskToken
-   */
-  signInWithCustomToken(tiledeskToken: string): Promise<any> {
-    const headers = new HttpHeaders({
-      'Content-type': 'application/json',
-      Authorization: tiledeskToken
-    });
-    const requestOptions = { headers: headers };
-    const that = this;
-    return new Promise((resolve, reject) => {
-      this.http.post(this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN, null, requestOptions).subscribe((data) => {
-        if (data['success'] && data['token']) {
-          that.tiledeskToken = data['token'];
-          this.createCompleteUser(data['user']);
-          this.appStorage.setItem('tiledeskToken', that.tiledeskToken);
-          that.createFirebaseCustomToken();
-          resolve(this.currentUser)
-        }
-      }, (error) => {
-        this.logger.printError('FIREBASE-AUTH-SERV - signInWithCustomToken ERR ',error);
-        reject(error)
-      });
-    });
-  }
-
-  /**
-   * https://www.techiediaries.com/ionic-http-post/
-   * @param url
-   * @param emailVal
-   * @param pswVal
-   */
-  // private signIn(url: string, emailVal: string, pswVal: string) {
-  //   const httpHeaders = new HttpHeaders();
-  //   httpHeaders.append('Accept', 'application/json');
-  //   httpHeaders.append('Content-Type', 'application/json' );
-  //   const requestOptions = { headers: httpHeaders };
-  //   const postData = {
-  //     email: emailVal,
-  //     password: pswVal
-  //   };
-  //   const that = this;
-  //   this.http.post(url, postData, requestOptions)
-  //     .subscribe(data => {
-  //       if (data['success'] && data['token']) {
-  //         that.tiledeskToken = data['token'];
-  //         this.createCompleteUser(data['user']);
-  //         localStorage.setItem('tiledeskToken', that.tiledeskToken);
-  //         that.createFirebaseCustomToken();
-  //       }
-  //     }, error => {
-  //       console.log(error);
-  //     });
-  // }
-
-  /**
-   * createCompleteUser
-   * @param user
-   */
-  private createCompleteUser(user: any) {
-    const member = new UserModel(user._id);
-    try {
-      const uid = user._id;
-      const firstname = user.firstname ? user.firstname : '';
-      const lastname = user.lastname ? user.lastname : '';
-      const email = user.email ? user.email : '';
-      const fullname = (firstname + ' ' + lastname).trim();
-      const avatar = avatarPlaceholder(fullname);
-      const color = getColorBck(fullname);
-      //TODO-GAB
-      // const imageurl = this.imageRepo.getImageThumb(uid);
-
-      member.uid = uid;
-      member.email = email;
-      member.firstname = firstname;
-      member.lastname = lastname;
-      member.fullname = fullname;
-      //TODO-GAB
-      // member.imageurl = imageurl;
-      member.avatar = avatar;
-      member.color = color;
-      // console.log('createCompleteUser: ', member);
-      this.logger.printLog('FIREBASE-AUTH-SERV - createCompleteUser member ', member) 
-    } catch (err) {
-      // console.log('createCompleteUser error:' + err);
-      this.logger.printError('FIREBASE-AUTH-SERV - createCompleteUser ERR ', err) 
-    }
-    this.currentUser = member;
-    // salvo nel local storage e sollevo l'evento
-    this.appStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-    // this.BScurrentUser.next(this.currentUser);
-  }
-
   /**
    *
    * @param token
    */
-  private createFirebaseCustomToken() {
+  createCustomToken(tiledeskToken: string) {
     const headers = new HttpHeaders({
       'Content-type': 'application/json',
-      Authorization: this.tiledeskToken
+      Authorization: tiledeskToken
     });
     const responseType = 'text';
     const postData = {};
@@ -441,41 +242,15 @@ export class FirebaseAuthService extends AuthService {
       //localStorage.setItem('firebaseToken', that.firebaseToken);
       that.signInFirebaseWithCustomToken(data)
     }, error => {
-      console.log(error);
-      this.logger.printError('FIREBASE-AUTH-SERV - createFirebaseCustomToken ERR ', error) 
-
+      that.logger.error('[FIREBASEAuthSERVICE] createFirebaseCustomToken ERR ', error) 
     });
-
   }
 
-
-
-  /**
-   *
-   * @param error
-   */
-  // handleError(error: HttpErrorResponse) {
-  //   if (error.error instanceof ErrorEvent) {
-  //     console.error('An error occurred:', error.error.message);
-  //   } else {
-  //     console.error(
-  //       `Backend returned code ${error.status}, ` +
-  //       `body was: ${error.error}`);
-  //   }
-  //   return throwError(
-  //     'Something bad happened; please try again later.');
-  // }
-
-
-  public logout() {
-    this.logger.printLog('FIREBASE-AUTH-SERV logout')
+  logout() {
+    this.logger.debug('[FIREBASEAuthSERVICE] logout');
     // cancello token firebase dal local storage e da firebase
     // dovrebbe scattare l'evento authchangeStat
-    this.BSSignOut.next(true);
-
     this.signOut();
-
-    console.log('logout non nancora x');
   }
 
 }

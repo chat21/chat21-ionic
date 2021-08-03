@@ -45,11 +45,14 @@
       </div>
 
     </ion-title>
-
+    <!-- openInfoConversation  {{openInfoConversation}} -->
     <ion-buttons slot="end">
 
           <ion-button  *ngIf="!openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
-            <ion-icon slot="icon-only" name="alert-circle-outline"></ion-icon>
+            <!-- <ion-icon slot="icon-only" name="alert-circle-outline"></ion-icon> -->
+            <ion-icon slot="icon-only"  name="information-circle-outline"></ion-icon>
+            <!-- <ion-icon slot="icon-only"  name="information-outline"></ion-icon> -->
+          
           </ion-button>
           <ion-button  *ngIf="openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
             <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>

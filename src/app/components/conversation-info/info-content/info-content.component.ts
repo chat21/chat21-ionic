@@ -1,3 +1,4 @@
+import { TiledeskAuthService } from './../../../../chat21-core/providers/tiledesk/tiledesk-auth.service';
 import { Component, OnInit, Input } from '@angular/core';
 // models
 import { UserModel } from 'src/chat21-core/models/user';
@@ -5,8 +6,7 @@ import { ConversationModel } from 'src/chat21-core/models/conversation';
 
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
-import { environment } from 'src/environments/environment';
+
 import { ActivatedRoute } from '@angular/router';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 import { AppConfigProvider } from '../../../services/app-config';
@@ -47,7 +47,7 @@ export class InfoContentComponent implements OnInit {
   constructor(
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     public conversationsHandlerService: ConversationsHandlerService,
-    public authService: AuthService,
+    public tiledeskAuthService: TiledeskAuthService,
     private route: ActivatedRoute,
     public contactsService: ContactsService,
     public appConfigProvider: AppConfigProvider,
@@ -56,7 +56,10 @@ export class InfoContentComponent implements OnInit {
     console.log('INFO-CONTENT-COMP HELLO (CONSTUCTOR) !!!!!');
     // this.loggedUser = this.authService.getCurrentUser();
     // console.log('INFO-CONTENT-COMP loggedUser: ', this.loggedUser);
-    this.tenant = environment.tenant;
+  
+    const appconfig = appConfigProvider.getConfig()
+    this.tenant = appconfig.tenant;
+    console.log('INFO-CONTENT-COMP tenant ', this.tenant);
 
     this.route.paramMap.subscribe(params => {
       console.log('INFO-CONTENT-COMP initialize params: ', params);
@@ -208,7 +211,7 @@ export class InfoContentComponent implements OnInit {
     
     this.member = null;
     const that = this;
-    const tiledeskToken = this.authService.getTiledeskToken();
+    const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith)
       .subscribe(res => {
         console.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail RES', res);
@@ -256,15 +259,13 @@ export class InfoContentComponent implements OnInit {
   //   }
   //   console.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
   // }
-
-
  
-  const tiledeskToken = this.authService.getTiledeskToken();
+  const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
   const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
   
   console.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', this.project_id)
   if (this.conversationWith) {
-   
+    
     let urlPanel = DASHBOARD_URL + '#/project/' + this.project_id + '/request-for-panel/' + this.conversationWith;
     urlPanel += '?token=' + tiledeskToken;
    

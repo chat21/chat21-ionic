@@ -1,6 +1,6 @@
 {
     "name": "chat-ionic-v4",
-    "version": "3.0.37",
+    "version": "3.0.42-beta.1.18",
     "author": "Lanzilotto Nicola, Panico Gabriele - Frontiere21 SRL",
     "homepage": "https://ionicframework.com/",
     "scripts": {
@@ -45,7 +45,7 @@
         "cordova-plugin-whitelist": "^1.3.3",
         "cordova-res": "^0.15.1",
         "core-js": "^2.5.4",
-        "firebase": "^7.14.1",
+        "firebase": "^8.6.7",
         "marked": "^2.0.1",
         "material-design-icons": "^3.0.1",
         "moment": "^2.24.0",

@@ -1,8 +1,10 @@
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 // firebase
-import * as firebase from 'firebase/app';
+// import * as firebase from 'firebase/app';
+import firebase from "firebase/app";
 import 'firebase/messaging';
 import 'firebase/database';
 
@@ -10,6 +12,7 @@ import 'firebase/database';
 // import { EventsService } from '../events-service';
 import { PresenceService } from '../abstract/presence.service';
 import { CustomLogger } from '../logger/customLogger';
+import { LoggerInstance } from '../logger/loggerInstance';
 
 // utils
 // import { setLastDate } from '../../utils/utils';
@@ -24,16 +27,17 @@ export class FirebasePresenceService extends PresenceService {
   BSIsOnline: BehaviorSubject<any>;
   BSLastOnline: BehaviorSubject<any>;
 
+  // public tenant: string;
 
-  // public params
-  public tenant: string;
-
+  // -------------------------------
   // private params
+  // -------------------------------
+  private tenant: string;
   private urlNodePresence: string;
   private onlineConnectionsRef: any;
   private lastOnlineConnectionsRef: any;
   private keyConnectionRef: any;
-  private logger: CustomLogger = new CustomLogger(true)
+  private logger: LoggerService = LoggerInstance.getInstance();
   online_member = []
   constructor() {
     super();
@@ -42,7 +46,10 @@ export class FirebasePresenceService extends PresenceService {
   /**
    *
    */
-  public initialize() {
+  public initialize(tenant: string) {
+    // this.tenant = this.getTenant();
+    this.tenant = tenant;
+    this.logger.debug('[FIREBASEPresenceSERVICE] initialize this.tenant', this.tenant);
     this.urlNodePresence = '/apps/' + this.tenant + '/presence/';
   }
 
@@ -51,48 +58,42 @@ export class FirebasePresenceService extends PresenceService {
    * @param userid
    */
   // public userIsOnline(userid: string) {
-  //   this.logger.printDebug('userIsOnline', userid);
-  //   console.log('CONVERSATION-DETAIL group detail userIsOnline', userid);
+  //   this.logger.debug('[FIREBASEPresenceSERVICE] userIsOnline', userid);
+  //   this.logger.debug('CONVERSATION-DETAIL group detail userIsOnline', userid);
   //   const that = this;
   //   const urlNodeConnections = this.urlNodePresence + userid + '/connections';
-  //   this.logger.printDebug('userIsOnline: ', urlNodeConnections);
+  //   this.logger.debug('[FIREBASEPresenceSERVICE] userIsOnline: ', urlNodeConnections);
   //   const connectionsRef = firebase.database().ref().child(urlNodeConnections);
   //   connectionsRef.on('value', (child) => {
-  //     this.logger.printDebug('is-online-' + userid);
+  //     this.logger.debug('[FIREBASEPresenceSERVICE] is-online-' + userid);
   //     if (child.val()) {
-  //       console.log('CONVERSATION-DETAIL group detail userIsOnline id user', userid, '- child.val: ', child.val());
+  //       this.logger.debug('CONVERSATION-DETAIL group detail userIsOnline id user', userid, '- child.val: ', child.val());
   //       this.BSIsOnline.next({uid: userid, isOnline: true});
-  //       console.log('CONVERSATION-DETAIL group detail userIsOnline 1', userid);
+  //       this.logger.debug('CONVERSATION-DETAIL group detail userIsOnline 1', userid);
   //     } else {
   //       this.BSIsOnline.next({uid: userid, isOnline: false});
-  //       console.log('CONVERSATION-DETAIL group detail userIsOnline 2', userid);
+  //       this.logger.debug('CONVERSATION-DETAIL group detail userIsOnline 2', userid);
   //     }
   //   });
   // }
 
   public userIsOnline(userid: string): Observable<any> {
-    let local_BSIsOnline = new BehaviorSubject<any>(null);
-    this.logger.printDebug('userIsOnline', userid);
-    console.log('CONVERSATION-DETAIL group detail userIsOnline', userid);
     const that = this;
+    let local_BSIsOnline = new BehaviorSubject<any>(null);
     const urlNodeConnections = this.urlNodePresence + userid + '/connections';
-    this.logger.printDebug('userIsOnline: ', urlNodeConnections);
+    this.logger.debug('[FIREBASEPresenceSERVICE] userIsOnline: ', urlNodeConnections);
     const connectionsRef = firebase.database().ref().child(urlNodeConnections);
     connectionsRef.off()
     connectionsRef.on('value', (child) => {
-      this.logger.printDebug('is-online-' + userid);
+      that.logger.debug('[FIREBASEPresenceSERVICE] CONVERSATION-DETAIL group detail userIsOnline id user', userid, '- child.val: ', child.val());
       if (child.val()) {
-        console.log('CONVERSATION-DETAIL group detail userIsOnline id user', userid, '- child.val: ', child.val());
-        this.BSIsOnline.next({ uid: userid, isOnline: true });
+        that.BSIsOnline.next({ uid: userid, isOnline: true });
         local_BSIsOnline.next({ uid: userid, isOnline: true });
-        console.log('CONVERSATION-DETAIL group detail userIsOnline 1', userid);
       } else {
-        this.BSIsOnline.next({ uid: userid, isOnline: false });
+        that.BSIsOnline.next({ uid: userid, isOnline: false });
         local_BSIsOnline.next({ uid: userid, isOnline: false });
-        console.log('CONVERSATION-DETAIL group detail userIsOnline 2', userid);
       }
     });
-
     return local_BSIsOnline
   }
 
@@ -102,7 +103,7 @@ export class FirebasePresenceService extends PresenceService {
    * @param userid
    */
   public lastOnlineForUser(userid: string) {
-    this.logger.printDebug('lastOnlineForUser', userid);
+    this.logger.debug('[FIREBASEPresenceSERVICE] lastOnlineForUser', userid);
     const that = this;
     const lastOnlineRef = this.referenceLastOnlineForUser(userid);
     lastOnlineRef.on('value', (child) => {
@@ -128,13 +129,12 @@ export class FirebasePresenceService extends PresenceService {
    * @param userid
    */
   public setPresence(userid: string): void {
-    //console.log(' setPresence: ', userid);
     this.onlineConnectionsRef = this.referenceOnlineForUser(userid);
     this.lastOnlineConnectionsRef = this.referenceLastOnlineForUser(userid);
     const connectedRefURL = '/.info/connected';
     const conn = firebase.database().ref(connectedRefURL);
     conn.on('value', (dataSnapshot) => {
-      // console.log('self.deviceConnectionRef: ', dataSnapshot.val());
+      this.logger.debug('[FIREBASEPresenceSERVICE] self.deviceConnectionRef: ', dataSnapshot.val());
       if (dataSnapshot.val()) {
         if (this.onlineConnectionsRef) {
           this.keyConnectionRef = this.onlineConnectionsRef.push(true);
@@ -143,7 +143,7 @@ export class FirebasePresenceService extends PresenceService {
           const timestamp = now.valueOf();
           this.lastOnlineConnectionsRef.onDisconnect().set(timestamp);
         } else {
-          this.logger.printError('This is an error. self.deviceConnectionRef already set. Cannot be set again.');
+          this.logger.error('[FIREBASEPresenceSERVICE] setPresence --> This is an error. self.deviceConnectionRef already set. Cannot be set again.');
         }
       }
     });
@@ -160,7 +160,7 @@ export class FirebasePresenceService extends PresenceService {
       this.lastOnlineConnectionsRef.set(timestamp);
       this.onlineConnectionsRef.off();
       this.onlineConnectionsRef.remove();
-      this.logger.printDebug('goOffline onlineConnectionsRef', this.onlineConnectionsRef);
+      this.logger.debug('[FIREBASEPresenceSERVICE] goOffline onlineConnectionsRef', this.onlineConnectionsRef);
     }
   }
 

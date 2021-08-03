@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit, Input, OnChanges, OnDestroy } from '@angular/core';
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { TiledeskAuthService } from './../../../../chat21-core/providers/tiledesk/tiledesk-auth.service';
+import { Component, OnInit, AfterViewInit, Input, OnChanges, OnDestroy, Renderer2 } from '@angular/core';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
@@ -21,24 +21,51 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
   member_is_online;
   member_array: any
   private unsubscribe$: Subject<any> = new Subject<any>();
+
+  tooltip: HTMLElement;
+  tooltipOptions = {
+    'show-delay': 100,
+    'tooltip-class': 'chat-tooltip',
+    'theme': 'light',
+    'shadow': false,
+    'hide-delay-mobile': 0,
+    'hideDelayAfterClick': 3000,
+    'hide-delay': 200
+  };
   
   constructor(
     public imageRepoService: ImageRepoService,
     public presenceService: PresenceService,
-    public authService: AuthService,
-    public contactsService: ContactsService
+    public tiledeskAuthService: TiledeskAuthService,
+    public contactsService: ContactsService,
+    public renderer: Renderer2
   ) {
 
     console.log('InfoGroupComponent HELLO !!!')
   }
 
 
+  // copyMemberUID(memberid) {
+  //   var copyText = document.createElement("input");                  
+  //   copyText.setAttribute("type", "text");
+  //   copyText.setAttribute("value", memberid);
+     
+  //   document.body.appendChild(copyText); 
+  //   copyText.select();
+  //   copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+  //   document.execCommand("copy");
+  //   console.log("Copied the text: " + copyText.value);
+  //   const tootipElem = <HTMLElement>document.querySelector('.chat-tooltip');
+  //   this.renderer.appendChild(tootipElem, this.renderer.createText('Copied!'))
+
+  // }
+
   ngOnChanges() {
     console.log('InfoGroupComponent group detail ngOnChanges', this.groupDetail);
 
     if (this.groupDetail) {
       if (this.groupDetail.uid.startsWith('group-')) {
-        const tiledeskToken = this.authService.getTiledeskToken();
+        const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
 
         this.member_array = []
         const members_isonline_array = []

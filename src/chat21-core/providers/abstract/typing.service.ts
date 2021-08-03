@@ -13,10 +13,19 @@ export abstract class TypingService {
   BSSetTyping: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   // params
-  abstract tenant = environment.tenant;
+  private _tenant: string;
+  public setTenant(tenant): void {
+    this._tenant = tenant;
+  }
+  public getTenant(): string {
+    if (this._tenant) {
+      return this._tenant;
+    } 
+  }
+
 
   // functions
-  abstract initialize(): void;
+  abstract initialize(tenant: string): void;
   abstract isTyping(idConversation: string, idCurrentUser: string, isDirect: boolean): void;
   abstract setTyping(idConversation: string, message: string, idUser: string, userFullname: string): void;
 }

@@ -3,7 +3,8 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 // firebase
-import * as firebase from 'firebase/app';
+
+import firebase from "firebase/app";
 import 'firebase/messaging';
 import 'firebase/database';
 import 'firebase/firestore';
@@ -11,24 +12,18 @@ import 'firebase/firestore';
 // models
 
 import { UserModel } from '../../models/user';
-import { ConversationModel } from '../../models/conversation';
-
+import { MessageModel } from '../../models/message';
 // services
 import { ConversationHandlerService } from '../abstract/conversation-handler.service';
-
+import { LoggerService } from '../abstract/logger.service';
+import { LoggerInstance } from '../logger/loggerInstance';
 // utils
 import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT, MESSAGE_TYPE_INFO } from '../../utils/constants';
-import {
-  htmlEntities,
-  compareValues,
-  searchIndexInArrayForUid,
-  setHeaderDate,
-  conversationMessagesRef
-} from '../../utils/utils';
-import { timestamp } from 'rxjs/operators';
-import { MessageModel } from '../../models/message';
+import { compareValues,searchIndexInArrayForUid,conversationMessagesRef } from '../../utils/utils';
+
+
 import { messageType } from 'src/chat21-core/utils/utils-message';
-import { CustomLogger } from '../logger/customLogger';
+
 
 
 
@@ -59,7 +54,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private listSubsriptions: any[];
     private CLIENT_BROWSER: string;
     private lastDate = '';
-    private logger: CustomLogger = new CustomLogger(true)
+    private logger:LoggerService = LoggerInstance.getInstance()
     private ref: firebase.database.Query;
 
     constructor(@Inject('skipMessage') private skipMessage: boolean) {
@@ -70,7 +65,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
      * inizializzo conversation handler
      */
     initialize(recipientId: string,recipientFullName: string,loggedUser: UserModel,tenant: string,translationMap: Map<string, string>) {
-        this.logger.printDebug('initWithRecipient::: FirebaseConversationHandler',recipientId, recipientFullName, loggedUser, tenant, translationMap)
+        this.logger.info('[FIREBASEConversationHandlerSERVICE] initWithRecipient',recipientId, recipientFullName, loggedUser, tenant, translationMap)
         this.recipientId = recipientId;
         this.recipientFullname = recipientFullName;
         this.loggedUser = loggedUser;
@@ -98,15 +93,15 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         const that = this;
         this.urlNodeFirebase = conversationMessagesRef(this.tenant, this.loggedUser.uid);
         this.urlNodeFirebase = this.urlNodeFirebase + this.conversationWith;
-        this.logger.printDebug('urlNodeFirebase *****', this.urlNodeFirebase);
+        this.logger.debug('[FIREBASEConversationHandlerSERVICE] urlNodeFirebase *****', this.urlNodeFirebase);
         const firebaseMessages = firebase.database().ref(this.urlNodeFirebase);
         this.ref = firebaseMessages.orderByChild('timestamp').limitToLast(100);
         this.ref.on('child_added', (childSnapshot) => {
-            this.logger.printDebug('>>>>>>>>>>>>>> child_added: ', childSnapshot.val())
+            that.logger.debug('[FIREBASEConversationHandlerSERVICE] >>>>>>>>>>>>>> child_added: ', childSnapshot.val())
             that.added(childSnapshot);
         });
         this.ref.on('child_changed', (childSnapshot) => {
-            this.logger.printDebug('>>>>>>>>>>>>>> child_changed: ', childSnapshot.val())
+            that.logger.debug('[FIREBASEConversationHandlerSERVICE] >>>>>>>>>>>>>> child_changed: ', childSnapshot.val())
             that.changed(childSnapshot);
         });
         this.ref.on('child_removed', (childSnapshot) => {
@@ -195,27 +190,11 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         //     channelType, // channel_type
         //     true // is_sender
         // );
-        this.logger.printDebug('messages: ',  this.messages);
-        this.logger.printDebug('senderFullname: ',  senderFullname);
-        this.logger.printDebug('sender: ',  sender);
-        this.logger.printDebug('SEND MESSAGE: ', msg, channelType);
-        this.logger.printDebug('timestamp: ', );
-        this.logger.printDebug('messaggio **************', );
-        // messageRef.update({
-        //     uid: messageRef.key
-        // }, ( error ) => {
-        //     // if (error) {
-        //     //     message.status = -100;
-        //     //     console.log('ERRORE', error);
-        //     // } else {
-        //     //     message.status = 150;
-        //     //     console.log('OK MSG INVIATO CON SUCCESSO AL SERVER', message);
-        //     // }
-        //     // console.log('****** changed *****', that.messages);
-        // });
-
-        
-          return message
+        this.logger.debug('[FIREBASEConversationHandlerSERVICE] sendMessage --> messages: ',  this.messages);
+        this.logger.debug('[FIREBASEConversationHandlerSERVICE] sendMessage --> senderFullname: ',  senderFullname);
+        this.logger.debug('[FIREBASEConversationHandlerSERVICE] sendMessage --> sender: ',  sender);
+        this.logger.debug('[FIREBASEConversationHandlerSERVICE] sendMessage --> SEND MESSAGE: ', msg, channelType);
+        return message
     }
 
     /**
@@ -253,7 +232,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     //     //         userEmail: this.loggedUser.email,
     //     //         userFullname: this.loggedUser.fullname
     //     //     };
-    //     //     console.log('>>>>>>>>>>>>>> setAttributes: ', JSON.stringify(attributes));
+    //     //     this.logger.printLog('>>>>>>>>>>>>>> setAttributes: ', JSON.stringify(attributes));
     //     //     sessionStorage.setItem('attributes', JSON.stringify(attributes));
     //     // }
     //     return attributes;
@@ -263,10 +242,9 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private added(childSnapshot: any) {
         const msg = this.messageGenerate(childSnapshot);
         // msg.attributes && msg.attributes['subtype'] === 'info'
-        if(this.skipMessage && messageType(MESSAGE_TYPE_INFO, msg) ){
+        if(this.skipMessage && messageType(MESSAGE_TYPE_INFO, msg)){
             return;
         }
-        // console.log('>>>>>>>>>>>>>> added headerDate: ', msg);
         this.addRepalceMessageInArray(childSnapshot.key, msg);
         this.messageAdded.next(msg);
     }
@@ -275,7 +253,6 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
     private changed(childSnapshot: any) {
         const msg = this.messageGenerate(childSnapshot);
         // imposto il giorno del messaggio per visualizzare o nascondere l'header data
-        // console.log('>>>>>>>>>>>>>> changed headerDate: ', msg);
         // msg.attributes && msg.attributes['subtype'] === 'info'
         if(this.skipMessage && messageType(MESSAGE_TYPE_INFO, msg) ){
             return;
@@ -304,9 +281,11 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
             msg.sender_fullname = msg.sender;
         }
         // bonifico messaggio da url
-        if (msg.type === 'text') {
-            // msg.text = htmlEntities(msg.text);
-        }
+        // if (msg.type === 'text') {
+        //     msg.text = htmlEntities(msg.text)
+        //     msg.text = replaceEndOfLine(msg.text)
+        // }
+        
         // verifico che il sender è il logged user
         msg.isSender = this.isSender(msg.sender, this.loggedUser.uid);
         // traduco messaggi se sono del server
@@ -390,7 +369,7 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
         if (msg.status < MSG_STATUS_RECEIVED) {
             if (msg.sender !== this.loggedUser.uid && msg.status < MSG_STATUS_RECEIVED) {
             const urlNodeMessagesUpdate  = this.urlNodeFirebase + '/' + msg.uid;
-            this.logger.printDebug('AGGIORNO STATO MESSAGGIO', urlNodeMessagesUpdate);
+            this.logger.debug('[FIREBASEConversationHandlerSERVICE] update message status', urlNodeMessagesUpdate);
             firebase.database().ref(urlNodeMessagesUpdate).update({ status: MSG_STATUS_RECEIVED });
             }
         }
@@ -425,14 +404,13 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
 
 
   unsubscribe(key: string) {
-    this.logger.printDebug('unsubscribe: ', key);
     this.listSubsriptions.forEach(sub => {
-        this.logger.printDebug('unsubscribe: ', sub.uid, key);
-      if (sub.uid === key) {
-        this.logger.printDebug('unsubscribe: ', sub.uid, key);
-        sub.unsubscribe(key, null);
-        return;
-      }
+        this.logger.debug('[FIREBASEConversationHandlerSERVICE] unsubscribe: ', sub.uid, key);
+    	if (sub.uid === key) {
+			this.logger.debug('[FIREBASEConversationHandlerSERVICE] unsubscribe: ', sub.uid, key);
+			sub.unsubscribe(key, null);
+			return;
+      	}
     });
   }
 }

@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, HostListener } from '@angular/core';
 import { TYPE_MSG_IMAGE } from 'src/chat21-core/utils/constants';
 import { NavParams, ModalController } from '@ionic/angular';
-
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-loader-preview',
   templateUrl: './loader-preview.page.html',
   styleUrls: ['./loader-preview.page.scss'],
 })
 export class LoaderPreviewPage implements OnInit {
-  @ViewChild('thumbnailsPreview', {static: false}) thumbnailsPreview: ElementRef;
-  @ViewChild('messageTextArea', {static: false}) messageTextArea: ElementRef;
+  @ViewChild('thumbnailsPreview', { static: false }) thumbnailsPreview: ElementRef;
+  @ViewChild('messageTextArea', { static: false }) messageTextArea: ElementRef;
   // @Output() eventSendMessage = new EventEmitter<object>();
   @Input() files: [any];
 
@@ -18,41 +18,166 @@ export class LoaderPreviewPage implements OnInit {
   public messageString: string;
   public heightPreviewArea = '183';
   private selectedFiles: any;
+  srcData: SafeResourceUrl;
+  public file_extension: string;
+  public file_name: string;
 
-  
   constructor(
-    public viewCtrl: ModalController
+    public viewCtrl: ModalController,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
-    console.log('LoaderPreviewPage' );
+    console.log('LoaderPreviewPage');
     // tslint:disable-next-line: prefer-for-of
-     this.selectedFiles = this.files;
-    for ( let i = 0; i < this.files.length; i++ ) {
+    this.selectedFiles = this.files;
+    for (let i = 0; i < this.files.length; i++) {
       this.readAsDataURL(this.files[i]);
       //this.fileChange(this.files[i]);
     }
   }
 
   ionViewDidEnter() {
-    console.log('ionViewDidEnter LoaderPreviewPage', this.thumbnailsPreview.nativeElement.offsetHeight );
+    console.log('ionViewDidEnter LoaderPreviewPage', this.thumbnailsPreview.nativeElement.offsetHeight);
     this.calculateHeightPreviewArea();
   }
 
   readAsDataURL(file: any) {
-    const reader = new FileReader();
-    reader.onloadend = (evt) => {
+    console.log('LoaderPreviewPage readAsDataURL file', file);
+    // ---------------------------------------------------------------------
+    // USE CASE IMAGE
+    // ---------------------------------------------------------------------
+    if (file.type.startsWith("image") && (!file.type.includes('svg'))) {
+
+      console.log('LoaderPreviewPage USE CASE IMAGE readAsDataURL file TYPE', file.type);
+      const reader = new FileReader();
+      reader.onloadend = (evt) => {
         const img = reader.result.toString();
-        console.log('FileReader success');
+        console.log('FileReader success ', img);
         this.arrayFiles.push(img);
         if (!this.fileSelected) {
           this.fileSelected = img;
         }
+      };
+
+      reader.readAsDataURL(file);
+      // ---------------------------------------------------------------------
+      // USE CASE SVG 
+      // ---------------------------------------------------------------------
+    } else if (file.type.startsWith("image") && (file.type.includes('svg'))) {
+      // this.previewFiles(file)
+
+      console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL file TYPE', file.type);
+      console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL file ', file);
+      const preview = document.querySelector('#img-preview') as HTMLImageElement;
+
+
+      const reader = new FileReader();
+      const that = this;
+      reader.addEventListener("load", function () {
+        // convert image file to base64 string
+        // const img = reader.result as string;
+        const img = reader.result.toString();
+        console.log('FIREBASE-UPLOAD USE CASE SVG LoaderPreviewPage readAsDataURL img ', img);
+
+        // that.fileSelected = that.sanitizer.bypassSecurityTrustResourceUrl(img);
+
+        that.arrayFiles.push(that.sanitizer.bypassSecurityTrustResourceUrl(img));
+        if (!that.fileSelected) {
+          that.fileSelected = that.sanitizer.bypassSecurityTrustResourceUrl(img);
+        }
+      }, false);
+
+      if (file) {
+
+        reader.readAsDataURL(file);
+      }
+
+      // ---------------------------------------------------------------------
+      // USE CASE FILE
+      // ---------------------------------------------------------------------
+      // } else if (file.type.startsWith("application") || file.type.startsWith("video") || file.type.startsWith("audio") ) {
+    } else {
+      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE ', file);
+      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file TYPE', file.type);
+      this.file_extension = file.name.substring(file.name.lastIndexOf('.')+1, file.name.length) || file.name;
+      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE EXTENSION', this.file_extension);
+      this.file_name = file.name
+      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE NAME', this.file_name);
+      // if (file.type) {
+      //   const file_type_array = file.type.split('/');
+      //   console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file_type_array', file_type_array);
+      //   this.file_type = file_type_array[1]
+      // } else {
+      //   this.file_type = file.name.substring(file.name.lastIndexOf('.')+1, file.name.length) || file.name;
+
+      // }
+
+      this.createFile();
+
+    }
+  }
+  // file-alt-solid.png
+  async createFile() {
+    let response = await fetch('./assets/images/file-alt-solid.png');
+    let data = await response.blob();
+    let metadata = {
+      type: 'image/png'
+    };
+    let file = new File([data], "test.png", metadata);
+    console.log('LoaderPreviewPage createFile file', file);
+    const reader = new FileReader();
+    reader.onloadend = (evt) => {
+      const img = reader.result.toString();
+      console.log('FileReader success ', img);
+      this.arrayFiles.push(img);
+      if (!this.fileSelected) {
+        this.fileSelected = img;
+      }
     };
     reader.readAsDataURL(file);
   }
 
 
+  // for svg
+
+  // previewFiles(file) {
+  //   console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
+  //   console.log('LoaderPreviewPage readAsDataURL file ', file);
+  //   const preview = document.querySelector('#img-preview');
+  //   console.log('LoaderPreviewPage readAsDataURL preview ', preview);
+  //   this.readAndPreview(file, preview)
+  // }
+
+
+  // readAndPreview(file, preview) {
+  //   console.log('LoaderPreviewPage readAsDataURL preview HERE 1');
+  //   // Make sure `file.name` matches our extensions criteria
+  //   if (/\.(jpe?g|png|gif|svg)$/i.test(file.name)) {
+  //     var reader = new FileReader();
+
+  //     reader.addEventListener("load", function () {
+  //       var image = new Image();
+  //       image.height = 100;
+  //       image.title = file.name;
+  //       image.src = this.result.toString();
+  //       console.log('LoaderPreviewPage readAsDataURL preview image.src ', image.src);
+  //       // preview.appendChild(image);
+
+  //       preview.src(image);
+  //     }, false);
+
+  //     reader.readAsDataURL(file);
+  //   }
+
+  //   if (file) {
+  //     [].forEach.call(file, this.readAndPreview);
+  //   }
+
+  // }
+
+
+  // NOT USED    
   fileChange(file) {
     console.log('fileChange');
     const that = this;
@@ -70,7 +195,7 @@ export class LoaderPreviewPage implements OnInit {
         if (!that.fileSelected) {
           that.fileSelected = img;
         }
-        
+
         if (typeFile.indexOf('image') !== -1) {
           const file4Load = new Image;
           file4Load.src = reader.result.toString();
@@ -94,7 +219,7 @@ export class LoaderPreviewPage implements OnInit {
             // 2 - carico immagine
             //that.uploadSingle(metadata, type_msg);
           };
-        } 
+        }
         /*
         else if (typeFile.indexOf('application') !== -1) {
           const type_msg = 'file';
@@ -122,17 +247,17 @@ export class LoaderPreviewPage implements OnInit {
     const heightThumbnailsPreview = this.thumbnailsPreview.nativeElement.offsetHeight;
     const heightMessageTextArea = this.messageTextArea.nativeElement.offsetHeight;
     this.heightPreviewArea = (heightMessageTextArea + heightThumbnailsPreview).toString();
-    console.log('heightThumbnailsPreview', heightThumbnailsPreview);
-    console.log('heightMessageTextArea', this.messageTextArea);
-    console.log('heightPreviewArea', this.heightPreviewArea);
+    // console.log('heightThumbnailsPreview', heightThumbnailsPreview);
+    // console.log('heightMessageTextArea', this.messageTextArea);
+    // console.log('heightPreviewArea', this.heightPreviewArea);
   }
 
-  uploadImages(){}
+  uploadImages() { }
 
 
   /** */
   onChangeTextArea(e: any) {
-    console.log('onChangeTextArea', e.target.clientHeight);
+    // console.log('onChangeTextArea', e.target.clientHeight);
     this.calculateHeightPreviewArea();
     // try {
     //   let height: number = e.target.offsetHeight;
@@ -150,6 +275,15 @@ export class LoaderPreviewPage implements OnInit {
     this.fileSelected = file;
   }
 
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+      this.onSendMessage()
+    }
+
+  }
+
   pressedOnKeyboard(e: any, text: string) {
     console.log('pressedOnKeyboard ************** event:: ', e);
     // const message = e.target.textContent.trim();
@@ -158,10 +292,12 @@ export class LoaderPreviewPage implements OnInit {
     //   return;
     // } else {
     //   this.messageString = '';
-      
+
     // }
     this.onSendMessage()
   }
+
+
 
   /** */
   onSendMessage() {
@@ -182,7 +318,7 @@ export class LoaderPreviewPage implements OnInit {
       'type': typeFile,
       'uid': uid
     };
-    this.viewCtrl.dismiss({fileSelected: file, messageString: this.messageString, metadata: metadata, type: TYPE_MSG_IMAGE});
+    this.viewCtrl.dismiss({ fileSelected: file, messageString: this.messageString, metadata: metadata, type: TYPE_MSG_IMAGE });
   }
 
   async onClose() {

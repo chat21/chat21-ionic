@@ -1,6 +1,4 @@
 .group-profile {
-
-
     ion-card {
         width: 100%;
         padding: 10px 20px;
@@ -29,8 +27,7 @@
         line-height: 57px;
         font-size: 25px;
         color: white;
-        position:relative;
-
+        position: relative;
     }
 
     .user-online {
@@ -50,7 +47,7 @@
         left: calc(50% + 30px);
         width: 100px;
     }
-    
+
     .info-profile {
         padding: 10px 0 0 0;
         text-align: center;
@@ -72,5 +69,12 @@
         }
     }
 
-  
+    .info-group-member-email {
+        font-size: 13px;
+        margin-top: 2px;
+        white-space: nowrap;
+        width: 205px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }

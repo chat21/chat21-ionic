@@ -1,3 +1,4 @@
+import { LogLevel } from './../../utils/constants';
 import { Inject, Injectable } from '@angular/core';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { NGXLogger, NGXLoggerMonitor, NGXLogInterface } from 'ngx-logger';
@@ -8,27 +9,38 @@ export class CustomLogger implements LoggerService {
 
     //private variables
     // private logger: NGXLogger 
+    private logLevel: number = LogLevel.Debug
 
-    // constructor(@Inject('isLogEnabled') private isLogEnabled: boolean, private logger: NGXLogger  ) {
-    constructor(@Inject('isLogEnabled') private isLogEnabled: boolean) {
+    constructor(@Inject('isLogEnabled') private isLogEnabled: boolean, private logger: NGXLogger) {
     }
 
-    printLog(...message: any[]) {
-        if (this.isLogEnabled && message && message.length > 0) {
-            // this.logger.log(message)
-            console.log(message)
+    setLoggerConfig(isLogEnabled: boolean, logLevel: number){
+        this.isLogEnabled = isLogEnabled;
+        this.logLevel = logLevel;
+    }
+
+    info(...message: any[]) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.Info) {
+            this.logger.info(message)
+            // console.log(message)
         }
     }
-    printDebug(...message: any[]) {
-        if (this.isLogEnabled && message && message.length > 0) {
-            // this.logger.debug(message)
-            console.log(message)
+    debug(...message: any[]) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.Debug) {
+            this.logger.debug(message)
+            // console.log(message)
         }
     }
-    printError(...message: any[]) {
-        if (this.isLogEnabled && message && message.length > 0) {
-            // this.logger.error(message)
-            console.log(message)
+    warn(...message: any[]) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.Warn) {
+            this.logger.warn(message)
+            // console.log(message)
+        }
+    }
+    error(...message: any[]) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.Error) {
+            this.logger.error(message)
+            // console.log(message)
         }
     }
 

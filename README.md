@@ -47,14 +47,16 @@ In progress git
 * Configure the file environment.ts in src/environments folder:     
     ```
     export const environment = {
-        supportMode: true,
-        CHAT_SEND_BY_EMAIL_LINK: '<CHAT-TRANSCRIPT-URL>',
-        FIREBASESTORAGE_BASE_URL_IMAGE: 'https://firebasestorage.googleapis.com/v0/b/',
-        DASHBOARD_URL: '<YOUR-DASHBOARD-URL>/',
-        SERVER_BASE_URL: '<YOUR-TILEDESK-SERVER-URL>',
+        supportMode: false,
         production: false,
         remoteConfig: true,
-        remoteConfigUrl: '/firebase-config.json',
+        remoteConfigUrl: '/chat-config.json',
+        chatEngine: "mqtt", // OR YOUR CUSTOM CHAT ENGINE
+        updloaEngine: "native", // OR YOUR CUSTOM UPLOAD ENGINE
+        pushEngine:"none", // OR YOUR CUSTOM PUSH ENGINE
+        tenant:"tilechat",
+        fileUploadAccept:"*/*",
+        logLevel":"<YOUR-PREFERRED-LOG-LEVEL-NUMBER>",
         firebaseConfig: {
             apiKey: '123ABC..',
             authDomain: 'XYZ.firebaseapp.com',
@@ -64,13 +66,24 @@ In progress git
             messagingSenderId: '123456',
             appId: 'CHANGEIT',
             chat21ApiUrl: '<YOUR_CHAT21_CLOUD_FUNCTION_FIREBASE_ENDPOINT>'
-        }
+        },
+         chat21Config: {
+            "appId": "tilechat",
+            "MQTTendpoint": "mqtt://<YOUR-MQTT-ENPOINT>",
+            "APIendpoint": "http://<YOUR-MQTT-API-ENPOINT>"
+        },
+        "apiUrl": "https://<YOUR-TILEDESK-API-URL>",
+        "baseImageUrl": "https://<YOUR-BASE-IMAGE-URL>",
+        "dashboardUrl": "https://<YOUR-DASHBOARD-URL>"
     }
   };
   ```
   
-* (optional) Update app.module.ts file: 
-    * open `/src/app/app.module.ts` and change tenant name
+* `logLevel`: The Chat21-ionic supports 4 log levels. The order is as follows:
+  `Error = 0 < Warn = 1 < Info = 2 < Debug = 3`
+
+* `fileUploadAccept`: The Chat21-ionic allows you to manage the type of files that can be uploaded. By default, all file types are accepted.
+
 
 ### Push notification
 * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: with < your messagingSenderId >
@@ -142,5 +155,14 @@ If you want to customize logos and assets you can mount a docker volume and atta
 Example:
 ```
 docker run -p 8080:80 --env-file .env --mount source=chat21-ionic-assets-vol,destination=/usr/share/nginx/html/assets  chat21/chat21-ionic
+```
+
+# Autologin 
+To auto login pass the JWT token as a query parameter of your Chat url as in the following example:
+
+```typescript
+
+"http://localhost:8100/#/conversation-detail?jwt=<JWT_TOKEN>"
+
 ```
 

@@ -1,5 +1,140 @@
 # chat21-ionic ver 3.0
 
+### 3.0.42-beta.1.18
+- Improves logger service
+- Fixes the bug: with MQTT enviroment it is not possible to know changes in the conversation
+
+### 3.0.42-beta.1.17
+- Note: this version has been published under the subfolder "chat5"
+- Adds the right side panel that allows the selection of projects to which the current user belongs and the display of unassigned conversations 
+- Fixes the bug: Property 'addUploadingBubbleEvent' does not exist on type 'ConversationDetailPage'.
+
+### 3.0.42-beta.1.16
+- Bug fixed: the selected image preview popup window opens twice if after selecting the image dragging it in the chat area, the image is selected pasting it in the 'send message' texarea,
+- Prevents the user from pasting non-image files into the 'send message' textarea 
+- Displays an error message when files that are not of type image are pasted in the "send message" text area
+- Displays an error message when files that are not of type image are dragged into the chat area
+
+### 3.0.42-beta.1.15
+- Adds the ability to select an image to upload by drag it in the chat area
+- Adds the ability to upload an image or file by pressing the "Enter" keyboard key
+- Fixes the bug: the placeholder in the textarea 'send message' isn't responsive and when it is on two lines of text it overlaps the chat content
+- Fixes the bug: if the canned responses are called on group type or direct type conversations, an error is thrown as the project id is not available
+
+### 3.0.42-beta.1.14
+- Minor improvements
+
+### 3.0.42-beta.1.13
+- Fixes the bug: if the message inserted in the textarea has more lines of text, that textarea overlaps the chat content
+- Adds the ability to select an image to upload by paste it in the 'send message' textarea
+- Fixes the bug: the placeholder in the textarea 'send message' isn't responsive and when it is on two lines of text it overlaps the chat content
+
+### 3.0.42-beta.1.12
+- Renames the 'temp' folder in 'chatib'
+- Improves the button to attach files / images 
+- Changes the endpoint where images and files are saved in the 'firebase-upload' service
+- Adds the ability to upload any file type
+- Adds the extension and name of the file that will be uploaded into the popup modal preview
+- Displays an error message if the file upload failed
+- Fixes the bug: if the uploaded file has a size of 0 bytes, the "bubble spinner" is displayed twice and the second remains visible
+- Fixes the bug: the user ID and uiid are added to the downloaded file name
+- Adds in the environments the 'fileUploadAccept' key set by default to accept the upload of any type of file and binds the value in message-text-area
+- Changes the Log Level number values
+- Decreases the display delay of the message tooltips (from 1500ms to 500ms)
+- Adds in chat-config-template.json, chat-config.json and env.sample the keys "fileUploadAccept" and "logLevel"
+- Changes in the environments the default value of the log level to 1
+- Updates the mqtt library to the latest version (4.2.8) 
+
+### 3.0.42-beta.1.11
+- Improves the "push notifications service worker" and in conversations-list-page the method listenToNotificationCLick()
+- Changes in the "precence.service" and "typing.service" the occurrences where the "tenant" property is obtained from the environment rather than from 'appConfig'
+
+### 3.0.42-beta.1.10
+- Improves the "push notifications service worker"
+
+### 3.0.42-beta.1.9
+- Adds logs in "firebase-messaging-sw.js" and in "conversations-list.page.ts" for push notification test
+
+### 3.0.42-beta.1.8
+- Handles the responses of the 'signInWithEmailAndPassword' method: displays a toast in case of error and a spinner waiting for the response
+- Adds in the "login component" the links to the dashboard's pages "reset password" and "signup"
+- Adds in the "login component" the display of validation errors of the authentication form 
+- Adds the preview of the selected SVG image in image/file preview popup 
+- Fixes the bug: "fileSelected of undefined" when the image/file preview popup is closed without any image or file being selected
+- Adds the check of the pushEngine key set to "none" in the "notificationsServiceFactory" function of app.module
+- Changes occurrences where "tenant" is obtained from "environment" by getting it from "appConfig" (app.component.ts, info.content.component.ts, conversation-detail.page, conversation-list.page)
+- Adds in info-message.component.html the pipe htmlEntiesEncode
+- Updates in the firebase-messaging-sw.js the version of Firebase SDK imported and replaces the deprecated method "setBackgroundMessageHandler()" with the new onBackgroundMessage()
+- Removes the dependecies of the "appConfig" from the "notifications classes"
+- Removes imageUrl from setConversationAvatar utils function 
+- Fixed the bug: if pushEngine is setted to none are called the method getNotificationPermissionAndSaveToken()
+- Adds the "tenant" property in chat-config and chat-config-template
+- Fixed the bug: the logger is not displayed
+- Adds the ability by clicking on a push notification to open the chat, that is in background or that is closed, directly to the conversation to which the push notification refers
+- Renames FirebaseGroupHandler in FirebaseGroupsHandler,
+- Removes unused components (conversation-archived-list and current-user-service)
+
+### 3.0.42-beta.1.7
+- Adds the Html entities encode pipe and removes the entities encode from the sendMessage method
+- Adds the abstract class "notification.service" and the classes "firebase-notifications" and "mqtt-notifications"
+
+### 3.0.42-beta.1.6
+- Disables the dark mode
+- Fixed the bug: in pre environment the the uploadEngine key is set to 'native'
+
+### 3.0.42-beta.1.5
+- Sets in pre: the value of the key chatEngine to 'firebase', the value of the key uploadEngine to 'firebase' and the value of the key pushEngine to 'firebase'
+
+### 3.0.42-beta.1.4
+- Updated in pre environment the endpoints of "dashboardUrl" to the Dashboard latest versions (2.1.70-beta.1.6)
+
+### 3.0.42-beta.1.3
+- Fixes the bug: if the uploadEngine key is set to native images and files are not upload
+- Sets in pre: the value of the key chatEngine to 'mqtt', the value of the key uploadEngine to 'native' and the value of the key pushEngine to 'none'
+
+### 3.0.42-beta.1.2
+- Adds push notifications
+- Updates firebase SDK to the 8.6.7 version
+- Changes the import of firebase 'import * as firebase from "firebase/app"' with 'import firebase from "firebase/app"'
+
+### 3.0.42-beta.1.1
+- Fixes the bug: if the uploadEngine key is set to native the svg images are not uploaded
+- Fixes the bug: "logger.printLog" is not a function in "conversation-content-component"
+- Fixes the bug: with native uploadEgine uploading files or images whose names contain spaces return broken URLs
+- Fixes the bug: when switching from mobile to desktop mode, if a conversation is selected in the conversation details, the list of conversations is displayed
+- Fixes the bug: when switching from desktop mode to mobile mode, if no conversation is selected, the conversation list is not displayed
+- Fixes the bug: remove the dependency of the "LoggerService" from the 'ion-conversation-detail' component constructor
+
+### 3.0.42-beta.1.0
+- Minor improvements
+
+### 3.0.42
+- Fixes the bug: in mobile mode in the right side panel "Conversation info" the textarea 'send message' is displayed
+- Fixes the bug: the button open/close the right side panel 'Info conversation' does not work correctly
+- Hides the 'Conversation Info' right side panel when the window width is less than 991px
+
+### 3.0.41
+- Sets in pre environment the key "uploadEngine" to "firebase"
+- Fixes the bug: when is pressed enter in the textarea "send message" is added a new line
+- Fixes the bug: the text of the message is always written on a single line, ignoring line breaks
+- Adds a bubble with an upload spinner to the in-conversation-detail page when uploading a file using uploadEngine = 'firebase'
+- Displays in the loader-preview page a placeholder image when a file is selected to be loaded
+- Removes from the services "firebase-conversation-handler",  "firebase-conversations-handler", "firebase-archivedconversations-handler" and mqtt-conversation-handler the HTML entities encode
+- Improves the "htmlEntities" function and adds the "replaceEndOfLine" function
+
+### 3.0.40
+- Improves the methods implemented for the correct display of messages in the conversation list when a snippet of code is pasted
+
+### 3.0.39
+- Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the chat
+- Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the convesations list 
+
+### 3.0.38
+- Conditions the display of the splash screen only on platforms other than "desktop" (on the desktop platforms the splash screen is not supported)
+- Fixes the bug: signin button is not disable when the form is invalid
+- Fixes the bug: markdown doen't work when the page is refreshed
+- Adds the encode of the HTML entities
+
 ### 3.0.37
 - Fixes the bug: the skeleton placeholder remains active after logout 
 
@@ -87,7 +222,7 @@
 - Fixes the bug: the selected active conversation is no longer selected when the user returns to active conversations from archived conversations
 - Deletes the persistence of the last open conversation from the local storage
 - Restores the button 'open conversation detail'
-- Changes the mqtt library loading: from external loaded in index.html to local loaded in angular.json
+- Changes the mqtt library (v4.2.6) loading: from external loaded in index.html to local loaded in angular.json
 - Adds checking for user existence before running "setPresence" in the goOnLine method of app.component
 - Adds a path to "Conversation-detail" with only the conversation ID parameter
 - Renames (and improves) the method connect in subscribeToConversations and removes the subscriptions to the conversation detail

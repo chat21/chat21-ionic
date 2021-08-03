@@ -9,6 +9,8 @@ import 'firebase/database';
 // services
 // import { EventsService } from '../events-service';
 import { PresenceService } from '../abstract/presence.service';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from '../logger/loggerInstance';
 
 // utils
 import { setLastDate } from '../../utils/utils';
@@ -22,17 +24,20 @@ export class MQTTPresenceService extends PresenceService {
   BSIsOnline: BehaviorSubject<any>;
   BSLastOnline: BehaviorSubject<any>;
 
-  tenant: string;
+  // private params
+  private tenant: string;
   private urlNodePresence: string;
-
+  private logger: LoggerService = LoggerInstance.getInstance();
   constructor(
     // private events: EventsService
   ) {
     super();
   }
 
-  initialize() {
-    console.log('FirebasePresenceService', this.tenant);
+  initialize(tenant: string) {
+    // this.tenant = this.getTenant();
+    this.tenant = tenant;
+    this.logger.info('[MQTT-PRESENCE] initialize this.tenant', this.tenant);
     this.urlNodePresence = '/apps/' + this.tenant + '/presence/';
   }
 

@@ -1,8 +1,10 @@
+
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 
 // services
-import { AuthService } from 'src/chat21-core/providers/abstract/auth.service';
+import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
+import { TiledeskAuthService } from './../../../../chat21-core/providers/tiledesk/tiledesk-auth.service';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { EventsService } from '../../../services/events-service';
 
@@ -28,7 +30,8 @@ export class LoginPage implements OnInit {
 
 
   constructor(
-    public authService: AuthService,
+    public tiledeskAuthService: TiledeskAuthService,
+    public messagingAuthService: MessagingAuthService,
     private translateService: CustomTranslateService,
     private events: EventsService,
     private loginComponent: LoginComponent,
@@ -65,9 +68,6 @@ export class LoginPage implements OnInit {
       this.subscriptions.push(keySubscription);
       this.events.subscribe(keySubscription, this.signIn);
     }
-    const subAuthStateChanged = this.authService.BSAuthStateChanged.subscribe(state => {
-      console.log('BSAuthStateChanged:::', state);
-    });
   }
 
   /**
@@ -80,7 +80,7 @@ export class LoginPage implements OnInit {
     console.log('LOGIN PAGE signIn - error', error);
     if (error) {
       // faccio uscire alert
-      const errore =  this.translationMap.get('LABEL_SIGNIN_ERROR');
+      const errore = this.translationMap.get('LABEL_SIGNIN_ERROR');
       this.showSpinnerInLoginBtn = false;
       // this.presentToast(errore);
       this.loginComponent.showErrorSignIn(errore);
@@ -100,7 +100,14 @@ export class LoginPage implements OnInit {
       'LABEL_SIGNUP',
       'LABEL_FORGOT_YOUR_PASSWORD',
       'LABEL_CLICK_HERE',
-      'LABEL_SIGNIN_ERROR'
+      'LABEL_SIGNIN_ERROR',
+      'SIGNIN_ERROR_USER_NOT_FOUND',
+      'SIGNIN_ERROR_USER_WRONG_PSW',
+      'Email is required',
+      'Email must be a valid email',
+      'Password is required',
+      'Password must be at least 6 characters long'
+
     ];
     this.translationMap = this.translateService.translateLanguage(keys);
   }
@@ -112,8 +119,47 @@ export class LoginPage implements OnInit {
    * @param auth
    */
   returnSignInWithEmailAndPassword(auth: any) {
-    console.log('returnSignInWithEmailAndPassword', auth, auth.email, auth.password );
-    this.authService.signInWithEmailAndPassword(auth.email, auth.password);
+    this.showSpinnerInLoginBtn = true
+    console.log('LOGIN PAGE returnSignInWithEmailAndPassword', auth, auth.email, auth.password);
+    this.tiledeskAuthService.signInWithEmailAndPassword(auth.email, auth.password)
+      .then(tiledeskToken => {
+        this.messagingAuthService.createCustomToken(tiledeskToken)
+      })
+      .catch(error => {
+        this.showSpinnerInLoginBtn = false;
+        console.log('LOGIN PAGE signInWithEmailAndPassword error', error);
+        console.log('LOGIN PAGE signInWithEmailAndPassword error msg', error.error.msg);
+        console.log('LOGIN PAGE signInWithEmailAndPassword error msg TYPE OF', typeof error.error.msg);
+        let error_msg = '';
+        if (error.error.msg == "Authentication failed. User not found.") {
+          console.log('LOGIN PAGE signInWithEmailAndPassword error HERE 1', error.error.msg);
+          error_msg = this.translationMap.get('SIGNIN_ERROR_USER_NOT_FOUND');
+        } else if (error.error.msg === "Authentication failed. Wrong password.") {
+          console.log('LOGIN PAGE signInWithEmailAndPassword error HERE 2', error.error.msg);
+          error_msg = this.translationMap.get('SIGNIN_ERROR_USER_WRONG_PSW');
+        } else {
+          console.log('LOGIN PAGE signInWithEmailAndPassword error HERE 3', error.error.msg);
+          error_msg = this.translationMap.get('LABEL_SIGNIN_ERROR');
+        }
+
+        this.presentToast(error_msg)
+      })
+      .finally(() => {
+        this.showSpinnerInLoginBtn = false;
+        console.log('LOGIN PAGE signInWithEmailAndPassword ');
+      });
+
+    // this.authService.signInWithEmailAndPassword(auth.email, auth.password);
+  }
+
+  async presentToast(errormsg: string) {
+    const toast = await this.toastController.create({
+      message: errormsg,
+      duration: 3000,
+      color: "danger",
+      cssClass: 'toast-custom-class',
+    });
+    toast.present();
   }
 
   /** */
