@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.43-beta
+- Fixes the bug: logger of undefined in firebase-notifications and in app.component
+- Fixes the bug: "el" of undefined in "conversation-detail.page"
+
 ### 3.0.42-beta.1.19
 - Fixes the bug: uploading images by dragging to the "conversation detail" area does not work if the image is dragged to an area without messages
 
