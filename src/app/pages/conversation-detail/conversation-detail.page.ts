@@ -685,7 +685,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.heightMessageTextArea = height.toString(); //e.target.scrollHeight + 20;
       const message = e.msg; // e.detail.value;
       this.logger.log('[CONVS-DETAIL] returnChangeTextArea heightMessageTextArea ', this.heightMessageTextArea);
-      this.logger.log('[CONVS-DETAIL] returnChangeTextArea e.detail.value', e.detail.value);
+      // this.logger.log('[CONVS-DETAIL] returnChangeTextArea e.detail.value', e.detail.value);
+      this.logger.log('[CONVS-DETAIL] returnChangeTextArea e.detail.value', e.msg);
       this.logger.log('[CONVS-DETAIL] returnChangeTextArea loggedUser uid:', this.loggedUser.uid);
       this.logger.log('[CONVS-DETAIL] returnChangeTextArea loggedUser firstname:', this.loggedUser.firstname);
       this.logger.log('[CONVS-DETAIL] returnChangeTextArea conversationSelected uid:', this.conversationWith);
