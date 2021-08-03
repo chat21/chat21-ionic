@@ -1,17 +1,7 @@
-<!-- <span *ngIf="isShowMenuPage;then contentShowMenu else contentConversations">here is ignored</span>
-<ng-template #contentShowMenu>
-  <app-menu-home
-  (closeInfoPage) = returnCloseInfoPage()
-  ></app-menu-home>
-</ng-template> -->
 
-<!-- <ng-template #contentConversations> -->
 <ion-header no-border class="ion-no-border">
-  <app-ddp-header *ngIf="conversationType ==='active'" 
-  [numberOpenConv]=numberOpenConv 
-  [supportMode]=supportMode
-    (openContactsDirectory)=openContactsDirectory($event)
-     (openProfileInfo)=openProfileInfo($event)>
+  <app-ddp-header *ngIf="conversationType ==='active'" [numberOpenConv]=numberOpenConv [supportMode]=supportMode
+    (openContactsDirectory)=openContactsDirectory($event) (openProfileInfo)=openProfileInfo($event)>
   </app-ddp-header>
 
   <app-option-header *ngIf="conversationType !=='active'" [headerTitle]=headerTitle
@@ -21,58 +11,33 @@
 
 <ion-content class="list-avatar-page" appScrollbarTheme>
 
-  <!-- <iframe width="100%"
-  height="100%"
-  src="http://localhost:4203/#/projects-for-panel"
-  frameborder="0"
-  allowfullscreen>
-  </iframe>    -->
-  
   <div id="scrollbar2">
     <ion-list>
 
-      <span *ngIf="(conversations.length > 0 && conversationType ==='active') || (archivedConversations.length > 0  && conversationType ==='archived');then contentConversations else contentMessageWelcome">here is ignored</span>
+      <span
+        *ngIf="(conversations.length > 0 && conversationType ==='active') || (archivedConversations.length > 0  && conversationType ==='archived');then contentConversations else contentMessageWelcome">
+        here is ignored
+      </span>
 
       <ng-template #contentConversations>
-        <!-- <ion-item lines="none" class="ion-no-padding" *ngFor="let conversation of conversations"
-          (mousedown)="navigateByUrl(conversation.uid)"> 
-          <!- - (mouseup)="openMessageList()" - ->
-          <div [class.selected]="conversation.uid === uidConvSelected"></div>
-          <ion-avatar item-start>
-            <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color" [innerHTML]="conversation.avatar"></div>
-            <div *ngIf="conversation.image" #avatarImage class="avatar-profile" [style.background-image]="'url(' + conversation.image + ')'"></div>
-            <!- - <div *ngIf="getImageAvatar(conversation.sender)" #avatarImage class="avatar-profile" [style.background-image]="'url(' + getImageAvatar(conversation.sender) + ')'"></div> - ->
-          </ion-avatar>
-          <ion-label>
-            <div class="conversation_with truncate" [innerHTML]="conversation.conversation_with_fullname"></div>
-            <div class="conversation_message">
-              <p [class.not-read]="conversation.is_new" class="truncate" [innerHTML]="convertMessage(conversation.last_message_text)"></p>
-            </div>
-          </ion-label>
-          <ion-note class="conversation_time">{{conversation.time_last_message}}</ion-note>
-          <ion-buttons slot="end">
-            <ion-button id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
-              <ion-icon class="close-conversation-button-icon" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="close" item-end></ion-icon>
-            </ion-button>
-          </ion-buttons>
-          <div item-end class="notification_point" *ngIf="conversation.is_new">&nbsp;</div>
-        </ion-item> -->
-        <!-- >>>  2  conversations.length    {{conversations.length}} -->
-
-       
+        <!-- ---------------------------------- -->
         <!-- ACTIVE CONVERSATION LIST -->
+        <!-- ---------------------------------- -->
         <ion-list-conversations *ngIf="conversationType ==='active'" 
           [uidConvSelected]="uidConvSelected"
           [listConversations]="conversations" 
           [stylesMap]="stylesMap" 
           [translationMap]="translationMapConversation"
-          (onConversationSelected)=onConversationSelected($event)
+          (onConversationSelected)=onConversationSelected($event) 
           (onImageLoaded)="onImageLoaded($event)"
-          (onConversationLoaded)="onConversationLoaded($event)"
+          (onConversationLoaded)="onConversationLoaded($event)" 
           (onCloseConversation)="onCloseConversation($event)">
         </ion-list-conversations>
 
-        <ion-list-conversations  *ngIf="conversationType ==='archived'" 
+        <!-- ---------------------------------- -->
+        <!-- ARCHIVED CONVERSATION LIST -->
+        <!-- ---------------------------------- -->
+        <ion-list-conversations *ngIf="conversationType ==='archived'" 
           [listConversations]="archivedConversations"
           [stylesMap]="stylesMap" 
           [translationMap]="translationMapConversation"
@@ -83,8 +48,6 @@
       </ng-template>
 
       <ng-template #contentMessageWelcome>
-    <!-- >>>    loadingIsActive    {{loadingIsActive}}
-    >>>  2  conversations.length    {{conversations.length}} -->
         <div [class.active]="loadingIsActive" class="chat21-spinner" id="chat21-spinner">
           <!-- <div class="chat21-bounce1"></div>
           <div class="chat21-bounce2"></div>
@@ -94,7 +57,7 @@
           <!-- skeleton loading -->
           <!-- --------------------------------------------- -->
           <ion-list *ngIf="loadingIsActive">
-            <ion-item lines="none" *ngFor="let fake of generateFake(10)"> 
+            <ion-item lines="none" *ngFor="let fake of generateFake(10)">
               <ion-avatar slot="start" style="margin-left: 0 !important;">
                 <ion-skeleton-text animated></ion-skeleton-text>
               </ion-avatar>
@@ -109,20 +72,17 @@
             </ion-item>
           </ion-list>
         </div>
-        <div id="no-convs-wpr" *ngIf="(!loadingIsActive && conversations.length === 0) || (!loadingIsActive && archivedConversations.length === 0) " >
-          <!-- <div class="messaggio">{{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}</div> -->
 
+        <div id="no-convs-wpr"
+          *ngIf="(!loadingIsActive && conversations.length === 0) || (!loadingIsActive && archivedConversations.length === 0) ">
           <ion-item id="no-convs" class="ion-text-center" lines="none">
             <ion-label class="ion-text-wrap" color="medium">
               {{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}
             </ion-label>
           </ion-item>
         </div>
+        
       </ng-template>
-
-
-
     </ion-list>
   </div>
 </ion-content>
-<!-- </ng-template> -->
