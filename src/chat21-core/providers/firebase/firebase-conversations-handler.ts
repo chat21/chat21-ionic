@@ -277,7 +277,8 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
                 const childData: ConversationModel = childSnapshot.val();
-                if (childSnapshot.key && childSnapshot.key !== null) {
+                this.logger.debug('[FIREBASEConversationsHandlerSERVICE] conversationDetail childSnapshot *****', childSnapshot.val())
+                if (childSnapshot && childSnapshot.key && childData.uid) {
                     childData.uid = childSnapshot.key;
                     const conversation = this.completeConversation(childData);
                     if (conversation) {
