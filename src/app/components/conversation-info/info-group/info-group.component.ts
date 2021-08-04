@@ -32,7 +32,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
     'hideDelayAfterClick': 3000,
     'hide-delay': 200
   };
-  
+
   constructor(
     public imageRepoService: ImageRepoService,
     public presenceService: PresenceService,
@@ -49,7 +49,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
   //   var copyText = document.createElement("input");                  
   //   copyText.setAttribute("type", "text");
   //   copyText.setAttribute("value", memberid);
-     
+
   //   document.body.appendChild(copyText); 
   //   copyText.select();
   //   copyText.setSelectionRange(0, 99999); /*For mobile devices*/
@@ -70,7 +70,8 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
         this.member_array = []
         const members_isonline_array = []
 
-        for (const [key, value] of Object.entries(this.groupDetail.membersinfo)) {
+        // for (const [key, value] of Object.entries(this.groupDetail.membersinfo)) {
+        for (const [key, value] of Object.entries(this.groupDetail.members)) {
           console.log('CONVERSATION-DETAIL group detail Key:', key, ' -Value: ', value);
 
 
@@ -82,7 +83,10 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
               // this.member_is_online = isOnline;
 
               // test 
-              this.groupDetail.membersinfo[key]['isSignin'] = isOnline.isOnline
+              // this.groupDetail.membersinfo[key]['isSignin'] = isOnline.isOnline
+
+              members_isonline_array[key] = {};
+              members_isonline_array[key]['isSignin'] = isOnline.isOnline
 
               if (this.member_array.length > 0) {
                 console.log('InfoGroupComponent group detail BSIsOnline HERE YES')
@@ -103,19 +107,16 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
               //   console.log('InfoGroupComponent group detail after assignment ', this.groupDetail)
               // }
               // console.log('InfoGroupComponent group detail BSIsOnline isOnline', this.member_is_online)
-
-
             })
 
-
-            this.contactsService.loadContactDetail(tiledeskToken, key)
+          this.contactsService.loadContactDetail(tiledeskToken, key)
             .subscribe(user => {
               console.log('InfoGroupComponent group detail loadContactDetail RES', user);
               // console.log('InfoGroupComponent group detail this.presenceService.BSIsOnline.value()', this.presenceService.BSIsOnline.getValue);
 
               user.imageurl = this.imageRepoService.getImagePhotoUrl(key)
               // this.member_array.push({ userid: user.uid, avatar: user.avatar, color: user.color, email: user.email, fullname: user.fullname, imageurl: user.imageurl, userOnline: isOnline })
-              this.member_array.push({ userid: user.uid, avatar: user.avatar, color: user.color, email: user.email, fullname: user.fullname, imageurl: user.imageurl, userOnline: this.groupDetail.membersinfo[user.uid]['isSignin'] })
+              this.member_array.push({ userid: user.uid, avatar: user.avatar, color: user.color, email: user.email, fullname: user.fullname, imageurl: user.imageurl, userOnline: members_isonline_array[user.uid]['isSignin'] })
 
             }, (error) => {
               console.log('InfoGroupComponent group detail loadContactDetail - ERROR  ', error);
