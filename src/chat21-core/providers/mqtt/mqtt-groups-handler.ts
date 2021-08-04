@@ -101,7 +101,7 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
     private completeGroup(group: any): GroupModel {
         group.avatar = avatarPlaceholder(group.name);
         group.color = getColorBck(group.name);
-        group.membersinfo = group.members;
+        // group.membersinfo = group.members;
         return group
     }
 

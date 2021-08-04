@@ -70,44 +70,29 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
         this.member_array = []
         const members_isonline_array = []
 
+        for (const [key, value] of Object.entries(this.groupDetail.members)) {
+          console.log('CONVERSATION-DETAIL group detail Key:', key, ' -Value: ', value);
+          members_isonline_array[key] = {};
+          members_isonline_array[key]['isSignin'] = false
+        }
+
         // for (const [key, value] of Object.entries(this.groupDetail.membersinfo)) {
         for (const [key, value] of Object.entries(this.groupDetail.members)) {
           console.log('CONVERSATION-DETAIL group detail Key:', key, ' -Value: ', value);
-
 
           this.presenceService.userIsOnline(key)
             .pipe(takeUntil(this.unsubscribe$))
             .pipe(filter((isOnline) => isOnline !== null))
             .subscribe((isOnline: any) => {
               console.log('InfoGroupComponent group detail BSIsOnline isOnline', isOnline)
-              // this.member_is_online = isOnline;
-
-              // test 
-              // this.groupDetail.membersinfo[key]['isSignin'] = isOnline.isOnline
-
-              members_isonline_array[key] = {};
               members_isonline_array[key]['isSignin'] = isOnline.isOnline
-
               if (this.member_array.length > 0) {
                 console.log('InfoGroupComponent group detail BSIsOnline HERE YES')
-                // this.member_array['userOnline'] = isOnline.isOnline
                 this.member_array.find(x => x.userid == isOnline.uid)['userOnline'] = isOnline.isOnline
-
               }
-
               console.log('InfoGroupComponent group detail BSIsOnline  this.groupDetail 2', this.groupDetail)
-
               console.log('InfoGroupComponent group detail BSIsOnline isOnline member_array', this.member_array)
-              // this.member_array['userOnline'] = this.groupDetail.membersinfo[key]['isSignin']
-              // if (this.member_array.length > 0) {
-              //   // if (isOnline !== null) {
-              // this.member_array.find(x => x.userid == isOnline.uid)['userOnline'] = isOnline.isOnline
-              // this.member_array.find(x => x.userid == isOnline.uid)['userOnlineUID'] = isOnline.uid;
-              //   console.log('InfoGroupComponent group detail BSIsOnline isOnline member_array 2', this.member_array)
-              //   console.log('InfoGroupComponent group detail after assignment ', this.groupDetail)
-              // }
-              // console.log('InfoGroupComponent group detail BSIsOnline isOnline', this.member_is_online)
-            })
+          });
 
           this.contactsService.loadContactDetail(tiledeskToken, key)
             .subscribe(user => {
@@ -116,7 +101,16 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
               user.imageurl = this.imageRepoService.getImagePhotoUrl(key)
               // this.member_array.push({ userid: user.uid, avatar: user.avatar, color: user.color, email: user.email, fullname: user.fullname, imageurl: user.imageurl, userOnline: isOnline })
-              this.member_array.push({ userid: user.uid, avatar: user.avatar, color: user.color, email: user.email, fullname: user.fullname, imageurl: user.imageurl, userOnline: members_isonline_array[user.uid]['isSignin'] })
+              this.member_array.push(
+                {
+                  userid: user.uid,
+                  avatar: user.avatar,
+                  color: user.color,
+                  email: user.email,
+                  fullname: user.fullname,
+                  imageurl: user.imageurl,
+                  userOnline: members_isonline_array[user.uid]['isSignin']
+                })
 
             }, (error) => {
               console.log('InfoGroupComponent group detail loadContactDetail - ERROR  ', error);
