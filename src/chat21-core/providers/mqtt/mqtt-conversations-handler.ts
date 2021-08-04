@@ -16,6 +16,7 @@ import { getImageUrlThumbFromFirebasestorage, avatarPlaceholder, getColorBck } f
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid } from '../../utils/utils';
 import { LoggerService } from '../abstract/logger.service';
 import { LoggerInstance } from '../logger/loggerInstance';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 // import { ImageRepoService } from '../abstract/image-repo.service';
 // import { ConsoleReporter } from 'jasmine';
 
@@ -160,28 +161,35 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
      subscribeToConversations(loaded) {
         this.logger.debug('[MQTTConversationsHandler] connecting MQTT conversations handler');
         const handlerConversationAdded = this.chat21Service.chatClient.onConversationAdded( (conv) => {
+            console.log("onConversationAdded:", conv);
             let conversation = this.completeConversation(conv); // needed to get the "conversation_with", and find the conv in the conv-history
+            console.log("onConversationAdded completed:" + JSON.stringify(conversation));
             const index = this.searchIndexInArrayForConversationWith(this.conversations, conversation.conversation_with);
+            console.log("this.searchIndexInArrayForConversationWith(this.conversations, conversation.conversation_with): ", this.searchIndexInArrayForConversationWith(this.conversations, conversation.conversation_with))
+            console.log("[console1] INDEX IS" + index)
+            console.log("[console1] INDEX IS,", index)
+            this.logger.debug("INDEX IS" + index)
+            console.log("[console2] INDEX IS" + index)
             if (index > -1) {
-                this.logger.debug('[MQTTConversationsHandler] Added conv -> Changed!')
+                console.log('[MQTTConversationsHandler] Added conv -> Changed!')
                 this.changed(conversation);
             }
             else {
-                this.logger.debug('[MQTTConversationsHandler]Added conv -> Added!')
+                console.log('[MQTTConversationsHandler]Added conv -> Added!')
                 this.added(conversation);
             }
         });
         const handlerConversationUpdated = this.chat21Service.chatClient.onConversationUpdated( (conv, topic) => {
-            this.logger.debug('[MQTTConversationsHandler] conversation updated:', JSON.stringify(conv));
+            console.debug('[MQTTConversationsHandler] conversation updated:', JSON.stringify(conv));
             this.changed(conv);
         });
         const handlerConversationDeleted = this.chat21Service.chatClient.onConversationDeleted( (conv, topic) => {
-            this.logger.debug('[MQTTConversationsHandler] conversation deleted:', conv, topic);
+            console.debug('[MQTTConversationsHandler] conversation deleted:', conv, topic);
             // example topic: apps.tilechat.users.ME.conversations.CONVERS-WITH.clientdeleted
             const topic_parts = topic.split("/")
             this.logger.debug('[MQTTConversationsHandler] topic and parts', topic_parts)
             if (topic_parts.length < 7) {
-                this.logger.error('[MQTTConversationsHandler] Error. Not a conversation-deleted topic:', topic);
+                console.error('[MQTTConversationsHandler] Error. Not a conversation-deleted topic:', topic);
                 return
             }
             const convers_with = topic_parts[5];
@@ -244,7 +252,11 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     }
 
     searchIndexInArrayForConversationWith(conversations, conversation_with: string) {
-        return conversations.findIndex(conv => conv.conversation_with === conversation_with);
+        console.log("searching in array for conversations...")
+        let INDICE = conversations.findIndex(conv => conv.conversation_with === conversation_with);
+        console.log("INDICE:" + INDICE);
+        // return conversations.findIndex(conv => conv.conversation_with === conversation_with);
+        return INDICE;
     }
 
     /**
@@ -281,6 +293,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
             this.updateConversationWithSnapshot(this.conversations[index], conversation);
             this.logger.debug('[MQTTConversationsHandler] conversationchanged.isnew', JSON.stringify(conversation))
             this.conversations.sort(compareValues('timestamp', 'desc'));
+            console.log("this.conversations:" + JSON.stringify(this.conversations));
             this.conversationChanged.next(this.conversations[index]);
         }
     }
@@ -321,7 +334,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
             }
             if (k === 'timestamp') {
                 this.logger.debug('[MQTTConversationsHandler] aggiorno key:' + k);
-                conv.timestamp = this.getTimeLastMessage(snap[k]);
+                conv.timestamp = snap[k];
             }
             if (k === 'status') {
                 this.logger.debug('[MQTTConversationsHandler] aggiorno key:' + k);

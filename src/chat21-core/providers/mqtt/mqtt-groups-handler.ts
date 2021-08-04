@@ -63,7 +63,7 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
 
     onGroupChange(groupId: string): Observable<GroupModel> {
         if (this.isGroup(groupId)) {
-            this.chat21Service.chatClient.getGroup(groupId, (err, group) => {
+            this.chat21Service.chatClient.groupData(groupId, (err, group) => {
                 console.log('subscribing to group updates...', group);
                 this.groupValue(group);
                 const handler_group_updated = this.chat21Service.chatClient.onGroupUpdated( (group, topic) => {
@@ -90,6 +90,8 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
         console.log('groupValue > GroupModel by childSnapshot:', group)
         if (group) {
             let groupCompleted = this.completeGroup(group)
+            console.log("group:", group);
+            console.log("groupCompleted:", groupCompleted);
             this.SgroupDetail.next(groupCompleted)
         }
     }
