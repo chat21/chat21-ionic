@@ -35,7 +35,7 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
      * inizializzo groups handler
      */
     initialize(tenant: string, loggedUserId: string): void {
-        console.log('initialize GROUP-HANDLER MQTT');
+        this.logger.log('initialize GROUP-HANDLER MQTT');
         this.tenant = tenant;
         this.loggedUserId = loggedUserId;
     }
@@ -57,18 +57,20 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
     getDetail(groupId: string, callback?: (group: GroupModel) => void): Promise<GroupModel> {
         //throw new Error('Method not implemented.');
         // Ignorare versione firebase
-          console.log('Method not implemented.');
+          this.logger.log('Method not implemented.');
           return;
     }
-
+// abstract onGroupChange(groupId: string): Observable<GroupModel>;
     onGroupChange(groupId: string): Observable<GroupModel> {
         if (this.isGroup(groupId)) {
             this.chat21Service.chatClient.groupData(groupId, (err, group) => {
-                console.log('subscribing to group updates...', group);
-                this.groupValue(group);
+                this.logger.log('got result by REST call:', group);
+                this.logger.log('got group by REST call:', group.result);
+                this.groupValue(group.result);
+                this.logger.log('subscribing to group updates...', groupId);
                 const handler_group_updated = this.chat21Service.chatClient.onGroupUpdated( (group, topic) => {
                     if (topic.conversWith === groupId) {
-                        console.log('group updated:', group);
+                        this.logger.log('group updated:', group);
                         this.groupValue(group);
                     }
                 });
@@ -85,13 +87,13 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
     }
 
     private groupValue(childSnapshot: any){
-        console.log('groupValue > childSnapshot:', childSnapshot)
+        this.logger.log('groupValue > childSnapshot:', childSnapshot)
         const group: GroupModel = childSnapshot;
-        console.log('groupValue > GroupModel by childSnapshot:', group)
+        this.logger.log('groupValue > GroupModel by childSnapshot:', group)
         if (group) {
             let groupCompleted = this.completeGroup(group)
-            console.log("group:", group);
-            console.log("groupCompleted:", groupCompleted);
+            this.logger.log("group:", group);
+            this.logger.log("groupCompleted:", groupCompleted);
             this.SgroupDetail.next(groupCompleted)
         }
     }
@@ -106,7 +108,7 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
     create(groupName: string, members: [string], callback?: (res: any, error: any) => void): Promise<any> {
         // throw new Error('Method not implemented.');
         // Ignorare versione firebase
-        console.log('Method not implemented.');
+        this.logger.log('Method not implemented.');
         return;
     }
 
@@ -117,21 +119,21 @@ import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user
     leave(groupId: string, callback?: (res: any, error: any) => void): Promise<any> {
         // throw new Error('Method not implemented.');
         // Ignorare versione firebase
-        console.log('Method not implemented.');
+        this.logger.log('Method not implemented.');
         return;
     }
 
     join(groupId: string, member: string, callback?: (res: any, error: any) => void) {
         // throw new Error('Method not implemented.');
         // Ignorare versione firebase
-        console.log('Method not implemented.');
+        this.logger.log('Method not implemented.');
         return;
     }
 
 
     dispose(): void {
         //throw new Error('Method not implemented.');
-        console.log('Method not implemented.');
+        this.logger.log('Method not implemented.');
     }
       
   }

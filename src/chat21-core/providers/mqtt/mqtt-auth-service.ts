@@ -3,11 +3,14 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-// firebase
-import * as firebase from 'firebase/app';
-import 'firebase/messaging';
-import 'firebase/database';
-import 'firebase/auth';
+import { LoggerService } from '../abstract/logger.service';
+import { LoggerInstance } from '../logger/loggerInstance';
+
+// // firebase
+// import * as firebase from 'firebase/app';
+// import 'firebase/messaging';
+// import 'firebase/database';
+// import 'firebase/auth';
 
 // services
 // import { EventsService } from '../events-service';
@@ -25,14 +28,9 @@ import { AppStorageService } from '../abstract/app-storage.service';
 
 export class MQTTAuthService extends MessagingAuthService {
   
-
-  // authStateChanged: BehaviorSubject<any>; // = new BehaviorSubject<any>([]);
-
-  // BehaviorSubject
   BSAuthStateChanged: BehaviorSubject<any>;
   BSSignOut: BehaviorSubject<any>;
 
-  // private persistence: string;
   SERVER_BASE_URL: string;
 
   public token: any;
@@ -40,10 +38,12 @@ export class MQTTAuthService extends MessagingAuthService {
   public user: any;
   private currentUser: any;
 
-  private URL_TILEDESK_SIGNIN: string;
+  // private URL_TILEDESK_SIGNIN: string;
   private URL_TILEDESK_CREATE_CUSTOM_TOKEN: string;
-  private URL_TILEDESK_SIGNIN_ANONYMOUSLY: string;
-  private URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN: string;
+  // private URL_TILEDESK_SIGNIN_ANONYMOUSLY: string;
+  // private URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN: string;
+
+  private logger: LoggerService = LoggerInstance.getInstance()
 
   constructor(
     public http: HttpClient,
@@ -51,7 +51,7 @@ export class MQTTAuthService extends MessagingAuthService {
     public appStorage: AppStorageService
   ) {
     super();
-    console.log("chat21Service:", chat21Service)
+    this.logger.log("chat21Service:", chat21Service)
   }
 
   /**
@@ -63,21 +63,21 @@ export class MQTTAuthService extends MessagingAuthService {
     // this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously';
     this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'chat21/native/auth/createCustomToken';
     // this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'auth/signinWithCustomToken';
-    console.log(' ---------------- login con token url ---------------- ');
+    this.logger.log(' ---------------- login con token url ---------------- ');
     // this.checkIsAuth();
     this.onAuthStateChanged();
   }
 
   // logout(callback) {
   logout() {
-    console.log("closing mqtt connection...");
+    this.logger.log("closing mqtt connection...");
     this.chat21Service.chatClient.close(() => {
-      console.log("mqtt connection closed. OK");
+      this.logger.log("mqtt connection closed. OK");
       // remove
       // this.appStorage.removeItem('tiledeskToken');
       // this.appStorage.removeItem('currentUser');
       this.currentUser = null;
-      console.log("user removed.");
+      this.logger.log("user removed.");
       this.BSSignOut.next(true);
       this.BSAuthStateChanged.next('offline');
       // if (callback) {
@@ -97,24 +97,24 @@ z
 
   /** */
   getToken(): string {
-    console.log('UserService::getToken');
+    this.logger.log('UserService::getToken');
     return this.token;
   }
 
   /**
    */
   onAuthStateChanged() {
-    console.log('UserService::onAuthStateChanged');
+    this.logger.log('UserService::onAuthStateChanged');
     // if (this.appStorage.getItem('tiledeskToken') == null) {
     //   this.currentUser = null;
     this.BSAuthStateChanged.next('offline');
     // }
 
-    // console.log("STORAGE CHANGED: added listner")
+    // this.logger.log("STORAGE CHANGED: added listner")
     // window.addEventListener('storage', (e) => {
-    //   console.log('STORAGE CHANGED:', e.key);
+    //   this.logger.log('STORAGE CHANGED:', e.key);
     //   if (this.appStorage.getItem('tiledeskToken') == null && this.appStorage.getItem('currentUser') == null) {
-    //     console.log('STORAGE CHANGED: CASO TOKEN NULL');
+    //     this.logger.log('STORAGE CHANGED: CASO TOKEN NULL');
     //     this.currentUser = null;
     //     // that.logout(() => {
     //     //   that.BSAuthStateChanged.next('offline');
@@ -122,7 +122,7 @@ z
     //     this.logout();
     //   }
     //   else if (this.currentUser == null && this.appStorage.getItem('tiledeskToken') != null && this.appStorage.getItem('currentUser') != null) {
-    //     console.log('STORAGE CHANGED: CASO LOGGED OUTSIDE');
+    //     this.logger.log('STORAGE CHANGED: CASO LOGGED OUTSIDE');
     //     this.currentUser = JSON.parse(this.appStorage.getItem('currentUser'));
     //     const tiledeskToken = this.appStorage.getItem('tiledeskToken');
     //     this.connectWithCustomToken(tiledeskToken);
@@ -147,13 +147,13 @@ z
   //   .subscribe(data =>  {
   //     that.getCustomToken(data);
   //   }, error => {
-  //     console.log(error);
+  //     this.logger.log(error);
   //   });
   // }
 
   // ********************* NATIVE AUTH (NO TILEDESK) ********************* //
   // private signinMQTT(url: string, username: string, password: string) {
-  //   console.log("signinMQTT...")
+  //   this.logger.log("signinMQTT...")
   //   const httpHeaders = new HttpHeaders();
   //   httpHeaders.append('Accept', 'application/json');
   //   httpHeaders.append('Content-Type', 'application/json' );
@@ -165,7 +165,7 @@ z
   //   const that = this;
   //   this.http.post(url, postData, requestOptions)
   //     .subscribe(data => {
-  //       console.log("native auth data:", JSON.stringify(data));
+  //       this.logger.log("native auth data:", JSON.stringify(data));
   //       if (data['token'] && data['userid']) {
   //         this.appStorage.setItem('tiledeskToken', data['token']);
   //         this.tiledeskToken = data['token'];
@@ -175,7 +175,7 @@ z
   //         // that.firebaseCreateCustomToken(tiledeskToken);
   //       }
   //     }, error => {
-  //       console.log(error);
+  //       this.logger.log(error);
   //     });
   // }
 
@@ -199,7 +199,7 @@ z
   //         resolve(this.currentUser)
   //       }
   //     }, (error) => {
-  //       console.log(error);
+  //       this.logger.log(error);
   //       reject(error)
   //     });
   //   });
@@ -219,7 +219,7 @@ z
   //   // const that = this;
   //   this.http.post(url, postData, requestOptions)
   //     .subscribe(data => {
-  //       console.log("data:", JSON.stringify(data));
+  //       this.logger.log("data:", JSON.stringify(data));
   //       if (data['success'] && data['token']) {
   //         this.tiledeskToken = data['token'];
   //         this.createCompleteUser(data['user']);
@@ -228,7 +228,7 @@ z
   //         // that.firebaseCreateCustomToken(tiledeskToken);
   //       }
   //     }, error => {
-  //       console.log(error);
+  //       this.logger.log(error);
   //     });
   // }
 
@@ -244,7 +244,7 @@ z
   //   .subscribe(data =>  {
   //     that.getCustomToken(data);
   //   }, error => {
-  //     console.log(error);
+  //     this.logger.log(error);
   //   });
   // }
 
@@ -258,19 +258,19 @@ z
     // const that = this;
     this.http.post(this.URL_TILEDESK_CREATE_CUSTOM_TOKEN, postData, { headers, responseType})
     .subscribe(data =>  {
-      console.log("**** data", data)
+      this.logger.log("**** data", data)
       const result = JSON.parse(data);
       this.connectMQTT(result);
     }, error => {
-      console.log(error);
+      this.logger.log(error);
     });
   }
 
   connectMQTT(credentials: any): any {
-    console.log('**** credentials:', credentials);
+    this.logger.log('**** credentials:', credentials);
     const userid = credentials.userid;
     this.chat21Service.chatClient.connect(userid, credentials.token, () => {
-      console.log('Chat connected.');
+      this.logger.log('Chat connected.');
       this.BSAuthStateChanged.next('online');
     });
   }
@@ -301,11 +301,11 @@ z
   //     // member.imageurl = imageurl;
   //     member.avatar = avatar;
   //     member.color = color;
-  //     console.log('createCompleteUser: ', member);
+  //     this.logger.log('createCompleteUser: ', member);
   //   } catch (err) {
-  //     console.log('createCompleteUser error:' + err);
+  //     this.logger.log('createCompleteUser error:' + err);
   //   }
-  //   console.log('createCompleteUser: ', member);
+  //   this.logger.log('createCompleteUser: ', member);
   //   this.currentUser = member;
   //   // salvo nel local storage e sollevo l'evento
   //   this.appStorage.setItem('currentUser', JSON.stringify(this.currentUser));
