@@ -226,7 +226,7 @@ export function notificationsServiceFactory(appConfig: AppConfigProvider) {
 
 const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
   return () => {
-    let customLogger = new CustomLogger(true, logger)
+    let customLogger = new CustomLogger(logger)
     LoggerInstance.setInstance(customLogger)
     if (environment.remoteConfig) {
       return appConfig.loadAppConfig();
