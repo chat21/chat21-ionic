@@ -576,11 +576,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         this.groupDetail = groupDetail;
 
         this.logger.log('[CONVS-DETAIL] subscribe to onGroupChange - groupDetail ', this.groupDetail)
-        let memberStr = JSON.stringify(this.groupDetail.members);
-        let arrayMembers = [];
-        JSON.parse(memberStr, (key, value) => {
-          arrayMembers.push(key);
-        });
+
+        /* Unesed Code */
+        // let memberStr = JSON.stringify(this.groupDetail.members);
+        // let arrayMembers = [];
+        // JSON.parse(memberStr, (key, value) => {
+        //   arrayMembers.push(key);
+        // });
 
       });
       const subscribe = { key: subscriptionKey, value: subscription };
@@ -677,15 +679,17 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
   returnChangeTextArea(e: any) {
+    this.logger.log('[CONVS-DETAIL] returnChangeTextArea event', e);
     try {
       let height: number = e.offsetHeight;
       if (height < 50) {
         height = 50;
       }
+
       this.heightMessageTextArea = height.toString(); //e.target.scrollHeight + 20;
-      const message = e.msg; // e.detail.value;
+      const message = e.msg;
       this.logger.log('[CONVS-DETAIL] returnChangeTextArea heightMessageTextArea ', this.heightMessageTextArea);
-      // this.logger.log('[CONVS-DETAIL] returnChangeTextArea e.detail.value', e.detail.value);
+
       this.logger.log('[CONVS-DETAIL] returnChangeTextArea e.detail.value', e.msg);
       this.logger.log('[CONVS-DETAIL] returnChangeTextArea loggedUser uid:', this.loggedUser.uid);
       this.logger.log('[CONVS-DETAIL] returnChangeTextArea loggedUser firstname:', this.loggedUser.firstname);
@@ -714,8 +718,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         var pos = message.lastIndexOf("/");
         this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / ", pos);
         this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - pos:: ", pos);
-        // if (pos >= 0) {
-        if (pos === 0) {
+        if (pos >= 0) {
+        // if (pos === 0) {
           // && that.tagsCanned.length > 0
           var strSearch = message.substr(pos + 1);
           this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses strSearch ", strSearch);
@@ -811,14 +815,17 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   replaceTagInMessage(canned) {
+    const elTextArea = this.rowTextArea['el'];
+    const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
+    this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea ", textArea);
+    this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea value", textArea.value)
+
+
     this.arrowkeyLocation = -1
     this.tagsCannedFilter = [];
     this.logger.log("[CONVS-DETAIL] replaceTagInMessage  canned text ", canned.text);
     // // prendo val input
-    const elTextArea = this.rowTextArea['el'];
-    const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
-    this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea ", textArea);
-    this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea value", textArea.value);
+
 
 
     // replace text
@@ -841,29 +848,34 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    // this.logger.log("CONVERSATION-DETAIL handleKeyboardEvent  event.key ", event.key);
+    this.logger.log("CONVERSATION-DETAIL handleKeyboardEvent  event.key ", event.key);
 
     if (this.tagsCannedFilter.length > 0) {
 
       if (event.key === 'ArrowDown') {
+
         this.arrowkeyLocation++;
         if (this.arrowkeyLocation === this.tagsCannedFilter.length) {
           this.arrowkeyLocation--
         }
+        // this.replaceTagInMessage(this.tagsCannedFilter[this.arrowkeyLocation])
       }
       else if (event.key === 'ArrowUp') {
 
         if (this.arrowkeyLocation > 0) {
           this.arrowkeyLocation--;
-        } else
-          if (this.arrowkeyLocation < 0) {
-            this.arrowkeyLocation++;
-          }
+        } else if (this.arrowkeyLocation < 0) {
+          this.arrowkeyLocation++;
+        }
+        // this.replaceTagInMessage(this.tagsCannedFilter[this.arrowkeyLocation])
       }
 
       if (event.key === 'Enter') {
         const canned_selected = this.tagsCannedFilter[this.arrowkeyLocation]
-        this.replaceTagInMessage(canned_selected)
+
+        if (canned_selected) {
+          this.replaceTagInMessage(canned_selected)
+        }
       }
     }
   }

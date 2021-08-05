@@ -37,7 +37,7 @@
           [value]=""
           [(ngModel)]="messageString" 
           (ionChange)="ionChange($event);"
-          (keydown.enter)="pressedOnKeyboard($event, messageString);false"
+          (keydown.enter)="onKeydown($event, messageString)"
           (paste)="onPaste($event)">
         </ion-textarea>
         <!-- (ionInput)="onChange($event);" -->
