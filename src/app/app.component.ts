@@ -149,6 +149,7 @@ export class AppComponent implements OnInit {
       this.chatManager.initialize();
       this.presenceService.initialize(this.tenant);
       this.typingService.initialize(this.tenant);
+      this.notificationsService.initialize(this.tenant)
       this.uploadService.initialize();
       this.initSubscriptions();
       this.initAudio()

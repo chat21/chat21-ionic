@@ -27,7 +27,7 @@ export class FirebaseNotifications extends NotificationsService {
     }
 
     getNotificationPermissionAndSaveToken(currentUserUid) {
-        this.tenant = this.getTenant();
+        // this.tenant = this.getTenant();
         this.logger.debug('[FIREBASE-NOTIFICATIONS] calling requestPermission - tenant ', this.tenant)
         this.logger.debug('[FIREBASE-NOTIFICATIONS] calling requestPermission - currentUserUid ', currentUserUid)
         this.userId = currentUserUid;
