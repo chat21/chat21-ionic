@@ -4,6 +4,8 @@ import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.
 import { convertMessage } from 'src/chat21-core/utils/utils';
 import { ListConversationsComponent } from '../list-conversations/list-conversations.component';
 import { Platform } from '@ionic/angular';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 // import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 // import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
@@ -18,9 +20,8 @@ export class IonListConversationsComponent extends ListConversationsComponent im
   @Input() uidConvSelected: string;
   @Output() onCloseConversation = new EventEmitter<ConversationModel>();
 
-  public convertMessage = convertMessage;
+  convertMessage = convertMessage;
   isApp: boolean = false;
-
   /**
    * 
    * @param iterableDiffers 
@@ -29,22 +30,21 @@ export class IonListConversationsComponent extends ListConversationsComponent im
    */
   constructor(
     public iterableDiffers: IterableDiffers,
-    public imageRepoService: ImageRepoService,
+    public kvDiffers: KeyValueDiffers,
     public platform: Platform
   ) {
-    super(iterableDiffers, imageRepoService)
-    console.log('[ION-LIST-CONVS-COMP] IS-APP (constructor)',this.isApp )
+    super(iterableDiffers, kvDiffers)
   }
 
   ngOnInit() {
     this.isApp = this.platform.is('ios') || this.platform.is('android')
-    console.log('[ION-LIST-CONVS-COMP] - ngOnInit - IS-APP ',this.isApp )
-    console.log('[ION-LIST-CONVS-COMP] - ngOnInit - Platform', this.platform.platforms());
+    this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - IS-APP ',this.isApp )
+    this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - Platform', this.platform.platforms());
    }
 
   closeConversation(conversation: ConversationModel) {
     var conversationId = conversation.uid;
-    console.log('[ION-LIST-CONVS-COMP] - closeConversation - conversationId ',conversationId )
+    this.logger.log('[ION-LIST-CONVS-COMP] - closeConversation - conversationId ',conversationId )
     this.onCloseConversation.emit(conversation)
   }
 

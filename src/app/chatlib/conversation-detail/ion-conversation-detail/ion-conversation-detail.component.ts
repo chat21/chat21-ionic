@@ -34,7 +34,6 @@ export class IonConversationDetailComponent extends ConversationContentComponent
   MESSAGE_TYPE_INFO = MESSAGE_TYPE_INFO;
   MESSAGE_TYPE_MINE = MESSAGE_TYPE_MINE;
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS;
-  public logger: LoggerService = LoggerInstance.getInstance();
 
   /**
    * Constructor

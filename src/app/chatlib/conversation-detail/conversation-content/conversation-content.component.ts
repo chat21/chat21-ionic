@@ -69,7 +69,8 @@ export class ConversationContentComponent implements OnInit {
   uploadProgress: number;
   showUploadProgress: boolean = false;
   fileType: string;
-  public logger: LoggerService = LoggerInstance.getInstance();
+  logger: LoggerService = LoggerInstance.getInstance();
+
   constructor(
     public cdref: ChangeDetectorRef,
     public uploadService: UploadService
@@ -115,7 +116,7 @@ export class ConversationContentComponent implements OnInit {
   // ENABLE HTML SECTION 'FILE PENDING UPLOAD'
   listenToUploadFileProgress() {
     this.uploadService.BSStateUpload.subscribe((data: any) => {
-      this.logger.debug('[CONV-CONTENT] BSStateUpload', data);
+      this.logger.log('[CONV-CONTENT-W] BSStateUpload', data);
       if (data && data.type.startsWith("application")) {
         data.upload === 100 || isNaN(data.upload) ? this.showUploadProgress = false : this.showUploadProgress = true
         this.uploadProgress = data.upload
@@ -154,10 +155,10 @@ export class ConversationContentComponent implements OnInit {
       divScrollMe = this.scrollMe.nativeElement
     }
     if (divScrollMe.scrollHeight - divScrollMe.scrollTop <= (divScrollMe.clientHeight + 40)) {
-      this.logger.debug('[CONV-CONTENT] - SONO ALLA FINE');
+      this.logger.log('[CONV-CONTENT-W] - SONO ALLA FINE');
       return true;
     } else {
-      this.logger.debug('[CONV-CONTENT] - NON SONO ALLA FINE');
+      this.logger.log('[CONV-CONTENT-W] - NON SONO ALLA FINE');
       return false;
     }
   }
@@ -210,7 +211,7 @@ export class ConversationContentComponent implements OnInit {
         that.firstScroll = false;
       }, 0);
     } catch (err) {
-      this.logger.error('[CONV-CONTENT] scrollToBottom > Error :' + err);
+      this.logger.error('[CONV-CONTENT-W] scrollToBottom > Error :' + err);
     }
     that.isScrolling = false;
   }
@@ -221,7 +222,6 @@ export class ConversationContentComponent implements OnInit {
   * function customize tooltip
   */
   handleTooltipEvents() {
-    console.log('handleToolpitEvents')
     const that = this;
     const showDelay = this.tooltipOptions['showDelay'];
     // console.log(this.tooltipOptions);
@@ -241,7 +241,7 @@ export class ConversationContentComponent implements OnInit {
           }, that.tooltipOptions['hideDelayAfterClick']);
         }
       } catch (err) {
-        this.logger.error('[CONV-CONTENT] handleTooltipEvents > Error :' + err);
+        this.logger.error('[CONV-CONTENT-W] handleTooltipEvents > Error :' + err);
       }
     }, showDelay);
   }
