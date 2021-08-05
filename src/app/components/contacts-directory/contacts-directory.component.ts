@@ -2,6 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angu
 import { UserModel } from 'src/chat21-core/models/user';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Component({
   selector: 'component-contacts-directory',
   templateUrl: './contacts-directory.component.html',
@@ -13,6 +17,8 @@ export class ContactsDirectoryComponent implements OnInit, OnChanges {
 
   private contactsOrig: Array<UserModel>;
   uidUserSelected: string;
+  private logger: LoggerService = LoggerInstance.getInstance();
+ 
   constructor(
     public imageRepoService: ImageRepoService
   ) { }
@@ -25,7 +31,7 @@ export class ContactsDirectoryComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    console.log('ContactsDirectoryComponent contacts', this.contacts)
+    this.logger.log('ContactsDirectoryComponent contacts', this.contacts)
     if(this.contacts){
       this.contacts.forEach(contact => {
         contact.imageurl = this.imageRepoService.getImagePhotoUrl(contact.uid)
@@ -44,7 +50,7 @@ export class ContactsDirectoryComponent implements OnInit, OnChanges {
     if (!this.contactsOrig) {
       this.contactsOrig = this.contacts;
     }
-    console.log('onSearchInput::: ', ev);
+    this.logger.log('onSearchInput::: ', ev);
     const searchTerm = ev.target.value;
     if (searchTerm && searchTerm.trim() !== '') {
       const searchKey = 'fullname';
