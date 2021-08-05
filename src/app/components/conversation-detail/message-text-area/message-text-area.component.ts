@@ -41,6 +41,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Output() eventSendMessage = new EventEmitter<object>();
 
 
+
   public conversationEnabled = false;
   public messageString: string;
   public HAS_PASTED: boolean = false;
@@ -51,6 +52,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   public SHORTER_TEXAREA_PLACEHOLDER: string;
   public currentWindowWidth: any;
   private logger: LoggerService = LoggerInstance.getInstance();
+  public countClicks: number = 0;
 
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
 
@@ -68,6 +70,10 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     public toastController: ToastController
   ) { }
 
+  // ---------------------------------------------------------
+  // @ Lifehooks
+  // ---------------------------------------------------------
+
   ngOnInit() {
     // this.setSubscriptions();
     this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] HELLO !!!!! ");
@@ -84,6 +90,30 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     this.getWindowWidth();
   }
 
+
+
+  ngOnChanges() {
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges this.isOpenInfoConversation ", this.isOpenInfoConversation);
+    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
+
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
+    // use case drop
+    if (this.dropEvent) {
+      this.presentModal(this.dropEvent)
+    }
+    // if (this.isOpenInfoConversation === true) {
+    // this.getIfTexareaIsEmpty('ngOnChanges')
+    this.getWindowWidth();
+    // }
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] set focus on ", this.messageTextArea);
+      // Keyboard.show() // for android
+      this.messageTextArea.setFocus();
+    }, 300); //a least 150ms.
+  }
 
 
   getWindowWidth(): any {
@@ -205,28 +235,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   }
 
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] set focus on ", this.messageTextArea);
-      // Keyboard.show() // for android
-      this.messageTextArea.setFocus();
-    }, 300); //a least 150ms.
-  }
 
-  ngOnChanges() {
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges this.isOpenInfoConversation ", this.isOpenInfoConversation);
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
-
-
-    // use case drop
-    if (this.dropEvent) {
-      this.presentModal(this.dropEvent)
-    }
-    // if (this.isOpenInfoConversation === true) {
-    // this.getIfTexareaIsEmpty('ngOnChanges')
-    this.getWindowWidth();
-    // }
-  }
 
   onPaste(event: any) {
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste DROP EVENT ", this.dropEvent);
@@ -390,7 +399,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   ionChange(e: any) {
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange event ", e);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange event ", e);
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange detail.value ", e.detail.value);
 
     const message = e.detail.value
@@ -411,6 +420,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       this.conversationEnabled = false;
     }
 
+
     this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
   }
 
@@ -418,15 +428,48 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   // invoked by pressing the enter key on the message input field
   // if the message is not empty it is passed  to the control method
   // ------------------------------------------------------------------------
-  pressedOnKeyboard(e: any, text: string) {
-    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] pressedOnKeyboard - event: ', e);
+  onKeydown(e: any, text: string) {
+    e.preventDefault(); // Prevent press enter from creating new line 
+
+    this.countClicks++;
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - countClicks: ', this.countClicks);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - event: ', e);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - event target: ', e.target);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - event target textContent: ', e.target.textContent);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - tagsCannedFilter: ', this.tagsCannedFilter);
+    // this.logger.error("[CONVS-DETAIL][MSG-TEXT-AREA] pressedOnKeyboard e.keyCode ", e.keyCode);
+
     const message = e.target.textContent.trim();
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - event target textContent (message): ', message);
+    // e.inputType === 'insertLineBreak' && 
     if (e.inputType === 'insertLineBreak' && message === '') {
+
       this.messageString = '';
       return;
     } else {
-      this.messageString = '';
-      this.sendMessage(text);
+      var pos = text.lastIndexOf("/");
+      this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - POSITION OF '/': ", pos);
+        if (!text.includes("/")){ 
+        this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 1 message: ', message);
+        this.messageString = '';
+        this.sendMessage(text);
+        this.countClicks = 0
+      } else if (text.includes("/") && pos >= 0 && this.countClicks > 1 && this.tagsCannedFilter.length > 0) {
+        this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - tagsCannedFilter.length 2: ', this.tagsCannedFilter.length);
+        this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 2 message: ', message);
+        this.messageString = '';
+        
+        this.sendMessage(text);
+        this.countClicks = 0
+      } else if (text.includes("/") && this.tagsCannedFilter.length === 0 ) {
+        this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - tagsCannedFilter.length 3: ', this.tagsCannedFilter.length);
+        this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 3 message: ', message);
+        this.messageString = '';
+        
+        this.sendMessage(text);
+        this.countClicks = 0
+
+      } 
     }
   }
 

@@ -2,6 +2,11 @@ import { Injectable, Component, OnInit, Input, Output, EventEmitter, ViewChild }
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastController, IonInput } from '@ionic/angular';
 import { AppConfigProvider } from '../../../services/app-config';
+
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 type UserFields = 'email' | 'password';
 type FormErrors = { [u in UserFields]: string };
 
@@ -12,12 +17,13 @@ type FormErrors = { [u in UserFields]: string };
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
+
 export class LoginComponent implements OnInit {
   @Input() showSpinnerInLoginBtn: boolean;
   @Input() translationMap: Map<string, string>;
   @Input() companyLogoBlackUrl: string;
   @Input() companyName: string;
-  @Output() eventSignInWithEmailAndPassword =  new EventEmitter<{email: string, password: string}>();
+  @Output() eventSignInWithEmailAndPassword = new EventEmitter<{ email: string, password: string }>();
 
   // (eventSignInWithEmailAndPassword)="returnSignInWithEmailAndPassword($event)"
 
@@ -41,24 +47,25 @@ export class LoginComponent implements OnInit {
       'minlength': 'Password must be at least 6 characters long',
     },
   };
+  private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor(
     public formBuilder: FormBuilder,
     public toastController: ToastController,
     public appConfig: AppConfigProvider
-  ) {  }
+  ) { }
 
   ngOnInit() {
     this.buildForm();
-   this.DASHBOARD_URL = this.appConfig.getConfig().dashboardUrl;
-    console.log('LOGIN-COMP OnInit DASHBOARD_URL', this.DASHBOARD_URL)
+    this.DASHBOARD_URL = this.appConfig.getConfig().dashboardUrl;
+    this.logger.log('LOGIN-COMP OnInit DASHBOARD_URL', this.DASHBOARD_URL)
     this.showSpinnerInLoginBtn = false;
   }
   // ngAfterViewChecked() {
   //   this.emailInputEl.setFocus()
   // }
 
-   buildForm() {
+  buildForm() {
     const EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
     this.userForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.pattern(EMAIL_REGEXP)]],
@@ -69,36 +76,36 @@ export class LoginComponent implements OnInit {
 
   }
 
-    // Updates validation state on form changes.
-    onValueChanged(data?: any) {
-      if (!this.userForm) { return; }
-      const form = this.userForm;
-      for (const field in this.formErrors) {
-        // tslint:disable-next-line:max-line-length
-        if (Object.prototype.hasOwnProperty.call(this.formErrors, field) && (field === 'email' || field === 'password')) {
-          // clear previous error message (if any)
-          this.formErrors[field] = '';
-          const control = form.get(field);
-          if (control && control.dirty && !control.valid) {
-            const messages = this.validationMessages[field];
-            // console.log('buildForm onValueChanged messages',messages)
-            if (control.errors) {
-              for (const key in control.errors) {
-                if (Object.prototype.hasOwnProperty.call(control.errors, key)) {
-                  this.formErrors[field] += this.translationMap.get(`${(messages as { [key: string]: string })[key]}`);
-                  // console.log('buildForm onValueChanged   this.formErrors[field] ',  this.formErrors[field])
-                  
-                }
+  // Updates validation state on form changes.
+  onValueChanged(data?: any) {
+    if (!this.userForm) { return; }
+    const form = this.userForm;
+    for (const field in this.formErrors) {
+      // tslint:disable-next-line:max-line-length
+      if (Object.prototype.hasOwnProperty.call(this.formErrors, field) && (field === 'email' || field === 'password')) {
+        // clear previous error message (if any)
+        this.formErrors[field] = '';
+        const control = form.get(field);
+        if (control && control.dirty && !control.valid) {
+          const messages = this.validationMessages[field];
+          // this.logger.log('buildForm onValueChanged messages',messages)
+          if (control.errors) {
+            for (const key in control.errors) {
+              if (Object.prototype.hasOwnProperty.call(control.errors, key)) {
+                this.formErrors[field] += this.translationMap.get(`${(messages as { [key: string]: string })[key]}`);
+                // this.logger.log('buildForm onValueChanged   this.formErrors[field] ',  this.formErrors[field])
+
               }
             }
           }
         }
       }
     }
+  }
 
 
-  goToTiledekV1() {}
- 
+  goToTiledekV1() { }
+
 
   goToResetPsw() {
     const url = this.DASHBOARD_URL + '#/forgotpsw';
@@ -109,7 +116,7 @@ export class LoginComponent implements OnInit {
     const url = this.DASHBOARD_URL + '#/signup';
     window.open(url, "_self");
   }
-  
+
 
   /**
    * signInWithEmailAndPassword
@@ -120,12 +127,12 @@ export class LoginComponent implements OnInit {
     const emailValue = this.userForm.value.email;
     const pswValue = this.userForm.value.password;
     this.showSpinnerInLoginBtn = true;
-    this.eventSignInWithEmailAndPassword.emit({email: emailValue, password: pswValue});
+    this.eventSignInWithEmailAndPassword.emit({ email: emailValue, password: pswValue });
   }
 
   /** */
   showErrorSignIn(error: string) {
-    console.log('showErrorSignIn');
+    this.logger.log('showErrorSignIn');
     // const error =  this.translationMap.get('LABEL_SIGNIN_ERROR');
     this.showSpinnerInLoginBtn = false;
     this.presentToast(error);
@@ -143,13 +150,13 @@ export class LoginComponent implements OnInit {
       buttons: null
     });
     this.toastController.dismiss().then((obj) => {
-      console.log('dismesso');
+      this.logger.log('dismesso');
     }).catch(() => {
-      console.log('catch');
+      this.logger.log('catch');
     }).finally(() => {
 
       this.showSpinnerInLoginBtn = false;
-      console.log('finally', this.showSpinnerInLoginBtn);
+      this.logger.log('finally', this.showSpinnerInLoginBtn);
     });
 
     toast.present();
