@@ -107,11 +107,11 @@ export class AppComponent implements OnInit {
     public notificationsService: NotificationsService,
     public toastController: ToastController
   ) {
-   
+
     const appconfig = appConfigProvider.getConfig()
     // this.tenant = environment.tenant;
     this.tenant = appconfig.tenant;
-    if(appconfig.logLevel){
+    if (appconfig.logLevel) {
       this.logger.setLoggerConfig(true, appconfig.logLevel)
     }
     if (!this.platform.is('desktop')) {
@@ -144,13 +144,18 @@ export class AppComponent implements OnInit {
       this.appStorageService.initialize(environment.storage_prefix, environment.authPersistence, '')
       this.tiledeskAuthService.initialize(this.appConfigProvider.getConfig().apiUrl);
       this.messagingAuthService.initialize();
-      this.initAuthentication();
+
       // this.currentUserService.initialize();
       this.chatManager.initialize();
       this.presenceService.initialize(this.tenant);
       this.typingService.initialize(this.tenant);
-      this.notificationsService.initialize(this.tenant)
+      const pushEngine = this.appConfigProvider.getConfig().pushEngine
+      if (pushEngine && pushEngine !== 'none') {
+        this.notificationsService.initialize(this.tenant)
+      }
       this.uploadService.initialize();
+
+      this.initAuthentication();
       this.initSubscriptions();
       this.initAudio()
 
@@ -186,8 +191,8 @@ export class AppComponent implements OnInit {
       clearTimeout(this.timeModalLogin);
       this.timeModalLogin = setTimeout(() => {
         // if (!this.hadBeenCalledOpenModal) {
-          this.authModal = this.presentModal('initAuthentication');
-          this.hadBeenCalledOpenModal = true;
+        this.authModal = this.presentModal('initAuthentication');
+        this.hadBeenCalledOpenModal = true;
         // }
       }, 1000);
     }
@@ -228,7 +233,7 @@ export class AppComponent implements OnInit {
     // PUSH NOTIFICATIONS
     // ----------------------------------------------
     const pushEngine = this.appConfigProvider.getConfig().pushEngine
-    if( pushEngine && pushEngine !== 'none'){
+    if (pushEngine && pushEngine !== 'none') {
       this.notificationsService.getNotificationPermissionAndSaveToken(currentUser.uid);
     }
 
@@ -262,8 +267,8 @@ export class AppComponent implements OnInit {
     clearTimeout(this.timeModalLogin);
     this.timeModalLogin = setTimeout(() => {
       // if (!this.hadBeenCalledOpenModal) {
-        this.authModal = this.presentModal('goOffLine');
-        this.hadBeenCalledOpenModal = true
+      this.authModal = this.presentModal('goOffLine');
+      this.hadBeenCalledOpenModal = true
       // }
     }, 1000);
   }
@@ -353,13 +358,13 @@ export class AppComponent implements OnInit {
 
       this.router.navigateByUrl(pageUrl);
 
-    
+
       // const DASHBOARD_URL = this.appConfigProvider.getConfig().DASHBOARD_URL;
       // createExternalSidebar(this.renderer, DASHBOARD_URL);
 
       // // FOR REALTIME TESTING
       // createExternalSidebar(this.renderer, 'http://localhost:4203');
-     
+
     }
   }
 
@@ -387,7 +392,7 @@ export class AppComponent implements OnInit {
       // TAB IS HIDDEN --> manage title and SOUND
 
       let badgeNewConverstionNumber = this.conversationsHandlerService.countIsNew()
-      badgeNewConverstionNumber > 0 ? badgeNewConverstionNumber : badgeNewConverstionNumber=1
+      badgeNewConverstionNumber > 0 ? badgeNewConverstionNumber : badgeNewConverstionNumber = 1
       document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
 
       clearInterval(this.setIntervalTime)
@@ -503,7 +508,7 @@ export class AppComponent implements OnInit {
       // ----------------------------------------------
       const that = this;
       const pushEngine = this.appConfigProvider.getConfig().pushEngine
-      if( pushEngine && pushEngine !== 'none'){
+      if (pushEngine && pushEngine !== 'none') {
         this.notificationsService.removeNotificationsInstance(function (res) {
           that.logger.log('[APP-COMP] FIREBASE-NOTIFICATION >>>>  removeNotificationsInstance > CALLBACK RES', res);
 
@@ -568,7 +573,7 @@ export class AppComponent implements OnInit {
   //       if( pushEngine && pushEngine !== 'none'){
   //         this.notificationsService.removeNotificationsInstance(function (res) {
   //           that.logger.debug('[APP-COMP] FIREBASE-NOTIFICATION >>>>  removeNotificationsInstance > CALLBACK RES', res);
-  
+
   //           if (res === 'success') {
   //             that.removePresenceAndLogout();
   //           } else {
