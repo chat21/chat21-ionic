@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffers, KeyValueDiffer, KeyValueDiffers, OnInit, Output, SimpleChanges } from '@angular/core';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { ConversationModel } from '../../../../chat21-core/models/conversation';
 import { ImageRepoService } from '../../../../chat21-core/providers/abstract/image-repo.service';
 
@@ -20,19 +22,40 @@ export class ListConversationsComponent implements OnInit {
   // ========= end:: Input/Output values ============//
 
   iterableDifferListConv: any;
+  logger: LoggerService = LoggerInstance.getInstance()
+
+  empDifferMap: Map<string, any> = new Map<string, any>();
+  empMap = new Map<string, ConversationModel>();
+  arrayDiffer: any;
+
   uidConvSelected: string;
   constructor(public iterableDiffers: IterableDiffers,
-              public imageRepoService: ImageRepoService) {
+              public kvDiffers: KeyValueDiffers) {
           this.iterableDifferListConv = this.iterableDiffers.find([]).create(null);   
-        }
+  }
 
   ngOnInit() {
-    console.log(' ngOnInit::::list-conversations ', this.listConversations);
-    
+    this.logger.log('[LISTCONVERSATIONS-W] ngOnInit', this.listConversations);
+    // console.log('empDifferMap::' + JSON.stringify(this.listConversations))
+    // this.listConversations.forEach(emp => {
+    //   this.empDifferMap[emp.uid] = this.kvDiffers.find(emp).create();
+    //   this.empMap[emp.uid] = emp;
+    //   console.log('empDifferMap::', this.empDifferMap, this.empMap)
+    // })
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    // console.log('empDifferMap:: 1111' + JSON.stringify(this.listConversations[1]))
+    // console.log('empDifferMap:: 1111', this.listConversations)
+    // this.listConversations.forEach(emp => {
+    //   this.empDifferMap[emp.uid] = this.kvDiffers.find(emp).create();
+    //   this.empMap[emp.uid] = emp;
+    //   console.log('empDifferMap::', this.empDifferMap, this.empMap)
+    // })
   }
 
   public openConversationByID(conversation) {
-    console.log('openConversationByID: ', conversation);
+    this.logger.log('[LISTCONVERSATIONS-W] openConversationByID: ', conversation);
     if ( conversation ) {
       // this.conversationsService.updateIsNew(conversation);
       // this.conversationsService.updateConversationBadge();
@@ -42,7 +65,7 @@ export class ListConversationsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(' --------ngAfterViewInit: list-conversations-------- ', this.listConversations);
+    this.logger.log('[LISTCONVERSATIONS-W] ---ngAfterViewInit---: listConversations ', this.listConversations);
   }
   
   ngDoCheck() {
