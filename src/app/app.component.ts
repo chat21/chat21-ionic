@@ -155,7 +155,7 @@ export class AppComponent implements OnInit {
       this.initAudio()
 
       this.logger.debug('[APP-COMP] initializeApp:: ', this.sidebarNav, this.detailNav);
-      this.listenToLogoutEvent()
+      // this.listenToLogoutEvent()
       this.translateToastMessage();
     });
   }
@@ -492,8 +492,30 @@ export class AppComponent implements OnInit {
   }
 
   subscribeProfileInfoButtonLogOut = (hasClickedLogout) => {
+    this.logger.log('[APP-COMP] FIREBASE-NOTIFICATION >>>>  subscribeProfileInfoButtonLogOut ');
+    // if (hasClickedLogout === true) {
+    //   this.removePresenceAndLogout()
+    // }
+
     if (hasClickedLogout === true) {
-      this.removePresenceAndLogout()
+      // ----------------------------------------------
+      // PUSH NOTIFICATIONS
+      // ----------------------------------------------
+      const that = this;
+      const pushEngine = this.appConfigProvider.getConfig().pushEngine
+      if( pushEngine && pushEngine !== 'none'){
+        this.notificationsService.removeNotificationsInstance(function (res) {
+          that.logger.log('[APP-COMP] FIREBASE-NOTIFICATION >>>>  removeNotificationsInstance > CALLBACK RES', res);
+
+          if (res === 'success') {
+            that.removePresenceAndLogout();
+          } else {
+            that.removePresenceAndLogout();
+            that.presentToast();
+          }
+        })
+      }
+
     }
   }
 
@@ -534,31 +556,31 @@ export class AppComponent implements OnInit {
   }
 
 
-  listenToLogoutEvent() {
-    this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
-      this.logger.debug('[APP-COMP] hasclickedlogout', hasclickedlogout);
-      if (hasclickedlogout === true) {
-        // ----------------------------------------------
-        // PUSH NOTIFICATIONS
-        // ----------------------------------------------
-        const that = this;
-        const pushEngine = this.appConfigProvider.getConfig().pushEngine
-        if( pushEngine && pushEngine !== 'none'){
-          this.notificationsService.removeNotificationsInstance(function (res) {
-            that.logger.debug('[APP-COMP] FIREBASE-NOTIFICATION >>>>  removeNotificationsInstance > CALLBACK RES', res);
+  // listenToLogoutEvent() {
+  //   this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
+  //     this.logger.debug('[APP-COMP] hasclickedlogout', hasclickedlogout);
+  //     if (hasclickedlogout === true) {
+  //       // ----------------------------------------------
+  //       // PUSH NOTIFICATIONS
+  //       // ----------------------------------------------
+  //       const that = this;
+  //       const pushEngine = this.appConfigProvider.getConfig().pushEngine
+  //       if( pushEngine && pushEngine !== 'none'){
+  //         this.notificationsService.removeNotificationsInstance(function (res) {
+  //           that.logger.debug('[APP-COMP] FIREBASE-NOTIFICATION >>>>  removeNotificationsInstance > CALLBACK RES', res);
   
-            if (res === 'success') {
-              that.removePresenceAndLogout();
-            } else {
-              that.removePresenceAndLogout();
-              that.presentToast();
-            }
-          })
-        }
+  //           if (res === 'success') {
+  //             that.removePresenceAndLogout();
+  //           } else {
+  //             that.removePresenceAndLogout();
+  //             that.presentToast();
+  //           }
+  //         })
+  //       }
 
-      }
-    });
-  }
+  //     }
+  //   });
+  // }
 
 
   async presentToast() {
