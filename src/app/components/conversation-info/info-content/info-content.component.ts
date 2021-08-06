@@ -61,7 +61,7 @@ export class InfoContentComponent implements OnInit {
     this.logger.log('INFO-CONTENT-COMP HELLO (CONSTUCTOR) !!!!!');
     // this.loggedUser = this.authService.getCurrentUser();
     // this.logger.log('INFO-CONTENT-COMP loggedUser: ', this.loggedUser);
-  
+
     const appconfig = appConfigProvider.getConfig()
     this.tenant = appconfig.tenant;
     this.logger.log('INFO-CONTENT-COMP tenant ', this.tenant);
@@ -212,8 +212,8 @@ export class InfoContentComponent implements OnInit {
   setInfoDirect() {
     this.logger.log('INFO-CONTENT-COMP - setInfoDirect ', this.conversationWith);
     this.logger.log('INFO-CONTENT-COMP - setInfoDirect member', this.member);
-   
-    
+
+
     this.member = null;
     const that = this;
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
@@ -235,7 +235,7 @@ export class InfoContentComponent implements OnInit {
   // ---------------------------------------------------
   setInfoGroup() {
     this.logger.log('INFO-CONTENT-COMP - setInfoGroup groupDetail ', this.groupDetail);
-    
+
     // group
   }
 
@@ -244,44 +244,44 @@ export class InfoContentComponent implements OnInit {
   // @ setInfoGroup
   // ---------------------------------------------------
   setInfoSupportGroup() {
-  //   let projectID = '';
-  //   const tiledeskToken = this.authService.getTiledeskToken();
-  //   const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
-  //   if (this.conversationSelected && this.conversationSelected.attributes) {
-  //     projectID = this.conversationSelected.attributes.projectId;
-  //   }
-  //   this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup conversationSelected ', this.conversationSelected)
-  //   this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', projectID)
-  //   if (projectID && this.conversationWith) {
-  //     this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup HERE YES ')
-  //     let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
-  //     urlPanel += '?token=' + tiledeskToken;
-  //     this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup urlPanel ', urlPanel)
-  //     const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
-  //     this.urlConversationSupportGroup = urlConversationTEMP;
-  //   } else {
-  //     this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
-  //   }
-  //   this.logger.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
-  // }
- 
-  const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
-  const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
-  
-  this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', this.project_id)
-  if (this.conversationWith) {
-    
-    let urlPanel = DASHBOARD_URL + '#/project/' + this.project_id + '/request-for-panel/' + this.conversationWith;
-    urlPanel += '?token=' + tiledeskToken;
-   
-    const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
-    this.urlConversationSupportGroup = urlConversationTEMP;
-    this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup urlConversationSupportGroup ', this.urlConversationSupportGroup)
-  } else {
-    this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
+    //   let projectID = '';
+    //   const tiledeskToken = this.authService.getTiledeskToken();
+    //   const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
+    //   if (this.conversationSelected && this.conversationSelected.attributes) {
+    //     projectID = this.conversationSelected.attributes.projectId;
+    //   }
+    //   this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup conversationSelected ', this.conversationSelected)
+    //   this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', projectID)
+    //   if (projectID && this.conversationWith) {
+    //     this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup HERE YES ')
+    //     let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
+    //     urlPanel += '?token=' + tiledeskToken;
+    //     this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup urlPanel ', urlPanel)
+    //     const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
+    //     this.urlConversationSupportGroup = urlConversationTEMP;
+    //   } else {
+    //     this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
+    //   }
+    //   this.logger.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
+    // }
+
+    const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
+    const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
+
+    this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', this.project_id)
+    if (this.conversationWith) {
+
+      let urlPanel = DASHBOARD_URL + '#/project/' + this.project_id + '/request-for-panel/' + this.conversationWith;
+      urlPanel += '?token=' + tiledeskToken;
+
+      const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
+      this.urlConversationSupportGroup = urlConversationTEMP;
+      this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup urlConversationSupportGroup ', this.urlConversationSupportGroup)
+    } else {
+      this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
+    }
+    this.logger.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
   }
-  this.logger.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
-}
 
 
 
