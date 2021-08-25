@@ -19,10 +19,16 @@ export class CustomLogger implements LoggerService {
     setLoggerConfig(isLogEnabled: boolean, logLevel: string) {
 
         this.isLogEnabled = isLogEnabled;
+        console.log('LoggerService this.logLevel  ', this.logLevel)
 
         if (logLevel) {
-            this.logLevel = LogLevel[logLevel.toUpperCase()];
-            console.log('LoggerService this.logLevel  ', this.logLevel)
+            // console.log('LoggerService typeof logLevel  ', typeof logLevel)
+            if (typeof logLevel === 'string') {
+                this.logLevel = LogLevel[logLevel.toUpperCase()];
+                // console.log('LoggerService this.logLevel toUpperCase', this.logLevel)
+            } else {
+                console.error('logLevel is not a string. See the chat21-ionic README.md')
+            }
         }
     }
 
