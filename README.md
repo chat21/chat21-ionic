@@ -56,7 +56,7 @@ In progress git
         pushEngine:"none", // OR YOUR CUSTOM PUSH ENGINE
         tenant:"tilechat",
         fileUploadAccept:"*/*",
-        logLevel":"<YOUR-PREFERRED-LOG-LEVEL-NUMBER>",
+        logLevel":"<YOUR-PREFERRED-LOG-LEVEL>",
         firebaseConfig: {
             apiKey: '123ABC..',
             authDomain: 'XYZ.firebaseapp.com',
@@ -80,7 +80,7 @@ In progress git
   ```
   
 * `logLevel`: The Chat21-ionic supports 4 log levels. The order is as follows:
-  `Error = 0 < Warn = 1 < Info = 2 < Debug = 3`
+  `Error < Warn < Info < Debug`
 
 * `fileUploadAccept`: The Chat21-ionic allows you to manage the type of files that can be uploaded. By default, all file types are accepted.
 
