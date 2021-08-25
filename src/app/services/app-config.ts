@@ -13,7 +13,7 @@ export class AppConfigProvider {
 
   constructor(public http: HttpClient) {
     this.appConfig = environment;
-    console.log('AppConfigProvider constructor environment:: ', environment);
+    // console.log('AppConfigProvider constructor environment:: ', environment);
   }
 
   /** */
@@ -22,7 +22,7 @@ export class AppConfigProvider {
     return this.http.get(this.appConfig.remoteConfigUrl).toPromise().then(data => {
         that.appConfig = data;
       }).catch(err => {
-        console.log('error loadAppConfig' + err);
+        // console.log('error loadAppConfig' + err);
       });
   }
 
