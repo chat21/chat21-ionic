@@ -14,13 +14,16 @@ export class CustomLogger implements LoggerService {
     private logLevel: number = LogLevel.DEBUG;
     private isLogEnabled: boolean = true;
 
-    constructor(private logger: NGXLogger) {   }
+    constructor(private logger: NGXLogger) { }
 
     setLoggerConfig(isLogEnabled: boolean, logLevel: string) {
 
         this.isLogEnabled = isLogEnabled;
-        this.logLevel = LogLevel[logLevel.toUpperCase()] ;
-        console.log('LoggerService this.logLevel  ', this.logLevel)
+
+        if (logLevel) {
+            this.logLevel = LogLevel[logLevel.toUpperCase()];
+            console.log('LoggerService this.logLevel  ', this.logLevel)
+        }
     }
 
     error(...message: any[]) {
