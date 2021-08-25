@@ -7,6 +7,9 @@ import { ContactsService } from 'src/app/services/contacts/contacts.service';
 import { UserModel } from 'src/chat21-core/models/user';
 import { EventsService } from '../../services/events-service';
 
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 @Component({
   selector: 'app-contacts-directory',
@@ -18,6 +21,7 @@ export class ContactsDirectoryPage implements OnInit {
   // @Input() user: string;
 
   public contacts: Array<UserModel>;
+  private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor(
     private modalController: ModalController,
@@ -29,14 +33,14 @@ export class ContactsDirectoryPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('TOKEN', this.token);
+    this.logger.log('[CONTACT-DIRECTORY-PAGE] - TOKEN (ngOnInit)', this.token);
     this.initialize();
   }
 
   /** */
   initialize() {
-    console.log('Contact-directory-page - initialize');
-    console.log('Contact-directory-page - token: ', this.token);
+    this.logger.log('[CONTACT-DIRECTORY-PAGE] - initialize');
+    this.logger.log('[CONTACT-DIRECTORY-PAGE] - token: ', this.token);
     this.contacts = [];
     this.initSubscriptions();
     this.contactsService.loadContactsFromUrl(this.token);
@@ -46,10 +50,10 @@ export class ContactsDirectoryPage implements OnInit {
    * initSubscriptions
    */
   initSubscriptions() {
-    console.log('Contact-directory-page initSubscriptions to BScontacts');
+    this.logger.log('[CONTACT-DIRECTORY-PAGE] initSubscriptions to BScontacts');
     const that = this;
     this.contactsService.BScontacts.subscribe((contacts: any) => {
-      console.log('Contact-directory-page ***** BScontacts *****', contacts);
+      this.logger.log('[CONTACT-DIRECTORY-PAGE] ***** BScontacts *****', contacts);
       if (contacts) {
         that.contacts = contacts;
       }
@@ -66,10 +70,10 @@ export class ContactsDirectoryPage implements OnInit {
     listOfContacts.forEach((user: UserModel) => {
       let fullname = '';
       if (user.firstname && user.firstname !== undefined) {
-          fullname += user.firstname;
+        fullname += user.firstname;
       }
       if (user.lastname && user.lastname !== undefined) {
-          fullname += ' ' + user.lastname;
+        fullname += ' ' + user.lastname;
       }
       user.fullname = fullname;
       this.contacts.push(user);
@@ -78,29 +82,29 @@ export class ContactsDirectoryPage implements OnInit {
 
   /** */
   getTokenFromLocalStorage() {
-    let token = localStorage.getItem('tiledeskToken');
-    console.log('getTokenFromLocalStorage: ');
+    let token = localStorage.getItem('tiledeskToken'); // ??? NN CREDO SIA USATO
+    this.logger.log('[CONTACT-DIRECTORY-PAGE] getTokenFromLocalStorage token ', token);
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
-      console.log('user: ', user);
+      this.logger.log('[CONTACT-DIRECTORY-PAGE] DSHBRD STORED USER: ', user);
       if (user.token) {
         token = user.token;
-        console.log('token: ', user.token);
+        console.log('[CONTACTS-DIRECTORY] DSHBRD STORED USER > TOKEN: ', user.token);
       }
     }
     return token;
-}
+  }
 
   /** */
   async onClose() {
-    console.log('CONTACTS-DIRECTORY - onClose MODAL')
-    console.log('CONTACTS-DIRECTORY - onClose MODAL isModalOpened ',await this.modalController.getTop())
+    this.logger.log('[CONTACT-DIRECTORY-PAGE] - onClose MODAL')
+    this.logger.log('[CONTACT-DIRECTORY-PAGE] - onClose MODAL isModalOpened ', await this.modalController.getTop())
     const isModalOpened = await this.modalController.getTop();
-   
+
     if (isModalOpened) {
-      this.modalController.dismiss({ 
-        
-        confirmed: true 
+      this.modalController.dismiss({
+
+        confirmed: true
       });
     } else {
       this.navService.pop();
@@ -113,7 +117,7 @@ export class ContactsDirectoryPage implements OnInit {
    */
   openNewChat(user: UserModel) {
     // this.onClose();
-    console.log('CONTACTS-DIRECTORY - openNewChat')
+    this.logger.log('[CONTACT-DIRECTORY-PAGE] - openNewChat')
     this.events.publish('uidConvSelected:changed', user, 'new');
     this.onClose();
   }

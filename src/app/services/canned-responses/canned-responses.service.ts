@@ -2,27 +2,34 @@ import { Injectable } from '@angular/core';
 import { AppConfigProvider } from '../app-config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Injectable({
   providedIn: 'root'
 })
 export class CannedResponsesService {
+
   private apiUrl: string;
+  private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor(
     public http: HttpClient,
     public appConfigProvider: AppConfigProvider
   ) {
-
-    console.log('CannedResponsesService HELLO  !');
+   
+    this.logger.log('[CANNED-RESPONSES-SERVICE] HELLO !');
     this.apiUrl = appConfigProvider.getConfig().apiUrl;
-    console.log('CannedResponsesService apiUrl ', this.apiUrl);
+    this.logger.log('[CANNED-RESPONSES-SERVICE] apiUrl ', this.apiUrl);
   }
 
 
   public getCannedResponses(token: string, projectid: string) {
 
     const cannedResponsesURL = this.apiUrl + projectid + "/canned/";
-    console.log('CONVERSATION-DETAIL getCannedResponses (CannedResponsesService) - URL ', cannedResponsesURL);
+    this.logger.log('[CANNED-RESPONSES-SERVICE] getCannedResponses - URL ', cannedResponsesURL);
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -34,7 +41,7 @@ export class CannedResponsesService {
     return this.http
       .get(cannedResponsesURL, httpOptions)
       .pipe(map((res: any) => {
-        console.log('CONVERSATION-DETAIL getCannedResponses (CannedResponsesService) - RES ', res);
+        this.logger.log('[CANNED-RESPONSES-SERVICE] getCannedResponses - RES ', res);
         return res
       }))
   }
