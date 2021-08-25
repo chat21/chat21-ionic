@@ -294,7 +294,7 @@ export function supports_html5_session() {
   try {
     return 'sessionStorage' in window && window['sessionStorage'] !== null;
   } catch (e) {
-    this.g.wdLog(['> Error :' + e]);
+    
     return false;
   }
 }
@@ -304,7 +304,7 @@ export function setStoragePrefix(): string {
   try {
     prefix = environment.storage_prefix + '_';
   } catch (e) {
-    this.g.wdLog(['> Error :' + e]);
+  
   }
   return prefix + this.g.projectid + '_';
 }
