@@ -11,48 +11,48 @@ export class CustomLogger implements LoggerService {
 
     //private variables
     // private logger: NGXLogger 
-    private logLevel: number = LogLevel.Debug
+    private logLevel: number = LogLevel.DEBUG;
     private isLogEnabled: boolean = true;
 
-    constructor(private logger: NGXLogger) {
-    }
+    constructor(private logger: NGXLogger) {   }
 
-    setLoggerConfig(isLogEnabled: boolean, logLevel: number) {
+    setLoggerConfig(isLogEnabled: boolean, logLevel: string) {
+
         this.isLogEnabled = isLogEnabled;
-        this.logLevel = logLevel;
-        // console.log('LoggerService this.logLevel  ', this.logLevel)
+        this.logLevel = LogLevel[logLevel.toUpperCase()] ;
+        console.log('LoggerService this.logLevel  ', this.logLevel)
     }
 
     error(...message: any[]) {
-        if (this.isLogEnabled && this.logLevel >= LogLevel.Error) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.ERROR) {
             this.logger.error(message)
             // console.log(message)
         }
     }
 
     warn(...message: any[]) {
-        if (this.isLogEnabled && this.logLevel >= LogLevel.Warn) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.WARN) {
             this.logger.warn(message)
             // console.log(message)
         }
     }
 
     info(...message: any[]) {
-        if (this.isLogEnabled && this.logLevel >= LogLevel.Info) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.INFO) {
             this.logger.info(message)
             // console.log(message)
         }
     }
 
     debug(...message: any[]) {
-        if (this.isLogEnabled && this.logLevel >= LogLevel.Debug) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.DEBUG) {
             this.logger.debug(message)
             // console.debug(message)
         }
     }
 
     log(...message: any[]) {
-        if (this.isLogEnabled && this.logLevel >= LogLevel.Debug) {
+        if (this.isLogEnabled && this.logLevel >= LogLevel.DEBUG) {
             // console.log(message);
             this.logger.log(message)
         }
