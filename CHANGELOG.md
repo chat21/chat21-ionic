@@ -3,7 +3,7 @@
 ### 3.0.46-beta
 - Modifies the "logger service" to accept only values of string type from the "logLevel" environments property (Error < Warn < Info < Debug)
 - Updates the README.md
-- Replaces the value of the "logLevel" property of numeric type with a value of type string in the env.sample and chat-config.json files
+- Replaces the value of the "logLevel" property of numeric type with the corresponding value of type string in the env.sample and chat-config.json files
 - Adds unit tests
 
 ### 3.0.45-beta
