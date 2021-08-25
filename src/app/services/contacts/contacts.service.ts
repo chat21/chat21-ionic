@@ -36,8 +36,7 @@ export class ContactsService {
     public http: HttpClient,
     public appConfigProvider: AppConfigProvider
   ) {
-    console.log('ContactsService');
-
+    
     this.urlRemoteContacts = appConfigProvider.getConfig().apiUrl + 'chat21/contacts';
     this.FIREBASESTORAGE_BASE_URL_IMAGE = appConfigProvider.getConfig().baseImageUrl;
     this.urlStorageBucket = appConfigProvider.getConfig().firebaseConfig.storageBucket + '/o/profiles%2F';
