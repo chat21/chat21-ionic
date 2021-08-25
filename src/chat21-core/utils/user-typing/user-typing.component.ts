@@ -3,6 +3,10 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 // services
 import { TypingService } from '../../providers/abstract/typing.service';
 
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Component({
   selector: 'app-user-typing',
   templateUrl: './user-typing.component.html',
@@ -24,27 +28,29 @@ export class UserTypingComponent implements OnInit, OnDestroy {
   private setTimeoutWritingMessages: any;
   private subscriptions = [];
 
+  private logger: LoggerService = LoggerInstance.getInstance();
+
   constructor(
     public typingService: TypingService
   ) { }
 
   /** */
   ngOnInit() {
-    console.log('UserTypingComponent - ngOnInit');
+    this.logger.log('[USER-TYPING-COMPONENT] - ngOnInit');
     this.initialize();
   }
 
   /** */
   ngOnDestroy() {
-    console.log('UserTypingComponent - ngOnDestroy');
+    this.logger.log('UserTypingComponent - ngOnDestroy');
     // this.unsubescribeAll();
   }
 
   /** */
   initialize() {
     this.status = ''; // this.translationMap.get('LABEL_AVAILABLE');
-    console.log('this.translationMap', this.translationMap);
-    console.log('this.status', this.status);
+    this.logger.log('this.translationMap', this.translationMap);
+    this.logger.log('this.status', this.status);
     this.setSubscriptions();
     this.typingService.isTyping(this.idConversation, this.idCurrentUser, this.isDirect);
   }
@@ -55,7 +61,7 @@ export class UserTypingComponent implements OnInit, OnDestroy {
     const conversationSelected = this.subscriptions.find(item => item.key === this.idConversation);
     if (!conversationSelected) {
       const subscribeBSIsTyping =  this.typingService.BSIsTyping.subscribe((data: any) => {
-        console.log('***** BSIsTyping *****', data);
+        this.logger.log('***** BSIsTyping *****', data);
         if (data) {
           const isTypingUid = data.uid;
           if (this.idConversation === isTypingUid) {
@@ -77,28 +83,28 @@ export class UserTypingComponent implements OnInit, OnDestroy {
       if (data.nameUserTypingNow) {
         this.nameUserTypingNow = data.nameUserTypingNow;
       }
-      console.log('subscribeTypings data:', data);
+      this.logger.log('subscribeTypings data:', data);
       const userTyping = this.membersConversation.includes(key);
       if ( !userTyping ) {
         this.isTyping = true;
-        console.log('child_changed key', key);
-        console.log('child_changed name', this.nameUserTypingNow);
+        this.logger.log('child_changed key', key);
+        this.logger.log('child_changed name', this.nameUserTypingNow);
         clearTimeout(this.setTimeoutWritingMessages);
         this.setTimeoutWritingMessages = setTimeout(() => {
             that.isTyping = false;
         }, 2000);
       }
     } catch (error) {
-      console.log('error: ', error);
+      this.logger.log('error: ', error);
     }
   }
 
 
   /** */
   private unsubescribeAll() {
-    console.log('UserTypingComponent unsubescribeAll: ', this.subscriptions);
+    this.logger.log('UserTypingComponent unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach((subscription: any) => {
-      console.log('unsubescribe: ', subscription);
+      this.logger.log('unsubescribe: ', subscription);
       subscription.unsubescribe();
     });
     this.subscriptions = [];
