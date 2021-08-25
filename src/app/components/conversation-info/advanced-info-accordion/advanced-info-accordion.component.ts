@@ -1,4 +1,7 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 @Component({
   selector: 'app-advanced-info-accordion',
@@ -19,51 +22,32 @@ export class AdvancedInfoAccordionComponent implements OnInit, OnChanges {
     'hideDelayAfterClick': 3000,
     'hide-delay': 200
   };
-
+  private logger: LoggerService = LoggerInstance.getInstance()
+  
   constructor() { }
 
   ngOnInit() { }
 
+
+  ngOnChanges() {
+    this.logger.log('ADVANCED-INFO-ACCORDION  advancedAttributes ', this.advancedAttributes)
+    this.teammateID = this.advancedAttributes[0]['value'];
+    this.logger.log('ADVANCED-INFO-ACCORDION  teammateID ', this.teammateID)
+  }
+
   openAdvancedInfoAccordion() {
-    console.log('Has clicked  openAdvancedInfoAccordion')
-
-
-
-
+    this.logger.log('Has clicked  openAdvancedInfoAccordion')
 
     var acc = <HTMLElement>document.querySelector('#absolute-icon_' + this.teammateID)
-    console.log('Has clicked  openAdvancedInfoAccordion absolute-icon', acc)
+    this.logger.log('Has clicked  openAdvancedInfoAccordion absolute-icon', acc)
     acc.classList.toggle("active");
     var panel = <HTMLElement>document.querySelector('#advanced-info-panel_' + this.teammateID)
-    console.log('Has clicked  openAdvancedInfoAccordion panel', panel)
+    this.logger.log('Has clicked  openAdvancedInfoAccordion panel', panel)
     if (panel.style.maxHeight) {
       panel.style.maxHeight = null;
     } else {
       panel.style.maxHeight = panel.scrollHeight + "px";
     }
-
-
-
-    // var acc = <HTMLElement>document.querySelector('.absolute-icon')
-    // console.log('Has clicked  openAdvancedInfoAccordion absolute-icon', acc)
-    // acc.classList.toggle("active");
-    // var panel = <HTMLElement>document.querySelector('.advanced-info-panel')
-    // console.log('Has clicked  openAdvancedInfoAccordion panel', panel)
-    // if (panel.style.maxHeight) {
-    //   panel.style.maxHeight = null;
-    // } else {
-    //   panel.style.maxHeight = panel.scrollHeight + "px";
-    // }
-
-
-
   }
-
-  ngOnChanges() {
-    console.log('ADVANCED-INFO-ACCORDION  advancedAttributes ', this.advancedAttributes)
-    this.teammateID = this.advancedAttributes[0]['value'];
-    console.log('ADVANCED-INFO-ACCORDION  teammateID ', this.teammateID)
-  }
-
 
 }

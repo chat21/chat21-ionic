@@ -4,34 +4,29 @@ import * as moment from 'moment/moment';
 import 'moment/locale/it.js';
 
 import { FIREBASESTORAGE_BASE_URL_IMAGE, STORAGE_PREFIX, TYPE_GROUP } from './constants';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment'; // ?????
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularDelegate, ModalController } from '@ionic/angular';
 import { ConversationModel } from '../models/conversation';
 
-import {
-  MAX_WIDTH_IMAGES,
-  TYPE_DIRECT,
-  TYPE_SUPPORT_GROUP
-} from './constants';
+import { MAX_WIDTH_IMAGES, TYPE_DIRECT, TYPE_SUPPORT_GROUP } from './constants';
 
-import {
-  avatarPlaceholder,
-  getColorBck,
-  getImageUrlThumbFromFirebasestorage
-} from './utils-user';
+import { avatarPlaceholder, getColorBck, getImageUrlThumbFromFirebasestorage } from './utils-user';
+
+
 /**
  * Shortest description  for phone and tablet
  * Nota: eseguendo un test su desktop in realtà lo switch avviene a 921px 767px
  */
 export function windowsMatchMedia() {
+  
   const mq = window.matchMedia('(max-width: 767px)');
   if (mq.matches) {
-    console.log('window width is less than 767px ');
+    // console.log('window width is less than 767px ');
     return false;
   } else {
-    console.log('window width is at least 767px');
+    // console.log('window width is at least 767px');
     return true;
   }
 }
@@ -299,7 +294,7 @@ export function supports_html5_session() {
   try {
     return 'sessionStorage' in window && window['sessionStorage'] !== null;
   } catch (e) {
-    this.g.wdLog(['> Error :' + e]);
+    
     return false;
   }
 }
@@ -307,11 +302,9 @@ export function supports_html5_session() {
 export function setStoragePrefix(): string {
   let prefix = STORAGE_PREFIX;
   try {
-    // const sv = 'sv' + environment.shemaVersion + '_';
-    // prefix = prefix + sv;
     prefix = environment.storage_prefix + '_';
   } catch (e) {
-    this.g.wdLog(['> Error :' + e]);
+  
   }
   return prefix + this.g.projectid + '_';
 }
@@ -444,17 +437,17 @@ export function htmlEntities(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    // .replace(/\n/g, '<br>')
+  // .replace(/\n/g, '<br>')
 }
 
 export function htmlEntitiesDecode(str) {
   return String(str)
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
-    // .replace(/\n/g, '<br>')
+  // .replace(/\n/g, '<br>')
 }
 
-export function  replaceEndOfLine(text) {
+export function replaceEndOfLine(text) {
   // const newText =   text.replace(/\n/g, '<br>')
   const newText = text.replace(/[\n\r]/g, '<br>');
   // const newText = text.replace(/<br\s*[\/]?>/gi, '\n')
@@ -494,7 +487,7 @@ export function createConfirm(translate, alertCtrl, events, title, message, acti
         text: LABEL_OK,
         handler: () => {
           events.publish('PopupConfirmation', LABEL_OK, action);
-          console.log('Agree clicked');
+          // console.log('Agree clicked');
         }
       }
     ]
@@ -511,7 +504,7 @@ export function createConfirm(translate, alertCtrl, events, title, message, acti
         text: LABEL_OK,
         handler: () => {
           events.publish('PopupConfirmation', LABEL_OK, action);
-          console.log('Agree clicked');
+          // console.log('Agree clicked');
         }
       }
     ]
@@ -668,7 +661,7 @@ export function isURL(str: string) {
     '(\:\d+)?(\/[-a-z\d%_.~+]*)*' + // port and path
     '(\?[;&a-z\d%_.~+=-]*)?' + // query string
     '(\#[-a-z\d_]*)?$', 'i'); // fragment locater
-  console.log('pattern: ', pattern);
+  // console.log('pattern: ', pattern);
   if (!pattern.test(str)) {
     return false;
   } else {
@@ -707,7 +700,7 @@ export function getParameterByName(name: string) {
 
 
 export async function presentModal(modalController, page, attributes) {
-  console.log('presentModal');
+  console.log('UTILS - presentModal');
   const modal: HTMLIonModalElement =
     await modalController.create({
       component: page,
@@ -718,15 +711,15 @@ export async function presentModal(modalController, page, attributes) {
   await modal.present();
   modal.onDidDismiss().then((detail: any) => {
     if (detail !== null) {
-      console.log('The result:', detail.data);
-      return 'CHIUDI!!!!!';
+      console.log('UTILS - presentModal - detail.data:', detail.data);
+      return 'CLOSE!!!!!';
     }
   });
 }
 
 
 export async function closeModal(modalController: ModalController) {
-  console.log('closeModal', modalController);
+  console.log('UTILS - closeModal', modalController);
   await modalController.getTop();
   await modalController.dismiss({ confirmed: true });
   // try {
@@ -743,13 +736,13 @@ export function createTranslateLoader(http: HttpClient) {
 export function redirect2(router, IDConv, conversationSelected) {
   if (window.innerWidth < 768) {
     // mobile
-    console.log('mobile::::', window.innerWidth, IDConv, conversationSelected, router);
+    // console.log('mobile::::', window.innerWidth, IDConv, conversationSelected, router);
     if (!IDConv) {
       router.navigateByUrl('/conversations-list');
     }
   } else {
     // desktop
-    console.log('desktop::::', window.innerWidth, IDConv, conversationSelected, router);
+    // console.log('desktop::::', window.innerWidth, IDConv, conversationSelected, router);
     if (IDConv) {
       let navigationExtras = {
         state: {
@@ -791,7 +784,7 @@ export function redirect2(router, IDConv, conversationSelected) {
 
 /** */
 export function checkPlatformIsMobile() {
-  console.log('checkPlatformIsMobile:: ', window.innerWidth);
+  // console.log('UTILS - checkPlatformIsMobile:: ', window.innerWidth);
   if (window.innerWidth < 768) {
     return true;
   }
@@ -800,7 +793,7 @@ export function checkPlatformIsMobile() {
 
 
 export function checkWindowWidthIsLessThan991px() {
-  console.log('checkWindowWidthIsLessThan991px:: ', window.innerWidth);
+  // console.log('UTILS - checkWindowWidthIsLessThan991px:: ', window.innerWidth);
   if (window.innerWidth < 991) {
     return true;
   }

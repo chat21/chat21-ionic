@@ -107,7 +107,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
 
     chat21Service.config = config.chat21Config;
     chat21Service.initChat();
-    console.log("appConfig.getConfig()", config);
+   
     const auth = new MQTTAuthService(http, chat21Service, appSorage);
 
     auth.setBaseUrl(appConfig.getConfig().apiUrl)
@@ -122,7 +122,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
 }
 
 export function conversationsHandlerFactory(chat21Service: Chat21Service, httpClient: HttpClient, appConfig: AppConfigProvider) {
-  console.log('conversationsHandlerFactory: ');
+
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTConversationsHandler(chat21Service);
@@ -141,7 +141,6 @@ export function archivedConversationsHandlerFactory(chat21Service: Chat21Service
 }
 
 export function conversationHandlerBuilderFactory(chat21Service: Chat21Service, appConfig: AppConfigProvider) {
-  console.log('conversationHandlerBuilderFactory: ');
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTConversationHandlerBuilderService(chat21Service);

@@ -1,5 +1,19 @@
 # chat21-ionic ver 3.0
 
+### 3.0.46-beta
+- Modifies the "logger service" to accept only values of string type from the "logLevel" environments property (Error < Warn < Info < Debug)
+- Updates the README.md
+- Replaces the value of the "logLevel" property of numeric type with a value of type string in the env.sample and chat-config.json files
+- Adds unit tests
+
+### 3.0.45-beta
+- Adds the ability to display the canned responses by pressing '/' anywhere in the message
+- Fixes the bug: in group side panel are not displayed the members
+
+### 3.0.44-beta
+- Fixes the bug: When a canned response is selected from the keyboard and enter is pressed, the slash character "/" is sent as a message
+- Fixes the bug: default log level is undefined if it is not setted in the eviroment.*
+
 ### 3.0.43-beta
 - Fixes the bug: logger of undefined in firebase-notifications and in app.component
 - Fixes the bug: "el" of undefined in "conversation-detail.page"

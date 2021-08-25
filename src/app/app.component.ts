@@ -108,12 +108,26 @@ export class AppComponent implements OnInit {
     public toastController: ToastController
   ) {
 
-    const appconfig = appConfigProvider.getConfig()
-    // this.tenant = environment.tenant;
+    const appconfig = appConfigProvider.getConfig();
+    
+    this.logger.info('[APP-COMP] logLevel: ', appconfig.logLevel);
     this.tenant = appconfig.tenant;
-    if (appconfig.logLevel) {
+
+    // let loggingLevel = null
+    // if (appconfig.logLevel) {
+      // if (appconfig.logLevel === 'Error') {
+      //   loggingLevel = 0
+      // } else if (appconfig.logLevel === 'Warn') {
+      //   loggingLevel = 1
+      // } else if (appconfig.logLevel === 'Info') {
+      //   loggingLevel = 2
+      // } else if (appconfig.logLevel === 'Debug') {
+      //   loggingLevel = 3
+      // }
+
+      // this.logger.setLoggerConfig(true, loggingLevel)
       this.logger.setLoggerConfig(true, appconfig.logLevel)
-    }
+    // }
     if (!this.platform.is('desktop')) {
       this.splashScreen.show();
     }
@@ -474,12 +488,12 @@ export class AppComponent implements OnInit {
     this.events.subscribe('profileInfoButtonClick:logout', this.subscribeProfileInfoButtonLogOut);
 
     this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
-      this.logger.info(' [APP-COMP] ***** conversationsAdded *****', conversation);
+      this.logger.log('[APP-COMP] ***** conversationsAdded *****', conversation);
       // that.conversationsChanged(conversations);
       this.manageTabNotification()
     });
     this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
-      this.logger.info('[APP-COMP] ***** subscribeConversationChanged *****', conversation);
+      this.logger.log('[APP-COMP] ***** subscribeConversationChanged *****', conversation);
       // that.conversationsChanged(conversations);
       this.manageTabNotification();
     });

@@ -7,14 +7,13 @@ import { BehaviorSubject } from 'rxjs';
 import { UserModel } from 'src/chat21-core/models/user';
 
 // utils
-import {
-  avatarPlaceholder,
-  getColorBck,
-  getImageUrlThumbFromFirebasestorage
-} from 'src/chat21-core/utils/utils-user';
+import { avatarPlaceholder,  getColorBck} from 'src/chat21-core/utils/utils-user';
 import { AppConfigProvider } from '../app-config';
 import { map } from 'rxjs/operators';
 
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 @Injectable({
   providedIn: 'root'
@@ -31,13 +30,13 @@ export class ContactsService {
   private contacts: UserModel[];
   private FIREBASESTORAGE_BASE_URL_IMAGE: string;
   private urlStorageBucket: string;
+  private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor(
     public http: HttpClient,
     public appConfigProvider: AppConfigProvider
   ) {
-    console.log('ContactsService');
-
+    
     this.urlRemoteContacts = appConfigProvider.getConfig().apiUrl + 'chat21/contacts';
     this.FIREBASESTORAGE_BASE_URL_IMAGE = appConfigProvider.getConfig().baseImageUrl;
     this.urlStorageBucket = appConfigProvider.getConfig().firebaseConfig.storageBucket + '/o/profiles%2F';
@@ -50,8 +49,8 @@ export class ContactsService {
   /** */
   public loadContactsFromUrl(token: string) {
     this.contacts = [];
-    console.log('CONTACT-SERVICE token', token);
-    console.log('CONTACT-SERVICE urlRemoteContacts', this.urlRemoteContacts)
+    this.logger.log('[CONTACT-SERVICE] loadContactsFromUrl token', token);
+    this.logger.log('[CONTACT-SERVICE] loadContactsFromUrl urlRemoteContacts', this.urlRemoteContacts)
     // if (this.urlRemoteContacts.startsWith('http') && token) {
     const that = this;
     const httpOptions = {
@@ -61,9 +60,9 @@ export class ContactsService {
       })
     };
    
-    console.log('urlRemoteContacts:: url ', this.urlRemoteContacts);
+ 
     this.http.get<any[]>(this.urlRemoteContacts, httpOptions).subscribe(users => {
-      console.log('urlRemoteContacts:: data ', users);
+      this.logger.log('[CONTACT-SERVICE] loadContactsFromUrl users ', users);
       users.forEach(user => {
         const member = that.createCompleteUser(user);
         that.contacts.push(member);
@@ -71,7 +70,7 @@ export class ContactsService {
       localStorage.setItem('contacts', JSON.stringify(this.contacts));
       this.BScontacts.next(this.contacts);
     }, error => {
-      console.log('urlRemoteContacts:: error ', error);
+      this.logger.error('[CONTACT-SERVICE] loadContactsFromUrl ERROR ', error);
     });
     // }
   }
@@ -112,7 +111,8 @@ export class ContactsService {
   */
   public loadContactDetail(token: string, uid: string) {
     this.contacts = [];
-    console.log('INFO-CONTENT-COMP setInfoDirect (contact-service) - loadContactDetail:: uid ', uid);
+    this.logger.log('[CONTACT-SERVICE] - loadContactDetail - uid ', uid);
+    this.logger.log('[CONTACT-SERVICE] - loadContactDetail - token ', token);
     const urlRemoteContactDetail = this.urlRemoteContacts + '/' + uid;
     // if (urlRemoteContactDetail.startsWith('http') && token) {
 
@@ -123,11 +123,11 @@ export class ContactsService {
         })
       };
       // const postData = {};
-      console.log('INFO-CONTENT-COMP setInfoDirect (contact-service) - loadContactDetail  url ', urlRemoteContactDetail);
+      this.logger.log('[CONTACT-SERVICE] - loadContactDetail  url ', urlRemoteContactDetail);
       return this.http
         .get(urlRemoteContactDetail, httpOptions)
         .pipe(map((res: any) => {
-          console.log('INFO-CONTENT-COMP setInfoDirect (contact-service) - loadContactDetail RES ', res);
+          this.logger.log('[CONTACT-SERVICE] - loadContactDetail - loadContactDetail RES ', res);
           if (res.uid) {
             let user = this.createCompleteUser(res)
             return user
@@ -143,7 +143,7 @@ export class ContactsService {
    * @param user
    */
   private createCompleteUser(user: any): UserModel {
-    console.log('INFO-CONTENT-COMP (contact-service) - createCompleteUser !!!  ');
+    this.logger.log('[CONTACT-SERVICE] - createCompleteUser !!!  ');
     const member = new UserModel(user.uid);
     try {
       const uid = user.uid;
@@ -162,9 +162,9 @@ export class ContactsService {
       // member.imageurl = imageurl;
       member.avatar = avatar;
       member.color = color;
-      console.log('createCompleteUser: ', member);
+      this.logger.log('CONTACT-SERVICE] - createCompleteUser member', member);
     } catch (err) {
-      console.log('createCompleteUser error:' + err);
+      this.logger.error('CONTACT-SERVICE] - createCompleteUser - ERROR ' , err);
     }
     return member;
   }

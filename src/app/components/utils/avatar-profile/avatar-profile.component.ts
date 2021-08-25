@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 @Component({
   selector: 'app-avatar-profile',
@@ -7,13 +10,15 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class AvatarProfileComponent implements OnInit {
   @Input() itemAvatar: any;
+  
+  private logger: LoggerService = LoggerInstance.getInstance();
   constructor() {
-    console.log('AvatarProfileComponent:::: constructor');
+    this.logger.log('AvatarProfileComponent:::: constructor');
    }
 
   ngOnInit() {
-    console.log('AvatarProfileComponent:::: ngOnInit');
-    console.log(this.itemAvatar);
+    this.logger.log('AvatarProfileComponent:::: ngOnInit');
+    this.logger.log(this.itemAvatar);
   }
 
 }

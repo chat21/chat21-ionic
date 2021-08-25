@@ -14,7 +14,7 @@ export class OptionHeaderComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log('headertitleeee', this.headerTitle)
+    // console.log('headertitleeee', this.headerTitle)
   }
 
   onBackButtonHandler(){

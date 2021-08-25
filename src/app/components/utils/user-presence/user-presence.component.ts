@@ -6,6 +6,10 @@ import { PresenceService } from 'src/chat21-core/providers/abstract/presence.ser
 // utils
 import { isInArray, setLastDateWithLabels } from 'src/chat21-core/utils/utils';
 
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Component({
   selector: 'app-user-presence',
   templateUrl: './user-presence.component.html',
@@ -23,29 +27,30 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
   public status = '';
   private lastConnectionDate: string;
   private subscriptions = [];
+  private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor(
     public presenceService: PresenceService
   ) { }
 
   ngOnInit() {
-    console.log('UserPresenceComponent - ngOnInit');
+    this.logger.log('UserPresenceComponent - ngOnInit');
     this.initialize();
   }
 
 
   /** */
   ngOnDestroy() {
-    console.log('UserPresenceComponent - ngOnDestroy');
+    this.logger.log('UserPresenceComponent - ngOnDestroy');
     this.unsubescribeAll();
   }
 
   /** */
   initialize() {
     this.status = this.translationMap.get('LABEL_ACTIVE_NOW');
-    console.log('this.translationMap', this.translationMap);
-    console.log('this.status', this.status);
-    console.log('idUser ->', this.idUser);
+    this.logger.log('this.translationMap', this.translationMap);
+    this.logger.log('this.status', this.status);
+    this.logger.log('idUser ->', this.idUser);
     this.setSubscriptions();
   }
 
@@ -64,7 +69,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
       subscribtion =  this.presenceService.BSIsOnline.subscribe((data: any) => {
-        console.log('***** BSIsOnline *****', data);
+        this.logger.log('***** BSIsOnline *****', data);
         if (data) {
           const userId = data.uid;
           const isOnline = data.isOnline;
@@ -82,7 +87,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
       subscribtion =  this.presenceService.BSLastOnline.subscribe((data: any) => {
-        console.log('***** BSLastOnline *****', data);
+        this.logger.log('***** BSLastOnline *****', data);
         if (data) {
           const userId = data.uid;
           const timestamp = data.lastOnline;
@@ -112,7 +117,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
    *
    */
   userIsOnLine = (userId: string, isOnline: boolean) => {
-    console.log('************** userIsOnLine', userId, isOnline);
+    this.logger.log('************** userIsOnLine', userId, isOnline);
     this.online = isOnline;
     if (isOnline) {
       this.status = this.translationMap.get('LABEL_ACTIVE_NOW');
@@ -128,10 +133,10 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
    *
    */
   userLastConnection = (userId: string, timestamp: string) => {
-    console.log('************** userLastConnection', userId, timestamp);
+    this.logger.log('************** userLastConnection', userId, timestamp);
     if (timestamp && timestamp !== '') {
       const lastConnectionDate = setLastDateWithLabels(this.translationMap, timestamp);
-      console.log('************** lastConnectionDate', lastConnectionDate);
+      this.logger.log('************** lastConnectionDate', lastConnectionDate);
       this.lastConnectionDate = lastConnectionDate;
       if (this.online === false ) {
         this.status = this.lastConnectionDate;
@@ -142,7 +147,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
 
   /** */
   private unsubescribeAll() {
-    console.log('unsubescribeAll: ', this.subscriptions);
+    this.logger.log('unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach(subscription => {
       subscription.value.unsubscribe(); // vedere come fare l'unsubscribe!!!!
     });
