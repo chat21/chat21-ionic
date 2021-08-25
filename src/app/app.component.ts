@@ -108,11 +108,25 @@ export class AppComponent implements OnInit {
     public toastController: ToastController
   ) {
 
-    const appconfig = appConfigProvider.getConfig()
-    // this.tenant = environment.tenant;
+    const appconfig = appConfigProvider.getConfig();
+    
+    this.logger.info('[APP-COMP] logLevel: ', appconfig.logLevel);
     this.tenant = appconfig.tenant;
+
+    let loggingLevel = null
     if (appconfig.logLevel) {
-      this.logger.setLoggerConfig(true, appconfig.logLevel)
+      if (appconfig.logLevel === 'Error') {
+        loggingLevel = 0
+      } else if (appconfig.logLevel === 'Warn') {
+        loggingLevel = 1
+      } else if (appconfig.logLevel === 'Info') {
+        loggingLevel = 2
+      } else if (appconfig.logLevel === 'Debug') {
+        loggingLevel = 3
+      }
+
+      this.logger.setLoggerConfig(true, loggingLevel)
+      // this.logger.setLoggerConfig(true, appconfig.logLevel)
     }
     if (!this.platform.is('desktop')) {
       this.splashScreen.show();
