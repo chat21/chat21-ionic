@@ -28,6 +28,6 @@ export const environment = {
     dashboardUrl: 'CHANGEIT', 
     storage_prefix : 'chat_sv5',
     authPersistence: 'LOCAL',
-    logLevel: 1,
+    logLevel: 'Info',
     supportMode: false,
 };

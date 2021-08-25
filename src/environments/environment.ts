@@ -27,6 +27,6 @@ export const environment = {
     dashboardUrl: 'http://localhost:4500/',
     storage_prefix : 'chat_sv5',
     authPersistence: 'LOCAL',
-    logLevel: 1,
+    logLevel: 'Info',
     supportMode: false,
 };
