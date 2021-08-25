@@ -18,7 +18,7 @@ export class ImageComponent implements OnInit {
   ngOnInit() {
   }
 
-  onLoaded(){
+  onLoaded(event){
     this.loading = false
     this.onImageRendered.emit(true)
   }

@@ -27,23 +27,23 @@
                           
                             <!--backgroundColor non viene ancora usato -->
                             <tiledeskwidget-bubble-message class="messages msg_sent slide-in-right"
-                                [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}"
-                                [message]="message"
-                                [textColor]="'col-msg-sent'"
-                                (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-                                (onAfterMessageRender)="returnOnAfterMessageRender($event)">
+                              [ngClass]="{'button-in-msg' : message?.metadata && message?.metadata?.button}"
+                              [message]="message"
+                              [textColor]="'col-msg-sent'"
+                              (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+                              (onAfterMessageRender)="returnOnAfterMessageRender($event)">
                             </tiledeskwidget-bubble-message>
 
                               <!-- icon status message -->
                             <tiledeskwidget-return-receipt class="slide-in-right"
-                                [status]="message.status">
+                              [status]="message?.status">
                             </tiledeskwidget-return-receipt>
 
                           </div>
     
     
                           <!-- message RECIPIENT:: -->
-                          <div role="messaggio" *ngIf="message.sender != senderId;" class="message_sender_fullname slide-in-left">{{message.sender_fullname}}</div>
+                          <div role="messaggio" *ngIf="message.sender != senderId;" class="message_sender_fullname slide-in-left">{{message?.sender_fullname}}</div>
                           <div role="messaggio" *ngIf="message.sender != senderId;" class="msg_container base_receive">
                             
                             <!-- <tiledeskwidget-avatar-image class="slide-in-left"  
@@ -54,10 +54,10 @@
 
                             <!--backgroundColor non viene ancora usato -->
                             <tiledeskwidget-bubble-message class="messages msg_receive slide-in-left"
-                                [message]="message"
-                                [textColor]="'black'"
-                                (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-                                (onAfterMessageRender)="returnOnAfterMessageRender($event)">
+                              [message]="message"
+                              [textColor]="'black'"
+                              (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+                              (onAfterMessageRender)="returnOnAfterMessageRender($event)">
                             </tiledeskwidget-bubble-message>
 
                           </div>
@@ -107,8 +107,8 @@
                           </div> -->
     
     
-                          <div class="time slide-in-left" [ngClass]="{'sender' : message.sender == senderId}">
-                              <time #timeTooltip *ngIf="message.sender!=='' && message.timestamp !== '{.sv: timestamp}'" >{{message.timestamp  | amTimeAgo}} </time>
+                          <div class="time slide-in-left" [ngClass]="{'sender' : message?.sender == senderId}">
+                              <time #timeTooltip *ngIf="message?.sender!=='' && message?.timestamp !== '{.sv: timestamp}'" >{{message?.timestamp  | amTimeAgo}} </time>
                           </div>
     
                           <!-- message INFO/SUPPORT:: -->
@@ -119,11 +119,11 @@
                           </div> -->
     
                           <!-- message type:: button &&  -->
-                          <div *ngIf="message.attributes && message.attributes.attachment " class="slide-in-left" > 
+                          <div *ngIf="message?.attributes && message?.attributes?.attachment " class="slide-in-left" > 
                               <tiledeskwidget-message-attachment 
                                   style="height: 100%; display: block;"
                                   [message]="message"
-                                  [isLastMessage] = "isLastMessage(message.uid)"
+                                  [isLastMessage] = "isLastMessage(message?.uid)"
                                   [stylesMap]="stylesMap"
                                   (onAttachmentButtonClicked)="returnOnAttachmentButtonClicked($event)">
                               </tiledeskwidget-message-attachment>

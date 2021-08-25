@@ -1,4 +1,6 @@
+import { HtmlEntitiesEncodePipe } from './../../../../directives/html-entities-encode.pipe';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MarkedPipe } from 'src/app/directives/marked.pipe';
 
 import { InfoMessageComponent } from './info-message.component';
 
@@ -8,7 +10,7 @@ describe('InfoMessageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InfoMessageComponent ]
+      declarations: [ InfoMessageComponent, MarkedPipe, HtmlEntitiesEncodePipe ]
     })
     .compileComponents();
   }));

@@ -8,6 +8,11 @@ img {
     object-fit: cover;
 }
 
+.isLoadingImage {
+    position: relative;
+    top: 6px;
+}
+
 .loader {
     float: left;
     // position: absolute;
