@@ -19,7 +19,7 @@ export class CustomLogger implements LoggerService {
     setLoggerConfig(isLogEnabled: boolean, logLevel: string) {
 
         this.isLogEnabled = isLogEnabled;
-        console.log('LoggerService this.logLevel  ', this.logLevel)
+        // console.log('LoggerService this.logLevel  ', this.logLevel)
 
         if (logLevel) {
             // console.log('LoggerService typeof logLevel  ', typeof logLevel)
