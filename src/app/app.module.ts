@@ -122,7 +122,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
 }
 
 export function conversationsHandlerFactory(chat21Service: Chat21Service, httpClient: HttpClient, appConfig: AppConfigProvider) {
-  console.log('conversationsHandlerFactory: ');
+
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTConversationsHandler(chat21Service);
