@@ -4,7 +4,7 @@
     "pushEngine":"none",
     "tenant":"tilechat",
     "fileUploadAccept":"*/*",
-    "logLevel":1,
+    "logLevel": "Info",
     "firebaseConfig": {
         "apiKey": "CHANGEIT",
         "authDomain": "CHANGEIT",
@@ -17,7 +17,7 @@
     },
     "chat21Config": {
         "appId": "tilechat",
-        "MQTTendpoint": "mqtt://localhost:15675/ws",
+        "MQTTendpoint": "ws://localhost:15675/ws",
         "APIendpoint": "http://localhost:8004/api"
     },
     "apiUrl": "http://localhost:3000/",
