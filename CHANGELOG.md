@@ -1,5 +1,11 @@
 # chat21-ionic ver 3.0
 
+### 3.0.46-beta
+- Modifies the "logger service" to accept only values of string type from the "logLevel" environments property (Error < Warn < Info < Debug)
+- Updates the README.md
+- Replaces the value of the "logLevel" property of numeric type with a value of type string in the env.sample and chat-config.json files
+- Adds unit tests
+
 ### 3.0.45-beta
 - Adds the ability to display the canned responses by pressing '/' anywhere in the message
 - Fixes the bug: in group side panel are not displayed the members
