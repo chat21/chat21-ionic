@@ -2,10 +2,10 @@
     "chatEngine": "mqtt",
     "updloaEngine": "native",
     "pushEngine":"none",
-    "tenant":"tilechat",
     "fileUploadAccept":"*/*",
     "logLevel": "Info",
     "firebaseConfig": {
+        "tenant":"tilechat",
         "apiKey": "CHANGEIT",
         "authDomain": "CHANGEIT",
         "databaseURL": "CHANGEIT",
