@@ -17,6 +17,9 @@ import { isInArray, setLastDateWithLabels } from 'src/chat21-core/utils/utils';
 import * as PACKAGE from 'package.json';
 import { EventsService } from 'src/app/services/events-service';
 
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 @Component({
   selector: 'app-profile-info',
@@ -30,7 +33,7 @@ export class ProfileInfoPage implements OnInit {
   version: string;
   itemAvatar: any;
   public translationMap: Map<string, string>;
-
+  private logger: LoggerService = LoggerInstance.getInstance();
 
   private subscriptions = [];
   borderColor = '#2d323e';
@@ -118,38 +121,26 @@ export class ProfileInfoPage implements OnInit {
   private setSubscriptions() {
     this.presenceService.userIsOnline(this.loggedUser.uid);
     this.presenceService.lastOnlineForUser(this.loggedUser.uid);
-    let keySubscription = '';
-    // keySubscription = 'is-online-' + this.loggedUser.uid;
-    // if (!isInArray(keySubscription, this.subscriptions)) {
-    //   this.subscriptions.push(keySubscription);
-    //   this.events.subscribe(keySubscription, this.userIsOnLine);
-    // }
-    // keySubscription = 'last-connection-date-' + this.loggedUser.uid;
-    // if (!isInArray(keySubscription, this.subscriptions)) {
-    //   this.subscriptions.push(keySubscription);
-    //   this.events.subscribe(keySubscription, this.userLastConnection);
-    // }
-
-
-    const that = this;
+   
+  
     const subscribeBSIsOnline = this.presenceService.BSIsOnline.subscribe((data: any) => {
-      console.log('***** BSIsOnline *****', data);
+     this.logger.log('[PROFILE-INFO-PAGE] setSubscriptions $ubscribe to BSIsOnline - data' , data);
       if (data) {
         const userId = data.uid;
         const isOnline = data.isOnline;
         if (this.loggedUser.uid === userId) {
-          that.userIsOnLine(userId, isOnline);
+          this.userIsOnLine(userId, isOnline);
         }
       }
     });
 
     const subscribeBSLastOnline = this.presenceService.BSLastOnline.subscribe((data: any) => {
-      console.log('***** BSLastOnline *****', data);
+     this.logger.log('[PROFILE-INFO-PAGE] setSubscriptions $ubscribe to BSLastOnline - data' , data);
       if (data) {
         const userId = data.uid;
         const timestamp = data.lastOnline;
         if (this.loggedUser.uid === userId) {
-          that.userLastConnection(userId, timestamp);
+          this.userLastConnection(userId, timestamp);
         }
       }
     });
@@ -157,11 +148,9 @@ export class ProfileInfoPage implements OnInit {
 
   }
 
-  /**
-   *
-   */
+
   userIsOnLine = (userId: string, isOnline: boolean) => {
-    console.log('************** userIsOnLine', userId, isOnline);
+   this.logger.log('[PROFILE-INFO-PAGE] userIsOnLine - userId ', userId, ' - isOnline ', isOnline);
     this.itemAvatar.online = isOnline;
     if (isOnline) {
       this.itemAvatar.status = this.translationMap.get('LABEL_AVAILABLE');
@@ -170,11 +159,9 @@ export class ProfileInfoPage implements OnInit {
     }
   }
 
-  /**
-   *
-   */
+
   userLastConnection = (userId: string, timestamp: string) => {
-    console.log('************** userLastConnection', userId, timestamp);
+    this.logger.log('[PROFILE-INFO-PAGE] userLastConnection - userId ', userId, ' - timestamp ', timestamp);
     if (timestamp && timestamp !== '') {
       const lastConnectionDate = setLastDateWithLabels(this.translationMap, timestamp);
       this.itemAvatar.lastConnection = lastConnectionDate;
@@ -193,9 +180,9 @@ export class ProfileInfoPage implements OnInit {
 
   /** */
   private unsubescribeAll() {
-    console.log('unsubescribeAll: ', this.subscriptions);
+   this.logger.log('unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach((subscription: any) => {
-      console.log('unsubescribe: ', subscription);
+     this.logger.log('unsubescribe: ', subscription);
       // this.events.unsubscribe(subscription, null);
     });
     this.subscriptions = [];
@@ -228,7 +215,7 @@ export class ProfileInfoPage implements OnInit {
     copyText.select();
     copyText.setSelectionRange(0, 99999); /*For mobile devices*/
     document.execCommand("copy");
-    console.log("Copied the text: " + copyText.value);
+   this.logger.log("Copied the text: " + copyText.value);
     const tootipElem = <HTMLElement>document.querySelector('.chat-tooltip');
     this.renderer.appendChild(tootipElem, this.renderer.createText('Copied!'))
 
