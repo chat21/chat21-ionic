@@ -54,10 +54,10 @@ In progress git
         chatEngine: "mqtt", // OR YOUR CUSTOM CHAT ENGINE
         updloaEngine: "native", // OR YOUR CUSTOM UPLOAD ENGINE
         pushEngine:"none", // OR YOUR CUSTOM PUSH ENGINE
-        tenant:"tilechat",
         fileUploadAccept:"*/*",
         logLevel":"<YOUR-PREFERRED-LOG-LEVEL>",
         firebaseConfig: {
+            tenant:"tilechat",
             apiKey: '123ABC..',
             authDomain: 'XYZ.firebaseapp.com',
             databaseURL: 'https://XYZ.firebaseio.com',
