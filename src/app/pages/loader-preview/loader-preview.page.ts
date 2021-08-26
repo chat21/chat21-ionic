@@ -2,6 +2,11 @@ import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, 
 import { TYPE_MSG_IMAGE } from 'src/chat21-core/utils/constants';
 import { NavParams, ModalController } from '@ionic/angular';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Component({
   selector: 'app-loader-preview',
   templateUrl: './loader-preview.page.html',
@@ -21,6 +26,7 @@ export class LoaderPreviewPage implements OnInit {
   srcData: SafeResourceUrl;
   public file_extension: string;
   public file_name: string;
+  private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor(
     public viewCtrl: ModalController,
@@ -28,7 +34,7 @@ export class LoaderPreviewPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('LoaderPreviewPage');
+    this.logger.log('[LOADER-PREVIEW-PAGE] Hello!');
     // tslint:disable-next-line: prefer-for-of
     this.selectedFiles = this.files;
     for (let i = 0; i < this.files.length; i++) {
@@ -38,22 +44,22 @@ export class LoaderPreviewPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log('ionViewDidEnter LoaderPreviewPage', this.thumbnailsPreview.nativeElement.offsetHeight);
+    this.logger.log('[LOADER-PREVIEW-PAGE] ionViewDidEnter thumbnailsPreview.nativeElement.offsetHeight', this.thumbnailsPreview.nativeElement.offsetHeight);
     this.calculateHeightPreviewArea();
   }
 
   readAsDataURL(file: any) {
-    console.log('LoaderPreviewPage readAsDataURL file', file);
+    this.logger.log('[LOADER-PREVIEW-PAGE] readAsDataURL file', file);
     // ---------------------------------------------------------------------
     // USE CASE IMAGE
     // ---------------------------------------------------------------------
     if (file.type.startsWith("image") && (!file.type.includes('svg'))) {
 
-      console.log('LoaderPreviewPage USE CASE IMAGE readAsDataURL file TYPE', file.type);
+      this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - USE CASE IMAGE file TYPE', file.type);
       const reader = new FileReader();
       reader.onloadend = (evt) => {
         const img = reader.result.toString();
-        console.log('FileReader success ', img);
+        this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - FileReader success ', img);
         this.arrayFiles.push(img);
         if (!this.fileSelected) {
           this.fileSelected = img;
@@ -67,8 +73,8 @@ export class LoaderPreviewPage implements OnInit {
     } else if (file.type.startsWith("image") && (file.type.includes('svg'))) {
       // this.previewFiles(file)
 
-      console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL file TYPE', file.type);
-      console.log('FIREBASE-UPLOAD LoaderPreviewPage readAsDataURL file ', file);
+      this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL file TYPE', file.type);
+      this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL file ', file);
       const preview = document.querySelector('#img-preview') as HTMLImageElement;
 
 
@@ -78,7 +84,7 @@ export class LoaderPreviewPage implements OnInit {
         // convert image file to base64 string
         // const img = reader.result as string;
         const img = reader.result.toString();
-        console.log('FIREBASE-UPLOAD USE CASE SVG LoaderPreviewPage readAsDataURL img ', img);
+        that.logger.log('FIREBASE-UPLOAD USE CASE SVG LoaderPreviewPage readAsDataURL img ', img);
 
         // that.fileSelected = that.sanitizer.bypassSecurityTrustResourceUrl(img);
 
@@ -98,15 +104,15 @@ export class LoaderPreviewPage implements OnInit {
       // ---------------------------------------------------------------------
       // } else if (file.type.startsWith("application") || file.type.startsWith("video") || file.type.startsWith("audio") ) {
     } else {
-      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE ', file);
-      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file TYPE', file.type);
+      this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE ', file);
+      this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file TYPE', file.type);
       this.file_extension = file.name.substring(file.name.lastIndexOf('.')+1, file.name.length) || file.name;
-      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE EXTENSION', this.file_extension);
+      this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE EXTENSION', this.file_extension);
       this.file_name = file.name
-      console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE NAME', this.file_name);
+      this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE NAME', this.file_name);
       // if (file.type) {
       //   const file_type_array = file.type.split('/');
-      //   console.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file_type_array', file_type_array);
+      //   this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file_type_array', file_type_array);
       //   this.file_type = file_type_array[1]
       // } else {
       //   this.file_type = file.name.substring(file.name.lastIndexOf('.')+1, file.name.length) || file.name;
@@ -125,11 +131,11 @@ export class LoaderPreviewPage implements OnInit {
       type: 'image/png'
     };
     let file = new File([data], "test.png", metadata);
-    console.log('LoaderPreviewPage createFile file', file);
+    this.logger.log('LoaderPreviewPage createFile file', file);
     const reader = new FileReader();
     reader.onloadend = (evt) => {
       const img = reader.result.toString();
-      console.log('FileReader success ', img);
+      this.logger.log('FileReader success ', img);
       this.arrayFiles.push(img);
       if (!this.fileSelected) {
         this.fileSelected = img;
@@ -142,16 +148,16 @@ export class LoaderPreviewPage implements OnInit {
   // for svg
 
   // previewFiles(file) {
-  //   console.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
-  //   console.log('LoaderPreviewPage readAsDataURL file ', file);
+  //   this.logger.log('LoaderPreviewPage readAsDataURL file TYPE', file.type);
+  //   this.logger.log('LoaderPreviewPage readAsDataURL file ', file);
   //   const preview = document.querySelector('#img-preview');
-  //   console.log('LoaderPreviewPage readAsDataURL preview ', preview);
+  //   this.logger.log('LoaderPreviewPage readAsDataURL preview ', preview);
   //   this.readAndPreview(file, preview)
   // }
 
 
   // readAndPreview(file, preview) {
-  //   console.log('LoaderPreviewPage readAsDataURL preview HERE 1');
+  //   this.logger.log('LoaderPreviewPage readAsDataURL preview HERE 1');
   //   // Make sure `file.name` matches our extensions criteria
   //   if (/\.(jpe?g|png|gif|svg)$/i.test(file.name)) {
   //     var reader = new FileReader();
@@ -161,7 +167,7 @@ export class LoaderPreviewPage implements OnInit {
   //       image.height = 100;
   //       image.title = file.name;
   //       image.src = this.result.toString();
-  //       console.log('LoaderPreviewPage readAsDataURL preview image.src ', image.src);
+  //       this.logger.log('LoaderPreviewPage readAsDataURL preview image.src ', image.src);
   //       // preview.appendChild(image);
 
   //       preview.src(image);
@@ -179,18 +185,18 @@ export class LoaderPreviewPage implements OnInit {
 
   // NOT USED    
   fileChange(file) {
-    console.log('fileChange');
+    this.logger.log('fileChange');
     const that = this;
     if (file) {
       const nameImg = file.name;
       const typeFile = file.type;
-      console.log('nameImg: ', nameImg);
-      console.log('typeFile: ', typeFile);
+      this.logger.log('nameImg: ', nameImg);
+      this.logger.log('typeFile: ', typeFile);
 
       const reader = new FileReader();
       reader.addEventListener('load', function () {
         const img = reader.result.toString();
-        console.log('FileReader success');
+        that.logger.log('FileReader success');
         that.arrayFiles.push(img);
         if (!that.fileSelected) {
           that.fileSelected = img;
@@ -201,7 +207,7 @@ export class LoaderPreviewPage implements OnInit {
           file4Load.src = reader.result.toString();
           file4Load.title = nameImg;
           file4Load.onload = function () {
-            console.log('that.file4Load: ', file4Load);
+            that.logger.log('that.file4Load: ', file4Load);
             //that.arrayFiles.push(file4Load);
             const uid = file4Load.src.substring(file4Load.src.length - 16);
             const metadata = {
@@ -247,9 +253,9 @@ export class LoaderPreviewPage implements OnInit {
     const heightThumbnailsPreview = this.thumbnailsPreview.nativeElement.offsetHeight;
     const heightMessageTextArea = this.messageTextArea.nativeElement.offsetHeight;
     this.heightPreviewArea = (heightMessageTextArea + heightThumbnailsPreview).toString();
-    // console.log('heightThumbnailsPreview', heightThumbnailsPreview);
-    // console.log('heightMessageTextArea', this.messageTextArea);
-    // console.log('heightPreviewArea', this.heightPreviewArea);
+    // this.logger.log('heightThumbnailsPreview', heightThumbnailsPreview);
+    // this.logger.log('heightMessageTextArea', this.messageTextArea);
+    // this.logger.log('heightPreviewArea', this.heightPreviewArea);
   }
 
   uploadImages() { }
@@ -257,7 +263,7 @@ export class LoaderPreviewPage implements OnInit {
 
   /** */
   onChangeTextArea(e: any) {
-    // console.log('onChangeTextArea', e.target.clientHeight);
+    // this.logger.log('onChangeTextArea', e.target.clientHeight);
     this.calculateHeightPreviewArea();
     // try {
     //   let height: number = e.target.offsetHeight;
@@ -285,7 +291,7 @@ export class LoaderPreviewPage implements OnInit {
   }
 
   pressedOnKeyboard(e: any, text: string) {
-    console.log('pressedOnKeyboard ************** event:: ', e);
+    this.logger.log('pressedOnKeyboard ************** event:: ', e);
     // const message = e.target.textContent.trim();
     // if (e.inputType === 'insertLineBreak' && message === '') {
     //   this.messageString = '';
@@ -301,7 +307,7 @@ export class LoaderPreviewPage implements OnInit {
 
   /** */
   onSendMessage() {
-    console.log('onSendMessage testo::', this.messageString);
+    this.logger.log('onSendMessage testo::', this.messageString);
     const file = this.selectedFiles.item(0);
     const file4Load = new Image;
     const nameImg = file.name;
