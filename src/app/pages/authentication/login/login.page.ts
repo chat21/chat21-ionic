@@ -13,6 +13,10 @@ import { LoginComponent } from '../../../components/authentication/login/login.c
 // utils
 import { isInArray } from 'src/chat21-core/utils/utils';
 
+// Logger
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -27,7 +31,7 @@ export class LoginPage implements OnInit {
 
   public translationMap: Map<string, string>;
   private subscriptions = [];
-
+  private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor(
     public tiledeskAuthService: TiledeskAuthService,
@@ -76,20 +80,17 @@ export class LoginPage implements OnInit {
    * @param error
    */
   signIn = (user: any, error: any) => {
-    console.log('LOGIN PAGE signIn - user', user);
-    console.log('LOGIN PAGE signIn - error', error);
+    this.logger.log('[LOGIN PAGE] signIn - user', user);
+    this.logger.error('[LOGIN PAGE] signIn - error', error);
     if (error) {
       // faccio uscire alert
-      const errore = this.translationMap.get('LABEL_SIGNIN_ERROR');
+      const error = this.translationMap.get('LABEL_SIGNIN_ERROR');
       this.showSpinnerInLoginBtn = false;
       // this.presentToast(errore);
-      this.loginComponent.showErrorSignIn(errore);
+      this.loginComponent.showErrorSignIn(error);
     }
   }
 
-  /**
-   *
-   */
   public translations() {
     const keys = [
       'LABEL_SIGNIN_TO',
@@ -112,33 +113,31 @@ export class LoginPage implements OnInit {
     this.translationMap = this.translateService.translateLanguage(keys);
   }
 
-
-
   /**
    *
    * @param auth
    */
   returnSignInWithEmailAndPassword(auth: any) {
     this.showSpinnerInLoginBtn = true
-    console.log('LOGIN PAGE returnSignInWithEmailAndPassword', auth, auth.email, auth.password);
+    this.logger.log('[LOGIN PAGE] returnSignInWithEmailAndPassword', auth, auth.email, auth.password);
     this.tiledeskAuthService.signInWithEmailAndPassword(auth.email, auth.password)
       .then(tiledeskToken => {
         this.messagingAuthService.createCustomToken(tiledeskToken)
       })
       .catch(error => {
         this.showSpinnerInLoginBtn = false;
-        console.log('LOGIN PAGE signInWithEmailAndPassword error', error);
-        console.log('LOGIN PAGE signInWithEmailAndPassword error msg', error.error.msg);
-        console.log('LOGIN PAGE signInWithEmailAndPassword error msg TYPE OF', typeof error.error.msg);
+        this.logger.error('[LOGIN PAGE] signInWithEmailAndPassword error', error);
+        this.logger.error('[LOGIN PAGE] signInWithEmailAndPassword error msg', error.error.msg);
+        this.logger.error('[LOGIN PAGE] signInWithEmailAndPassword error msg TYPE OF', typeof error.error.msg);
         let error_msg = '';
         if (error.error.msg == "Authentication failed. User not found.") {
-          console.log('LOGIN PAGE signInWithEmailAndPassword error HERE 1', error.error.msg);
+          this.logger.error('[LOGIN PAGE] signInWithEmailAndPassword error HERE 1', error.error.msg);
           error_msg = this.translationMap.get('SIGNIN_ERROR_USER_NOT_FOUND');
         } else if (error.error.msg === "Authentication failed. Wrong password.") {
-          console.log('LOGIN PAGE signInWithEmailAndPassword error HERE 2', error.error.msg);
+          this.logger.error('[LOGIN PAGE] signInWithEmailAndPassword error HERE 2', error.error.msg);
           error_msg = this.translationMap.get('SIGNIN_ERROR_USER_WRONG_PSW');
         } else {
-          console.log('LOGIN PAGE signInWithEmailAndPassword error HERE 3', error.error.msg);
+          this.logger.error('[LOGIN PAGE] signInWithEmailAndPassword error HERE 3', error.error.msg);
           error_msg = this.translationMap.get('LABEL_SIGNIN_ERROR');
         }
 
@@ -146,7 +145,7 @@ export class LoginPage implements OnInit {
       })
       .finally(() => {
         this.showSpinnerInLoginBtn = false;
-        console.log('LOGIN PAGE signInWithEmailAndPassword ');
+        this.logger.log('[LOGIN PAGE] signInWithEmailAndPassword ');
       });
 
     // this.authService.signInWithEmailAndPassword(auth.email, auth.password);
@@ -176,9 +175,9 @@ export class LoginPage implements OnInit {
 
   /** */
   private unsubescribeAll() {
-    console.log('unsubescribeAll: ', this.subscriptions);
+    this.logger.log('[LOGIN PAGE] - unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach((subscription: any) => {
-      console.log('unsubescribe: ', subscription);
+      this.logger.log('[LOGIN PAGE] - unsubescribe: ', subscription);
       this.events.unsubscribe(subscription, null);
     });
     this.subscriptions = [];
