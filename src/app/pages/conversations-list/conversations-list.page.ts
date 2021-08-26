@@ -60,7 +60,7 @@ export class ConversationListPage implements OnInit {
 
   public conversationType = 'active'
   headerTitle: string
- 
+
 
   constructor(
     private router: Router,
@@ -82,7 +82,7 @@ export class ConversationListPage implements OnInit {
     this.listenToAppCompConvsLengthOnInitConvs();
     this.listenToLogoutEvent();
     this.listenToNotificationCLick();
-  
+
   }
 
   // -----------------------------------------------
@@ -99,28 +99,30 @@ export class ConversationListPage implements OnInit {
 
   listenToNotificationCLick() {
     const that = this;
-    navigator.serviceWorker.addEventListener('message', function (event) {
-      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data: ', event.data);
-      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data data: ', event.data['data']);
-      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data data typeof: ', typeof event.data['data']);
-      let uidConvSelected = ''
-      if (typeof event.data['data'] === 'string') {
-        uidConvSelected = event.data['data']
-      } else {
-        uidConvSelected = event.data['data']['recipient']
-      }
+    if (navigator && navigator.serviceWorker) {
+      navigator.serviceWorker.addEventListener('message', function (event) {
+        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data: ', event.data);
+        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data data: ', event.data['data']);
+        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data data typeof: ', typeof event.data['data']);
+        let uidConvSelected = ''
+        if (typeof event.data['data'] === 'string') {
+          uidConvSelected = event.data['data']
+        } else {
+          uidConvSelected = event.data['data']['recipient']
+        }
 
-      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
-      that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker that.conversations: ', that.conversations);
-      const conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
-      if (conversationSelected) {
+        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
+        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker that.conversations: ', that.conversations);
+        const conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
+        if (conversationSelected) {
 
-        that.conversationSelected = conversationSelected;
-        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event conversationSelected: ', that.conversationSelected);
+          that.conversationSelected = conversationSelected;
+          that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick- Received a message from service worker event conversationSelected: ', that.conversationSelected);
 
-        that.navigateByUrl('active', uidConvSelected)
-      }
-    });
+          that.navigateByUrl('active', uidConvSelected)
+        }
+      });
+    }
   }
 
 
