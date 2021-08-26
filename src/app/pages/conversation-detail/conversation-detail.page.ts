@@ -200,12 +200,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // this.conversationSelected = localStorage.getItem('conversationSelected');
     this.showButtonToBottom = false;
     this.showMessageWelcome = false;
-    // this.tenant = environment.tenant;
-
+   
     const appconfig = this.appConfigProvider.getConfig()
-    this.tenant = appconfig.tenant;
-    this.logger.log('[CONVS-DETAIL] - initialize -> tenant ', this.tenant);
-
+    // this.tenant = appconfig.tenant;
+    this.tenant = appconfig.firebaseConfig.tenant;
+    this.logger.log('[CONVS-DETAIL] - initialize -> firebaseConfig tenant ', this.tenant);
+   
 
     // Change list on date change
     this.route.paramMap.subscribe(params => {

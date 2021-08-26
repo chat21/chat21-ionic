@@ -10,8 +10,12 @@ import { ConversationsHandlerService } from './../providers/abstract/conversatio
 // import { ChatContactsSynchronizer } from '../app/services/chat-contacts-synchronizer';
 import { environment } from '../../environments/environment';
 import { ArchivedConversationsHandlerService } from './../providers/abstract/archivedconversations-handler.service';
+import { AppConfigProvider } from 'src/app/services/app-config';
+
+// Logger
 import { LoggerService } from './abstract/logger.service';
 import { LoggerInstance } from './logger/loggerInstance';
+
 
 
 @Injectable({ providedIn: 'root' })
@@ -20,8 +24,10 @@ export class ChatManager {
 
   BSStart: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  supportMode = environment.supportMode;
-  tenant = environment.tenant;
+  // supportMode = environment.supportMode;
+  // tenant = environment.tenant;
+  tenant: string
+ 
 
   private currentUser: UserModel;
   private tiledeskToken: string;
@@ -33,16 +39,20 @@ export class ChatManager {
   constructor(
     // public chatContactsSynchronizer: ChatContactsSynchronizer,
     public conversationsHandlerService: ConversationsHandlerService,
-    public archivedConversationsService: ArchivedConversationsHandlerService
+    public archivedConversationsService: ArchivedConversationsHandlerService,
+    public appConfigProvider: AppConfigProvider,
   ) { }
   /**
    * inizializza chatmanager
    */
   initialize() {
+    const appconfig = this.appConfigProvider.getConfig();
+    this.tenant = appconfig.firebaseConfig.tenant;
+    this.logger.info('[CHAT MANAGER] - initialize -> firebaseConfig tenant ', this.tenant);
     this.handlers = [];
     this.openInfoConversation = true;
     this.currentUser = null;
-    this.logger.info('[CHAT MANAGER]**** init ****', this.handlers);
+    this.logger.log('[CHAT MANAGER]- initialize -> this.handlers', this.handlers);
   }
 
   /**

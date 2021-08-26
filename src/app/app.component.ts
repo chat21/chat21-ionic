@@ -109,9 +109,10 @@ export class AppComponent implements OnInit {
   ) {
 
     const appconfig = appConfigProvider.getConfig();
-    
+    console.log('[APP-COMP] appconfig: ', appconfig) 
     this.logger.info('[APP-COMP] logLevel: ', appconfig.logLevel);
-    this.tenant = appconfig.tenant;
+    this.tenant = appconfig.firebaseConfig.tenant;
+    this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant) 
 
     // let loggingLevel = null
     // if (appconfig.logLevel) {
@@ -540,7 +541,7 @@ export class AppComponent implements OnInit {
 
   private async presentModal(calledby): Promise<any> {
     this.logger.debug('[APP-COMP] presentModal calledby', calledby);
-    const attributes = { tenant: 'tilechat', enableBackdropDismiss: false };
+    const attributes = { tenant: this.tenant, enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
       await this.modalController.create({
         component: LoginPage,

@@ -63,8 +63,10 @@ export class InfoContentComponent implements OnInit {
     // this.logger.log('INFO-CONTENT-COMP loggedUser: ', this.loggedUser);
 
     const appconfig = appConfigProvider.getConfig()
-    this.tenant = appconfig.tenant;
-    this.logger.log('INFO-CONTENT-COMP tenant ', this.tenant);
+    // this.tenant = appconfig.tenant;
+    this.tenant = appconfig.firebaseConfig.tenant;
+    this.logger.log('INFO-CONTENT-COMP appconfig firebaseConfig tenant ', this.tenant);
+    
 
     this.route.paramMap.subscribe(params => {
       this.logger.log('INFO-CONTENT-COMP initialize params: ', params);

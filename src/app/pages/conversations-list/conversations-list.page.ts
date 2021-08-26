@@ -367,9 +367,10 @@ export class ConversationListPage implements OnInit {
    * ::: initialize :::
    */
   initialize() {
-    // this.tenant = environment.tenant;
-    this.tenant = this.appConfigProvider.getConfig().tenant
-    this.logger.log('[CONVS-LIST-PAGE] this.tenant', this.tenant)
+    const appconfig = this.appConfigProvider.getConfig();
+    this.tenant = appconfig.firebaseConfig.tenant;
+    this.logger.log('[CONVS-LIST-PAGE] - initialize -> firebaseConfig tenant ', this.tenant);
+    
     this.loggedUserUid = this.tiledeskAuthService.getCurrentUser().uid;
     this.subscriptions = [];
     this.initConversationsHandler();
@@ -391,8 +392,6 @@ export class ConversationListPage implements OnInit {
    * imposto uidConvSelected recuperando id ultima conversazione aperta dallo storage
    */
   initVariables() {
-
-
     this.logger.log('[CONVS-LIST-PAGE] uidReciverFromUrl:: ' + this.uidReciverFromUrl);
     this.logger.log('[CONVS-LIST-PAGE] loggedUserUid:: ' + this.loggedUserUid);
     this.logger.log('[CONVS-LIST-PAGE] tenant:: ' + this.tenant);
@@ -681,7 +680,7 @@ export class ConversationListPage implements OnInit {
 
 
 
-    // ------------------------------------------------------------------------------------
+  // ------------------------------------------------------------------------------------
   // ::: readAllMessages :::  ??????????? SEEMS NOT USED ?????????????????
   // when all chat messages are displayed,
   // that is when in the conversation detail I go to the bottom of the page,
