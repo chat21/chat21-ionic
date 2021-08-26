@@ -104,12 +104,12 @@ export class LoaderPreviewPage implements OnInit {
       // ---------------------------------------------------------------------
       // } else if (file.type.startsWith("application") || file.type.startsWith("video") || file.type.startsWith("audio") ) {
     } else {
-      this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE ', file);
-      this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file TYPE', file.type);
+      this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - USE CASE FILE - FILE ', file);
+      this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - USE CASE FILE - FILE TYPE', file.type);
       this.file_extension = file.name.substring(file.name.lastIndexOf('.')+1, file.name.length) || file.name;
-      this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE EXTENSION', this.file_extension);
+      this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - USE CASE FILE - FILE EXTENSION', this.file_extension);
       this.file_name = file.name
-      this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL FILE NAME', this.file_name);
+      this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - USE CASE FILE - FILE NAME', this.file_name);
       // if (file.type) {
       //   const file_type_array = file.type.split('/');
       //   this.logger.log('FIREBASE-UPLOAD USE CASE FILE LoaderPreviewPage readAsDataURL file_type_array', file_type_array);
@@ -131,11 +131,11 @@ export class LoaderPreviewPage implements OnInit {
       type: 'image/png'
     };
     let file = new File([data], "test.png", metadata);
-    this.logger.log('LoaderPreviewPage createFile file', file);
+    this.logger.log('[LOADER-PREVIEW-PAGE] - createFile file - file', file);
     const reader = new FileReader();
     reader.onloadend = (evt) => {
       const img = reader.result.toString();
-      this.logger.log('FileReader success ', img);
+      this.logger.log('[LOADER-PREVIEW-PAGE] - createFile file - FileReader success img', img);
       this.arrayFiles.push(img);
       if (!this.fileSelected) {
         this.fileSelected = img;
@@ -291,7 +291,7 @@ export class LoaderPreviewPage implements OnInit {
   }
 
   pressedOnKeyboard(e: any, text: string) {
-    this.logger.log('pressedOnKeyboard ************** event:: ', e);
+    this.logger.log('[LOADER-PREVIEW-PAGE] pressedOnKeyboard - event:: ', e);
     // const message = e.target.textContent.trim();
     // if (e.inputType === 'insertLineBreak' && message === '') {
     //   this.messageString = '';
@@ -307,7 +307,7 @@ export class LoaderPreviewPage implements OnInit {
 
   /** */
   onSendMessage() {
-    this.logger.log('onSendMessage testo::', this.messageString);
+    this.logger.log('[LOADER-PREVIEW-PAGE] onSendMessage messageString:', this.messageString);
     const file = this.selectedFiles.item(0);
     const file4Load = new Image;
     const nameImg = file.name;
