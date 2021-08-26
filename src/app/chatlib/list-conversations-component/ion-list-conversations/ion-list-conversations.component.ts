@@ -22,6 +22,7 @@ export class IonListConversationsComponent extends ListConversationsComponent im
 
   convertMessage = convertMessage;
   isApp: boolean = false;
+  public logger: LoggerService = LoggerInstance.getInstance()
   /**
    * 
    * @param iterableDiffers 
