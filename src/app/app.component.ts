@@ -196,12 +196,12 @@ export class AppComponent implements OnInit {
     const tiledeskToken = this.appStorageService.getItem('tiledeskToken')
     const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
     if (tiledeskToken) {
-      this.logger.debug('[APP-COMP]  ---------------- MI LOGGO CON UN TOKEN ESISTENTE NEL LOCAL STORAGE O PASSATO NEI PARAMS URL ---------------- ')
+      this.logger.debug('[APP-COMP] >>> I LOG IN WITH A TOKEN EXISTING IN THE LOCAL STORAGE OR WITH A TOKEN PASSED IN THE URL PARAMETERS <<<')
       this.tiledeskAuthService.signInWithCustomToken(tiledeskToken).then(user => {
         this.messagingAuthService.createCustomToken(tiledeskToken)
       }).catch(error => { this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::' + error) })
     } else {
-      this.logger.warn(' [APP-COMP]---------------- NON sono loggato ---------------- ')
+      this.logger.warn('[APP-COMP] >>> I AM NOT LOGGED IN <<<')
       const that = this;
       clearTimeout(this.timeModalLogin);
       this.timeModalLogin = setTimeout(() => {
@@ -272,7 +272,8 @@ export class AppComponent implements OnInit {
 
   goOffLine = () => {
     this.logger.debug('[APP-COMP] ************** goOffLine:', this.authModal);
-
+    // this.conversationsHandlerService.conversations = [];
+  
     this.chatManager.setTiledeskToken(null);
     this.chatManager.setCurrentUser(null);
     this.chatManager.goOffLine();
