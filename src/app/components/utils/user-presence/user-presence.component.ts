@@ -34,23 +34,23 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.logger.log('UserPresenceComponent - ngOnInit');
+    this.logger.log('[USER-PRESENCE-COMP] - ngOnInit');
     this.initialize();
   }
 
 
   /** */
   ngOnDestroy() {
-    this.logger.log('UserPresenceComponent - ngOnDestroy');
+    this.logger.log('[USER-PRESENCE-COMP] - ngOnDestroy');
     this.unsubescribeAll();
   }
 
   /** */
   initialize() {
     this.status = this.translationMap.get('LABEL_ACTIVE_NOW');
-    this.logger.log('this.translationMap', this.translationMap);
-    this.logger.log('this.status', this.status);
-    this.logger.log('idUser ->', this.idUser);
+    this.logger.log('[USER-PRESENCE-COMP] - initialize - this.translationMap', this.translationMap);
+    this.logger.log('[USER-PRESENCE-COMP] - initialize - this.status', this.status);
+    this.logger.log('[USER-PRESENCE-COMP] - initialize - idUser ->', this.idUser);
     this.setSubscriptions();
   }
 
@@ -69,7 +69,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
       subscribtion =  this.presenceService.BSIsOnline.subscribe((data: any) => {
-        this.logger.log('***** BSIsOnline *****', data);
+        this.logger.log('[USER-PRESENCE-COMP] $subs to BSIsOnline - data ', data);
         if (data) {
           const userId = data.uid;
           const isOnline = data.isOnline;
@@ -87,7 +87,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
       subscribtion =  this.presenceService.BSLastOnline.subscribe((data: any) => {
-        this.logger.log('***** BSLastOnline *****', data);
+        this.logger.log('[USER-PRESENCE-COMP] $subs to BSLastOnline - data ', data);
         if (data) {
           const userId = data.uid;
           const timestamp = data.lastOnline;
@@ -117,7 +117,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
    *
    */
   userIsOnLine = (userId: string, isOnline: boolean) => {
-    this.logger.log('************** userIsOnLine', userId, isOnline);
+    this.logger.log('[USER-PRESENCE-COMP] userIsOnLine - userId: ', userId, ' - isOnline: ', isOnline);
     this.online = isOnline;
     if (isOnline) {
       this.status = this.translationMap.get('LABEL_ACTIVE_NOW');
@@ -133,10 +133,10 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
    *
    */
   userLastConnection = (userId: string, timestamp: string) => {
-    this.logger.log('************** userLastConnection', userId, timestamp);
+    this.logger.log('[USER-PRESENCE-COMP] userLastConnection - userId: ', userId, ' - timestamp: ', timestamp);
     if (timestamp && timestamp !== '') {
       const lastConnectionDate = setLastDateWithLabels(this.translationMap, timestamp);
-      this.logger.log('************** lastConnectionDate', lastConnectionDate);
+      this.logger.log('[USER-PRESENCE-COMP] userLastConnection - lastConnectionDate', lastConnectionDate);
       this.lastConnectionDate = lastConnectionDate;
       if (this.online === false ) {
         this.status = this.lastConnectionDate;
@@ -147,7 +147,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
 
   /** */
   private unsubescribeAll() {
-    this.logger.log('unsubescribeAll: ', this.subscriptions);
+    this.logger.log('[USER-PRESENCE-COMP] - unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach(subscription => {
       subscription.value.unsubscribe(); // vedere come fare l'unsubscribe!!!!
     });
