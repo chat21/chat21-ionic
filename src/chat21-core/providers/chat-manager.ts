@@ -7,7 +7,7 @@ import { UserModel } from './../models/user';
 // handlers
 import { ConversationHandlerService } from './../providers/abstract/conversation-handler.service';
 import { ConversationsHandlerService } from './../providers/abstract/conversations-handler.service';
-// import { ChatContactsSynchronizer } from '../app/services/chat-contacts-synchronizer';
+
 import { environment } from '../../environments/environment';
 import { ArchivedConversationsHandlerService } from './../providers/abstract/archivedconversations-handler.service';
 import { AppConfigProvider } from 'src/app/services/app-config';
@@ -37,7 +37,6 @@ export class ChatManager {
   private logger: LoggerService = LoggerInstance.getInstance();
   
   constructor(
-    // public chatContactsSynchronizer: ChatContactsSynchronizer,
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsService: ArchivedConversationsHandlerService,
     public appConfigProvider: AppConfigProvider,

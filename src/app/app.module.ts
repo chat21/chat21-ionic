@@ -27,7 +27,6 @@ import { CHAT_ENGINE_MQTT, CHAT_ENGINE_FIREBASE, UPLOAD_ENGINE_NATIVE } from '..
 // SERVICES
 import { AppConfigProvider } from './services/app-config';
 import { EventsService } from './services/events-service';
-import { DatabaseProvider } from './services/database';
 
 // ABSTRACT SERVICES
 import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
@@ -344,7 +343,6 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     Keyboard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     EventsService,
-    DatabaseProvider,
     Chooser,
     Chat21Service,
   ]

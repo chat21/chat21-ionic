@@ -16,7 +16,6 @@ import { EventsService } from '../../services/events-service';
 import PerfectScrollbar from 'perfect-scrollbar'; // https://github.com/mdbootstrap/perfect-scrollbar
 
 // services
-import { DatabaseProvider } from '../../services/database';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
 import { ChatManager } from 'src/chat21-core/providers/chat-manager';
 import { NavProxyService } from '../../services/nav-proxy.service';
@@ -68,7 +67,6 @@ export class ConversationListPage implements OnInit {
     private navService: NavProxyService,
     public events: EventsService,
     public modalController: ModalController,
-    public databaseProvider: DatabaseProvider,
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     public chatManager: ChatManager,
@@ -374,7 +372,6 @@ export class ConversationListPage implements OnInit {
     this.loggedUserUid = this.tiledeskAuthService.getCurrentUser().uid;
     this.subscriptions = [];
     this.initConversationsHandler();
-    this.databaseProvider.initialize(this.loggedUserUid, this.tenant);
     this.initVariables();
     this.initSubscriptions();
     // this.initHandlerEventEmitter();

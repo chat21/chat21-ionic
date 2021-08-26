@@ -15,7 +15,7 @@ import { ConversationModel } from '../../models/conversation';
 
 // services
 import { ConversationsHandlerService } from '../abstract/conversations-handler.service';
-//import { DatabaseProvider } from '../database';
+
 
 // utils
 import { avatarPlaceholder, getColorBck } from '../../utils/utils-user';
