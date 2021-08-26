@@ -848,7 +848,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    this.logger.log("CONVERSATION-DETAIL handleKeyboardEvent  event.key ", event.key);
+    // this.logger.log("CONVERSATION-DETAIL handleKeyboardEvent  event.key ", event.key);
 
     if (this.tagsCannedFilter.length > 0) {
 
