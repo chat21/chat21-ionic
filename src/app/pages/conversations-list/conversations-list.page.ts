@@ -54,7 +54,7 @@ export class ConversationListPage implements OnInit {
 
   public convertMessage = convertMessage;
   private isShowMenuPage = false;
-  private logger: LoggerService = LoggerInstance.getInstance()
+  private logger: LoggerService = LoggerInstance.getInstance();
   translationMapConversation: Map<string, string>;
   stylesMap: Map<string, string>;
 
