@@ -1,5 +1,10 @@
 # chat21-ionic ver 3.0
 
+### 3.0.47-beta
+- Changes the obtaining of the "tenant" environment variable moved inside the "firebaseConfig" configuration
+- Removes unused services "chat-contacts-synchronizer.ts" (class "ChatContactsSynchronizer") and "database.ts" (class DatabaseProvider)
+- Moves the environment variable 'tenant' in the object "firebaseConfig" of the files chat-config.json, chat-config-template.json; updated README.md
+
 ### 3.0.46-beta
 - Modifies the "logger service" to accept only values of string type from the "logLevel" environments property (Error < Warn < Info < Debug)
 - Updates the README.md
