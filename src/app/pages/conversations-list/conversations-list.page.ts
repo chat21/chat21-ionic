@@ -60,6 +60,7 @@ export class ConversationListPage implements OnInit {
 
   public conversationType = 'active'
   headerTitle: string
+ 
 
   constructor(
     private router: Router,
@@ -67,6 +68,7 @@ export class ConversationListPage implements OnInit {
     private navService: NavProxyService,
     public events: EventsService,
     public modalController: ModalController,
+    // public databaseProvider: DatabaseProvider,
     public conversationsHandlerService: ConversationsHandlerService,
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     public chatManager: ChatManager,
@@ -75,11 +77,12 @@ export class ConversationListPage implements OnInit {
     private translateService: CustomTranslateService,
     public tiledeskService: TiledeskService,
     public tiledeskAuthService: TiledeskAuthService,
-    public appConfigProvider: AppConfigProvider,
+    public appConfigProvider: AppConfigProvider
   ) {
-    this.listenToAppCompConvsLengthOnInitConvs()
+    this.listenToAppCompConvsLengthOnInitConvs();
     this.listenToLogoutEvent();
-    this.listenToNotificationCLick()
+    this.listenToNotificationCLick();
+  
   }
 
   // -----------------------------------------------
@@ -186,7 +189,13 @@ export class ConversationListPage implements OnInit {
 
   listenToLogoutEvent() {
     this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
-      this.logger.log('[CONVS-LIST-PAGE]-CONVS loadingIsActive hasclickedlogout', hasclickedlogout);
+      this.logger.log('[CONVS-LIST-PAGE] - listenToLogoutEvent - hasclickedlogout', hasclickedlogout);
+
+      this.conversationsHandlerService.conversations = [];
+      this.uidConvSelected = null;
+
+      this.logger.log('[CONVS-LIST-PAGE] - listenToLogoutEvent - CONVERSATIONS ', this.conversations)
+      this.logger.log('[CONVS-LIST-PAGE] - listenToLogoutEvent - uidConvSelected ', this.uidConvSelected)
       if (hasclickedlogout === true) {
         this.loadingIsActive = false
       }
@@ -368,7 +377,7 @@ export class ConversationListPage implements OnInit {
     const appconfig = this.appConfigProvider.getConfig();
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.log('[CONVS-LIST-PAGE] - initialize -> firebaseConfig tenant ', this.tenant);
-    
+
     this.loggedUserUid = this.tiledeskAuthService.getCurrentUser().uid;
     this.subscriptions = [];
     this.initConversationsHandler();
