@@ -205,10 +205,10 @@ export class AppComponent implements OnInit {
       const that = this;
       clearTimeout(this.timeModalLogin);
       this.timeModalLogin = setTimeout(() => {
-        // if (!this.hadBeenCalledOpenModal) {
+        if (!this.hadBeenCalledOpenModal) {
         this.authModal = this.presentModal('initAuthentication');
         this.hadBeenCalledOpenModal = true;
-        // }
+        }
       }, 1000);
     }
 
@@ -282,10 +282,10 @@ export class AppComponent implements OnInit {
     const that = this;
     clearTimeout(this.timeModalLogin);
     this.timeModalLogin = setTimeout(() => {
-      // if (!this.hadBeenCalledOpenModal) {
+      if (!this.hadBeenCalledOpenModal) {
       this.authModal = this.presentModal('goOffLine');
       this.hadBeenCalledOpenModal = true
-      // }
+      }
     }, 1000);
   }
   /**------- AUTHENTICATION FUNCTIONS --> END <--- +*/
@@ -541,7 +541,7 @@ export class AppComponent implements OnInit {
   }
 
   private async presentModal(calledby): Promise<any> {
-    this.logger.debug('[APP-COMP] presentModal calledby', calledby);
+    console.log('[APP-COMP] presentModal calledby', calledby, '- hadBeenCalledOpenModal: ', this.hadBeenCalledOpenModal );
     const attributes = { tenant: this.tenant, enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
       await this.modalController.create({
@@ -551,8 +551,8 @@ export class AppComponent implements OnInit {
         backdropDismiss: false
       });
     modal.onDidDismiss().then((detail: any) => {
-      // this.modalOpen = false
-      this.logger.debug('[APP-COMP] The result: CHIUDI!!!!!', detail.data);
+      this.hadBeenCalledOpenModal = false
+      this.logger.debug('[APP-COMP] presentModal onDidDismiss detail.data ', detail.data);
       // this.checkPlatform();
       if (detail !== null) {
         //  this.logger.debug('The result: CHIUDI!!!!!', detail.data);
