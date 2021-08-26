@@ -4,6 +4,10 @@
 - Changes the obtaining of the "tenant" environment variable moved inside the "firebaseConfig" configuration
 - Removes unused services "chat-contacts-synchronizer.ts" (class "ChatContactsSynchronizer") and "database.ts" (class DatabaseProvider)
 - Moves the environment variable 'tenant' in the object "firebaseConfig" of the files chat-config.json, chat-config-template.json; updated README.md
+- Fixes the bug: after logging out the list of conversations is still visible
+- Fixes the bug: modal "login" is sometimes loaded twice after logout
+- Downgrades the mqtt library from version 4.2.8 to 4.1.0
+- Check if the serviceWorker exists before to append 'addEventListener' (fixes the bug addEventListener of undefined)
 
 ### 3.0.46-beta
 - Modifies the "logger service" to accept only values of string type from the "logLevel" environments property (Error < Warn < Info < Debug)
