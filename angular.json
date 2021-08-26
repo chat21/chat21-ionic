@@ -49,7 +49,7 @@
               }
             ],
             "scripts": [
-              "src/assets/js/mqtt/4.2.8/mqtt.min.js"
+              "src/assets/js/mqtt/4.1.0/mqtt.min.js"
             ]
           },
           "configurations": {
