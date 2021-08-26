@@ -19,7 +19,7 @@ import { ConversationsHandlerService } from '../abstract/conversations-handler.s
 
 // utils
 import { avatarPlaceholder, getColorBck } from '../../utils/utils-user';
-import { compareValues, getFromNow, searchIndexInArrayForUid, archivedConversationsPathForUserId, isGroup} from '../../utils/utils';
+import { compareValues, getFromNow, searchIndexInArrayForUid, archivedConversationsPathForUserId, isGroup } from '../../utils/utils';
 import { ImageRepoService } from '../abstract/image-repo.service';
 import { FirebaseImageRepoService } from './firebase-image-repo';
 import { ArchivedConversationsHandlerService } from '../abstract/archivedconversations-handler.service';
@@ -31,7 +31,7 @@ import { LoggerInstance } from '../logger/loggerInstance';
 // @Injectable({ providedIn: 'root' })
 @Injectable()
 export class FirebaseArchivedConversationsHandler extends ArchivedConversationsHandlerService {
-    
+
 
     // BehaviorSubject
     BSConversationDetail: BehaviorSubject<ConversationModel>;
@@ -51,7 +51,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
     private loggedUserId: string;
     private translationMap: Map<string, string>;
     private isConversationClosingMap: Map<string, boolean>;
-    private logger:LoggerService = LoggerInstance.getInstance()
+    private logger: LoggerService = LoggerInstance.getInstance()
     private ref: firebase.database.Query;
 
     constructor(
@@ -63,11 +63,8 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
     /**
      * inizializzo conversations handler
      */
-    initialize(
-        tenant: string,
-        userId: string,
-        translationMap: Map<string, string>
-        ) {
+    initialize(tenant: string, userId: string, translationMap: Map<string, string>) {
+        this.logger.info('[FIREBASEArchivedConversationsHandlerSERVICE] tenant ', tenant, ' - userId: ', userId, ' - translationMap: ', translationMap)
         this.tenant = tenant;
         this.loggedUserId = userId;
         this.translationMap = translationMap;
@@ -96,13 +93,13 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
     //     this.ref.on('child_added', (childSnapshot) => {
     //         that.added(childSnapshot);
     //     });
-        
+
     // }
 
-     // ---------------------------------------------------------------------------------
-     // New connect - renamed subscribeToConversation
-     //----------------------------------------------------------------------------------
-     subscribeToConversations(callback: any) {
+    // ---------------------------------------------------------------------------------
+    // New connect - renamed subscribeToConversation
+    //----------------------------------------------------------------------------------
+    subscribeToConversations(callback: any) {
         const that = this;
         const urlNodeFirebase = archivedConversationsPathForUserId(this.tenant, this.loggedUserId);
         this.logger.debug('[FIREBASEArchivedConversationsHandlerSERVICE] SubscribeToConversations conversations::ARCHIVED urlNodeFirebase', urlNodeFirebase)
@@ -118,8 +115,8 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
         });
 
         setTimeout(() => {
-            callback() 
-          }, 2000);
+            callback()
+        }, 2000);
         // SET AUDIO
         // this.audio = new Audio();
         // this.audio.src = URL_SOUND;
@@ -178,7 +175,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
     }
 
 
-    getConversationDetail(conversationId: string, callback:(conv: ConversationModel)=>void) {
+    getConversationDetail(conversationId: string, callback: (conv: ConversationModel) => void) {
         const conversation = this.archivedConversations.find(item => item.uid === conversationId);
         this.logger.debug('[FIREBASEArchivedConversationsHandlerSERVICE] SubscribeToConversations getConversationDetail::ARCHIVED *****: ', conversation)
         if (conversation) {
@@ -204,7 +201,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
             });
         }
     }
-    
+
     /**
      * dispose reference di conversations
      */
@@ -260,10 +257,10 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
             return false;
         }
     }
-     /**
-     *
-     * @param childSnapshot
-     */
+    /**
+    *
+    * @param childSnapshot
+    */
     // private conversationGenerate(childSnapshot: any): ConversationModel {
     //     console.log('conversationGenerate: ', childSnapshot.val());
     //     const childData: ConversationModel = childSnapshot.val();
@@ -383,7 +380,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
             conversation_with_fullname = conv.recipient_fullname;
             conv.sender_fullname = this.translationMap.get('YOU')
             // conv.last_message_text = YOU + conv.last_message_text;
-        // } else if (conv.channel_type === TYPE_GROUP) {
+            // } else if (conv.channel_type === TYPE_GROUP) {
         } else if (isGroup(conv)) {
             // conversation_with_fullname = conv.sender_fullname;
             // conv.last_message_text = conv.last_message_text;

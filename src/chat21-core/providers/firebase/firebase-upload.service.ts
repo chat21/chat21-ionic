@@ -43,7 +43,7 @@ export class FirebaseUploadService extends UploadService {
   }
 
   public initialize() {
-    this.logger.info('[FIREBASEUploadSERVICE] initialize()');
+    this.logger.info('[FIREBASEUploadSERVICE] initialize');
   }
   
   public upload(userId: string, upload: UploadModel): Promise<any> {

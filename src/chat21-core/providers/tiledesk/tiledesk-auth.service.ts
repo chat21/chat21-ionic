@@ -28,6 +28,7 @@ export class TiledeskAuthService {
 
 
   initialize(serverBaseUrl: string) {
+    this.logger.info('[TILEDESK-AUTH-SERV] - initialize serverBaseUrl', serverBaseUrl);
     this.SERVER_BASE_URL = serverBaseUrl;
     this.URL_TILEDESK_SIGNIN = this.SERVER_BASE_URL + 'auth/signin';
     this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously'
@@ -40,7 +41,7 @@ export class TiledeskAuthService {
    * @param password
    */
   signInWithEmailAndPassword(email: string, password: string): Promise<string> {
-    this.logger.debug('[TILEDESK-AUTH]-SERV] - signInWithEmailAndPassword', email, password);
+    this.logger.log('[TILEDESK-AUTH-SERV] - signInWithEmailAndPassword', email, password);
     const httpHeaders = new HttpHeaders();
 
     httpHeaders.append('Accept', 'application/json');

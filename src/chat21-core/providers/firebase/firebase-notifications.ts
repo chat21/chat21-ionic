@@ -24,6 +24,8 @@ export class FirebaseNotifications extends NotificationsService {
 
     initialize(tenant: string): void{
         this.tenant = tenant
+        this.logger.info('[FIREBASE-NOTIFICATIONS] initialize - tenant ', this.tenant)
+        
     }
 
     getNotificationPermissionAndSaveToken(currentUserUid) {
