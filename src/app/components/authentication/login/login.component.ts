@@ -44,9 +44,9 @@ export class LoginComponent implements OnInit {
     },
     'password': {
       'required': 'Password is required',
-      'minlength': 'Password must be at least 6 characters long',
     },
   };
+  // 'minlength': 'Password must be at least 6 characters long',
   private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor(
@@ -69,8 +69,10 @@ export class LoginComponent implements OnInit {
     const EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
     this.userForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.pattern(EMAIL_REGEXP)]],
-      password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
+      password: ['', Validators.compose([Validators.required])]
     });
+
+    // Validators.minLength(6),
     this.userForm.valueChanges.subscribe((data) => this.onValueChanged(data));
     this.onValueChanged(); // reset validation messages
 
@@ -132,7 +134,7 @@ export class LoginComponent implements OnInit {
 
   /** */
   showErrorSignIn(error: string) {
-    this.logger.log('showErrorSignIn');
+    this.logger.error('showErrorSignIn TOAST');
     // const error =  this.translationMap.get('LABEL_SIGNIN_ERROR');
     this.showSpinnerInLoginBtn = false;
     this.presentToast(error);
