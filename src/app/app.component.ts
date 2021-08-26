@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
   ) {
 
     const appconfig = appConfigProvider.getConfig();
-    console.log('[APP-COMP] appconfig: ', appconfig) 
+    this.logger.info('[APP-COMP] appconfig: ', appconfig) 
     this.logger.info('[APP-COMP] logLevel: ', appconfig.logLevel);
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant) 
@@ -541,7 +541,7 @@ export class AppComponent implements OnInit {
   }
 
   private async presentModal(calledby): Promise<any> {
-    console.log('[APP-COMP] presentModal calledby', calledby, '- hadBeenCalledOpenModal: ', this.hadBeenCalledOpenModal );
+    this.logger.log('[APP-COMP] presentModal calledby', calledby, '- hadBeenCalledOpenModal: ', this.hadBeenCalledOpenModal );
     const attributes = { tenant: this.tenant, enableBackdropDismiss: false };
     const modal: HTMLIonModalElement =
       await this.modalController.create({
@@ -552,7 +552,7 @@ export class AppComponent implements OnInit {
       });
     modal.onDidDismiss().then((detail: any) => {
       this.hadBeenCalledOpenModal = false
-      this.logger.debug('[APP-COMP] presentModal onDidDismiss detail.data ', detail.data);
+      this.logger.log('[APP-COMP] presentModal onDidDismiss detail.data ', detail.data);
       // this.checkPlatform();
       if (detail !== null) {
         //  this.logger.debug('The result: CHIUDI!!!!!', detail.data);
