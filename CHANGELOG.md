@@ -1,7 +1,7 @@
 # chat21-ionic ver 3.0
 
 ### 3.0.49-beta
-- Replaces in "chat-config-template.json" the value "${TENANT}" of the property "tenant" in ${FIREBASE TENANT} "
+- Replaces in "chat-config-template.json" the value "${TENANT}" of the property "tenant" in "${FIREBASE TENANT}"
 
 ### 3.0.48-beta
 - Update environments by moving the "tenant" environment variable to the "firebaseConfig" object
