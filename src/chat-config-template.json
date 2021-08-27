@@ -5,7 +5,7 @@
     "fileUploadAccept":"${FILE_UPLOAD_ACCEPT}",
     "logLevel":"${LOG_LEVEL}",
     "firebaseConfig": {
-        "tenant":"${TENANT}",
+        "tenant":"${FIREBASE_TENANT}",
         "apiKey": "${FIREBASE_APIKEY}",
         "authDomain": "${FIREBASE_AUTHDOMAIN}",
         "databaseURL": "${FIREBASE_DATABASEURL}",
