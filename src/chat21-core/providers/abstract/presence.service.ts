@@ -15,15 +15,15 @@ export abstract class PresenceService {
   // params
   // abstract tenant = environment.tenant;
 
-  private _tenant: string;
-  public setTenant(tenant): void {
-    this._tenant = tenant;
-  }
-  public getTenant(): string {
-    if (this._tenant) {
-      return this._tenant;
-    } 
-  }
+  // private _tenant: string;
+  // public setTenant(tenant): void {
+  //   this._tenant = tenant;
+  // }
+  // public getTenant(): string {
+  //   if (this._tenant) {
+  //     return this._tenant;
+  //   } 
+  // }
 
   // functions
   abstract initialize(tenant: string): void;

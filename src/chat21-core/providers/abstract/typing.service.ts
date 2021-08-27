@@ -13,15 +13,15 @@ export abstract class TypingService {
   BSSetTyping: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   // params
-  private _tenant: string;
-  public setTenant(tenant): void {
-    this._tenant = tenant;
-  }
-  public getTenant(): string {
-    if (this._tenant) {
-      return this._tenant;
-    } 
-  }
+  // private _tenant: string;
+  // public setTenant(tenant): void {
+  //   this._tenant = tenant;
+  // }
+  // public getTenant(): string {
+  //   if (this._tenant) {
+  //     return this._tenant;
+  //   } 
+  // }
 
 
   // functions
