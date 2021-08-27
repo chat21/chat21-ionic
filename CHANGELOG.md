@@ -1,5 +1,11 @@
 # chat21-ionic ver 3.0
 
+### 3.0.49-beta
+- Replaces in "chat-config-template.json" the value "${TENANT}" of the property "tenant" in ${FIREBASE TENANT} "
+
+### 3.0.48-beta
+- Update environments by moving the "tenant" environment variable to the "firebaseConfig" object
+
 ### 3.0.47-beta
 - Changes the obtaining of the "tenant" environment variable moved inside the "firebaseConfig" configuration
 - Removes unused services "chat-contacts-synchronizer.ts" (class "ChatContactsSynchronizer") and "database.ts" (class DatabaseProvider)
