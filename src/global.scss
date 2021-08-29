@@ -535,7 +535,6 @@ select:-webkit-autofill:focus {
     color: #1877f2 !important;
 }
 
-
 .base_info > p {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
@@ -543,7 +542,7 @@ select:-webkit-autofill:focus {
 
 .toast-custom-class {
     text-align: center;
-  }
+}
 
 // #chatArea > ion-row.row_chat_area > ion-content > ion-conversation-detail > div > div > tiledeskwidget-bubble-message.slide-in-right > div > div > div > tiledeskwidget-text > p > p > a{
 //     display: none;
@@ -555,3 +554,20 @@ select:-webkit-autofill:focus {
 //     border-top-right-radius: 6px !important;
 //     border-top-left-radius: 16px !important;
 // }
+
+/* Start rules for the member list refactoring in the "info-group.component.html" (replacement of ion-grid with ion-list) */
+#members-list > ion-item > ion-avatar > app-avatar-profile > div > div.avatar.avatar-image {
+    margin-top: -110% !important;
+    width: 44px !important;
+    height: 44px !important;
+}
+
+#members-list > ion-item > ion-avatar > .user-online {
+    top: 37px !important;
+    left: 45px !important;
+}
+
+#members-list > ion-item > ion-avatar > app-avatar-profile > div > div.avatar.avatar-placeholder {
+    line-height: 42px;
+}
+/* End rules for the member list refactoring in the "info-group.component.html" (replacement of ion-grid with ion-list) */
