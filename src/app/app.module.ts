@@ -92,7 +92,8 @@ import { ConversationInfoModule } from 'src/app/components/conversation-info/con
 // Directives
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
-import { ReturnStatement } from '@angular/compiler';
+
+
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -106,7 +107,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
 
     chat21Service.config = config.chat21Config;
     chat21Service.initChat();
-   
+
     const auth = new MQTTAuthService(http, chat21Service, appSorage);
 
     auth.setBaseUrl(appConfig.getConfig().apiUrl)
@@ -170,8 +171,8 @@ export function typingFactory(appConfig: AppConfigProvider) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
     return new MQTTTypingService();
-  } else {  
-    return new FirebaseTypingService(); 
+  } else {
+    return new FirebaseTypingService();
   }
 }
 
