@@ -444,8 +444,10 @@ export class ConversationListPage implements OnInit {
     //console.log('returnSelectedConversation::', conversation)
     if (conversation.archived) {
       this.navigateByUrl('archived', conversation.uid)
+      this.logger.log('[CONVS-LIST-PAGE] onConversationSelected archived conversation.uid ', conversation.uid)
     } else {
       this.navigateByUrl('active', conversation.uid)
+      this.logger.log('[CONVS-LIST-PAGE] onConversationSelected active conversation.uid ', conversation.uid)
     }
 
   }
@@ -483,7 +485,7 @@ export class ConversationListPage implements OnInit {
       }
     }
   }
-  // ?????? 
+ 
   navigateByUrl(converationType: string, uidConvSelected: string) {
     this.logger.log('[CONVS-LIST-PAGE] navigateByUrl uidConvSelected: ', uidConvSelected);
     this.logger.log('[CONVS-LIST-PAGE] navigateByUrl run  this.setUidConvSelected');
