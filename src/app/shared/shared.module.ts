@@ -59,7 +59,7 @@ import { OptionHeaderComponent } from '../components/conversation-detail/option-
     ReturnReceiptComponent,
     TextComponent,
 
-    BubbleDayMessageComponent,
+     BubbleDayMessageComponent,
     BubbleSystemMessageComponent,
     BubbleMyMessageComponent,
     BubbleOthersMessageComponent,
@@ -74,6 +74,7 @@ import { OptionHeaderComponent } from '../components/conversation-detail/option-
     OptionHeaderComponent
   ],
   exports: [
+    AutofocusDirective,
     AvatarProfileComponent,
     DdpHeaderComponent,
     UserPresenceComponent,
