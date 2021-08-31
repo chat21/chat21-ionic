@@ -1,6 +1,6 @@
 import { URL_SOUND_LIST_CONVERSATION } from './../../../chat21-core/utils/constants';
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Directive, HostListener } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Directive, HostListener, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ModalController, ToastController, PopoverController, Platform, ActionSheetController, NavController, IonContent, IonTextarea } from '@ionic/angular';
 
 // models
@@ -35,7 +35,8 @@ import { isFirstMessage, isInfo, isMine, messageType } from 'src/chat21-core/uti
 // Logger
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -47,11 +48,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild('ionContentChatArea', { static: false }) ionContentChatArea: IonContent;
   @ViewChild('rowMessageTextArea', { static: false }) rowTextArea: ElementRef;
 
+  // @ViewChild('info_content', { static: false }) info_content_child : InfoContentComponent;
+
   showButtonToBottom = false; // indica lo stato del pulsante per scrollare la chat (showed/hidden)
   NUM_BADGES = 0; // numero di messaggi non letti
   COLOR_GREEN = '#24d066'; // colore presence active da spostare nelle costanti
   COLOR_RED = '#db4437'; // colore presence none da spostare nelle costanti
 
+  private unsubscribe$: Subject<any> = new Subject<any>();
   private subscriptions: Array<any>;
   public tenant: string;
   public loggedUser: UserModel;
@@ -106,7 +110,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   isInfo = isInfo;
   isFirstMessage = isFirstMessage;
   messageType = messageType;
-
+  // info_content_child_enabled: boolean = false
   private logger: LoggerService = LoggerInstance.getInstance();
   /**
    * Constructor
@@ -152,33 +156,68 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public imageRepoService: ImageRepoService,
     public presenceService: PresenceService,
     public toastController: ToastController
+  ) {
 
-  ) { }
+  }
 
   // -----------------------------------------------------------
   // @ Lifehooks
   // -----------------------------------------------------------
   ngOnInit() {
-    this.logger.log('[CONVS-DETAIL] ngOnInit - window.location: ', window.location);
+    this.logger.log('[CONVS-DETAIL] > ngOnInit - window.location: ', window.location);
+
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {
+    this.logger.log('[CONVS-DETAIL] > ngAfterViewInit')
+  }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    this.logger.log('[CONVS-DETAIL] > ngOnDestroy')
+  }
+
+  ngOnChanges() {
+    this.logger.log('[CONVS-DETAIL] > ngOnChanges')
+  }
 
 
   ionViewWillEnter() {
+    // this.info_content_child_enabled = true;
+    this.logger.log('[CONVS-DETAIL] TEST > ionViewWillEnter - convId ', this.conversationWith)
     this.loggedUser = this.tiledeskAuthService.getCurrentUser();
     this.logger.log('[CONVS-DETAIL] ionViewWillEnter loggedUser: ', this.loggedUser);
     this.listnerStart();
   }
 
-  ionViewDidEnter() { }
+  ionViewDidEnter() {
+    this.logger.log('[CONVS-DETAIL] > ionViewDidEnter')
+    // this.info_content_child_enabled = true;
+  }
 
   // Unsubscibe when new page transition end
   ionViewWillLeave() {
+    this.logger.log('[CONVS-DETAIL] > ionViewWillLeave')
+
+    // this.logger.log('[CONVS-DETAIL] > ionViewWillLeave info_content_child ', this.info_content_child)   
+    // if (this.info_content_child) {
+    //   this.logger.log('[CONVS-DETAIL] > HERE YES')   
+    //   this.info_content_child.destroy();
+    // } 
+
+    // this.logger.log('[CONVS-DETAIL] TEST > ionViewWillLeave info_content_child_enabled ', this.info_content_child_enabled , 'convId ', this.conversationWith)
     this.unsubescribeAll();
   }
+
+  // reloadTree() {
+  //   this.info_content_child_enabled = false;
+  //   // now notify angular to check for updates
+  //   this.changeDetector.detectChanges();
+  //   // change detection should remove the component now
+  //   // then we can enable it again to create a new instance
+  //   this.info_content_child_enabled = true;
+  // }
+
+
 
   private listnerStart() {
     const that = this;
@@ -200,12 +239,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // this.conversationSelected = localStorage.getItem('conversationSelected');
     this.showButtonToBottom = false;
     this.showMessageWelcome = false;
-   
+
     const appconfig = this.appConfigProvider.getConfig()
     // this.tenant = appconfig.tenant;
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.log('[CONVS-DETAIL] - initialize -> firebaseConfig tenant ', this.tenant);
-   
+
 
     // Change list on date change
     this.route.paramMap.subscribe(params => {
@@ -568,26 +607,26 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.subscriptions.push(subscribe);
     }
 
-    subscriptionKey = 'onGroupChange';
-    subscription = this.subscriptions.find(item => item.key === subscriptionKey);
-    if (!subscription) {
-      this.logger.log('[CONVS-DETAIL] subscribe to onGroupChange');
-      subscription = this.groupService.onGroupChange(this.conversationWith).subscribe(groupDetail => {
-        this.groupDetail = groupDetail;
-
-        this.logger.log('[CONVS-DETAIL] subscribe to onGroupChange - groupDetail ', this.groupDetail)
-
-        /* Unesed Code */
-        // let memberStr = JSON.stringify(this.groupDetail.members);
-        // let arrayMembers = [];
-        // JSON.parse(memberStr, (key, value) => {
-        //   arrayMembers.push(key);
-        // });
-
-      });
-      const subscribe = { key: subscriptionKey, value: subscription };
-      this.subscriptions.push(subscribe);
+    // subscriptionKey = 'onGroupChange';
+    // subscription = this.subscriptions.find(item => item.key === subscriptionKey);
+    // if (!subscription) {
+    // subscription = 
+    if (this.conversationWith.startsWith("group-")) {
+      this.groupService.onGroupChange(this.conversationWith)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((groupDetail: any) => {
+          this.groupDetail = groupDetail;
+          this.logger.log('[CONVS-DETAIL] subscribe to onGroupChange - groupDetail ', this.groupDetail)
+        }, (error) => {
+          this.logger.error('I[CONVS-DETAIL] subscribe to onGroupChange  - ERROR  ', error);
+        }, () => {
+          this.logger.log('[CONVS-DETAIL] subscribe to onGroupChange  /* COMPLETE */');
+          this.groupDetail = null
+        });
     }
+    // const subscribe = { key: subscriptionKey, value: subscription };
+    // this.subscriptions.push(subscribe);
+    // }
   }
 
 
@@ -613,7 +652,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // @ Unsubscribe all subscribed events (called in ionViewWillLeave)
   // ----------------------------------------------------------------
   unsubescribeAll() {
-    this.logger.log('|[CONVS-DETAIL] unsubescribeAll 1: ', this.subscriptions);
+    this.logger.log('[CONVS-DETAIL] unsubescribeAll 1: ', this.subscriptions);
     if (this.subscriptions) {
       this.logger.log('[CONVS-DETAIL] unsubescribeAll 2: ', this.subscriptions);
       this.subscriptions.forEach(subscription => {
@@ -627,6 +666,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       window.removeEventListener('keyboardWillHide', null);
       window.removeEventListener('keyboardDidHide', null);
     }
+
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
     // this.conversationHandlerService.dispose();
   }
 
@@ -719,7 +761,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / ", pos);
         this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - pos:: ", pos);
         if (pos >= 0) {
-        // if (pos === 0) {
+          // if (pos === 0) {
           // && that.tagsCanned.length > 0
           var strSearch = message.substr(pos + 1);
           this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses strSearch ", strSearch);
