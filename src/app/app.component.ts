@@ -271,7 +271,7 @@ export class AppComponent implements OnInit {
   }
 
   goOffLine = () => {
-    this.logger.debug('[APP-COMP] ************** goOffLine:', this.authModal);
+    this.logger.log('[APP-COMP] ************** goOffLine:', this.authModal);
     // this.conversationsHandlerService.conversations = [];
   
     this.chatManager.setTiledeskToken(null);
