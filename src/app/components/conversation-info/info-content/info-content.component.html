@@ -6,9 +6,9 @@
   [conversationWith]= "conversationWith">
   </app-info-direct>
 
-  <app-info-group *ngIf="panelType === 'group-panel'"
-  [groupDetail]="groupDetail"
-  ></app-info-group>
+  <app-info-group *ngIf="panelType === 'group-panel' && IS_GROUP_PANEL === true"
+    [groupDetail]="groupDetail">
+  </app-info-group>
 
   <app-info-support-group *ngIf="panelType === 'support-group-panel'"
     [urlConversationSupportGroup]="urlConversationSupportGroup">

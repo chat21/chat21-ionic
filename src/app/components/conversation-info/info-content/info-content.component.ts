@@ -1,5 +1,5 @@
 import { TiledeskAuthService } from './../../../../chat21-core/providers/tiledesk/tiledesk-auth.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 // models
 import { UserModel } from 'src/chat21-core/models/user';
 import { ConversationModel } from 'src/chat21-core/models/conversation';
@@ -7,7 +7,7 @@ import { ConversationModel } from 'src/chat21-core/models/conversation';
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { ConversationsHandlerService } from 'src/chat21-core/providers/abstract/conversations-handler.service';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ContactsService } from 'src/app/services/contacts/contacts.service';
 import { AppConfigProvider } from '../../../services/app-config';
 import { setChannelType } from '../../../../chat21-core/utils/utils';
@@ -17,6 +17,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
+
 @Component({
   selector: 'app-info-content',
   templateUrl: './info-content.component.html',
@@ -25,7 +26,6 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 
 
 export class InfoContentComponent implements OnInit {
-
   @Input() openInfoConversation: boolean;
   @Input() translationMap: Map<string, string>;
   // @Input() member: UserModel;
@@ -33,6 +33,7 @@ export class InfoContentComponent implements OnInit {
   @Input() tenant: string
   @Input() groupDetail: any
 
+ 
   public member: UserModel;
   public urlConversation: any;
   // public loggedUser: UserModel;
@@ -47,8 +48,8 @@ export class InfoContentComponent implements OnInit {
   public panelType: string;
   public project_id: string
   private logger: LoggerService = LoggerInstance.getInstance();
-
-
+  public IS_GROUP_PANEL: boolean = false
+ 
   constructor(
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     public conversationsHandlerService: ConversationsHandlerService,
@@ -56,7 +57,8 @@ export class InfoContentComponent implements OnInit {
     private route: ActivatedRoute,
     public contactsService: ContactsService,
     public appConfigProvider: AppConfigProvider,
-    private sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer
+  
   ) {
     this.logger.log('INFO-CONTENT-COMP HELLO (CONSTUCTOR) !!!!!');
     // this.loggedUser = this.authService.getCurrentUser();
@@ -66,169 +68,117 @@ export class InfoContentComponent implements OnInit {
     // this.tenant = appconfig.tenant;
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.log('INFO-CONTENT-COMP appconfig firebaseConfig tenant ', this.tenant);
-    
+
 
     this.route.paramMap.subscribe(params => {
       this.logger.log('INFO-CONTENT-COMP initialize params: ', params);
       this.conversationWith = params.get('IDConv');
+      this.logger.log('INFO-CONTENT-COMP - paramMap.subscribe conversationWith: ', this.conversationWith);
       this.conversationWithFullname = params.get('FullNameConv');
       this.conv_type = params.get('Convtype');
       const conversationWith_segments = this.conversationWith.split('-');
-      this.logger.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent conversationWith_segments: ', conversationWith_segments);
+      this.logger.log('INFO-CONTENT-COMP - paramMap.subscribe conversationWith_segments: ', conversationWith_segments);
       this.project_id = conversationWith_segments[2]
 
+      this.selectInfoContentTypeComponent(this.conversationWith);
       // this.project_id = this.groupDetail['attributes']['projectId']
     });
+
   }
 
   ngOnInit() {
-    this.logger.log('INFO-CONTENT-COMP CALLING ngOnInit');
-    this.logger.log('INFO-CONTENT-COMP  Logged user', this.loggedUser);
-    this.logger.log('INFO-CONTENT-COMP  Tenant', this.tenant);
-    this.logger.log('INFO-CONTENT-COMP  conversationWith', this.conversationWith);
-    this.logger.log('INFO-CONTENT-COMP  conversationWithFullname', this.conversationWithFullname);
-    this.logger.log('INFO-CONTENT-COMP  conv_type', this.conv_type);
-    this.logger.log('INFO-CONTENT-COMP  project_id', this.project_id);
+    this.logger.log('>>> N INFO-CONTENT-COMP CALLING ngOnInit');
+    this.logger.log('[INFO-CONTENT-COMP] - ngOnInit - Logged user', this.loggedUser);
+    this.logger.log('[INFO-CONTENT-COMP] - ngOnInit - Tenant', this.tenant);
+    this.logger.log('[INFO-CONTENT-COMP] - ngOnInit - conversationWith', this.conversationWith);
+    this.logger.log('[INFO-CONTENT-COMP] - ngOnInit - conversationWithFullname', this.conversationWithFullname);
+    this.logger.log('[INFO-CONTENT-COMP] - ngOnInit - conv_type', this.conv_type);
+    this.logger.log('[INFO-CONTENT-COMP] - ngOnInit - project_id', this.project_id);
     // this.initConversationsHandler(); // nk
 
-    this.selectInfoContentTypeComponent(); // nk
+    // this.selectInfoContentTypeComponent(); // nk
+  }
+  ngAfterViewInit() {
+    this.logger.log('[INFO-CONTENT-COMP] - ngAfterViewInit');
+   
+  }
 
+  ngOnDestroy() {
+    this.logger.log('[INFO-CONTENT-COMP] - ngOnDestroy');
   }
 
 
-  //DARINOMINARE 
-  // initConversationsHandler() {
-  //   this.logger.log('INFO-CONTENT-COMP initConversationsHandler ::: TENANT: ', this.tenant, 'LOGGED-USER-ID' , this.loggedUser.uid, ' CONV-WITH ' , this.conversationWith, ' CONV-TYPE ', this.conv_type);
-  //   if (this.conv_type === 'active' || this.conv_type === 'new') {
-  //     // qui al refresh array conv è null
-  //     this.logger.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE');
-  //     this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-  //       this.logger.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - GET conv FROM ACTIVE - CONV FOUND ', conv);
-  //       if (conv) {
-  //         this.conversationSelected = conv;
-  //         this.conversationWith = conv.uid;
-  //         this.selectInfoContentTypeComponent();
-  //       } else {
-  //         // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ARCHIVIATE
-  //         this.logger.log('INFO-CONTENT-COMP initConversationsHandler conv null', conv)
-  //         this.logger.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - CONV NOT FOUND - get from ARCHIVED');
-
-
-  //         this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-  //           this.logger.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ACTIVE - GET conv FROM ARCHIVED - CONV FOUND ', conv);
-  //           if (conv) {
-  //             this.conversationSelected = conv;
-  //             this.conversationWith = conv.uid;
-  //             this.selectInfoContentTypeComponent();
-  //           } else {
-  //             // SHOW ERROR --> nessuna conversazione trovata tra attiVe e archiviate
-  //           }
-  //         });
-  //       }
-  //     });
-
-  //   } else if (this.conv_type === 'archived') {
-  //     this.logger.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED ');
-  //     this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-  //       this.logger.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED GET conv FROM ARCHIVED - CONV FOUND ', conv);
-  //       if (conv) {
-  //         this.conversationSelected = conv
-  //         this.conversationWith = conv.uid
-  //         this.selectInfoContentTypeComponent();
-  //       } else {
-  //         // CONTROLLO SE LA CONV E' NEL NODO DELLE CHAT ATTIVE
-  //         this.logger.log('INFO-CONTENT-COMP initConversationsHandler conv null', conv)
-  //         this.logger.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED - CONV NOT FOUND - get from ARCHIVED');
-
-  //         this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-  //           this.logger.log('INFO-CONTENT-COMP initConversationsHandler USE CASE conv_type ARCHIVED GET conv FROM ACTIVE - CONV FOUND ', conv);
-  //           if (conv) {
-  //             this.conversationSelected = conv;
-  //             this.conversationWith = conv.uid;
-  //             this.selectInfoContentTypeComponent();
-  //           } else {
-  //             // SHOW ERROR --> nessuna conversazione trovata tra attice e archiviate
-  //           }
-  //         });
-  //       }
-  //     });
-  //   } else {
-  //     // use case conversation new (write to)
-  //     // this.selectInfoContentTypeComponent()
-  //   }
-  // }
   // ---------------------------------------------------
   // START SET INFO COMPONENT
   // ---------------------------------------------------
-  selectInfoContentTypeComponent() {
-    // this.logger.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent conversationWith: ', this.conversationWith);
+  selectInfoContentTypeComponent(conversationWith) {
+    this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent conversationWith: ', this.conversationWith);
 
-
-    if (this.conversationWith) {
-      // this.channelType = setChannelType(this.conversationWith , 'INFO-CONTENT');
+    if (conversationWith) {
       this.panelType = 'direct-panel'
-      // this.logger.log('INFO-CONTENT-COMP - panelType: ', this.panelType);
-      // this.logger.log('INFO-CONTENT-COMP - channelType: ', this.channelType);
-      // controlllare come comincia conversationWith nn + channel type
 
-      if (this.conversationWith.startsWith("support-group")) {
-        this.logger.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent - SUPPORT_GROUP - conversationWith start with "support-group"  ', this.conversationWith.startsWith("support-group"));
+      if (conversationWith.startsWith("support-group")) {
+        this.panelType = ''
+        this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent - SUPPORT_GROUP - conversationWith start with "support-group"  ', this.conversationWith.startsWith("support-group"));
         this.urlConversationSupportGroup = '';
         this.setInfoSupportGroup();
-        this.panelType = 'support-group-panel'
-        this.logger.log('INFO-CONTENT-COMP - panelType: ', this.panelType);
+        this.panelType = 'support-group-panel';
+        this.IS_GROUP_PANEL = false;
+        this.logger.log('[INFO-CONTENT-COMP] - panelType IS_GROUP_PANEL: ', this.IS_GROUP_PANEL);
+        this.logger.log('[INFO-CONTENT-COMP] - panelType: ', this.panelType);
 
-      } else if (this.conversationWith.startsWith("group-")) {
-        this.logger.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent - GROUP -  conversationWith start with "group-"  ', this.conversationWith.startsWith("group-"));
+      } else if (conversationWith.startsWith("group-")) {
+        this.panelType = ''
+        this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent - GROUP -  conversationWith start with "group-"  ', this.conversationWith.startsWith("group-"));
         this.setInfoGroup();
-        this.panelType = 'group-panel'
-        this.logger.log('INFO-CONTENT-COMP - panelType: ', this.panelType);
+        this.panelType = 'group-panel';
+        this.IS_GROUP_PANEL = true;
+        this.logger.log('[INFO-CONTENT-COMP] - panelType IS_GROUP_PANEL: ', this.IS_GROUP_PANEL);
+        this.logger.log('[INFO-CONTENT-COMP] - panelType: ', this.panelType);
 
       } else {
-        this.logger.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent - DIRECT - conversationWith NOT START with "group-" NOR with "support-group" ',);
+        this.panelType = ''
+        this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent - DIRECT - conversationWith NOT START with "group-" NOR with "support-group" ',);
         this.setInfoDirect();
-        this.panelType = 'direct-panel'
-        this.logger.log('INFO-CONTENT-COMP - panelType: ', this.panelType);
+        this.panelType = 'direct-panel';
+        this.IS_GROUP_PANEL = false;
+        this.logger.log('[INFO-CONTENT-COMP] - panelType IS_GROUP_PANEL: ', this.IS_GROUP_PANEL);
+        this.logger.log('[INFO-CONTENT-COMP] - panelType: ', this.panelType);
 
       }
-
-
-
-      // if (this.channelType === TYPE_DIRECT) {
-      //   this.logger.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
-      //   this.setInfoDirect();
-      // } else if (this.channelType === TYPE_GROUP) {
-      //   this.logger.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
-      //   this.setInfoGroup();
-      // } else if (this.channelType === TYPE_SUPPORT_GROUP) {
-      //   this.logger.log('INFO-CONTENT-COMP - selectInfoContentTypeComponent CHANNEL-TYPE: ', this.channelType);
-      //   this.urlConversationSupportGroup = '';
-      //   this.setInfoSupportGroup();
-      // }
     }
   }
+
+  // private deleteHandler(): void {
+  //   if ( this.panelType !== 'group-panel') {
+  //     this.childExists = false;
+  //     this.logger.log('INFO-CONTENT-COMP - childExists panelType ', this.panelType);
+  //     this.logger.log('INFO-CONTENT-COMP - childExists ', this.childExists);
+  //   } else if  (this.panelType === 'group-panel'){
+  //     this.childExists = true;
+  //     this.logger.log('INFO-CONTENT-COMP - childExists panelType ', this.panelType);
+  //     this.logger.log('INFO-CONTENT-COMP - childExists ', this.childExists);
+  //   }
+  // }
 
   // ---------------------------------------------------
   // @ setInfoDirect
   // ---------------------------------------------------
   setInfoDirect() {
-    this.logger.log('INFO-CONTENT-COMP - setInfoDirect ', this.conversationWith);
-    this.logger.log('INFO-CONTENT-COMP - setInfoDirect member', this.member);
-
-
+    this.logger.log('[INFO-CONTENT-COMP] - setInfoDirect ', this.conversationWith);
+  
     this.member = null;
-    const that = this;
+ 
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith)
       .subscribe(res => {
         this.logger.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail RES', res);
         this.member = res
+        this.logger.log('INFO-CONTENT-COMP - setInfoDirect member', this.member);
       }, (error) => {
         this.logger.error('INFO-CONTENT-COMP - setInfoDirect loadContactDetail - ERROR  ', error);
-
       }, () => {
         this.logger.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail * COMPLETE *');
-
       });
   }
 
@@ -237,42 +187,18 @@ export class InfoContentComponent implements OnInit {
   // ---------------------------------------------------
   setInfoGroup() {
     this.logger.log('INFO-CONTENT-COMP - setInfoGroup groupDetail ', this.groupDetail);
-
-    // group
   }
 
 
   // ---------------------------------------------------
-  // @ setInfoGroup
+  // @ setInfoSupportGroup
   // ---------------------------------------------------
   setInfoSupportGroup() {
-    //   let projectID = '';
-    //   const tiledeskToken = this.authService.getTiledeskToken();
-    //   const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
-    //   if (this.conversationSelected && this.conversationSelected.attributes) {
-    //     projectID = this.conversationSelected.attributes.projectId;
-    //   }
-    //   this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup conversationSelected ', this.conversationSelected)
-    //   this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', projectID)
-    //   if (projectID && this.conversationWith) {
-    //     this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup HERE YES ')
-    //     let urlPanel = DASHBOARD_URL + '#/project/' + projectID + '/request-for-panel/' + this.conversationWith;
-    //     urlPanel += '?token=' + tiledeskToken;
-    //     this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup urlPanel ', urlPanel)
-    //     const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
-    //     this.urlConversationSupportGroup = urlConversationTEMP;
-    //   } else {
-    //     this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
-    //   }
-    //   this.logger.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
-    // }
-
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
+    this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', this.project_id);
 
-    this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', this.project_id)
     if (this.conversationWith) {
-
       let urlPanel = DASHBOARD_URL + '#/project/' + this.project_id + '/request-for-panel/' + this.conversationWith;
       urlPanel += '?token=' + tiledeskToken;
 
