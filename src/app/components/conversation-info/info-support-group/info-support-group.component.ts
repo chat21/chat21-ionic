@@ -16,7 +16,14 @@ export class InfoSupportGroupComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.logger.log('urlConversationSupportGroup: ', this.urlConversationSupportGroup);
+    this.logger.log('InfoSupportGroupComponent - urlConversationSupportGroup: ', this.urlConversationSupportGroup);
+  }
+
+  ngOnDestroy() {
+    // this.logger.log('ngOnDestroy ConversationDetailPage: ');
+    this.logger.log('InfoSupportGroupComponent - ngOnDestroy ');
+
+
   }
 
 }
