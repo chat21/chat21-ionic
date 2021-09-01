@@ -29,11 +29,16 @@
       <div class="text-message">
         <!-- [value]=""  -->
         <!-- placeholder="{{ 'LABEL_ENTER_MSG' | translate }}" -->
+        <!-- (ionBlur)="txtfocus(0)" -->
+        <!-- autofocus="true" -->
+        <!-- autoFocus="true" // directive -->
+
         <ion-textarea id="ion-textarea" #messageTextArea #textArea rows="1" 
           [placeholder]="TEXAREA_PLACEHOLDER"
+          (ionFocus)="txtfocus('hasFocus')" 
           autosize="false" 
           auto-grow="true" 
-          autofocus="true" 
+          autofocus="true"
           [value]=""
           [(ngModel)]="messageString" 
           (ionChange)="ionChange($event);"
