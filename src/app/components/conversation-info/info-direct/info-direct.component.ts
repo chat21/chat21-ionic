@@ -34,10 +34,18 @@ export class InfoDirectComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngAfterViewInit() {
     this.logger.log('InfoDirectComponent - ngAfterViewInit');
-    this.logger.log('InfoDirectComponent member', this.member);
-    this.logger.log('InfoDirectComponent conversationWith', this.conversationWith);
+    this.logger.log('InfoDirectComponent - member', this.member);
+    this.logger.log('InfoDirectComponent - conversationWith', this.conversationWith);
   }
 
+  ngOnDestroy() {
+    // this.logger.log('ngOnDestroy ConversationDetailPage: ');
+    this.logger.log('InfoDirectComponent - ngOnDestroy ' );
+    // this.unsubscribe$.next();
+    // this.unsubscribe$.complete();
+   
+
+  }
 
   ngOnChanges(){
     if(this.member){
