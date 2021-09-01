@@ -1,74 +1,61 @@
 <!-- <pre style="font-size: 12px;"> {{ groupDetail | json }} </pre>  -->
 
-
-<!-- *ngIf="groupDetail" -->
 <ion-content class="group-profile">
   <ion-card class="first-card">
     <div class="chat21-box-profile chat21-box">
-
       <div class="chat21-content">
-
         <div class="image-profile">
           <app-avatar-profile [itemAvatar]="groupDetail"></app-avatar-profile>
         </div>
-
-
 
         <div class="info-profile">
           <div class="name">
             <span class="read">{{groupDetail?.name}}</span>
           </div>
         </div>
-
         <!-- <div class="member-email">
           <a [href]="'mailto:' + member.email + '?Subject='">
             {{member.email}}
           </a>
         </div> -->
-
       </div>
 
     </div>
   </ion-card>
+  
+  <ion-list id="fake-members-list" *ngIf="displaySkeletonScreen">
+    <ion-item lines="none" *ngFor="let fake of generateFake(membersObjectLength)" style="margin-left:-3px">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated style="width: 44px; height: 44px;"></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 60%;position: relative;top: 2px;height: 16px;"></ion-skeleton-text>
+        </h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 
-  <!-- {{groupDetail?.membersinfo | json }} -->
-  <!-- <div *ngFor="let item of groupDetail?.membersinfo  | keyvalue">
-    {{item.key}}:{{item.value}}
-  </div> -->
-  <!-- <div *ngIf="groupDetail?.membersinfo">
-    <div *ngFor="let key of Object.keys(groupDetail?.membersinfo)">
-      my key: {{key}}
-      <!- - my object {{objs[key] | json}}   hier I could use ngFor again with Object.keys(objs[key]) - ->
-      <div *ngFor="let subkey of Object.keys(groupDetail?.membersinfo[key])">
-        <p>{{subkey}} </p>
-        <p>{{subkey}} </p>
-      </div>
-    </div>
-  </div> -->
-  <!-- <div *ngIf="groupDetail?.membersinfo">
-    <div *ngFor='let key of objectKeys(groupDetail?.membersinfo)'>
-      Key: {{key}}
-   {{ groupDetail?.membersinfo[key] | json}}   
-      <!- - <div *ngFor='let obj of groupDetail?.membersinfo[key]'>
-        {{ obj | json }}
-       
-      </div> - ->
+  <!-- <pre style="font-size: 8px;"> {{member_array | json }} </pre>  <pre style="font-size: 8px;"> {{displaySkeletonScreen}} </pre> -->
+  <ion-list id="members-list" *ngIf="groupDetail?.member_array?.length > 0 && !displaySkeletonScreen">
+    <ion-item lines="none" *ngFor='let member of groupDetail?.member_array'>
+      <ion-avatar  slot="start" style="margin-right: 12px;"> 
+        <app-avatar-profile [itemAvatar]=member></app-avatar-profile>
+        <div class="user-online" [ngStyle]="{ 'background-color':(member?.userOnline)?'#24d066':'#db4437' }"></div>
+      </ion-avatar>
+      <ion-label>
+        <h3>
+          {{ member.fullname }}
+        </h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 
-    </div>
-  </div> -->
 
-  <div *ngIf="groupDetail">
+
+
+  <div *ngIf="groupDetail" style="display:none">
     <div *ngFor='let member of groupDetail?.member_array'>
-
-      <!-- {{ member | json }}  -->
-      <!-- <ion-item>
-        <ion-avatar slot="start"> -->
-      <!-- <div class="image-profile"> -->
-      <!-- <div class="image-profile">
-        <app-avatar-profile [itemAvatar]="member"></app-avatar-profile>
-   
-      </div> -->
-
       <ion-grid>
         <ion-row class="ion-align-items-center">
           <ion-col size="3">
@@ -76,13 +63,14 @@
               <!-- (click)="copyLoggedUserUID({member.userid)" -->
               <!-- <div class="avatar-container" [tooltip]="useruidTooltip" [options]="tooltipOptions" placement="top"
                 content-type="template" > -->
-                <app-avatar-profile [itemAvatar]=member></app-avatar-profile>
+              <app-avatar-profile [itemAvatar]=member></app-avatar-profile>
               <!-- </div> -->
               <!-- <ng-template #useruidTooltip>
                 <span> {{member.userid}}</span>
               </ng-template> -->
 
-              <div class="user-online" [ngStyle]="{ 'background-color':(member.userOnline)?'#24d066':'#db4437' }"></div>
+              <div class="user-online" [ngStyle]="{ 'background-color':(member?.userOnline)?'#24d066':'#db4437' }">
+              </div>
             </div>
 
 
@@ -97,7 +85,7 @@
                 {{member.email}}
               </a>
             </div> -->
-          
+
 
           </ion-col>
         </ion-row>
