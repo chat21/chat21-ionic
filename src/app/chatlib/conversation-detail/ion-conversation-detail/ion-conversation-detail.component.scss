@@ -1,5 +1,9 @@
 :host .base_sent .msg_sent ::ng-deep div > div > div > tiledeskwidget-text > p > p > a {
-    color: lightblue
+    color: lightblue;
+}
+
+:host .base_sent .msg_sent ::ng-deep div > div > div > tiledeskwidget-text > p > p  {
+    margin-top:12px !important;
 }
 
 :host .base_sent .msg_sent ::ng-deep > div > div > tiledeskwidget-image > div  {
