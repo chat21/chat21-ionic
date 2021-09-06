@@ -103,7 +103,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
   ngOnChanges() {
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges this.isOpenInfoConversation ", this.isOpenInfoConversation);
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
 
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
     // use case drop
@@ -318,7 +318,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         data.items.add(new File([file], file.name, { type: file.type }));
         this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste data ", data);
         this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste file ", file);
+       
         this.presentModal(data);
+
       } else if (item.type.startsWith("application")) {
 
         event.preventDefault();
@@ -336,7 +338,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   }
 
   onFileSelected(e: any) {
-    this.logger.log('Message-text-area - onFileSelected event', e);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - onFileSelected event', e);
     this.presentModal(e);
 
   }
@@ -355,6 +357,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] presentModal change e.target ', e.target);
       this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] presentModal change e.target.files', e.target.files);
       dataFiles = e.target.files;
+
     } else if (e.type === 'drop') {
       dataFiles = e.dataTransfer.files
       this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] presentModal drop e.dataTransfer.files', e.dataTransfer.files);
@@ -383,7 +386,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         backdropDismiss: true
       });
     modal.onDidDismiss().then((detail: any) => {
-
+      
       this.logger.log('presentModal onDidDismiss detail', detail);
       if (detail.data !== undefined) {
         let type = ''
@@ -400,6 +403,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         let fileSelected = null;
         if (e.type === 'change') {
           fileSelected = e.target.files.item(0);
+
         } else if (e.type === 'drop') {
           this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD [MSG-TEXT-AREA] DROP dataFiles[0]', dataFiles[0])
           fileSelected = dataFiles[0]
@@ -424,18 +428,24 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
         if (detail !== null) {
           const currentUpload = new UploadModel(fileSelected);
-          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD The result: currentUpload', currentUpload);
-          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD The result: CHIUDI!!!!!', detail.data);
+          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal onDidDismiss currentUpload', currentUpload);
+          this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal onDidDismiss detail.data', detail.data);
 
           that.uploadService.upload(that.loggedUser.uid, currentUpload).then(downloadURL => {
             metadata.src = downloadURL;
-            this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg downloadURL::: ', metadata);
+            this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg metadata::: ', metadata);
             this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg metadata downloadURL::: ', downloadURL);
             this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg type::: ', type);
             this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg message::: ', messageString);
             // send message
+// if(messageString === undefined) {
+//   messageString = metadata.name
+// }
+
             that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
+
             that.fileInput.nativeElement.value = '';
+            this.dropEvent = null
           }).catch(error => {
             // Use to signal error if something goes wrong.
             this.logger.error(`[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD - upload Failed to upload file and get link `, error);
