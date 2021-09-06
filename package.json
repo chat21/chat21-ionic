@@ -1,7 +1,7 @@
 {
     "name": "@chat21/chat21-ionic",
-    "version": "3.0.49-beta",
-    "author": "Lanzilotto Nicola, Panico Gabriele - Frontiere21 SRL",
+    "version": "3.0.50-beta",
+    "author": "Tiledesk SRL",
     "homepage": "https://ionicframework.com/",
     "scripts": {
         "ng": "ng",
@@ -33,7 +33,8 @@
         "@ngx-translate/http-loader": "^4.0.0",
         "angular2-moment": "^1.9.0",
         "autolinker": "^3.14.2",
-        "cordova-android": "9.0.0",
+        "cordova-android": "^6.2.3",
+        "cordova-android-support-gradle-release": "^3.0.1",
         "cordova-browser": "5.0.4",
         "cordova-ios": "6.1.1",
         "cordova-plugin-chooser": "^1.3.2",
@@ -93,7 +94,10 @@
                 "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
             },
             "cordova-plugin-ionic-keyboard": {},
-            "cordova-plugin-chooser": {}
+            "cordova-plugin-chooser": {},
+            "cordova-android-support-gradle-release": {
+                "ANDROID_SUPPORT_VERSION": "27.+"
+            }
         },
         "platforms": [
             "android",
