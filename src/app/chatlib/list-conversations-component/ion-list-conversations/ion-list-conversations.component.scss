@@ -187,7 +187,14 @@ ion-item:hover {
 }
 .icon-image-before-msg {
     vertical-align: middle;
-    // margin-bottom: 2px;
     color: #999999;
     padding-right: 3px;
+}
+
+.icon-attach-before-msg {
+    transform: rotate(45deg);
+    font-size: 16px;
+    padding-right: 0px;
+    vertical-align: middle;
+    color: #999999;
 }
