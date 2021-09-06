@@ -172,6 +172,8 @@
   "UPLOAD_FILE_ERROR":"An unexpected error occurred while uploading the file",
   "DROP_IMAGE_HERE_TO_SEND_IT":"Drop image here to send it",
   "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE": "Only image files and text are allowed to be pasted",
-  "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG": "Only image files are allowed to be dragged"
+  "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG": "Only image files are allowed to be dragged",
+  "SENT_AN_IMAGE": "sent an image",
+  "SENT_AN_ATTACHMENT":"sent an attachment"
   
 }
