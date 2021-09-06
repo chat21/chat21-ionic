@@ -1,5 +1,17 @@
 # chat21-ionic ver 3.0
 
+### 3.0.50-beta
+- Fixes the bug: in the right side panel 'info group' the loading of members fires twice
+- Fixes the bug: autofocus doesn't always work
+- Fixes the bug: browser tab title sounds and blinks even if the message is sent by the logged in user
+- Fixes the bug: browser tab title sounds and blinks if the user change tab during page refresh
+- Fixes the bug: browser tab title sounds and blinks if the user change tab during page refresh
+- Fixes the bug: after uploading the image via drag-and-drop, if the user opens or closes the right side panel or opens another conversation, the image upload preview modal window reopens
+- In the package.json: changes the name of the author + updates version + adds "cordova-android-support-gradle-release"  + downgrade "cordova-android" from the version 9.0.0 to 6.2.3
+- Replaces, in conversation list, when the logged user send an image the markdown with the string "You sent an image" and when send a file with the string "You sent an attachment"
+- Displays the attach icon in the conversation list if the conversation type is "file"
+- Fixes the bug: if an image without text is sent as the first message, the conversation does not appear in the conversation list
+
 ### 3.0.49-beta
 - Replaces in "chat-config-template.json" the value "${TENANT}" of the property "tenant" in "${FIREBASE TENANT}"
 
