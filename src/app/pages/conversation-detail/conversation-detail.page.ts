@@ -397,11 +397,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
       // // wait 8 second and then display the message if there are no messages
       const that = this;
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages  ', that.messages );
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages.length  ', that.messages.length );
       setTimeout(() => {
         if (!that.messages || that.messages.length === 0) {
           this.showIonContent = true;
           that.showMessageWelcome = true;
-          this.logger.log('[CONVS-DETAIL] - initConversationHandler - setTimeout: ', that.showMessageWelcome);
+          this.logger.log('[CONVS-DETAIL] - initConversationHandler - showMessageWelcome: ', that.showMessageWelcome);
         }
       }, 8000);
 
@@ -409,6 +411,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.logger.log('[CONVS-DETAIL] - initConversationHandler (else) - conversationHandlerService ', this.conversationHandlerService, ' handler', handler);
       this.conversationHandlerService = handler;
       this.messages = this.conversationHandlerService.messages;
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler (else) - this.messages: ', this.messages);
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler (else) - this.showMessageWelcome: ', this.showMessageWelcome);
     }
     this.logger.log('[CONVS-DETAIL] - initConversationHandler (else) - message ', this.messages, ' showIonContent', this.showIonContent);
   }
@@ -492,17 +496,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
    */
   sendMessage(msg: string, type: string, metadata?: any) {
     this.logger.log('[CONVS-DETAIL] - SEND MESSAGE - MSG: ', msg);
-
+    this.logger.log('[CONVS-DETAIL] - SEND MESSAGE - type: ', type);
+    this.logger.log('[CONVS-DETAIL] - SEND MESSAGE - metadata: ', metadata);
     let fullname = this.loggedUser.uid;
     if (this.loggedUser.fullname) {
       fullname = this.loggedUser.fullname;
     }
 
-    if (type === 'file') {
+    if (type === 'file' || type === 'image') {
 
       if (msg) {
         // msg = msg + '<br>' + 'File: ' + metadata.src;
-        msg = msg + '\n' + `[${metadata.name}](${metadata.src})`
+        msg =  `[${metadata.name}](${metadata.src})` + '\n' + msg
 
       } else {
         // msg = 'File: ' + metadata.src;
