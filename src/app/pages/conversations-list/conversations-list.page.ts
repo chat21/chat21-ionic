@@ -470,7 +470,7 @@ export class ConversationListPage implements OnInit {
 
   onConversationLoaded(conversation: ConversationModel) {
     this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded ', conversation)
-    const keys = ['YOU'];
+    const keys = ['YOU', 'SENT_AN_IMAGE', 'SENT_AN_ATTACHMENT'];
     const translationMap = this.translateService.translateLanguage(keys);
     // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the convesations list
 
@@ -481,11 +481,30 @@ export class ConversationListPage implements OnInit {
       //FIX-BUG: 'YOU: YOU: YOU: text' on last-message-text in conversation-list
       if (conversation.sender === this.loggedUserUid && !conversation.last_message_text.includes(': ')) {
         this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded', conversation)
-        conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text;
+
+        if (conversation.type !== "image" && conversation.type !== "file") {
+          conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text;
+
+        } else if (conversation.type === "image") {
+
+          this.logger.log('[CONVS-LIST-PAGE] HAS SENT AN IMAGE');
+          this.logger.log("[CONVS-LIST-PAGE] translationMap.get('YOU')")
+          // const keys = ['SENT_AN_IMAGE'];
+          
+          const SENT_AN_IMAGE = conversation['last_message_text'] = translationMap.get('SENT_AN_IMAGE')
+
+          conversation.last_message_text = translationMap.get('YOU') + ' ' + SENT_AN_IMAGE;
+
+        } else if (conversation.type === "file") {
+          this.logger.log('[CONVS-LIST-PAGE] HAS SENT FILE')
+          const SENT_AN_ATTACHMENT = conversation['last_message_text'] = translationMap.get('SENT_AN_ATTACHMENT')
+          conversation.last_message_text = translationMap.get('YOU') + ' ' + SENT_AN_ATTACHMENT;
+        }
       }
     }
   }
- 
+
+
   navigateByUrl(converationType: string, uidConvSelected: string) {
     this.logger.log('[CONVS-LIST-PAGE] navigateByUrl uidConvSelected: ', uidConvSelected);
     this.logger.log('[CONVS-LIST-PAGE] navigateByUrl run  this.setUidConvSelected');
