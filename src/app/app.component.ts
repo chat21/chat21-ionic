@@ -113,6 +113,7 @@ export class AppComponent implements OnInit {
     this.logger.info('[APP-COMP] logLevel: ', appconfig.logLevel);
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant)
+    this.logger.info('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
 
     // let loggingLevel = null
     // if (appconfig.logLevel) {
@@ -129,9 +130,14 @@ export class AppComponent implements OnInit {
     // this.logger.setLoggerConfig(true, loggingLevel)
     this.logger.setLoggerConfig(true, appconfig.logLevel)
     // }
-    if (!this.platform.is('desktop')) {
+    // if (!this.platform.is('desktop')) {
+    //   this.splashScreen.show();
+    // }
+    if (!this.platform.is('cordova')) {
       this.splashScreen.show();
     }
+
+    
   }
 
 
