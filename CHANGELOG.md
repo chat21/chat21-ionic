@@ -1,5 +1,14 @@
 # chat21-ionic ver 3.0
 
+### 3.0.51-beta
+- Enhances the style of the search bar in the contact list
+- Adds the ability to upload a file by dragging it to the chat area
+- Fixes the bug: Chat scrolls up when file preview page opens after dragging the file or image 
+- Fixes the bug: the 'loading bubble' is not displayed if the last message is at the bottom of the chat area
+- Fixes the bug: in the "upload preview page" the file icon in the footer is not displayed correctly if the file name is on two lines
+- Adds backward compatibility for viewing conversation details for "support group" type conversations in the "Conversation Information" panel
+- Displays the text "No information available" in the right side panel "Conversation Information" when no information on the selected conversation is found
+
 ### 3.0.50-beta
 - Fixes the bug: in the right side panel 'info group' the loading of members fires twice
 - Fixes the bug: autofocus doesn't always work
