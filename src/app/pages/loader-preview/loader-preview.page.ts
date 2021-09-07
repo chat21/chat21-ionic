@@ -26,6 +26,7 @@ export class LoaderPreviewPage implements OnInit {
   srcData: SafeResourceUrl;
   public file_extension: string;
   public file_name: string;
+  public file_name_ellipsis_the_middle: string;
   private logger: LoggerService = LoggerInstance.getInstance();
 
   constructor(
@@ -106,9 +107,10 @@ export class LoaderPreviewPage implements OnInit {
     } else {
       this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - USE CASE FILE - FILE ', file);
       this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - USE CASE FILE - FILE TYPE', file.type);
-      this.file_extension = file.name.substring(file.name.lastIndexOf('.')+1, file.name.length) || file.name;
+      this.file_extension = file.name.substring(file.name.lastIndexOf('.') + 1, file.name.length) || file.name;
       this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - USE CASE FILE - FILE EXTENSION', this.file_extension);
       this.file_name = file.name
+      this.file_name_ellipsis_the_middle = this.start_and_end(file.name)
       this.logger.log('[LOADER-PREVIEW-PAGE] - readAsDataURL - USE CASE FILE - FILE NAME', this.file_name);
       // if (file.type) {
       //   const file_type_array = file.type.split('/');
@@ -118,10 +120,15 @@ export class LoaderPreviewPage implements OnInit {
       //   this.file_type = file.name.substring(file.name.lastIndexOf('.')+1, file.name.length) || file.name;
 
       // }
-
       this.createFile();
-
     }
+  }
+
+  start_and_end(str) {
+    if (str.length > 70) {
+      return str.substr(0, 20) + '...' + str.substr(str.length-10, str.length);
+    }
+    return str;
   }
   // file-alt-solid.png
   async createFile() {

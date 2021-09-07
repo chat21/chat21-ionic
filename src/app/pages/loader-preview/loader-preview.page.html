@@ -13,9 +13,14 @@
   <div class="previewSelected" [style.height]="'calc(100% - '+heightPreviewArea+'px)'">
     <img id="img-preview" [src]="fileSelected" class="center">
     <div id="img-preview-file-extension">{{ file_extension }} </div>
-
   </div>
-  <div id="img-preview-file-name" >{{ file_name }} </div>
+
+  <div class="loader-preview-file-name-wpr" id="img-preview-file-name">
+    
+      <!-- {{ file_name }} -->
+      {{file_name_ellipsis_the_middle}}
+  
+  </div>
 
   <div class="messageTextArea" #messageTextArea>
 
