@@ -40,12 +40,39 @@ export class TiledeskService {
     // const url = 'https://tiledesk-server-pre.herokuapp.com/' + this.project_id + '/requests/' + group_id + '/close';
     const url = this.apiUrl + projectid + '/requests/' + supportgroupid + '/close';
 
-    this.logger.log('CONV-LIST-PAGE (tiledesk.service) - closeSupportGroup URL ', url);
+    this.logger.log('[TILEDESK-SERVICE] - closeSupportGroup URL ', url);
     return this.http
       .put(url, body, httpOptions)
       .pipe(map((res: any) => {
-        this.logger.log('CONV-LIST-PAGE (tiledesk.service) - closeSupportGroup - RES ', res);
+        this.logger.log('[TILEDESK-SERVICE] - closeSupportGroup - RES ', res);
         return res
       }))
   }
+
+  // http://tiledesk-server-pre.herokuapp.com/requests_util/lookup/id_project/support-group-60ffe291f725db00347661ef-b4cb6875785c4a23b27244fe498eecf44
+  public getProjectIdByConvRecipient(token: string ,conversationWith: string ) {
+    const lookupUrl =this.apiUrl + 'requests_util/lookup/id_project/' + conversationWith;
+
+    this.logger.log('[TILEDESK-SERVICE] GET PROJECTID BY CONV RECIPIENT - URL ', lookupUrl);
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: token
+      })
+    };
+
+    return this.http
+      .get(lookupUrl, httpOptions)
+      .pipe(map((res: any) => {
+        this.logger.log('[TILEDESK-SERVICE] GET PROJECTID BY CONV RECIPIENT - RES ', res);
+        return res
+      }))
+  }
+
+  
+
+
+
+
 }

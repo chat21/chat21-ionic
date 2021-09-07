@@ -1,4 +1,5 @@
 import { TiledeskAuthService } from './../../../../chat21-core/providers/tiledesk/tiledesk-auth.service';
+import { TiledeskService } from '../../../services/tiledesk/tiledesk.service';
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 // models
 import { UserModel } from 'src/chat21-core/models/user';
@@ -33,7 +34,7 @@ export class InfoContentComponent implements OnInit {
   @Input() tenant: string
   @Input() groupDetail: any
 
- 
+
   public member: UserModel;
   public urlConversation: any;
   // public loggedUser: UserModel;
@@ -49,7 +50,7 @@ export class InfoContentComponent implements OnInit {
   public project_id: string
   private logger: LoggerService = LoggerInstance.getInstance();
   public IS_GROUP_PANEL: boolean = false
- 
+
   constructor(
     public archivedConversationsHandlerService: ArchivedConversationsHandlerService,
     public conversationsHandlerService: ConversationsHandlerService,
@@ -57,33 +58,67 @@ export class InfoContentComponent implements OnInit {
     private route: ActivatedRoute,
     public contactsService: ContactsService,
     public appConfigProvider: AppConfigProvider,
-    private sanitizer: DomSanitizer
-  
+    private sanitizer: DomSanitizer,
+    public tiledeskService: TiledeskService
+
   ) {
-    this.logger.log('INFO-CONTENT-COMP HELLO (CONSTUCTOR) !!!!!');
+    this.logger.log('[INFO-CONTENT-COMP] HELLO (CONSTUCTOR) !!!!!');
     // this.loggedUser = this.authService.getCurrentUser();
     // this.logger.log('INFO-CONTENT-COMP loggedUser: ', this.loggedUser);
 
     const appconfig = appConfigProvider.getConfig()
     // this.tenant = appconfig.tenant;
     this.tenant = appconfig.firebaseConfig.tenant;
-    this.logger.log('INFO-CONTENT-COMP appconfig firebaseConfig tenant ', this.tenant);
+    this.logger.log('[INFO-CONTENT-COMP] appconfig firebaseConfig tenant ', this.tenant);
 
 
     this.route.paramMap.subscribe(params => {
-      this.logger.log('INFO-CONTENT-COMP initialize params: ', params);
+      this.logger.log('[INFO-CONTENT-COMP] initialize params: ', params);
       this.conversationWith = params.get('IDConv');
-      this.logger.log('INFO-CONTENT-COMP - paramMap.subscribe conversationWith: ', this.conversationWith);
+      this.logger.log('[INFO-CONTENT-COMP] - paramMap.subscribe conversationWith: ', this.conversationWith);
       this.conversationWithFullname = params.get('FullNameConv');
       this.conv_type = params.get('Convtype');
-      const conversationWith_segments = this.conversationWith.split('-');
-      this.logger.log('INFO-CONTENT-COMP - paramMap.subscribe conversationWith_segments: ', conversationWith_segments);
-      this.project_id = conversationWith_segments[2]
 
-      this.selectInfoContentTypeComponent(this.conversationWith);
+      const conversationWith_segments = this.conversationWith.split('-');
+      this.logger.log('[INFO-CONTENT-COMP] - paramMap.subscribe conversationWith_segments: ', conversationWith_segments);
+
+      if (this.conversationWith.startsWith("support-group")) {
+        if (conversationWith_segments.length === 4) {
+          this.project_id = conversationWith_segments[2];
+
+          this.selectInfoContentTypeInfoSupportGroup();
+
+        } else {
+
+          this.getProjectIdByConversationWith(this.conversationWith)
+        }
+      } else {
+        this.selectInfoContentTypeDirectAndGroup(this.conversationWith);
+      }
+
       // this.project_id = this.groupDetail['attributes']['projectId']
     });
 
+  }
+
+  getProjectIdByConversationWith(conversationWith: string) {
+    const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
+
+    this.tiledeskService.getProjectIdByConvRecipient(tiledeskToken, conversationWith).subscribe(res => {
+      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT RES', res);
+
+      if (res) {
+        this.project_id = res.id_project
+        this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT  this.project_id', this.project_id);
+      }
+
+    }, (error) => {
+      this.logger.error('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error);
+
+    }, () => {
+      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT * COMPLETE *');
+      this.selectInfoContentTypeInfoSupportGroup();
+    });
   }
 
   ngOnInit() {
@@ -100,7 +135,7 @@ export class InfoContentComponent implements OnInit {
   }
   ngAfterViewInit() {
     this.logger.log('[INFO-CONTENT-COMP] - ngAfterViewInit');
-   
+
   }
 
   ngOnDestroy() {
@@ -108,26 +143,39 @@ export class InfoContentComponent implements OnInit {
   }
 
 
+
+  selectInfoContentTypeInfoSupportGroup() {
+    this.panelType = ''
+    this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent - SUPPORT_GROUP - conversationWith start with "support-group"  ', this.conversationWith.startsWith("support-group"));
+    this.urlConversationSupportGroup = '';
+    this.setInfoSupportGroup();
+    this.panelType = 'support-group-panel';
+    this.IS_GROUP_PANEL = false;
+    this.logger.log('[INFO-CONTENT-COMP] - panelType IS_GROUP_PANEL: ', this.IS_GROUP_PANEL);
+    this.logger.log('[INFO-CONTENT-COMP] - panelType: ', this.panelType);
+  } 
+
   // ---------------------------------------------------
   // START SET INFO COMPONENT
   // ---------------------------------------------------
-  selectInfoContentTypeComponent(conversationWith) {
+  selectInfoContentTypeDirectAndGroup(conversationWith) {
     this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent conversationWith: ', this.conversationWith);
 
     if (conversationWith) {
       this.panelType = 'direct-panel'
 
-      if (conversationWith.startsWith("support-group")) {
-        this.panelType = ''
-        this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent - SUPPORT_GROUP - conversationWith start with "support-group"  ', this.conversationWith.startsWith("support-group"));
-        this.urlConversationSupportGroup = '';
-        this.setInfoSupportGroup();
-        this.panelType = 'support-group-panel';
-        this.IS_GROUP_PANEL = false;
-        this.logger.log('[INFO-CONTENT-COMP] - panelType IS_GROUP_PANEL: ', this.IS_GROUP_PANEL);
-        this.logger.log('[INFO-CONTENT-COMP] - panelType: ', this.panelType);
+      // if (conversationWith.startsWith("support-group")) {
+      //   this.panelType = ''
+      //   this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent - SUPPORT_GROUP - conversationWith start with "support-group"  ', this.conversationWith.startsWith("support-group"));
+      //   this.urlConversationSupportGroup = '';
+      //   this.setInfoSupportGroup();
+      //   this.panelType = 'support-group-panel';
+      //   this.IS_GROUP_PANEL = false;
+      //   this.logger.log('[INFO-CONTENT-COMP] - panelType IS_GROUP_PANEL: ', this.IS_GROUP_PANEL);
+      //   this.logger.log('[INFO-CONTENT-COMP] - panelType: ', this.panelType);
 
-      } else if (conversationWith.startsWith("group-")) {
+      // } else
+     if (conversationWith.startsWith("group-")) {
         this.panelType = ''
         this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent - GROUP -  conversationWith start with "group-"  ', this.conversationWith.startsWith("group-"));
         this.setInfoGroup();
@@ -166,19 +214,19 @@ export class InfoContentComponent implements OnInit {
   // ---------------------------------------------------
   setInfoDirect() {
     this.logger.log('[INFO-CONTENT-COMP] - setInfoDirect ', this.conversationWith);
-  
+
     this.member = null;
- 
+
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     this.contactsService.loadContactDetail(tiledeskToken, this.conversationWith)
       .subscribe(res => {
-        this.logger.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail RES', res);
+        this.logger.log('[INFO-CONTENT-COMP] - setInfoDirect loadContactDetail RES', res);
         this.member = res
-        this.logger.log('INFO-CONTENT-COMP - setInfoDirect member', this.member);
+        this.logger.log('[INFO-CONTENT-COMP] - setInfoDirect member', this.member);
       }, (error) => {
-        this.logger.error('INFO-CONTENT-COMP - setInfoDirect loadContactDetail - ERROR  ', error);
+        this.logger.error('[INFO-CONTENT-COMP] - setInfoDirect loadContactDetail - ERROR  ', error);
       }, () => {
-        this.logger.log('INFO-CONTENT-COMP - setInfoDirect loadContactDetail * COMPLETE *');
+        this.logger.log('I[INFO-CONTENT-COMP] - setInfoDirect loadContactDetail * COMPLETE *');
       });
   }
 
@@ -186,7 +234,7 @@ export class InfoContentComponent implements OnInit {
   // @ setInfoGroup
   // ---------------------------------------------------
   setInfoGroup() {
-    this.logger.log('INFO-CONTENT-COMP - setInfoGroup groupDetail ', this.groupDetail);
+    this.logger.log('[INFO-CONTENT-COMP] - setInfoGroup groupDetail ', this.groupDetail);
   }
 
 
@@ -194,9 +242,10 @@ export class InfoContentComponent implements OnInit {
   // @ setInfoSupportGroup
   // ---------------------------------------------------
   setInfoSupportGroup() {
+    this.logger.log('[INFO-CONTENT-COMP] setInfoSupportGroup HERE YES ');
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     const DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl;
-    this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup projectID ', this.project_id);
+    this.logger.log('[INFO-CONTENT-COMP] setInfoSupportGroup projectID ', this.project_id);
 
     if (this.conversationWith) {
       let urlPanel = DASHBOARD_URL + '#/project/' + this.project_id + '/request-for-panel/' + this.conversationWith;
@@ -204,11 +253,11 @@ export class InfoContentComponent implements OnInit {
 
       const urlConversationTEMP = this.sanitizer.bypassSecurityTrustResourceUrl(urlPanel);
       this.urlConversationSupportGroup = urlConversationTEMP;
-      this.logger.log('INFO-CONTENT-COMP setInfoSupportGroup urlConversationSupportGroup ', this.urlConversationSupportGroup)
+      this.logger.log('[INFO-CONTENT-COMP] setInfoSupportGroup urlConversationSupportGroup ', this.urlConversationSupportGroup)
     } else {
       this.urlConversationSupportGroup = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_URL);
     }
-    this.logger.log('INFO-CONTENT-COMP  urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
+    this.logger.log('[INFO-CONTENT-COMP] urlConversationSupportGroup:: ', this.urlConversationSupportGroup, this.conversationSelected);
   }
 
 
