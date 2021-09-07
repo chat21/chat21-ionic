@@ -52,6 +52,7 @@
 <!-- ----------------------------------------------------------- -->
 <!--  nk - no tag ionic -->
 <!-- ----------------------------------------------------------- -->
+
 <div class="conversation-wpr" style="height: 100%;">
   <div *ngFor="let message of messages; let i = index">
 
@@ -98,14 +99,25 @@
         (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
         (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
       </tiledeskwidget-bubble-message>
-
-
     </div>
-
   </div>
+
+  <div *ngIf="(fileType === 'file' && uploadProgress !== 100)" class="msg_container base_sent"
+    style="margin-right: 20px;">
+    <div class="messages msg_sent">
+      <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div *ngIf="(fileType === 'file' && uploadProgress !== 100)" class="msg_container base_sent"
+<!-- fileType > {{fileType }} uploadProgress {{uploadProgress}} -->
+<!--  -->
+<!-- <div class="msg_container base_sent"
   style="margin-right: 20px;">
   <div class="messages msg_sent">
     <div class="spinner">
@@ -114,4 +126,4 @@
       <div class="bounce3"></div>
     </div>
   </div>
-</div>
+</div> -->
