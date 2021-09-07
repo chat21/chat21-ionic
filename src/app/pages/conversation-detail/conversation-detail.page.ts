@@ -993,6 +993,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
+  onPresentModalScrollToBottom (event: boolean) {
+    this.logger.log('[CONVS-DETAIL] onPresentModalScrollToBottom event', event);
+    if (event === true) {
+      this.scrollBottom(0);
+    }
+  }
+
   // -------------- START SCROLL/RESIZE  -------------- //
   /** */
   resizeTextArea() {
@@ -1106,7 +1113,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       var mimeType = fileList[0].type;
       this.logger.log('[CONVS-DETAIL] ----> FILE - DROP mimeType files ', mimeType);
 
-      if (mimeType.startsWith("image")) {
+      if (mimeType.startsWith("image") || mimeType.startsWith("application")) {
 
         this.handleDropEvent(ev);
 

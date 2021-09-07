@@ -142,7 +142,7 @@
               [loggedUser]="loggedUser" [conversationWith]="conversationWith" [tagsCannedFilter]="tagsCannedFilter"
               (eventChangeTextArea)="returnChangeTextArea($event)" (eventSendMessage)="returnSendMessage($event)"
               [translationMap]="translationMap" [fileUploadAccept]="appConfigProvider.getConfig().fileUploadAccept"
-              [isOpenInfoConversation]="isOpenInfoConversation" [dropEvent]="dropEvent">
+              [isOpenInfoConversation]="isOpenInfoConversation" [dropEvent]="dropEvent"  (onPresentModalScrollToBottom)="onPresentModalScrollToBottom($event)">
             </app-message-text-area>
             <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
           </ion-row>
