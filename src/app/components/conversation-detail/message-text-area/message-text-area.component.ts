@@ -47,8 +47,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Input() dropEvent: any;
   @Output() eventChangeTextArea = new EventEmitter<object>();
   @Output() eventSendMessage = new EventEmitter<object>();
-
-
+  @Output() onPresentModalScrollToBottom = new EventEmitter<boolean>();
 
   public conversationEnabled = false;
   public messageString: string;
@@ -349,6 +348,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
  * @param e 
  */
   private async presentModal(e: any): Promise<any> {
+    this.onPresentModalScrollToBottom.emit(true);
     const that = this;
     let dataFiles = " "
     if (e.type === 'change') {
