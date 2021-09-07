@@ -1,5 +1,6 @@
+
 <ion-content padding>
-  <ion-searchbar debounce="500" (ionInput)="onSearchInput($event)"></ion-searchbar>
+  <ion-searchbar id="contacts-searchbar" debounce="500" (ionInput)="onSearchInput($event)"></ion-searchbar>
   <ion-list>
     
     <ion-item button="true" lines="none" class="ion-no-padding" *ngFor="let user of contacts" (click)="goToChat(user)">

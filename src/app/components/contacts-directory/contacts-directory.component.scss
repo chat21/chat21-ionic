@@ -115,3 +115,9 @@ ion-item {
         bottom: 8px;
     }
 }
+
+ion-searchbar { 
+    --box-shadow: 0px ;
+    --background: rgba(0, 0, 0, 0.05);
+    --border-radius: 10px;
+}
