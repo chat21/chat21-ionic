@@ -342,7 +342,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'LABEL_ENTER_MSG_SHORT',
       'LABEL_ENTER_MSG_SHORTER',
       'ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE',
-      'ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG'
+      'ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG',
+      'NO_INFORMATION_AVAILABLE'
     ];
 
     this.translationMap = this.customTranslateService.translateLanguage(keys);

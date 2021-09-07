@@ -174,6 +174,6 @@
   "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE": "Only image files and text are allowed to be pasted",
   "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG": "Only image files are allowed to be dragged",
   "SENT_AN_IMAGE": "sent an image",
-  "SENT_AN_ATTACHMENT":"sent an attachment"
-  
+  "SENT_AN_ATTACHMENT":"sent an attachment",
+  "NO_INFORMATION_AVAILABLE": "No information available"
 }

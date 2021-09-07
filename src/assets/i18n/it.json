@@ -182,5 +182,6 @@
     "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE": "Possono essere incollati solo file di tipo immagine e testo",
     "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG": "È consentito trascinare solo file di tipo immagine",
     "SENT_AN_IMAGE": "hai inviato un'immagine",
-    "SENT_AN_ATTACHMENT":"hai inviato un allegato"
+    "SENT_AN_ATTACHMENT":"hai inviato un allegato",
+    "NO_INFORMATION_AVAILABLE": "Nessuna informazione disponibile"
 }
