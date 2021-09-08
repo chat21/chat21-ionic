@@ -175,5 +175,7 @@
   "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG": "Only image files are allowed to be dragged",
   "SENT_AN_IMAGE": "sent an image",
   "SENT_AN_ATTACHMENT":"sent an attachment",
-  "NO_INFORMATION_AVAILABLE": "No information available"
+  "NO_INFORMATION_AVAILABLE": "No information available",
+  "CONTACT_ID": "Contact ID",
+  "USER_ID": "User ID"
 }

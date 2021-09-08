@@ -56,7 +56,7 @@ export class InfoDirectComponent implements OnInit, AfterViewInit, OnChanges {
   /** */
   initialize() {
     this.logger.log('InfoDirectComponent - initialize');
-    this.advancedAttributes.push({key: "ID_CONVERSATION", value: this.conversationWith, icon: 'code'})
+    this.advancedAttributes.push({key: "USER_ID", value: this.conversationWith, icon: 'code'})
     this.logger.log('InfoDirectComponent - advancedAttributes' , this.advancedAttributes);
   }
 
