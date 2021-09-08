@@ -98,6 +98,7 @@ export class ConversationListPage implements OnInit {
   ionViewDidEnter() { }
 
   listenToNotificationCLick() {
+    this.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - CALLED: ');
     const that = this;
     if (navigator && navigator.serviceWorker) {
       navigator.serviceWorker.addEventListener('message', function (event) {
