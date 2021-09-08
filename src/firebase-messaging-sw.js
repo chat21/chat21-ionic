@@ -61,7 +61,7 @@ self.addEventListener('notificationclick', event => {
 
   let baseurl = ''
   if (event.notification && event.notification.data && event.notification.data.url) {
-    baseurl =  event.notification.data.url;
+    baseurl = event.notification.data.url;
   } else if (event.notification && event.notification.data && event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.data && event.notification.data.FCM_MSG.data.click_action) {
     baseurl = event.notification.data.FCM_MSG.data.click_action;
   }
@@ -100,12 +100,29 @@ self.addEventListener('notificationclick', event => {
             message: 'Received a push message.',
             data: event.notification.actions[0]['action']
           });
-        } else if (event.notification && event.notification.data && event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.data && event.notification.data.FCM_MSG.data.recipient) {
-          console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  CALLING POSTMESSAGE USECASE event.notification.data.FCM_MSG.data.recipient', event.notification.data.FCM_MSG.data.recipient);
-          chatClient.postMessage({
-            message: 'Received a push message.',
-            data: event.notification.data.FCM_MSG.data.recipient
-          });
+          
+        } else if (event.notification.data.FCM_MSG.data.channel_type === 'group') {
+          if (event.notification && event.notification.data && event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.data && event.notification.data.FCM_MSG.data.recipient) {
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  CALLING POSTMESSAGE USECASE event.notification.data.FCM_MSG.data.recipient', event.notification.data.FCM_MSG.data.recipient);
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  CALLING POSTMESSAGE USECASE event.notification.data.FCM_MSG.data.channel_type', event.notification.data.FCM_MSG.data.channel_type);
+
+            chatClient.postMessage({
+              message: 'Received a push message.',
+              data: event.notification.data.FCM_MSG.data.recipient
+            });
+          }
+
+        } else if (event.notification.data.FCM_MSG.data.channel_type === 'direct') {
+          if (event.notification && event.notification.data && event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.data && event.notification.data.FCM_MSG.data.sender) {
+
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  CALLING POSTMESSAGE USECASE event.notification.data.FCM_MSG.data.sender', event.notification.data.FCM_MSG.data.sender);
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  CALLING POSTMESSAGE USECASE event.notification.data.FCM_MSG.data.channel_type', event.notification.data.FCM_MSG.data.channel_type);
+
+            chatClient.postMessage({
+              message: 'Received a push message.',
+              data: event.notification.data.FCM_MSG.data.sender
+            });
+          }
         }
 
 
@@ -126,19 +143,24 @@ self.addEventListener('notificationclick', event => {
         // console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  notification  actioObjct ', actioObjct);
         // 
         // const url = event.notification.data.url + '#/conversation-detail/' + actioObjct.recipient + "/" + actioObjct.recipient_fullname + '/active'
-        let recipient = ''
-        let recipient_fullname = ''
+        let conv_id = ''
+        let sender_fullname = ''
         if (event.notification && event.notification.actions && event.notification.actions.length > 0) {
           console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2A event.notification.actions  ', event.notification.actions);
-          recipient = event.notification.actions[0]['action'];
-          recipient_fullname = event.notification.actions[0]['title'];
+          conv_id = event.notification.actions[0]['action'];
+          sender_fullname = event.notification.actions[0]['title'];
         } else if (event.notification && event.notification.data && event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.data) {
           console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data  ', event.notification.data.FCM_MSG.data);
-          recipient = event.notification.data.FCM_MSG.data.recipient;
-          recipient_fullname = event.notification.data.FCM_MSG.data.recipient_fullname;
+          if (event.notification.data.FCM_MSG.data.channel_type === "direct") {
+            conv_id = event.notification.data.FCM_MSG.data.sender;
+          } else if (event.notification.data.FCM_MSG.data.channel_type === "direct") {
+            conv_id = event.notification.data.FCM_MSG.data.recipient;
+          }
+          sender_fullname = event.notification.data.FCM_MSG.data.sender_fullname;
         }
 
-        const url = baseurl + '#/conversation-detail/' + recipient + "/" + recipient_fullname + '/active'
+        const url = baseurl + '#/conversation-detail/' + conv_id + "/" + sender_fullname + '/active'
+        // const url = baseurl + '#/conversation-detail/' + recipient + "/" + recipient_fullname + '/active'
         console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  built url ', url);
         chatClient = await clients.openWindow(url);
       }
@@ -178,18 +200,28 @@ const messaging = firebase.messaging();//.useServiceWorker(registration);
 messaging.onBackgroundMessage(function (payload) {
   console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) Received background message ', payload);
   console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) Received background message payload recipient', payload.data.recipient);
+  console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) Received background message payload sender', payload.data.sender);
+  console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) Received background message payload channel_type', payload.data.channel_type);
   console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) Received background message payload recipient_fullname', payload.data.recipient_fullname);
-
+  console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) Received background message payload sender_fullname', payload.data.sender_fullname);
   // data = `{ "recipient": "${payload.data.recipient}", "recipient_fullname": "${payload.data.recipient_fullname}", "status": "${payload.data.status}" }`
-  recipient = payload.data.recipient
-  recipient_fullname = payload.data.recipient_fullname
+
+  let conv_id = ""
+  if (payload.data.channel_type === "direct") {
+    conv_id = payload.data.sender
+  } else if (payload.data.channel_type === "group") {
+    conv_id = payload.data.recipient
+  }
+
+
+  let sender_fullname = payload.data.sender_fullname
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
     icon: './assets/images/tiledesk_logo_50x50.png',
     data: { url: payload.data.click_action }, //the url which we gonna use later
     actions: [{
-      "action": recipient, "title": recipient_fullname
+      "action": conv_id, "title": sender_fullname
     }]
   };
   // /Users/nicola/CHAT21_IONIC/src/assets/images/tiledesk_logo_no_text_72x72.png
