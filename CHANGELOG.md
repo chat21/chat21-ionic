@@ -1,5 +1,10 @@
 # chat21-ionic ver 3.0
 
+### 3.0.52-beta
+- Replaces the label "conversation ID" with "user ID" in the accordion available in the panel "conversation info" of direct conversations
+- Adds the ability to change the log level via the query-string parameter "logLevel"
+- Fixes the bug: clicking on a push notification, if it is a "direct" conversation, the correct conversation is not selected after redirection
+
 ### 3.0.51-beta
 - Enhances the style of the search bar in the contact list
 - Adds the ability to upload a file by dragging it to the chat area
