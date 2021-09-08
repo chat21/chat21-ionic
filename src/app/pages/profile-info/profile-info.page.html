@@ -29,8 +29,13 @@
       </ng-template>
 
       <div class="user-presence">
-        <app-user-presence [idUser]=loggedUser.uid [translationMap]=translationMap [borderColor]=borderColor
-          [fontColor]=fontColor></app-user-presence>
+        <app-user-presence 
+        [component] = "profile-info"
+        [idUser]=loggedUser.uid 
+        [translationMap]=translationMap 
+        [borderColor]=borderColor
+        [fontColor]=fontColor>
+        </app-user-presence>
       </div>
 
 

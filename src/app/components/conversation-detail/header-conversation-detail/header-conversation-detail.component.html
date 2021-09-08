@@ -20,6 +20,7 @@
 
         <div *ngIf="isDirect" class="user-presence">
           <app-user-presence
+            [component] = "header"
             [idUser] = conversationAvatar.conversation_with
             [translationMap] = translationMap
             [borderColor] = borderColor

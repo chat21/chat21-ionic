@@ -11,6 +11,7 @@
 
         <div class="user-presence">
           <app-user-presence 
+            [component] = "info-direct"
             [idUser]='member.uid '
             [translationMap]='translationMap' 
             [borderColor]='borderColor'
@@ -45,13 +46,13 @@
 
 </ion-content>
 
-<ion-content *ngIf="!member">
+<!-- <ion-content *ngIf="!member">
   <ion-item lines="none">  
     <ion-label style="text-align: center;margin-top: 65px;color: #999999;" class="ion-text-wrap">
       {{ translationMap.get('NO_INFORMATION_AVAILABLE') }}
     </ion-label>
   </ion-item>
-</ion-content>
+</ion-content> -->
 
 
 
