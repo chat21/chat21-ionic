@@ -115,19 +115,21 @@ export class AppComponent implements OnInit {
     this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant)
     this.logger.info('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
 
-    // let loggingLevel = null
-    // if (appconfig.logLevel) {
-    // if (appconfig.logLevel === 'Error') {
-    //   loggingLevel = 0
-    // } else if (appconfig.logLevel === 'Warn') {
-    //   loggingLevel = 1
-    // } else if (appconfig.logLevel === 'Info') {
-    //   loggingLevel = 2
-    // } else if (appconfig.logLevel === 'Debug') {
-    //   loggingLevel = 3
-    // }
 
-    // this.logger.setLoggerConfig(true, loggingLevel)
+
+
+    this.route.queryParams.subscribe(params => {
+      this.logger.info('[APP-COMP] queryParams params: ', params)
+      if (params.logLevel) {
+        this.logger.info('[APP-COMP] log level get from queryParams: ', params.logLevel)
+        this.logger.setLoggerConfig(true, params.logLevel)
+      } else {
+        this.logger.info('[APP-COMP] log level get from appconfig: ', appconfig.logLevel)
+        this.logger.setLoggerConfig(true, appconfig.logLevel)
+      }
+    });
+
+
     this.logger.setLoggerConfig(true, appconfig.logLevel)
     // }
     // if (!this.platform.is('desktop')) {
@@ -137,7 +139,7 @@ export class AppComponent implements OnInit {
       this.splashScreen.show();
     }
 
-    
+
   }
 
 
@@ -512,7 +514,7 @@ export class AppComponent implements OnInit {
       this.logger.log('[APP-COMP] ***** subscribeConversationChanged current_user: ', currentUser);
       if (currentUser) {
         this.logger.log('[APP-COMP] ***** subscribeConversationChanged current_user uid: ', currentUser.uid);
-       
+
         if (conversation && conversation.sender !== currentUser.uid) {
           this.manageTabNotification();
         }
