@@ -21,7 +21,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
   @Input() translationMap: Map<string, string>;
   @Input() fontColor: string;
   @Input() borderColor: string;
-  @Input() component: string;
+
 
   public online = true;
   public status = '';
