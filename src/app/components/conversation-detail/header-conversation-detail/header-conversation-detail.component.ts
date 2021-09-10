@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 
 // Logger
@@ -17,7 +18,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   @Input() isMobile: boolean;
   @Input() translationMap: Map<string, string>;
   @Output() eventOpenCloseInfoConversation = new EventEmitter<boolean>();
-
+  conversationWithFullname: string
   openInfoConversation = true;
   openInfoMessage = true;
   DIRECT = 'direct';
@@ -35,9 +36,17 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
    * @param imageRepoService 
    */
   constructor(
-    public imageRepoService: ImageRepoService
-
-  ) { }
+    public imageRepoService: ImageRepoService,
+    private route: ActivatedRoute,
+  ) { 
+    this.route.paramMap.subscribe(params => {
+      
+     
+      this.conversationWithFullname = params.get('FullNameConv');
+      this.logger.log('[CONVS-DETAIL][HEADER]- initialize -> params: ', params);
+      this.logger.log('[CONVS-DETAIL][HEADER]- initialize -> params > : ',  this.conversationWithFullname);
+    });
+  }
 
   // ----------------------------------------------------
   // @ Lifehooks
@@ -64,6 +73,10 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   // @ Initialize (called in ngOnInit)
   // ----------------------------------------------------
   initialize() {
+
+ 
+
+
     if (this.conversationAvatar && this.conversationAvatar.channelType === this.DIRECT) {
       this.isDirect = true;
     } else if (this.idLoggedUser) {
