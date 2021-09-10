@@ -102,9 +102,9 @@ export class ConversationListPage implements OnInit {
     const that = this;
     if (navigator && navigator.serviceWorker) {
       navigator.serviceWorker.addEventListener('message', function (event) {
-        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data: ', event.data);
-        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data data: ', event.data['data']);
-        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event data data typeof: ', typeof event.data['data']);
+        that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - Received a message from service worker event data: ', event.data);
+        that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - Received a message from service worker event data data: ', event.data['data']);
+        that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - Received a message from service worker event data data typeof: ', typeof event.data['data']);
         let uidConvSelected = ''
         if (typeof event.data['data'] === 'string') {
           uidConvSelected = event.data['data']
@@ -112,8 +112,8 @@ export class ConversationListPage implements OnInit {
           uidConvSelected = event.data['data']['recipient']
         }
 
-        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
-        that.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - Received a message from service worker that.conversations: ', that.conversations);
+        that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
+        that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - Received a message from service worker that.conversations: ', that.conversations);
         const conversationSelected = that.conversations.find(item => item.uid === uidConvSelected);
         if (conversationSelected) {
 
