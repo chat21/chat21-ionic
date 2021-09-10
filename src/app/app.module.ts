@@ -262,7 +262,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
       timestampFormat: 'HH:mm:ss.SSS',
       enableSourceMaps: false,
       colorScheme: ['purple', 'yellow', 'gray', 'gray', 'red', 'red', 'red'],
-      serverLoggingUrl: 'http://tiledesk-server-pre.herokuapp.com/logs'
+      serverLoggingUrl: 'https://tiledesk-server-pre.herokuapp.com/logs'
     }),
     ScrollbarThemeModule,
     SharedModule,
