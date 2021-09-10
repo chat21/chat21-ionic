@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.53-RC1
+- Fixes the bug: sometimes the message sender name displayed in the header is different from the one displayed in the conversation list
+- Fixes the bug: duplicate push notifications
+
 ### 3.0.52-beta
 - Replaces the label "conversation ID" with "user ID" in the accordion available in the panel "conversation info" of direct conversations
 - Adds the ability to change the log level via the query-string parameter "logLevel"
