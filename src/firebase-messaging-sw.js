@@ -90,6 +90,7 @@ self.addEventListener('notificationclick', event => {
       if (client.url.startsWith(baseurl)) {
         // Excellent, let's use it!
         client.focus();
+        // windowClient.focus();
 
         chatClient = client;
 
@@ -100,7 +101,7 @@ self.addEventListener('notificationclick', event => {
             message: 'Received a push message.',
             data: event.notification.actions[0]['action']
           });
-          
+
         } else if (event.notification.data.FCM_MSG.data.channel_type === 'group') {
           if (event.notification && event.notification.data && event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.data && event.notification.data.FCM_MSG.data.recipient) {
             console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick  CALLING POSTMESSAGE USECASE event.notification.data.FCM_MSG.data.recipient', event.notification.data.FCM_MSG.data.recipient);
@@ -143,26 +144,39 @@ self.addEventListener('notificationclick', event => {
         // console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  notification  actioObjct ', actioObjct);
         // 
         // const url = event.notification.data.url + '#/conversation-detail/' + actioObjct.recipient + "/" + actioObjct.recipient_fullname + '/active'
-        let conv_id = ''
-        let sender_fullname = ''
+
         if (event.notification && event.notification.actions && event.notification.actions.length > 0) {
           console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2A event.notification.actions  ', event.notification.actions);
-          conv_id = event.notification.actions[0]['action'];
-          sender_fullname = event.notification.actions[0]['title'];
-        } else if (event.notification && event.notification.data && event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.data) {
-          console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data  ', event.notification.data.FCM_MSG.data);
-          if (event.notification.data.FCM_MSG.data.channel_type === "direct") {
-            conv_id = event.notification.data.FCM_MSG.data.sender;
-          } else if (event.notification.data.FCM_MSG.data.channel_type === "direct") {
-            conv_id = event.notification.data.FCM_MSG.data.recipient;
-          }
-          sender_fullname = event.notification.data.FCM_MSG.data.sender_fullname;
-        }
 
-        const url = baseurl + '#/conversation-detail/' + conv_id + "/" + sender_fullname + '/active'
-        // const url = baseurl + '#/conversation-detail/' + recipient + "/" + recipient_fullname + '/active'
-        console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  built url ', url);
-        chatClient = await clients.openWindow(url);
+          const url = baseurl + '#/conversation-detail/' +  event.notification.actions[0]['action'] + "/" + event.notification.actions[0]['title'] + '/active'
+          console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  built url ', url);
+          chatClient = await clients.openWindow(url);
+
+        } else if (event.notification.data.FCM_MSG.data.channel_type === "direct") {
+          if (event.notification && event.notification.data && event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.data) {
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data  ', event.notification.data.FCM_MSG.data);
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data.channel_type  ', event.notification.data.FCM_MSG.data.channel_type);
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data.sender_fullname  ', event.notification.data.FCM_MSG.data.sender_fullname);
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data.channel_type  ', event.notification.data.FCM_MSG.data.sender);
+
+            const url = baseurl + '#/conversation-detail/' +  event.notification.data.FCM_MSG.data.sender + "/" + event.notification.data.FCM_MSG.data.sender_fullname + '/active'
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  built url ', url);
+            chatClient = await clients.openWindow(url);
+
+
+          }
+        } else if (event.notification.data.FCM_MSG.data.channel_type === "group") {
+          if (event.notification && event.notification.data && event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.data) {
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data  ', event.notification.data.FCM_MSG.data);
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data.channel_type  ', event.notification.data.FCM_MSG.data.channel_type);
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data.sender_fullname  ', event.notification.data.FCM_MSG.data.sender_fullname);
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) notificationclick HERE YES  2B  event.notification.data.FCM_MSG.data.recipient  ', event.notification.data.FCM_MSG.data.recipient);
+
+            const url = baseurl + '#/conversation-detail/' +  event.notification.data.FCM_MSG.data.recipient + "/" + event.notification.data.FCM_MSG.data.sender_fullname + '/active'
+            console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) HERE YES  2  built url ', url);
+            chatClient = await clients.openWindow(url);
+          }
+        }
       }
 
       // Message the client:
@@ -206,7 +220,9 @@ messaging.onBackgroundMessage(function (payload) {
   console.log('FIREBASE-NOTIFICATION (FIREBASE-MESSAGING-SW) Received background message payload sender_fullname', payload.data.sender_fullname);
   // data = `{ "recipient": "${payload.data.recipient}", "recipient_fullname": "${payload.data.recipient_fullname}", "status": "${payload.data.status}" }`
 
-  let conv_id = ""
+
+
+  conv_id = ""
   if (payload.data.channel_type === "direct") {
     conv_id = payload.data.sender
   } else if (payload.data.channel_type === "group") {
@@ -225,7 +241,7 @@ messaging.onBackgroundMessage(function (payload) {
     }]
   };
   // /Users/nicola/CHAT21_IONIC/src/assets/images/tiledesk_logo_no_text_72x72.png
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  // self.registration.showNotification(notificationTitle, notificationOptions);
 });
 // [END background_handler]
 
