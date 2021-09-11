@@ -3,6 +3,9 @@
 ### 3.0.53-RC1
 - Fixes the bug: sometimes the message sender name displayed in the header is different from the one displayed in the conversation list
 - Fixes the bug: duplicate push notifications
+- Increase the height of the selectable message in the conversation list to prevent the 'Archive' icon and the sender name text from overlapping the string indicating the message arrival time
+- Updates the avatar background colors
+- Does not set the "image" property of the "conversation" object for "support-group" conversations
 
 ### 3.0.52-beta
 - Replaces the label "conversation ID" with "user ID" in the accordion available in the panel "conversation info" of direct conversations
