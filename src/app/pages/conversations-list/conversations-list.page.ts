@@ -466,7 +466,9 @@ export class ConversationListPage implements OnInit {
       conversation_with = conversation.recipient;
       conversation_with_fullname = conversation.recipient_fullname;
     }
-    conversation.image = this.imageRepoService.getImagePhotoUrl(conversation_with)
+    if (!conversation_with.startsWith("support-group")) {
+      conversation.image = this.imageRepoService.getImagePhotoUrl(conversation_with)
+    }
   }
 
   onConversationLoaded(conversation: ConversationModel) {
@@ -491,7 +493,7 @@ export class ConversationListPage implements OnInit {
           this.logger.log('[CONVS-LIST-PAGE] HAS SENT AN IMAGE');
           this.logger.log("[CONVS-LIST-PAGE] translationMap.get('YOU')")
           // const keys = ['SENT_AN_IMAGE'];
-          
+
           const SENT_AN_IMAGE = conversation['last_message_text'] = translationMap.get('SENT_AN_IMAGE')
 
           conversation.last_message_text = translationMap.get('YOU') + ' ' + SENT_AN_IMAGE;
