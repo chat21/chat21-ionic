@@ -23,10 +23,12 @@
 </div> -->
 
 
-<ion-item button="true" lines="none" class="ion-no-padding" *ngFor="let conversation of listConversations"
+<ion-item button="true" lines="none" class="ion-no-padding"  [class.ion-selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of listConversations"
   (click)="openConversationByID(conversation)">
   <!-- (mouseup)="openMessageList()" -->
-  <div [class.selected]="conversation.uid === uidConvSelected"></div>
+
+ 
+  <!-- <div [class.selected]="conversation.uid === uidConvSelected"></div> -->
   <ion-avatar item-start>
     <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color"
       [innerHTML]="conversation.avatar"></div>
@@ -57,7 +59,8 @@
       </span>
     </div>
   </ion-label>
-  <ion-note *ngIf="!conversation.archived" class="conversation_time">{{conversation.time_last_message}}</ion-note>
+
+  <ion-note *ngIf="!conversation.archived" class="conversation_time">{{conversation.timestamp | amTimeAgo}}</ion-note>
 
   <ion-buttons slot="end">
     <ion-button *ngIf="!conversation.archived" [ngClass]="{'hide': !isApp, 'button-on-desktop': !isApp  }"

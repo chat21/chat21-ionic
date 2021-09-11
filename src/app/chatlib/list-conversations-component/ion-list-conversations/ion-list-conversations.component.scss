@@ -9,7 +9,8 @@
 }
 ion-item {
     cursor: pointer;
-    height: 64px;
+    height: 70px;
+    --min-height: 70px;
     position: relative;
     display: flex;
     text-decoration: none;
@@ -197,4 +198,8 @@ ion-item:hover {
     padding-right: 0px;
     vertical-align: middle;
     color: #999999;
+}
+
+.ion-selected {
+    --background: rgb(231, 241, 255);
 }
