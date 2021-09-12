@@ -140,7 +140,7 @@ ion-item {
     }
 
     .notification_point-on-desktop {
-        bottom: 24px !important;
+        bottom: 29px !important;
     }
 }
 
@@ -178,7 +178,7 @@ ion-item:hover {
 .achived-icon-wpr {
     position: absolute;
     right: 3px;
-    top: 11px;
+    top: 4px;
     font-size: 12px;
 }
 
@@ -202,4 +202,11 @@ ion-item:hover {
 
 .ion-selected {
     --background: rgb(231, 241, 255);
+}
+
+.time-in-archived {
+    color: #666666;
+    font-size: 10px;
+    position: relative;
+    top: -4px;
 }
