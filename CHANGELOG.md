@@ -4,8 +4,11 @@
 - Fixes the bug: sometimes the message sender name displayed in the header is different from the one displayed in the conversation list
 - Fixes the bug: duplicate push notifications
 - Increase the height of the selectable message in the conversation list to prevent the 'Archive' icon and the sender name text from overlapping the string indicating the message arrival time
-- Updates the avatar background colors
-- Does not set the "image" property of the "conversation" object for "support-group" conversations
+- Updates the avatars background colors
+- Fixes the bug: 404 error when trying to view the profile picture of "support-group" conversations requesters
+- Adds the date the message was sent to the list of archived conversations
+- Translates the date "how long ago" the message was sent in the conversation list
+
 
 ### 3.0.52-beta
 - Replaces the label "conversation ID" with "user ID" in the accordion available in the panel "conversation info" of direct conversations
