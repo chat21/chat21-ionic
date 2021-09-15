@@ -8,7 +8,7 @@ import * as PACKAGE from '../../../../package.json';
 export abstract class NotificationsService {
   
   private _tenant: string;
-  abstract BUILD_VERSION = PACKAGE.version
+  public BUILD_VERSION = PACKAGE.version
 
   public setTenant(tenant): void {
     this._tenant = tenant;
@@ -19,7 +19,7 @@ export abstract class NotificationsService {
     } 
   }
 
-  abstract initialize(tenant: string): void;
+  abstract initialize(tenant: string, vapidKey: string): void;
   abstract getNotificationPermissionAndSaveToken(currentUserUid: string): void;
   abstract removeNotificationsInstance(callback: (string) => void): void;
 

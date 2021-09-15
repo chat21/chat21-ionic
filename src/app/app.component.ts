@@ -172,9 +172,11 @@ export class AppComponent implements OnInit {
       this.chatManager.initialize();
       this.presenceService.initialize(this.tenant);
       this.typingService.initialize(this.tenant);
+
       const pushEngine = this.appConfigProvider.getConfig().pushEngine
+      const vap_id_Key = this.appConfigProvider.getConfig().firebaseConfig.vapidKey
       if (pushEngine && pushEngine !== 'none') {
-        this.notificationsService.initialize(this.tenant)
+        this.notificationsService.initialize(this.tenant, vap_id_Key)
       }
       this.uploadService.initialize();
 
