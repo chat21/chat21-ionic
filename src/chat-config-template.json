@@ -13,7 +13,8 @@
         "storageBucket": "${FIREBASE_STORAGEBUCKET}",
         "messagingSenderId": "${FIREBASE_MESSAGINGSENDERID}",
         "appId": "${FIREBASE_APP_ID}",
-        "chat21ApiUrl": "${CHAT21_URL}"
+        "chat21ApiUrl": "${CHAT21_URL}",
+        "vapidKey": "${FIREBASE_VAPID}"
     },
     "chat21Config": {
         "appId": "${MQTT_APPID}",
