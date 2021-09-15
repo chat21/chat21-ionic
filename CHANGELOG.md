@@ -2,6 +2,7 @@
 
 ### 3.0.54-RC1
 - Moves FCM property "VAPID" to environments
+- Enhances the firebase-messaging-sw.js
 
 ### 3.0.53-RC6
 - Adds "VAPID" in the getToken() method of the "firebase-notification.service"
