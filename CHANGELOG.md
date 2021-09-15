@@ -1,5 +1,24 @@
 # chat21-ionic ver 3.0
 
+### 3.0.54-RC1
+- Moves FCM property "VAPID" to environments
+
+### 3.0.53-RC6
+- Adds "VAPID" in the getToken() method of the "firebase-notification.service"
+- Adds log in the "firebase-notification.service"
+
+### 3.0.53-RC5
+- Push notification debug
+
+### 3.0.53-RC4
+- Enhances the service worker postMessage method 
+
+### 3.0.53-RC3
+- Enhances listenToNotificationCLick() method and rename it to listenToSwPostMessage()
+
+### 3.0.53-RC2
+- Commented the method listenToNotificationCLick() 
+
 ### 3.0.53-RC1
 - Fixes the bug: sometimes the message sender name displayed in the header is different from the one displayed in the conversation list
 - Fixes the bug: duplicate push notifications
