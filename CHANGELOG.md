@@ -2,6 +2,7 @@
 
 ### 3.0.54-RC1
 - Moves FCM property "VAPID" to environments
+- Adds FCM "VAPID" property to env.sample, chat-config.json and chat-config-template.json files
 - Enhances the firebase-messaging-sw.js
 
 ### 3.0.53-RC6
