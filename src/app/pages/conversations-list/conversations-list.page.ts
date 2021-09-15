@@ -81,8 +81,7 @@ export class ConversationListPage implements OnInit {
   ) {
     this.listenToAppCompConvsLengthOnInitConvs();
     this.listenToLogoutEvent();
-    this.listenToNotificationCLick();
-
+    this.listenToSwPostMessage();
   }
 
   // -----------------------------------------------
@@ -97,19 +96,23 @@ export class ConversationListPage implements OnInit {
 
   ionViewDidEnter() { }
 
-  listenToNotificationCLick() {
+  listenToSwPostMessage() {
     this.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - CALLED: ');
     const that = this;
     if (navigator && navigator.serviceWorker) {
+
       navigator.serviceWorker.addEventListener('message', function (event) {
+
         that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - Received a message from service worker event data: ', event.data);
         that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - Received a message from service worker event data data: ', event.data['data']);
         that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - Received a message from service worker event data data typeof: ', typeof event.data['data']);
         let uidConvSelected = ''
-        if (typeof event.data['data'] === 'string') {
-          uidConvSelected = event.data['data']
-        } else {
-          uidConvSelected = event.data['data']['recipient']
+        if (event.data && event.data['conversWith']) {
+          uidConvSelected = event.data['conversWith'];
+        }
+        else {
+          that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - DIFFERENT MSG');
+          return;
         }
 
         that.logger.log('[CONVS-LIST-PAGE] FIREBASE-NOTIFICATION  listenToNotificationCLick - Received a message from service worker event dataObjct uidConvSelected: ', uidConvSelected);
