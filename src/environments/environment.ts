@@ -15,7 +15,8 @@ export const environment = {
         storageBucket: 'CHANGEIT',
         messagingSenderId: 'CHANGEIT',
         appId: 'CHANGEIT',
-        chat21ApiUrl: 'CHANGEIT'
+        chat21ApiUrl: 'CHANGEIT',
+        vapidKey: 'CHANGEIT'
     },
     chat21Config: {
         appId: 'tilechat',
