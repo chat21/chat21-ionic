@@ -23,11 +23,11 @@ export class FirebaseNotifications extends NotificationsService {
         super();
     }
 
-    initialize(tenant: string, vapId:string): void {
+    initialize(tenant: string, vapId: string): void {
         this.tenant = tenant
         this.vapidkey = vapId
         this.logger.info('[FIREBASE-NOTIFICATIONS] initialize - tenant ', this.tenant)
-       
+
 
         if (!('serviceWorker' in navigator)) {
             // , disable or hide UI.
@@ -56,24 +56,33 @@ export class FirebaseNotifications extends NotificationsService {
                     //     });
                 }
             });
-
-
-
         }
     }
+
+
 
     getNotificationPermissionAndSaveToken(currentUserUid) {
         // this.tenant = this.getTenant();
         this.logger.log('[FIREBASE-NOTIFICATIONS] calling requestPermission - tenant ', this.tenant)
         this.logger.log('[FIREBASE-NOTIFICATIONS] calling requestPermission - currentUserUid ', currentUserUid)
         this.userId = currentUserUid;
+        // Service Worker explicit registration to explicitly define sw location at a path
+        // const swRegistration = async () => {
+        //     try {
+        //         await navigator.serviceWorker.register('http://localhost:8101/firebase-messaging-sw.js');
+        //     } catch (error) {
+        //         console.error(error);
+        //     }
+        // }
+
+
         const messaging = firebase.messaging();
         if (firebase.messaging.isSupported()) {
             // messaging.requestPermission()
             Notification.requestPermission().then((permission) => {
                 if (permission === 'granted') {
                     this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> requestPermission Notification permission granted.');
-                    
+
                     return messaging.getToken({ vapidKey: this.vapidkey })
                 }
             }).then(FCMtoken => {
