@@ -177,17 +177,18 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
 
     getConversationDetail(conversationId: string, callback: (conv: ConversationModel) => void) {
         const conversation = this.archivedConversations.find(item => item.uid === conversationId);
-        this.logger.debug('[FIREBASEArchivedConversationsHandlerSERVICE] SubscribeToConversations getConversationDetail::ARCHIVED *****: ', conversation)
+        this.logger.log('[FIREBASEArchivedConversationsHandlerSERVICE] SubscribeToConversations getConversationDetail::ARCHIVED *****: ', conversation)
         if (conversation) {
             callback(conversation)
             // this.BSConversationDetail.next(conversationSelected);
         } else {
             // const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/archived_conversations/' + conversationId;
             const urlNodeFirebase = archivedConversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversationId;
-            this.logger.debug('[FIREBASEArchivedConversationsHandlerSERVICE] urlNodeFirebase conversationDetail *****', urlNodeFirebase)
+            this.logger.log('[FIREBASEArchivedConversationsHandlerSERVICE] urlNodeFirebase conversationDetail *****', urlNodeFirebase)
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
                 const childData: ConversationModel = childSnapshot.val();
+                this.logger.log('[FIREBASEArchivedConversationsHandlerSERVICE] childData *****', childData)
                 if (childSnapshot && childSnapshot.key && childData.uid) {
                     childData.uid = childSnapshot.key;
                     const conversation = this.completeConversation(childData);

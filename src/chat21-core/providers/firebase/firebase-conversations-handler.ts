@@ -47,7 +47,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
     private loggedUserId: string;
     private translationMap: Map<string, string>;
     private isConversationClosingMap: Map<string, boolean>;
-    private logger:LoggerService = LoggerInstance.getInstance()
+    private logger: LoggerService = LoggerInstance.getInstance()
     private ref: firebase.database.Query;
     private BASE_URL: string;
     // private audio: any;
@@ -127,7 +127,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         this.ref.on('child_added', (childSnapshot) => {
             that.added(childSnapshot);
         });
-        
+
         setTimeout(() => {
             callback()
         }, 2000);
@@ -263,22 +263,25 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
 
     public getConversationDetail(conversationId: string, callback: (conv: ConversationModel) => void): void {
         // fare promise o callback ??
+        this.logger.log('[FIREBASEConversationsHandlerSERVICE]  getConversationDetail *****: ', conversationId)
         const conversation = this.conversations.find(item => item.uid === conversationId);
-        this.logger.debug('[FIREBASEConversationsHandlerSERVICE]  conversations *****: ', this.conversations)
-        this.logger.debug('[FIREBASEConversationsHandlerSERVICE]  getConversationDetail *****: ', conversation)
+        this.logger.log('[FIREBASEConversationsHandlerSERVICE]  conversations *****: ', this.conversations)
+        this.logger.log('[FIREBASEConversationsHandlerSERVICE]  getConversationDetail *****: ', conversation)
         if (conversation) {
             callback(conversation)
             // return conversationSelected
             // this.BSConversationDetail.next(conversationSelected);
         } else {
+            this.logger.log('[FIREBASEConversationsHandlerSERVICE]  getConversationDetail ***** ELSE')
             // const urlNodeFirebase = '/apps/' + this.tenant + '/users/' + this.loggedUserId + '/conversations/' + conversationId;
             const urlNodeFirebase = conversationsPathForUserId(this.tenant, this.loggedUserId) + '/' + conversationId;
-            this.logger.debug('[FIREBASEConversationsHandlerSERVICE] conversationDetail urlNodeFirebase *****', urlNodeFirebase)
+            this.logger.log('[FIREBASEConversationsHandlerSERVICE] conversationDetail urlNodeFirebase *****', urlNodeFirebase)
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
                 const childData: ConversationModel = childSnapshot.val();
-                this.logger.debug('[FIREBASEConversationsHandlerSERVICE] conversationDetail childSnapshot *****', childSnapshot.val())
-                if (childSnapshot && childSnapshot.key && childData.uid) {
+                this.logger.log('[FIREBASEConversationsHandlerSERVICE] conversationDetail childSnapshot *****', childSnapshot.val())
+                // if (childSnapshot && childSnapshot.key && childData.uid) {
+                if (childData) {
                     childData.uid = childSnapshot.key;
                     const conversation = this.completeConversation(childData);
                     if (conversation) {
@@ -472,7 +475,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             conversation_with_fullname = conv.recipient_fullname;
             conv.sender_fullname = this.translationMap.get('YOU')
             // conv.last_message_text = YOU + conv.last_message_text;
-        // } else if (conv.channel_type === TYPE_GROUP) {
+            // } else if (conv.channel_type === TYPE_GROUP) {
         } else if (isGroup(conv)) {
             // conversation_with_fullname = conv.sender_fullname;
             // conv.last_message_text = conv.last_message_text;
@@ -490,7 +493,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         return conv;
     }
 
- 
+
 
     /** */
     private setStatusConversation(sender: string, uid: string): string {
