@@ -37,6 +37,7 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { TiledeskService } from '../../services/tiledesk/tiledesk.service';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -155,8 +156,17 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public cannedResponsesService: CannedResponsesService,
     public imageRepoService: ImageRepoService,
     public presenceService: PresenceService,
-    public toastController: ToastController
+    public toastController: ToastController,
+    public tiledeskService: TiledeskService
   ) {
+
+    // Change list on date change
+    this.route.paramMap.subscribe(params => {
+      this.logger.log('[CONVS-DETAIL] - constructor -> params: ', params);
+      this.conversationWith = params.get('IDConv');
+      this.conversationWithFullname = params.get('FullNameConv');
+      this.conv_type = params.get('Convtype');
+    });
 
   }
 
@@ -233,6 +243,25 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   //  @ Inizialize
   // -------------------------------------------------- 
   initialize() {
+
+    // this.logger.log('[CONVS-DETAIL] x conversationWith getConversationDetail', this.conversationWith)
+    // this.logger.log('[CONVS-DETAIL] x conversationsHandlerService getConversationDetail', this.conversationsHandlerService)
+    // this.logger.log('[CONVS-DETAIL] x this.conv_type getConversationDetail', this.conv_type)
+
+    // if (this.conversationWith && this.conversationsHandlerService && this.conv_type === 'active') {
+    //   this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+    //     this.logger.log('[CONVS-DETAIL] x conversationsHandlerService getConversationDetail', this.conversationWith, conv)
+    //   })
+    // }
+    // else { //get conversation from 'conversations' firebase node
+    //   this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+    //     this.logger.log('[CONVS-DETAIL] x archivedConversationsHandlerService getConversationDetail', this.conversationWith, conv)
+
+    //   })
+    // }
+
+
+
     this.loggedUser = this.tiledeskAuthService.getCurrentUser();
     this.logger.log('[CONVS-DETAIL] - initialize -> loggedUser: ', this.loggedUser);
     this.translations();
@@ -246,13 +275,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.logger.log('[CONVS-DETAIL] - initialize -> firebaseConfig tenant ', this.tenant);
 
 
-    // Change list on date change
-    this.route.paramMap.subscribe(params => {
-      this.logger.log('[CONVS-DETAIL] - initialize -> params: ', params);
-      this.conversationWith = params.get('IDConv');
-      this.conversationWithFullname = params.get('FullNameConv');
-      this.conv_type = params.get('Convtype');
-    });
+
 
     this.logger.log('[CONVS-DETAIL] - initialize -> conversationWith: ', this.conversationWith, ' -> conversationWithFullname: ', this.conversationWithFullname);
     this.subscriptions = [];
@@ -349,6 +372,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     ];
 
     this.translationMap = this.customTranslateService.translateLanguage(keys);
+    this.logger.log('[CONVS-DETAIL] x this.translationMap ', this.translationMap)
   }
 
   // --------------------------------------------------------
@@ -400,8 +424,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
       // // wait 8 second and then display the message if there are no messages
       const that = this;
-      this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages  ', that.messages );
-      this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages.length  ', that.messages.length );
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages  ', that.messages);
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages.length  ', that.messages.length);
       setTimeout(() => {
         if (!that.messages || that.messages.length === 0) {
           this.showIonContent = true;
@@ -463,6 +487,28 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   setHeaderContent() {
+  //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conversationWith', this.conversationWith)
+  //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conversationsHandlerService', this.conversationsHandlerService)
+  //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conv_type', this.conv_type)
+  //  if (this.conversationWith && this.conversationsHandlerService && this.conv_type === 'active') {
+  //   this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING')
+  //     this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+  //       this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv)
+  //       this.conversationAvatar = setConversationAvatar(
+  //         conv.conversation_with,
+  //         conv.conversation_with_fullname,
+  //         conv.channel_type
+  //       );
+  //       this.logger.log('[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ', this.conversationAvatar);
+  //     })
+  //   }
+  //   else { //get conversation from 'conversations' firebase node
+  //     this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+  //       this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (archived)', this.conversationWith, conv)
+
+  //     })
+  //   }
+
     this.conversationAvatar = setConversationAvatar(
       this.conversationWith,
       this.conversationWithFullname,
@@ -510,7 +556,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
       if (msg) {
         // msg = msg + '<br>' + 'File: ' + metadata.src;
-        msg =  `[${metadata.name}](${metadata.src})` + '\n' + msg
+        msg = `[${metadata.name}](${metadata.src})` + '\n' + msg
 
       } else {
         // msg = 'File: ' + metadata.src;
@@ -765,18 +811,21 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // DISPLAY CANNED RESPONSES if message.lastIndexOf("/")
       // ----------------------------------------------------------
       setTimeout(() => {
-        var pos = message.lastIndexOf("/");
-        this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / ", pos);
-        this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - pos:: ", pos);
-        if (pos >= 0) {
-          // if (pos === 0) {
-          // && that.tagsCanned.length > 0
-          var strSearch = message.substr(pos + 1);
-          this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses strSearch ", strSearch);
-          this.loadTagsCanned(strSearch);
+        if (this.conversationWith.startsWith("support-group")) {
+          var pos = message.lastIndexOf("/");
+          this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / ", pos);
+          this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - pos:: ", pos);
 
-        } else {
-          this.tagsCannedFilter = [];
+          if (pos >= 0) {
+            // if (pos === 0) {
+            // && that.tagsCanned.length > 0
+            var strSearch = message.substr(pos + 1);
+            this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses strSearch ", strSearch);
+            this.loadTagsCanned(strSearch, this.conversationWith);
+
+          } else {
+            this.tagsCannedFilter = [];
+          }
         }
       }, 300);
       // ./ CANNED RESPONSES //
@@ -789,36 +838,69 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // ----------------------------------------------------------
   // @ CANNED RESPONSES methods
   // ----------------------------------------------------------
-  loadTagsCanned(strSearch) {
+  loadTagsCanned(strSearch, conversationWith) {
     this.logger.log("[CONVS-DETAIL] - loadTagsCanned strSearch ", strSearch);
+    this.logger.log("[CONVS-DETAIL] - loadTagsCanned groupDetail ", this.groupDetail);
+    this.logger.log("[CONVS-DETAIL] - loadTagsCanned conversationWith ", conversationWith);
 
+    const conversationWith_segments = conversationWith.split('-');
+    this.logger.log("[CONVS-DETAIL] - loadTagsCanned conversationWith_segments ", conversationWith_segments);
     let projectId = ""
-    if (this.groupDetail && this.groupDetail['attributes'] && this.groupDetail['attributes']['projectId']) {
-      this.logger.log("[CONVS-DETAIL] - loadTagsCanned groupDetail ", this.groupDetail);
-      projectId = this.groupDetail['attributes']['projectId']
 
-      this.logger.log('[CONVS-DETAIL] - loadTagsCanned groupDetail > attributes > project id', this.groupDetail['attributes']['projectId']);
+    if (conversationWith_segments.length === 4) {
+      projectId = conversationWith_segments[2];
+      this.logger.log("[CONVS-DETAIL] - loadTagsCanned projectId ", projectId);
 
+      this.getAndShowCannedResponses(strSearch, projectId)
 
-      const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
-      this.logger.log('[CONVS-DETAIL] - loadTagsCanned tagsCanned.length', this.tagsCanned.length);
-      //if(this.tagsCanned.length <= 0 ){
-      this.tagsCanned = [];
-      this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId).subscribe(res => {
-        this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses RES', res);
-
-        this.tagsCanned = res
-        this.showTagsCanned(strSearch);
-
-      }, (error) => {
-        this.logger.error('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses - ERROR  ', error);
-
-      }, () => {
-        this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses * COMPLETE *');
-
-      });
+    } else {
+      this.getProjectIdByConversationWith(strSearch, this.conversationWith)
     }
   }
+
+  getProjectIdByConversationWith(strSearch, conversationWith: string) {
+    const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
+
+    this.tiledeskService.getProjectIdByConvRecipient(tiledeskToken, conversationWith).subscribe(res => {
+      this.logger.log('[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT RES', res);
+      if (res) {
+        const projectId = res.id_project
+        this.logger.log('[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT projectId ', projectId);
+        if (projectId) {
+          this.getAndShowCannedResponses(strSearch, projectId)
+        }
+      }
+
+    }, (error) => {
+      this.logger.error('[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error);
+
+    }, () => {
+      this.logger.log('[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT * COMPLETE *');
+
+    });
+  }
+
+  getAndShowCannedResponses(strSearch, projectId) {
+
+    const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
+    this.logger.log('[CONVS-DETAIL] - loadTagsCanned tagsCanned.length', this.tagsCanned.length);
+    //if(this.tagsCanned.length <= 0 ){
+    this.tagsCanned = [];
+    this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId).subscribe(res => {
+      this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses RES', res);
+
+      this.tagsCanned = res
+      this.showTagsCanned(strSearch);
+
+    }, (error) => {
+      this.logger.error('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses - ERROR  ', error);
+
+    }, () => {
+      this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses * COMPLETE *');
+
+    });
+  }
+
 
   showTagsCanned(strSearch) {
     this.logger.log('[CONVS-DETAIL] - showTagsCanned strSearch ', strSearch);
@@ -855,9 +937,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   replacePlaceholderInCanned(str) {
     this.logger.log('[CONVS-DETAIL] - replacePlaceholderInCanned str ', str);
 
-    if (this.groupDetail && this.groupDetail['attributes'] && this.groupDetail['attributes']['userFullname']) {
-      str = str.replace('$recipient_name', this.groupDetail['attributes']['userFullname']);
-    }
+
+    str = str.replace('$recipient_name', this.conversationWithFullname);
+
     if (this.loggedUser && this.loggedUser.fullname) {
       str = str.replace('$agent_name', this.loggedUser.fullname);
     }
@@ -996,7 +1078,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  onPresentModalScrollToBottom (event: boolean) {
+  onPresentModalScrollToBottom(event: boolean) {
     this.logger.log('[CONVS-DETAIL] onPresentModalScrollToBottom event', event);
     if (event === true) {
       this.scrollBottom(0);
