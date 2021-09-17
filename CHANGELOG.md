@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC2
+- Adds style rules to fit the image name to its width
+- Improves the method of getting Project ID from Conversation ID
+
 ### 3.0.54-RC2
 - Fixes the bug: canned responses are not loaded
 - Adds backward compatibility: loading of canned responses for old projects
