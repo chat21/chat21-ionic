@@ -27,12 +27,12 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild('textArea', { static: false }) messageTextArea: any
-//   set textArea(element: ElementRef<HTMLInputElement>) {
-//     if(element) {
-//       this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ViewChild element ", element);
-//       element.nativeElement.focus()
-//     }
-//  }
+  //   set textArea(element: ElementRef<HTMLInputElement>) {
+  //     if(element) {
+  //       this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ViewChild element ", element);
+  //       element.nativeElement.focus()
+  //     }
+  //  }
 
 
   @ViewChild('fileInput', { static: false }) fileInput: any;
@@ -88,9 +88,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     // this.events.subscribe((cannedmessage) => {
     //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] events.subscribe cannedmessage ", cannedmessage);
     // })
-    this.LONG_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG')
-    this.SHORT_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
-    this.SHORTER_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
+
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] LONG_TEXAREA_PLACEHOLDER ", this.LONG_TEXAREA_PLACEHOLDER);
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] SHORT_TEXAREA_PLACEHOLDER ", this.SHORT_TEXAREA_PLACEHOLDER);
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] SHORTER_TEXAREA_PLACEHOLDER ", this.SHORTER_TEXAREA_PLACEHOLDER);
@@ -101,6 +99,12 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   ngOnChanges() {
+    if (this.translationMap) {
+      this.LONG_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG')
+      this.SHORT_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
+      this.SHORTER_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
+    }
+
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges this.isOpenInfoConversation ", this.isOpenInfoConversation);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
 
@@ -116,9 +120,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   }
 
   // ngAfterViewInit() {
-    ngAfterViewInit() {
+  ngAfterViewInit() {
 
-      
+
     // const element = this.renderer.selectRootElement('#textArea');
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit element get with renderer ", element);
     // const elemTexarea= <HTMLElement>document.querySelector('#ion-textarea');
@@ -317,7 +321,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         data.items.add(new File([file], file.name, { type: file.type }));
         this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste data ", data);
         this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste file ", file);
-       
+
         this.presentModal(data);
 
       } else if (item.type.startsWith("application")) {
@@ -386,7 +390,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         backdropDismiss: true
       });
     modal.onDidDismiss().then((detail: any) => {
-      
+
       this.logger.log('presentModal onDidDismiss detail', detail);
       if (detail.data !== undefined) {
         let type = ''
@@ -438,9 +442,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
             this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg type::: ', type);
             this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] FIREBASE-UPLOAD presentModal invio msg message::: ', messageString);
             // send message
-// if(messageString === undefined) {
-//   messageString = metadata.name
-// }
+            // if(messageString === undefined) {
+            //   messageString = metadata.name
+            // }
 
             that.eventSendMessage.emit({ message: messageString, type: type, metadata: metadata });
 
