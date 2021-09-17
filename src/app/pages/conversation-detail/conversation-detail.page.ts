@@ -844,6 +844,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.logger.log("[CONVS-DETAIL] - loadTagsCanned conversationWith ", conversationWith);
 
     const conversationWith_segments = conversationWith.split('-');
+      // Removes the last element of the array if is = to the separator 
+      if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
+        conversationWith_segments.pop();
+     }
     this.logger.log("[CONVS-DETAIL] - loadTagsCanned conversationWith_segments ", conversationWith_segments);
     let projectId = ""
 

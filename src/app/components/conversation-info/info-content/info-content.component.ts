@@ -78,8 +78,15 @@ export class InfoContentComponent implements OnInit {
       this.logger.log('[INFO-CONTENT-COMP] - paramMap.subscribe conversationWith: ', this.conversationWith);
       this.conversationWithFullname = params.get('FullNameConv');
       this.conv_type = params.get('Convtype');
-
+     
       const conversationWith_segments = this.conversationWith.split('-');
+
+      // Removes the last element of the array if is = to the separator 
+      if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
+        conversationWith_segments.pop();
+     }
+      
+
       this.logger.log('[INFO-CONTENT-COMP] - paramMap.subscribe conversationWith_segments: ', conversationWith_segments);
 
       if (this.conversationWith.startsWith("support-group")) {
