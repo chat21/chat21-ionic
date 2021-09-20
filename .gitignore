@@ -13,3 +13,4 @@ docs.zip
 firebase-messaging-sw.js
 env.pre
 .env
+src/firebase-messaging-sw.js
