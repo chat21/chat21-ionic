@@ -39,13 +39,13 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
     public imageRepoService: ImageRepoService,
     private route: ActivatedRoute,
   ) { 
-    this.route.paramMap.subscribe(params => {
+    // this.route.paramMap.subscribe(params => {
       
      
-      this.conversationWithFullname = params.get('FullNameConv');
-      this.logger.log('[CONVS-DETAIL][HEADER]- initialize -> params: ', params);
-      this.logger.log('[CONVS-DETAIL][HEADER]- initialize -> params > : ',  this.conversationWithFullname);
-    });
+    //   this.conversationWithFullname = params.get('FullNameConv');
+    //   this.logger.log('[CONVS-DETAIL][HEADER]- initialize -> params: ', params);
+    //   this.logger.log('[CONVS-DETAIL][HEADER]- initialize -> params > : ',  this.conversationWithFullname);
+    // });
   }
 
   // ----------------------------------------------------

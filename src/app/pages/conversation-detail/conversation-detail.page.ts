@@ -490,31 +490,35 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conversationWith', this.conversationWith)
   //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conversationsHandlerService', this.conversationsHandlerService)
   //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conv_type', this.conv_type)
-  //  if (this.conversationWith && this.conversationsHandlerService && this.conv_type === 'active') {
-  //   this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING')
-  //     this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-  //       this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv)
-  //       this.conversationAvatar = setConversationAvatar(
-  //         conv.conversation_with,
-  //         conv.conversation_with_fullname,
-  //         conv.channel_type
-  //       );
-  //       this.logger.log('[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ', this.conversationAvatar);
-  //     })
-  //   }
-  //   else { //get conversation from 'conversations' firebase node
-  //     this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-  //       this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (archived)', this.conversationWith, conv)
+   if (this.conversationWith && this.conversationsHandlerService && this.conv_type === 'active') {
+    this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING')
+      this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+        this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv)
+        this.conversationAvatar = setConversationAvatar(
+          conv.conversation_with,
+          conv.conversation_with_fullname,
+          conv.channel_type
+        );
+        this.logger.log('[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ', this.conversationAvatar);
+      })
+    }
+    else { //get conversation from 'conversations' firebase node
+      this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+        this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (archived)', this.conversationWith, conv)
+        this.conversationAvatar = setConversationAvatar(
+          conv.conversation_with,
+          conv.conversation_with_fullname,
+          conv.channel_type
+        );
+      })
+    }
 
-  //     })
-  //   }
-
-    this.conversationAvatar = setConversationAvatar(
-      this.conversationWith,
-      this.conversationWithFullname,
-      this.channelType
-    );
-    this.logger.log('[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ', this.conversationAvatar);
+    // this.conversationAvatar = setConversationAvatar(
+    //   this.conversationWith,
+    //   this.conversationWithFullname,
+    //   this.channelType
+    // );
+    // this.logger.log('[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ', this.conversationAvatar);
   }
 
   returnSendMessage(e: any) {

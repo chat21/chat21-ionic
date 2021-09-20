@@ -279,9 +279,11 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             const firebaseMessages = firebase.database().ref(urlNodeFirebase);
             firebaseMessages.on('value', (childSnapshot) => {
                 const childData: ConversationModel = childSnapshot.val();
-                this.logger.log('[FIREBASEConversationsHandlerSERVICE] conversationDetail childSnapshot *****', childSnapshot.val())
-                // if (childSnapshot && childSnapshot.key && childData.uid) {
-                if (childData) {
+                this.logger.log('[FIREBASEConversationsHandlerSERVICE] conversationDetail childSnapshot.val() *****', childSnapshot.val());
+                this.logger.log('[FIREBASEConversationsHandlerSERVICE] conversationDetail childSnapshot *****', childSnapshot)
+                // && childData.uid
+                if (childSnapshot && childSnapshot.key) {
+                // if (childData) {
                     childData.uid = childSnapshot.key;
                     const conversation = this.completeConversation(childData);
                     if (conversation) {
@@ -485,7 +487,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         conv.conversation_with = conversation_with;
         conv.conversation_with_fullname = conversation_with_fullname;
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
-        conv.time_last_message = this.getTimeLastMessage(conv.timestamp);
+        // conv.time_last_message = this.getTimeLastMessage(conv.timestamp); // evaluate if is used
         conv.avatar = avatarPlaceholder(conversation_with_fullname);
         conv.color = getColorBck(conversation_with_fullname);
         //conv.image = this.imageRepo.getImagePhotoUrl(conversation_with);
