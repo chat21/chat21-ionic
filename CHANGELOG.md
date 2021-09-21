@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC4
+- Set "Auth.Persistence" to "firebase.auth().signInWithCustomToken" method
+- Hardcoded the authPersistence value to 'LOCAL' in the 'localSessionStorage' service
+
 ### 3.0.55-RC3
 - Fixes the bug with another solution: the sender name in the conversation list does not match the sender name in the conversation details header
 - Adds Android resources
