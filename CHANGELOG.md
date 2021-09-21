@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC6
+- Fixed the bug: when the pc starts up, if the connection is missing, the chat tab is a blank page and remains so even after the connection (use case the app-root does not load the ion-app)
+
 ### 3.0.55-RC5
 - Removes the changes in version 3.0.55-RC4
 - Updates the method of "app.component.ts" watchToConnectionStatus()
