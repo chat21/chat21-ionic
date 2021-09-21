@@ -92,7 +92,8 @@ import { ConversationInfoModule } from 'src/app/components/conversation-info/con
 // Directives
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
-
+import { Network } from '@ionic-native/network/ngx';
+import { ConnectionService } from 'ng-connection-service';
 
 
 // FACTORIES
@@ -101,7 +102,7 @@ export function createTranslateLoader(http: HttpClient) {
 
 }
 
-export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service, appSorage: AppStorageService) {
+export function authenticationFactory(http: HttpClient, appConfig: AppConfigProvider, chat21Service: Chat21Service, appSorage: AppStorageService, network: Network, connectionService:ConnectionService) {
   const config = appConfig.getConfig()
   if (config.chatEngine === CHAT_ENGINE_MQTT) {
 
@@ -115,8 +116,10 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
   } else {
 
     FirebaseInitService.initFirebase(config.firebaseConfig)
-    const auth = new FirebaseAuthService(http);
+    console.log('[APP-MOD] FirebaseInitService config ', config)
+    const auth = new FirebaseAuthService(http, network, connectionService);
     auth.setBaseUrl(config.apiUrl)
+    auth.setPersistence(config.authPersistence)
     return auth
   }
 }
@@ -283,7 +286,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     {
       provide: MessagingAuthService,
       useFactory: authenticationFactory,
-      deps: [HttpClient, AppConfigProvider, Chat21Service, AppStorageService]
+      deps: [HttpClient, AppConfigProvider, Chat21Service, AppStorageService, Network, ConnectionService]
     },
     {
       provide: PresenceService,
@@ -343,6 +346,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     StatusBar,
     SplashScreen,
     Keyboard,
+    Network,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     EventsService,
     Chooser,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-
+import { ConnectionService } from 'ng-connection-service';
 // firebase
 // import * as firebase from 'firebase/app';
 import firebase from "firebase/app";
@@ -30,6 +30,9 @@ import { LoggerInstance } from '../logger/loggerInstance';
 import { LoggerService } from '../abstract/logger.service';
 
 
+import { Observable, Observer, fromEvent, merge } from 'rxjs';
+import { map } from 'rxjs/operators'
+import { Network } from '@ionic-native/network/ngx';
 // @Injectable({ providedIn: 'root' })
 @Injectable()
 export class FirebaseAuthService extends MessagingAuthService {
@@ -53,9 +56,15 @@ export class FirebaseAuthService extends MessagingAuthService {
   // private imageRepo: ImageRepoService = new FirebaseImageRepoService();
 
   private firebaseToken: string;
-  private logger:LoggerService = LoggerInstance.getInstance()
+  private logger: LoggerService = LoggerInstance.getInstance()
+
+  status = 'ONLINE';
+  isConnected = true;
+
   constructor(
-    public http: HttpClient
+    public http: HttpClient,
+    private network: Network,
+    private connectionService: ConnectionService
   ) {
     super();
   }
@@ -64,7 +73,7 @@ export class FirebaseAuthService extends MessagingAuthService {
    *
    */
   initialize() {
-   
+
     this.SERVER_BASE_URL = this.getBaseUrl();
     this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
     this.logger.info('[FIREBASEAuthSERVICE] - initialize URL_TILEDESK_CREATE_CUSTOM_TOKEN ', this.URL_TILEDESK_CREATE_CUSTOM_TOKEN)
@@ -72,8 +81,65 @@ export class FirebaseAuthService extends MessagingAuthService {
     // this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously'
     // this.URL_TILEDESK_SIGNIN_WITH_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'auth/signinWithCustomToken';
     // this.checkIsAuth();
+
+    // this.createOnline$().subscribe((isOnline) =>{
+    //   console.log('FIREBASEAuthSERVICE] isOnline ', isOnline);
+    //   if (isOnline === true ) {
+    //     this.onAuthStateChanged();
+    //   }
+    // }) 
+    this.checkInternetConnection()
+
     this.onAuthStateChanged();
   }
+
+  checkInternetConnection () {
+    this.logger.log('[FIREBASEAuthSERVICE] - checkInternetConnection');
+    // let connectSubscription = this.network.onConnect().subscribe(() => {
+    //   this.logger.log('[FIREBASEAuthSERVICE] - network connected!');
+    //   // We just got a connection but we need to wait briefly
+    //    // before we determine the connection type. Might need to wait.
+    //   // prior to doing any api requests as well.
+    //   setTimeout(() => {
+    //     if (this.network.type === 'wifi') {
+    //       this.logger.log('[FIREBASEAuthSERVICE] - we got a wifi connection, woohoo!');
+    //     }
+    //   }, 3000);
+    // });
+
+   
+      this.connectionService.monitor().subscribe(isConnected => {
+        this.isConnected = isConnected;
+        this.logger.log('[FIREBASEAuthSERVICE] - checkInternetConnection isConnected', isConnected);
+        if (this.isConnected) {
+          this.status = "ONLINE";
+
+          // this.onAuthStateChanged();
+          firebase.auth().onAuthStateChanged(user => {
+            this.logger.log('[FIREBASEAuthSERVICE] checkInternetConnection onAuthStateChanged', user)
+          })
+        }
+        else {
+          this.status = "OFFLINE";
+          // this.onAuthStateChanged();
+          firebase.auth().onAuthStateChanged(user => {
+            this.logger.log('[FIREBASEAuthSERVICE] checkInternetConnection onAuthStateChanged', user)
+          })
+        }
+      })
+    
+  
+  }
+
+  // createOnline$() {
+  //   return merge<boolean>(
+  //     fromEvent(window, 'offline').pipe(map(() => false)),
+  //     fromEvent(window, 'online').pipe(map(() => true)),
+  //     new Observable((sub: Observer<boolean>) => {
+  //       sub.next(navigator.onLine);
+  //       sub.complete();
+  //     }));
+  // }
 
   /**
    * checkIsAuth
@@ -113,12 +179,12 @@ export class FirebaseAuthService extends MessagingAuthService {
   onAuthStateChanged() {
     const that = this;
     firebase.auth().onAuthStateChanged(user => {
-      this.logger.debug('[FIREBASEAuthSERVICE] onAuthStateChanged', user)
+      this.logger.log('[FIREBASEAuthSERVICE] onAuthStateChanged', user)
       if (!user) {
-        this.logger.debug('[FIREBASEAuthSERVICE] 1 - PASSO OFFLINE AL CHAT MANAGER')
+        this.logger.log('[FIREBASEAuthSERVICE] 1 - PASSO OFFLINE AL CHAT MANAGER')
         that.BSAuthStateChanged.next('offline');
       } else {
-        this.logger.debug('[FIREBASEAuthSERVICE] 2 - PASSO ONLINE AL CHAT MANAGER')
+        this.logger.log('[FIREBASEAuthSERVICE] 2 - PASSO ONLINE AL CHAT MANAGER')
         that.BSAuthStateChanged.next('online');
       }
     });
@@ -131,6 +197,7 @@ export class FirebaseAuthService extends MessagingAuthService {
   signInFirebaseWithCustomToken(token: string): Promise<any> {
     const that = this;
     let firebasePersistence;
+    console.log('FB-AUTH firebasePersistence', this.getPersistence()) 
     switch (this.getPersistence()) {
       case 'SESSION': {
         firebasePersistence = firebase.auth.Auth.Persistence.SESSION;
@@ -149,13 +216,13 @@ export class FirebaseAuthService extends MessagingAuthService {
         break;
       }
     }
-    return firebase.auth().setPersistence(firebasePersistence).then( async () => {
-      return firebase.auth().signInWithCustomToken(token).then( async () => {
-                // that.firebaseSignInWithCustomToken.next(response);
-              }).catch((error) => {
-                that.logger.error('[FIREBASEAuthSERVICE] signInFirebaseWithCustomToken Error: ', error);
-                  // that.firebaseSignInWithCustomToken.next(null);
-              });
+    return firebase.auth().setPersistence(firebasePersistence).then(async () => {
+      return firebase.auth().signInWithCustomToken(token).then(async () => {
+        // that.firebaseSignInWithCustomToken.next(response);
+      }).catch((error) => {
+        that.logger.error('[FIREBASEAuthSERVICE] signInFirebaseWithCustomToken Error: ', error);
+        // that.firebaseSignInWithCustomToken.next(null);
+      });
     }).catch((error) => {
       that.logger.error('[FIREBASEAuthSERVICE] signInFirebaseWithCustomToken Error: ', error);
     });
@@ -200,7 +267,7 @@ export class FirebaseAuthService extends MessagingAuthService {
   private signOut() {
     const that = this;
     firebase.auth().signOut().then(() => {
-      that.logger.debug('[FIREBASEAuthSERVICE] firebase-sign-out');
+      that.logger.log('[FIREBASEAuthSERVICE] signOut firebase-sign-out');
       // cancello token
       // this.appStorage.removeItem('tiledeskToken');
       //localStorage.removeItem('firebaseToken');
@@ -244,12 +311,12 @@ export class FirebaseAuthService extends MessagingAuthService {
       //localStorage.setItem('firebaseToken', that.firebaseToken);
       that.signInFirebaseWithCustomToken(data)
     }, error => {
-      that.logger.error('[FIREBASEAuthSERVICE] createFirebaseCustomToken ERR ', error) 
+      that.logger.error('[FIREBASEAuthSERVICE] createFirebaseCustomToken ERR ', error)
     });
   }
 
   logout() {
-    this.logger.debug('[FIREBASEAuthSERVICE] logout');
+    this.logger.log('[FIREBASEAuthSERVICE] logout');
     // cancello token firebase dal local storage e da firebase
     // dovrebbe scattare l'evento authchangeStat
     this.signOut();
