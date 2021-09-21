@@ -112,7 +112,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
     const auth = new MQTTAuthService(http, chat21Service, appSorage);
 
     auth.setBaseUrl(appConfig.getConfig().apiUrl)
-    auth.setPersistence(config.authPersistence)
+    
     return auth
   } else {
 
@@ -120,7 +120,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
     console.log('[APP-MOD] FirebaseInitService config ', config)
     const auth = new FirebaseAuthService(http, network, connectionService);
     auth.setBaseUrl(config.apiUrl)
-    auth.setPersistence(config.authPersistence)
+  
     return auth
   }
 }
