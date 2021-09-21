@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC5
+- Removes the changes in version 3.0.55-RC4
+- Updates the method of app.component.ts watchToConnectionStatus()
+
 ### 3.0.55-RC4
 - Set "Auth.Persistence" to "firebase.auth().signInWithCustomToken" method
 - Hardcoded the authPersistence value to 'LOCAL' in the 'localSessionStorage' service
