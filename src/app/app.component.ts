@@ -273,7 +273,7 @@ translateToastMessage() {
   this.logger.log('[APP-COMP] >>> initAuthentication tiledeskToken ', tiledeskToken)
 
   const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
-  this.logger.log('[APP-COMP] >>> initAuthentication tiledeskToken ', tiledeskToken)
+  this.logger.log('[APP-COMP] >>> initAuthentication currentUser ', currentUser)
   if (tiledeskToken) {
     this.logger.log('[APP-COMP] >>> initAuthentication I LOG IN WITH A TOKEN EXISTING IN THE LOCAL STORAGE OR WITH A TOKEN PASSED IN THE URL PARAMETERS <<<')
 
