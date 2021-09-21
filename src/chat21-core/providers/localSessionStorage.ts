@@ -16,7 +16,8 @@ export class LocalSessionStorage extends AppStorageService{
     initialize(storagePrefix: string, persistence: string, projectID: string): void {
       this.storagePrefix = storagePrefix;
       this.projectID = projectID;
-      this.persistence = persistence;
+      // this.persistence = persistence;
+      this.persistence = 'LOCAL';
       this.logger.info('[LocalSessionStorage] - initialize ', this.storagePrefix, this.persistence, this.projectID)
   }
 
@@ -30,7 +31,7 @@ export class LocalSessionStorage extends AppStorageService{
           // prefix = prefix + sv;
           prefix = this.storagePrefix + '_';
       } catch (e) {
-          this.logger.error('[LocalSessionStorage] getItem >Error :' + e);
+          this.logger.error('[LocalSessionStorage] getItem - Error :' + e);
       }
       const newKey = prefix + this.projectID + '_' + key;
       return this.getValueForKey(newKey);
