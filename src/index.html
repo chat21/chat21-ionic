@@ -5,24 +5,104 @@
   <meta charset="utf-8" />
   <title>Tiledesk - Open Source Live Chat</title>
 
-  <base href="./"/>
+  <base href="./" />
   <!-- <base href="/"/>  -->
   <!-- <base href="./"/>  quando rilascio in prod sostituisco questo base con quello sopra -->
 
   <!-- <meta name="color-scheme" content="light dark" /> disable dark mode: Note in theme/variable.scss is also commented all the code that referts to dark-mode -->
   <meta name="color-scheme" content="light" />
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport"
+    content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
 
   <link rel="icon" type="image/png" href="assets/icon/favicon.ico" />
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&lang=en" />
-  
+
   <link rel="manifest" href="./manifest.json">
   <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
-  
+
   <!-- <script src="./assets/js/chat21client.js"></script> -->
   <!-- <script src="https://unpkg.com/mqtt@4.1.0/dist/mqtt.min.js"></script> -->
+
+  <script>
+    console.log('index.html  script version 0.1');
+    // window.onload = (event) => {
+    //   console.log('index.html  page is fully loaded');
+    // };
+
+    // window.addEventListener('online', (event) => {
+    //   console.log("index.html You are now connected to the network.");
+    // });
+
+    // // ononline version
+    window.ononline = (event) => {
+      console.log("index.html You are now connected to the network.");
+    };
+
+    // // addEventListener version
+    // window.addEventListener('offline', (event) => {
+    //   console.log("The network connection has been lost.");
+    // });
+
+    // // onoffline version
+    window.onoffline = (event) => {
+      console.log("The network connection has been lost.");
+    };
+    console.log('index.html window.navigator.onLine is ' + window.navigator.onLine);
+
+    if (window.navigator.onLine === false) {
+      let app_root_el = document.getElementsByTagName('app-root');
+      console.log('index.html app_root_el ', app_root_el);
+
+      setTimeout(function () {
+        console.log('index.html app_root_el > childNodes ', app_root_el[0].childNodes);
+        if (app_root_el[0].childNodes.length > 0) { // Or just `if (element.childNodes.length)`
+          console.log('index.html app_root_el has child', app_root_el[0].childNodes);
+          // window.ononline = (event) => {
+          //   console.log("index.html You are now connected to the network.");
+          //   location.reload(true);
+          // };
+        } else {
+          console.log('index.html app_root_el not has child', app_root_el[0].childNodes);
+          // if (window.navigator.onLine === true) {
+          //   location.reload(true);
+          // }
+          window.ononline = (event) => {
+            console.log("index.html You are now connected to the network.");
+            location.reload(true);
+          };
+        }
+
+      }, 3000);
+
+
+    }
+
+
+    // document.addEventListener('DOMContentLoaded', (event) => {
+    //   // log.textContent = log.textContent + `DOMContentLoaded\n`;
+    //   console.log("index.html DOMContentLoaded event ", event);
+    //   console.log('index.html window.navigator.onLine is ' + window.navigator.onLine);
+    //   let app_root_el = document.getElementsByTagName('app-root');
+    //   console.log('index.html app_root_el ', app_root_el);
+
+    //   setTimeout(function () {
+    //     console.log('index.html app_root_el > childNodes ', app_root_el[0].childNodes);
+    //     if (app_root_el[0].childNodes.length > 0) { // Or just `if (element.childNodes.length)`
+    //       console.log('index.html app_root_el has child', app_root_el[0].childNodes);
+    //     } else {
+    //       console.log('index.html app_root_el not has child', app_root_el[0].childNodes);
+    //       if (window.navigator.onLine === true) {
+    //         location.reload(true);
+    //       }
+    //     }
+
+    //   }, 3000);
+
+    // });
+
+  </script>
 
 
 
@@ -37,5 +117,6 @@
   <app-root></app-root>
 </body>
 
-</script>  
+</script>
+
 </html>
