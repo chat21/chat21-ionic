@@ -185,5 +185,7 @@
     "SENT_AN_ATTACHMENT":"hai inviato un allegato",
     "NO_INFORMATION_AVAILABLE": "Nessuna informazione disponibile",
     "CONTACT_ID": "ID contatto",
-    "USER_ID": "ID utente"
+    "USER_ID": "ID utente",
+    "CLOSE_TOAST": "Chiudi",
+    "WAITING_FOR_NETWORK": "In attesa di rete"
 }

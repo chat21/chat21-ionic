@@ -177,5 +177,7 @@
   "SENT_AN_ATTACHMENT":"sent an attachment",
   "NO_INFORMATION_AVAILABLE": "No information available",
   "CONTACT_ID": "Contact ID",
-  "USER_ID": "User ID"
+  "USER_ID": "User ID",
+  "CLOSE_TOAST": "Close",
+  "WAITING_FOR_NETWORK": "Waiting for network"
 }
