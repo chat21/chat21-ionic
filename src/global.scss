@@ -571,3 +571,14 @@ select:-webkit-autofill:focus {
     line-height: 42px;
 }
 /* End rules for the member list refactoring in the "info-group.component.html" (replacement of ion-grid with ion-list) */
+.missing-connection-toast {
+    --background:#FDD764;
+    --color:#2e3939;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+
+.missing-connection-toast > .spinner-middle {
+    vertical-align: middle;
+}
