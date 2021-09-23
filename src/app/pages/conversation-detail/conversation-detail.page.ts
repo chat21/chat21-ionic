@@ -92,9 +92,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public window: any = window;
   public styleMap: Map<string, string> = new Map();
 
-  public isButtonUrl: boolean = false;
-  public buttonClicked: any;
-
   MESSAGE_TYPE_INFO = MESSAGE_TYPE_INFO;
   MESSAGE_TYPE_MINE = MESSAGE_TYPE_MINE;
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS;
@@ -1128,11 +1125,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   private openLink(event: any) {
     const link = event.link ? event.link : '';
     const target = event.target ? event.target : '';
-    if (target === 'self') {
-      // window.open(link, '_self');
-      this.isButtonUrl= true;
-      this.buttonClicked = event
-    } else if (target === 'parent') {
+    if (target === 'self' || target === 'parent') {
       window.open(link, '_parent');
     } else {
       window.open(link, '_blank');
