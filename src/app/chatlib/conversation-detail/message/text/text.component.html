@@ -1,4 +1,5 @@
-<p [ngStyle] = "{ 'width': media_width +'px'  }" #messageEl class="message_innerhtml marked" 
+<!-- [ngStyle] = "{ 'width': media_width +'px'  }" -->
+<p  #messageEl class="message_innerhtml marked" 
     [innerHTML]="printMessage(text, messageEl, this) | htmlEntiesEncode  | marked"
     [ngStyle]="{'color': '$'+ color }">
 </p>
