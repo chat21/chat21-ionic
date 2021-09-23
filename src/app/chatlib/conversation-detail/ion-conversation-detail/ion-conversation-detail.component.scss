@@ -5,9 +5,9 @@
 
 :host .base_sent .msg_sent ::ng-deep div > div > div > tiledeskwidget-text > p > p  {
     margin-top:12px !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    // white-space: nowrap;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
 }
 
 :host .base_sent .msg_sent ::ng-deep > div > div > tiledeskwidget-image > div  {
