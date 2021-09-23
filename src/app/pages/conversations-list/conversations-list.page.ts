@@ -59,8 +59,8 @@ export class ConversationListPage implements OnInit {
   stylesMap: Map<string, string>;
 
   public conversationType = 'active'
-  headerTitle: string
-
+  headerTitle: string;
+ 
 
   constructor(
     private router: Router,
@@ -82,12 +82,16 @@ export class ConversationListPage implements OnInit {
     this.listenToAppCompConvsLengthOnInitConvs();
     this.listenToLogoutEvent();
     this.listenToSwPostMessage();
+
   }
+
 
   // -----------------------------------------------
   // @ Lifehooks
   // -----------------------------------------------
-  ngOnInit() { }
+  ngOnInit() {
+
+  }
 
   ionViewWillEnter() {
     this.logger.log('[CONVS-LIST-PAGE] ionViewWillEnter uidConvSelected', this.uidConvSelected);
@@ -403,18 +407,22 @@ export class ConversationListPage implements OnInit {
    * imposto recipient se esiste nei parametri passati nell'url
    * imposto uidConvSelected recuperando id ultima conversazione aperta dallo storage
    */
+  // --------------------------------------------------------
+  // It only works on BSStart.subscribe! it is useful or can be eliminated
+  // --------------------------------------------------------
   initVariables() {
     this.logger.log('[CONVS-LIST-PAGE] uidReciverFromUrl:: ' + this.uidReciverFromUrl);
     this.logger.log('[CONVS-LIST-PAGE] loggedUserUid:: ' + this.loggedUserUid);
     this.logger.log('[CONVS-LIST-PAGE] tenant:: ' + this.tenant);
     if (this.route.component['name'] !== "ConversationListPage") {
+
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
-      this.logger.log('[CONVS-LIST-PAGE] conversationWith: ', IDConv);
+      this.logger.log('[CONVS-LIST-PAGE] conversationWith 2: ', IDConv);
       if (IDConv) {
         this.setUidConvSelected(IDConv);
       } else {
 
-        this.logger.log('[CONVS-LIST-PAGE] conversationWith: ', IDConv);
+        this.logger.log('[CONVS-LIST-PAGE] conversationWith 2 (else): ', IDConv);
       }
     }
   }
@@ -437,7 +445,7 @@ export class ConversationListPage implements OnInit {
       }
       if (conversationSelected) {
         this.logger.log('[CONVS-LIST-PAGE] conversationSelected', conversationSelected);
-        this.logger.log('[CONVS-LIST-PAGE] la conv ', this.conversationSelected, ' è già stata caricata');
+        this.logger.log('[CONVS-LIST-PAGE] la conv ', this.conversationSelected, ' has already been loaded');
         this.conversationSelected = conversationSelected;
         this.logger.log('[CONVS-LIST-PAGE] setUidConvSelected: ', this.conversationSelected);
       }
@@ -493,9 +501,9 @@ export class ConversationListPage implements OnInit {
 
         } else if (conversation.type === "image") {
 
-          this.logger.log('[CONVS-LIST-PAGE] HAS SENT AN IMAGE');
-          this.logger.log("[CONVS-LIST-PAGE] translationMap.get('YOU')")
-          // const keys = ['SENT_AN_IMAGE'];
+          // this.logger.log('[CONVS-LIST-PAGE] HAS SENT AN IMAGE');
+          // this.logger.log("[CONVS-LIST-PAGE] translationMap.get('YOU')")
+
 
           const SENT_AN_IMAGE = conversation['last_message_text'] = translationMap.get('SENT_AN_IMAGE')
 
@@ -588,32 +596,68 @@ export class ConversationListPage implements OnInit {
     const conversationId = conversation.uid;
 
     this.logger.log('[CONVS-LIST-PAGE] onCloseConversation conversationId: ', conversationId)
-    const conversationId_segments = conversationId.split('-');
-    this.logger.log('[CONVS-LIST-PAGE] - conversationId_segments: ', conversationId_segments);
-    const project_id = conversationId_segments[2]
-    this.logger.log('[CONVS-LIST-PAGE] - conversationWith_segments project_id: ', project_id);
+
+    const conversationWith_segments = conversationId.split('-');
+    this.logger.log('[CONVS-LIST-PAGE] - conversationId_segments: ', conversationWith_segments);
+
+    // Removes the last element of the array if is = to the separator 
+    if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
+      conversationWith_segments.pop();
+    }
 
     if (conversationId.startsWith("support-group")) {
+      let project_id = ''
+      if (conversationWith_segments.length === 4) {
+        project_id = conversationWith_segments[2];
 
-      // const projectId = conversation.attributes.projectId
-      const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
-      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
+        const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
+        this.archiveSupportGroupConv(tiledeskToken, project_id, conversationId);
 
-      this.tiledeskService.closeSupportGroup(tiledeskToken, project_id, conversationId).subscribe(res => {
-
-        this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup RES', res);
-      }, (error) => {
-        this.logger.error('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup - ERROR  ', error);
-      }, () => {
-        this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup * COMPLETE *');
-        this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS ', this.conversations)
-        this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS LENGHT ', this.conversations.length)
-      });
+      } else {
+        this.getProjectIdByConversationWith(conversationId)
+      }
     } else {
-
       this.conversationsHandlerService.archiveConversation(conversationId)
     }
   }
+
+  getProjectIdByConversationWith(conversationId: string) {
+    const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
+
+    this.tiledeskService.getProjectIdByConvRecipient(tiledeskToken, conversationId).subscribe(res => {
+      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT RES', res);
+
+      if (res) {
+        const project_id = res.id_project
+        this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT  project_id', project_id);
+        this.archiveSupportGroupConv(tiledeskToken, project_id, conversationId);
+      }
+
+    }, (error) => {
+      this.logger.error('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error);
+
+    }, () => {
+      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT * COMPLETE *');
+     
+    });
+  }
+
+  archiveSupportGroupConv(tiledeskToken, project_id,conversationId) {
+    this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
+    this.tiledeskService.closeSupportGroup(tiledeskToken, project_id, conversationId).subscribe(res => {
+
+      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup RES', res);
+    }, (error) => {
+      this.logger.error('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup - ERROR  ', error);
+    }, () => {
+      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup * COMPLETE *');
+      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS ', this.conversations)
+      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS LENGHT ', this.conversations.length)
+    });
+
+  }
+
+
 
 
 
