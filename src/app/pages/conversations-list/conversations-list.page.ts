@@ -243,7 +243,7 @@ export class ConversationListPage implements OnInit {
     // });
 
     this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
-      this.logger.log('[CONVS-LIST-PAGE] ***** conversationsAdded *****', conversation);
+      // this.logger.log('[CONVS-LIST-PAGE] ***** conversationsAdded *****', conversation);
       // that.conversationsChanged(conversations);
       if (conversation) {
         this.onImageLoaded(conversation)
@@ -457,7 +457,7 @@ export class ConversationListPage implements OnInit {
   }
 
   onImageLoaded(conversation: any) {
-    this.logger.log('[CONVS-LIST-PAGE] onImageLoaded', conversation)
+    // this.logger.log('[CONVS-LIST-PAGE] onImageLoaded', conversation)
     let conversation_with_fullname = conversation.sender_fullname;
     let conversation_with = conversation.sender;
     if (conversation.sender === this.loggedUserUid) {
@@ -475,7 +475,7 @@ export class ConversationListPage implements OnInit {
   }
 
   onConversationLoaded(conversation: ConversationModel) {
-    this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded ', conversation)
+    // this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded ', conversation)
     const keys = ['YOU', 'SENT_AN_IMAGE', 'SENT_AN_ATTACHMENT'];
     const translationMap = this.translateService.translateLanguage(keys);
     // Fixes the bug: if a snippet of code is pasted and sent it is not displayed correctly in the convesations list
@@ -486,7 +486,7 @@ export class ConversationListPage implements OnInit {
 
       //FIX-BUG: 'YOU: YOU: YOU: text' on last-message-text in conversation-list
       if (conversation.sender === this.loggedUserUid && !conversation.last_message_text.includes(': ')) {
-        this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded', conversation)
+        // this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded', conversation)
 
         if (conversation.type !== "image" && conversation.type !== "file") {
           conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text;

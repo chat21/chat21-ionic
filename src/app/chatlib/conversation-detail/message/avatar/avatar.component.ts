@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 @Component({
-  selector: 'tiledeskwidget-avatar-image',
+  selector: 'chat-avatar-image',
   templateUrl: './avatar.component.html',
   styleUrls: ['./avatar.component.scss']
 })

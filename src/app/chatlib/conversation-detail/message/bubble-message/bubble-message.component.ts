@@ -6,7 +6,7 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 import { isFile, isFrame, isImage } from 'src/chat21-core/utils/utils-message';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 @Component({
-  selector: 'tiledeskwidget-bubble-message',
+  selector: 'chat-bubble-message',
   templateUrl: './bubble-message.component.html',
   styleUrls: ['./bubble-message.component.scss']
 })

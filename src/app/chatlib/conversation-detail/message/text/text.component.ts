@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Sanitizer } from '@angular/core';
 import { MAX_WIDTH_IMAGES } from 'src/chat21-core/utils/constants';
 @Component({
-  selector: 'tiledeskwidget-text',
+  selector: 'chat-text',
   templateUrl: './text.component.html',
   styleUrls: ['./text.component.scss']
 })

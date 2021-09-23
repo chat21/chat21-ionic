@@ -1,0 +1,169 @@
+#buttons-in-message {
+    text-align: right;
+    display: block; 
+    margin-top: -6px;
+    margin-bottom: 5px;
+    height: auto;
+
+
+    .div-button {
+        display: inline-block;
+        .button-in-msg {
+            padding: 8px 16px!important;
+        }
+    }
+
+    
+    
+    
+    // .button-success {
+    //     background-color: white; 
+    //     color: #333333;
+    //     border: 1px solid rgb(28, 184, 65);
+    // }
+    // .button-error {
+    //     background-color: white; 
+    //     color: #333333;
+    //     border: 1px solid rgb(202, 60, 60);
+    // }
+    // .button-warning {
+    //     background-color: white; 
+    //     color: #333333;
+    //     border: 1px solid rgb(223, 117, 20);
+    // }
+    // .button-secondary {
+    //     background-color: white; 
+    //     color: #333333;
+    //     border: 1px solid rgb(66, 184, 221);
+    // }
+    // .button-success:hover {
+    //     color: white;
+    //     background: rgb(28, 184, 65);
+    // }
+    // .button-error:hover {
+    //     color: white;
+    //     background: rgb(202, 60, 60);
+    // }
+    // .button-warning:hover {
+    //     color: white;
+    //     background: rgb(223, 117, 20);
+    // }
+    // .button-secondary:hover {
+    //     color: white;
+    //     background: rgb(66, 184, 221);
+    // } 
+}
+
+
+.button-in-msg {
+    position: relative;
+    max-width: 300px;
+    min-width: inherit;
+    cursor: pointer;
+    border: 1px solid rgb(42, 106, 193);
+    border-radius: 20px;
+    margin: 3px;
+    background: transparent;
+    overflow: hidden;
+    font-family: 'Muli', sans-serif;
+    font-size: 15px;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: -0.24px;
+    -webkit-font-smoothing: antialiased;
+    color: rgb(42, 106, 193);
+    line-height: 16px;
+    // &:focus,
+    // &:hover {
+    //     color: white;
+    //     background:  rgb(42, 106, 193);
+    // }
+
+    
+    &.text {
+        // color: rgb(42, 106, 193);
+        transition: background-color .6s ease;
+        &:focus,
+        &:hover {
+            color: white;
+            background:  rgb(42, 106, 193);
+            .icon-button-action {
+                svg {
+                    fill: rgb(255,255,255);
+                }
+            }
+        }
+    }
+    &.url {
+        transition: background-color .6s ease;
+        .icon-button-action {
+            position: absolute;
+            top: -1;
+            right: 1;
+            svg {
+                fill: rgb(42, 106, 193);
+            }
+        }
+        &:focus,
+        &:hover {
+            color: white;
+            background:  rgb(42, 106, 193);
+            .icon-button-action {
+                svg {
+                    fill: rgb(255,255,255);
+                }
+            }
+        }
+    }
+    &.action {
+        background:  rgb(255,255,255);
+        transition: background-color .6s ease;
+        &:focus,
+        &:hover {
+            color: white;
+            background:  rgb(42, 106, 193);
+            .icon-button-action {
+                svg {
+                    fill: rgb(255,255,255);
+                }
+            }
+        }
+        &:after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 0;
+            top: 50%;
+            left: 50%;
+            transform-style: flat;
+            transform: translate3d(-50%,-50%,0);
+            background: rgba(white,.2);
+            border-radius: 100%;
+            transition: width .5s ease, height .5s ease;
+        }
+        &.active {
+            &:after {
+                width: 200px;
+                height: 200px;
+            }
+            
+        }
+        
+        // &:focus{
+        //     color: white;
+        //     background:  rgb(42, 106, 193);
+        // }
+        // &:hover {
+        //     transition: background-color .6s ease;
+        // //     color: white;
+        // //     background:  rgb(42, 106, 193);
+        // }
+        // &:active {
+        //     &:after {
+        //         width: 200px;
+        //         height: 200px;
+        //     }
+        // }
+    }
+}

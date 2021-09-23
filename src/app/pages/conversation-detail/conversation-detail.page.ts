@@ -92,6 +92,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public window: any = window;
   public styleMap: Map<string, string> = new Map();
 
+  public isButtonUrl: boolean = false;
+  public buttonClicked: any;
 
   MESSAGE_TYPE_INFO = MESSAGE_TYPE_INFO;
   MESSAGE_TYPE_MINE = MESSAGE_TYPE_MINE;
@@ -541,13 +543,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
-  /**
+/**
    * SendMessage
    * @param msg 
    * @param type 
-   * @param metadata 
+   * @param metadata
+   * @param additional_attributes 
    */
-  sendMessage(msg: string, type: string, metadata?: any) {
+  sendMessage(msg: string, type: string, metadata?: any, additional_attributes?: any) {
     this.logger.log('[CONVS-DETAIL] - SEND MESSAGE - MSG: ', msg);
     this.logger.log('[CONVS-DETAIL] - SEND MESSAGE - type: ', type);
     this.logger.log('[CONVS-DETAIL] - SEND MESSAGE - metadata: ', metadata);
@@ -555,6 +558,21 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (this.loggedUser.fullname) {
       fullname = this.loggedUser.fullname;
     }
+
+    const g_attributes = this.setAttributes();
+    // added <any> to resolve the Error occurred during the npm installation: Property 'userFullname' does not exist on type '{}'
+    const attributes = <any>{};
+    if (g_attributes) {
+      for (const [key, value] of Object.entries(g_attributes)) {
+        attributes[key] = value;
+      }
+    }
+    if (additional_attributes) {
+      for (const [key, value] of Object.entries(additional_attributes)) {
+        attributes[key] = value;
+      }
+    }
+
 
     if (type === 'file' || type === 'image') {
 
@@ -568,7 +586,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         //   ${metadata.name}
         // </a>`
 
-        // msg = `![file-image-placehoder](./assets/images/file-alt-solid.png)` + `[${metadata.name}](${metadata.src})`
+        // msg = ![file-image-placehoder](./assets/images/file-alt-solid.png) + [${metadata.name}](${metadata.src})
         msg = `[${metadata.name}](${metadata.src})`
       }
     }
@@ -588,12 +606,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         this.loggedUser.uid,
         fullname,
         this.channelType,
-        this.setAttributes()
+        attributes
       );
 
     }
   }
-
   // ----------------------------------------------------------
   // InitSubscriptions BS subscriptions 
   // ----------------------------------------------------------
@@ -1069,7 +1086,35 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   returnOnAttachmentButtonClicked(event: any) {
-
+    this.logger.debug('[CONV-COMP] eventbutton', event)
+    if (!event || !event.target.type) {
+      return;
+    }
+    switch (event.target.type) {
+      case 'url':
+        try {
+          this.openLink(event.target.button);
+        } catch (err) {
+          this.logger.error('[CONV-COMP] url > Error :' + err);
+        }
+        return;
+      case 'action':
+        try {
+          this.actionButton(event.target.button);
+        } catch (err) {
+          this.logger.error('[CONV-COMP] action > Error :' + err);
+        }
+        return false;
+      case 'text':
+        try{
+          const text = event.target.button.value
+          const metadata = { 'button': true };
+          this.sendMessage(text, TYPE_MSG_TEXT, metadata);
+        }catch(err){
+          this.logger.error('[CONV-COMP] text > Error :' + err);
+        }
+      default: return;
+    }
   }
 
   onImageRenderedFN(event) {
@@ -1077,6 +1122,36 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (this.showButtonToBottom) {
       this.scrollBottom(0)
     }
+  }
+
+ 
+  private openLink(event: any) {
+    const link = event.link ? event.link : '';
+    const target = event.target ? event.target : '';
+    if (target === 'self') {
+      // window.open(link, '_self');
+      this.isButtonUrl= true;
+      this.buttonClicked = event
+    } else if (target === 'parent') {
+      window.open(link, '_parent');
+    } else {
+      window.open(link, '_blank');
+    }
+  }
+
+ 
+  private actionButton(event: any) {
+    // console.log(event);
+    const action = event.action ? event.action : '';
+    const message = event.value ? event.value : '';
+    const subtype = event.show_reply ?  '' : 'info';
+
+    const attributes = {
+      action: action,
+      subtype: subtype
+    };
+    this.sendMessage(message, TYPE_MSG_TEXT, null, attributes);
+    this.logger.debug('[CONV-COMP] > action :');
   }
 
   addUploadingBubbleEvent(event: boolean) {

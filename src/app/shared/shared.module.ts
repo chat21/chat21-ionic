@@ -36,6 +36,7 @@ import { AdvancedInfoAccordionComponent } from '../components/conversation-info/
 import { InfoGroupComponent } from '../components/conversation-info/info-group/info-group.component';
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { OptionHeaderComponent } from '../components/conversation-detail/option-header/option-header.component';
+import { MessageAttachmentComponent } from '../chatlib/conversation-detail/message/message-attachment/message-attachment.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { OptionHeaderComponent } from '../components/conversation-detail/option-
     ConversationContentComponent,
     AvatarComponent,
     BubbleMessageComponent,
+    MessageAttachmentComponent,
     TextButtonComponent,
     LinkButtonComponent,
     ActionButtonComponent,

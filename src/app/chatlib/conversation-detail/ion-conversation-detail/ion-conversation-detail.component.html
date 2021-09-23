@@ -2,27 +2,27 @@
   <div *ngFor="let message of messages; let i = index">
  
     <ion-item class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)" class="msg_info_container">
-      <tiledeskwidget-info-message class="messages"
+      <chat-info-message class="messages"
           [message]="message">
-      </tiledeskwidget-info-message>
+      </chat-info-message>
     </ion-item>
 
     <!- - message SENDER:: - ->
     <ion-item role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
                           
       <!- -backgroundColor non viene ancora usato - ->
-      <tiledeskwidget-bubble-message class="messages msg_sent slide-in-right"
+      <chat-bubble-message class="messages msg_sent slide-in-right"
           [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}"
           [message]="message"
           [textColor]="'col-msg-sent'"
           (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
           (onAfterMessageRender)="returnOnAfterMessageRender($event)">
-      </tiledeskwidget-bubble-message>
+      </chat-bubble-message>
 
         <!- - icon status message - ->
-      <tiledeskwidget-return-receipt class="slide-in-right"
+      <chat-return-receipt class="slide-in-right"
           [status]="message.status">
-      </tiledeskwidget-return-receipt>
+      </chat-return-receipt>
 
     </ion-item>
 
@@ -30,19 +30,19 @@
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message) && isChannelTypeGroup(channelType)" class="message_sender_fullname slide-in-left">{{message.sender_fullname}}</div>
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)" class="msg_container base_receive">
                           
-      <!- - <tiledeskwidget-avatar-image class="slide-in-left"  
+      <!- - <chat-avatar-image class="slide-in-left"  
           [senderID]="message.sender"
           [senderFullname]="message.sender_fullname"
           [baseLocation]="baseLocation">
-      </tiledeskwidget-avatar-image> - ->
+      </chat-avatar-image> - ->
 
       <!- -backgroundColor non viene ancora usato - ->
-      <tiledeskwidget-bubble-message class="messages msg_receive slide-in-left"
+      <chat-bubble-message class="messages msg_receive slide-in-left"
           [message]="message"
           [textColor]="'black'"
           (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
           (onAfterMessageRender)="returnOnAfterMessageRender($event)">
-      </tiledeskwidget-bubble-message>
+      </chat-bubble-message>
 
     </div>
 
@@ -58,23 +58,23 @@
 
     <div class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)"
       class="msg_info_container">
-      <tiledeskwidget-info-message class="messages" [message]="message">
-      </tiledeskwidget-info-message>
+      <chat-info-message class="messages" [message]="message">
+      </chat-info-message>
     </div>
 
     <!-- message SENDER:: -->
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
 
       <!--backgroundColor non viene ancora usato -->
-      <tiledeskwidget-bubble-message class="messages msg_sent" id="{{'message'+'_'+ i}}"
+      <chat-bubble-message class="messages msg_sent" id="{{'message'+'_'+ i}}"
         [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" [message]="message"
         [textColor]="'col-msg-sent'" (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
         (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
-      </tiledeskwidget-bubble-message>
+      </chat-bubble-message>
 
       <!-- icon status message -->
-      <tiledeskwidget-return-receipt [status]="message.status" [message]="message" [senderId]="senderId">
-      </tiledeskwidget-return-receipt>
+      <chat-return-receipt [status]="message.status" [message]="message" [senderId]="senderId">
+      </chat-return-receipt>
 
     </div>
 
@@ -87,18 +87,29 @@
 
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_OTHERS, message)" class="msg_container base_receive">
 
-      <!-- <tiledeskwidget-avatar-image class="slide-in-left"  
+      <!-- <chat-avatar-image class="slide-in-left"  
           [senderID]="message.sender"
           [senderFullname]="message.sender_fullname"
           [baseLocation]="baseLocation">
-      </tiledeskwidget-avatar-image> -->
+      </chat-avatar-image> -->
 
       <!--backgroundColor non viene ancora usato -->
 
-      <tiledeskwidget-bubble-message class="messages msg_receive" [message]="message" [textColor]="'black'"
+      <chat-bubble-message class="messages msg_receive" [message]="message" [textColor]="'black'"
         (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
         (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
-      </tiledeskwidget-bubble-message>
+      </chat-bubble-message>
+    </div>
+
+    <!-- message type:: button &&  -->
+    <div *ngIf="message?.attributes && message?.attributes?.attachment " class="slide-in-left" > 
+      <chat-message-attachment 
+          style="height: 100%; display: block;"
+          [message]="message"
+          [isLastMessage] = "isLastMessage(message?.uid)"
+          [stylesMap]="stylesMap"
+          (onAttachmentButtonClicked)="returnOnAttachmentButtonClicked($event)">
+      </chat-message-attachment>
     </div>
   </div>
 

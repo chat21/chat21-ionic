@@ -6,7 +6,7 @@ import { replaceEndOfLine } from 'src/chat21-core/utils/utils';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
 @Component({
-  selector: 'tiledeskwidget-info-message',
+  selector: 'chat-info-message',
   templateUrl: './info-message.component.html',
   styleUrls: ['./info-message.component.scss']
 })

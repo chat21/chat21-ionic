@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: 'tiledeskwidget-image',
+  selector: 'chat-image',
   templateUrl: './image.component.html',
   styleUrls: ['./image.component.scss']
 })
