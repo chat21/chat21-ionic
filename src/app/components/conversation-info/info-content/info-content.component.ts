@@ -78,14 +78,14 @@ export class InfoContentComponent implements OnInit {
       this.logger.log('[INFO-CONTENT-COMP] - paramMap.subscribe conversationWith: ', this.conversationWith);
       this.conversationWithFullname = params.get('FullNameConv');
       this.conv_type = params.get('Convtype');
-     
+
       const conversationWith_segments = this.conversationWith.split('-');
 
       // Removes the last element of the array if is = to the separator 
       if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
         conversationWith_segments.pop();
-     }
-      
+      }
+
 
       this.logger.log('[INFO-CONTENT-COMP] - paramMap.subscribe conversationWith_segments: ', conversationWith_segments);
 
@@ -160,7 +160,7 @@ export class InfoContentComponent implements OnInit {
     this.IS_GROUP_PANEL = false;
     this.logger.log('[INFO-CONTENT-COMP] - panelType IS_GROUP_PANEL: ', this.IS_GROUP_PANEL);
     this.logger.log('[INFO-CONTENT-COMP] - panelType: ', this.panelType);
-  } 
+  }
 
   // ---------------------------------------------------
   // START SET INFO COMPONENT
@@ -182,7 +182,7 @@ export class InfoContentComponent implements OnInit {
       //   this.logger.log('[INFO-CONTENT-COMP] - panelType: ', this.panelType);
 
       // } else
-     if (conversationWith.startsWith("group-")) {
+      if (conversationWith.startsWith("group-")) {
         this.panelType = ''
         this.logger.log('[INFO-CONTENT-COMP] - selectInfoContentTypeComponent - GROUP -  conversationWith start with "group-"  ', this.conversationWith.startsWith("group-"));
         this.setInfoGroup();
