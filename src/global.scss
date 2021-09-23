@@ -579,6 +579,12 @@ select:-webkit-autofill:focus {
 }
 
 
-.missing-connection-toast > .spinner-middle {
-    vertical-align: middle;
+.missing-connection-toast::part(message) {
+    // display: none;
+    display: flex;
+    align-items: center;
 }
+
+
+  
+ 
