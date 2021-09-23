@@ -123,53 +123,44 @@ export class AppComponent implements OnInit {
     public toastController: ToastController,
     private network: Network
   ) {
-
-    const appconfig = appConfigProvider.getConfig();
-    this.logger.info('[APP-COMP] appconfig: ', appconfig)
-    this.logger.info('[APP-COMP] logLevel: ', appconfig.logLevel);
-    this.tenant = appconfig.firebaseConfig.tenant;
-    this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant)
-    this.logger.info('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
-    this.logger.info('[APP-COMP] appconfig version: 3.0.55-RC4-test1',)
-
-
-
-
-
-    this.route.queryParams.subscribe(params => {
-      this.logger.info('[APP-COMP] queryParams params: ', params)
-      if (params.logLevel) {
-        this.logger.info('[APP-COMP] log level get from queryParams: ', params.logLevel)
-        this.logger.setLoggerConfig(true, params.logLevel)
-      } else {
-        this.logger.info('[APP-COMP] log level get from appconfig: ', appconfig.logLevel)
-        this.logger.setLoggerConfig(true, appconfig.logLevel)
-      }
-    });
-
-
-    this.logger.setLoggerConfig(true, appconfig.logLevel)
-    // }
-    // if (!this.platform.is('desktop')) {
-    //   this.splashScreen.show();
-    // }
-    if (!this.platform.is('cordova')) {
-      this.splashScreen.show();
-    }
+    console.log('[APP-COMP] HELLO Constuctor !!!!!!!')
+   
   }
 
 
   /**
    */
   ngOnInit() {
+    console.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
     this.logger.info('[APP-COMP] ngOnInit -->', this.route.snapshot.params);
-    this.tabTitle = document.title
+    
     this.initializeApp();
   }
 
 
   /** */
   initializeApp() {
+    this.logger.info('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
+   
+    if (!this.platform.is('cordova')) {
+      this.splashScreen.show();
+    }
+    this.tabTitle = document.title;
+
+    this.getRouteParamsAndSetLoggerConfig();
+    
+    const appconfig = this.appConfigProvider.getConfig();
+    this.logger.info('[APP-COMP] appconfig: ', appconfig)
+
+    this.logger.setLoggerConfig(true, appconfig.logLevel)
+    this.logger.info('[APP-COMP] logLevel: ', appconfig.logLevel);
+    
+    this.tenant = appconfig.firebaseConfig.tenant;
+    this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant);
+
+   
+
+    console.log('[APP-COMP] HELLO initializeApp !!!!!!!')
     this.notificationsEnabled = true;
     this.zone = new NgZone({}); // a cosa serve?
     this.platform.ready().then(() => {
@@ -212,6 +203,8 @@ export class AppComponent implements OnInit {
     });
   }
 
+
+
   watchToConnectionStatus() {
     this.checkInternetFunc().subscribe(isOnline => {
       this.checkInternet = isOnline
@@ -222,14 +215,32 @@ export class AppComponent implements OnInit {
         // show success alert if internet is working
         // alert('Internet is working.')
         console.log('[APP-COMP] - watchToConnectionStatus - Internet is working.')
-        // this.missingConnectionToast.onDidDismiss()
+        console.log('[APP-COMP] - watchToConnectionStatus - this.missingConnectionToast', this.missingConnectionToast)
+
+        const elemIonNav = <HTMLElement>document.querySelector('ion-nav');
+        console.log('[APP-COMP] - watchToConnectionStatus - elemIonNav', elemIonNav)
         
-        this.dismissMissingConnectionToast()
+        setTimeout(() => {
+          const elemIonNavchildNodes = elemIonNav.childNodes;
+          console.log('[APP-COMP] - watchToConnectionStatus - elemIonNavchildNodes ', elemIonNavchildNodes);
+          if (elemIonNavchildNodes.length === 0 ){
+            this.initializeApp()
+          }
+        }, 2000);
+
+        
+
+        console.log("[APP-COMP] missingConnectionToast", this.missingConnectionToast)
+
+
+        if (this.missingConnectionToast !== undefined) {
+          this.dismissMissingConnectionToast();
+        }
       }
       else {
         // show danger alert if net internet not working
         // alert('Internet is slow or not working.')
-        this.presentMissingConnectionToast()
+        this.presentMissingConnectionToast();
         console.log('[APP-COMP] - watchToConnectionStatus - Internet is slow or not working.')
       }
     });
@@ -256,16 +267,27 @@ export class AppComponent implements OnInit {
         fromEvent(window, 'offline').pipe(mapTo(false))
       );
     }
-
     return this.appIsOnline$
   }
 
-  
-  
+  getRouteParamsAndSetLoggerConfig() {
+    const appconfig = this.appConfigProvider.getConfig();
+    this.route.queryParams.subscribe(params => {
+      this.logger.info('[APP-COMP] getRouteParamsAndSetLoggerConfig - queryParams params: ', params)
+      if (params.logLevel) {
+        this.logger.info('[APP-COMP] getRouteParamsAndSetLoggerConfig - log level get from queryParams: ', params.logLevel)
+        this.logger.setLoggerConfig(true, params.logLevel)
+      } else {
+        this.logger.info('[APP-COMP] getRouteParamsAndSetLoggerConfig - log level get from appconfig: ', appconfig.logLevel)
+        this.logger.setLoggerConfig(true, appconfig.logLevel)
+      }
+    });
+  }
+
   async presentMissingConnectionToast() {
     this.missingConnectionToast = await this.toastController.create({
       // header: '<ion-icon name="bicycle"></ion-icon>' + this.toastMsgWaitingForNetwork,
-      message: '<ion-spinner class="spinner-middle"></ion-spinner>  <span class="waiting-for-network-msg"> Waiting for network</span> ',
+      message: '<ion-spinner class="spinner-middle"></ion-spinner>  <span part="message-text" class="waiting-for-network-msg">&nbsp;&nbsp; Waiting for network</span> ',
       position: 'top',
       cssClass: 'missing-connection-toast',
       // buttons: [
@@ -276,8 +298,8 @@ export class AppComponent implements OnInit {
       //   }
       // ]
     });
-    await  this.missingConnectionToast.present();
-   
+    await this.missingConnectionToast.present()
+
     // const { role } = await toast.onDidDismiss();
     // console.log('onDidDismiss resolved with role', role);
   }
@@ -287,19 +309,16 @@ export class AppComponent implements OnInit {
   }
 
 
-
-
-
   translateToastMsgs() {
     this.translate.get('AnErrorOccurredWhileUnsubscribingFromNotifications')
       .subscribe((text: string) => {
         this.toastMsgErrorWhileUnsubscribingFromNotifications = text;
       });
-      this.translate.get('CLOSE_TOAST')
+    this.translate.get('CLOSE_TOAST')
       .subscribe((text: string) => {
         this.toastMsgCloseToast = text;
       });
-      this.translate.get('WAITING_FOR_NETWORK')
+    this.translate.get('WAITING_FOR_NETWORK')
       .subscribe((text: string) => {
         this.toastMsgWaitingForNetwork = text;
       });
@@ -362,7 +381,7 @@ export class AppComponent implements OnInit {
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     const currentUser = this.tiledeskAuthService.getCurrentUser();
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
-    this.logger.debug('[APP-COMP] - goOnLine****', currentUser);
+    this.logger.log('[APP-COMP] - goOnLine****', currentUser);
     this.chatManager.setTiledeskToken(tiledeskToken);
 
     // ----------------------------------------------
@@ -412,31 +431,6 @@ export class AppComponent implements OnInit {
   }
   /**------- AUTHENTICATION FUNCTIONS --> END <--- +*/
   /***************************************************+*/
-
-  /**
-   * ::: initConversationsHandler :::
-   * inizializzo chatConversationsHandler e archviedConversationsHandler
-   * recupero le conversazioni salvate nello storage e pubblico l'evento loadedConversationsStorage
-   * imposto uidConvSelected in conversationHandler e chatArchivedConversationsHandler
-   * e mi sottoscrivo al nodo conversazioni in conversationHandler e chatArchivedConversationsHandler (connect)
-   * salvo conversationHandler in chatManager
-   */
-  // initConversationsHandler(userId: string) {
-  //   const keys = [
-  //     'LABEL_TU'
-  //   ];
-  //   const translationMap = this.translateService.translateLanguage(keys);
-
-  //   this.logger.debug('initConversationsHandler ------------->', userId);
-  //   // 1 - init chatConversationsHandler and  archviedConversationsHandler
-  //   this.conversationsHandlerService.initialize(userId, translationMap);
-  //   // 2 - get conversations from storage
-  //   // this.chatConversationsHandler.getConversationsFromStorage();
-  //   // 5 - connect conversationHandler and archviedConversationsHandler to firebase event (add, change, remove)
-  //   this.conversationsHandlerService.connect();
-  //   // 6 - save conversationHandler in chatManager
-  //   this.chatManager.setConversationsHandler(this.conversationsHandlerService);
-  // }
 
   /** */
   setLanguage() {
@@ -572,7 +566,7 @@ export class AppComponent implements OnInit {
     const that = this;
 
     this.messagingAuthService.BSAuthStateChanged.subscribe((state: any) => {
-      this.logger.debug('[APP-COMP] ***** BSAuthStateChanged ***** state', state);
+      this.logger.log('[APP-COMP] ***** BSAuthStateChanged ***** state', state);
       if (state && state === AUTH_STATE_ONLINE) {
         const user = that.tiledeskAuthService.getCurrentUser();
         that.goOnLine();
@@ -611,17 +605,16 @@ export class AppComponent implements OnInit {
     this.events.subscribe('uidConvSelected:changed', this.subscribeChangedConversationSelected);
     this.events.subscribe('profileInfoButtonClick:logout', this.subscribeProfileInfoButtonLogOut);
 
+
     this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
-      this.logger.log('[APP-COMP] ***** conversationsAdded *****', conversation);
+      // this.logger.log('[APP-COMP] ***** conversationsAdded *****', conversation);
       // that.conversationsChanged(conversations);
       if (conversation && conversation.is_new === true) {
         this.manageTabNotification()
       }
     });
+
     this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
-      this.logger.log('[APP-COMP] ***** subscribeConversationChanged *****', conversation);
-      // that.conversationsChanged(conversations);
-      // 
 
       this.logger.log('[APP-COMP] ***** subscribeConversationChanged conversation: ', conversation);
       const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
@@ -764,9 +757,10 @@ export class AppComponent implements OnInit {
 
     // this.subscribeToConvs()
     this.conversationsHandlerService.subscribeToConversations(() => {
-      this.logger.debug('[APP-COMP]-CONVS- INIT CONV')
+      this.logger.log('[APP-COMP]-CONVS- INIT CONV')
+
       const conversations = this.conversationsHandlerService.conversations;
-      this.logger.debug('[APP-COMP]-CONVS - INIT CONV CONVS', conversations)
+      this.logger.log('[APP-COMP]-CONVS - INIT CONV CONVS', conversations)
 
       // this.logger.printDebug('SubscribeToConversations (convs-list-page) - conversations')
       if (!conversations || conversations.length === 0) {
