@@ -1,16 +1,15 @@
-:host .base_sent .msg_sent ::ng-deep div > div > div > tiledeskwidget-text > p > p > a {
+:host .base_sent .msg_sent ::ng-deep div > div > div > chat-text > p > p > a {
     color: lightblue;
- 
 }
 
-:host .base_sent .msg_sent ::ng-deep div > div > div > tiledeskwidget-text > p > p  {
+:host .base_sent .msg_sent ::ng-deep div > div > div > chat-text > p > p  {
     margin-top:12px !important;
     // white-space: nowrap;
     // overflow: hidden;
     // text-overflow: ellipsis;
 }
 
-:host .base_sent .msg_sent ::ng-deep > div > div > tiledeskwidget-image > div  {
+:host .base_sent .msg_sent ::ng-deep > div > div > chat-image > div  {
     // display: none !important;
     // border-radius: unset !important;
     img, .loader { 
@@ -22,7 +21,7 @@
     
 }
 
-:host .base_receive .msg_receive ::ng-deep > div > div > tiledeskwidget-image > div > img {
+:host .base_receive .msg_receive ::ng-deep > div > div > chat-image > div > img {
     // display: none !important;
     // border-radius: unset !important;
     img, .loader { 
