@@ -82,8 +82,18 @@ export class InfoContentComponent implements OnInit {
       const conversationWith_segments = this.conversationWith.split('-');
 
       // Removes the last element of the array if is = to the separator 
+      
       if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
         conversationWith_segments.pop();
+      }
+
+      if (conversationWith_segments.length === 4) {
+        const lastArrayElement = conversationWith_segments[conversationWith_segments.length - 1]
+        this.logger.log('[INFO-CONTENT-COMP] - paramMap.subscribe lastArrayElement ', lastArrayElement);
+        this.logger.log('[INFO-CONTENT-COMP] - paramMap.subscribe lastArrayElement length', lastArrayElement.length);
+        if (lastArrayElement.length !== 32) {
+          conversationWith_segments.pop();
+        }
       }
 
 

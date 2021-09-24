@@ -267,6 +267,15 @@ export class ConversationListPage implements OnInit {
     this.conversationsHandlerService.conversationRemoved.subscribe((conversation: ConversationModel) => {
       this.logger.log('[CONVS-LIST-PAGE] ***** conversationsRemoved *****', conversation);
     });
+
+    this.archivedConversationsHandlerService.archivedConversationAdded.subscribe((conversation: ConversationModel) => {
+      this.logger.log('[CONVS-LIST-PAGE] ***** archivedConversationAdded *****', conversation);
+      // that.conversationsChanged(conversations);
+      if (conversation) {
+        this.onImageLoaded(conversation)
+        this.onConversationLoaded(conversation)
+      }
+    });
   }
 
   // ------------------------------------------------------------------------------------
@@ -603,6 +612,15 @@ export class ConversationListPage implements OnInit {
     // Removes the last element of the array if is = to the separator 
     if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
       conversationWith_segments.pop();
+    }
+
+    if (conversationWith_segments.length === 4) {
+      const lastArrayElement = conversationWith_segments[conversationWith_segments.length - 1]
+      this.logger.log('[CONVS-LIST-PAGE] - lastArrayElement ', lastArrayElement);
+      this.logger.log('[CONVS-LIST-PAGE] - lastArrayElement length', lastArrayElement.length);
+      if (lastArrayElement.length !== 32) {
+        conversationWith_segments.pop();
+      }
     }
 
     if (conversationId.startsWith("support-group")) {

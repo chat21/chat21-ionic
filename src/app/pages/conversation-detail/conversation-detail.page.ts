@@ -294,17 +294,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // this.openInfoConversation = true;
     }
 
-
-    if (checkWindowWidthIsLessThan991px()) {
-      this.logger.log('[CONVS-DETAIL] - initialize -> checkWindowWidthIsLessThan991px ', checkWindowWidthIsLessThan991px())
-      this.openInfoConversation = false; // indica se è aperto il box info conversazione
-      this.isOpenInfoConversation = false;
-      this.logger.log('[CONVS-DETAIL] - initialize -> openInfoConversation ', this.openInfoConversation, ' -> isOpenInfoConversation ', this.isOpenInfoConversation)
-    } else {
-      this.logger.log('[CONVS-DETAIL] - initialize -> checkWindowWidthIsLessThan991px ', checkWindowWidthIsLessThan991px())
-      this.openInfoConversation = true;
-      this.isOpenInfoConversation = true;
-      this.logger.log('[CONVS-DETAIL] - initialize -> openInfoConversation ', this.openInfoConversation, ' -> isOpenInfoConversation ', this.isOpenInfoConversation)
+    if (this.isMobile === false) {
+      if (checkWindowWidthIsLessThan991px()) {
+        this.logger.log('[CONVS-DETAIL] - initialize -> checkWindowWidthIsLessThan991px ', checkWindowWidthIsLessThan991px())
+        this.openInfoConversation = false; // indica se è aperto il box info conversazione
+        this.isOpenInfoConversation = false;
+        this.logger.log('[CONVS-DETAIL] - initialize -> openInfoConversation ', this.openInfoConversation, ' -> isOpenInfoConversation ', this.isOpenInfoConversation)
+      } else {
+        this.logger.log('[CONVS-DETAIL] - initialize -> checkWindowWidthIsLessThan991px ', checkWindowWidthIsLessThan991px())
+        this.openInfoConversation = true;
+        this.isOpenInfoConversation = true;
+        this.logger.log('[CONVS-DETAIL] - initialize -> openInfoConversation ', this.openInfoConversation, ' -> isOpenInfoConversation ', this.isOpenInfoConversation)
+      }
     }
 
     this.online = false;
@@ -486,11 +487,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   setHeaderContent() {
-  //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conversationWith', this.conversationWith)
-  //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conversationsHandlerService', this.conversationsHandlerService)
-  //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conv_type', this.conv_type)
-   if (this.conversationWith && this.conversationsHandlerService && this.conv_type === 'active') {
-    this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING')
+    //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conversationWith', this.conversationWith)
+    //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conversationsHandlerService', this.conversationsHandlerService)
+    //   this.logger.log('[CONVS-DETAIL] - setHeaderContent conv_type', this.conv_type)
+    if (this.conversationWith && this.conversationsHandlerService && this.conv_type === 'active') {
+      this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING')
       this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
         this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv)
         this.conversationAvatar = setConversationAvatar(
@@ -540,13 +541,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
-/**
-   * SendMessage
-   * @param msg 
-   * @param type 
-   * @param metadata
-   * @param additional_attributes 
-   */
+  /**
+     * SendMessage
+     * @param msg 
+     * @param type 
+     * @param metadata
+     * @param additional_attributes 
+     */
   sendMessage(msg: string, type: string, metadata?: any, additional_attributes?: any) {
     this.logger.log('[CONVS-DETAIL] - SEND MESSAGE - MSG: ', msg);
     this.logger.log('[CONVS-DETAIL] - SEND MESSAGE - type: ', type);
@@ -862,10 +863,20 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.logger.log("[CONVS-DETAIL] - loadTagsCanned conversationWith ", conversationWith);
 
     const conversationWith_segments = conversationWith.split('-');
-      // Removes the last element of the array if is = to the separator 
-      if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
+    // Removes the last element of the array if is = to the separator 
+    if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
+      conversationWith_segments.pop();
+    }
+
+    if (conversationWith_segments.length === 4) {
+      const lastArrayElement = conversationWith_segments[conversationWith_segments.length - 1]
+      this.logger.log('[CONVS-DETAIL] - lastArrayElement ', lastArrayElement);
+      this.logger.log('[CONVS-DETAIL] - lastArrayElement length', lastArrayElement.length);
+      if (lastArrayElement.length !== 32) {
         conversationWith_segments.pop();
-     }
+      }
+    }
+
     this.logger.log("[CONVS-DETAIL] - loadTagsCanned conversationWith_segments ", conversationWith_segments);
     let projectId = ""
 
@@ -1103,11 +1114,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         }
         return false;
       case 'text':
-        try{
+        try {
           const text = event.target.button.value
           const metadata = { 'button': true };
           this.sendMessage(text, TYPE_MSG_TEXT, metadata);
-        }catch(err){
+        } catch (err) {
           this.logger.error('[CONV-COMP] text > Error :' + err);
         }
       default: return;
@@ -1121,7 +1132,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
- 
+
   private openLink(event: any) {
     const link = event.link ? event.link : '';
     const target = event.target ? event.target : '';
@@ -1132,12 +1143,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
- 
+
   private actionButton(event: any) {
     // console.log(event);
     const action = event.action ? event.action : '';
     const message = event.value ? event.value : '';
-    const subtype = event.show_reply ?  '' : 'info';
+    const subtype = event.show_reply ? '' : 'info';
 
     const attributes = {
       action: action,
