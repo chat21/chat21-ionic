@@ -27,7 +27,7 @@ export class FirebaseImageRepoService extends ImageRepoService {
     getImagePhotoUrl(uid: string): string {
         this.baseImageURL = this.getImageBaseUrl()
         let sender_id = '';
-        if (uid.includes('bot_')) {
+        if (uid && uid.includes('bot_')) {
             sender_id = uid.slice(4)
         } else {
             sender_id = uid
