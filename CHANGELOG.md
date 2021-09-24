@@ -1,14 +1,18 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC8
+- Improves backward compatibility for old conversations of the "archive", "predefined replies" features and for displaying the right "Conversation Info" panel
+- Bug fixing
+
 ### 3.0.55-RC7
-- Adds the message "No Internet Connection" when the chat tab is a blank page (use case the browser is positioned on the chat tab when the pc has been turned on)
+- Adds the message "No Internet Connection" when the chat tab is a blank page
 - Adds a "toast" indicating when the chat has lost connection
 - Adds action button component
 - Fixes the bug: when accessing the chat without internet connection, the chat does not restart when the connection is restored
 - Fixes the bug: old conversations are not archived (implemented backwards compatibility)
 
 ### 3.0.55-RC6
-- Fixes the bug: when the pc starts up, if the connection is missing and the browser is positioned on the chat tab, the chat tab is a blank page and remains so even after the connection
+- Fixes the bug: when the pc starts up, if the connection is missing, the chat tab is a blank page and remains so even after the connection
 
 ### 3.0.55-RC5
 - Removes the changes in version 3.0.55-RC4
