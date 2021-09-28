@@ -282,16 +282,15 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
                 this.logger.log('[FIREBASEConversationsHandlerSERVICE] conversationDetail childSnapshot.val() *****', childSnapshot.val());
                 this.logger.log('[FIREBASEConversationsHandlerSERVICE] conversationDetail childSnapshot *****', childSnapshot)
                 // && childData.uid
-                if (childSnapshot && childSnapshot.key) {
-                    if (childData) {
-                        childData.uid = childSnapshot.key;
-                        const conversation = this.completeConversation(childData);
-                        if (conversation) {
-                            callback(conversation)
-                        } else {
-                            callback(null)
-                        }
+                if (childSnapshot && childSnapshot.key && childData) {
+                    childData.uid = childSnapshot.key;
+                    const conversation = this.completeConversation(childData);
+                    if (conversation) {
+                        callback(conversation)
+                    } else {
+                        callback(null)
                     }
+
                 }
                 // this.BSConversationDetail.next(conversation);
             });

@@ -190,7 +190,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
                 const childData: ConversationModel = childSnapshot.val();
                 this.logger.log('[FIREBASEArchivedConversationsHandlerSERVICE] childData *****', childData)
                 // if (childSnapshot && childSnapshot.key && childData.uid) {
-                if (childSnapshot && childSnapshot.key) {
+                if (childSnapshot && childSnapshot.key && childData) {
                     childData.uid = childSnapshot.key;
                     const conversation = this.completeConversation(childData);
                     if (conversation) {
