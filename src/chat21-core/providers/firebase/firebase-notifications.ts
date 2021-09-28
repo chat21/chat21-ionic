@@ -76,8 +76,9 @@ export class FirebaseNotifications extends NotificationsService {
         // }
 
 
-        const messaging = firebase.messaging();
+      
         if (firebase.messaging.isSupported()) {
+            const messaging = firebase.messaging(); 
             // messaging.requestPermission()
             Notification.requestPermission().then((permission) => {
                 if (permission === 'granted') {
