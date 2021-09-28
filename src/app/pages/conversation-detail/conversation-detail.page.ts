@@ -173,7 +173,22 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   // @ Lifehooks
   // -----------------------------------------------------------
   ngOnInit() {
-    this.logger.log('[CONVS-DETAIL] > ngOnInit - window.location: ', window.location);
+    // this.logger.log('[CONVS-DETAIL] > ngOnInit - window.location: ', window.location);
+    // this.logger.log('[CONVS-DETAIL] > ngOnInit - fileUploadAccept: ', this.appConfigProvider.getConfig().fileUploadAccept);
+    // const accept_files = this.appConfigProvider.getConfig().fileUploadAccept;
+    // this.logger.log('[CONVS-DETAIL] > ngOnInit - fileUploadAccept typeof accept_files ', typeof accept_files);
+    // const accept_files_array = accept_files.split(',')
+    // this.logger.log('[CONVS-DETAIL] > ngOnInit - fileUploadAccept accept_files_array ', accept_files_array);
+    // this.logger.log('[CONVS-DETAIL] > ngOnInit - fileUploadAccept accept_files_array typeof: ', typeof accept_files_array);
+
+    // accept_files_array.forEach(accept_file => {
+    //   this.logger.log('[CONVS-DETAIL] > ngOnInit - fileUploadAccept accept_file ', accept_file);
+    //   const accept_file_segment = accept_file.split('/')
+    //   this.logger.log('[CONVS-DETAIL] > ngOnInit - fileUploadAccept accept_file_segment ', accept_file_segment);
+    //   if (accept_file_segment[1] === '*') {
+
+    //   }
+    // });
 
   }
 
@@ -365,7 +380,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'LABEL_ENTER_MSG_SHORT',
       'LABEL_ENTER_MSG_SHORTER',
       'ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE',
-      'ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG',
+      'FAILED_TO_UPLOAD_THE_FORMAT_IS NOT_SUPPORTED',
       'NO_INFORMATION_AVAILABLE',
       'CONTACT_ID',
       'USER_ID'
@@ -1263,8 +1278,49 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.heightMessageTextArea = '50';
     }
   }
+  checkAcceptedFile(draggedFileMimeType) {
+    let isAcceptFile = false;
+    this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept: ', this.appConfigProvider.getConfig().fileUploadAccept);
+    const accept_files = this.appConfigProvider.getConfig().fileUploadAccept;
+    this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - mimeType: ', draggedFileMimeType);
+    if (accept_files === "*") {
+      isAcceptFile = true;
+      return isAcceptFile
+    } else if (accept_files !== "*") {
+      this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept typeof accept_files ', typeof accept_files);
+      const accept_files_array = accept_files.split(',')
+      this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept accept_files_array ', accept_files_array);
+      this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept accept_files_array typeof: ', typeof accept_files_array);
 
+      accept_files_array.forEach(accept_file => {
 
+        this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept accept_file ', accept_file);
+        const accept_file_segment = accept_file.split('/')
+        this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept accept_file_segment ', accept_file_segment);
+        if (accept_file_segment[1] === '*') {
+          if (draggedFileMimeType.startsWith(accept_file_segment[0])) {
+            isAcceptFile = true;
+            this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept isAcceptFile', isAcceptFile);
+            return isAcceptFile
+
+          } else {
+            isAcceptFile = false;
+            this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept isAcceptFile', isAcceptFile);
+            return isAcceptFile
+
+          }
+        } else if (accept_file_segment[1] !== '*') {
+          if (draggedFileMimeType === accept_file) {
+            isAcceptFile = true;
+            this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept isAcceptFile', isAcceptFile);
+            return isAcceptFile
+          }
+        }
+        return isAcceptFile
+      });
+      return isAcceptFile
+    }
+  }
   // -------------------------------------------------------------
   // DRAG FILE 
   // -------------------------------------------------------------
@@ -1285,8 +1341,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       var mimeType = fileList[0].type;
       this.logger.log('[CONVS-DETAIL] ----> FILE - DROP mimeType files ', mimeType);
 
-      if (mimeType.startsWith("image") || mimeType.startsWith("application")) {
-
+      // if (mimeType.startsWith("image") || mimeType.startsWith("application")) {
+      // this.logger.log('[CONVS-DETAIL] ----> FILE - DROP mimeType files: ', this.appConfigProvider.getConfig().fileUploadAccept);
+      // this.checkAcceptedFile(mimeType);
+      const isAccepted = this.checkAcceptedFile(mimeType);
+      this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept isAcceptFile FILE - DROP', isAccepted);
+      if (isAccepted === true) {
         this.handleDropEvent(ev);
 
       } else {
@@ -1321,8 +1381,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   async presentToastOnlyImageFilesAreAllowedToDrag() {
     const toast = await this.toastController.create({
-      message: this.translationMap.get('ONLY_IMAGE_FILES_ARE_ALLOWED_TO_DRAG'),
-      duration: 3000,
+      message: this.translationMap.get('FAILED_TO_UPLOAD_THE_FORMAT_IS NOT_SUPPORTED'),
+      duration: 5000,
       color: "danger",
       cssClass: 'toast-custom-class',
     });
