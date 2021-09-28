@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC9
+- Adds the left panel "projects"
+
 ### 3.0.55-RC8
 - Improves backward compatibility for old conversations of the "archive", "predefined replies" features and for displaying the right "Conversation Info" panel
 - Bug fixing
