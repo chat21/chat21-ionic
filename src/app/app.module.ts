@@ -117,7 +117,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
   } else {
 
     FirebaseInitService.initFirebase(config.firebaseConfig)
-    console.log('[APP-MOD] FirebaseInitService config ', config)
+    // console.log('[APP-MOD] FirebaseInitService config ', config)
     const auth = new FirebaseAuthService(http, network, connectionService);
     auth.setBaseUrl(config.apiUrl)
   
