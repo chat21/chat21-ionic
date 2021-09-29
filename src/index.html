@@ -39,8 +39,8 @@
     };
     console.log('index.html window.navigator.onLine is ' + window.navigator.onLine);
 
-
-    if (window.navigator.onLine === false || window.navigator.onLine === true) {
+    // || window.navigator.onLine === true
+    if (window.navigator.onLine === false ) {
       let app_root_el = document.getElementsByTagName('app-root');
       console.log('index.html app_root_el ', app_root_el);
 
@@ -61,7 +61,7 @@
           div_1.className = 'lost-connection-wpr';
 
           div_1.style.cssText += 'position: absolute;left: 50%;top: 50%;webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%); font-size:18px; color: #92949c; font-family: Roboto, "Helvetica Neue";';
-          div_1.textContent += "No internet connection"
+          div_1.textContent += "Internet is slow or not working."
 
           document.body.appendChild(div)
           document.body.appendChild(div_1);
@@ -71,7 +71,7 @@
             location.reload(true);
           };
         }
-      }, 3000);
+      }, 4000);
     }
   </script>
 
