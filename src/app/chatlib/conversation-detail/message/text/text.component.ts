@@ -36,7 +36,7 @@ export class TextComponent implements OnInit {
 
   ngOnChanges() {
     if (this.message.type === 'image') {
-      console.log('TextComponent message ', this.message)
+      // console.log('TextComponent message ', this.message)
       if (this.message.metadata.width && this.message.metadata.width > MAX_WIDTH_IMAGES) {
 
         const ratio = (this.message.metadata['width'] / this.message.metadata['height']);
@@ -44,11 +44,11 @@ export class TextComponent implements OnInit {
         this.media_width = MAX_WIDTH_IMAGES;
         this.media_height = MAX_WIDTH_IMAGES / ratio;
 
-        console.log('TextComponent media_width ', this.media_width, ' media_height' ,  this.media_height)
+        // console.log('TextComponent media_width ', this.media_width, ' media_height' ,  this.media_height)
       } else {
         this.media_width = this.message.metadata.width;
         this.media_height = this.message.metadata.height;
-        console.log('TextComponent media_width ', this.media_width, ' media_height' ,  this.media_height)
+        // console.log('TextComponent media_width ', this.media_width, ' media_height' ,  this.media_height)
       }
     }
   }
