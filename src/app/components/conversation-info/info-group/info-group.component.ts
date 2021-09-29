@@ -70,7 +70,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges {
       .pipe(filter(event => event instanceof NavigationEnd))
 
       .subscribe((event: NavigationEnd) => {
-        console.log('InfoGroupComponent -  router.events prev url :', event.url);
+        // console.log('InfoGroupComponent -  router.events prev url :', event.url);
         this.previousUrl = event.url;
 
 
@@ -81,7 +81,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges {
         // this.pleaseDeleteMeEvent.emit();
 
         if (this.groupDetail.hasOwnProperty("member_array")) {
-          console.log('InfoGroupComponent - router.events has Property member_array  :', this.groupDetail.hasOwnProperty("member_array"));
+          // console.log('InfoGroupComponent - router.events has Property member_array  :', this.groupDetail.hasOwnProperty("member_array"));
           delete this.groupDetail['member_array'];
         }
       });
