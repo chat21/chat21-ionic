@@ -1283,10 +1283,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept: ', this.appConfigProvider.getConfig().fileUploadAccept);
     const accept_files = this.appConfigProvider.getConfig().fileUploadAccept;
     this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - mimeType: ', draggedFileMimeType);
-    if (accept_files === "*") {
+    if (accept_files === "*/*") {
       isAcceptFile = true;
       return isAcceptFile
-    } else if (accept_files !== "*") {
+    } else if (accept_files !== "*/*") {
       this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept typeof accept_files ', typeof accept_files);
       const accept_files_array = accept_files.split(',')
       this.logger.log('[CONVS-DETAIL] > checkAcceptedFile - fileUploadAccept accept_files_array ', accept_files_array);
@@ -1381,7 +1381,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   async presentToastOnlyImageFilesAreAllowedToDrag() {
     const toast = await this.toastController.create({
-      message: this.translationMap.get('FAILED_TO_UPLOAD_THE_FORMAT_IS NOT_SUPPORTED'),
+      message: this.translationMap.get('FAILED_TO_UPLOAD_THE_FORMAT_IS_NOT_SUPPORTED'),
       duration: 5000,
       color: "danger",
       cssClass: 'toast-custom-class',
