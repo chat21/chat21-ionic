@@ -1,5 +1,19 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC12
+- Fixes the bug: when a file is uploaded via drag & drop, the message "Failed to upload: the format is not supported" is displayed even if fileUploadAccept is set to "* / *" (accept all)
+- Fixes the bug: the left side panel "conversation list" is not displayed on Safari
+- Fixes the bug: on Safari, clicking a button causes the app to reload or crash
+- Adds a gradient background to the avatars
+
+### 3.0.55-RC11
+- Replaces the message "No internet connection" displayed when Internet is slow or not working  with the message "Internet is slow or not working."
+
+### 3.0.55-RC10
+- Fixes the bug: Safari doesn't support the API's required to use FCM
+- Fixes the bug: the drag and drop does not take into account the accepted files set in the "fileUploadAccept" environments property
+- Fixes the bug: on Safari in the login modal the email and psw entered are not displayed
+
 ### 3.0.55-RC9
 - Adds the left panel "projects"
 
