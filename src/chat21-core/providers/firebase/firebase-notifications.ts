@@ -39,10 +39,10 @@ export class FirebaseNotifications extends NotificationsService {
             navigator.serviceWorker.getRegistrations().then((serviceWorkerRegistrations) => {
                 this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser serviceWorkerRegistrations", serviceWorkerRegistrations)
                 if (serviceWorkerRegistrations.length > 0) {
-                    serviceWorkerRegistrations.forEach(registrations => {
-
-                        this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registrations scriptURL", registrations.active.scriptURL)
-                        this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registrations state", registrations.active.state)
+                    serviceWorkerRegistrations.forEach(registration => {
+                        this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registration ", registration)
+                        // this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registrations scriptURL", registrations.active.scriptURL)
+                        // this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registrations state", registrations.active.state)
 
                     });
                 } else {
