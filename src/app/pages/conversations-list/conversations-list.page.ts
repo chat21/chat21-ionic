@@ -220,6 +220,7 @@ export class ConversationListPage implements OnInit {
   //  SUBSCRIPTIONS
   // ------------------------------------------------------------------
   initSubscriptions() {
+    this.logger.log('[CONVS-LIST-PAGE] - CALLING - initSubscriptions ')
     let key = '';
 
 
@@ -247,7 +248,7 @@ export class ConversationListPage implements OnInit {
     // });
 
     this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
-      // this.logger.log('[CONVS-LIST-PAGE] ***** conversationsAdded *****', conversation);
+      this.logger.log('[CONVS-LIST-PAGE] ***** conversationsAdded *****', conversation);
       // that.conversationsChanged(conversations);
       if (conversation) {
         this.onImageLoaded(conversation)
@@ -512,18 +513,16 @@ export class ConversationListPage implements OnInit {
 
           // this.logger.log('[CONVS-LIST-PAGE] HAS SENT AN IMAGE');
           // this.logger.log("[CONVS-LIST-PAGE] translationMap.get('YOU')")
-
-
           const SENT_AN_IMAGE = conversation['last_message_text'] = translationMap.get('SENT_AN_IMAGE')
 
-          conversation.last_message_text = translationMap.get('YOU') + ' ' + SENT_AN_IMAGE;
+          conversation.last_message_text = translationMap.get('YOU') + ': ' + SENT_AN_IMAGE;
 
         } else if (conversation.type === "file") {
           this.logger.log('[CONVS-LIST-PAGE] HAS SENT FILE')
           const SENT_AN_ATTACHMENT = conversation['last_message_text'] = translationMap.get('SENT_AN_ATTACHMENT')
-          conversation.last_message_text = translationMap.get('YOU') + ' ' + SENT_AN_ATTACHMENT;
+          conversation.last_message_text = translationMap.get('YOU') + ': ' + SENT_AN_ATTACHMENT;
         }
-      }
+      } 
     }
   }
 
