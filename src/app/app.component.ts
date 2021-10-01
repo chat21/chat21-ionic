@@ -74,6 +74,7 @@ export class AppComponent implements OnInit {
   private doitResize: any;
   private timeModalLogin: any;
   public tenant: string;
+  public persistence: string;
   public authModal: any;
 
   private audio: any;
@@ -124,7 +125,12 @@ export class AppComponent implements OnInit {
     private network: Network
   ) {
     console.log('[APP-COMP] HELLO Constuctor !!!!!!!')
-   
+    // HACK: fix toast not presented when offline, due to lazy loading the toast controller.
+    this.toastController.create({ animated: false }).then(t => {
+      console.log('[APP-COMP] toastController create')
+      t.present();
+      t.dismiss();
+    });
   }
 
 
@@ -133,7 +139,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     console.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
     this.logger.info('[APP-COMP] ngOnInit -->', this.route.snapshot.params);
-    
+
     this.initializeApp();
   }
 
@@ -141,28 +147,29 @@ export class AppComponent implements OnInit {
   /** */
   initializeApp() {
     this.logger.info('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
-   
+
     if (!this.platform.is('cordova')) {
       this.splashScreen.show();
     }
     this.tabTitle = document.title;
 
     this.getRouteParamsAndSetLoggerConfig();
-    
+
     const appconfig = this.appConfigProvider.getConfig();
     this.logger.info('[APP-COMP] appconfig: ', appconfig)
 
     this.logger.setLoggerConfig(true, appconfig.logLevel)
     this.logger.info('[APP-COMP] logLevel: ', appconfig.logLevel);
-    
+
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant);
 
-   
+    this.persistence = appconfig.authPersistence;
 
     console.log('[APP-COMP] HELLO initializeApp !!!!!!!')
     this.notificationsEnabled = true;
     this.zone = new NgZone({}); // a cosa serve?
+
     this.platform.ready().then(() => {
       this.setLanguage();
 
@@ -171,7 +178,7 @@ export class AppComponent implements OnInit {
       }
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
-      this.appStorageService.initialize(environment.storage_prefix, environment.authPersistence, '')
+      this.appStorageService.initialize(environment.storage_prefix, this.persistence, '')
       this.tiledeskAuthService.initialize(this.appConfigProvider.getConfig().apiUrl);
       this.messagingAuthService.initialize();
 
@@ -199,7 +206,9 @@ export class AppComponent implements OnInit {
       // ---------------------------------------
       // Watch to network status
       // ---------------------------------------
-      this.watchToConnectionStatus()
+      // if (!checkPlatformIsMobile()) {
+      //   this.watchToConnectionStatus();
+      // }
     });
   }
 
@@ -214,34 +223,50 @@ export class AppComponent implements OnInit {
       if (this.checkInternet == true) {
         // show success alert if internet is working
         // alert('Internet is working.')
-        console.log('[APP-COMP] - watchToConnectionStatus - Internet is working.')
-        console.log('[APP-COMP] - watchToConnectionStatus - this.missingConnectionToast', this.missingConnectionToast)
+        this.logger.log('[APP-COMP] - watchToConnectionStatus - Internet is working.')
+        this.logger.log('[APP-COMP] - watchToConnectionStatus - this.missingConnectionToast', this.missingConnectionToast)
 
         const elemIonNav = <HTMLElement>document.querySelector('ion-nav');
-        console.log('[APP-COMP] - watchToConnectionStatus - elemIonNav', elemIonNav)
-        
+        this.logger.log('[APP-COMP] - watchToConnectionStatus - * elemIonNav *', elemIonNav)
+
         setTimeout(() => {
           const elemIonNavchildNodes = elemIonNav.childNodes;
-          console.log('[APP-COMP] - watchToConnectionStatus - elemIonNavchildNodes ', elemIonNavchildNodes);
-          if (elemIonNavchildNodes.length === 0 ){
+          this.logger.log('[APP-COMP] - watchToConnectionStatus - elemIonNavchildNodes ', elemIonNavchildNodes);
+          if (elemIonNavchildNodes.length === 0) {
+            this.logger.log('[APP-COMP] - watchToConnectionStatus - elemIonNavchildNodes  HERE YES', elemIonNavchildNodes);
             this.initializeApp()
           }
         }, 2000);
 
-        
-
-        console.log("[APP-COMP] missingConnectionToast", this.missingConnectionToast)
 
 
-        if (this.missingConnectionToast !== undefined) {
-          this.dismissMissingConnectionToast();
-        }
+        this.logger.log("[APP-COMP] missingConnectionToast", this.missingConnectionToast)
+
+        // --------------------------------------------------
+        // Publish event
+        // --------------------------------------------------
+        // this.events.publish('internetisonline', true);
+
+        // if (this.missingConnectionToast !== undefined) {
+        //   this.dismissMissingConnectionToast();
+        // }
       }
       else {
+
+        // --------------------------------------------------
+        // Publish event
+        // --------------------------------------------------
+        // this.events.publish('internetisonline', false);
+
         // show danger alert if net internet not working
         // alert('Internet is slow or not working.')
-        this.presentMissingConnectionToast();
-        console.log('[APP-COMP] - watchToConnectionStatus - Internet is slow or not working.')
+        // this.presentMissingConnectionToast();
+
+        this.logger.log('[APP-COMP] - watchToConnectionStatus - Internet is slow or not working.')
+        // --------------------------------------------------
+        // Publish event
+        // --------------------------------------------------
+        // this.events.publish('internetisonline', false);
       }
     });
   }
@@ -495,7 +520,7 @@ export class AppComponent implements OnInit {
       // createExternalSidebar(this.renderer, DASHBOARD_URL);
 
       // // FOR REALTIME TESTING
-      // createExternalSidebar(this.renderer, 'http://localhost:4203');
+      // createExternalSidebar(this.renderer, 'http://localhost:4204');
 
     }
   }
