@@ -56,6 +56,7 @@
 
   <ion-list *ngIf="loggedUser">
     <ion-item lines="none" class="sidebar-items" (click)="onClickArchivedConversation()">
+      <div tabindex="0"></div>
       <ion-icon name="archive-outline" class="sidebar-icons"></ion-icon>
       <ion-label class="sidebar-labels">
         <h3>{{ 'LABEL_ARCHIVED' | translate }}</h3>
@@ -63,6 +64,7 @@
     </ion-item>
 
     <ion-item lines="none" class="sidebar-items" (click)="onLogout()">
+      <div tabindex="0"></div>
       <ion-icon name="log-out-outline" class="sidebar-icons"></ion-icon>
       <ion-label class="sidebar-labels">
         <h3>{{ 'LABEL_LOGOUT' | translate }}</h3>

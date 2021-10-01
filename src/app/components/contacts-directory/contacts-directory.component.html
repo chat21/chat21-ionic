@@ -4,9 +4,10 @@
   <ion-list>
     
     <ion-item button="true" lines="none" class="ion-no-padding" *ngFor="let user of contacts" (click)="goToChat(user)">
-      <!-- <div [class.selected]="user.uid === uidUserSelected"></div> -->
+      <div tabindex="0"></div>
+      <!-- <div [class.selected]="user.uid === uidUserSelected"></div> [style.background-color]="user.color"-->
       <ion-avatar slot="start">
-        <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="user.color" [innerHTML]="user.avatar"></div>
+        <div #avatarPlaceholder class="avatar-placeholder" [ngStyle]="{'background':  'linear-gradient(rgb(255,255,255) -125%,' + user.color + ')'}" [innerHTML]="user.avatar"></div>
         <div *ngIf="user.imageurl" #avatarImage class="avatar-profile" [style.background-image]="'url(' + user.imageurl + ')'"></div>
         <!-- <div *ngIf="getImageAvatar(conversation.sender)" #avatarImage class="avatar-profile" [style.background-image]="'url(' + getImageAvatar(conversation.sender) + ')'"></div> -->
       </ion-avatar>

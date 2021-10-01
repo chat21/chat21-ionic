@@ -22,15 +22,21 @@
   </div>
 </div> -->
 
+<!-- -------------------------------------------------------------------------- -->
+<!-- New -->
+<!-- -------------------------------------------------------------------------- -->
+<!-- <ion-item *ngIf="isOnline === false" button="true" lines="none" class="ion-no-padding waiting-for-connection" >
+  <ion-spinner class="spinner-middle" style="margin-left: 19px;"></ion-spinner>  <span part="message-text" class="waiting-for-network-msg">&nbsp;&nbsp; Waiting for network</span> 
+</ion-item> -->
 
 <ion-item button="true" lines="none" class="ion-no-padding"  [class.ion-selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of listConversations"
   (click)="openConversationByID(conversation)">
-  <!-- (mouseup)="openMessageList()" -->
+  <div tabindex="0"></div>
 
- 
   <!-- <div [class.selected]="conversation.uid === uidConvSelected"></div> -->
   <ion-avatar item-start>
-    <div #avatarPlaceholder class="avatar-placeholder" [style.background-color]="conversation.color"
+    <!-- [style.background-color]="conversation.color"  -->
+    <div #avatarPlaceholder class="avatar-placeholder"   [ngStyle]="{'background':  'linear-gradient(rgb(255,255,255) -125%,' + conversation.color + ')'}"
       [innerHTML]="conversation.avatar"></div>
     <div *ngIf="conversation.image" #avatarImage class="avatar-profile"
       [style.background-image]="'url(' + conversation.image + ')'"></div>
