@@ -77,7 +77,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
         this.member_array = []
-        console.log('InfoGroupComponent -  router.events member_array :', this.member_array);
+        // console.log('InfoGroupComponent -  router.events member_array :', this.member_array);
         // this.pleaseDeleteMeEvent.emit();
 
         if (this.groupDetail.hasOwnProperty("member_array")) {

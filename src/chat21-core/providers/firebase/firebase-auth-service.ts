@@ -197,7 +197,7 @@ export class FirebaseAuthService extends MessagingAuthService {
   signInFirebaseWithCustomToken(token: string): Promise<any> {
     const that = this;
     let firebasePersistence;
-    console.log('FB-AUTH firebasePersistence', this.getPersistence()) 
+    // console.log('FB-AUTH firebasePersistence', this.getPersistence()) 
     switch (this.getPersistence()) {
       case 'SESSION': {
         firebasePersistence = firebase.auth.Auth.Persistence.SESSION;
