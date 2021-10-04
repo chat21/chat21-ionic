@@ -9,9 +9,12 @@
 
     <ion-grid style="height: 100%;">
       <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%; flex-direction: column">
-        <span
+        <span *ngIf="isOnline === true"
           style="color: #92949c; font-size: 16px;line-height: 18px;margin-top: -160px;">{{'PleaseSelectChatToStartMessaging'
           | translate }}</span>
+
+          <span *ngIf="isOnline === false"
+          style="color: #92949c; font-size: 16px;line-height: 18px;margin-top: -160px;">Internet is slow or not working</span>
       </ion-row>
     </ion-grid>
   </ion-content>

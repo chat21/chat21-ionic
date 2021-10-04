@@ -35,9 +35,11 @@ import { isFirstMessage, isInfo, isMine, messageType } from 'src/chat21-core/uti
 // Logger
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TiledeskService } from '../../services/tiledesk/tiledesk.service';
+import { NetworkService } from '../../services/network-service/network.service';
 
 @Component({
   selector: 'app-conversation-detail',
@@ -112,6 +114,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   messageType = messageType;
   // info_content_child_enabled: boolean = false
   private logger: LoggerService = LoggerInstance.getInstance();
+
+
+  public isOnline: boolean = true;
+  public checkInternet: boolean;
   /**
    * Constructor
    * @param route 
@@ -156,7 +162,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     public imageRepoService: ImageRepoService,
     public presenceService: PresenceService,
     public toastController: ToastController,
-    public tiledeskService: TiledeskService
+    public tiledeskService: TiledeskService,
+    private networkService: NetworkService
   ) {
 
     // Change list on date change
@@ -189,7 +196,23 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     //   }
     // });
+    this.watchToConnectionStatus();
+  }
 
+  watchToConnectionStatus() {
+
+    this.networkService.checkInternetFunc().subscribe(isOnline => {
+      this.checkInternet = isOnline
+      console.log('[CONVS-LIST-PAGE] - watchToConnectionStatus - isOnline', this.checkInternet)
+
+      // checking internet connection
+      if (this.checkInternet == true) {
+
+        this.isOnline = true;
+      } else {
+        this.isOnline = false;
+      }
+    });
   }
 
   ngAfterViewInit() {
