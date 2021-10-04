@@ -5,7 +5,7 @@ import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storag
 import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2, } from '@angular/core';
 import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav, ToastController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, VirtualTimeScheduler } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 
 // import * as firebase from 'firebase/app';
@@ -49,9 +49,11 @@ import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk
 import { NotificationsService } from 'src/chat21-core/providers/abstract/notifications.service';
 import { getImageUrlThumbFromFirebasestorage } from 'src/chat21-core/utils/utils-user';
 
-import { Network } from '@ionic-native/network/ngx';
-import { Observable, Observer, fromEvent, merge, of } from 'rxjs';
-import { mapTo } from 'rxjs/operators';
+// import { Network } from '@ionic-native/network/ngx';
+// import { Observable, Observer, fromEvent, merge, of } from 'rxjs';
+// import { mapTo } from 'rxjs/operators';
+import { TiledeskService } from './services/tiledesk/tiledesk.service';
+import { NetworkService } from './services/network-service/network.service';
 
 @Component({
   selector: 'app-root',
@@ -63,7 +65,7 @@ export class AppComponent implements OnInit {
   @ViewChild('sidebarNav', { static: false }) sidebarNav: IonNav;
   @ViewChild('detailNav', { static: false }) detailNav: IonRouterOutlet;
 
-  public appIsOnline$: Observable<boolean> = undefined;
+  // public appIsOnline$: Observable<boolean> = undefined;
   checkInternet: boolean;
 
   private subscription: Subscription;
@@ -89,6 +91,7 @@ export class AppComponent implements OnInit {
   private modalOpen: boolean = false;
   private hadBeenCalledOpenModal: boolean = false;
   public missingConnectionToast: any
+  public executedInitializeAppByWatchConnection: boolean = false;
 
   constructor(
     private platform: Platform,
@@ -122,30 +125,36 @@ export class AppComponent implements OnInit {
     private translateService: CustomTranslateService,
     public notificationsService: NotificationsService,
     public toastController: ToastController,
-    private network: Network
+    // private network: Network,
+    // private tiledeskService: TiledeskService,
+    private networkService: NetworkService
   ) {
-    console.log('[APP-COMP] HELLO Constuctor !!!!!!!')
+    this.logger.log('[APP-COMP] HELLO Constuctor !!!!!!!')
     // HACK: fix toast not presented when offline, due to lazy loading the toast controller.
-    this.toastController.create({ animated: false }).then(t => {
-      console.log('[APP-COMP] toastController create')
-      t.present();
-      t.dismiss();
-    });
+    // this.toastController.create({ animated: false }).then(t => {
+    //   console.log('[APP-COMP] toastController create')
+    //   t.present();
+    //   t.dismiss();
+    // });
   }
 
 
   /**
    */
   ngOnInit() {
-    console.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
+    this.logger.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
     this.logger.info('[APP-COMP] ngOnInit -->', this.route.snapshot.params);
 
     this.initializeApp();
+
   }
 
 
   /** */
   initializeApp() {
+
+    this.logger.log('[APP-COMP] - watchToConnectionStatus - initializeApp');
+    this.logger.log('[APP-COMP] HELLO initializeApp !!!!!!!')
     this.logger.info('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
 
     if (!this.platform.is('cordova')) {
@@ -166,7 +175,7 @@ export class AppComponent implements OnInit {
 
     this.persistence = appconfig.authPersistence;
 
-    console.log('[APP-COMP] HELLO initializeApp !!!!!!!')
+
     this.notificationsEnabled = true;
     this.zone = new NgZone({}); // a cosa serve?
 
@@ -206,94 +215,86 @@ export class AppComponent implements OnInit {
       // ---------------------------------------
       // Watch to network status
       // ---------------------------------------
-      // if (!checkPlatformIsMobile()) {
-      //   this.watchToConnectionStatus();
-      // }
+      this.watchToConnectionStatus();
     });
   }
 
 
 
   watchToConnectionStatus() {
-    this.checkInternetFunc().subscribe(isOnline => {
+    this.networkService.checkInternetFunc().subscribe(isOnline => {
       this.checkInternet = isOnline
-      console.log('[APP-COMP] - watchToConnectionStatus - isOnline', this.checkInternet)
+      this.logger.log('[APP-COMP] - watchToConnectionStatus - isOnline', this.checkInternet)
 
       // checking internet connection
       if (this.checkInternet == true) {
+        // this.events.publish('internetisonline', true);
         // show success alert if internet is working
         // alert('Internet is working.')
         this.logger.log('[APP-COMP] - watchToConnectionStatus - Internet is working.')
-        this.logger.log('[APP-COMP] - watchToConnectionStatus - this.missingConnectionToast', this.missingConnectionToast)
+        // this.logger.log('[APP-COMP] - watchToConnectionStatus - this.missingConnectionToast', this.missingConnectionToast)
+        if (!checkPlatformIsMobile()) {
+          const elemIonNav = <HTMLElement>document.querySelector('ion-nav');
+          this.logger.log('[APP-COMP] - watchToConnectionStatus - desktop * elemIonNav *', elemIonNav)
 
-        const elemIonNav = <HTMLElement>document.querySelector('ion-nav');
-        this.logger.log('[APP-COMP] - watchToConnectionStatus - * elemIonNav *', elemIonNav)
+          if (this.executedInitializeAppByWatchConnection === false) {
+            setTimeout(() => {
+              const elemIonNavchildNodes = elemIonNav.childNodes;
+              this.logger.log('[APP-COMP] - watchToConnectionStatus - elemIonNavchildNodes ', elemIonNavchildNodes);
 
-        setTimeout(() => {
-          const elemIonNavchildNodes = elemIonNav.childNodes;
-          this.logger.log('[APP-COMP] - watchToConnectionStatus - elemIonNavchildNodes ', elemIonNavchildNodes);
-          if (elemIonNavchildNodes.length === 0) {
-            this.logger.log('[APP-COMP] - watchToConnectionStatus - elemIonNavchildNodes  HERE YES', elemIonNavchildNodes);
-            this.initializeApp()
+              if (elemIonNavchildNodes.length === 0) {
+                this.logger.log('[APP-COMP] - watchToConnectionStatus - elemIonNavchildNodes  HERE YES', elemIonNavchildNodes);
+
+                this.initializeApp();
+                this.executedInitializeAppByWatchConnection = true;
+              }
+            }, 2000);
           }
-        }, 2000);
-
-
-
-        this.logger.log("[APP-COMP] missingConnectionToast", this.missingConnectionToast)
-
-        // --------------------------------------------------
-        // Publish event
-        // --------------------------------------------------
-        // this.events.publish('internetisonline', true);
-
-        // if (this.missingConnectionToast !== undefined) {
-        //   this.dismissMissingConnectionToast();
-        // }
+        } else if (checkPlatformIsMobile()) {
+          this.logger.log('[APP-COMP] - watchToConnectionStatus - mobile ')
+          const elemIonRouterOutlet = <HTMLElement>document.querySelector('ion-router-outlet');
+          this.logger.log('[APP-COMP] - watchToConnectionStatus - mobile * elemIonRouterOutlet *', elemIonRouterOutlet)
+          if (this.executedInitializeAppByWatchConnection === false) {
+            setTimeout(() => {
+              const childElementCount = elemIonRouterOutlet.childElementCount;
+              this.logger.log('[APP-COMP] - watchToConnectionStatus - mobile * childElementCount *', childElementCount)
+              if (childElementCount === 1) {
+                this.initializeApp();
+                this.executedInitializeAppByWatchConnection = true;
+              }
+            }, 2000);
+          }
+        }
       }
       else {
-
-        // --------------------------------------------------
-        // Publish event
-        // --------------------------------------------------
-        // this.events.publish('internetisonline', false);
-
-        // show danger alert if net internet not working
-        // alert('Internet is slow or not working.')
-        // this.presentMissingConnectionToast();
-
-        this.logger.log('[APP-COMP] - watchToConnectionStatus - Internet is slow or not working.')
-        // --------------------------------------------------
-        // Publish event
-        // --------------------------------------------------
-        // this.events.publish('internetisonline', false);
+        this.logger.log('[APP-COMP] - watchToConnectionStatus - Internet is slow or not working.');
       }
     });
   }
 
-  checkInternetFunc() {
-    if (!window || !navigator || !('onLine' in navigator)) return;
+  // checkInternetFunc() {
+  //   if (!window || !navigator || !('onLine' in navigator)) return;
 
-    this.appIsOnline$ = Observable.create(observer => {
-      observer.next(true);
-    }).pipe(mapTo(true));
+  //   this.appIsOnline$ = Observable.create(observer => {
+  //     observer.next(true);
+  //   }).pipe(mapTo(true));
 
-    if (this.platform.is('cordova')) {
-      // on Device - when platform is cordova
-      this.appIsOnline$ = merge(
-        this.network.onConnect().pipe(mapTo(true)),
-        this.network.onDisconnect().pipe(mapTo(false))
-      );
-    } else {
-      // on Browser - when platform is Browser
-      this.appIsOnline$ = merge(
-        of(navigator.onLine),
-        fromEvent(window, 'online').pipe(mapTo(true)),
-        fromEvent(window, 'offline').pipe(mapTo(false))
-      );
-    }
-    return this.appIsOnline$
-  }
+  //   if (this.platform.is('cordova')) {
+  //     // on Device - when platform is cordova
+  //     this.appIsOnline$ = merge(
+  //       this.network.onConnect().pipe(mapTo(true)),
+  //       this.network.onDisconnect().pipe(mapTo(false))
+  //     );
+  //   } else {
+  //     // on Browser - when platform is Browser
+  //     this.appIsOnline$ = merge(
+  //       of(navigator.onLine),
+  //       fromEvent(window, 'online').pipe(mapTo(true)),
+  //       fromEvent(window, 'offline').pipe(mapTo(false))
+  //     );
+  //   }
+  //   return this.appIsOnline$
+  // }
 
   getRouteParamsAndSetLoggerConfig() {
     const appconfig = this.appConfigProvider.getConfig();
@@ -501,6 +502,7 @@ export class AppComponent implements OnInit {
     } else {
       this.platformIs = PLATFORM_DESKTOP;
       this.logger.debug('[APP-COMP] PLATFORM_DESKTOP ', this.navService);
+
       this.navService.setRoot(ConversationListPage, {});
 
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
@@ -846,10 +848,21 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:storage', ['$event'])
   onStorageChanged(event: any) {
-    this.logger.log('[APP-COMP] - onStorageChanged')
+    console.log('[APP-COMP] - onStorageChanged tiledeskToken', this.appStorageService.getItem('tiledeskToken'))
     if (this.appStorageService.getItem('tiledeskToken') === null) {
       this.tiledeskAuthService.logOut()
       this.messagingAuthService.logout();
+    }
+    else {
+      setTimeout(() => {
+        const currentUser = this.tiledeskAuthService.getCurrentUser();
+        if (currentUser) {
+          console.log('[APP-COMP] - onStorageChanged currentUser', currentUser)
+        } else {
+          this.initializeApp()
+        }
+      }, 1000);
+
     }
   }
 
