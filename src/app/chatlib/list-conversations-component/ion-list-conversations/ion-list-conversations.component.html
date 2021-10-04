@@ -25,9 +25,9 @@
 <!-- -------------------------------------------------------------------------- -->
 <!-- New -->
 <!-- -------------------------------------------------------------------------- -->
-<!-- <ion-item *ngIf="isOnline === false" button="true" lines="none" class="ion-no-padding waiting-for-connection" >
+<ion-item *ngIf="isOnline === false" button="true" lines="none" class="ion-no-padding waiting-for-connection" >
   <ion-spinner class="spinner-middle" style="margin-left: 19px;"></ion-spinner>  <span part="message-text" class="waiting-for-network-msg">&nbsp;&nbsp; Waiting for network</span> 
-</ion-item> -->
+</ion-item>
 
 <ion-item button="true" lines="none" class="ion-no-padding"  [class.ion-selected]="conversation.uid === uidConvSelected" *ngFor="let conversation of listConversations"
   (click)="openConversationByID(conversation)">
