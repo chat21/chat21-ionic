@@ -213,9 +213,6 @@ export class ConversationListPage implements OnInit {
   }
 
 
-
-
-
   // ------------------------------------------------------------------ 
   //  SUBSCRIPTIONS
   // ------------------------------------------------------------------
@@ -673,9 +670,6 @@ export class ConversationListPage implements OnInit {
     });
 
   }
-
-
-
 
 
   public generateFake(count: number): Array<number> {
