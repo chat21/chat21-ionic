@@ -1,5 +1,11 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC14
+- Implements Network service
+- Displays, when the chat loses connection, the message "Waiting for network" at the top of the conversation list
+- Displays, when the chat loses connection, the message "Internet is slow or not working" on the conversation details page
+- Set the "user" variable to null when the user logs out of chat
+
 ### 3.0.55-RC12
 - Fixes the bug: when a file is uploaded via drag & drop, the message "Failed to upload: the format is not supported" is displayed even if fileUploadAccept is set to "* / *" (accept all)
 - Fixes the bug: the left side panel "conversation list" is not displayed on Safari
