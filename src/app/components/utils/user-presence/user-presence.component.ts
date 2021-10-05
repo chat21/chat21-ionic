@@ -47,7 +47,9 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
 
   /** */
   initialize() {
-    this.status = this.translationMap.get('LABEL_ACTIVE_NOW');
+    if (this.translationMap) {
+      this.status = this.translationMap.get('LABEL_ACTIVE_NOW');
+    }
     this.logger.log('[USER-PRESENCE-COMP] - initialize - this.translationMap', this.translationMap);
     this.logger.log('[USER-PRESENCE-COMP] - initialize - this.status', this.status);
     this.logger.log('[USER-PRESENCE-COMP] - initialize - idUser ->', this.idUser);
@@ -68,7 +70,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
     subscribtionKey = 'BSIsOnline';
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
-      subscribtion =  this.presenceService.BSIsOnline.subscribe((data: any) => {
+      subscribtion = this.presenceService.BSIsOnline.subscribe((data: any) => {
         this.logger.log('[USER-PRESENCE-COMP] $subs to BSIsOnline - data ', data);
         if (data) {
           const userId = data.uid;
@@ -78,7 +80,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
           }
         }
       });
-      const subscribe = {key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
 
@@ -86,7 +88,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
     subscribtionKey = 'BSLastOnline';
     subscribtion = this.subscriptions.find(item => item.key === subscribtionKey);
     if (!subscribtion) {
-      subscribtion =  this.presenceService.BSLastOnline.subscribe((data: any) => {
+      subscribtion = this.presenceService.BSLastOnline.subscribe((data: any) => {
         this.logger.log('[USER-PRESENCE-COMP] $subs to BSLastOnline - data ', data);
         if (data) {
           const userId = data.uid;
@@ -96,7 +98,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
           }
         }
       });
-      const subscribe = {key: subscribtionKey, value: subscribtion };
+      const subscribe = { key: subscribtionKey, value: subscribtion };
       this.subscriptions.push(subscribe);
     }
 
@@ -138,7 +140,7 @@ export class UserPresenceComponent implements OnInit, OnDestroy {
       const lastConnectionDate = setLastDateWithLabels(this.translationMap, timestamp);
       this.logger.log('[USER-PRESENCE-COMP] userLastConnection - lastConnectionDate', lastConnectionDate);
       this.lastConnectionDate = lastConnectionDate;
-      if (this.online === false ) {
+      if (this.online === false) {
         this.status = this.lastConnectionDate;
       }
     }
