@@ -80,7 +80,7 @@ export class InfoGroupComponent implements OnInit, AfterViewInit, OnChanges {
         // console.log('InfoGroupComponent -  router.events member_array :', this.member_array);
         // this.pleaseDeleteMeEvent.emit();
 
-        if (this.groupDetail.hasOwnProperty("member_array")) {
+        if (this.groupDetail && this.groupDetail.hasOwnProperty("member_array")) {
           // console.log('InfoGroupComponent - router.events has Property member_array  :', this.groupDetail.hasOwnProperty("member_array"));
           delete this.groupDetail['member_array'];
         }
