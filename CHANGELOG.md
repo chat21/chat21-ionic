@@ -1,5 +1,15 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC15
+- Fixes the bug: "ion-spinner" throws an error when the chat is offline
+- Fixes the bug: in the component "info-group-component" if groupDetail is not defined throws the error "Cannot read hasOwnProperty of undefined"
+- Fixes the bug: in the "advanced-info-accordion" component if translationMap is not defined throws the error "Cannot read properties of undefined (reading 'get')"
+- Fixes the bug: in the component "user-presence.component" if translationMap is not defined throws the error "Cannot read properties of undefined (reading 'get')"
+- Fixes the bug: if the image name is longer than the image width when uploading, it is displayed on the right side of the image
+- Fixes the bug: if the user logs out of the dashboard and then logs in, the user in the chat is not logged in again
+- Fixes the bug: if the file upload preview window is closed without sending the file, the windows does not reopen if the same file is selected
+- Adds autofocus in the "caption" text area in the file upload preview window
+
 ### 3.0.55-RC14
 - Implements Network service
 - Displays, when the chat loses connection, the message "Waiting for network" at the top of the conversation list
