@@ -1,7 +1,7 @@
 <ion-button expand="full" fill="clear" text-left class="advanced-info-accordion" (click)="openAdvancedInfoAccordion()">
   <span class="absolute-text">
 
-    {{ translationMap.get('LABEL_INFO_ADVANCED') }}
+    {{ translationMap?.get('LABEL_INFO_ADVANCED') }}
   </span>
 
   <ion-icon id="{{'absolute-icon_'+ teammateID}}" slot="end" name="chevron-down-outline" class="absolute-icon">
@@ -42,7 +42,7 @@
             <div class="attributes-title-wpr">
               <span class="attributes-title">
                 <!-- {{ attr.key  }} -->
-                {{ translationMap.get(attr.key) }}
+                {{ translationMap?.get(attr.key) }}
               </span>
             </div>
 
