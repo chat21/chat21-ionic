@@ -58,7 +58,8 @@
 
     <div class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)"
       class="msg_info_container">
-      <chat-info-message class="messages" [message]="message">
+      <chat-info-message class="messages" 
+        [message]="message">
       </chat-info-message>
     </div>
 
@@ -66,10 +67,13 @@
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
 
       <!--backgroundColor non viene ancora usato -->
-      <chat-bubble-message class="messages msg_sent" id="{{'message'+'_'+ i}}"
+      <chat-bubble-message 
+      class="messages msg_sent" id="{{'message'+'_'+ i}}"
         [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" [message]="message"
-        [textColor]="'col-msg-sent'" (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-        (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
+        [textColor]="'col-msg-sent'" 
+        (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+        (onAfterMessageRender)="returnOnAfterMessageRender($event)" 
+        (onImageRendered)="onImageRenderedFN($event)">
       </chat-bubble-message>
 
       <!-- icon status message -->
@@ -95,9 +99,12 @@
 
       <!--backgroundColor non viene ancora usato -->
 
-      <chat-bubble-message class="messages msg_receive" [message]="message" [textColor]="'black'"
+      <chat-bubble-message class="messages msg_receive" 
+        [message]="message" 
+        [textColor]="'black'"
         (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-        (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)">
+        (onAfterMessageRender)="returnOnAfterMessageRender($event)" 
+        (onImageRendered)="onImageRenderedFN($event)">
       </chat-bubble-message>
     </div>
 
