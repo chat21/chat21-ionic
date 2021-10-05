@@ -118,6 +118,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   public isOnline: boolean = true;
   public checkInternet: boolean;
+  public msgCount: number
   /**
    * Constructor
    * @param route 
@@ -464,6 +465,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       const that = this;
       this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages  ', that.messages);
       this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages.length  ', that.messages.length);
+      this.msgCount = that.messages.length
       setTimeout(() => {
         if (!that.messages || that.messages.length === 0) {
           this.showIonContent = true;
@@ -609,8 +611,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       }
     }
 
-
-    if (type === 'file' || type === 'image') {
+    // || type === 'image'
+    if (type === 'file') {
 
       if (msg) {
         // msg = msg + '<br>' + 'File: ' + metadata.src;
@@ -625,6 +627,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         // msg = ![file-image-placehoder](./assets/images/file-alt-solid.png) + [${metadata.name}](${metadata.src})
         msg = `[${metadata.name}](${metadata.src})`
       }
+    } else if (type === 'image') {
+      if (msg) {
+        // msg = msg + '<br>' + 'File: ' + metadata.src;
+        msg = metadata.name + '\n' + msg
+
+      } else {
+  
+        msg = metadata.name
+      }
+ 
     }
     //     <a href="/images/myw3schoolsimage.jpg" download>
     //   <img src="/images/myw3schoolsimage.jpg" alt="W3Schools" width="104" height="142">
@@ -632,6 +644,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     (metadata) ? metadata = metadata : metadata = '';
     this.logger.log('[CONVS-DETAIL] - SEND MESSAGE msg: ', msg, ' - messages: ', this.messages, ' - loggedUser: ', this.loggedUser);
+ 
     if (msg && msg.trim() !== '' || type !== TYPE_MSG_TEXT) {
       this.conversationHandlerService.sendMessage(
         msg,
