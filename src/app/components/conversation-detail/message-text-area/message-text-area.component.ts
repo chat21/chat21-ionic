@@ -458,6 +458,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
           });
 
         }
+      } else {
+        that.fileInput.nativeElement.value = '';
       }
     });
 
