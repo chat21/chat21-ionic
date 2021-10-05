@@ -54,6 +54,7 @@ import { getImageUrlThumbFromFirebasestorage } from 'src/chat21-core/utils/utils
 // import { mapTo } from 'rxjs/operators';
 import { TiledeskService } from './services/tiledesk/tiledesk.service';
 import { NetworkService } from './services/network-service/network.service';
+import * as PACKAGE from 'package.json';
 
 @Component({
   selector: 'app-root',
@@ -92,6 +93,7 @@ export class AppComponent implements OnInit {
   private hadBeenCalledOpenModal: boolean = false;
   public missingConnectionToast: any
   public executedInitializeAppByWatchConnection: boolean = false;
+  private version: string;
 
   constructor(
     private platform: Platform,
@@ -166,6 +168,8 @@ export class AppComponent implements OnInit {
 
     const appconfig = this.appConfigProvider.getConfig();
     this.logger.info('[APP-COMP] appconfig: ', appconfig)
+    this.version = PACKAGE.version;
+    this.logger.info('[APP-COMP] version: ', this.version)
 
     this.logger.setLoggerConfig(true, appconfig.logLevel)
     this.logger.info('[APP-COMP] logLevel: ', appconfig.logLevel);
