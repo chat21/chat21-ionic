@@ -27,7 +27,7 @@
     <ion-item>
       <ion-label color="primary" position="floating" floating> {{'AddACaption' | translate}}...</ion-label>
       <!-- <ion-input clearInput></ion-input> -->
-      <ion-textarea #messageTextArea rows="1" autosize="false" auto-grow="true" [(ngModel)]="messageString"
+      <ion-textarea #messageTextArea #imageCaptionTexarea rows="1" autosize="false" auto-grow="true" [(ngModel)]="messageString"
         (ionInput)="onChangeTextArea($event);" (keyup.enter)="pressedOnKeyboard($event, messageString);">
       </ion-textarea>
     </ion-item>

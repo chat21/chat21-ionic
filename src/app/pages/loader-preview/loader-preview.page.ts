@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, HostListener, AfterViewInit } from '@angular/core';
 import { TYPE_MSG_IMAGE } from 'src/chat21-core/utils/constants';
 import { NavParams, ModalController } from '@ionic/angular';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -12,9 +12,10 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
   templateUrl: './loader-preview.page.html',
   styleUrls: ['./loader-preview.page.scss'],
 })
-export class LoaderPreviewPage implements OnInit {
+export class LoaderPreviewPage implements OnInit, AfterViewInit {
   @ViewChild('thumbnailsPreview', { static: false }) thumbnailsPreview: ElementRef;
   @ViewChild('messageTextArea', { static: false }) messageTextArea: ElementRef;
+  @ViewChild('imageCaptionTexarea', { static: false }) imageCaptionTexarea: any
   // @Output() eventSendMessage = new EventEmitter<object>();
   @Input() files: [any];
 
@@ -41,6 +42,17 @@ export class LoaderPreviewPage implements OnInit {
     for (let i = 0; i < this.files.length; i++) {
       this.readAsDataURL(this.files[i]);
       //this.fileChange(this.files[i]);
+    }
+  }
+  ngAfterViewInit() {
+    if (this.imageCaptionTexarea) {
+      setTimeout(() => {
+        // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] set focus on ", this.messageTextArea);
+        // Keyboard.show() // for android
+        this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit this.imageCaptionTexarea ", this.imageCaptionTexarea);
+        this.imageCaptionTexarea.setFocus();
+
+      }, 1000); //a least 150ms.
     }
   }
 
@@ -126,7 +138,7 @@ export class LoaderPreviewPage implements OnInit {
 
   start_and_end(str) {
     if (str.length > 70) {
-      return str.substr(0, 20) + '...' + str.substr(str.length-10, str.length);
+      return str.substr(0, 20) + '...' + str.substr(str.length - 10, str.length);
     }
     return str;
   }
@@ -270,7 +282,7 @@ export class LoaderPreviewPage implements OnInit {
 
   /** */
   onChangeTextArea(e: any) {
-    // this.logger.log('onChangeTextArea', e.target.clientHeight);
+    this.logger.log('onChangeTextArea', e.target.clientHeight);
     this.calculateHeightPreviewArea();
     // try {
     //   let height: number = e.target.offsetHeight;
@@ -315,7 +327,7 @@ export class LoaderPreviewPage implements OnInit {
   /** */
   onSendMessage() {
     this.logger.log('[LOADER-PREVIEW-PAGE] onSendMessage messageString:', this.messageString);
-    const file = this.selectedFiles.item(0);
+    let file = this.selectedFiles.item(0);
     const file4Load = new Image;
     const nameImg = file.name;
     const typeFile = file.type;
@@ -332,6 +344,7 @@ export class LoaderPreviewPage implements OnInit {
       'uid': uid
     };
     this.viewCtrl.dismiss({ fileSelected: file, messageString: this.messageString, metadata: metadata, type: TYPE_MSG_IMAGE });
+  
   }
 
   async onClose() {
