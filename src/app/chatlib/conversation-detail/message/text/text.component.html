@@ -1,5 +1,6 @@
 <!-- [ngStyle] = "{ 'width': media_width +'px'  }" -->
-<p  #messageEl class="message_innerhtml marked" 
+<!-- {'background-image': !item.featured ? 'url(\'images/img1.png\')' : 'url(\'images/img2.png\')'}"> -->
+<p  #messageEl class="message_innerhtml marked" [ngStyle] = "{ 'width': message.type === 'image' ? media_width +'px' : ''  }" 
     [innerHTML]="printMessage(text, messageEl, this) | htmlEntiesEncode  | marked"
     [ngStyle]="{'color': '$'+ color }">
 </p>
