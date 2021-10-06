@@ -158,38 +158,41 @@ export class FirebaseNotifications extends NotificationsService {
     removeNotificationsInstance(callback: (string) => void) {
         var self = this;
         firebase.auth().onAuthStateChanged(function (user) {
+
             if (user) {
-                self.logger.debug('[FIREBASE-NOTIFICATIONS] - User is signed in. ', user)
+                self.logger.debug('[FIREBASE-NOTIFICATIONS] - FB User is signed in. ', user)
+
+                self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.userId', self.userId);
+                self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > FCMcurrentToken', self.FCMcurrentToken);
+                // this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.tenant', this.tenant);
+                const urlNodeFirebase = '/apps/' + self.tenant
+                const connectionsRefinstancesId = urlNodeFirebase + '/users/' + self.userId + '/instances/'
+                self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> connectionsRefinstancesId ', connectionsRefinstancesId);
+                let connectionsRefURL = '';
+                if (connectionsRefinstancesId) {
+                    connectionsRefURL = connectionsRefinstancesId + self.FCMcurrentToken;
+                    const connectionsRef = firebase.database().ref().child(connectionsRefURL);
+                    self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> connectionsRef ', connectionsRef);
+                    self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> connectionsRef url ', connectionsRefURL);
+                    connectionsRef.off()
+                    connectionsRef.remove()
+                        .then(() => {
+                            self.logger.log("[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > Remove succeeded.")
+                            callback('success')
+                        }).catch((error) => {
+                            self.logger.error("[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance Remove failed: " + error.message)
+                            callback('error')
+                        }).finally(() => {
+                            self.logger.log('[FIREBASE-NOTIFICATIONS] COMPLETED');
+                        })
+                }
 
             } else {
-                self.logger.debug('[FIREBASE-NOTIFICATIONS] - No user is signed in. ', user)
+                self.logger.debug('[FIREBASE-NOTIFICATIONS] - No FB user is signed in. ', user)
             }
         });
 
-        this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.userId', this.userId);
-        this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > FCMcurrentToken', this.FCMcurrentToken);
-        // this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.tenant', this.tenant);
-        const urlNodeFirebase = '/apps/' + this.tenant
-        const connectionsRefinstancesId = urlNodeFirebase + '/users/' + this.userId + '/instances/'
-        this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> connectionsRefinstancesId ', connectionsRefinstancesId);
-        let connectionsRefURL = '';
-        if (connectionsRefinstancesId) {
-            connectionsRefURL = connectionsRefinstancesId + this.FCMcurrentToken;
-            const connectionsRef = firebase.database().ref().child(connectionsRefURL);
-            this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> connectionsRef ', connectionsRef);
-            this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> connectionsRef url ', connectionsRefURL);
-            connectionsRef.off()
-            connectionsRef.remove()
-                .then(() => {
-                    this.logger.log("[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > Remove succeeded.")
-                    callback('success')
-                }).catch((error) => {
-                    this.logger.error("[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance Remove failed: " + error.message)
-                    callback('error')
-                }).finally(() => {
-                    this.logger.log('[FIREBASE-NOTIFICATIONS] COMPLETED');
-                })
-        }
+    
     }
 
     // removeNotificationsInstance() {
