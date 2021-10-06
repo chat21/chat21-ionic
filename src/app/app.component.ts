@@ -152,6 +152,7 @@ export class AppComponent implements OnInit {
   }
 
 
+
   /** */
   initializeApp() {
 
@@ -850,24 +851,55 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // Storage event not firing: This won't work on the same page that is making the changes
+  // https://stackoverflow.com/questions/35865481/storage-event-not-firing
+  // https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event
   @HostListener('window:storage', ['$event'])
   onStorageChanged(event: any) {
-    console.log('[APP-COMP] - onStorageChanged tiledeskToken', this.appStorageService.getItem('tiledeskToken'))
-    if (this.appStorageService.getItem('tiledeskToken') === null) {
-      this.tiledeskAuthService.logOut()
-      this.messagingAuthService.logout();
-    }
-    else {
-      setTimeout(() => {
-        const currentUser = this.tiledeskAuthService.getCurrentUser();
-        if (currentUser) {
-          console.log('[APP-COMP] - onStorageChanged currentUser', currentUser)
-        } else {
-          this.initializeApp()
-        }
-      }, 1000);
+    // console.log('[APP-COMP] - onStorageChanged event', event)
+    // console.log('[APP-COMP] - onStorageChanged tiledeskToken', this.appStorageService.getItem('tiledeskToken'))
+    const storage = event.storageArea;
+    // console.log('[APP-COMP] - onStorageChanged event storage', storage)
 
-    }
+    setTimeout(() => {
+      if (storage && storage['chat_sv5__tiledeskToken'] === undefined) {
+        this.logger.log('[APP-COMP] - onStorageChanged event storage chat_sv5__tiledeskToken', storage['chat_sv5__tiledeskToken'])
+        this.tiledeskAuthService.logOut()
+        this.messagingAuthService.logout();
+        // this.events.publish('profileInfoButtonClick:logout', true);
+        this.conversationsHandlerService.conversations = [];
+      } else if (storage && storage['chat_sv5__tiledeskToken']) {
+
+        this.logger.log('[APP-COMP] - onStorageChanged event storage chat_sv5__tiledeskToken * IS DEFINED *')
+        const currentUser = this.tiledeskAuthService.getCurrentUser();
+
+        if (!currentUser) {
+          window.location.reload();
+        }
+
+      }
+    }, 1000);
+
+    // else {
+    //   console.log('[APP-COMP] - onStorageChanged event storage chat_sv5__tiledeskToken', storage['chat_sv5__tiledeskToken'])
+    // }
+
+
+    // if (this.appStorageService.getItem('tiledeskToken') === null) {
+    //   this.tiledeskAuthService.logOut()
+    //   this.messagingAuthService.logout();
+    // }
+    // else {
+    //   setTimeout(() => {
+    //     const currentUser = this.tiledeskAuthService.getCurrentUser();
+    //     if (currentUser) {
+    //       console.log('[APP-COMP] - onStorageChanged currentUser', currentUser)
+    //     } else {
+    //       this.initializeApp()
+    //     }
+    //   }, 1000);
+
+    // }
   }
 
 }
