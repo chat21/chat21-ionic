@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC18
+- Fixes the bug: check if exist the user before to remove the notification instance to avoid the error "Permission denied"
+- Fixes the bug: if the chat is open on more than one tab, the previous ones logging out
+
 ### 3.0.55-RC16
 - Removes the image name displayed at the bottom of the image
 - Removes the adaptation of the image caption width to the image size
