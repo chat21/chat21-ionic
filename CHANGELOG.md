@@ -2,6 +2,7 @@
 
 ### 3.0.55-RC16
 - Removes the image name displayed at the bottom of the image
+- Removes the adaptation of the image caption width to the image size
 
 ### 3.0.55-RC15
 - Fixes the bug: "ion-spinner" throws an error when the chat is offline
