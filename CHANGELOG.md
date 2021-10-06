@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC16
+- Removes the image name displayed at the bottom of the image
+
 ### 3.0.55-RC15
 - Fixes the bug: "ion-spinner" throws an error when the chat is offline
 - Fixes the bug: in the component "info-group-component" if groupDetail is not defined throws the error "Cannot read hasOwnProperty of undefined"
