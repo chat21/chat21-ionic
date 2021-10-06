@@ -245,7 +245,7 @@ export class ConversationListPage implements OnInit {
     // });
 
     this.conversationsHandlerService.conversationAdded.subscribe((conversation: ConversationModel) => {
-      this.logger.log('[CONVS-LIST-PAGE] ***** conversationsAdded *****', conversation);
+      // this.logger.log('[CONVS-LIST-PAGE] ***** conversationsAdded *****', conversation);
       // that.conversationsChanged(conversations);
       if (conversation) {
         this.onImageLoaded(conversation)
@@ -254,7 +254,7 @@ export class ConversationListPage implements OnInit {
     });
 
     this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
-      this.logger.log('[CONVS-LIST-PAGE] ***** subscribeConversationChanged *****', conversation);
+      // this.logger.log('[CONVS-LIST-PAGE] ***** subscribeConversationChanged *****', conversation);
       // that.conversationsChanged(conversations)
       if (conversation) {
         this.onImageLoaded(conversation)

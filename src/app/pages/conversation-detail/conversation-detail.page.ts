@@ -204,7 +204,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     this.networkService.checkInternetFunc().subscribe(isOnline => {
       this.checkInternet = isOnline
-      console.log('[CONVS-LIST-PAGE] - watchToConnectionStatus - isOnline', this.checkInternet)
+      // console.log('[CONVS-LIST-PAGE] - watchToConnectionStatus - isOnline', this.checkInternet)
 
       // checking internet connection
       if (this.checkInternet == true) {
