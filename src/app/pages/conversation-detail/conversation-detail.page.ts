@@ -627,20 +627,20 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         // msg = ![file-image-placehoder](./assets/images/file-alt-solid.png) + [${metadata.name}](${metadata.src})
         msg = `[${metadata.name}](${metadata.src})`
       }
-    } else if (type === 'image') {
-      if (msg) {
-        // msg = msg + '<br>' + 'File: ' + metadata.src;
-        msg = metadata.name + '\n' + msg
-
-      } else {
-  
-        msg = metadata.name
-      }
- 
     }
-    //     <a href="/images/myw3schoolsimage.jpg" download>
-    //   <img src="/images/myw3schoolsimage.jpg" alt="W3Schools" width="104" height="142">
-    // </a>
+    
+    // else if (type === 'image') {
+    //   if (msg) {
+    //     // msg = msg + '<br>' + 'File: ' + metadata.src;
+    //     msg = metadata.name + '\n' + msg
+
+    //   } else {
+  
+    //     msg = metadata.name
+    //   }
+ 
+    // }
+ 
 
     (metadata) ? metadata = metadata : metadata = '';
     this.logger.log('[CONVS-DETAIL] - SEND MESSAGE msg: ', msg, ' - messages: ', this.messages, ' - loggedUser: ', this.loggedUser);
