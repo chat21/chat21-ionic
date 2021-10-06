@@ -88,7 +88,7 @@ export class FirebaseAuthService extends MessagingAuthService {
     //     this.onAuthStateChanged();
     //   }
     // }) 
-    this.checkInternetConnection()
+    // this.checkInternetConnection()
 
     this.onAuthStateChanged();
   }
