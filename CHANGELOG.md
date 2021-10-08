@@ -1,7 +1,14 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC20
+- Improve the method that solves the bug: if the chat is open on more than one tab, the previous ones disconnect
+- Displays the message "sent an image" when the sender sends an image
+- Removes the "setTimeout" set on the onStorageChanged event
+
+### 3.0.55-RC19
+- Fixes the bug: opening the "conversations info" side panel for support type conversations causes the chat to log out
+
 ### 3.0.55-RC18
-- Fixes the bug: check if exist the user before to remove the notification instance to avoid the error "Permission denied"
 - Fixes the bug: if the chat is open on more than one tab, the previous ones logging out
 
 ### 3.0.55-RC16
