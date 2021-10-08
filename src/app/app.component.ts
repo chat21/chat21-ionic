@@ -692,7 +692,7 @@ export class AppComponent implements OnInit {
             that.removePresenceAndLogout();
           } else {
             that.removePresenceAndLogout();
-            that.presentToast();
+            // that.presentToast();
           }
         })
       }
@@ -858,48 +858,48 @@ export class AppComponent implements OnInit {
   onStorageChanged(event: any) {
     // console.log('[APP-COMP] - onStorageChanged event', event)
     // console.log('[APP-COMP] - onStorageChanged tiledeskToken', this.appStorageService.getItem('tiledeskToken'))
-    const storage = event.storageArea;
+    // const storage = event.storageArea;
     // console.log('[APP-COMP] - onStorageChanged event storage', storage)
 
-    setTimeout(() => {
-      if (storage && storage['chat_sv5__tiledeskToken'] === undefined) {
-        this.logger.log('[APP-COMP] - onStorageChanged event storage chat_sv5__tiledeskToken', storage['chat_sv5__tiledeskToken'])
-        this.tiledeskAuthService.logOut()
-        this.messagingAuthService.logout();
-        // this.events.publish('profileInfoButtonClick:logout', true);
-        this.conversationsHandlerService.conversations = [];
-      } else if (storage && storage['chat_sv5__tiledeskToken']) {
+    // setTimeout(() => {
+    //   if (storage && storage['chat_sv5__tiledeskToken'] === undefined) {
+    //     this.logger.log('[APP-COMP] - onStorageChanged event storage chat_sv5__tiledeskToken', storage['chat_sv5__tiledeskToken'])
+    //     this.tiledeskAuthService.logOut()
+    //     this.messagingAuthService.logout();
+    //     // this.events.publish('profileInfoButtonClick:logout', true);
+    //     this.conversationsHandlerService.conversations = [];
+    //   } else if (storage && storage['chat_sv5__tiledeskToken']) {
 
-        this.logger.log('[APP-COMP] - onStorageChanged event storage chat_sv5__tiledeskToken * IS DEFINED *')
-        const currentUser = this.tiledeskAuthService.getCurrentUser();
+    //     this.logger.log('[APP-COMP] - onStorageChanged event storage chat_sv5__tiledeskToken * IS DEFINED *')
+    //     const currentUser = this.tiledeskAuthService.getCurrentUser();
 
-        if (!currentUser) {
-          window.location.reload();
-        }
+    //     if (!currentUser) {
+    //       window.location.reload();
+    //     }
 
-      }
-    }, 1000);
+    //   }
+    // }, 1000);
 
     // else {
     //   console.log('[APP-COMP] - onStorageChanged event storage chat_sv5__tiledeskToken', storage['chat_sv5__tiledeskToken'])
     // }
 
+    // setTimeout(() => {
+      if (this.appStorageService.getItem('tiledeskToken') === null) {
+        this.tiledeskAuthService.logOut()
+        this.messagingAuthService.logout();
+      }
+      else {
 
-    // if (this.appStorageService.getItem('tiledeskToken') === null) {
-    //   this.tiledeskAuthService.logOut()
-    //   this.messagingAuthService.logout();
-    // }
-    // else {
-    //   setTimeout(() => {
-    //     const currentUser = this.tiledeskAuthService.getCurrentUser();
-    //     if (currentUser) {
-    //       console.log('[APP-COMP] - onStorageChanged currentUser', currentUser)
-    //     } else {
-    //       this.initializeApp()
-    //     }
-    //   }, 1000);
-
-    // }
+        const currentUser = this.tiledeskAuthService.getCurrentUser();
+        if (currentUser) {
+          console.log('[APP-COMP] - onStorageChanged currentUser', currentUser)
+        } else {
+          // this.initializeApp();
+          window.location.reload();
+        }
+      }
+    // }, 1000);
   }
 
 }
