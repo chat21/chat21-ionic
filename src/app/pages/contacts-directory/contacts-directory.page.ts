@@ -89,7 +89,7 @@ export class ContactsDirectoryPage implements OnInit {
       this.logger.log('[CONTACT-DIRECTORY-PAGE] DSHBRD STORED USER: ', user);
       if (user.token) {
         token = user.token;
-        console.log('[CONTACTS-DIRECTORY] DSHBRD STORED USER > TOKEN: ', user.token);
+        this.logger.log('[CONTACTS-DIRECTORY] DSHBRD STORED USER > TOKEN: ', user.token);
       }
     }
     return token;
