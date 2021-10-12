@@ -531,12 +531,12 @@ export class ConversationListPage implements OnInit {
           conversation.last_message_text = SENT_AN_IMAGE;
 
         } 
-        // else if (conversation.type !== "text" && conversation.type !== "image") {
-        //   // this.logger.log('[CONVS-LIST-PAGE] HAS SENT FILE')
-        //   const SENT_AN_ATTACHMENT = conversation['last_message_text'] = translationMap.get('SENT_AN_ATTACHMENT')
-        //   conversation.last_message_text = SENT_AN_ATTACHMENT;
+        else if (conversation.type === "file" ) {
+          // this.logger.log('[CONVS-LIST-PAGE] HAS SENT FILE')
+          const SENT_AN_ATTACHMENT = conversation['last_message_text'] = translationMap.get('SENT_AN_ATTACHMENT')
+          conversation.last_message_text = SENT_AN_ATTACHMENT;
 
-        // } 
+        } 
       }
     }
   }
