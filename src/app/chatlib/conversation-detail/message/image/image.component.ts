@@ -32,7 +32,7 @@ export class ImageComponent implements OnInit {
   }
   getBrowserLanguageAndTranslateTooltipMsg() {
     var userLang = navigator.language;
-    console.log('Image COMP - userLang ', userLang)
+    // console.log('Image COMP - userLang ', userLang)
     if (userLang === 'en') {
       this.tooltipMessage = "Click to download"
     } else {
