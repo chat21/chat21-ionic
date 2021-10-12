@@ -179,12 +179,15 @@ export class FirebaseAuthService extends MessagingAuthService {
   onAuthStateChanged() {
     const that = this;
     firebase.auth().onAuthStateChanged(user => {
-      this.logger.log('[FIREBASEAuthSERVICE] onAuthStateChanged', user)
+      this.logger.log('initialize FROM [APP-COMP] - [FIREBASEAuthSERVICE] onAuthStateChanged', user)
       if (!user) {
         this.logger.log('[FIREBASEAuthSERVICE] 1 - PASSO OFFLINE AL CHAT MANAGER')
+        // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - [FIREBASEAuthSERVICE] onAuthStateChanged user ', user)
+       
         that.BSAuthStateChanged.next('offline');
       } else {
         this.logger.log('[FIREBASEAuthSERVICE] 2 - PASSO ONLINE AL CHAT MANAGER')
+        // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - [FIREBASEAuthSERVICE] onAuthStateChanged user ', user)
         that.BSAuthStateChanged.next('online');
       }
     });
@@ -217,7 +220,8 @@ export class FirebaseAuthService extends MessagingAuthService {
       }
     }
     return firebase.auth().setPersistence(firebasePersistence).then(async () => {
-      return firebase.auth().signInWithCustomToken(token).then(async () => {
+      return firebase.auth().signInWithCustomToken(token).then(async (user) => {
+        
         // that.firebaseSignInWithCustomToken.next(response);
       }).catch((error) => {
         that.logger.error('[FIREBASEAuthSERVICE] signInFirebaseWithCustomToken Error: ', error);
@@ -317,6 +321,7 @@ export class FirebaseAuthService extends MessagingAuthService {
 
   logout() {
     this.logger.log('[FIREBASEAuthSERVICE] logout');
+    this.BSAuthStateChanged.next(null);
     // cancello token firebase dal local storage e da firebase
     // dovrebbe scattare l'evento authchangeStat
     this.signOut();
