@@ -199,8 +199,8 @@ export class ConversationListPage implements OnInit {
 
   listenToLogoutEvent() {
     this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
-      this.logger.log('[CONVS-LIST-PAGE] - listenToLogoutEvent - hasclickedlogout', hasclickedlogout);
-
+      this.logger.info('[CONVS-LIST-PAGE] - listenToLogoutEvent - hasclickedlogout', hasclickedlogout);
+      this.conversations = []
       this.conversationsHandlerService.conversations = [];
       this.uidConvSelected = null;
 

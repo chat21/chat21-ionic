@@ -834,6 +834,7 @@ export class AppComponent implements OnInit {
       this.logger.log('[APP-COMP] - onStorageChanged tiledeskToken is null - RUN LOGOUT')
       this.tiledeskAuthService.logOut()
       this.messagingAuthService.logout();
+      this.events.publish('profileInfoButtonClick:logout', true);
     }
     else {
       const currentUser = this.tiledeskAuthService.getCurrentUser();
