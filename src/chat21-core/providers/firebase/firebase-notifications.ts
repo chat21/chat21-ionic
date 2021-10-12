@@ -63,10 +63,10 @@ export class FirebaseNotifications extends NotificationsService {
 
     getNotificationPermissionAndSaveToken(currentUserUid) {
         // this.tenant = this.getTenant();
-        this.logger.log('[FIREBASE-NOTIFICATIONS] calling requestPermission - tenant ', this.tenant)
-        this.logger.log('[FIREBASE-NOTIFICATIONS] calling requestPermission - currentUserUid ', currentUserUid)
+        this.logger.log('initialize FROM [APP-COMP] - [FIREBASE-NOTIFICATIONS] calling requestPermission - tenant ', this.tenant, ' currentUserUid ', currentUserUid)
+        // this.logger.log('[FIREBASE-NOTIFICATIONS] calling requestPermission - currentUserUid ', currentUserUid)
         this.userId = currentUserUid;
-        // Service Worker explicit registration to explicitly define sw location at a path
+        // Service Worker explicit registration to explicitly define sw location at a path,
         // const swRegistration = async () => {
         //     try {
         //         await navigator.serviceWorker.register('http://localhost:8101/firebase-messaging-sw.js');
@@ -76,9 +76,9 @@ export class FirebaseNotifications extends NotificationsService {
         // }
 
 
-      
+
         if (firebase.messaging.isSupported()) {
-            const messaging = firebase.messaging(); 
+            const messaging = firebase.messaging();
             // messaging.requestPermission()
             Notification.requestPermission().then((permission) => {
                 if (permission === 'granted') {
@@ -165,7 +165,7 @@ export class FirebaseNotifications extends NotificationsService {
                 self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.userId', self.userId);
                 self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > FCMcurrentToken', self.FCMcurrentToken);
                 // this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.tenant', this.tenant);
-      
+
 
             } else {
                 self.logger.debug('[FIREBASE-NOTIFICATIONS] - No FB user is signed in. ', user)
@@ -194,7 +194,7 @@ export class FirebaseNotifications extends NotificationsService {
                 })
         }
 
-    
+
     }
 
     // removeNotificationsInstance() {

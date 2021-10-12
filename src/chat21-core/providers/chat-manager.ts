@@ -15,8 +15,6 @@ import { AppConfigProvider } from 'src/app/services/app-config';
 // Logger
 import { LoggerService } from './abstract/logger.service';
 import { LoggerInstance } from './logger/loggerInstance';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-
 
 
 @Injectable({ providedIn: 'root' })

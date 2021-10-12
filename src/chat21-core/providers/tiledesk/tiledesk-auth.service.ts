@@ -5,12 +5,16 @@ import { UserModel } from 'src/chat21-core/models/user';
 import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user';
 import { AppStorageService } from '../abstract/app-storage.service';
 import { LoggerInstance } from '../logger/loggerInstance';
+// import { BehaviorSubject } from 'rxjs';
+// import { EventsService } from 'src/app/services/events-service';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class TiledeskAuthService {
 
+  // public isOnline$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
   // private persistence: string;
   public SERVER_BASE_URL: string;
 
@@ -23,8 +27,11 @@ export class TiledeskAuthService {
   private currentUser: UserModel;
   private logger: LoggerService = LoggerInstance.getInstance()
 
-  constructor(public http: HttpClient,
-    public appStorage: AppStorageService) { }
+  constructor(
+    public http: HttpClient,
+    public appStorage: AppStorageService,
+    // private events: EventsService,
+    ) { }
 
 
   initialize(serverBaseUrl: string) {
@@ -125,10 +132,12 @@ export class TiledeskAuthService {
   }
 
   logOut() {
-    this.logger.debug('[TILEDESK-AUTH] logOut()')
+    this.logger.log('[TILEDESK-AUTH] - LOGOUT')
     this.appStorage.removeItem('tiledeskToken')
     this.appStorage.removeItem('currentUser')
     this.setCurrentUser(null);
+    // this.isOnline$.next(false) 
+    
   }
 
 
@@ -155,8 +164,9 @@ export class TiledeskAuthService {
       member.avatar = avatar;
       member.color = color;
       this.currentUser = member;
-      this.logger.debug('[TILEDESK-AUTH] - createCompleteUser member ', member);
+      this.logger.log('[TILEDESK-AUTH] - createCompleteUser member ', member);
       this.appStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+      // this.isOnline$.next(true) 
     } catch (err) {
       this.logger.error('[TILEDESK-AUTH]- createCompleteUser ERR ', err)
     }
@@ -171,7 +181,7 @@ export class TiledeskAuthService {
       this.logger.log('[TILEDESK-AUTH] - checkAndSetInStorageTiledeskToken TOKEN DOES NOT EXIST - RUN SET ')
       this.appStorage.setItem('tiledeskToken', tiledeskToken);
     } else if (storedTiledeskToken && storedTiledeskToken !== tiledeskToken) {
-      console.log('[TILEDESK-AUTH] - checkAndSetInStorageTiledeskToken STORED-TOKEN EXIST BUT IS != FROM TOKEN - RUN SET ')
+      this.logger.log('[TILEDESK-AUTH] - checkAndSetInStorageTiledeskToken STORED-TOKEN EXIST BUT IS != FROM TOKEN - RUN SET ')
       this.appStorage.setItem('tiledeskToken', tiledeskToken);
     } else if (storedTiledeskToken && storedTiledeskToken === tiledeskToken){
       this.logger.log('[TILEDESK-AUTH] - checkAndSetInStorageTiledeskToken STORED-TOKEN EXIST AND IS = TO TOKEN ')

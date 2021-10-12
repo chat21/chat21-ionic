@@ -129,6 +129,7 @@ export class FirebasePresenceService extends PresenceService {
    * @param userid
    */
   public setPresence(userid: string): void {
+    this.logger.info('initialize FROM [APP-COMP] - [FIREBASEPresenceSERVICE] - SET PRESENCE userid ', userid) 
     this.onlineConnectionsRef = this.referenceOnlineForUser(userid);
     this.lastOnlineConnectionsRef = this.referenceLastOnlineForUser(userid);
     const connectedRefURL = '/.info/connected';
