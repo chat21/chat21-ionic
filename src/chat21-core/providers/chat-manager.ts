@@ -15,6 +15,7 @@ import { AppConfigProvider } from 'src/app/services/app-config';
 // Logger
 import { LoggerService } from './abstract/logger.service';
 import { LoggerInstance } from './logger/loggerInstance';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 
@@ -58,6 +59,7 @@ export class ChatManager {
    * setTiledeskToken
    */
   public setTiledeskToken(tiledeskToken: string) {
+    this.logger.info('initialize FROM [APP-COMP] - [CHAT MANAGER] - initialize -> firebaseConfig tenant ', this.tenant);
     this.tiledeskToken = tiledeskToken;
   }
 
@@ -72,6 +74,7 @@ export class ChatManager {
    * setCurrentUser
    */
   public setCurrentUser(currentUser: UserModel) {
+    this.logger.info('initialize FROM [APP-COMP] - [CHAT MANAGER] setCurrentUser currentUser ', currentUser)
     this.currentUser = currentUser;
   }
 
