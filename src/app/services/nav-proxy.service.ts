@@ -52,7 +52,7 @@ export class NavProxyService {
 
     // !!!! SEEMS NOT USED
     pushSidebar(page: any, pageName: string, navExtra?) {
-      console.log('push2:', pageName, 'navExtra():', navExtra, 'this.sidebarNav', this.sidebarNav);
+      this.logger.log('push2:', pageName, 'navExtra():', navExtra, 'this.sidebarNav', this.sidebarNav);
       if (checkPlatformIsMobile()) {
         this.router.navigate([pageName], navExtra);
       } else {
@@ -64,7 +64,7 @@ export class NavProxyService {
 
    // !!!! SEEMS NOT USED
   closePage(pageName: string) {
-    console.log('closePage:', pageName, 'checkPlatformIsMobile():', checkPlatformIsMobile());
+    this.logger.log('closePage:', pageName, 'checkPlatformIsMobile():', checkPlatformIsMobile());
     if (checkPlatformIsMobile()) {
       const navigationExtras: NavigationExtras = {
         state: {
