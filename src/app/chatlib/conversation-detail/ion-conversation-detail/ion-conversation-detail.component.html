@@ -119,8 +119,10 @@
       </chat-message-attachment>
     </div>
   </div>
+  <!-- (fileType === 'file' && uploadProgress !== 100)  -->
 
-  <div *ngIf="(fileType === 'file' && uploadProgress !== 100)" class="msg_container base_sent"
+  <!-- uploadProgress -> {{ uploadProgress }} -->
+  <div *ngIf="uploadProgress !== 100" class="msg_container base_sent"
     style="margin-right: 20px;">
     <div class="messages msg_sent">
       <div class="spinner">

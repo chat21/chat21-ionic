@@ -22,7 +22,7 @@ export class IonConversationDetailComponent extends ConversationContentComponent
   @Output() onAddUploadingBubble = new EventEmitter<boolean>();
  
 
-  public uploadProgress: number
+  public uploadProgress: number = 100
   public fileType: any
 
   isMine = isMine;
@@ -45,10 +45,12 @@ export class IonConversationDetailComponent extends ConversationContentComponent
     public uploadService: UploadService
   ) {
     super(cdref, uploadService)
-    this.listenToUploadFileProgress()
+   
   }
 
-  ngOnInit() { }
+  ngOnInit() { 
+  this.listenToUploadFileProgress()
+  }
 
   listenToUploadFileProgress() {
     this.logger.log('[CONVS-DETAIL][ION-CONVS-DETAIL] FIREBASE-UPLOAD - calling BSStateUpload ');
@@ -65,14 +67,14 @@ export class IonConversationDetailComponent extends ConversationContentComponent
           this.uploadProgress = 100
         }
         // if (data.type.startsWith("application")) {
-        if (!data.type.startsWith("image")) {
+        // if (!data.type.startsWith("image")) {
          
-          this.fileType = 'file'
+          // this.fileType = 'file'
 
           this.addUploadingBubblePlaceholder(true)
 
-          this.logger.log('[CONVS-DETAIL][ION-CONVS-DETAIL] FIREBASE-UPLOAD - BSStateUpload this.fileType', this.fileType);
-        }
+          // this.logger.log('[CONVS-DETAIL][ION-CONVS-DETAIL] FIREBASE-UPLOAD - BSStateUpload this.fileType', this.fileType);
+        // }
       }
     });
   }
