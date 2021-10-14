@@ -355,10 +355,15 @@ export class AppComponent implements OnInit {
     }
 
     this.route.queryParams.subscribe(params => {
+      this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN params 1' , params) 
       if (params.jwt) {
+        this.isOnline = false;
+        this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN params 2' , params) 
         this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
           this.messagingAuthService.createCustomToken(params.jwt)
-        }).catch(error => { this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::' + error) })
+        }).catch(error => { 
+          this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::' , error) 
+        })
       }
     });
   }
@@ -825,7 +830,7 @@ export class AppComponent implements OnInit {
   // https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event
   @HostListener('window:storage', ['$event'])
   onStorageChanged(event: any) {
-
+    console.error('[APP-COMP] - onStorageChanged event ', event)
     if (event.key !== 'chat_sv5__tiledeskToken') {
       return;
     }
@@ -835,6 +840,7 @@ export class AppComponent implements OnInit {
       this.tiledeskAuthService.logOut()
       this.messagingAuthService.logout();
       this.events.publish('profileInfoButtonClick:logout', true);
+      this.isOnline = false;
     }
     else {
       const currentUser = this.tiledeskAuthService.getCurrentUser();
