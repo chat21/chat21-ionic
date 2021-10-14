@@ -1,5 +1,11 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-RC23
+- Fixes the bug: missing contact information in the header when selecting a "Direct" conversation
+- Fixes the bug: by clicking on an archived chat the avatar displayed in the header does not correspond to the one displayed in the conversation list and in the right side panel "conversation info"
+- Fixes the bug: sometimes auto login with JWT passed in URL as query string doesn't work
+- Improves the "send message" textarea graphics
+
 ### 3.0.55-RC22
 - Fixes the bug: if the chat is open in multiple browser tabs when the user log in the 'goOnline' method is activated several times
 - Manages the message displayed in the conversation list when the sender sends a file (replace the markdown string with the string "sent an attachment")
