@@ -1311,7 +1311,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       }
     } catch (e) {
       this.logger.error('[CONVS-DETAIL] setHeightTextArea - ERROR ', e)
-      this.heightMessageTextArea = '50';
+      // this.heightMessageTextArea = '50';
+      this.heightMessageTextArea = '57'; // NK edited
     }
   }
   checkAcceptedFile(draggedFileMimeType) {

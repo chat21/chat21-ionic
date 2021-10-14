@@ -7,7 +7,7 @@
     .buttons-left {
         position: absolute;
         left: 0;
-        bottom: 0;
+        bottom: -3px;
         width: 30px;
         height: 100%;
         .attach-button {
@@ -26,7 +26,7 @@
     }
     .buttons-right {
         position: absolute;
-        bottom: 0;
+        bottom: 3px;
         right: 0;
         width: 30px;
         height: 100%;
@@ -47,18 +47,22 @@
         margin: 0 35px;
         width: calc(100% - 70px);
         ion-textarea {
-            border-radius: 4px;
+            // border-radius: 4px;
+            border-radius: 20px; // NK edited
             padding: 0;
             margin: 0;
             height: auto;
             overflow: auto;
-            min-height: 30px;
+            // min-height: 30px;
+            min-height: 37px; // NK edited
             max-height: 184px;
             background-color: rgba(0, 0, 0, .05);
-            --padding-top: 5px;
+            // --padding-top: 5px; // NK edited
+            --padding-top: 8px;
             --padding-bottom: 5px;
             --padding-end: 5px;
-            --padding-start: 5px;
+            // --padding-start: 5px; // NK edited
+            --padding-start: 10px;
             line-height: 1.34;
             font-size: 15px;
         }
