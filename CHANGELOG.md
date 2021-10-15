@@ -1,6 +1,6 @@
 # chat21-ionic ver 3.0
 
-### 3.0.55-RC24
+### 3.0.55-rc24
 - Improves the auto-login method
 
 ### 3.0.55-RC23
