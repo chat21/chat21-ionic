@@ -1,7 +1,7 @@
 # chat21-ionic ver 3.0
 
 ### 3.0.55-RC24
-- Improves the automatic login method
+- Improves the auto-login method
 
 ### 3.0.55-RC23
 - Fixes the bug: missing contact information in the header when selecting a "Direct" conversation
