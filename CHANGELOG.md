@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-rc25
+- Changes the method to get the JWT from the URL query string and the way to run the auto login
+
 ### 3.0.55-rc24
 - Improves the auto-login method
 
