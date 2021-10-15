@@ -108,9 +108,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       this.SHORTER_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
     }
 
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges this.isOpenInfoConversation ", this.isOpenInfoConversation);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
-
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
     // use case drop
     if (this.dropEvent) {
@@ -125,18 +123,6 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   // ngAfterViewInit() {
   ngAfterViewInit() {
 
-
-    // const element = this.renderer.selectRootElement('#textArea');
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit element get with renderer ", element);
-    // const elemTexarea= <HTMLElement>document.querySelector('#ion-textarea');
-    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] elemTexarea ', elemTexarea) 
-    // elemTexarea.focus()
-    // setTimeout(() => {
-    //   (this.messageTextArea.nativeElement.shadowRoot as ShadowRoot).querySelector('input').focus();
-    // }, 100);
-
-
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit messageTextArea.children[0] ", this.messageTextArea['el'].children);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit message_text_area ", this.message_text_area);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit messageTextArea ", this.messageTextArea);
     if (this.messageTextArea) {
@@ -144,16 +130,16 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
         const elTextArea = this.message_text_area['el'];
-        this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextArea ", elTextArea);
-        this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextArea children", elTextArea.children);
+        // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextArea ", elTextArea);
+        // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextArea children", elTextArea.children);
         if (elTextArea.children.length === 1) {
 
           const elTextAreaWrapper = elTextArea.children[0]
-          this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextAreaWrapper", elTextAreaWrapper);
+          // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextAreaWrapper", elTextAreaWrapper);
           
           if (elTextAreaWrapper.children.length === 1) {
             const elNativeTearea = elTextAreaWrapper.children[0]
-            this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elNativeTearea", elNativeTearea);
+            // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elNativeTearea", elNativeTearea);
              elNativeTearea.setAttribute("style", "height: 37px !important; ");
           }
         }
@@ -164,37 +150,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
         this.messageTextArea.setFocus();
 
-
-        // const el = document.querySelector('textarea');
-        // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit el ", el);
-        // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit document.activeElement ", document.activeElement);
-        // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit el === document.activeElement ", el === document.activeElement);
-
-        // if (document.activeElement.tagName !== 'BODY') {
-        //   if ((el === document.activeElement) === true) {
-        //     const texAreaHasFocus = true
-        //     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit texAreaHasFocus ", texAreaHasFocus);
-        //   } else {
-        //     const texAreaHasFocus = false
-        //     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit texAreaHasFocus ", texAreaHasFocus);
-        //   }
-        // }
-
-        // el = textarea.native-textarea.sc-ion-textarea-md
-        // dc = textarea.native-textarea.sc-ion-textarea-md
       }, 1500); //a least 150ms.
     }
   }
-
-  txtfocus(string) {
-    // const el = document.querySelector('textarea');
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit txtfocus string ", string);
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit txtfocus document.activeElement ", document.activeElement);
-    // // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit document.activeElement === TEXAREa", document.activeElement === );
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit txtfocus el ", el);
-  }
-
-
 
 
   getWindowWidth(): any {
