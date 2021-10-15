@@ -4,7 +4,7 @@ import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storag
 
 import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2, } from '@angular/core';
 import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav, ToastController } from '@ionic/angular';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription, VirtualTimeScheduler } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 
@@ -151,8 +151,63 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     this.logger.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
-    this.logger.info('[APP-COMP] ngOnInit -->', this.route.snapshot.params);
-    this.initializeApp('oninit');
+    this.logger.info('[APP-COMP] ngOnInit this.route.snapshot.params -->', this.route.snapshot.params);
+    // this.initializeApp('oninit');
+
+    // this.subscription = this.router.events.subscribe((event) => {
+    //   if (event instanceof NavigationStart) {
+    //    const current_url = event.url
+    //     this.logger.info('[APP-COMP] - NavigationStart event current_url ', current_url);
+    //     if (current_url.includes('jwt')) {
+    //       this.logger.info('[APP-COMP] - NavigationStart event current_url INCLUDES jwt');
+    //       const tokenString =  current_url.slice(current_url.lastIndexOf('=') + 1)
+    //       // const token =  tokenString.substring(1, tokenString.length - 1)
+    //       const token =  tokenString
+    //       this.logger.info('[APP-COMP] - NavigationStart event current_url INCLUDES jwt > token ', token);
+    //       this.signInWithCustomToken("JWT%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDhhZDAyZDNhNGRjMDAwMzQ0YWRlMTciLCJlbWFpbCI6Im51b3ZvcHJlZ2lub0BtYWlsbmEuY28iLCJmaXJzdG5hbWUiOiJOdW92byIsImxhc3RuYW1lIjoiUHJlZ2lubyIsImVtYWlsdmVyaWZpZWQiOnRydWUsImlhdCI6MTYzNDE5OTU1NiwiYXVkIjoiaHR0cHM6Ly90aWxlZGVzay5jb20iLCJpc3MiOiJodHRwczovL3RpbGVkZXNrLmNvbSIsInN1YiI6InVzZXIiLCJqdGkiOiIwMGQyNTI0MS05MDI4LTRmYTYtYmJhNi0xOGNmZTUwNzdiYTMifQ.4kCuHOyceIMWnlyOiCvQEiDPqDZR8HwYgyQoqMYJxX0")
+    //     } else {
+    //       this.logger.info('[APP-COMP] - NavigationStart event current_url NOT INCLUDES jwt');
+    //     }
+    //   }
+    // });
+
+    this.route.queryParams.subscribe(params => {
+      this.logger.log('[APP-COMP] ROUTE QUERY PARAMS params', params)
+      if (params.jwt) {
+        this.isOnline = false;
+        this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN  params ', params)
+        this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
+          this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN user', user)
+          if (user) {
+            this.logger.log('[APP-COMP] AUTLOGIN > RUN INIZIALIZE APP')
+            this.initializeApp('oninit');
+          }
+          this.messagingAuthService.createCustomToken(params.jwt)
+        }).catch(error => {
+          this.logger.error('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKE - ERROR', error)
+        })
+      } else {
+        this.isOnline = false;
+        this.logger.log('[APP-COMP] NO AUTLOGIN > RUN INIZIALIZE APP')
+        this.initializeApp('oninit');
+      }
+    });
+  }
+
+
+  signInWithCustomToken(token) {
+
+    this.isOnline = false;
+    this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN token', token)
+    this.tiledeskAuthService.signInWithCustomToken(token)
+      .then((user: any) => {
+        this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN user', user)
+        this.messagingAuthService.createCustomToken(token)
+      })
+      .catch(error => {
+        this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::', error)
+      })
+
   }
 
 
@@ -225,6 +280,8 @@ export class AppComponent implements OnInit {
       // ---------------------------------------
       this.watchToConnectionStatus();
       // this.listenToUserIsSignedIn();
+
+
     });
   }
 
@@ -354,18 +411,18 @@ export class AppComponent implements OnInit {
       }, 1000);
     }
 
-    this.route.queryParams.subscribe(params => {
-      this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN params 1' , params) 
-      if (params.jwt) {
-        this.isOnline = false;
-        this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN params 2' , params) 
-        this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
-          this.messagingAuthService.createCustomToken(params.jwt)
-        }).catch(error => { 
-          this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::' , error) 
-        })
-      }
-    });
+    // this.route.queryParams.subscribe(params => {
+    //   this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN params 1', params)
+    //   if (params.jwt) {
+    //     this.isOnline = false;
+    //     this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN params 2', params)
+    //     this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
+    //       this.messagingAuthService.createCustomToken(params.jwt)
+    //     }).catch(error => {
+    //       this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::', error)
+    //     })
+    //   }
+    // });
   }
 
   authenticate() {
@@ -483,7 +540,7 @@ export class AppComponent implements OnInit {
     if (checkPlatformIsMobile()) {
       this.platformIs = PLATFORM_MOBILE;
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
-      this.logger.debug('[APP-COMP] PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE, this.route.snapshot);
+      this.logger.log('[APP-COMP] PLATFORM_MOBILE2 navigateByUrl', PLATFORM_MOBILE, this.route.snapshot);
       if (!IDConv) {
         this.router.navigateByUrl('conversations-list')
       }
@@ -491,7 +548,7 @@ export class AppComponent implements OnInit {
       // this.navService.setRoot(ConversationListPage, {});
     } else {
       this.platformIs = PLATFORM_DESKTOP;
-      this.logger.debug('[APP-COMP] PLATFORM_DESKTOP ', this.navService);
+      this.logger.log('[APP-COMP] PLATFORM_DESKTOP ', this.navService);
 
       this.navService.setRoot(ConversationListPage, {});
 
@@ -583,8 +640,8 @@ export class AppComponent implements OnInit {
       ) */
   initSubscriptions() {
     this.logger.log('initialize FROM [APP-COMP] - initSubscriptions');
-  
-  
+
+
     this.messagingAuthService.BSAuthStateChanged
       .pipe(takeUntil(this.unsubscribe$))
       .pipe(filter((state) => state !== null))
@@ -763,7 +820,7 @@ export class AppComponent implements OnInit {
 
     // this.subscribeToConvs()
     this.conversationsHandlerService.subscribeToConversations(() => {
-      this.logger.log('[APP-COMP]-CONVS- INIT CONV')
+      this.logger.log('[APP-COMP] - CONVS - INIT CONV')
 
       const conversations = this.conversationsHandlerService.conversations;
       this.logger.info('initialize FROM [APP-COMP] - [APP-COMP]-CONVS - INIT CONV CONVS', conversations)
