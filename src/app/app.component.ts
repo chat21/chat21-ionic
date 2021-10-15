@@ -37,7 +37,7 @@ import { LoginPage } from './pages/authentication/login/login.page';
 import { ConversationListPage } from './pages/conversations-list/conversations-list.page';
 
 // utils
-import { createExternalSidebar, checkPlatformIsMobile, isGroup } from '../chat21-core/utils/utils';
+import { createExternalSidebar, checkPlatformIsMobile, isGroup, getParameterByName } from '../chat21-core/utils/utils';
 import { STORAGE_PREFIX, PLATFORM_MOBILE, PLATFORM_DESKTOP, CHAT_ENGINE_FIREBASE, AUTH_STATE_OFFLINE, AUTH_STATE_ONLINE } from '../chat21-core/utils/constants';
 import { environment } from '../environments/environment';
 import { UserModel } from '../chat21-core/models/user';
@@ -146,13 +146,40 @@ export class AppComponent implements OnInit {
     // });
   }
 
-
+  param() {
+    // PARAM
+    const url: URL = new URL(window.top.location.href);
+    const params: URLSearchParams = url.searchParams;
+    return params;
+  }
   /**
    */
   ngOnInit() {
+    const appconfig = this.appConfigProvider.getConfig();
+    this.persistence = appconfig.authPersistence;
+    this.appStorageService.initialize(environment.storage_prefix, this.persistence, '')
     this.logger.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
     this.logger.info('[APP-COMP] ngOnInit this.route.snapshot.params -->', this.route.snapshot.params);
     // this.initializeApp('oninit');
+    const token = getParameterByName('jwt')
+    this.logger.info('[APP-COMP] ngOnInit token get from params -->', token);
+   
+    if (token) {
+      this.isOnline = false;
+      this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN  params ', token)
+      // save token in local storage then 
+      this.appStorageService.setItem('tiledeskToken', token);
+    }
+    this.initializeApp('oninit');
+    // else {
+    //   this.isOnline = false;
+    //   this.logger.log('[APP-COMP] NO AUTLOGIN > RUN INIZIALIZE APP')
+    //   this.initializeApp('oninit');
+    // }
+
+    // const param = this.param();
+    // const token: string = param.get("jwt");
+    // this.logger.info('[APP-COMP] ngOnInit token geet from params -->', token);
 
     // this.subscription = this.router.events.subscribe((event) => {
     //   if (event instanceof NavigationStart) {
@@ -171,27 +198,28 @@ export class AppComponent implements OnInit {
     //   }
     // });
 
-    this.route.queryParams.subscribe(params => {
-      this.logger.log('[APP-COMP] ROUTE QUERY PARAMS params', params)
-      if (params.jwt) {
-        this.isOnline = false;
-        this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN  params ', params)
-        this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
-          this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN user', user)
-          if (user) {
-            this.logger.log('[APP-COMP] AUTLOGIN > RUN INIZIALIZE APP')
-            this.initializeApp('oninit');
-          }
-          this.messagingAuthService.createCustomToken(params.jwt)
-        }).catch(error => {
-          this.logger.error('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKE - ERROR', error)
-        })
-      } else {
-        this.isOnline = false;
-        this.logger.log('[APP-COMP] NO AUTLOGIN > RUN INIZIALIZE APP')
-        this.initializeApp('oninit');
-      }
-    });
+    // this.route.queryParams.subscribe(params => {
+    //   this.logger.log('[APP-COMP] ROUTE QUERY PARAMS params', params)
+    //   if (params.jwt) {
+    //     this.isOnline = false;
+    //     this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN  params ', params)
+    //     this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
+    //       this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN user', user)
+    //       // if (user) {
+    //         this.logger.log('[APP-COMP] AUTLOGIN > RUN INIZIALIZE APP')
+    //         this.initializeApp('oninit');
+    //       // }
+    //       this.messagingAuthService.createCustomToken(params.jwt)
+    //     }).catch(error => {
+    //       this.logger.error('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKE - ERROR', error)
+    //     })
+    //   } 
+    //   else {
+    //     this.isOnline = false;
+    //     this.logger.log('[APP-COMP] NO AUTLOGIN > RUN INIZIALIZE APP')
+    //     this.initializeApp('oninit');
+    //   }
+    // });
   }
 
 
@@ -236,7 +264,7 @@ export class AppComponent implements OnInit {
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant);
 
-    this.persistence = appconfig.authPersistence;
+    
 
 
     this.notificationsEnabled = true;
@@ -250,7 +278,8 @@ export class AppComponent implements OnInit {
       }
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
-      this.appStorageService.initialize(environment.storage_prefix, this.persistence, '')
+      // this.persistence = appconfig.authPersistence;
+      // this.appStorageService.initialize(environment.storage_prefix, this.persistence, '')
       this.tiledeskAuthService.initialize(this.appConfigProvider.getConfig().apiUrl);
       this.messagingAuthService.initialize();
 
