@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.55-rc26
+- Fixes the bug: the iframe is not displayed
+- Fits the image caption to the width of the image
+
 ### 3.0.55-rc25
 - Changes the method to get the JWT from the URL query string and the way to run the auto login
 
