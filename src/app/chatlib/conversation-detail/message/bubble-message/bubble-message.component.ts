@@ -1,7 +1,7 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MessageModel } from 'src/chat21-core/models/message';
-import { MAX_WIDTH_IMAGES} from 'src/chat21-core/utils/constants';
+import { MAX_WIDTH_IMAGES } from 'src/chat21-core/utils/constants';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { isFile, isFrame, isImage } from 'src/chat21-core/utils/utils-message';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
@@ -10,7 +10,7 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
   templateUrl: './bubble-message.component.html',
   styleUrls: ['./bubble-message.component.scss']
 })
-export class BubbleMessageComponent implements OnInit {
+export class BubbleMessageComponent implements OnInit, OnChanges {
 
   @Input() message: MessageModel;
   @Input() textColor: string;
@@ -20,7 +20,7 @@ export class BubbleMessageComponent implements OnInit {
   isImage = isImage;
   isFile = isFile;
   isFrame = isFrame;
-  
+
   tooltipOptions = {
     'show-delay': 500,
     'tooltip-class': 'chat-tooltip',
@@ -32,61 +32,101 @@ export class BubbleMessageComponent implements OnInit {
   };
 
   private logger: LoggerService = LoggerInstance.getInstance()
-  constructor(public sanitizer: DomSanitizer) { }
+  constructor(public sanitizer: DomSanitizer) {
+    console.log('BUBBLE-MSG Hello !!!!')
+  }
 
   ngOnInit() {
+
   }
+
+  ngOnChanges() {
+    // console.log('BUBBLE-MSG Hello !!!! this.message ',  this.message)
+    if (this.message && this.message.metadata) {
+      this.getMetadataSize(this.message.metadata)
+      // console.log('BUBBLE-MSG ngOnChanges message > metadata', this.message.metadata)
+    }
+
+  }
+
 
   /**
    *
    * @param message
    */
+  // getMetadataSize(metadata): any {
+  //   if(metadata.width === undefined){
+  //     metadata.width= MAX_WIDTH_IMAGES
+  //   }
+  //   if(metadata.height === undefined){
+  //     metadata.height = MAX_WIDTH_IMAGES
+  //   }
+  //   // const MAX_WIDTH_IMAGES = 300;
+  //   const sizeImage = {
+  //       width: metadata.width,
+  //       height: metadata.height
+  //   };
+  //   //   that.g.wdLog(['message::: ', metadata);
+  //   if (metadata.width && metadata.width > MAX_WIDTH_IMAGES) {
+  //       const rapporto = (metadata['width'] / metadata['height']);
+  //       sizeImage.width = MAX_WIDTH_IMAGES;
+  //       sizeImage.height = MAX_WIDTH_IMAGES / rapporto;
+  //   }
+  //   return sizeImage; // h.toString();
+  // }
+
   getMetadataSize(metadata): any {
-    if(metadata.width === undefined){
-      metadata.width= MAX_WIDTH_IMAGES
+    if (metadata.width === undefined) {
+      metadata.width = MAX_WIDTH_IMAGES
     }
-    if(metadata.height === undefined){
+    if (metadata.height === undefined) {
       metadata.height = MAX_WIDTH_IMAGES
     }
-    // const MAX_WIDTH_IMAGES = 300;
-    const sizeImage = {
-        width: metadata.width,
-        height: metadata.height
-    };
-    //   that.g.wdLog(['message::: ', metadata);
-    if (metadata.width && metadata.width > MAX_WIDTH_IMAGES) {
-        const rapporto = (metadata['width'] / metadata['height']);
-        sizeImage.width = MAX_WIDTH_IMAGES;
-        sizeImage.height = MAX_WIDTH_IMAGES / rapporto;
+
+    if (metadata.width && metadata.width < MAX_WIDTH_IMAGES) {
+      if (metadata.width <= 55) {
+        const ratio = (metadata['width'] / metadata['height']);
+        metadata.width = 200;
+        metadata.height = 200 / ratio;
+      } else if (metadata.width > 55) {
+        metadata.width = this.message.metadata.width;
+        metadata.height = this.message.metadata.height;
+      }
+    } else if (metadata.width && metadata.width > MAX_WIDTH_IMAGES) {
+      const ratio = (metadata['width'] / metadata['height']);
+      metadata.width = MAX_WIDTH_IMAGES;
+      metadata.height = MAX_WIDTH_IMAGES / ratio;
     }
-    return sizeImage; // h.toString();
   }
+
+
+
 
   /**
   * function customize tooltip
   */
- handleTooltipEvents(event) {
-  const that = this;
-  const showDelay = this.tooltipOptions['show-delay'];
-  setTimeout(function () {
-    try {
-      const domRepresentation = document.getElementsByClassName('chat-tooltip');
-      if (domRepresentation) {
-        const item = domRepresentation[0] as HTMLInputElement;
-        if (!item.classList.contains('tooltip-show')) {
-          item.classList.add('tooltip-show');
-        }
-        setTimeout(function () {
-          if (item.classList.contains('tooltip-show')) {
-            item.classList.remove('tooltip-show');
+  handleTooltipEvents(event) {
+    const that = this;
+    const showDelay = this.tooltipOptions['show-delay'];
+    setTimeout(function () {
+      try {
+        const domRepresentation = document.getElementsByClassName('chat-tooltip');
+        if (domRepresentation) {
+          const item = domRepresentation[0] as HTMLInputElement;
+          if (!item.classList.contains('tooltip-show')) {
+            item.classList.add('tooltip-show');
           }
-        }, that.tooltipOptions['hideDelayAfterClick']);
+          setTimeout(function () {
+            if (item.classList.contains('tooltip-show')) {
+              item.classList.remove('tooltip-show');
+            }
+          }, that.tooltipOptions['hideDelayAfterClick']);
+        }
+      } catch (err) {
+        that.logger.error('[BUBBLE-MESSAGE] handleTooltipEvents >>>> Error :' + err);
       }
-    } catch (err) {
-      that.logger.error('[BUBBLE-MESSAGE] handleTooltipEvents >>>> Error :' + err);
-    }
-  }, showDelay);
-}
+    }, showDelay);
+  }
 
   // ========= begin:: event emitter function ============//
 
@@ -99,17 +139,17 @@ export class BubbleMessageComponent implements OnInit {
   //   this.onClickAttachmentButton.emit(event)
   // }
 
-  returnOnBeforeMessageRender(event){
-    const messageOBJ = { message: this.message, sanitizer: this.sanitizer, messageEl: event.messageEl, component: event.component}
+  returnOnBeforeMessageRender(event) {
+    const messageOBJ = { message: this.message, sanitizer: this.sanitizer, messageEl: event.messageEl, component: event.component }
     this.onBeforeMessageRender.emit(messageOBJ)
   }
 
-  returnOnAfterMessageRender(event){
-    const messageOBJ = { message: this.message, sanitizer: this.sanitizer, messageEl: event.messageEl, component: event.component}
+  returnOnAfterMessageRender(event) {
+    const messageOBJ = { message: this.message, sanitizer: this.sanitizer, messageEl: event.messageEl, component: event.component }
     this.onAfterMessageRender.emit(messageOBJ)
   }
 
-  onImageRenderedFN(event){
+  onImageRenderedFN(event) {
     this.onImageRendered.emit(event)
   }
 
