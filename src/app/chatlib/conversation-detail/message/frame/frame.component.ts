@@ -16,12 +16,14 @@ export class FrameComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-    if(this.metadata && this.metadata.url){
+    if(this.metadata && this.metadata.src){
       this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.metadata.src);
     }
     // this.width = this.getSizeImg(this.metadata).width;
     // this.height = this.getSizeImg(this.metadata).height;
   }
+  
+
 
   ngOnDestroy(){
     this.url = null;
