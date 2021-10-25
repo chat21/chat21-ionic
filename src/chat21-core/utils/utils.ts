@@ -700,7 +700,7 @@ export function getParameterByName(name: string) {
 
 
 export async function presentModal(modalController, page, attributes) {
-  console.log('UTILS - presentModal');
+  // console.log('UTILS - presentModal');
   const modal: HTMLIonModalElement =
     await modalController.create({
       component: page,
@@ -711,7 +711,7 @@ export async function presentModal(modalController, page, attributes) {
   await modal.present();
   modal.onDidDismiss().then((detail: any) => {
     if (detail !== null) {
-      console.log('UTILS - presentModal - detail.data:', detail.data);
+      // console.log('UTILS - presentModal - detail.data:', detail.data);
       return 'CLOSE!!!!!';
     }
   });
@@ -719,7 +719,7 @@ export async function presentModal(modalController, page, attributes) {
 
 
 export async function closeModal(modalController: ModalController) {
-  console.log('UTILS - closeModal', modalController);
+  // console.log('UTILS - closeModal', modalController);
   await modalController.getTop();
   await modalController.dismiss({ confirmed: true });
   // try {

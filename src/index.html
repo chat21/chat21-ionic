@@ -35,7 +35,7 @@
 
     // // onoffline version
     window.onoffline = (event) => {
-      console.log("The network connection has been lost.");
+      // console.log("The network connection has been lost.");
     };
     // console.log('index.html window.navigator.onLine is ' + window.navigator.onLine);
 
@@ -45,12 +45,12 @@
       console.log('index.html app_root_el ', app_root_el);
 
       setTimeout(function () {
-        console.log('index.html app_root_el > childNodes ', app_root_el[0].childNodes);
+        // console.log('index.html app_root_el > childNodes ', app_root_el[0].childNodes);
         if (app_root_el[0].childNodes.length > 0) { // Or just `if (element.childNodes.length)`
-          console.log('index.html app_root_el has child', app_root_el[0].childNodes);
+          // console.log('index.html app_root_el has child', app_root_el[0].childNodes);
 
         } else {
-          console.log('index.html app_root_el not has child', app_root_el[0].childNodes);
+          // console.log('index.html app_root_el not has child', app_root_el[0].childNodes);
 
           var div = document.createElement('div');
           div.className = 'img-connection';
@@ -67,7 +67,7 @@
           document.body.appendChild(div_1);
 
           window.ononline = (event) => {
-            console.log("index.html You are now connected to the network.");
+            // console.log("index.html You are now connected to the network.");
             location.reload(true);
           };
         }

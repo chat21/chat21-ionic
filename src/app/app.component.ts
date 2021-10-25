@@ -916,7 +916,7 @@ export class AppComponent implements OnInit {
   // https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event
   @HostListener('window:storage', ['$event'])
   onStorageChanged(event: any) {
-    console.error('[APP-COMP] - onStorageChanged event ', event)
+    // console.log('[APP-COMP] - onStorageChanged event ', event)
     if (event.key !== 'chat_sv5__tiledeskToken') {
       return;
     }
