@@ -162,13 +162,22 @@ export class AppComponent implements OnInit {
     this.logger.info('[APP-COMP] ngOnInit this.route.snapshot.params -->', this.route.snapshot.params);
     // this.initializeApp('oninit');
     const token = getParameterByName('jwt')
-    this.logger.info('[APP-COMP] ngOnInit token get from params -->', token);
-   
+    this.logger.info('[APP-COMP] ngOnInit token get with getParameterByName -->', token);
+
     if (token) {
       this.isOnline = false;
-      this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN  params ', token)
+      this.logger.log('[APP-COMP] ngOnInit token get with this.isOnline  ', this.isOnline)
+      this.logger.log('[APP-COMP] ngOnInit token get with getParameterByName  ', token)
       // save token in local storage then 
-      this.appStorageService.setItem('tiledeskToken', token);
+
+      const storedToken = this.appStorageService.getItem('tiledeskToken');
+      this.logger.log('[APP-COMP] ngOnInit storedToken ', storedToken)
+      this.logger.log('[APP-COMP] ngOnInit SAVE THE PARAMS TOKEN ', token)
+      if (storedToken !== token) {
+        this.appStorageService.setItem('tiledeskToken', token);
+      } else {
+        this.logger.log('[APP-COMP] the current user already exist DON\'T SAVE ')
+      }
     }
     this.initializeApp('oninit');
     // else {
@@ -226,7 +235,7 @@ export class AppComponent implements OnInit {
   signInWithCustomToken(token) {
 
     this.isOnline = false;
-    this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN token', token)
+    this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN  token', token)
     this.tiledeskAuthService.signInWithCustomToken(token)
       .then((user: any) => {
         this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN user', user)
@@ -264,7 +273,7 @@ export class AppComponent implements OnInit {
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant);
 
-    
+
 
 
     this.notificationsEnabled = true;
@@ -309,6 +318,10 @@ export class AppComponent implements OnInit {
       // ---------------------------------------
       this.watchToConnectionStatus();
       // this.listenToUserIsSignedIn();
+
+      // window.onbeforeunload = () => {
+      //   localStorage.removeItem('isAuth');
+      // }
 
 
     });
@@ -509,7 +522,7 @@ export class AppComponent implements OnInit {
   }
 
   goOffLine = () => {
-    this.logger.log('[APP-COMP] ************** goOffLine:', this.authModal);
+    this.logger.log('[APP-COMP] ************** goOffLine authModal:', this.authModal);
     this.isOnline = false;
     // this.conversationsHandlerService.conversations = [];
 
