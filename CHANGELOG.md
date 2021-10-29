@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.57
+- Review of the "login" code
+
 ### 3.0.56
 - Improves the auto-login method
 
