@@ -157,21 +157,16 @@ export class FirebaseNotifications extends NotificationsService {
 
     removeNotificationsInstance(callback: (string) => void) {
         var self = this;
-        firebase.auth().onAuthStateChanged(function (user) {
-
-            if (user) {
-                self.logger.debug('[FIREBASE-NOTIFICATIONS] - FB User is signed in. ', user)
-
-                self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.userId', self.userId);
-                self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > FCMcurrentToken', self.FCMcurrentToken);
-                // this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.tenant', this.tenant);
-
-
-            } else {
-                self.logger.debug('[FIREBASE-NOTIFICATIONS] - No FB user is signed in. ', user)
-            }
-        });
-
+        // firebase.auth().onAuthStateChanged(function (user) {
+        //     if (user) {
+        //         self.logger.debug('[FIREBASE-NOTIFICATIONS] - FB User is signed in. ', user)
+        //         self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.userId', self.userId);
+        //         self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > FCMcurrentToken', self.FCMcurrentToken);
+        //         // this.logger.log('[FIREBASE-NOTIFICATIONS] >>>> removeNotificationsInstance > this.tenant', this.tenant);
+        //     } else {
+        //         self.logger.debug('[FIREBASE-NOTIFICATIONS] - No FB user is signed in. ', user)
+        //     }
+        // });
         const urlNodeFirebase = '/apps/' + self.tenant
         const connectionsRefinstancesId = urlNodeFirebase + '/users/' + self.userId + '/instances/'
         self.logger.log('[FIREBASE-NOTIFICATIONS] >>>> connectionsRefinstancesId ', connectionsRefinstancesId);
@@ -193,7 +188,6 @@ export class FirebaseNotifications extends NotificationsService {
                     self.logger.log('[FIREBASE-NOTIFICATIONS] COMPLETED');
                 })
         }
-
 
     }
 
