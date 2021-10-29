@@ -58,6 +58,7 @@ import * as PACKAGE from 'package.json';
 
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators'
+
 // import { filter } from 'rxjs/operators';
 
 @Component({
@@ -73,7 +74,7 @@ export class AppComponent implements OnInit {
   // public appIsOnline$: Observable<boolean> = undefined;
   checkInternet: boolean;
 
-  private subscription: Subscription;
+  private BSAuthStateChangedSubscriptionRef: Subscription;
   public sidebarPage: any;
   public notificationsEnabled: boolean;
   public zone: NgZone;
@@ -99,7 +100,7 @@ export class AppComponent implements OnInit {
   public executedInitializeAppByWatchConnection: boolean = false;
   private version: string;
   private unsubscribe$: Subject<any> = new Subject<any>();
-  private isOnline: boolean = false;
+  // private isOnline: boolean = false;
 
   constructor(
     private platform: Platform,
@@ -162,79 +163,30 @@ export class AppComponent implements OnInit {
     this.logger.info('[APP-COMP] ngOnInit this.route.snapshot.params -->', this.route.snapshot.params);
     // this.initializeApp('oninit');
     const token = getParameterByName('jwt')
-    this.logger.info('[APP-COMP] ngOnInit token get with getParameterByName -->', token);
+    this.logger.info('[APP-COMP] ngOnInit AUTOLOGIN token get with getParameterByName -->', token);
 
     if (token) {
-      this.isOnline = false;
-      this.logger.log('[APP-COMP] ngOnInit token get with this.isOnline  ', this.isOnline)
-      this.logger.log('[APP-COMP] ngOnInit token get with getParameterByName  ', token)
+      // this.isOnline = false;
+      // this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN token get with this.isOnline  ', this.isOnline)
+      this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN token get with getParameterByName  ', token)
       // save token in local storage then 
 
       const storedToken = this.appStorageService.getItem('tiledeskToken');
-      this.logger.log('[APP-COMP] ngOnInit storedToken ', storedToken)
-      this.logger.log('[APP-COMP] ngOnInit SAVE THE PARAMS TOKEN ', token)
+      this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN storedToken ', storedToken)
+      this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN SAVE THE PARAMS TOKEN ', token)
       if (storedToken !== token) {
         this.appStorageService.setItem('tiledeskToken', token);
       } else {
-        this.logger.log('[APP-COMP] the current user already exist DON\'T SAVE ')
+        this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN the current user already exist DON\'T SAVE ')
       }
     }
     this.initializeApp('oninit');
-    // else {
-    //   this.isOnline = false;
-    //   this.logger.log('[APP-COMP] NO AUTLOGIN > RUN INIZIALIZE APP')
-    //   this.initializeApp('oninit');
-    // }
 
-    // const param = this.param();
-    // const token: string = param.get("jwt");
-    // this.logger.info('[APP-COMP] ngOnInit token geet from params -->', token);
-
-    // this.subscription = this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationStart) {
-    //    const current_url = event.url
-    //     this.logger.info('[APP-COMP] - NavigationStart event current_url ', current_url);
-    //     if (current_url.includes('jwt')) {
-    //       this.logger.info('[APP-COMP] - NavigationStart event current_url INCLUDES jwt');
-    //       const tokenString =  current_url.slice(current_url.lastIndexOf('=') + 1)
-    //       // const token =  tokenString.substring(1, tokenString.length - 1)
-    //       const token =  tokenString
-    //       this.logger.info('[APP-COMP] - NavigationStart event current_url INCLUDES jwt > token ', token);
-    //       this.signInWithCustomToken("JWT%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDhhZDAyZDNhNGRjMDAwMzQ0YWRlMTciLCJlbWFpbCI6Im51b3ZvcHJlZ2lub0BtYWlsbmEuY28iLCJmaXJzdG5hbWUiOiJOdW92byIsImxhc3RuYW1lIjoiUHJlZ2lubyIsImVtYWlsdmVyaWZpZWQiOnRydWUsImlhdCI6MTYzNDE5OTU1NiwiYXVkIjoiaHR0cHM6Ly90aWxlZGVzay5jb20iLCJpc3MiOiJodHRwczovL3RpbGVkZXNrLmNvbSIsInN1YiI6InVzZXIiLCJqdGkiOiIwMGQyNTI0MS05MDI4LTRmYTYtYmJhNi0xOGNmZTUwNzdiYTMifQ.4kCuHOyceIMWnlyOiCvQEiDPqDZR8HwYgyQoqMYJxX0")
-    //     } else {
-    //       this.logger.info('[APP-COMP] - NavigationStart event current_url NOT INCLUDES jwt');
-    //     }
-    //   }
-    // });
-
-    // this.route.queryParams.subscribe(params => {
-    //   this.logger.log('[APP-COMP] ROUTE QUERY PARAMS params', params)
-    //   if (params.jwt) {
-    //     this.isOnline = false;
-    //     this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN  params ', params)
-    //     this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
-    //       this.logger.log('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKEN user', user)
-    //       // if (user) {
-    //         this.logger.log('[APP-COMP] AUTLOGIN > RUN INIZIALIZE APP')
-    //         this.initializeApp('oninit');
-    //       // }
-    //       this.messagingAuthService.createCustomToken(params.jwt)
-    //     }).catch(error => {
-    //       this.logger.error('[APP-COMP] AUTLOGIN > RUN SIGNINWITHCUSTOMTOKE - ERROR', error)
-    //     })
-    //   } 
-    //   else {
-    //     this.isOnline = false;
-    //     this.logger.log('[APP-COMP] NO AUTLOGIN > RUN INIZIALIZE APP')
-    //     this.initializeApp('oninit');
-    //   }
-    // });
   }
 
 
   signInWithCustomToken(token) {
-
-    this.isOnline = false;
+    // this.isOnline = false;
     this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN  token', token)
     this.tiledeskAuthService.signInWithCustomToken(token)
       .then((user: any) => {
@@ -251,8 +203,7 @@ export class AppComponent implements OnInit {
 
   /** */
   initializeApp(calledby: string) {
-    this.logger.info('[APP-COMP] - initializeApp !!! CALLED-BY: ', calledby);
-
+    console.log('[APP-COMP] - X - initializeApp !!! CALLED-BY: ', calledby);
     this.logger.log('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
 
     if (!this.platform.is('cordova')) {
@@ -272,10 +223,6 @@ export class AppComponent implements OnInit {
 
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.info('[APP-COMP] appconfig firebaseConfig tenant: ', this.tenant);
-
-
-
-
     this.notificationsEnabled = true;
     this.zone = new NgZone({}); // a cosa serve?
 
@@ -307,38 +254,18 @@ export class AppComponent implements OnInit {
 
       this.initAuthentication();
       this.initSubscriptions();
-      this.initAudio()
+      this.initAudio();
 
       this.logger.debug('[APP-COMP] initializeApp:: ', this.sidebarNav, this.detailNav);
-      // this.listenToLogoutEvent()
+
       this.translateToastMsgs();
 
       // ---------------------------------------
       // Watch to network status
       // ---------------------------------------
       this.watchToConnectionStatus();
-      // this.listenToUserIsSignedIn();
-
-      // window.onbeforeunload = () => {
-      //   localStorage.removeItem('isAuth');
-      // }
-
-
     });
   }
-
-  // listenToUserIsSignedIn() {
-  //   this.tiledeskAuthService.isOnline$
-  //     .pipe(filter((isOnline) => isOnline !== null))
-  //     .subscribe((isOnline: any) => {
-  //       console.log('[APP-COMP] user isOnline: ', isOnline);
-
-  //       // if (isOnline === false) {
-  //       //   this.events.publish('profileInfoButtonClick:logout', true);
-  //       // }
-  //     });
-  // }
-
 
 
   watchToConnectionStatus() {
@@ -365,7 +292,7 @@ export class AppComponent implements OnInit {
               if (elemIonNavchildNodes.length === 0) {
                 this.logger.log('[APP-COMP] - watchToConnectionStatus - elemIonNavchildNodes  HERE YES', elemIonNavchildNodes);
 
-                this.initializeApp('checkinternet');
+                // this.initializeApp('checkinternet');
                 this.executedInitializeAppByWatchConnection = true;
               }
             }, 2000);
@@ -379,7 +306,7 @@ export class AppComponent implements OnInit {
               const childElementCount = elemIonRouterOutlet.childElementCount;
               this.logger.log('[APP-COMP] - watchToConnectionStatus - mobile * childElementCount *', childElementCount)
               if (childElementCount === 1) {
-                this.initializeApp('checkinternet');
+                // this.initializeApp('checkinternet');
                 this.executedInitializeAppByWatchConnection = true;
               }
             }, 2000);
@@ -428,19 +355,18 @@ export class AppComponent implements OnInit {
   /**------- AUTHENTICATION FUNCTIONS --> START <--- +*/
   private initAuthentication() {
     const tiledeskToken = this.appStorageService.getItem('tiledeskToken')
-    this.logger.log('[APP-COMP] >>> INIT-AUTHENTICATION !!! ')
+    console.log('[APP-COMP] >>> INIT-AUTHENTICATION !!! ')
     this.logger.log('[APP-COMP] >>> initAuthentication tiledeskToken ', tiledeskToken)
-
-    const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
-    this.logger.log('[APP-COMP] >>> initAuthentication currentUser ', currentUser)
+    // const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
+    // this.logger.log('[APP-COMP] >>> initAuthentication currentUser ', currentUser)
     if (tiledeskToken) {
       this.logger.log('[APP-COMP] >>> initAuthentication I LOG IN WITH A TOKEN EXISTING IN THE LOCAL STORAGE OR WITH A TOKEN PASSED IN THE URL PARAMETERS <<<')
-
       this.tiledeskAuthService.signInWithCustomToken(tiledeskToken).then(user => {
         this.logger.log('[APP-COMP] >>> initAuthentication user ', user)
         this.messagingAuthService.createCustomToken(tiledeskToken)
-      }).catch(error => { this.logger.error('[APP-COMP] initAuthentication SIGNINWITHCUSTOMTOKEN error::' + error) })
-
+      }).catch(error => {
+        this.logger.error('[APP-COMP] initAuthentication SIGNINWITHCUSTOMTOKEN error::', error)
+      })
     } else {
       this.logger.warn('[APP-COMP] >>> I AM NOT LOGGED IN <<<')
       const that = this;
@@ -452,28 +378,15 @@ export class AppComponent implements OnInit {
         }
       }, 1000);
     }
-
-    // this.route.queryParams.subscribe(params => {
-    //   this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN params 1', params)
-    //   if (params.jwt) {
-    //     this.isOnline = false;
-    //     this.logger.log('[APP-COMP] SIGNINWITHCUSTOMTOKEN AUTLOGIN params 2', params)
-    //     this.tiledeskAuthService.signInWithCustomToken(params.jwt).then(user => {
-    //       this.messagingAuthService.createCustomToken(params.jwt)
-    //     }).catch(error => {
-    //       this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::', error)
-    //     })
-    //   }
-    // });
   }
 
-  authenticate() {
-    let token = this.appStorageService.getItem('tiledeskToken');
-    this.logger.info('[APP-COMP] ***** authenticate - stored token *****', token);
-    if (!token) {
-      this.goOffLine()
-    }
-  }
+  // authenticate() {
+  //   let token = this.appStorageService.getItem('tiledeskToken');
+  //   this.logger.info('[APP-COMP] ***** authenticate - stored token *****', token);
+  //   if (!token) {
+  //     this.goOffLine()
+  //   }
+  // }
 
   /**
    * goOnLine:
@@ -483,15 +396,15 @@ export class AppComponent implements OnInit {
    * @param user
    */
   goOnLine = () => {
-    this.isOnline = true;
-    this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - GO ONLINE isOnline ', this.isOnline);
+    // this.isOnline = true;
+    // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - GO-ONLINE isOnline ', this.isOnline);
 
 
     clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     const currentUser = this.tiledeskAuthService.getCurrentUser();
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
-    this.logger.log('[APP-COMP] - goOnLine****', currentUser);
+    this.logger.log('[APP-COMP] - GO-ONLINE - currentUser ', currentUser);
     this.chatManager.setTiledeskToken(tiledeskToken);
     this.chatManager.setCurrentUser(currentUser);
     // ----------------------------------------------
@@ -523,7 +436,7 @@ export class AppComponent implements OnInit {
 
   goOffLine = () => {
     this.logger.log('[APP-COMP] ************** goOffLine authModal:', this.authModal);
-    this.isOnline = false;
+    // this.isOnline = false;
     // this.conversationsHandlerService.conversations = [];
 
     this.chatManager.setTiledeskToken(null);
@@ -684,20 +597,30 @@ export class AppComponent implements OnInit {
     this.logger.log('initialize FROM [APP-COMP] - initSubscriptions');
 
 
-    this.messagingAuthService.BSAuthStateChanged
-      .pipe(takeUntil(this.unsubscribe$))
+    // ---------------------------------------------------------------------------------------------------
+    // Protecting from multiple subsciptions due to multiple app initializations (call to initializeApp())
+    // Only one subscriber x application allowed
+    // ---------------------------------------------------------------------------------------------------
+    if (this.BSAuthStateChangedSubscriptionRef) {
+      this.logger.log('initialize FROM [APP-COMP] - BSAuthStateChanged ALREADY SUBSCRIBED');
+      return;
+    }
+
+    this.BSAuthStateChangedSubscriptionRef = this.messagingAuthService.BSAuthStateChanged
+      // .pipe(takeUntil(this.unsubscribe$))
       .pipe(filter((state) => state !== null))
       .subscribe((state: any) => {
-        this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  state', state);
-        this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  isOnline', this.isOnline);
+        console.log('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  state', state);
+        // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  isOnline', this.isOnline);
         if (state && state === AUTH_STATE_ONLINE) {
-          const user = this.tiledeskAuthService.getCurrentUser();
-          if (this.isOnline === false) {
-            this.goOnLine();
-          }
+          // const user = this.tiledeskAuthService.getCurrentUser();
+          // if (this.isOnline === false) {
+          // if (AUTH_STATE_ONLINE) {
+          this.goOnLine();
+          // }
         } else if (state === AUTH_STATE_OFFLINE) {
-          // that.goOffLine();
-          this.authenticate() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
+          // this.authenticate() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
+          this.goOffLine()
         }
       }, error => {
         this.logger.error('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged * error * ', error)
@@ -935,20 +858,35 @@ export class AppComponent implements OnInit {
     }
 
     if (this.appStorageService.getItem('tiledeskToken') === null) {
-      this.logger.log('[APP-COMP] - onStorageChanged tiledeskToken is null - RUN LOGOUT')
+      console.log('[APP-COMP] - onStorageChanged tiledeskToken is null - RUN LOGOUT')
       this.tiledeskAuthService.logOut()
       this.messagingAuthService.logout();
       this.events.publish('profileInfoButtonClick:logout', true);
-      this.isOnline = false;
+      // this.isOnline = false;
     }
     else {
       const currentUser = this.tiledeskAuthService.getCurrentUser();
+      console.log('[APP-COMP] - X - onStorageChanged currentUser', currentUser)
 
-      if (!currentUser && this.appStorageService.getItem('tiledeskToken') !== null) {
-        this.logger.log('[APP-COMP] - onStorageChanged currentUser', currentUser)
-        // console.log('[APP-COMP] - onStorageChanged wentOnline 2', this.wentOnline)
+      const currentToken = this.tiledeskAuthService.getTiledeskToken();
+      console.log('[APP-COMP] - onStorageChanged currentToken', currentToken)
+      if (this.appStorageService.getItem('tiledeskToken') !== null && currentToken !== this.appStorageService.getItem('tiledeskToken')) {
 
+        console.log('[APP-COMP] - onStorageChanged wentOnline 2')
+        // DEALLOCO RISORSE OCCUPATE
+        this.messagingAuthService.logout();
+        this.appStorageService.removeItem('currentUser')
+        this.tiledeskAuthService.setCurrentUser(null);
+        // this.unsubscribe$.next();
+        // this.unsubscribe$.complete();
         this.initializeApp('onstoragechanged');
+
+        console.log('[APP-COMP] -  that.BSAuthStateChanged ', this.messagingAuthService.BSAuthStateChanged)
+
+        // console.log('[APP-COMP]  onAuthStateChanged HERE !!! ')
+        // firebase.auth().onAuthStateChanged(user => {
+        //   console.log('[APP-COMP]  onAuthStateChanged', user)
+        // })
 
       }
     }
