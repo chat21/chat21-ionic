@@ -380,13 +380,13 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // authenticate() {
-  //   let token = this.appStorageService.getItem('tiledeskToken');
-  //   this.logger.info('[APP-COMP] ***** authenticate - stored token *****', token);
-  //   if (!token) {
-  //     this.goOffLine()
-  //   }
-  // }
+  checkTokenAndGoOffline() {
+    let token = this.appStorageService.getItem('tiledeskToken');
+    this.logger.info('[APP-COMP] ***** checkTokenAndGoOffline - stored token *****', token);
+    if (!token) {
+      this.goOffLine()
+    }
+  }
 
   /**
    * goOnLine:
@@ -619,8 +619,8 @@ export class AppComponent implements OnInit {
           this.goOnLine();
           // }
         } else if (state === AUTH_STATE_OFFLINE) {
-          // this.authenticate() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
-          this.goOffLine()
+          this.checkTokenAndGoOffline() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
+          // this.goOffLine()
         }
       }, error => {
         this.logger.error('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged * error * ', error)
