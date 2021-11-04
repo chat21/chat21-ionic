@@ -196,14 +196,11 @@ export class AppComponent implements OnInit {
       .catch(error => {
         this.logger.error('[APP-COMP] SIGNINWITHCUSTOMTOKEN error::', error)
       })
-
   }
-
-
 
   /** */
   initializeApp(calledby: string) {
-    console.log('[APP-COMP] - X - initializeApp !!! CALLED-BY: ', calledby);
+    this.logger.log('[APP-COMP] - X - initializeApp !!! CALLED-BY: ', calledby);
     this.logger.log('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
 
     if (!this.platform.is('cordova')) {
@@ -355,7 +352,7 @@ export class AppComponent implements OnInit {
   /**------- AUTHENTICATION FUNCTIONS --> START <--- +*/
   private initAuthentication() {
     const tiledeskToken = this.appStorageService.getItem('tiledeskToken')
-    console.log('[APP-COMP] >>> INIT-AUTHENTICATION !!! ')
+    this.logger.log('[APP-COMP] >>> INIT-AUTHENTICATION !!! ')
     this.logger.log('[APP-COMP] >>> initAuthentication tiledeskToken ', tiledeskToken)
     // const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
     // this.logger.log('[APP-COMP] >>> initAuthentication currentUser ', currentUser)
@@ -363,30 +360,30 @@ export class AppComponent implements OnInit {
       this.logger.log('[APP-COMP] >>> initAuthentication I LOG IN WITH A TOKEN EXISTING IN THE LOCAL STORAGE OR WITH A TOKEN PASSED IN THE URL PARAMETERS <<<')
       this.tiledeskAuthService.signInWithCustomToken(tiledeskToken).then(user => {
         this.logger.log('[APP-COMP] >>> initAuthentication user ', user)
-        this.messagingAuthService.createCustomToken(tiledeskToken)
+        this.messagingAuthService.createCustomToken(tiledeskToken) 
       }).catch(error => {
         this.logger.error('[APP-COMP] initAuthentication SIGNINWITHCUSTOMTOKEN error::', error)
       })
     } else {
       this.logger.warn('[APP-COMP] >>> I AM NOT LOGGED IN <<<')
-      const that = this;
-      clearTimeout(this.timeModalLogin);
-      this.timeModalLogin = setTimeout(() => {
+      
+      // clearTimeout(this.timeModalLogin);
+      // this.timeModalLogin = setTimeout(() => {
         if (!this.hadBeenCalledOpenModal) {
           this.authModal = this.presentModal('initAuthentication');
           this.hadBeenCalledOpenModal = true;
         }
-      }, 1000);
+      // }, 1000);
     }
   }
 
-  checkTokenAndGoOffline() {
-    let token = this.appStorageService.getItem('tiledeskToken');
-    this.logger.info('[APP-COMP] ***** checkTokenAndGoOffline - stored token *****', token);
-    if (!token) {
-      this.goOffLine()
-    }
-  }
+  // checkTokenAndGoOffline() {
+  //   let token = this.appStorageService.getItem('tiledeskToken');
+  //   this.logger.info('[APP-COMP] ***** checkTokenAndGoOffline - stored token *****', token);
+  //   if (!token) {
+  //     this.goOffLine()
+  //   }
+  // }
 
   /**
    * goOnLine:
@@ -398,7 +395,6 @@ export class AppComponent implements OnInit {
   goOnLine = () => {
     // this.isOnline = true;
     // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - GO-ONLINE isOnline ', this.isOnline);
-
 
     clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
@@ -416,9 +412,8 @@ export class AppComponent implements OnInit {
       if (pushEngine && pushEngine !== 'none') {
         this.notificationsService.getNotificationPermissionAndSaveToken(currentUser.uid);
       }
-
-
       this.presenceService.setPresence(currentUser.uid);
+
       this.initConversationsHandler(currentUser.uid);
       this.initArchivedConversationsHandler(currentUser.uid);
     }
@@ -435,7 +430,7 @@ export class AppComponent implements OnInit {
   }
 
   goOffLine = () => {
-    this.logger.log('[APP-COMP] ************** goOffLine authModal:', this.authModal);
+    this.logger.log('[APP-COMP] - GO-OFFLINE');
     // this.isOnline = false;
     // this.conversationsHandlerService.conversations = [];
 
@@ -444,14 +439,14 @@ export class AppComponent implements OnInit {
     this.chatManager.goOffLine();
 
     this.router.navigateByUrl('conversation-detail/'); //redirect to basePage
-    const that = this;
-    clearTimeout(this.timeModalLogin);
-    this.timeModalLogin = setTimeout(() => {
+   
+    // clearTimeout(this.timeModalLogin);
+    // this.timeModalLogin = setTimeout(() => {
       if (!this.hadBeenCalledOpenModal) {
         this.authModal = this.presentModal('goOffLine');
         this.hadBeenCalledOpenModal = true
       }
-    }, 1000);
+    // }, 1000);
 
     // this.unsubscribe$.next();
     // this.unsubscribe$.complete();
@@ -606,11 +601,12 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    this.BSAuthStateChangedSubscriptionRef = this.messagingAuthService.BSAuthStateChanged
+    this.BSAuthStateChangedSubscriptionRef = this.messagingAuthService.BSAuthStateChanged 
+   
       // .pipe(takeUntil(this.unsubscribe$))
       .pipe(filter((state) => state !== null))
       .subscribe((state: any) => {
-        console.log('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  state', state);
+        this.logger.log('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  state', state);
         // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  isOnline', this.isOnline);
         if (state && state === AUTH_STATE_ONLINE) {
           // const user = this.tiledeskAuthService.getCurrentUser();
@@ -619,8 +615,8 @@ export class AppComponent implements OnInit {
           this.goOnLine();
           // }
         } else if (state === AUTH_STATE_OFFLINE) {
-          this.checkTokenAndGoOffline() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
-          // this.goOffLine()
+          // this.checkTokenAndGoOffline() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
+          this.goOffLine()
         }
       }, error => {
         this.logger.error('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged * error * ', error)
@@ -858,7 +854,7 @@ export class AppComponent implements OnInit {
     }
 
     if (this.appStorageService.getItem('tiledeskToken') === null) {
-      console.log('[APP-COMP] - onStorageChanged tiledeskToken is null - RUN LOGOUT')
+      // console.log('[APP-COMP] - onStorageChanged tiledeskToken is null - RUN LOGOUT')
       this.tiledeskAuthService.logOut()
       this.messagingAuthService.logout();
       this.events.publish('profileInfoButtonClick:logout', true);
@@ -866,13 +862,13 @@ export class AppComponent implements OnInit {
     }
     else {
       const currentUser = this.tiledeskAuthService.getCurrentUser();
-      console.log('[APP-COMP] - X - onStorageChanged currentUser', currentUser)
+      // console.log('[APP-COMP] - X - onStorageChanged currentUser', currentUser)
 
       const currentToken = this.tiledeskAuthService.getTiledeskToken();
-      console.log('[APP-COMP] - onStorageChanged currentToken', currentToken)
+      // console.log('[APP-COMP] - onStorageChanged currentToken', currentToken)
       if (this.appStorageService.getItem('tiledeskToken') !== null && currentToken !== this.appStorageService.getItem('tiledeskToken')) {
 
-        console.log('[APP-COMP] - onStorageChanged wentOnline 2')
+        // console.log('[APP-COMP] - onStorageChanged wentOnline 2')
         // DEALLOCO RISORSE OCCUPATE
         this.messagingAuthService.logout();
         this.appStorageService.removeItem('currentUser')
@@ -881,7 +877,7 @@ export class AppComponent implements OnInit {
         // this.unsubscribe$.complete();
         this.initializeApp('onstoragechanged');
 
-        console.log('[APP-COMP] -  that.BSAuthStateChanged ', this.messagingAuthService.BSAuthStateChanged)
+       
 
         // console.log('[APP-COMP]  onAuthStateChanged HERE !!! ')
         // firebase.auth().onAuthStateChanged(user => {
