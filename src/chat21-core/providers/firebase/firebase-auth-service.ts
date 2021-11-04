@@ -103,10 +103,10 @@ export class FirebaseAuthService extends MessagingAuthService {
     }
     firebase.auth().setPersistence(firebasePersistence).then(async () => {
       console.log('[FIREBASEAuthSERVICE] firebasePersistence ', firebasePersistence)
-      this.onAuthStateChanged();
+      // this.onAuthStateChanged(); // commented for new-login
     })
       .catch((error) => {
-        this.logger.error('[FIREBASEAuthSERVICE] signInFirebaseWithCustomToken Error: ', error);
+        this.logger.error('[FIREBASEAuthSERVICE]  Error: ', error);
       });
 
 
@@ -209,6 +209,8 @@ export class FirebaseAuthService extends MessagingAuthService {
 
     this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
       console.log('initialize FROM [APP-COMP] - [FIREBASEAuthSERVICE] onAuthStateChanged', user)
+
+      
       if (!user) {
         this.logger.log('[FIREBASEAuthSERVICE] 1 - PASSO OFFLINE AL CHAT MANAGER')
         // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - [FIREBASEAuthSERVICE] onAuthStateChanged user ', user)
@@ -230,41 +232,6 @@ export class FirebaseAuthService extends MessagingAuthService {
 
   }
 
-  /**
-   * FIREBASE: signInWithCustomToken
-   * @param token
-   */
-  signInFirebaseWithCustomToken(token: string): Promise<any> {
-    // const that = this;
-    // let firebasePersistence;
-    // // console.log('FB-AUTH firebasePersistence', this.getPersistence()) 
-    // switch (this.getPersistence()) {
-    //   case 'SESSION': {
-    //     firebasePersistence = firebase.auth.Auth.Persistence.SESSION;
-    //     break;
-    //   }
-    //   case 'LOCAL': {
-    //     firebasePersistence = firebase.auth.Auth.Persistence.LOCAL;
-    //     break;
-    //   }
-    //   case 'NONE': {
-    //     firebasePersistence = firebase.auth.Auth.Persistence.NONE;
-    //     break;
-    //   }
-    //   default: {
-    //     firebasePersistence = firebase.auth.Auth.Persistence.NONE;
-    //     break;
-    //   }
-    // }
-    // return firebase.auth().setPersistence(firebasePersistence).then(async () => {
-    return firebase.auth().signInWithCustomToken(token).then(async (user) => {
-
-      // that.firebaseSignInWithCustomToken.next(response);
-    }).catch((error) => {
-      this.logger.error('[FIREBASEAuthSERVICE] signInFirebaseWithCustomToken Error: ', error);
-      // that.firebaseSignInWithCustomToken.next(null);
-    });
-  }
 
   /**
    * FIREBASE: createUserWithEmailAndPassword
@@ -355,12 +322,53 @@ export class FirebaseAuthService extends MessagingAuthService {
     });
   }
 
+
+  /**
+   * FIREBASE: signInWithCustomToken
+   * @param token
+   */
+   signInFirebaseWithCustomToken(token: string): Promise<any> {
+    // const that = this;
+    // let firebasePersistence;
+    // // console.log('FB-AUTH firebasePersistence', this.getPersistence()) 
+    // switch (this.getPersistence()) {
+    //   case 'SESSION': {
+    //     firebasePersistence = firebase.auth.Auth.Persistence.SESSION;
+    //     break;
+    //   }
+    //   case 'LOCAL': {
+    //     firebasePersistence = firebase.auth.Auth.Persistence.LOCAL;
+    //     break;
+    //   }
+    //   case 'NONE': {
+    //     firebasePersistence = firebase.auth.Auth.Persistence.NONE;
+    //     break;
+    //   }
+    //   default: {
+    //     firebasePersistence = firebase.auth.Auth.Persistence.NONE;
+    //     break;
+    //   }
+    // }
+    // return firebase.auth().setPersistence(firebasePersistence).then(async () => {
+    return firebase.auth().signInWithCustomToken(token).then(async (user) => {
+      console.log('[FIREBASEAuthSERVICE] signInWithCustomToken user: ', user);
+      if (user) {
+        this.BSAuthStateChanged.next('online');
+      }
+      // that.firebaseSignInWithCustomToken.next(response);
+    }).catch((error) => {
+      this.logger.error('[FIREBASEAuthSERVICE] signInWithCustomToken Error: ', error);
+      // that.firebaseSignInWithCustomToken.next(null);
+    });
+  }
+
   logout() {
     this.logger.log('[FIREBASEAuthSERVICE] logout');
     this.BSAuthStateChanged.next(null);
 
     // cancello token firebase dal local storage e da firebase
     // dovrebbe scattare l'evento authchangeStat
+    this.BSAuthStateChanged.next('offline');
     this.signOut();
     // this.unsubscribe();
   }
