@@ -182,7 +182,7 @@
     "ONLY_IMAGE_FILES_ARE_ALLOWED_TO_PASTE": "Possono essere incollati solo file di tipo immagine e testo",
     "FAILED_TO_UPLOAD_THE_FORMAT_IS_NOT_SUPPORTED": "Impossibile caricare: il formato non è supportato",
     "SENT_AN_IMAGE": "ha inviato un'immagine",
-    "SENT_AN_ATTACHMENT":"hai inviato un allegato",
+    "SENT_AN_ATTACHMENT":"ha inviato un allegato",
     "NO_INFORMATION_AVAILABLE": "Nessuna informazione disponibile",
     "CONTACT_ID": "ID contatto",
     "USER_ID": "ID utente",
