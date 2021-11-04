@@ -122,7 +122,7 @@ export class LoginPage implements OnInit {
     this.logger.log('[LOGIN PAGE] returnSignInWithEmailAndPassword', auth, auth.email, auth.password);
     this.tiledeskAuthService.signInWithEmailAndPassword(auth.email, auth.password)
       .then(tiledeskToken => {
-        this.messagingAuthService.createCustomToken(tiledeskToken)
+        this.messagingAuthService.createCustomToken(tiledeskToken) 
       })
       .catch(error => {
         this.showSpinnerInLoginBtn = false;
