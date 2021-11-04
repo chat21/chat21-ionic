@@ -33,7 +33,7 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
 
   private logger: LoggerService = LoggerInstance.getInstance()
   constructor(public sanitizer: DomSanitizer) {
-    console.log('BUBBLE-MSG Hello !!!!')
+    // console.log('BUBBLE-MSG Hello !!!!')
   }
 
   ngOnInit() {
