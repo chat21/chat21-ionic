@@ -1,5 +1,10 @@
 # chat21-ionic ver 3.0
 
+### 3.0.58
+- Changes the logic with which the 'online' / 'offline' event is published (done before by the onAuthStateChanged () method)
+- Removes the setTimeout set for displaying the login window
+- Executes the "goOffline" method without checking whether the token exists in memory or not
+
 ### 3.0.57
 - Review of the "login" code
 
