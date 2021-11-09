@@ -48,9 +48,10 @@
       </div>
 
       <div class="buttons-right">
-        <ion-button [disabled]="!conversationEnabled" class="send-button right active" ion-button fill="clear"
+        <!-- [disabled]="conversationEnabled === false" -->
+        <ion-button [disabled]="conversationEnabled === false"  class="send-button right active" ion-button fill="clear"
           (click)="sendMessage(messageString)">
-          <ion-icon slot="icon-only" name="send"></ion-icon>
+          <ion-icon [ngClass]="{'send-msg-disabled': conversationEnabled === false,'send-msg-activated': conversationEnabled === true }" slot="icon-only" name="send"></ion-icon>
         </ion-button>
       </div>
     </ion-col>

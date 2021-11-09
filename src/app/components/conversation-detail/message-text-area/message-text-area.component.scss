@@ -21,8 +21,6 @@
             --padding-start: 0;
             --padding-end: 0;
         }
-
-        
     }
     .buttons-right {
         position: absolute;
@@ -56,7 +54,7 @@
             // min-height: 30px;
             min-height: 37px; // NK edited
             max-height: 184px;
-            background-color: rgba(0, 0, 0, .05);
+            background-color: rgba(0, 0, 0, 0.05);
             // --padding-top: 5px; // NK edited
             --padding-top: 8px;
             --padding-bottom: 5px;
@@ -69,21 +67,21 @@
     }
 }
 
-#fileInput{
+#fileInput {
     position: absolute;
     opacity: 0;
-  }
-  
-  #file-input {
+}
+
+#file-input {
     // width: 0.1px;
     // height: 0.1px;
     opacity: 0;
     overflow: hidden;
     position: absolute;
     // z-index: -1;
-  }
+}
 
-  .upload-image-btn {
+.upload-image-btn {
     // margin-bottom: 0px;
     // margin-top: 5px;
     // margin-left: 0px;
@@ -99,21 +97,28 @@
     --border-radius: 50%;
     --padding-end: 1px;
     --padding-start: 1px;
-  
+
     height: 33px !important;
-  }
+}
 
-  .upload-image-btn .button-native {
-      border-radius: 50%;
-  } 
+.upload-image-btn .button-native {
+    border-radius: 50%;
+}
 
+.send-msg-activated {
+    color: #3880ff !important;
+}
+
+.send-msg-disabled {
+    cursor: default;
+    opacity: 0.8;
+    pointer-events: none;
+}
 
 //   input[placeholder] { text-overflow: ellipsis; }
 // ::-moz-placeholder { text-overflow: ellipsis; } /* firefox 19+ */
 // input:-moz-placeholder { text-overflow: ellipsis; }
 
-
- 
 // #ion-textarea > div > textarea[placeholder]{ text-overflow: ellipsis; }
 // #ion-textarea > div > textarea:-moz-placeholder  { text-overflow: ellipsis; }
 // ::-moz-placeholder { text-overflow: ellipsis; } /* firefox 19+ */
