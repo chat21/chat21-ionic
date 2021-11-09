@@ -5,6 +5,8 @@ import { MAX_WIDTH_IMAGES } from 'src/chat21-core/utils/constants';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { isFile, isFrame, isImage } from 'src/chat21-core/utils/utils-message';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+import { TranslateService } from '@ngx-translate/core';
+import * as moment from 'moment';
 @Component({
   selector: 'chat-bubble-message',
   templateUrl: './bubble-message.component.html',
@@ -21,6 +23,8 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   isFile = isFile;
   isFrame = isFrame;
 
+  public browserLang: string;
+
   tooltipOptions = {
     'show-delay': 500,
     'tooltip-class': 'chat-tooltip',
@@ -32,11 +36,52 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   };
 
   private logger: LoggerService = LoggerInstance.getInstance()
-  constructor(public sanitizer: DomSanitizer) {
+  constructor(
+    public sanitizer: DomSanitizer,
+    private translate: TranslateService) {
     // console.log('BUBBLE-MSG Hello !!!!')
   }
 
   ngOnInit() {
+    this.browserLang = this.translate.getBrowserLang();
+    // console.log('BUBBLE-MSG ngOnInit browserLang ', this.browserLang)
+    if (this.browserLang) {
+      if (this.browserLang === 'it') {
+        // console.log('BUBBLE-MSG browserLang ', this.browserLang)
+        // moment.locale('it')
+
+        moment.locale('it', {
+          calendar: {
+            lastDay: '[Ieri alle] LT',
+            sameDay: '[Oggi alle] LT',
+            nextDay: '[Domani alle] LT',
+            lastWeek: '[Ultimo] dddd [alle] LT',
+            nextWeek: 'dddd [alle] LT',
+            sameElse: 'lll'
+          }
+        });
+
+      } else {
+        // console.log('BUBBLE-MSG browserLang ', this.browserLang)
+        // moment.locale('en')
+
+        moment.locale('en', {
+          calendar: {
+            lastDay: '[Yesterday at] LT',
+            sameDay: '[Today at] LT',
+            nextDay: '[Tomorrow at] LT',
+            lastWeek: '[last] dddd [at] LT',
+            nextWeek: 'dddd [at] LT',
+            sameElse: 'lll'
+          }
+        });
+      }
+    }
+
+
+
+    // const yesterday = moment().subtract(1, 'day')
+    // console.log('BUBBLE-MSG yesterday ', yesterday)
 
   }
 
