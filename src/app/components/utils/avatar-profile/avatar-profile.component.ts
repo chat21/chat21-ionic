@@ -10,9 +10,9 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 })
 export class AvatarProfileComponent implements OnInit, OnChanges {
   @Input() itemAvatar: any;
-  private avatarUrl: string
-  private avatar: string
-  private color: string
+  public avatarUrl: string
+  public avatar: string
+  public color: string
   private logger: LoggerService = LoggerInstance.getInstance();
   constructor() {
     this.logger.log('AvatarProfileComponent:::: constructor');
