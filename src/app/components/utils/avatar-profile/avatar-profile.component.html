@@ -1,5 +1,6 @@
 <div *ngIf="itemAvatar" class="avatar-circle" [style.width]="itemAvatar.width" [style.height]="itemAvatar.height">
   <!-- [style.background-color]="itemAvatar.color" -->
-  <div class="avatar avatar-placeholder" [ngStyle]="{'background':  'linear-gradient(rgb(255,255,255) -125%,' + itemAvatar.color + ')'}" [innerHTML]="itemAvatar.avatar" ></div>
-  <div class="avatar avatar-image" [style.background-image]="'url(' + itemAvatar.imageurl + ')'" ></div>    
+  <div class="avatar avatar-placeholder" [ngStyle]="{'background':  'linear-gradient(rgb(255,255,255) -125%,' + color + ')'}" [innerHTML]="avatar" ></div>
+  <!-- <div class="avatar avatar-image" [style.background-image]="'url(' + itemAvatar.imageurl + ')'" ></div>  -->
+  <div *ngIf="avatarUrl" class="avatar avatar-image" [style.background-image]="'url(' + avatarUrl + ')'" ></div>    
 </div>
