@@ -31,6 +31,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   membersConversation = ['SYSTEM'];
   fullNameConv: string;
   idConv: string;
+  conversation_with_fullname: string
  
   private logger: LoggerService = LoggerInstance.getInstance();
 
@@ -59,7 +60,8 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   // ----------------------------------------------------
   ngOnInit() {
     this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - idLoggedUser', this.idLoggedUser);
-    // this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - conversationAvatar', this.conversationAvatar);
+    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - conversationAvatar', this.conversationAvatar);
+   this.conversation_with_fullname = this.conversationAvatar.conversation_with_fullname
 
     this.initialize();
   }
