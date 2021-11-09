@@ -75,7 +75,7 @@ export class FirebaseAuthService extends MessagingAuthService {
    *
    */
   initialize() {
-    console.log('initialize FROM [APP-COMP] [FIREBASEAuthSERVICE]')
+    this.logger.log('initialize FROM [APP-COMP] [FIREBASEAuthSERVICE]')
     this.SERVER_BASE_URL = this.getBaseUrl();
     this.URL_TILEDESK_CREATE_CUSTOM_TOKEN = this.SERVER_BASE_URL + 'chat21/firebase/auth/createCustomToken';
     this.logger.info('[FIREBASEAuthSERVICE] - initialize URL_TILEDESK_CREATE_CUSTOM_TOKEN ', this.URL_TILEDESK_CREATE_CUSTOM_TOKEN)
@@ -102,7 +102,7 @@ export class FirebaseAuthService extends MessagingAuthService {
       }
     }
     firebase.auth().setPersistence(firebasePersistence).then(async () => {
-      console.log('[FIREBASEAuthSERVICE] firebasePersistence ', firebasePersistence)
+      this.logger.log('[FIREBASEAuthSERVICE] firebasePersistence ', firebasePersistence)
       // this.onAuthStateChanged(); // commented for new-login
     })
       .catch((error) => {
@@ -351,7 +351,7 @@ export class FirebaseAuthService extends MessagingAuthService {
     // }
     // return firebase.auth().setPersistence(firebasePersistence).then(async () => {
     return firebase.auth().signInWithCustomToken(token).then(async (user) => {
-      console.log('[FIREBASEAuthSERVICE] signInWithCustomToken user: ', user);
+      this.logger.log('[FIREBASEAuthSERVICE] signInWithCustomToken user: ', user);
       if (user) {
         this.BSAuthStateChanged.next('online');
       }
