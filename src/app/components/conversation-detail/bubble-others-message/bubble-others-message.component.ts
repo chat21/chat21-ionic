@@ -62,7 +62,7 @@ export class BubbleOthersMessageComponent implements OnInit {
   }
 
   presentPopover(event, msg) {
-    console.log('presentPopover');
+    // console.log('presentPopover');
   }
 
 }
