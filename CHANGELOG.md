@@ -1,5 +1,10 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59
+- Fixes the bug: the "send message" button remains in the "disabled" state even if it is active
+- Changes the format of the date displayed in the message tooltips
+- Fixes the bug: the sender's avatar is not always displayed in the messages header
+
 ### 3.0.58
 - Changes the logic with which the 'online' / 'offline' event is published (done before by the onAuthStateChanged() method)
 - Removes the setTimeout set for displaying the login window
