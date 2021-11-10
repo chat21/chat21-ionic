@@ -1,11 +1,12 @@
 # chat21-ionic ver 3.0
 
-### 3.0.59
+### 3.0.59-rc1
 - Fixes the bug: the "send message" button remains in the "disabled" state even if it is active
 - Changes the format of the date displayed in the message tooltips
 - Fixes the bug: the sender's avatar is not always displayed in the messages header
 - Fixes the bug: the sender's name is not always displayed in the messages header
 - Fixes the bug: in the avatar-profile component the properties 'avatarUrl', 'color' and 'avatar' are private and accessible only within the class
+- Fixes the bug: on ios platforms the back button in the conversation details header overlaps the avatar
 
 ### 3.0.58
 - Changes the logic with which the 'online' / 'offline' event is published (done before by the onAuthStateChanged() method)
