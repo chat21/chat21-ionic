@@ -1,8 +1,9 @@
+
 <ion-header no-border class="ion-no-border">
   <ion-toolbar>
     
     <ion-buttons slot="start">
-      <ion-back-button *ngIf="isMobile"
+      <ion-back-button text="" *ngIf="isMobile"
           defaultHref="conversations-list"
           (click)="pushPage('conversations-list')">
       </ion-back-button> 
@@ -10,16 +11,16 @@
 
     <ion-title [class.info-open]="openInfoConversation || openInfoMessage">
 
-      <div *ngIf="conversationAvatar" class="">
-        
-        <div *ngIf="conversationAvatar" class="avatar-container">
+      <div *ngIf="conversationAvatar" class="avatar-and-typing-wpr">
+        <!-- [ngStyle] = "{ 'left': platformName === 'ios' ? '55px' : ''  }" -->
+        <div *ngIf="conversationAvatar" class="avatar-container" [ngClass] = "{ 'avatar-container-ios': platformName === 'ios' }">
           <app-avatar-profile
             [itemAvatar] = conversationAvatar
           ></app-avatar-profile>
         </div>
-
-        <div *ngIf="isDirect" class="user-presence">
-          <app-user-presence
+        <!-- [ngStyle] = "{ 'left': platformName === 'ios' ? '63px' : ''  }" -->
+        <div *ngIf="isDirect" class="user-presence" [ngClass] = "{ 'user-presence-ios': platformName === 'ios' }">
+          <app-user-presence 
             [idUser] = conversationAvatar.conversation_with
             [translationMap] = translationMap
             [borderColor] = borderColor
@@ -39,8 +40,9 @@
         </div>
 
       </div>
-
-      <div *ngIf="conversationAvatar" class="tile-info-with" (click)="onOpenCloseInfoConversation()">        
+      <!-- [ngClass] = "{ 'tile-info-with-ios': platformName === 'ios' ? '82px' : ''82px''  }" -->
+      <div *ngIf="conversationAvatar" class="tile-info-with" (click)="onOpenCloseInfoConversation()" 
+      [ngClass] = "{ 'tile-info-with-ios': platformName === 'ios' }">        
         <!-- <span class="tile-username">{{ conversationAvatar.conversation_with_fullname }} </span> -->
         <span class="tile-username">{{ conversation_with_fullname }} </span>
         

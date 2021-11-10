@@ -6,7 +6,7 @@ import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { setConversationAvatar, setChannelType } from 'src/chat21-core/utils/utils';
-
+import { Platform } from '@ionic/angular';
 @Component({
   selector: 'app-header-conversation-detail',
   templateUrl: './header-conversation-detail.component.html',
@@ -31,8 +31,9 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   membersConversation = ['SYSTEM'];
   fullNameConv: string;
   idConv: string;
-  conversation_with_fullname: string
- 
+  conversation_with_fullname: string;
+  platformName: string;
+
   private logger: LoggerService = LoggerInstance.getInstance();
 
   /**
@@ -42,6 +43,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   constructor(
     public imageRepoService: ImageRepoService,
     private route: ActivatedRoute,
+    public platform: Platform
   ) {
     this.route.paramMap.subscribe(params => {
 
@@ -61,7 +63,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - idLoggedUser', this.idLoggedUser);
     this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - conversationAvatar', this.conversationAvatar);
-   this.conversation_with_fullname = this.conversationAvatar.conversation_with_fullname
+    this.conversation_with_fullname = this.conversationAvatar.conversation_with_fullname
 
     this.initialize();
   }
@@ -81,7 +83,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
       if (this.conversationAvatar) {
         this.conversationAvatar.imageurl = this.imageRepoService.getImagePhotoUrl(this.conversationAvatar.uid)
       }
-      this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnChanges) - conversationAvatar usecase UNDEFINED conversationAvatar',  this.conversationAvatar);
+      this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnChanges) - conversationAvatar usecase UNDEFINED conversationAvatar', this.conversationAvatar);
     }
 
     this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnChanges) - isOpenInfoConversation', this.isOpenInfoConversation);
@@ -93,12 +95,24 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   // @ Initialize (called in ngOnInit)
   // ----------------------------------------------------
   initialize() {
-
+    this.getPlatformName()
     if (this.conversationAvatar && this.conversationAvatar.channelType === this.DIRECT) {
       this.isDirect = true;
     } else if (this.idLoggedUser) {
       this.membersConversation.push(this.idLoggedUser);
     }
+  }
+
+  getPlatformName() {
+    console.log('getPlatformName this.platform', this.platform) 
+    if (this.platform.is('ios')) {
+      this.platformName = 'ios'
+      console.log('getPlatformName platformName', this.platformName) 
+    } else if (this.platform.is('android')){
+      this.platformName = 'android'
+      console.log('getPlatformName platformName', this.platformName) 
+    }
+
   }
 
   onOpenCloseInfoConversation() {
