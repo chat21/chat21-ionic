@@ -46,7 +46,7 @@ export class ChatManager {
   initialize() {
     const appconfig = this.appConfigProvider.getConfig();
     this.tenant = appconfig.firebaseConfig.tenant;
-    this.logger.info('[CHAT MANAGER] - initialize -> firebaseConfig tenant ', this.tenant);
+    this.logger.log('[CHAT MANAGER] - initialize -> firebaseConfig tenant ', this.tenant);
     this.handlers = [];
     this.openInfoConversation = true;
     this.currentUser = null;
@@ -57,7 +57,7 @@ export class ChatManager {
    * setTiledeskToken
    */
   public setTiledeskToken(tiledeskToken: string) {
-    this.logger.info('initialize FROM [APP-COMP] - [CHAT MANAGER] - initialize -> firebaseConfig tenant ', this.tenant);
+    this.logger.log('initialize FROM [APP-COMP] - [CHAT MANAGER] - initialize -> firebaseConfig tenant ', this.tenant);
     this.tiledeskToken = tiledeskToken;
   }
 
@@ -72,7 +72,7 @@ export class ChatManager {
    * setCurrentUser
    */
   public setCurrentUser(currentUser: UserModel) {
-    this.logger.info('initialize FROM [APP-COMP] - [CHAT MANAGER] setCurrentUser currentUser ', currentUser)
+    this.logger.log('initialize FROM [APP-COMP] - [CHAT MANAGER] setCurrentUser currentUser ', currentUser)
     this.currentUser = currentUser;
   }
 

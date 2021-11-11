@@ -160,10 +160,10 @@ export class AppComponent implements OnInit {
     this.persistence = appconfig.authPersistence;
     this.appStorageService.initialize(environment.storage_prefix, this.persistence, '')
     this.logger.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
-    this.logger.info('[APP-COMP] ngOnInit this.route.snapshot.params -->', this.route.snapshot.params);
+    this.logger.log('[APP-COMP] ngOnInit this.route.snapshot.params -->', this.route.snapshot.params);
     // this.initializeApp('oninit');
     const token = getParameterByName('jwt')
-    this.logger.info('[APP-COMP] ngOnInit AUTOLOGIN token get with getParameterByName -->', token);
+    this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN token get with getParameterByName -->', token);
 
     if (token) {
       // this.isOnline = false;
@@ -211,7 +211,7 @@ export class AppComponent implements OnInit {
     this.getRouteParamsAndSetLoggerConfig();
 
     const appconfig = this.appConfigProvider.getConfig();
-    this.logger.info('[APP-COMP] appconfig: ', appconfig)
+    // this.logger.info('[APP-COMP] appconfig: ', appconfig)
     this.version = PACKAGE.version;
     this.logger.info('[APP-COMP] version: ', this.version)
 
@@ -320,9 +320,9 @@ export class AppComponent implements OnInit {
   getRouteParamsAndSetLoggerConfig() {
     const appconfig = this.appConfigProvider.getConfig();
     this.route.queryParams.subscribe(params => {
-      this.logger.info('[APP-COMP] getRouteParamsAndSetLoggerConfig - queryParams params: ', params)
+      this.logger.log('[APP-COMP] getRouteParamsAndSetLoggerConfig - queryParams params: ', params)
       if (params.logLevel) {
-        this.logger.info('[APP-COMP] getRouteParamsAndSetLoggerConfig - log level get from queryParams: ', params.logLevel)
+        this.logger.log('[APP-COMP] getRouteParamsAndSetLoggerConfig - log level get from queryParams: ', params.logLevel)
         this.logger.setLoggerConfig(true, params.logLevel)
       } else {
         this.logger.info('[APP-COMP] getRouteParamsAndSetLoggerConfig - log level get from appconfig: ', appconfig.logLevel)
@@ -658,7 +658,7 @@ export class AppComponent implements OnInit {
    * apro dettaglio conversazione
    */
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
-    this.logger.info('[APP-COMP] subscribeUidConvSelectedChanged navigateByUrl', user, type);
+    this.logger.log('[APP-COMP] subscribeUidConvSelectedChanged navigateByUrl', user, type);
     // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
     this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname + '/' + type);
   }

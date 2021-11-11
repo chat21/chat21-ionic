@@ -49,7 +49,7 @@ export class FirebasePresenceService extends PresenceService {
   public initialize(tenant: string) {
     // this.tenant = this.getTenant();
     this.tenant = tenant;
-    this.logger.info('[FIREBASEPresenceSERVICE] initialize this.tenant', this.tenant);
+    this.logger.log('[FIREBASEPresenceSERVICE] initialize this.tenant', this.tenant);
     this.urlNodePresence = '/apps/' + this.tenant + '/presence/';
   }
 
@@ -129,7 +129,7 @@ export class FirebasePresenceService extends PresenceService {
    * @param userid
    */
   public setPresence(userid: string): void {
-    this.logger.info('initialize FROM [APP-COMP] - [FIREBASEPresenceSERVICE] - SET PRESENCE userid ', userid) 
+    this.logger.log('initialize FROM [APP-COMP] - [FIREBASEPresenceSERVICE] - SET PRESENCE userid ', userid) 
     this.onlineConnectionsRef = this.referenceOnlineForUser(userid);
     this.lastOnlineConnectionsRef = this.referenceLastOnlineForUser(userid);
     const connectedRefURL = '/.info/connected';

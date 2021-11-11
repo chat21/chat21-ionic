@@ -64,7 +64,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
      * inizializzo conversations handler
      */
     initialize(tenant: string, userId: string, translationMap: Map<string, string>) {
-        this.logger.info('initialize FROM [APP-COMP] - FIREBASEArchivedConversationsHandlerSERVICE] tenant ', tenant, ' - userId: ', userId, ' - translationMap: ', translationMap)
+        this.logger.log('initialize FROM [APP-COMP] - FIREBASEArchivedConversationsHandlerSERVICE] tenant ', tenant, ' - userId: ', userId, ' - translationMap: ', translationMap)
         this.tenant = tenant;
         this.loggedUserId = userId;
         this.translationMap = translationMap;

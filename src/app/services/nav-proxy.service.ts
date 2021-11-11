@@ -25,7 +25,7 @@ export class NavProxyService {
   
     this.sidebarNav = sidebarNav;
     this.detailNav = detailNav;
-    this.logger.info('[NAV-SERV] initialize sidebarNav', sidebarNav, ' detailNav', detailNav);
+    this.logger.log('[NAV-SERV] initialize sidebarNav', sidebarNav, ' detailNav', detailNav);
   }
 
   setRoot(page: any, navExtra: any) {
