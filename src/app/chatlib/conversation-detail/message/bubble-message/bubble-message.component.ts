@@ -87,7 +87,7 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     // console.log('BUBBLE-MSG Hello !!!! this.message ',  this.message)
-    if (this.message && this.message.metadata) {
+    if (this.message && this.message.metadata && typeof this.message.metadata === 'object') {
       this.getMetadataSize(this.message.metadata)
       // console.log('BUBBLE-MSG ngOnChanges message > metadata', this.message.metadata)
     }
