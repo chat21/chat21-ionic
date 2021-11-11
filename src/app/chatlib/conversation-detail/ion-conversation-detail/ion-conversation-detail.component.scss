@@ -93,7 +93,9 @@ ion-item {
      
     }
 
-    
+    .has-metadata {
+        max-width: 100% !important;
+    }
 }
     
 /** recive message **/
@@ -138,7 +140,11 @@ ion-item {
         border-top-left-radius: 8px;
         border-bottom-left-radius: 0px;
 
-    }                    
+    }          
+    
+    .has-metadata {
+        max-width: 100% !important;
+    }
 }
 
 .time{

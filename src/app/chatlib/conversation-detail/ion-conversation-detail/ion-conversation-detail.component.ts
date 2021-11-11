@@ -5,6 +5,7 @@ import { ChangeDetectorRef, Component, Input, OnInit, Output, EventEmitter} from
 import { MESSAGE_TYPE_INFO, MESSAGE_TYPE_MINE, MESSAGE_TYPE_OTHERS } from 'src/chat21-core/utils/constants';
 import { isChannelTypeGroup, isFirstMessage, isInfo, isMine, messageType } from 'src/chat21-core/utils/utils-message';
 import { UploadService } from 'src/chat21-core/providers/abstract/upload.service';
+import { isFile, isFrame, isImage } from 'src/chat21-core/utils/utils-message';
 
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
@@ -25,6 +26,10 @@ export class IonConversationDetailComponent extends ConversationContentComponent
   public uploadProgress: number = 100
   public fileType: any
 
+  isImage = isImage;
+  isFile = isFile;
+  isFrame = isFrame;
+
   isMine = isMine;
   isInfo = isInfo;
   isFirstMessage = isFirstMessage;
@@ -34,7 +39,7 @@ export class IonConversationDetailComponent extends ConversationContentComponent
   MESSAGE_TYPE_INFO = MESSAGE_TYPE_INFO;
   MESSAGE_TYPE_MINE = MESSAGE_TYPE_MINE;
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS;
-
+  logger: LoggerService = LoggerInstance.getInstance()
   /**
    * Constructor
    * @param cdref 

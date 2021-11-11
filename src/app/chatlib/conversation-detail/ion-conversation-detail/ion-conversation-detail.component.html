@@ -67,8 +67,8 @@
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
 
       <!--backgroundColor non viene ancora usato -->
-      <chat-bubble-message 
-      class="messages msg_sent" id="{{'message'+'_'+ i}}"
+      <chat-bubble-message  [ngClass]="{'has-metadata': (isImage(message) || isFrame(message))}"
+        class="messages msg_sent" id="message_msg_sent"
         [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" [message]="message"
         [textColor]="'col-msg-sent'" 
         (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
@@ -98,8 +98,8 @@
       </chat-avatar-image> -->
 
       <!--backgroundColor non viene ancora usato -->
-
-      <chat-bubble-message class="messages msg_receive" 
+      
+      <chat-bubble-message [ngClass]="{'has-metadata': (isImage(message) || isFrame(message))}" class="messages msg_receive" id="message_msg_receive"
         [message]="message" 
         [textColor]="'black'"
         (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
