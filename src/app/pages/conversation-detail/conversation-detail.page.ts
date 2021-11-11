@@ -835,12 +835,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   logScrolling(event: any) {
     // EVENTO IONIC-NATIVE: SCATTA SEMPRE, QUINDI DECIDO SE MOSTRARE O MENO IL BADGE 
-    this.logger.log('[CONVS-DETAIL] logScrolling: ', event);
+    // this.logger.log('[CONVS-DETAIL] logScrolling: ', event);
     this.detectBottom()
   }
 
   logScrollEnd(event: any) {
-    this.logger.log('[CONVS-DETAIL] logScrollEnd: ', event);
+    // this.logger.log('[CONVS-DETAIL] logScrollEnd: ', event);
   }
 
 
