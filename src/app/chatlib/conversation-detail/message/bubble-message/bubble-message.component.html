@@ -1,7 +1,7 @@
 <!-- [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" -->
 <!-- [ngStyle]="{'padding': (isImage(message) || isFrame(message))?'0px':'0 8px'}" -->
 <!-- isImage >{{isImage(message) }}    message.metadata.width {{message?.metadata?.width }}  -->
-<div  [ngStyle]="{'padding': (isImage(message) || isFrame(message))?'0px':'0 8px', 'width': (isImage(message) || isFrame(message))? message?.metadata?.width + 'px' : null }"
+<div id="bubble-message" [ngStyle]="{'padding': (isImage(message) || isFrame(message))?'0px':'0 8px', 'width': (isImage(message) || isFrame(message))? message?.metadata?.width + 'px' : null }"
    class="messages primary-color"
   [class.emoticon]="message?.emoticon">
 
