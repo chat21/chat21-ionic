@@ -1,5 +1,9 @@
 [![npm version](https://badge.fury.io/js/%40chat21%2Fchat21-ionic.svg)](https://badge.fury.io/js/%40chat21%2Fchat21-ionic)
 
+> ***🚀 Do you want to install Tiledesk on your server with just one click?***
+> 
+> ***Use [Docker Compose Tiledesk installation](https://github.com/Tiledesk/tiledesk-deployment/blob/master/docker-compose/README.md) guide***
+
 Chat21 is the core of the open source live chat platform [Tiledesk.com](http://www.tiledesk.com).
 
 # Features #
