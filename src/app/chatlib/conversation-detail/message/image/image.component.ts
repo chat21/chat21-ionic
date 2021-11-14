@@ -14,6 +14,8 @@ export class ImageComponent implements OnInit {
 
   loading: boolean = true
   tooltipMessage: string;
+  modal: any
+  span: any
 
   tooltipOptions = {
     'show-delay': 0,
@@ -45,7 +47,7 @@ export class ImageComponent implements OnInit {
     this.onImageRendered.emit(true)
   }
 
-  downloadImage(url: string, fileName: string) {
+  _downloadImage(url: string, fileName: string) {
     // console.log('Image COMP - IMAGE URL ', url) 
     // console.log('Image COMP - IMAGE FILENAME ', fileName) 
     const a: any = document.createElement('a');
@@ -56,4 +58,21 @@ export class ImageComponent implements OnInit {
     a.click();
     a.remove();
   }
+
+  openImageViewerModal(url: string, fileName: string) {
+    this.modal = document.getElementById("image-viewer-modal");
+    // console.log('has clicked open image-viewer modal ',  this.modal)
+    this.modal.style.display = "block";
+    var modalImg = <HTMLImageElement>document.getElementById("image-viewer-img");
+    var captionText = document.getElementById("caption");
+    modalImg.src = url
+    captionText.innerHTML = fileName;
+   
+  }
+
+ 
+
+
 }
+
+
