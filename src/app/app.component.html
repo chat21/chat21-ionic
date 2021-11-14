@@ -1,11 +1,14 @@
 <ion-app>
-  <div > <!-- (click)="hideAlert()" -->
+  <div>
+    <!-- (click)="hideAlert()" -->
+    <app-image-viewer></app-image-viewer>
     <ion-split-pane when="md" contentId="main">
+
       <ion-nav #sidebarNav [root]="sidebarPage"></ion-nav>
       <!--  our side menu  -->
       <!-- <ion-router-outlet id="sidebar" name='sidebar' animated="false" #masterNav> -->
-        <!-- <app-conversations-list></app-conversations-list> -->
-        <!-- <app-details></app-details> -->
+      <!-- <app-conversations-list></app-conversations-list> -->
+      <!-- <app-details></app-details> -->
       <!-- </ion-router-outlet> -->
       <!-- the main content -->
       <ion-router-outlet id="main" #detailNav animated="false">
