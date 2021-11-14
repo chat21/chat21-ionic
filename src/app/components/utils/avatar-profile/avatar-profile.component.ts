@@ -16,14 +16,16 @@ export class AvatarProfileComponent implements OnInit, OnChanges {
   private logger: LoggerService = LoggerInstance.getInstance();
   constructor() {
     this.logger.log('AvatarProfileComponent:::: constructor');
-   }
+  }
 
   ngOnInit() {
     this.logger.log('AvatarProfileComponent:::: ngOnInit');
     // console.log('AvatarProfileComponent itemAvatar ',this.itemAvatar);
-    this.avatarUrl = this.itemAvatar.imageurl
-    this.avatar = this.itemAvatar.avatar
-    this.color = this.itemAvatar.color
+    if (this.itemAvatar) {
+      this.avatarUrl = this.itemAvatar.imageurl
+      this.avatar = this.itemAvatar.avatar
+      this.color = this.itemAvatar.color
+    }
     // console.log('AvatarProfileComponent avatarUrl ',this.avatarUrl);
     // console.log('AvatarProfileComponent avatar ',this.avatar);
     // console.log('AvatarProfileComponent color ',this.color);
