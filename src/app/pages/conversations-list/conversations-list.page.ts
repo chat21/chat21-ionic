@@ -28,7 +28,8 @@ import { CustomTranslateService } from 'src/chat21-core/providers/custom-transla
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 import { AppConfigProvider } from '../../services/app-config';
-
+import { Subscription } from 'rxjs';
+import { Platform } from '@ionic/angular';
 // Logger
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
@@ -61,7 +62,7 @@ export class ConversationListPage implements OnInit {
 
   public conversationType = 'active'
   headerTitle: string;
-
+  subscription: Subscription;
 
   constructor(
     private router: Router,
@@ -78,7 +79,8 @@ export class ConversationListPage implements OnInit {
     private translateService: CustomTranslateService,
     public tiledeskService: TiledeskService,
     public tiledeskAuthService: TiledeskAuthService,
-    public appConfigProvider: AppConfigProvider
+    public appConfigProvider: AppConfigProvider,
+    public platform: Platform
   ) {
     this.listenToAppCompConvsLengthOnInitConvs();
     this.listenToLogoutEvent();
@@ -90,13 +92,26 @@ export class ConversationListPage implements OnInit {
   // -----------------------------------------------
   // @ Lifehooks
   // -----------------------------------------------
-  ngOnInit() {
+  ngOnInit() { }
 
-  }
+
+
 
   ionViewWillEnter() {
+    console.log('Called ionViewDidEnter')
     this.logger.log('[CONVS-LIST-PAGE] ionViewWillEnter uidConvSelected', this.uidConvSelected);
     this.listnerStart();
+
+    // exit from app with hardware back button
+    this.subscription = this.platform.backButton.subscribe(() => {
+      navigator['app'].exitApp();
+    });
+  }
+
+  // unsubscribe backButton.subscribe method to not use from other page
+  ionViewWillLeave() {
+    console.log('Called ionViewWillLeave')
+    this.subscription.unsubscribe();
   }
 
   ionViewDidEnter() { }
