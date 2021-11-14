@@ -17,6 +17,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { AvatarProfileComponent } from 'src/app/components/utils/avatar-profile/avatar-profile.component';
 import { DdpHeaderComponent } from 'src/app/components/ddp-header/ddp-header.component';
+
 import { UserPresenceComponent } from 'src/app/components/utils/user-presence/user-presence.component';
 import { UserTypingComponent } from 'src/chat21-core/utils/user-typing/user-typing.component';
 import { ListConversationsComponent } from '../chatlib/list-conversations-component/list-conversations/list-conversations.component';
@@ -37,6 +38,7 @@ import { InfoGroupComponent } from '../components/conversation-info/info-group/i
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { OptionHeaderComponent } from '../components/conversation-detail/option-header/option-header.component';
 import { MessageAttachmentComponent } from '../chatlib/conversation-detail/message/message-attachment/message-attachment.component';
+import { ImageViewerComponent } from '../components/image-viewer/image-viewer.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,7 @@ import { MessageAttachmentComponent } from '../chatlib/conversation-detail/messa
     UserTypingComponent,
     ListConversationsComponent,
     IonListConversationsComponent,
-
+    ImageViewerComponent,
     IonConversationDetailComponent,
     ConversationContentComponent,
     AvatarComponent,
@@ -79,6 +81,7 @@ import { MessageAttachmentComponent } from '../chatlib/conversation-detail/messa
     AutofocusDirective,
     AvatarProfileComponent,
     DdpHeaderComponent,
+    ImageViewerComponent,
     UserPresenceComponent,
     UserTypingComponent,
     ListConversationsComponent,
