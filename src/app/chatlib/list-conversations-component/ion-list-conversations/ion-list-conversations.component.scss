@@ -142,6 +142,10 @@ ion-item {
     .notification_point-on-desktop {
         bottom: 29px !important;
     }
+    .notification_point-on-mobile {
+        bottom: 29px !important;
+        right: 8px;
+    }
 }
 
 // ion-item {
@@ -169,6 +173,10 @@ ion-item:hover {
     ion-icon {
         font-size: 21px !important;
     }
+}
+
+.button-on-mobile {
+    margin-right: 31px !important; 
 }
 
 .truncate-on-desktop {
