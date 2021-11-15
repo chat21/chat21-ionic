@@ -98,7 +98,7 @@ export class ConversationListPage implements OnInit {
 
 
   ionViewWillEnter() {
-    console.log('Called ionViewDidEnter')
+    this.logger.log('Called ionViewDidEnter')
     this.logger.log('[CONVS-LIST-PAGE] ionViewWillEnter uidConvSelected', this.uidConvSelected);
     this.listnerStart();
 
@@ -110,7 +110,7 @@ export class ConversationListPage implements OnInit {
 
   // unsubscribe backButton.subscribe method to not use from other page
   ionViewWillLeave() {
-    console.log('Called ionViewWillLeave')
+    this.logger.log('Called ionViewWillLeave')
     this.subscription.unsubscribe();
   }
 
