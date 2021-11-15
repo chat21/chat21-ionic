@@ -138,7 +138,7 @@ export class AppComponent implements OnInit {
     // private tiledeskService: TiledeskService,
     private networkService: NetworkService
   ) {
-    this.logger.log('[APP-COMP] HELLO Constuctor !!!!!!!')
+    // this.logger.log('[APP-COMP] HELLO Constuctor !!!!!!!')
     // HACK: fix toast not presented when offline, due to lazy loading the toast controller.
     // this.toastController.create({ animated: false }).then(t => {
     //   console.log('[APP-COMP] toastController create')
@@ -159,11 +159,11 @@ export class AppComponent implements OnInit {
     const appconfig = this.appConfigProvider.getConfig();
     this.persistence = appconfig.authPersistence;
     this.appStorageService.initialize(environment.storage_prefix, this.persistence, '')
-    this.logger.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
-    this.logger.log('[APP-COMP] ngOnInit this.route.snapshot.params -->', this.route.snapshot.params);
+    // this.logger.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
+    // this.logger.log('[APP-COMP] ngOnInit this.route.snapshot.params -->', this.route.snapshot.params);
     // this.initializeApp('oninit');
     const token = getParameterByName('jwt')
-    this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN token get with getParameterByName -->', token);
+    // this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN token get with getParameterByName -->', token);
 
     if (token) {
       // this.isOnline = false;
@@ -200,8 +200,8 @@ export class AppComponent implements OnInit {
 
   /** */
   initializeApp(calledby: string) {
-    this.logger.log('[APP-COMP] - X - initializeApp !!! CALLED-BY: ', calledby);
-    this.logger.log('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
+    // this.logger.log('[APP-COMP] - X - initializeApp !!! CALLED-BY: ', calledby);
+    // this.logger.log('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
 
     if (!this.platform.is('cordova')) {
       this.splashScreen.show();
@@ -320,7 +320,7 @@ export class AppComponent implements OnInit {
   getRouteParamsAndSetLoggerConfig() {
     const appconfig = this.appConfigProvider.getConfig();
     this.route.queryParams.subscribe(params => {
-      this.logger.log('[APP-COMP] getRouteParamsAndSetLoggerConfig - queryParams params: ', params)
+      // this.logger.log('[APP-COMP] getRouteParamsAndSetLoggerConfig - queryParams params: ', params)
       if (params.logLevel) {
         this.logger.log('[APP-COMP] getRouteParamsAndSetLoggerConfig - log level get from queryParams: ', params.logLevel)
         this.logger.setLoggerConfig(true, params.logLevel)
