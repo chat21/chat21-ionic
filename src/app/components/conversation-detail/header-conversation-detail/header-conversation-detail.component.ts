@@ -104,13 +104,13 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   }
 
   getPlatformName() {
-    console.log('getPlatformName this.platform', this.platform) 
+    this.logger.log('getPlatformName this.platform', this.platform) 
     if (this.platform.is('ios')) {
       this.platformName = 'ios'
-      console.log('getPlatformName platformName', this.platformName) 
+      this.logger.log('getPlatformName platformName', this.platformName) 
     } else if (this.platform.is('android')){
       this.platformName = 'android'
-      console.log('getPlatformName platformName', this.platformName) 
+      this.logger.log('getPlatformName platformName', this.platformName) 
     }
 
   }
