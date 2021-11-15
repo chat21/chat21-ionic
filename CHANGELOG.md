@@ -8,6 +8,7 @@
 - Fixes the bug: on mobile devices, a blank page appears when the hardware back button is pressed in the conversation list
 - Adds the image viewer and the ability to download an image from it
 - Fixes the position of the "archive" button when the app runs on mobile devices
+- Updates Android splash screen .png image
 
 ### 3.0.59-rc1
 - Fixes the bug: the "send message" button remains in the "disabled" state even if it is active
