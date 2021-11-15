@@ -35,7 +35,7 @@ export class TiledeskAuthService {
 
 
   initialize(serverBaseUrl: string) {
-    this.logger.info('[TILEDESK-AUTH-SERV] - initialize serverBaseUrl', serverBaseUrl);
+    this.logger.log('[TILEDESK-AUTH-SERV] - initialize serverBaseUrl', serverBaseUrl);
     this.SERVER_BASE_URL = serverBaseUrl;
     this.URL_TILEDESK_SIGNIN = this.SERVER_BASE_URL + 'auth/signin';
     this.URL_TILEDESK_SIGNIN_ANONYMOUSLY = this.SERVER_BASE_URL + 'auth/signinAnonymously'
