@@ -12,7 +12,7 @@ export class ImageViewerComponent implements OnInit {
   ngOnInit() {}
 
   closeImageViewerModal() {
-    console.log('HAS CLICKED CLOSE MODAL')
+    // console.log('HAS CLICKED CLOSE MODAL')
     var modal = document.getElementById("image-viewer-modal");
     // var span = document.getElementsByClassName("close")[0]; 
     modal.style.display = "none";
@@ -20,11 +20,11 @@ export class ImageViewerComponent implements OnInit {
 
   downloadImage()  {
     var modalImg = <HTMLImageElement>document.getElementById("image-viewer-img")
-    console.log('HAS CLICKED CLOSE DWNLD IMG modalImg ', modalImg)
+    // console.log('HAS CLICKED CLOSE DWNLD IMG modalImg ', modalImg)
     var modalImgURL = modalImg.src;
-    console.log('HAS CLICKED CLOSE DWNLD IMG modalImgURL ', modalImgURL)
+    // console.log('HAS CLICKED CLOSE DWNLD IMG modalImgURL ', modalImgURL)
     var captionText = document.getElementById("caption").innerHTML;
-    console.log('HAS CLICKED CLOSE DWNLD IMG captionText ', captionText)
+    // console.log('HAS CLICKED CLOSE DWNLD IMG captionText ', captionText)
 
     const a: any = document.createElement('a');
     a.href = modalImgURL;
