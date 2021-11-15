@@ -1,5 +1,14 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc2
+- Fixes the bug: on small windows, images and iframes are not the same size as the bubble message that contains them
+- Adds in the "bubble-message" component a check if the metadata is an object before calling the getMetadataSize() method
+- Hides the "canned responses" if there are whitespace after the forward slash "/" or if there are no whitespace before the forward slash "/"
+- Fixes the bug: if the "canned responses" are selected with the mouse, the "send message" text area does not have focus
+- Fixes the bug: on mobile devices, a blank page appears when the hardware back button is pressed in the conversation list
+- Adds the image viewer and the ability to download an image from it
+- Fixes the position of the "archive" button when the app runs on mobile devices
+
 ### 3.0.59-rc1
 - Fixes the bug: the "send message" button remains in the "disabled" state even if it is active
 - Changes the format of the date displayed in the message tooltips
