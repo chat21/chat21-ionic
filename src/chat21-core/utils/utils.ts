@@ -497,7 +497,7 @@ export function createConfirm(translate, alertCtrl, events, title, message, acti
         text: LABEL_ANNULLA,
         handler: () => {
           events.publish('PopupConfirmation', LABEL_ANNULLA, action);
-          console.log('Disagree clicked');
+          // console.log('Disagree clicked');
         }
       },
       {
