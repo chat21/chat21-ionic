@@ -43,6 +43,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Input() loggedUser: UserModel;
   @Input() conversationWith: string;
   @Input() tagsCannedFilter: any = [];
+
   @Input() events: Observable<void>;
   @Input() fileUploadAccept: string
   @Input() isOpenInfoConversation: boolean;
@@ -102,6 +103,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   ngOnChanges() {
+
     if (this.translationMap) {
       this.LONG_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG')
       this.SHORT_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
@@ -110,6 +112,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
+    this.logger.log('[CONVS-DETAIL] - returnChangeTextArea ngOnChanges in [MSG-TEXT-AREA]  this.tagsCannedFilter.length ', this.tagsCannedFilter.length ) 
+    
     // use case drop
     if (this.dropEvent) {
       this.presentModal(this.dropEvent)
@@ -136,11 +140,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
           const elTextAreaWrapper = elTextArea.children[0]
           // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextAreaWrapper", elTextAreaWrapper);
-          
+
           if (elTextAreaWrapper.children.length === 1) {
             const elNativeTearea = elTextAreaWrapper.children[0]
             // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elNativeTearea", elNativeTearea);
-             elNativeTearea.setAttribute("style", "height: 37px !important; ");
+            elNativeTearea.setAttribute("style", "height: 37px !important; ");
           }
         }
 
@@ -481,7 +485,10 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   // if the message is not empty it is passed  to the control method
   // ------------------------------------------------------------------------
   onKeydown(e: any, text: string) {
+    this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA event", e)
+    this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA text", text)
     e.preventDefault(); // Prevent press enter from creating new line 
+    // console.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea * event: ", e);
 
     this.countClicks++;
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - countClicks: ', this.countClicks);
@@ -489,7 +496,16 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - event target: ', e.target);
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - event target textContent: ', e.target.textContent);
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - tagsCannedFilter: ', this.tagsCannedFilter);
+
     // this.logger.error("[CONVS-DETAIL][MSG-TEXT-AREA] pressedOnKeyboard e.keyCode ", e.keyCode);
+    // this.events.subscribe((cannedmessage) => {
+
+    //   console.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea * cannedmessage: ", cannedmessage);
+    //   });
+
+    // user and time are the same arguments passed in `events.publish(user, time)`
+
+
 
     const message = e.target.textContent.trim();
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - event target textContent (message): ', message);
@@ -501,13 +517,25 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     } else {
       var pos = text.lastIndexOf("/");
       this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - POSITION OF '/': ", pos);
+      this.logger.log("[CONVS-DETAIL] returnChangeTextArea onKeydown in msg-texarea  POSITION OF '/': ", pos);
+      this.logger.log("[CONVS-DETAIL] returnChangeTextArea onKeydown in msg-texarea  this.tagsCannedFilter.length': ", this.tagsCannedFilter.length);
       if (!text.includes("/")) {
         this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 1 message: ', message);
+        this.logger.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea  SEND MESSAGE 1 message: ", message);
         this.messageString = '';
         this.sendMessage(text);
         this.countClicks = 0
       } else if (text.includes("/") && pos >= 0 && this.countClicks > 1 && this.tagsCannedFilter.length > 0) {
         this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - tagsCannedFilter.length 2: ', this.tagsCannedFilter.length);
+        this.logger.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea SEND MESSAGE 2 message: ", message);
+        this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 2 text: ', text);
+        var lastChar = message.value.substr(-1); // Selects the last character
+        if (lastChar === '/') {
+          message.value = message.value.substring(0, message.value.length() - 1);
+        }
+
+        this.logger.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea SEND MESSAGE 2 this.tagsCannedFilter.length: ", this.tagsCannedFilter.length);
+        this.logger.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea SEND MESSAGE 2 this.countClicks: ", this.countClicks);
         this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 2 message: ', message);
         this.messageString = '';
 
@@ -516,12 +544,20 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       } else if (text.includes("/") && this.tagsCannedFilter.length === 0) {
         this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - tagsCannedFilter.length 3: ', this.tagsCannedFilter.length);
         this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 3 message: ', message);
+        this.logger.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea SEND MESSAGE 3 message: ", message);
         this.messageString = '';
 
         this.sendMessage(text);
         this.countClicks = 0
 
       }
+
+
+
+
+
+
+      // }
     }
   }
 
@@ -586,7 +622,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     if (event.key === 'Enter' && event.altKey || event.key === 'Enter' && event.ctrlKey || event.key === 'Enter' && event.metaKey) {
 
 
-     
+
       this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] HAS PRESSED COMBO KEYS this.messageString', this.messageString);
 
       if (this.messageString !== undefined && this.messageString.trim() !== '') {

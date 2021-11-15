@@ -42,7 +42,7 @@
               here is ignored
             </span>
 
-            <div class="overlay" *ngIf="tagsCannedFilter.length > 0;"></div>
+            <div class="overlay" *ngIf="tagsCannedFilter.length > 0 && HIDE_CANNED_RESPONSES === false"></div>
 
             <ng-template #content_welcome>
               <!-- <div class="messageFirst">
@@ -139,12 +139,13 @@
             <!-- ----------------------------------------------------------- -->
             <!-- Canned responses -->
             <!-- ----------------------------------------------------------- -->
-            <div id="canned" *ngIf="tagsCannedFilter.length > 0;">
+         
+            <div id="canned" *ngIf="tagsCannedFilter.length > 0 && HIDE_CANNED_RESPONSES === false">
               <ion-list class="canned-list">
                 <ion-item button="true" [ngClass]="{'is_active_item': i == arrowkeyLocation}" lines="none"
                   class="canned-item" id="{{'canned-item_'+ i }}"
                   *ngFor="let canned of tagsCannedFilter; let i = index;" [innerHtml]="canned.title"
-                  (click)="replaceTagInMessage(canned)">
+                  (click)="replaceTagInMessage(canned, $event)">
                 </ion-item>
               </ion-list>
             </div>
@@ -153,6 +154,7 @@
             <!-- openInfoConversation   {{openInfoConversation}} - isMobile {{isMobile}} -->
             <app-message-text-area
               *ngIf="(openInfoConversation === false && isMobile === true) || (openInfoConversation === true && isMobile === false) || (openInfoConversation === false && isMobile === false)"
+             
               [loggedUser]="loggedUser" 
               [conversationWith]="conversationWith" 
               [tagsCannedFilter]="tagsCannedFilter"
