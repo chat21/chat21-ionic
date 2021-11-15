@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc3
+- Improves the method that allows to chain multiple canned responses
+
 ### 3.0.59-rc2
 - Fixes the bug: on small windows, images and iframes are not the same size as the bubble message that contains them
 - Adds in the "bubble-message" component a check if the metadata is an object before calling the getMetadataSize() method
