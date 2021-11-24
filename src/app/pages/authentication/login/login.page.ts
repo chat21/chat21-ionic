@@ -144,7 +144,7 @@ export class LoginPage implements OnInit {
         this.presentToast(error_msg)
       })
       .finally(() => {
-        this.showSpinnerInLoginBtn = false;
+        // this.showSpinnerInLoginBtn = false;
         this.logger.log('[LOGIN PAGE] signInWithEmailAndPassword ');
       });
 
