@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc4
+- Adds an item to the top of the conversation list that shows the number of unassigned conversations for a selected project
+- Adds the ability, by clicking on the element that displays the number of unassigned conversations, to view the unassigned conversations and to join them
+
 ### 3.0.59-rc3
 - Improves the method that allows to chain multiple canned responses
 
@@ -8,7 +12,6 @@
 - Adds in the "bubble-message" component a check if the metadata is an object before calling the getMetadataSize() method
 - Hides the "canned responses" if there are whitespace after the forward slash "/" or if there are no whitespace before the forward slash "/"
 - Fixes the bug: if the "canned responses" are selected with the mouse, the "send message" text area does not have focus
-- Fixes the bug: on mobile devices, a blank page appears when the hardware back button is pressed in the conversation list
 - Adds the image viewer and the ability to download an image from it
 - Fixes the position of the "archive" button when the app runs on mobile devices
 - Updates Android splash screen .png image
