@@ -187,5 +187,12 @@
     "CONTACT_ID": "ID contatto",
     "USER_ID": "ID utente",
     "CLOSE_TOAST": "Chiudi",
-    "WAITING_FOR_NETWORK": "In attesa di rete"
+    "WAITING_FOR_NETWORK": "In attesa di rete",
+    "Available": "Disponibile",
+    "Unavailable": "Non disponibile",
+    "Busy": "Occupato",
+    "YouAreAboutToJoinThisChat":"Stai per entrare in questa chat",
+    "Cancel": "Annulla",
+    "AreYouSure":"Sei sicuro?",
+    "UnassignedConversations":"Conversazioni non assegnate"
 }
