@@ -94,7 +94,8 @@ import { TooltipModule } from 'ng2-tooltip-directive';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { Network } from '@ionic-native/network/ngx';
 import { ConnectionService } from 'ng-connection-service';
-
+import { WebSocketJs } from './services/websocket/websocket-js';
+import { UnassignedConversationsPageModule } from './pages/unassigned-conversations/unassigned-conversations.module';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -253,6 +254,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     LoginPageModule,
     ConversationListPageModule,
     ConversationDetailPageModule,
+    UnassignedConversationsPageModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -352,6 +354,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     EventsService,
     Chooser,
     Chat21Service,
+    WebSocketJs
   ]
 })
 export class AppModule { }

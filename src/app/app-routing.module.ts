@@ -29,6 +29,27 @@ const routes: Routes = [
     loadChildren: './pages/conversation-detail/conversation-detail.module#ConversationDetailPageModule'
    
   },
+  {
+    path: 'contacts-directory',
+    loadChildren: () => import('./pages/contacts-directory/contacts-directory.module').then( m => m.ContactsDirectoryPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/authentication/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'profile-info',
+    loadChildren: () => import('./pages/profile-info/profile-info.module').then( m => m.ProfileInfoPageModule)
+  },
+  {
+    path: 'loader-preview',
+    loadChildren: () => import('./pages/loader-preview/loader-preview.module').then( m => m.LoaderPreviewPageModule)
+  },
+  {
+    path: 'unassigned-conversations',
+    loadChildren: () => import('./pages/unassigned-conversations/unassigned-conversations.module').then( m => m.UnassignedConversationsPageModule)
+  }
+
 
   // {
   //   path: 'conversation-detail/:IDConv',
@@ -50,23 +71,6 @@ const routes: Routes = [
   //   // loadChildren: () => import('./pages/details/details.module').then( m => m.DetailsPageModule),
   //   // loadChildren: './pages/details/details.module',
   // },
-  {
-    path: 'contacts-directory',
-    loadChildren: () => import('./pages/contacts-directory/contacts-directory.module').then( m => m.ContactsDirectoryPageModule)
-  },
-  {
-    path: 'login',
-    loadChildren: () => import('./pages/authentication/login/login.module').then( m => m.LoginPageModule)
-  },
-  {
-    path: 'profile-info',
-    loadChildren: () => import('./pages/profile-info/profile-info.module').then( m => m.ProfileInfoPageModule)
-  },
-  {
-    path: 'loader-preview',
-    loadChildren: () => import('./pages/loader-preview/loader-preview.module').then( m => m.LoaderPreviewPageModule)
-  }
-
 
 
   // {
