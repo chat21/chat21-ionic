@@ -1,0 +1,101 @@
+<div class="main-content main-content-project-for-panel">
+  <div class="container-fluid container-project-for-panel">
+
+    <div class="left-sidebar">
+
+      <!-- <loading-spinner *ngIf="showSpinner"></loading-spinner> -->
+      <!-- *ngIf="!showSpinner" -->
+      <div class="left-sidebar-project" style="margin-right: -10px;">
+
+        <!-- *ngFor="let project of projects; let i = index" -->
+        <div style="cursor:pointer">
+          <!-- (click)='goToUnservedRequests(project?.id_project?._id, project?.id_project?.name, project?.id_project?.profile?.name, project?.id_project?.trialExpired, project?.id_project?.trialDaysLeft, project?.id_project?.status)' -->
+          <div class="small-projects-sidebar">
+            <div *ngIf="project?.id_project?.status !== 0" class="flex-container-project-for-panel project-row">
+              <div class="flex-child-left">
+                <!-- padding:6px; background: rgb(31,107,192); -->
+                <div class="unassigned-notifications-icon-wpr">
+                  <svg viewBox="0 0 28 28" alt="" class="a8c37x1j ms05siws hwsy1cff b7h9ocf4 fzdkajry" height="40"
+                    width="40"
+                    style="vertical-align: middle;border-radius: 50%;">
+                    <style type="text/css">
+                      .notifications-icons {
+                        fill: #050505;
+                      }
+                    </style>
+                    <path class="notifications-icons"
+                      d="M7.847 23.488C9.207 23.488 11.443 23.363 14.467 22.806 13.944 24.228 12.581 25.247 10.98 25.247 9.649 25.247 8.483 24.542 7.825 23.488L7.847 23.488ZM24.923 15.73C25.17 17.002 24.278 18.127 22.27 19.076 21.17 19.595 18.724 20.583 14.684 21.369 11.568 21.974 9.285 22.113 7.848 22.113 7.421 22.113 7.068 22.101 6.79 22.085 4.574 21.958 3.324 21.248 3.077 19.976 2.702 18.049 3.295 17.305 4.278 16.073L4.537 15.748C5.2 14.907 5.459 14.081 5.035 11.902 4.086 7.022 6.284 3.687 11.064 2.753 15.846 1.83 19.134 4.096 20.083 8.977 20.506 11.156 21.056 11.824 21.986 12.355L21.986 12.356 22.348 12.561C23.72 13.335 24.548 13.802 24.923 15.73Z">
+                    </path>
+                  </svg>
+                </div>
+                <div class="unassigned-notifications-badge">
+                  <!-- || currentUserRequestCount > 0  -->
+                  <span *ngIf="unservedRequestCount > 0 ">
+                    <!-- + currentUserRequestCount -->
+                    <span class="notification-count">{{ unservedRequestCount }}</span>
+                  </span>
+                </div>
+
+              </div>
+
+              <!-- [ngClass]="{'im-available-project-for-panel' : project?.ws_projct_user_available === true}" -->
+              <div class="flex-child-right" *ngIf="!window_width_is_60">
+                <div class="project-name-project-for-panel">
+                  {{ project?.id_project?.name }}
+                </div>
+
+                <!-- <div class="status--text"
+                  (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)"
+                  [ngClass]="{'online-text-color' : project?.ws_projct_user_available === true, 'offline-text-color' : project?.ws_projct_user_available === false}">
+                  <span *ngIf="project?.ws_projct_user_available === true">
+                    Online
+                  </span>
+                  <span *ngIf="project?.ws_projct_user_available === false">
+                    Offline
+                  </span>
+                  <span class="status--icon-project-for-panel"
+                    [ngStyle]="{ 'background-color':(project?.ws_projct_user_available)?'#4caf50':'#f44336' }">
+                  </span>
+                  <span class="status--icon-project-for-panel busy--icon"
+                    *ngIf="project?.ws_projct_user_isBusy === true">
+                  </span>
+                </div> -->
+                <div class="availabily-and-busy-wpr">
+                  <div class="onoffswitch"
+                    (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch"
+                      tabindex="0" [checked]="project?.ws_projct_user_available">
+                    <label class="onoffswitch-label" for="myonoffswitch"></label>
+                  </div>
+
+                  <span *ngIf="project?.ws_projct_user_available === true" class="availibility-status-text"
+                    [ngClass]="{'online-text-color' : project?.ws_projct_user_available === true, 'offline-text-color' : project?.ws_projct_user_available === false}"
+                    (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)">
+                    {{translationMap.get('Available') }}
+                  </span>
+                  <span *ngIf="project?.ws_projct_user_available === false" class="availibility-status-text"
+                    [ngClass]="{'online-text-color' : project?.ws_projct_user_available === true, 'offline-text-color' : project?.ws_projct_user_available === false}"
+                    (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)">
+                    {{translationMap.get('Unavailable')}}
+                  </span>
+                  <div class="project-item--isBusy-icon-wpr" *ngIf="project?.ws_projct_user_isBusy === true">
+                    <span class="material-icons project-item--isBusy-icon">
+                      access_time
+                    </span>
+                  </div>
+                  <span *ngIf="project?.ws_projct_user_isBusy === true" class="project-item--isBusy-busy-text text-pulse-animation">
+                    {{translationMap.get('Busy')}}
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
