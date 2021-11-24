@@ -25,7 +25,8 @@
 <!-- -------------------------------------------------------------------------- -->
 <!-- New   <ion-spinner class="spinner-middle" style="margin-left: 19px;"></ion-spinner> -->
 <!-- -------------------------------------------------------------------------- -->
-<ion-item *ngIf="isOnline === false" button="true" lines="none" class="ion-no-padding waiting-for-connection">
+<!-- <ion-item *ngIf="isOnline === false" button="true" lines="none" class="ion-no-padding waiting-for-connection">
+  <div tabindex="0"></div>
   <ion-avatar item-start>
     <div class="sk-fading-circle">
       <div class="sk-circle1 sk-circle"></div>
@@ -43,7 +44,17 @@
     </div>
   </ion-avatar>
   <ion-label part="message-text" class="waiting-for-network-msg"> Waiting for network</ion-label>
-</ion-item>
+</ion-item> -->
+
+<!-- <ion-item>
+  <div tabindex="0"></div>
+  <iframe loading="lazy" width="100%" height="70px" style="border: unset;" [src]="PROJECT_FOR_PANEL"></iframe>
+</ion-item>  -->
+<!-- <ion-item button="true" (click)="openUnsevedConversationIframe()">
+  <app-project-item
+  (projectIdEvent)="getLastProjectId($event)"></app-project-item>
+</ion-item> -->
+
 
 <!-- <ion-item-sliding disabled>
   <ion-item>
