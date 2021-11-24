@@ -21,6 +21,8 @@ export class TiledeskService {
     public appConfigProvider: AppConfigProvider
   ) {
     this.apiUrl = appConfigProvider.getConfig().apiUrl;
+    const projectUrl = this.apiUrl + 'projects/'
+    console.log('[TILEDESK-SERVICE] projectUrl' ,projectUrl  )
   }
 
 
@@ -51,7 +53,7 @@ export class TiledeskService {
 
   // http://tiledesk-server-pre.herokuapp.com/requests_util/lookup/id_project/support-group-60ffe291f725db00347661ef-b4cb6875785c4a23b27244fe498eecf44
   public getProjectIdByConvRecipient(token: string ,conversationWith: string ) {
-    const lookupUrl =this.apiUrl + 'requests_util/lookup/id_project/' + conversationWith;
+    const lookupUrl = this.apiUrl + 'requests_util/lookup/id_project/' + conversationWith;
 
     this.logger.log('[TILEDESK-SERVICE] GET PROJECTID BY CONV RECIPIENT - URL ', lookupUrl);
 
@@ -68,6 +70,25 @@ export class TiledeskService {
         this.logger.log('[TILEDESK-SERVICE] GET PROJECTID BY CONV RECIPIENT - RES ', res);
         return res
       }))
+  }
+
+  public getProjects(token: string) {
+    const url = this.apiUrl + 'projects/';
+    this.logger.log('[TILEDESK-SERVICE] - GET PROJECTS URL', url);
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: token
+      })
+    };
+
+    return this.http
+    .get(url, httpOptions)
+    .pipe(map((res: any) => {
+      this.logger.log('[TILEDESK-SERVICE] GET PROJECTS - RES ', res);
+      return res
+    }))
   }
 
   
