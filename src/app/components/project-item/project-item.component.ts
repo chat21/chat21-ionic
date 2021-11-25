@@ -21,7 +21,7 @@ export class ProjectItemComponent implements OnInit {
   project: any;
   tiledeskToken: string;
 
-  unservedRequestCount: number;
+  unservedRequestCount: number = 0;
   currentUserRequestCount: number;
   ROLE_IS_AGENT: boolean;
   currentUserId: string;
@@ -122,8 +122,8 @@ export class ProjectItemComponent implements OnInit {
         this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES', projects);
         this.project = projects[0];
         this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES this.project', this.project);
+        
         localStorage.setItem('last_project', JSON.stringify(projects[0]))
-
         this.doProjectSubscriptions(this.project)
 
       }, (error) => {
@@ -166,7 +166,7 @@ export class ProjectItemComponent implements OnInit {
       this.listenTocurrentProjectUserUserAvailability$(project)
 
       this.wsService.subscriptionToWsConversations(project.id_project._id)
-      this.updateCurrentUserRequestCount();
+      // this.updateCurrentUserRequestCount();
       this.updateUnservedRequestCount();
 
     }
