@@ -1,7 +1,7 @@
 # chat21-ionic ver 3.0
 
 ### 3.0.59-rc5
-- Display a "toast message" of success after that the agent has joined to an unassigned conversation
+- Display a "toast message" of success after that the agent has joined to an unassigned conversation and other minor improvements
 
 ### 3.0.59-rc4
 - Adds an item to the top of the conversation list that shows the number of unassigned conversations for a selected project
