@@ -894,7 +894,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         if (this.conversationWith.startsWith("support-group")) {
 
           const pos = message.lastIndexOf("/");
-          console.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ", pos);
+          // console.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ", pos);
 
           // test
           // var rest = message.substring(0, message.lastIndexOf("/") + 1);

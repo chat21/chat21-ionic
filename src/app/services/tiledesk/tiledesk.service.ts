@@ -21,8 +21,8 @@ export class TiledeskService {
     public appConfigProvider: AppConfigProvider
   ) {
     this.apiUrl = appConfigProvider.getConfig().apiUrl;
-    const projectUrl = this.apiUrl + 'projects/'
-    console.log('[TILEDESK-SERVICE] projectUrl' ,projectUrl  )
+    // const projectUrl = this.apiUrl + 'projects/'
+    // console.log('[TILEDESK-SERVICE] projectUrl' ,projectUrl  )
   }
 
 

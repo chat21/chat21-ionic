@@ -203,12 +203,12 @@ export class FirebaseAuthService extends MessagingAuthService {
     // Only one subscriber x application allowed
     // ---------------------------------------------------------------------------------------------------
     if (this.unsubscribe) {
-      console.log('initialize FROM [APP-COMP] - [FIREBASEAuthSERVICE] onAuthStateChanged ALREADY SUBSCRIBED')
+      this.logger.log('initialize FROM [APP-COMP] - [FIREBASEAuthSERVICE] onAuthStateChanged ALREADY SUBSCRIBED')
       return
     }
 
     this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
-      console.log('initialize FROM [APP-COMP] - [FIREBASEAuthSERVICE] onAuthStateChanged', user)
+      this.logger.log('initialize FROM [APP-COMP] - [FIREBASEAuthSERVICE] onAuthStateChanged', user)
 
       
       if (!user) {

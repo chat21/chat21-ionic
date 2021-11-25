@@ -261,12 +261,12 @@ export class AppComponent implements OnInit {
 
   listenToPostMsgs() {
     window.addEventListener("message", (event) => {
-      console.log("[APP-COMP] message event ", event);
+      // console.log("[APP-COMP] message event ", event);
 
       if (event && event.data && event.data.action && event.data.parameter) {
         if (event.data.action === 'openJoinConversationModal') {
-          console.log("[APP-COMP] message event action ", event.data.action);
-          console.log("[APP-COMP] message event parameter ", event.data.parameter);
+          // console.log("[APP-COMP] message event action ", event.data.action);
+          // console.log("[APP-COMP] message event parameter ", event.data.parameter);
           this.presentAlertConfirmJoinRequest(event.data.parameter)
 
 
@@ -278,7 +278,7 @@ export class AppComponent implements OnInit {
 
   async presentAlertConfirmJoinRequest(requestid) {
     var iframeWin = <HTMLIFrameElement>document.getElementById("unassigned-convs-iframe")
-    console.log("[APP-COMP] message event iframeWin ", iframeWin);
+    // console.log("[APP-COMP] message event iframeWin ", iframeWin);
 
     const isIFrame = (input: HTMLElement | null): input is HTMLIFrameElement =>
       input !== null && input.tagName === 'IFRAME';
@@ -296,12 +296,12 @@ export class AppComponent implements OnInit {
           role: 'cancel',
           cssClass: 'secondary',
           handler: (blah) => {
-            console.log('Confirm Cancel: blah', blah);
+            // console.log('Confirm Cancel: blah', blah);
           }
         }, {
           text: 'Ok',
           handler: () => {
-            console.log('Confirm Okay');
+            // console.log('Confirm Okay');
 
             if (isIFrame(iframeWin) && iframeWin.contentWindow) {
               const msg = { action: "joinConversation", parameter: requestid }

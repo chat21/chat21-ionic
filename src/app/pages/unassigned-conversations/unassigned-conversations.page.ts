@@ -32,11 +32,11 @@ export class UnassignedConversationsPage implements OnInit {
     const keys = ['UnassignedConversations'];
     this.translationMap = this.translateService.translateLanguage(keys);
 
-    console.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL (ngOnInit)', this.unassigned_convs_url);
+    this.logger.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL (ngOnInit)', this.unassigned_convs_url);
     // this.unassigned_convs_url_sanitized = this.sanitizer.bypassSecurityTrustResourceUrl(this.unassigned_convs_url);
     // this.unassigned_convs_url_sanitized = this.sanitizer.bypassSecurityTrustHtml(this.unassigned_convs_url);
     this.unassigned_convs_url_sanitized = this.sanitizer.sanitize(SecurityContext.URL, this.unassigned_convs_url)
-    console.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL SANITIZED (ngOnInit)', this.unassigned_convs_url_sanitized);
+    this.logger.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL SANITIZED (ngOnInit)', this.unassigned_convs_url_sanitized);
     this.has_loaded = false
 
     this.ion_content = document.getElementById("iframe-ion-content");
@@ -88,8 +88,8 @@ export class UnassignedConversationsPage implements OnInit {
 
 
   async onClose() {
-    console.log('[UNASSIGNED-CONVS-PAGE] - onClose MODAL')
-    console.log('[UNASSIGNED-CONVS-PAGE] - onClose MODAL isModalOpened ', await this.modalController.getTop())
+    this.logger.log('[UNASSIGNED-CONVS-PAGE] - onClose MODAL')
+    this.logger.log('[UNASSIGNED-CONVS-PAGE] - onClose MODAL isModalOpened ', await this.modalController.getTop())
     const isModalOpened = await this.modalController.getTop();
 
     if (isModalOpened) {

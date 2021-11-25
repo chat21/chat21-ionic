@@ -141,16 +141,16 @@ watchToConnectionStatus() {
   ionViewDidEnter() { }
 
   getLastProjectId(projectid: string) {
-    console.log('[CONVS-LIST-PAGE] - GET LAST PROJECT ID', projectid);
+    this.logger.log('[CONVS-LIST-PAGE] - GET LAST PROJECT ID', projectid);
     this.lastProjectId = projectid;
   }
 
   openUnsevedConversationIframe() {
     this.hasClickedOpenUnservedConvIframe = true
-    console.log('[CONVS-LIST-PAGE] - HAS CLIKED OPEN UNSERVED REQUEST IFRAME', this.hasClickedOpenUnservedConvIframe);
+    this.logger.log('[CONVS-LIST-PAGE] - HAS CLIKED OPEN UNSERVED REQUEST IFRAME', this.hasClickedOpenUnservedConvIframe);
     const DASHBOARD_BASE_URL = this.appConfigProvider.getConfig().dashboardUrl;
     this.UNASSIGNED_CONVS_URL = DASHBOARD_BASE_URL + '#/project/' + this.lastProjectId + '/unserved-request-for-panel';
-    console.log('[CONVS-LIST-PAGE] - HAS CLIKED OPEN UNSERVED REQUEST IFRAME > UNASSIGNED CONVS URL', this.UNASSIGNED_CONVS_URL);
+    this.logger.log('[CONVS-LIST-PAGE] - HAS CLIKED OPEN UNSERVED REQUEST IFRAME > UNASSIGNED CONVS URL', this.UNASSIGNED_CONVS_URL);
     this.openUnassignedConversations(this.UNASSIGNED_CONVS_URL)
   }
 

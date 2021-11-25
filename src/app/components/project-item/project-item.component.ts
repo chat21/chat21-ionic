@@ -46,10 +46,10 @@ export class ProjectItemComponent implements OnInit {
 
   listenToPostMsgs() {
     window.addEventListener("message", (event) => {
-      console.log("[PROJECT-ITEM] post message event ", event);
+      // console.log("[PROJECT-ITEM] post message event ", event);
     
       if (event && event.data && event.data) {
-        console.log("[APP-COMP] message event data  ", event.data);
+        // console.log("[APP-COMP] message event data  ", event.data);
         if (event.data === 'hasChangedProject') {
           this.getLastProjectStoredAndSubscToWSAvailabilityAndConversations();
         }
@@ -90,20 +90,20 @@ export class ProjectItemComponent implements OnInit {
     const stored_project = localStorage.getItem('last_project')
     if (!stored_project) {
       const tiledeskToken = this.appStorageService.getItem('tiledeskToken');
-      console.log('[INFO-CONTENT-COMP] - GET PROJECTS - tiledeskToken', tiledeskToken);
+      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - tiledeskToken', tiledeskToken);
       this.tiledeskService.getProjects(tiledeskToken).subscribe(projects => {
-        console.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES', projects);
+        this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES', projects);
         this.project = projects[0];
-        console.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES this.project', this.project);
+        this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES this.project', this.project);
         localStorage.setItem('last_project', JSON.stringify(projects[0]))
 
         this.doProjectSubscriptions(this.project)
 
       }, (error) => {
-        console.error('[INFO-CONTENT-COMP] - GET PROJECTS - ERROR  ', error);
+        this.logger.error('[INFO-CONTENT-COMP] - GET PROJECTS - ERROR  ', error);
 
       }, () => {
-        console.log('[INFO-CONTENT-COMP] - GET PROJECTS * COMPLETE *');
+        this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS * COMPLETE *');
 
       });
     }
@@ -122,7 +122,7 @@ export class ProjectItemComponent implements OnInit {
   doProjectSubscriptions(project) {
     if (project) {
       const user_role = this.project.role
-      console.log('[PROJECT-ITEM] - user_role ', user_role)
+      this.logger.log('[PROJECT-ITEM] - user_role ', user_role)
       this.projectIdEvent.emit(project.id_project._id)
 
 

@@ -78,7 +78,7 @@ export class WebsocketService {
     return this.http
       .put(url, body, httpOptions)
       .pipe(map((res: any) => {
-        console.log('[WS-SERV] - UPDATE CURRENT PROJECT-USER AVAILABILITY (PUT) ', res);
+        this.logger.log('[WS-SERV] - UPDATE CURRENT PROJECT-USER AVAILABILITY (PUT) ', res);
         return res
       }))
   }
