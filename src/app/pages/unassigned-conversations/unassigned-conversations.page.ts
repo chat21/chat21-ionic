@@ -43,7 +43,7 @@ export class UnassignedConversationsPage implements OnInit {
     this.iframe = document.createElement("iframe");
     this.iframe.src = this.unassigned_convs_url_sanitized;
     this.iframe.width = "100%";
-    this.iframe.height = "99%";
+    this.iframe.height = "99.6%";
     this.iframe.id = "unassigned-convs-iframe"
     this.iframe.frameBorder = "0";
     this.iframe.style.border = "none";
