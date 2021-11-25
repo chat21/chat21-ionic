@@ -261,22 +261,33 @@ export class AppComponent implements OnInit {
 
   listenToPostMsgs() {
     window.addEventListener("message", (event) => {
-      // console.log("[APP-COMP] message event ", event);
+      console.log("[APP-COMP] message event ", event);
 
       if (event && event.data && event.data.action && event.data.parameter) {
         if (event.data.action === 'openJoinConversationModal') {
-          // console.log("[APP-COMP] message event action ", event.data.action);
-          // console.log("[APP-COMP] message event parameter ", event.data.parameter);
-          this.presentAlertConfirmJoinRequest(event.data.parameter)
-
-
+          console.log("[APP-COMP] message event action ", event.data.action);
+          console.log("[APP-COMP] message event parameter ", event.data.parameter);
+          this.presentAlertConfirmJoinRequest(event.data.parameter, event.data.calledBy)
+        }
+      }
+      if (event && event.data && event.data.action && event.data.text) {
+        if (event.data.action === "display_toast_join_complete") {
+          this.presentToastJoinComplete(event.data.text)
         }
       }
     })
-
   }
 
-  async presentAlertConfirmJoinRequest(requestid) {
+  async presentToastJoinComplete(text) {
+    const toast = await this.toastController.create({
+      message: text,
+      duration: 2000,
+      color: "success"
+    });
+    toast.present();
+  }
+
+  async presentAlertConfirmJoinRequest(requestid, calledby) {
     var iframeWin = <HTMLIFrameElement>document.getElementById("unassigned-convs-iframe")
     // console.log("[APP-COMP] message event iframeWin ", iframeWin);
 
@@ -304,7 +315,7 @@ export class AppComponent implements OnInit {
             // console.log('Confirm Okay');
 
             if (isIFrame(iframeWin) && iframeWin.contentWindow) {
-              const msg = { action: "joinConversation", parameter: requestid }
+              const msg = { action: "joinConversation", parameter: requestid, calledBy: calledby }
               iframeWin.contentWindow.postMessage(msg, '*');
             }
           }
