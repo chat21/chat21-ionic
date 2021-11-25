@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,6 +27,8 @@ export class ProjectItemComponent implements OnInit {
   currentUserId: string;
   public translationMap: Map<string, string>;
   private logger: LoggerService = LoggerInstance.getInstance();
+  window_width_is_60: boolean;
+  newInnerWidth: any;
 
   constructor(
     public wsService: WebsocketService,
@@ -42,6 +44,7 @@ export class ProjectItemComponent implements OnInit {
     this.getStoredCurrenUser();
     this.translations();
     this.listenToPostMsgs();
+    this.onInitWindowWidth();
   }
 
   listenToPostMsgs() {
@@ -55,7 +58,6 @@ export class ProjectItemComponent implements OnInit {
         }
       }
     })
-
   }
 
   public translations() {
@@ -65,6 +67,31 @@ export class ProjectItemComponent implements OnInit {
       'Busy'
     ];
     this.translationMap = this.translateService.translateLanguage(keys);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.newInnerWidth = event.target.innerWidth;
+    this.logger.log('[PROJECTS-X-PANEL] - INNER WIDTH ', this.newInnerWidth)
+
+    if (this.newInnerWidth <= 150) {
+      this.window_width_is_60 = true;
+    } else {
+      this.window_width_is_60 = false;
+    }
+  }
+
+  onInitWindowWidth(): any {
+    const actualWidth = window.innerWidth;
+    this.logger.log('[PROJECTS-X-PANEL] - ACTUAL Width ', actualWidth);
+
+
+    // if (actualWidth <= 60) {
+    if (actualWidth <= 150) {
+      this.window_width_is_60 = true;
+    } else {
+      this.window_width_is_60 = false;
+    }
   }
 
 
