@@ -55,7 +55,7 @@ export class ConversationListPage implements OnInit {
   public showPlaceholder = true;
   public numberOpenConv = 0;
   public loadingIsActive = true;
-  public supportMode = environment.supportMode;
+  public supportMode: boolean;
 
   public convertMessage = convertMessage;
   private isShowMenuPage = false;
@@ -90,6 +90,7 @@ export class ConversationListPage implements OnInit {
     public appConfigProvider: AppConfigProvider,
     public platform: Platform,
     private networkService: NetworkService,
+   
   ) {
     this.listenToAppCompConvsLengthOnInitConvs();
     this.listenToLogoutEvent();
@@ -101,11 +102,17 @@ export class ConversationListPage implements OnInit {
   // -----------------------------------------------
   // @ Lifehooks
   // -----------------------------------------------
-  ngOnInit() { 
-    this.watchToConnectionStatus()
+  ngOnInit() {
+    this.watchToConnectionStatus();
+    this.getSupportMode();
   }
 
-watchToConnectionStatus() {
+  getSupportMode() {
+    this.supportMode = this.appConfigProvider.getConfig().supportMode;
+    console.log('[ION-LIST-CONVS-COMP] - supportMode ', this.supportMode)
+  }
+
+  watchToConnectionStatus() {
     this.networkService.checkInternetFunc().subscribe(isOnline => {
       this.checkInternet = isOnline
       this.logger.log('[ION-LIST-CONVS-COMP] - watchToConnectionStatus - isOnline', this.checkInternet)
@@ -158,7 +165,7 @@ watchToConnectionStatus() {
   // Opens the Unassigned Conversations iframe
   // ---------------------------------------------------------
   openUnassignedConversations(UNASSIGNED_CONVS_URL) {
-   
+
     if (checkPlatformIsMobile()) {
       presentModal(this.modalController, UnassignedConversationsPage, { unassigned_convs_url: UNASSIGNED_CONVS_URL });
     } else {
