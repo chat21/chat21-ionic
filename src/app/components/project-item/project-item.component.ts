@@ -50,7 +50,7 @@ export class ProjectItemComponent implements OnInit {
   listenToPostMsgs() {
     window.addEventListener("message", (event) => {
       // console.log("[PROJECT-ITEM] post message event ", event);
-    
+
       if (event && event.data && event.data) {
         // console.log("[APP-COMP] message event data  ", event.data);
         if (event.data === 'hasChangedProject') {
@@ -114,15 +114,23 @@ export class ProjectItemComponent implements OnInit {
   }
 
   getLastProjectStoredAndSubscToWSAvailabilityAndConversations() {
-    const stored_project = localStorage.getItem('last_project')
+    let stored_project = ''
+    try {
+      stored_project = localStorage.getItem('last_project')
+    } catch (err) {
+      console.log('Get loacal storage item LAST PROJECT ', err)
+    }
+
+
     if (!stored_project) {
+      console.log('PROJECT-ITEM - THERE IS NOT STORED LAST PROJECT ', stored_project)
       const tiledeskToken = this.appStorageService.getItem('tiledeskToken');
       this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - tiledeskToken', tiledeskToken);
       this.tiledeskService.getProjects(tiledeskToken).subscribe(projects => {
         this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES', projects);
         this.project = projects[0];
         this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES this.project', this.project);
-        
+
         localStorage.setItem('last_project', JSON.stringify(projects[0]))
         this.doProjectSubscriptions(this.project)
 
@@ -137,13 +145,13 @@ export class ProjectItemComponent implements OnInit {
 
 
     if (stored_project) {
-      // this.logger.log('PROJECT-ITEM STORED LAST PROJECT ', stored_project)
+      console.log('PROJECT-ITEM - THERE IS STORED LAST PROJECT ', stored_project)
       this.project = JSON.parse(stored_project)
       this.doProjectSubscriptions(this.project)
       this.logger.log('[PROJECT-ITEM] - LAST PROJECT PARSED ', this.project)
     }
 
- 
+
   }
 
   doProjectSubscriptions(project) {
@@ -208,7 +216,7 @@ export class ProjectItemComponent implements OnInit {
 
         if (this.project['id_project']._id === projectUser.id_project) {
           this.project['ws_projct_user_available'] = projectUser.user_available;
-          this.project['ws_projct_user_isBusy'] = projectUser['isBusy']
+          // this.project['ws_projct_user_isBusy'] = projectUser['isBusy']
         }
 
       }, (error) => {

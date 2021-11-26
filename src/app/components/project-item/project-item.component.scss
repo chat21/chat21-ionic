@@ -6,9 +6,13 @@
     padding-bottom: 0px !important;
     background: #fff;
     padding-left: 0px;
-    min-height: 70px;
-    height: 70px;
     width: 100%;
+    // min-height: 70px;
+    // height: 70px;
+    min-height: 55px;
+    height: 55px;
+    position: relative;
+    top: -4px;
 }
 
 .main-content-project-for-panel:hover {
@@ -283,6 +287,9 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     font-family: Helvetica, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    position: relative;
+    top: -1px;
 }
 
 // .im-available-project-for-panel {
@@ -290,18 +297,26 @@
 // }
 
 .availabily-and-busy-wpr {
-    margin-top: 6px;
+    // margin-top: 6px;
+    margin-top: 4px;
     margin-left: 11px;
+}
+
+.availabily---wpr {
+    display: inline-block;
+    position: relative;
+    top: -4px;
+    margin-right: 6px;
 }
 
 .availibility-status-text {
     font-family: Helvetica, Helvetica, Arial, sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     margin-left: 3px;
-    position: relative;
-    top: -4px;
     display: inline-block;
-    min-width: 74px;
+    min-width: 85px;
+    position: relative;
+    top: -5px;
 }
 
 .online-text-color {
@@ -321,9 +336,12 @@
 
 .project-item--isBusy-icon {
     border-radius: 50%;
-    background-color: #fedd00;
-    font-size: 18px;
+    background-color: rgb(254,185,44);
+    font-size: 14px;
     color: #fff;
+    position: relative;
+    top: -1px;
+    // margin-left: 8px;
 }
 
 .project-item--isBusy-busy-text {
@@ -384,14 +402,18 @@
 
 .unassigned-notifications-badge {
     position: absolute;
-    top: 12px;
+    // top: 12px;
+    top: 14px;
     border-radius: 50%;
     background: #e41e3f;
-    width: 24px;
-    height: 24px;
+    // width: 24px;
+    // height: 24px;
+    width: 22px;
+    height: 22px;
     color: #fff;
-    left: 28px;
-    border: 2px solid #fff
+    // left: 28px;
+    left: 32px;
+    border: 1px solid #fff;
 }
 .notification-count {
     font-size: 12px;
@@ -488,10 +510,62 @@
 // ------------------------------------------------------------------
 // on-off availability switch btn // https://proto.io/freebies/onoff/
 // ------------------------------------------------------------------
+// .onoffswitch {
+//     display: inline-block;
+//     position: relative;
+//     width: 36px;
+//     -webkit-user-select: none;
+//     -moz-user-select: none;
+//     -ms-user-select: none;
+// }
+// .onoffswitch-checkbox {
+//     position: absolute;
+//     opacity: 0;
+//     pointer-events: none;
+// }
+// .onoffswitch-label {
+//     display: block;
+//     overflow: hidden;
+//     cursor: pointer;
+//     height: 18px;
+//     padding: 0;
+//     line-height: 18px;
+//     border: 0px solid #ffffff;
+//     border-radius: 20px;
+//     background-color: #eeeeee;
+// }
+// .onoffswitch-label:before {
+//     content: "";
+//     display: block;
+//     width: 20px;
+//     margin: -1px;
+//     background: #f44336;
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     // right: 14px;
+//     border-radius: 20px;
+//     // box-shadow: 0 6px 12px 0px #757575;
+// }
+// .onoffswitch-checkbox:checked + .onoffswitch-label {
+//     background-color: #eeeeee;
+// }
+// .onoffswitch-checkbox:checked + .onoffswitch-label,
+// .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+//     border-color: #eeeeee;
+// }
+// .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+//     margin-left: 0;
+// }
+// .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+//     right: 0px;
+//     background-color: #4caf50;
+//     // box-shadow: 3px 6px 18px 0px rgba(0, 0, 0, 0.2);
+// }
+
 .onoffswitch {
-    display: inline-block;
     position: relative;
-    width: 36px;
+    width: 30px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -505,24 +579,24 @@
     display: block;
     overflow: hidden;
     cursor: pointer;
-    height: 18px;
+    height: 8px;
     padding: 0;
-    line-height: 18px;
+    line-height: 8px;
     border: 0px solid #ffffff;
-    border-radius: 20px;
+    border-radius: 16px;
     background-color: #eeeeee;
 }
 .onoffswitch-label:before {
     content: "";
     display: block;
-    width: 20px;
-    margin: -1px;
+    width: 16px;
+    margin: -4px;
     background: #f44336;
     position: absolute;
     top: 0;
     bottom: 0;
-    // right: 14px;
-    border-radius: 20px;
+    right: 18px;
+    border-radius: 16px;
     // box-shadow: 0 6px 12px 0px #757575;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label {
@@ -539,4 +613,57 @@
     right: 0px;
     background-color: #4caf50;
     // box-shadow: 3px 6px 18px 0px rgba(0, 0, 0, 0.2);
+}
+
+// -----------------------
+// i on-off switch
+// -----------------------
+.i_onoffswitch {
+    position: relative;
+    width: 33px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+.i_onoffswitch-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.i_onoffswitch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    height: 18px;
+    padding: 0;
+    line-height: 18px;
+    // border: 1px solid #e3e3e3;
+    border-radius: 18px;
+    background-color: #f44336;
+    transition: background-color 0.3s ease-in;
+}
+.i_onoffswitch-label:before {
+    content: "";
+    display: block;
+    // width: 18px;
+    width: 16px;
+    margin: 0px;
+    background: #ffffff;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 15px;
+    border: 1px solid #e3e3e3;
+    border-radius: 18px;
+    transition: all 0.3s ease-in 0s;
+}
+.i_onoffswitch-checkbox:checked + .i_onoffswitch-label {
+    background-color: #4caf50;
+}
+.i_onoffswitch-checkbox:checked + .i_onoffswitch-label,
+.i_onoffswitch-checkbox:checked + .i_onoffswitch-label:before {
+    border-color: #4caf50;
+}
+.i_onoffswitch-checkbox:checked + .i_onoffswitch-label:before {
+    right: 0px;
 }

@@ -15,7 +15,7 @@
               <div class="flex-child-left">
                 <!-- padding:6px; background: rgb(31,107,192); -->
                 <div class="unassigned-notifications-icon-wpr">
-                  <svg viewBox="0 0 28 28" alt="" class="a8c37x1j ms05siws hwsy1cff b7h9ocf4 fzdkajry" height="40"
+                  <!-- <svg viewBox="0 0 28 28" alt="" class="a8c37x1j ms05siws hwsy1cff b7h9ocf4 fzdkajry" height="40"
                     width="40"
                     style="vertical-align: middle;border-radius: 50%;">
                     <style type="text/css">
@@ -26,20 +26,39 @@
                     <path class="notifications-icons"
                       d="M7.847 23.488C9.207 23.488 11.443 23.363 14.467 22.806 13.944 24.228 12.581 25.247 10.98 25.247 9.649 25.247 8.483 24.542 7.825 23.488L7.847 23.488ZM24.923 15.73C25.17 17.002 24.278 18.127 22.27 19.076 21.17 19.595 18.724 20.583 14.684 21.369 11.568 21.974 9.285 22.113 7.848 22.113 7.421 22.113 7.068 22.101 6.79 22.085 4.574 21.958 3.324 21.248 3.077 19.976 2.702 18.049 3.295 17.305 4.278 16.073L4.537 15.748C5.2 14.907 5.459 14.081 5.035 11.902 4.086 7.022 6.284 3.687 11.064 2.753 15.846 1.83 19.134 4.096 20.083 8.977 20.506 11.156 21.056 11.824 21.986 12.355L21.986 12.356 22.348 12.561C23.72 13.335 24.548 13.802 24.923 15.73Z">
                     </path>
+                  </svg> -->
+
+                  <!-- <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="bell"
+                    class="svg-inline--fa fa-bell fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512" height="auto" width="24px">
+                    <path fill="currentColor"
+                      d="M439.39 362.29c-19.32-20.76-55.47-51.99-55.47-154.29 0-77.7-54.48-139.9-127.94-155.16V32c0-17.67-14.32-32-31.98-32s-31.98 14.33-31.98 32v20.84C118.56 68.1 64.08 130.3 64.08 208c0 102.3-36.15 133.53-55.47 154.29-6 6.45-8.66 14.16-8.61 21.71.11 16.4 12.98 32 32.1 32h383.8c19.12 0 32-15.6 32.1-32 .05-7.55-2.61-15.27-8.61-21.71zM67.53 368c21.22-27.97 44.42-74.33 44.53-159.42 0-.2-.06-.38-.06-.58 0-61.86 50.14-112 112-112s112 50.14 112 112c0 .2-.06.38-.06.58.11 85.1 23.31 131.46 44.53 159.42H67.53zM224 512c35.32 0 63.97-28.65 63.97-64H160.03c0 35.35 28.65 64 63.97 64z">
+                    </path>
+                  </svg> -->
+
+                  <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"
+                    class="style-scope yt-icon"
+                    style="pointer-events: none; width: 37px; height:auto; fill: rgb(107,107,107);margin-left:4px">
+                    <g class="style-scope yt-icon">
+                      <path
+                        d="M10,20h4c0,1.1-0.9,2-2,2S10,21.1,10,20z M20,17.35V19H4v-1.65l2-1.88v-5.15c0-2.92,1.56-5.22,4-5.98V3.96 c0-1.42,1.49-2.5,2.99-1.76C13.64,2.52,14,3.23,14,3.96l0,0.39c2.44,0.75,4,3.06,4,5.98v5.15L20,17.35z M19,17.77l-2-1.88v-5.47 c0-2.47-1.19-4.36-3.13-5.1c-1.26-0.53-2.64-0.5-3.84,0.03C8.15,6.11,7,7.99,7,10.42v5.47l-2,1.88V18h14V17.77z"
+                        class="style-scope yt-icon"></path>
+                    </g>
                   </svg>
+
                 </div>
                 <div class="unassigned-notifications-badge">
                   <!-- || currentUserRequestCount > 0  -->
                   <!-- <span *ngIf="unservedRequestCount > 0 "> -->
-                    <!-- + currentUserRequestCount -->
-                    <span class="notification-count">{{ unservedRequestCount }}</span>
+                  <!-- + currentUserRequestCount -->
+                  <span class="notification-count">{{ unservedRequestCount }}</span>
                   <!-- </span> -->
-                
+
                 </div>
 
               </div>
 
-              
+
               <div class="flex-child-right" *ngIf="!window_width_is_60">
                 <div class="project-name-project-for-panel">
                   {{ project?.id_project?.name }}
@@ -62,12 +81,27 @@
                   </span>
                 </div> -->
                 <div class="availabily-and-busy-wpr">
-                  <div class="onoffswitch"
+                  <!-- <div class="onoffswitch"
                     (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)">
                     <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch"
                       tabindex="0" [checked]="project?.ws_projct_user_available">
                     <label class="onoffswitch-label" for="myonoffswitch"></label>
+                  </div> -->
+                  <div class="availabily---wpr" style=" ">
+                    <!-- <div class="i_onoffswitch"
+                      (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)">
+                      <input type="checkbox" name="i_onoffswitch" class="i_onoffswitch-checkbox"
+                        id="i_switch_availability" tabindex="0" [checked]="project?.ws_projct_user_available">
+                      <label style="margin-bottom: 0px" class="i_onoffswitch-label" for="i_switch_availability"></label>
+                    </div> -->
+
+
+                    <div class="onoffswitch" (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)">
+                      <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0" [checked]="project?.ws_projct_user_available">
+                      <label class="onoffswitch-label" for="myonoffswitch"></label>
                   </div>
+                  </div>
+
 
                   <span *ngIf="project?.ws_projct_user_available === true" class="availibility-status-text"
                     [ngClass]="{'online-text-color' : project?.ws_projct_user_available === true, 'offline-text-color' : project?.ws_projct_user_available === false}"
@@ -84,9 +118,9 @@
                       access_time
                     </span>
                   </div>
-                  <span *ngIf="project?.ws_projct_user_isBusy === true" class="project-item--isBusy-busy-text text-pulse-animation">
+                  <!-- <span *ngIf="project?.ws_projct_user_isBusy === true" class="project-item--isBusy-busy-text text-pulse-animation">
                     {{translationMap.get('Busy')}}
-                  </span>
+                  </span> -->
                 </div>
 
               </div>
