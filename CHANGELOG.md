@@ -4,6 +4,7 @@
 - Outsources the websocket URL to environments
 - Improves the graphic of the element, positioned at the top of the conversation list, which displays the number of new conversations
 - Adds "wsUrl" property to env.sample, chat-config-template.json and chat-config.json
+- Updates environments with "wsUrl" property
 
 ### 3.0.59-rc5
 - Display a "toast message" of success after that the agent has joined to an unassigned conversation and other minor improvements
