@@ -145,7 +145,7 @@ export class ProjectItemComponent implements OnInit {
 
 
     if (stored_project) {
-      console.log('PROJECT-ITEM - THERE IS STORED LAST PROJECT ', stored_project)
+      this.logger.log('PROJECT-ITEM - THERE IS STORED LAST PROJECT ', stored_project)
       this.project = JSON.parse(stored_project)
       this.doProjectSubscriptions(this.project)
       this.logger.log('[PROJECT-ITEM] - LAST PROJECT PARSED ', this.project)

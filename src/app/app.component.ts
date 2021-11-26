@@ -261,12 +261,12 @@ export class AppComponent implements OnInit {
 
   listenToPostMsgs() {
     window.addEventListener("message", (event) => {
-      console.log("[APP-COMP] message event ", event);
+      // console.log("[APP-COMP] message event ", event);
 
       if (event && event.data && event.data.action && event.data.parameter) {
         if (event.data.action === 'openJoinConversationModal') {
-          console.log("[APP-COMP] message event action ", event.data.action);
-          console.log("[APP-COMP] message event parameter ", event.data.parameter);
+          // console.log("[APP-COMP] message event action ", event.data.action);
+          // console.log("[APP-COMP] message event parameter ", event.data.parameter);
           this.presentAlertConfirmJoinRequest(event.data.parameter, event.data.calledBy)
         }
       }
@@ -531,7 +531,9 @@ export class AppComponent implements OnInit {
   // }
 
   connetWebsocket(tiledeskToken) {
-    const WS_URL = 'wss://tiledesk-server-pre.herokuapp.com/' + '?token=' + tiledeskToken
+    const appconfig = this.appConfigProvider.getConfig();
+    this.logger.log('connetWebsocket appconfig wsUrl ', appconfig.wsUrl)
+    const WS_URL = appconfig.wsUrl + '?token=' + tiledeskToken
     this.webSocketJs.init(
       WS_URL,
       undefined,
@@ -1013,7 +1015,7 @@ export class AppComponent implements OnInit {
   // https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event
   @HostListener('window:storage', ['$event'])
   onStorageChanged(event: any) {
-    // console.log('[APP-COMP] - onStorageChanged event ', event)
+    
     if (event.key !== 'chat_sv5__tiledeskToken') {
       return;
     }
@@ -1052,7 +1054,4 @@ export class AppComponent implements OnInit {
       }
     }
   }
-
-
-
 }
