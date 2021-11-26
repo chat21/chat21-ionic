@@ -23,7 +23,7 @@
     },
     "apiUrl": "http://localhost:3000/",
     "baseImageUrl": "https://firebasestorage.googleapis.com/v0/b/",
-    "dashboardUrl": "http://localhost:4500/",
+    "dashboardUrl": "https://support-pre.tiledesk.com/dashboard/",
     "wsUrl": "ws://localhost:3000/"
 
 }
