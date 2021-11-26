@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc7
+- Fixes the bug "Cannot read properties of undefined (reading 'get')" in component template showing the number of new conversations
+
 ### 3.0.59-rc6
 - Outsources the websocket URL to environments
 - Improves the graphic of the element, positioned at the top of the conversation list, which displays the number of new conversations
