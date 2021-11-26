@@ -2,6 +2,7 @@
 
 ### 3.0.59-rc7
 - Fixes the bug "Cannot read properties of undefined (reading 'get')" in component template showing the number of new conversations
+- Fixes the bug: the value of the "supportMode" property is passed hard-coded
 
 ### 3.0.59-rc6
 - Outsources the websocket URL to environments
