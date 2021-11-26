@@ -78,8 +78,9 @@ export class IonListConversationsComponent extends ListConversationsComponent im
     this.isApp = this.platform.is('ios') || this.platform.is('android')
     this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - IS-APP ', this.isApp)
     this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - Platform', this.platform.platforms());
-   
   }
+
+ 
 
 
 

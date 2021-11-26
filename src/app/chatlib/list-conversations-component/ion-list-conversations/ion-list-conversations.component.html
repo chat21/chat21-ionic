@@ -74,6 +74,7 @@
   </ion-item-options>
 </ion-item-sliding> -->
 
+
 <ion-item button="true" lines="none" class="ion-no-padding" [class.ion-selected]="conversation.uid === uidConvSelected"
   *ngFor="let conversation of listConversations" (click)="openConversationByID(conversation)" detail=false>
   <div tabindex="0"></div>
@@ -117,7 +118,8 @@
   <ion-note *ngIf="!conversation.archived" class="conversation_time">{{conversation.timestamp | amTimeAgo}}</ion-note>
 
   <ion-buttons slot="end">
-    <ion-button *ngIf="!conversation.archived" [ngClass]="{'hide': !isApp, 'button-on-desktop': !isApp, 'button-on-mobile': isApp  }"
+    <ion-button *ngIf="!conversation.archived"
+      [ngClass]="{'hide': !isApp, 'button-on-desktop': !isApp, 'button-on-mobile': isApp  }"
       id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear
       item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
       <ion-icon slot="icon-only" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}"
@@ -146,7 +148,8 @@
   </div>
 
   <!-- && !conversation?.archived -->
-  <div item-end class="notification_point" [ngClass]="{'notification_point-on-desktop': !isApp, 'notification_point-on-mobile': isApp }"
+  <div item-end class="notification_point"
+    [ngClass]="{'notification_point-on-desktop': !isApp, 'notification_point-on-mobile': isApp }"
     *ngIf="conversation.is_new">
   </div>
 
