@@ -106,12 +106,12 @@
                   <span *ngIf="project?.ws_projct_user_available === true" class="availibility-status-text"
                     [ngClass]="{'online-text-color' : project?.ws_projct_user_available === true, 'offline-text-color' : project?.ws_projct_user_available === false}"
                     (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)">
-                    {{translationMap.get('Available') }}
+                    {{translationMap?.get('Available') }}
                   </span>
                   <span *ngIf="project?.ws_projct_user_available === false" class="availibility-status-text"
                     [ngClass]="{'online-text-color' : project?.ws_projct_user_available === true, 'offline-text-color' : project?.ws_projct_user_available === false}"
                     (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)">
-                    {{translationMap.get('Unavailable')}}
+                    {{translationMap?.get('Unavailable')}}
                   </span>
                   <div class="project-item--isBusy-icon-wpr" *ngIf="project?.ws_projct_user_isBusy === true">
                     <span class="material-icons project-item--isBusy-icon">
