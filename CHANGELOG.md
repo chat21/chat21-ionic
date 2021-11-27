@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc8
+- Changes the title of the modal window showing unassigned conversations from "Unassigned Conversations" to "New Conversations"
+- Fixes the bug: if the "chatEngine" property value is set to "mqtt" the login modal window does not disappear even if the agent is logged in
+
 ### 3.0.59-rc7
 - Fixes the bug "Cannot read properties of undefined (reading 'get')" in component template showing the number of new conversations
 - Fixes the bug: the value of the "supportMode" property is passed hard-coded
