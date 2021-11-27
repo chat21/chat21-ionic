@@ -186,5 +186,6 @@
   "YouAreAboutToJoinThisChat":"You are about to join this chat",
   "Cancel": "Cancel",
   "AreYouSure":"Are you sure?",
-  "UnassignedConversations":"Unassigned Conversations"
+  "UnassignedConversations":"Unassigned Conversations",
+  "NewConversations": "Nuove conversazioni"
 }

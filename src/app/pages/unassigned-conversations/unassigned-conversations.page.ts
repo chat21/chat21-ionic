@@ -29,7 +29,7 @@ export class UnassignedConversationsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    const keys = ['UnassignedConversations'];
+    const keys = ['UnassignedConversations', 'NewConversations'];
     this.translationMap = this.translateService.translateLanguage(keys);
 
     this.logger.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL (ngOnInit)', this.unassigned_convs_url);

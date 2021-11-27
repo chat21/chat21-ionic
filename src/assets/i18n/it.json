@@ -194,5 +194,6 @@
     "YouAreAboutToJoinThisChat":"Stai per entrare in questa chat",
     "Cancel": "Annulla",
     "AreYouSure":"Sei sicuro?",
-    "UnassignedConversations":"Conversazioni non assegnate"
+    "UnassignedConversations":"Conversazioni non assegnate",
+    "NewConversations": "New conversations"
 }
