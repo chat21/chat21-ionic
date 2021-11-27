@@ -1,7 +1,7 @@
 # chat21-ionic ver 3.0
 
 ### 3.0.58.1
-Fix the bug: if the "chatEngine" property value is set to "mqtt "the login modal window does not disappear even if the agent is logged in
+- Fix the bug: if the "chatEngine" property value is set to "mqtt "the login modal window does not disappear even if the agent is logged in
 
 ### 3.0.58
 - Changes the logic with which the 'online' / 'offline' event is published (done before by the onAuthStateChanged() method)
