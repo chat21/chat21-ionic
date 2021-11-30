@@ -336,7 +336,7 @@
 
 .project-item--isBusy-icon {
     border-radius: 50%;
-    background-color: rgb(254,185,44);
+    background-color:#FEB92C;
     font-size: 14px;
     color: #fff;
     position: relative;
@@ -346,8 +346,8 @@
 
 .project-item--isBusy-busy-text {
     font-family: Helvetica, Helvetica, Arial, sans-serif;
-    font-size: 13px;
-    margin-left: 3px;
+    font-size: 11px;
+    // margin-left: 3px;
     position: relative;
     top: -4px;
 }
@@ -360,37 +360,37 @@
 
 @keyframes pulse {
     0% {
-        color: transparent;
+        color: #999999;
     }
     50% {
-        color: #fedd00;
+        color: #FEB92C;
     }
     100% {
-        color: transparent;
+        color: #999999;
     }
 }
 /* Firefox */
 @-moz-keyframes pulse {
     0% {
-        color: transparent;
+        color: #999999;
     }
     50% {
-        color: #fedd00;
+        color: #FEB92C;
     }
     100% {
-        color: transparent;
+        color: #999999;
     }
 }
 /* Safari and Chrome */
 @-webkit-keyframes pulse {
     0% {
-        color: transparent;
+        color: #999999;
     }
     50% {
-        color: #fedd00;
+        color: #FEB92C;
     }
     100% {
-        color: transparent;
+        color: #999999;
     }
 }
 
