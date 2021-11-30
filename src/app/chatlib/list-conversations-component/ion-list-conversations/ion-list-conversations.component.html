@@ -134,14 +134,12 @@
 
   <div item-end *ngIf="conversation?.archived" class="achived-icon-wpr">
     <span *ngIf="(conversation.timestamp | amDateFormat:'YYYY') === currentYear" class="time-in-archived">
-      {{browserLang === 'it' ? (conversation.timestamp| amDateFormat:'DD MMM') : (conversation.timestamp |
-      amDateFormat:'MMM DD')}}
+      {{browserLang === 'en' ? (conversation.timestamp | amDateFormat:'MMM DD') : (conversation.timestamp| amDateFormat:'DD MMM')}}
 
       <!-- {{conversation.timestamp | amDateFormat:'DD MMM'}} -->
     </span>
     <span *ngIf="(conversation.timestamp | amDateFormat:'YYYY') !== currentYear" class="time-in-archived">
-      {{browserLang === 'it' ? (conversation.timestamp| amDateFormat:'DD MMM') : (conversation.timestamp |
-      amDateFormat:'MMM DD YYYY')}}
+      {{browserLang === 'en' ? (conversation.timestamp | amDateFormat:'MMM DD YYYY') : (conversation.timestamp| amDateFormat:'DD MMM YYYY') }}
       <!-- {{conversation.timestamp | amDateFormat:'DD MMM YYYY'}} -->
     </span>
     <i class="material-icons" item-end style="font-size: 15px;font-weight: 400;color: #666666;"> history </i>
