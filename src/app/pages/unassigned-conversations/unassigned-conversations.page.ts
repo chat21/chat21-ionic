@@ -17,9 +17,12 @@ export class UnassignedConversationsPage implements OnInit {
   @Input() unassigned_convs_url: any;
   unassigned_convs_url_sanitized: any;
   private logger: LoggerService = LoggerInstance.getInstance();
-  has_loaded: boolean;
+  // has_loaded: boolean;
   ion_content: any;
   iframe: any;
+
+  isProjectsForPanel: boolean = false
+
   public translationMap: Map<string, string>;
   constructor(
     private modalController: ModalController,
@@ -31,13 +34,15 @@ export class UnassignedConversationsPage implements OnInit {
   ngOnInit() {
     const keys = ['UnassignedConversations', 'NewConversations'];
     this.translationMap = this.translateService.translateLanguage(keys);
+    this.buildIFRAME();
+    this.listenToPostMsg();
+  }
 
+  buildIFRAME() {
     this.logger.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL (ngOnInit)', this.unassigned_convs_url);
-    // this.unassigned_convs_url_sanitized = this.sanitizer.bypassSecurityTrustResourceUrl(this.unassigned_convs_url);
-    // this.unassigned_convs_url_sanitized = this.sanitizer.bypassSecurityTrustHtml(this.unassigned_convs_url);
     this.unassigned_convs_url_sanitized = this.sanitizer.sanitize(SecurityContext.URL, this.unassigned_convs_url)
     this.logger.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL SANITIZED (ngOnInit)', this.unassigned_convs_url_sanitized);
-    this.has_loaded = false
+    // this.has_loaded = false
 
     this.ion_content = document.getElementById("iframe-ion-content");
     this.iframe = document.createElement("iframe");
@@ -50,41 +55,39 @@ export class UnassignedConversationsPage implements OnInit {
     this.iframe.style.background = "white";
     this.ion_content.appendChild(this.iframe);
 
-    // }
-
-    // window.addEventListener("message", (event) => {
-    //   console.log("[UNASSIGNED-CONVS-PAGE] message event ", event);
-
-    //   if (event && event.data) {
-    //     if (event.data === 'finished') {
-    //       this.has_loaded = true
-
-    //     }
-    //   }
-    // });
-
+  //  this.getIframeHaLoaded()
   }
 
-  
+  getIframeHaLoaded() {
+    var self = this;
+    var iframe = document.getElementById('unassigned-convs-iframe') as HTMLIFrameElement;;
+    this.logger.log('[APP-STORE-INSTALL] GET iframe ', iframe)
+    if (iframe) {
+      iframe.addEventListener("load", function () {
+        self.logger.log("[APP-STORE-INSTALL] GET - Finish");
+        let spinnerElem = <HTMLElement>document.querySelector('.stretchspinner-unassigned-convs')
+        
+        self.logger.log('[APP-STORE-INSTALL] GET iframeDoc readyState spinnerElem', spinnerElem)
+        spinnerElem.classList.add("hide-stretchspinner")
 
-  // getIframeHaLoaded() {
-  //   var self = this;
-  //   var iframe = document.getElementById('i_frame') as HTMLIFrameElement;;
-  //   if (iframe) {
-  //     iframe.addEventListener("load", function () {
-  //       console.log("[UNASSIGNED-CONVS-PAGE] GET - Finish");
-  //       self.has_loaded = true
-    
+      });
+    }
+  }
 
-  //     });
-  //   }
-  // }
+  listenToPostMsg() {
+    window.addEventListener("message", (event) => {
+      // console.log("[UNASSIGNED-CONVS-PAGE] message event ", event);
 
-  //   loadDeferredIframe(unassigned_convs_url_sanitized) {
-  //     // this function will load the Google homepage into the iframe
-  //     var iframe = document.getElementById("my-deferred-iframe");
-  //     iframe.src = "./" // here goes your url
-  // };
+      if (event && event.data) {
+        if (event.data === 'onInitProjectsForPanel') {
+          this.isProjectsForPanel = true;
+        }
+        if (event.data === 'onDestroyProjectsForPanel') {
+          this.isProjectsForPanel = false;
+        }
+      }
+    });
+  }
 
 
   async onClose() {
