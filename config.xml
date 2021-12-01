@@ -2,7 +2,7 @@
 <widget id="chat.tiledesk" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Chat21</name>
     <description>Chat21 is the core of the open source live chat platform</description>
-    <author email="hi@ionicframework.com" href="http://ionicframework.com/">Tiledesk Team</author>
+    <author email="" href="https://tiledesk.com/">Tiledesk Team</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="*" />
