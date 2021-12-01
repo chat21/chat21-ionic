@@ -15,7 +15,7 @@ export class DdpHeaderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('DDP HEADER SUPPORT MODE ', this.supportMode)
+    // console.log('DDP HEADER SUPPORT MODE ', this.supportMode)
   }
 
   // START @Output() //
