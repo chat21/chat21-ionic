@@ -109,7 +109,7 @@ export class ConversationListPage implements OnInit {
 
   getSupportMode() {
     this.supportMode = this.appConfigProvider.getConfig().supportMode;
-    console.log('[ION-LIST-CONVS-COMP] - supportMode ', this.supportMode)
+    // console.log('[ION-LIST-CONVS-COMP] - supportMode ', this.supportMode)
   }
 
   watchToConnectionStatus() {
