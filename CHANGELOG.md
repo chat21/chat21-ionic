@@ -2,6 +2,8 @@
 
 ### 3.0.59-rc9
 - Changes in the archived conversations the date format if the browser language is English
+- Displays the button to open the contact list for direct conversations and the entry at the top of the conversation list showing the number of unassigned conversations for a selected project if the "supportMode" configuration property is set to true
+- Adds a style rule on the unassigned conversations page that changes the background of the "ion-content" if the project list is displayed in the iframe
 
 ### 3.0.59-rc8
 - Changes the title of the modal window showing unassigned conversations from "Unassigned Conversations" to "New Conversations"
