@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc11
+- Fixed bug: the item in the left side panel showing the number of new conversations is not displayed if there are no conversations
+- Removes the "last_project" object and the "contacts" object on logout from local storage
+
 ### 3.0.59-rc10
 - Changes in config.xml the site URL of the author 
 - Changes the splash screen images
