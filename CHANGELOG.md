@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.60-mqtt
+- added support for mqtt/firebase push notifications
+
 ### 3.0.59-rc10
 - Changes in config.xml the site URL of the author 
 - Changes the splash screen images
