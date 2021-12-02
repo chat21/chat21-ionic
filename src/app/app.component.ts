@@ -345,11 +345,11 @@ export class AppComponent implements OnInit {
   /** */
   initializeApp(calledby: string) {
     // this.logger.log('[APP-COMP] - X - initializeApp !!! CALLED-BY: ', calledby);
-    // this.logger.log('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
+    // console.log('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
 
-    if (!this.platform.is('cordova')) {
-      this.splashScreen.show();
-    }
+    // if (!this.platform.is('cordova')) {
+    this.splashScreen.show();
+    // }
     this.tabTitle = document.title;
 
     this.getRouteParamsAndSetLoggerConfig();
@@ -367,12 +367,39 @@ export class AppComponent implements OnInit {
     this.notificationsEnabled = true;
     this.zone = new NgZone({}); // a cosa serve?
 
+    // ------------------------------------------
+    // Platform ready
+    // ------------------------------------------
     this.platform.ready().then(() => {
+      // console.log("Check platform");
+      if (this.platform.is('cordova')) {
+        // console.log("the device running Cordova");
+      }
+      if (!this.platform.is('cordova')) {
+        // console.log("the device Not running Cordova");
+      }
+
+      if (this.platform.is('android')) {
+        // console.log("running on Android device!");
+      }
+      if (this.platform.is('ios')) {
+        // console.log("running on iOS device!");
+      }
+      if (this.platform.is('mobileweb')) {
+        // console.log("running in a browser on mobile!");
+      }
+      if (this.platform.is('desktop')) {
+        // console.log("running on desktop!");
+      }
+      
+
+
+
       this.setLanguage();
 
-      if (this.splashScreen) {
-        this.splashScreen.hide();
-      }
+      // if (this.splashScreen) {
+      this.splashScreen.hide();
+      // }
       this.statusBar.styleDefault();
       this.navService.init(this.sidebarNav, this.detailNav);
       // this.persistence = appconfig.authPersistence;
@@ -1015,7 +1042,7 @@ export class AppComponent implements OnInit {
   // https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event
   @HostListener('window:storage', ['$event'])
   onStorageChanged(event: any) {
-    
+
     if (event.key !== 'chat_sv5__tiledeskToken') {
       return;
     }
