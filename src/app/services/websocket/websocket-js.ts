@@ -78,10 +78,8 @@ export class WebSocketJs {
     this.callbacks.set(topic, { onCreate: onCreate, onUpdate: onUpdate, onData: onData });
     this.logger.log('[WEBSOCKET-JS] - CALLBACK-SET - callbacks', this.callbacks);
 
-    this.logger.log('[WEBSOCKET-JS] - REF - READY STATE ', this.ws.readyState);
-
     if (this.ws && this.ws.readyState == 1) {
-
+      this.logger.log('[WEBSOCKET-JS] - REF - READY STATE ', this.ws.readyState);
       this.logger.log('[WEBSOCKET-JS] - REF - READY STATE = 1 > SUBSCRIBE TO TOPICS ');
 
       this.subscribe(topic);
