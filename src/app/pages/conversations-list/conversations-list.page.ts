@@ -35,7 +35,8 @@ import { Platform } from '@ionic/angular';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { NetworkService } from 'src/app/services/network-service/network.service';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators'
 
 @Component({
   selector: 'app-conversations-list',
@@ -43,7 +44,10 @@ import { NetworkService } from 'src/app/services/network-service/network.service
   styleUrls: ['./conversations-list.page.scss'],
 })
 export class ConversationListPage implements OnInit {
+
   @ViewChild('ioncontentconvlist', { static: false }) ionContentConvList: IonContent;
+
+  private unsubscribe$: Subject<any> = new Subject<any>();
   private subscriptions: Array<string>;
   public tenant: string;
   public loggedUserUid: string;
@@ -72,6 +76,11 @@ export class ConversationListPage implements OnInit {
   public lastProjectId: string;
   public isOnline: boolean = true;
   public checkInternet: boolean;
+
+  public displayNewConvsItem: boolean = true
+
+  
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -90,10 +99,12 @@ export class ConversationListPage implements OnInit {
     public appConfigProvider: AppConfigProvider,
     public platform: Platform,
     private networkService: NetworkService,
-   
+
   ) {
     this.listenToAppCompConvsLengthOnInitConvs();
     this.listenToLogoutEvent();
+    this.listenGoOnline();
+    this.listenGoOffline();
     this.listenToSwPostMessage();
 
   }
@@ -218,11 +229,19 @@ export class ConversationListPage implements OnInit {
 
   private listnerStart() {
     const that = this;
-    this.chatManager.BSStart.subscribe((data: any) => {
-      this.logger.log('[CONVS-LIST-PAGE] ***** BSStart Current user *****', data);
+    this.chatManager.BSStart
+    .pipe(
+      takeUntil(that.unsubscribe$)
+    )
+    .subscribe((data: any) => {
+      console.log('[CONVS-LIST-PAGE] - BSStart SUBSCR DATA - Current user *****', data);
       if (data) {
         that.initialize();
       }
+    }, error => {
+      this.logger.error('[CONVS-LIST-PAGE] - BSStart SUBSCR - ERROR: ', error);
+    }, () => {
+      this.logger.log('[CONVS-LIST-PAGE] - BSStart SUBSCR * COMPLETE *')
     });
   }
 
@@ -259,7 +278,6 @@ export class ConversationListPage implements OnInit {
     if (!this.archivedConversations || this.archivedConversations.length === 0) {
       this.loadingIsActive = false;
     }
-
   }
 
 
@@ -279,9 +297,33 @@ export class ConversationListPage implements OnInit {
     });
   }
 
+  listenGoOnline() {
+   
+    this.events.subscribe('go:online', (goonline) => {
+      this.logger.info('[CONVS-LIST-PAGE] - listen To go:online - goonline', goonline);
+      // this.events.unsubscribe('profileInfoButtonClick:logout')
+      if (goonline === true) {
+        this.displayNewConvsItem = true
+      }
+    });
+  }
+
+  listenGoOffline(){
+ 
+    this.events.subscribe('go:offline', (offline) => {
+      this.logger.info('[CONVS-LIST-PAGE] - listen To go:offline - offline', offline);
+      // this.events.unsubscribe('profileInfoButtonClick:logout')
+      if (offline === true) {
+        this.displayNewConvsItem = false
+      }
+    });
+  }
+
   listenToLogoutEvent() {
     this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
       this.logger.info('[CONVS-LIST-PAGE] - listenToLogoutEvent - hasclickedlogout', hasclickedlogout);
+    
+
       this.conversations = []
       this.conversationsHandlerService.conversations = [];
       this.uidConvSelected = null;

@@ -37,7 +37,7 @@
           <ion-label part="message-text" class="waiting-for-network-msg"> Waiting for network</ion-label>
         </ion-item>
 
-        <ion-item  *ngIf="supportMode" class="ion-no-padding open-iframe-item" style="" 
+        <ion-item  *ngIf="supportMode && displayNewConvsItem" class="ion-no-padding open-iframe-item"
         button="true"
           (click)="openUnsevedConversationIframe()">
           <div tabindex="0"></div>
