@@ -55,9 +55,8 @@ import { getImageUrlThumbFromFirebasestorage } from 'src/chat21-core/utils/utils
 import { TiledeskService } from './services/tiledesk/tiledesk.service';
 import { NetworkService } from './services/network-service/network.service';
 import * as PACKAGE from 'package.json';
-
-import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators'
+import { filter } from 'rxjs/operators'
+import { WebSocketJs } from './services/websocket/websocket-js';
 
 // import { filter } from 'rxjs/operators';
 
@@ -99,8 +98,10 @@ export class AppComponent implements OnInit {
   public missingConnectionToast: any
   public executedInitializeAppByWatchConnection: boolean = false;
   private version: string;
-  private unsubscribe$: Subject<any> = new Subject<any>();
+
   // private isOnline: boolean = false;
+
+  wsService: WebSocketJs;
 
   constructor(
     private platform: Platform,
@@ -136,23 +137,94 @@ export class AppComponent implements OnInit {
     public toastController: ToastController,
     // private network: Network,
     // private tiledeskService: TiledeskService,
-    private networkService: NetworkService
+    private networkService: NetworkService,
+    public webSocketJs: WebSocketJs,
   ) {
-    // this.logger.log('[APP-COMP] HELLO Constuctor !!!!!!!')
-    // HACK: fix toast not presented when offline, due to lazy loading the toast controller.
-    // this.toastController.create({ animated: false }).then(t => {
-    //   console.log('[APP-COMP] toastController create')
-    //   t.present();
-    //   t.dismiss();
+
+    // this.saveInStorageChatOpenedTab();
+    // FOR TEST
+    // const last_project = { "user_available": true, "number_assigned_requests": 59, "last_login_at": "2021-08-09T17:30:55.234Z", "status": "active", "_id": "6112bc8f58c958003495a2cb", "id_project": { "status": 100, "_id": "60ffe291f725db00347661ef", "name": "27-LUGLIO-21-STRIPE-TEST", "activeOperatingHours": false, "createdBy": "608ad02d3a4dc000344ade17", "profile": { "name": "pro", "trialDays": 30, "agents": 5, "type": "payment", "subStart": "2021-11-18T10:42:41.000Z", "subEnd": "2021-11-19T10:42:41.000Z", "subscriptionId": "sub_Jvf4kABe9t8JvX", "last_stripe_event": "invoice.payment_succeeded" }, "versions": 20115, "channels": [{ "name": "chat21" }], "createdAt": "2021-07-27T10:40:17.752Z", "updatedAt": "2021-11-18T11:55:01.346Z", "__v": 0, "widget": { "preChatForm": true, "preChatFormJson": [{ "name": "userFullname", "type": "text", "mandatory": true, "label": { "en": "Your name", "it": "Il tuo nome" } }, { "name": "userEmail", "type": "text", "mandatory": true, "regex": "/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/", "label": { "en": "Your email", "it": "La tua email" }, "errorLabel": { "en": "Invalid email address", "it": "Indirizzo email non valido" } }, { "name": "tel", "mandatory": true, "label": { "en": "Your phone number", "it": "Il tuo numero di telefono" } }], "preChatFormCustomFieldsEnabled": true }, "trialExpired": true, "trialDaysLeft": 84, "isActiveSubscription": true, "id": "60ffe291f725db00347661ef" }, "id_user": "60aa0fef1482fe00346854a7", "role": "admin", "createdBy": "608ad02d3a4dc000344ade17", "createdAt": "2021-08-10T17:51:11.318Z", "updatedAt": "2021-11-19T08:08:21.437Z", "__v": 0, "presence": { "status": "online", "changedAt": "2021-11-19T08:08:21.432Z" }, "isAuthenticated": true, "id": "6112bc8f58c958003495a2cb" }
+    // localStorage.setItem('last_project', JSON.stringify(last_project))
+  }
+  saveInStorageChatOpenedTab() {
+    // if (+localStorage.tabCount > 0) {
+    //   alert('Already open!');
+    // } else {
+    //   localStorage.tabCount = 0;
+    // }
+
+    // window.addEventListener('load', (event) => {
+    //   console.log('[CONVS-LIST-PAGE] page is fully loaded', event);
+    //   // let tab  = + localStorage.getItem('tab')
+    //   // console.log('[CONVS-LIST-PAGE] page is fully loaded getItem tab', + tab);
+    //   // localStorage.setItem('tab', "1" )
+    //   localStorage.tabCount = +localStorage.tabCount + 1;
     // });
+
+    // // https://developers.google.com/web/updates/2018/07/page-lifecycle-api#the-beforeunload-event
+    // const terminationEvent = 'onpagehide' in self ? 'pagehide' : 'unload';
+    // window.addEventListener(terminationEvent, (event) => {
+    //   console.log('[CONVS-LIST-PAGE] page is terminationEvent', event);
+    //   localStorage.tabCount = +localStorage.tabCount - 1;
+    // }, { capture: true });
+    const getState = () => {
+      if (document.visibilityState === 'hidden') {
+        return 'hidden';
+      }
+      if (document.hasFocus()) {
+        return 'active';
+      }
+      return 'passive';
+    };
+
+    let state = getState();
+    console.log('[CONVS-LIST-PAGE] page state ', state)
+    if (state === 'hidden') {
+      localStorage.setItem('hidden', 'true')
+    }
+
+    const logStateChange = (nextState) => {
+      const prevState = state;
+      if (nextState !== prevState) {
+        console.log(`State change: ${prevState} >>> ${nextState}`);
+        state = nextState;
+      }
+    };
+
+    ['pageshow', 'focus', 'blur', 'visibilitychange', 'resume'].forEach((type) => {
+      window.addEventListener(type, () => logStateChange(getState()), { capture: true });
+    });
+
+    // The next two listeners, on the other hand, can determine the next
+    // state from the event itself.
+    window.addEventListener('freeze', () => {
+      // In the freeze event, the next state is always frozen.
+      logStateChange('frozen');
+    }, { capture: true });
+
+    window.addEventListener('pagehide', (event) => {
+      if (event.persisted) {
+        // If the event's persisted property is `true` the page is about
+        // to enter the Back-Forward Cache, which is also in the frozen state.
+        logStateChange('frozen');
+        localStorage.setItem('terminated', 'true')
+      } else {
+        // If the event's persisted property is not `true` the page is
+        // about to be unloaded.
+        logStateChange('terminated');
+        localStorage.setItem('terminated', 'true')
+      }
+    }, { capture: true });
+
   }
 
-  param() {
-    // PARAM
-    const url: URL = new URL(window.top.location.href);
-    const params: URLSearchParams = url.searchParams;
-    return params;
-  }
+
+  // param() {
+  //   // PARAM
+  //   const url: URL = new URL(window.top.location.href);
+  //   const params: URLSearchParams = url.searchParams;
+  //   return params;
+  // }
   /**
    */
   ngOnInit() {
@@ -182,7 +254,79 @@ export class AppComponent implements OnInit {
     }
     this.initializeApp('oninit');
 
+    this.listenToPostMsgs();
   }
+
+
+
+  listenToPostMsgs() {
+    window.addEventListener("message", (event) => {
+      // console.log("[APP-COMP] message event ", event);
+
+      if (event && event.data && event.data.action && event.data.parameter) {
+        if (event.data.action === 'openJoinConversationModal') {
+          // console.log("[APP-COMP] message event action ", event.data.action);
+          // console.log("[APP-COMP] message event parameter ", event.data.parameter);
+          this.presentAlertConfirmJoinRequest(event.data.parameter, event.data.calledBy)
+        }
+      }
+      if (event && event.data && event.data.action && event.data.text) {
+        if (event.data.action === "display_toast_join_complete") {
+          this.presentToastJoinComplete(event.data.text)
+        }
+      }
+    })
+  }
+
+  async presentToastJoinComplete(text) {
+    const toast = await this.toastController.create({
+      message: text,
+      duration: 2000,
+      color: "success"
+    });
+    toast.present();
+  }
+
+  async presentAlertConfirmJoinRequest(requestid, calledby) {
+    var iframeWin = <HTMLIFrameElement>document.getElementById("unassigned-convs-iframe")
+    // console.log("[APP-COMP] message event iframeWin ", iframeWin);
+
+    const isIFrame = (input: HTMLElement | null): input is HTMLIFrameElement =>
+      input !== null && input.tagName === 'IFRAME';
+
+    const keys = ['YouAreAboutToJoinThisChat', 'Cancel', 'AreYouSure'];
+    const translationMap = this.translateService.translateLanguage(keys);
+
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: translationMap.get('AreYouSure'),
+      message: translationMap.get('YouAreAboutToJoinThisChat'),
+      buttons: [
+        {
+          text: translationMap.get('Cancel'),
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            // console.log('Confirm Cancel: blah', blah);
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            // console.log('Confirm Okay');
+
+            if (isIFrame(iframeWin) && iframeWin.contentWindow) {
+              const msg = { action: "joinConversation", parameter: requestid, calledBy: calledby }
+              iframeWin.contentWindow.postMessage(msg, '*');
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+
 
 
   signInWithCustomToken(token) {
@@ -352,6 +496,7 @@ export class AppComponent implements OnInit {
   /**------- AUTHENTICATION FUNCTIONS --> START <--- +*/
   private initAuthentication() {
     const tiledeskToken = this.appStorageService.getItem('tiledeskToken')
+
     this.logger.log('[APP-COMP] >>> INIT-AUTHENTICATION !!! ')
     this.logger.log('[APP-COMP] >>> initAuthentication tiledeskToken ', tiledeskToken)
     // const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
@@ -360,19 +505,19 @@ export class AppComponent implements OnInit {
       this.logger.log('[APP-COMP] >>> initAuthentication I LOG IN WITH A TOKEN EXISTING IN THE LOCAL STORAGE OR WITH A TOKEN PASSED IN THE URL PARAMETERS <<<')
       this.tiledeskAuthService.signInWithCustomToken(tiledeskToken).then(user => {
         this.logger.log('[APP-COMP] >>> initAuthentication user ', user)
-        this.messagingAuthService.createCustomToken(tiledeskToken) 
+        this.messagingAuthService.createCustomToken(tiledeskToken)
       }).catch(error => {
         this.logger.error('[APP-COMP] initAuthentication SIGNINWITHCUSTOMTOKEN error::', error)
       })
     } else {
       this.logger.warn('[APP-COMP] >>> I AM NOT LOGGED IN <<<')
-      
+
       // clearTimeout(this.timeModalLogin);
       // this.timeModalLogin = setTimeout(() => {
-        if (!this.hadBeenCalledOpenModal) {
-          this.authModal = this.presentModal('initAuthentication');
-          this.hadBeenCalledOpenModal = true;
-        }
+      if (!this.hadBeenCalledOpenModal) {
+        this.authModal = this.presentModal('initAuthentication');
+        this.hadBeenCalledOpenModal = true;
+      }
       // }, 1000);
     }
   }
@@ -385,6 +530,18 @@ export class AppComponent implements OnInit {
   //   }
   // }
 
+  connetWebsocket(tiledeskToken) {
+    const appconfig = this.appConfigProvider.getConfig();
+    this.logger.log('connetWebsocket appconfig wsUrl ', appconfig.wsUrl)
+    const WS_URL = appconfig.wsUrl + '?token=' + tiledeskToken
+    this.webSocketJs.init(
+      WS_URL,
+      undefined,
+      undefined,
+      undefined
+    );
+  }
+
   /**
    * goOnLine:
    * 1 - nascondo splashscreen
@@ -396,8 +553,10 @@ export class AppComponent implements OnInit {
     // this.isOnline = true;
     // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - GO-ONLINE isOnline ', this.isOnline);
 
-    clearTimeout(this.timeModalLogin);
+    // clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
+    this.connetWebsocket(tiledeskToken)
+
     const currentUser = this.tiledeskAuthService.getCurrentUser();
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
     this.logger.log('[APP-COMP] - GO-ONLINE - currentUser ', currentUser);
@@ -429,8 +588,16 @@ export class AppComponent implements OnInit {
     this.chatManager.startApp();
   }
 
+
+  webSocketClose() {
+    this.logger.log('[APP-COMP] - GO-OFFLINE - webSocketClose');
+    this.webSocketJs.close()
+  }
+
   goOffLine = () => {
     this.logger.log('[APP-COMP] - GO-OFFLINE');
+
+    this.webSocketClose()
     // this.isOnline = false;
     // this.conversationsHandlerService.conversations = [];
 
@@ -439,13 +606,13 @@ export class AppComponent implements OnInit {
     this.chatManager.goOffLine();
 
     this.router.navigateByUrl('conversation-detail/'); //redirect to basePage
-   
+
     // clearTimeout(this.timeModalLogin);
     // this.timeModalLogin = setTimeout(() => {
-      if (!this.hadBeenCalledOpenModal) {
-        this.authModal = this.presentModal('goOffLine');
-        this.hadBeenCalledOpenModal = true
-      }
+    if (!this.hadBeenCalledOpenModal) {
+      this.authModal = this.presentModal('goOffLine');
+      this.hadBeenCalledOpenModal = true
+    }
     // }, 1000);
 
     // this.unsubscribe$.next();
@@ -601,8 +768,8 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    this.BSAuthStateChangedSubscriptionRef = this.messagingAuthService.BSAuthStateChanged 
-   
+    this.BSAuthStateChangedSubscriptionRef = this.messagingAuthService.BSAuthStateChanged
+
       // .pipe(takeUntil(this.unsubscribe$))
       .pipe(filter((state) => state !== null))
       .subscribe((state: any) => {
@@ -848,7 +1015,7 @@ export class AppComponent implements OnInit {
   // https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event
   @HostListener('window:storage', ['$event'])
   onStorageChanged(event: any) {
-    // console.log('[APP-COMP] - onStorageChanged event ', event)
+    
     if (event.key !== 'chat_sv5__tiledeskToken') {
       return;
     }
@@ -877,7 +1044,7 @@ export class AppComponent implements OnInit {
         // this.unsubscribe$.complete();
         this.initializeApp('onstoragechanged');
 
-       
+
 
         // console.log('[APP-COMP]  onAuthStateChanged HERE !!! ')
         // firebase.auth().onAuthStateChanged(user => {
@@ -887,7 +1054,4 @@ export class AppComponent implements OnInit {
       }
     }
   }
-
-
-
 }

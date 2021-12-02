@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastController, IonInput } from '@ionic/angular';
 import { AppConfigProvider } from '../../../services/app-config';
 
+
 // Logger
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
@@ -59,7 +60,7 @@ export class LoginComponent implements OnInit {
     this.buildForm();
     this.DASHBOARD_URL = this.appConfig.getConfig().dashboardUrl;
     this.logger.log('LOGIN-COMP OnInit DASHBOARD_URL', this.DASHBOARD_URL)
-    this.showSpinnerInLoginBtn = false;
+    // this.showSpinnerInLoginBtn = false;
   }
   // ngAfterViewChecked() {
   //   this.emailInputEl.setFocus()

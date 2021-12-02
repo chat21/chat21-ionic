@@ -7,14 +7,16 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class DdpHeaderComponent implements OnInit {
   @Input() numberOpenConv: number;
-  @Input() supportMode = false;
+  @Input() supportMode: boolean;
   @Output() openContactsDirectory = new EventEmitter();
   @Output() openProfileInfo = new EventEmitter();
 
   constructor(
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // console.log('DDP HEADER SUPPORT MODE ', this.supportMode)
+  }
 
   // START @Output() //
   /** */

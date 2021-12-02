@@ -22,6 +22,7 @@ import { NavProxyService } from '../../services/nav-proxy.service';
 import { TiledeskService } from '../../services/tiledesk/tiledesk.service';
 import { ConversationDetailPage } from '../conversation-detail/conversation-detail.page';
 import { ContactsDirectoryPage } from '../contacts-directory/contacts-directory.page';
+import { UnassignedConversationsPage } from '../unassigned-conversations/unassigned-conversations.page';
 import { ProfileInfoPage } from '../profile-info/profile-info.page';
 import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
@@ -33,6 +34,8 @@ import { Platform } from '@ionic/angular';
 // Logger
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+import { NetworkService } from 'src/app/services/network-service/network.service';
+
 
 @Component({
   selector: 'app-conversations-list',
@@ -52,7 +55,7 @@ export class ConversationListPage implements OnInit {
   public showPlaceholder = true;
   public numberOpenConv = 0;
   public loadingIsActive = true;
-  public supportMode = environment.supportMode;
+  public supportMode: boolean;
 
   public convertMessage = convertMessage;
   private isShowMenuPage = false;
@@ -64,6 +67,11 @@ export class ConversationListPage implements OnInit {
   headerTitle: string;
   subscription: Subscription;
 
+  public UNASSIGNED_CONVS_URL: any;
+  public hasClickedOpenUnservedConvIframe: boolean = false;
+  public lastProjectId: string;
+  public isOnline: boolean = true;
+  public checkInternet: boolean;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -80,7 +88,9 @@ export class ConversationListPage implements OnInit {
     public tiledeskService: TiledeskService,
     public tiledeskAuthService: TiledeskAuthService,
     public appConfigProvider: AppConfigProvider,
-    public platform: Platform
+    public platform: Platform,
+    private networkService: NetworkService,
+   
   ) {
     this.listenToAppCompConvsLengthOnInitConvs();
     this.listenToLogoutEvent();
@@ -92,9 +102,30 @@ export class ConversationListPage implements OnInit {
   // -----------------------------------------------
   // @ Lifehooks
   // -----------------------------------------------
-  ngOnInit() { }
+  ngOnInit() {
+    this.watchToConnectionStatus();
+    this.getSupportMode();
+  }
 
+  getSupportMode() {
+    this.supportMode = this.appConfigProvider.getConfig().supportMode;
+    // console.log('[ION-LIST-CONVS-COMP] - supportMode ', this.supportMode)
+  }
 
+  watchToConnectionStatus() {
+    this.networkService.checkInternetFunc().subscribe(isOnline => {
+      this.checkInternet = isOnline
+      this.logger.log('[ION-LIST-CONVS-COMP] - watchToConnectionStatus - isOnline', this.checkInternet)
+
+      // checking internet connection
+      if (this.checkInternet == true) {
+
+        this.isOnline = true;
+      } else {
+        this.isOnline = false;
+      }
+    });
+  }
 
 
   ionViewWillEnter() {
@@ -115,6 +146,41 @@ export class ConversationListPage implements OnInit {
   }
 
   ionViewDidEnter() { }
+
+  getLastProjectId(projectid: string) {
+    this.logger.log('[CONVS-LIST-PAGE] - GET LAST PROJECT ID', projectid);
+    this.lastProjectId = projectid;
+  }
+
+  openUnsevedConversationIframe() {
+    this.hasClickedOpenUnservedConvIframe = true
+    this.logger.log('[CONVS-LIST-PAGE] - HAS CLIKED OPEN UNSERVED REQUEST IFRAME', this.hasClickedOpenUnservedConvIframe);
+    const DASHBOARD_BASE_URL = this.appConfigProvider.getConfig().dashboardUrl;
+    this.UNASSIGNED_CONVS_URL = DASHBOARD_BASE_URL + '#/project/' + this.lastProjectId + '/unserved-request-for-panel';
+    this.logger.log('[CONVS-LIST-PAGE] - HAS CLIKED OPEN UNSERVED REQUEST IFRAME > UNASSIGNED CONVS URL', this.UNASSIGNED_CONVS_URL);
+    this.openUnassignedConversations(this.UNASSIGNED_CONVS_URL)
+  }
+
+  // ---------------------------------------------------------
+  // Opens the Unassigned Conversations iframe
+  // ---------------------------------------------------------
+  openUnassignedConversations(UNASSIGNED_CONVS_URL) {
+
+    if (checkPlatformIsMobile()) {
+      presentModal(this.modalController, UnassignedConversationsPage, { unassigned_convs_url: UNASSIGNED_CONVS_URL });
+    } else {
+      this.navService.push(UnassignedConversationsPage, { unassigned_convs_url: UNASSIGNED_CONVS_URL });
+    }
+  }
+
+  _closeContactsDirectory() {
+    try {
+      closeModal(this.modalController);
+    } catch (err) {
+      this.logger.error('[CONVS-LIST-PAGE] closeContactsDirectory -> error:', err);
+    }
+  }
+
 
   listenToSwPostMessage() {
     this.logger.log('[CONVS-LIST-PAGE] listenToNotificationCLick - CALLED: ');
@@ -508,8 +574,8 @@ export class ConversationListPage implements OnInit {
   }
 
   onConversationLoaded(conversation: ConversationModel) {
-    this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded ', conversation)
-    this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded is new? ', conversation.is_new)
+    // this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded ', conversation)
+    // this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded is new? ', conversation.is_new)
     // if (conversation.is_new === false) {
     //   this.ionContentConvList.scrollToTop(0);
     // }

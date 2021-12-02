@@ -39,6 +39,7 @@ import { TooltipModule } from 'ng2-tooltip-directive';
 import { OptionHeaderComponent } from '../components/conversation-detail/option-header/option-header.component';
 import { MessageAttachmentComponent } from '../chatlib/conversation-detail/message/message-attachment/message-attachment.component';
 import { ImageViewerComponent } from '../components/image-viewer/image-viewer.component';
+import { ProjectItemComponent } from '../components/project-item/project-item.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { ImageViewerComponent } from '../components/image-viewer/image-viewer.co
     ListConversationsComponent,
     IonListConversationsComponent,
     ImageViewerComponent,
+    ProjectItemComponent,
     IonConversationDetailComponent,
     ConversationContentComponent,
     AvatarComponent,
@@ -82,6 +84,7 @@ import { ImageViewerComponent } from '../components/image-viewer/image-viewer.co
     AvatarProfileComponent,
     DdpHeaderComponent,
     ImageViewerComponent,
+    ProjectItemComponent,
     UserPresenceComponent,
     UserTypingComponent,
     ListConversationsComponent,

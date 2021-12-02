@@ -1,10 +1,6 @@
-
 <ion-header no-border class="ion-no-border">
-  <app-ddp-header *ngIf="conversationType ==='active'" 
-    [numberOpenConv]="numberOpenConv" 
-    [supportMode]="supportMode"
-    (openContactsDirectory)=openContactsDirectory($event) 
-    (openProfileInfo)=openProfileInfo($event)>
+  <app-ddp-header *ngIf="conversationType ==='active'" [numberOpenConv]="numberOpenConv" [supportMode]="supportMode"
+    (openContactsDirectory)=openContactsDirectory($event) (openProfileInfo)=openProfileInfo($event)>
   </app-ddp-header>
 
   <app-option-header *ngIf="conversationType !=='active'" [headerTitle]=headerTitle
@@ -22,29 +18,50 @@
       </span>
 
       <ng-template #contentConversations>
+        <!-- -------------------------------------------------------------------------- -->
+        <!-- New   <ion-spinner class="spinner-middle" style="margin-left: 19px;"></ion-spinner> -->
+        <!-- -------------------------------------------------------------------------- -->
+        <ion-item *ngIf="isOnline === false" style="padding-left:0px!important ;padding-right:0px!important" button="true" lines="none" class="ion-no-padding waiting-for-connection">
+          <div tabindex="0"></div>
+          <ion-avatar item-start>
+            <div class="sk-fading-circle">
+              <div class="sk-circle1 sk-circle"></div>
+              <div class="sk-circle2 sk-circle"></div>
+              <div class="sk-circle3 sk-circle"></div>
+              <div class="sk-circle4 sk-circle"></div>
+              <div class="sk-circle5 sk-circle"></div>
+              <div class="sk-circle6 sk-circle"></div>
+              <div class="sk-circle7 sk-circle"></div>
+              <div class="sk-circle8 sk-circle"></div>
+              <div class="sk-circle9 sk-circle"></div>
+              <div class="sk-circle10 sk-circle"></div>
+              <div class="sk-circle11 sk-circle"></div>
+              <div class="sk-circle12 sk-circle"></div>
+            </div>
+          </ion-avatar>
+          <ion-label part="message-text" class="waiting-for-network-msg"> Waiting for network</ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="supportMode" class="ion-no-padding open-iframe-item" style="padding-left:0px!important ;padding-right:0px!important; height:55px" button="true"
+          (click)="openUnsevedConversationIframe()">
+          <div tabindex="0"></div>
+          <app-project-item (projectIdEvent)="getLastProjectId($event)"></app-project-item>
+        </ion-item>
         <!-- ---------------------------------- -->
         <!-- ACTIVE CONVERSATION LIST -->
         <!-- ---------------------------------- -->
-        <ion-list-conversations *ngIf="conversationType ==='active'" 
-          [uidConvSelected]="uidConvSelected"
-          [listConversations]="conversations" 
-          [stylesMap]="stylesMap" 
-          [translationMap]="translationMapConversation"
-          (onConversationSelected)=onConversationSelected($event) 
-          (onImageLoaded)="onImageLoaded($event)"
-          (onConversationLoaded)="onConversationLoaded($event)" 
-          (onCloseConversation)="onCloseConversation($event)">
+        <ion-list-conversations *ngIf="conversationType ==='active'" [uidConvSelected]="uidConvSelected"
+          [listConversations]="conversations" [stylesMap]="stylesMap" [translationMap]="translationMapConversation"
+          (onConversationSelected)=onConversationSelected($event) (onImageLoaded)="onImageLoaded($event)"
+          (onConversationLoaded)="onConversationLoaded($event)" (onCloseConversation)="onCloseConversation($event)">
         </ion-list-conversations>
 
         <!-- ---------------------------------- -->
         <!-- ARCHIVED CONVERSATION LIST -->
         <!-- ---------------------------------- -->
-        <ion-list-conversations *ngIf="conversationType ==='archived'" 
-          [listConversations]="archivedConversations"
-          [stylesMap]="stylesMap" 
-          [translationMap]="translationMapConversation"
-          (onConversationSelected)=onConversationSelected($event) 
-          (onImageLoaded)="onImageLoaded($event)"
+        <ion-list-conversations *ngIf="conversationType ==='archived'" [listConversations]="archivedConversations"
+          [stylesMap]="stylesMap" [translationMap]="translationMapConversation"
+          (onConversationSelected)=onConversationSelected($event) (onImageLoaded)="onImageLoaded($event)"
           (onConversationLoaded)="onConversationLoaded($event)">
         </ion-list-conversations>
       </ng-template>
@@ -83,7 +100,7 @@
             </ion-label>
           </ion-item>
         </div>
-        
+
       </ng-template>
     </ion-list>
   </div>

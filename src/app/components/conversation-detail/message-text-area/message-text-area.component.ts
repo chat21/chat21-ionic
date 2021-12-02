@@ -563,13 +563,6 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         this.countClicks = 0
 
       }
-
-
-
-
-
-
-      // }
     }
   }
 

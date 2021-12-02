@@ -539,23 +539,27 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (this.conversationWith && this.conversationsHandlerService && this.conv_type === 'active') {
       this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING')
       this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-        this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv)
-        this.conversationAvatar = setConversationAvatar(
-          conv.conversation_with,
-          conv.conversation_with_fullname,
-          conv.channel_type
-        );
+        if (conv) {
+          this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv)
+          this.conversationAvatar = setConversationAvatar(
+            conv.conversation_with,
+            conv.conversation_with_fullname,
+            conv.channel_type
+          );
+        }
         this.logger.log('[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ', this.conversationAvatar);
       })
     }
     else { //get conversation from 'conversations' firebase node
       this.archivedConversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
-        this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (archived)', this.conversationWith, conv)
-        this.conversationAvatar = setConversationAvatar(
-          conv.conversation_with,
-          conv.conversation_with_fullname,
-          conv.channel_type
-        );
+        if (conv) {
+          this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (archived)', this.conversationWith, conv)
+          this.conversationAvatar = setConversationAvatar(
+            conv.conversation_with,
+            conv.conversation_with_fullname,
+            conv.channel_type
+          );
+        }
       })
     }
 
@@ -890,8 +894,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         if (this.conversationWith.startsWith("support-group")) {
 
           const pos = message.lastIndexOf("/");
-          console.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ", pos);
-       
+          // console.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ", pos);
+
           // test
           // var rest = message.substring(0, message.lastIndexOf("/") + 1);
           // var last = message.substring(message.lastIndexOf("/") + 1, message.length);
@@ -917,7 +921,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
             // ------------------------------------------------------------------------------------------------------------------------------------------
             // Hide / display Canned when the SLASH has POSITION POS 0 and checking if there is a space after the SLASH (in this case it will be hidden)
             // ------------------------------------------------------------------------------------------------------------------------------------------
-            
+
             var after_slash = message.substring(message.lastIndexOf("/") + 1, message.length);
             if (pos === 0 && after_slash.length === 1 && after_slash.trim() === '') {
               this.logger.log('[CONVS-DETAIL] - returnChangeTextArea after_slash --> there is a white space after ');
@@ -928,14 +932,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
               this.HIDE_CANNED_RESPONSES = false
             }
 
-      
+
             if (pos > 0) {
-              
-            // ------------------------------------------------------------------------------------------------------------------------------------------
-            // Hide / display Canned when the SLASH has POSITION POS > and checking if there is a space after the SLASH (in this case they it be hidden)
-            // and if there is not a space before the SLASH (in this it will be hidden)
-            // ------------------------------------------------------------------------------------------------------------------------------------------
-              
+
+              // ------------------------------------------------------------------------------------------------------------------------------------------
+              // Hide / display Canned when the SLASH has POSITION POS > and checking if there is a space after the SLASH (in this case they it be hidden)
+              // and if there is not a space before the SLASH (in this it will be hidden)
+              // ------------------------------------------------------------------------------------------------------------------------------------------
+
               let beforeSlash = message.substr(pos - 1)
               let afterSlash = message.substr(pos + 1)
               this.logger.log('[CONVS-DETAIL] - returnChangeTextArea * POS ', pos);

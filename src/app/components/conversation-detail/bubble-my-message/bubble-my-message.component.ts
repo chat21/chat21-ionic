@@ -61,7 +61,7 @@ export class BubbleMyMessageComponent implements OnInit {
   * alla chiusura controllo su quale opzione ho premuto e attivo l'azione corrispondete
   */
  presentPopover(event, msg) {
-  console.log('presentPopover');
+  // console.log('presentPopover');
   // let popover = this.popoverCtrl.create(PopoverPage, { typePopup: TYPE_POPUP_DETAIL_MESSAGE, message: msg });
   // popover.present({
   //   ev: event

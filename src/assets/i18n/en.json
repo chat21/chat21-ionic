@@ -179,5 +179,13 @@
   "CONTACT_ID": "Contact ID",
   "USER_ID": "User ID",
   "CLOSE_TOAST": "Close",
-  "WAITING_FOR_NETWORK": "Waiting for network"
+  "WAITING_FOR_NETWORK": "Waiting for network",
+  "Available": "Available",
+  "Unavailable": "Unavailable",
+  "Busy": "Busy",
+  "YouAreAboutToJoinThisChat":"You are about to join this chat",
+  "Cancel": "Cancel",
+  "AreYouSure":"Are you sure?",
+  "UnassignedConversations":"Unassigned Conversations",
+  "NewConversations": "Nuove conversazioni"
 }

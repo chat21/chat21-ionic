@@ -1,5 +1,33 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc9
+- Changes in the archived conversations the date format if the browser language is English
+- Displays the button to open the contact list for direct conversations and the entry at the top of the conversation list showing the number of unassigned conversations for a selected project if the "supportMode" configuration property is set to true
+- Adds a style rule on the unassigned conversations page that changes the background of the "ion-content" if the project list is displayed in the iframe
+- Adds "supportMode" property to env.sample, chat-config-template.json and chat-config.json
+
+### 3.0.59-rc8
+- Changes the title of the modal window showing unassigned conversations from "Unassigned Conversations" to "New Conversations"
+- Fixes the bug: if the "chatEngine" property value is set to "mqtt" the login modal window does not disappear even if the agent is logged in
+- Fixed the value of the configuration property "dashboardUrl"
+
+### 3.0.59-rc7
+- Fixes the bug "Cannot read properties of undefined (reading 'get')" in component template showing the number of new conversations
+- Fixes the bug: the value of the "supportMode" property is passed hard-coded
+
+### 3.0.59-rc6
+- Outsources the websocket URL to environments
+- Improves the graphic of the element, positioned at the top of the conversation list, which displays the number of new conversations
+- Adds "wsUrl" property to env.sample, chat-config-template.json and chat-config.json
+- Updates environments with "wsUrl" property
+
+### 3.0.59-rc5
+- Display a "toast message" of success after that the agent has joined to an unassigned conversation and other minor improvements
+
+### 3.0.59-rc4
+- Adds an item to the top of the conversation list that shows the number of unassigned conversations for a selected project
+- Adds the ability, by clicking on the element that displays the number of unassigned conversations, to view the unassigned conversations and to join to them or archive them
+
 ### 3.0.59-rc3
 - Improves the method that allows to chain multiple canned responses
 
@@ -8,7 +36,6 @@
 - Adds in the "bubble-message" component a check if the metadata is an object before calling the getMetadataSize() method
 - Hides the "canned responses" if there are whitespace after the forward slash "/" or if there are no whitespace before the forward slash "/"
 - Fixes the bug: if the "canned responses" are selected with the mouse, the "send message" text area does not have focus
-- Fixes the bug: on mobile devices, a blank page appears when the hardware back button is pressed in the conversation list
 - Adds the image viewer and the ability to download an image from it
 - Fixes the position of the "archive" button when the app runs on mobile devices
 - Updates Android splash screen .png image

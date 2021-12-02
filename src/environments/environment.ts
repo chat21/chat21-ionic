@@ -26,6 +26,7 @@ export const environment = {
     apiUrl: 'http://localhost:3000/',
     baseImageUrl: 'https://firebasestorage.googleapis.com/v0/b/',
     dashboardUrl: 'http://localhost:4500/',
+    wsUrl: 'ws://localhost:3000/',
     storage_prefix: 'chat_sv5',
     authPersistence: 'LOCAL',
     logLevel: 'Info',
