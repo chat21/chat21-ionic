@@ -117,13 +117,14 @@ export class ProjectItemComponent implements OnInit {
     let stored_project = ''
     try {
       stored_project = localStorage.getItem('last_project')
+      this.logger.log('PROJECT-ITEM - THERE IS A STORED PROJECT ', stored_project)
     } catch (err) {
-      console.log('Get loacal storage item LAST PROJECT ', err)
+      this.logger.log('Get local storage LAST PROJECT ', err)
     }
 
 
     if (!stored_project) {
-      console.log('PROJECT-ITEM - THERE IS NOT STORED LAST PROJECT ', stored_project)
+      this.logger.log('PROJECT-ITEM - THERE IS NOT STORED LAST PROJECT ', stored_project)
       const tiledeskToken = this.appStorageService.getItem('tiledeskToken');
       this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - tiledeskToken', tiledeskToken);
       this.tiledeskService.getProjects(tiledeskToken).subscribe(projects => {
