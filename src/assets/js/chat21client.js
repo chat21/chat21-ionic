@@ -1,18 +1,9 @@
 /*
     Chat21Client
-    v. 0.1.5
-    - added groupSetMembers()
-    - renamed createGroup() in groupCreate()
-    - renamed leaveGroup() in groupLeave()
-    - renamed joinGroup() in groupJoin()
-    - renamed getGroup() in groupData()
 
+    v0.1.8
 
-    v. 0.1.4
-    - added basicMessageBuilder()
-    - added sendMessageRaw()
-    - added leaveGroup()
-
+    @Author Andrea Sponziello
     (c) Tiledesk 2020
 */
 
@@ -33,8 +24,9 @@ class Chat21Client {
         this.client_id = this.uuidv4();
         if (options && options.MQTTendpoint) {
             if (options.MQTTendpoint.startsWith('/')) {
-                console.log("MQTTendpoint relative url");
-
+                if (this.log) {
+                    console.log("MQTTendpoint relative url");
+                }
                 var loc = window.location, new_uri;
                 if (loc.protocol === "https:") {
                     // new_uri = "wss:";
@@ -59,7 +51,9 @@ class Chat21Client {
         this.log = options.log ? true : false;
         this.APIendpoint = options.APIendpoint;
         this.appid = options.appId;
-        console.log("final endpoint:", this.endpoint)
+        if (this.log) {
+            console.log("final endpoint:", this.endpoint);
+        }
         this.user_id = null;
         this.jwt = null;
         this.last_handler = 0;
@@ -86,10 +80,14 @@ class Chat21Client {
         // MQTT: https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/
         // RABBITMQ: https://www.cloudamqp.com/blog/2015-09-03-part4-rabbitmq-for-beginners-exchanges-routing-keys-bindings.html#topic-exchange
         this.topic_inbox = 'apps/tilechat/users/' + this.user_id + "/#"
-        console.log("subscribing to:", this.user_id, "topic", this.topic_inbox)
+        if (this.log) {
+            console.log("subscribing to:", this.user_id, "topic", this.topic_inbox);
+        }
         this.client.subscribe(this.topic_inbox, (err)  => {
-            console.log("subscribed to:", this.topic_inbox, " with err", err)
-        })
+            if (this.log) {
+                console.log("subscribed to:", this.topic_inbox, " with err", err)
+            }
+        });
     }
 
     // subscribeToMyMessages() {
@@ -159,16 +157,22 @@ class Chat21Client {
     }
 
     updateMessageStatus(messageId, conversWith, status, callback) {
-        // callback - function (err) 
-        console.log("updating recipient_id:", messageId, "on conversWith", conversWith, "status", status)
+        // callback - function (err)
+        if (this.log) {
+            console.log("updating recipient_id:", messageId, "on conversWith", conversWith, "status", status)
+        }
         // 'apps/tilechat/users/USER_ID/messages/CONVERS_WITH/MESSAGE_ID/update'
         let dest_topic = `apps/${this.appid}/users/${this.user_id}/messages/${conversWith}/${messageId}/update`
-        console.log("update dest_topic:", dest_topic)
+        if (this.log) {
+            console.log("update dest_topic:", dest_topic);
+        }
         let message_patch = {
             status: status
         }
         const payload = JSON.stringify(message_patch)
-        console.log("payload:", payload)
+        if (this.log) {
+            console.log("payload:", payload)
+        }
         this.client.publish(dest_topic, payload, null, (err) => {
             if (callback) {
                 callback(err, message_patch)
@@ -177,16 +181,22 @@ class Chat21Client {
     }
 
     updateConversationIsNew(conversWith, is_new, callback) {
-        // callback - function (err) 
-        console.log("updating conversation with:", conversWith, "is_new", is_new)
+        // callback - function (err)
+        if (this.log) {
+            console.log("updating conversation with:", conversWith, "is_new", is_new);
+        }
         // 'apps/tilechat/users/USER_ID/conversations/CONVERS_WITH/update'
         let dest_topic = `apps/${this.appid}/users/${this.user_id}/conversations/${conversWith}/update` //'apps/tilechat/users/' + this.user_id + '/conversations/' + conversWith + '/update'
-        console.log("update dest_topic:", dest_topic)
+        if (this.log) {
+            console.log("update dest_topic:", dest_topic);
+        }
         let patch = {
             is_new: is_new
         }
         const payload = JSON.stringify(patch)
-        console.log("payload:", payload)
+        if (this.log) {
+            console.log("payload:", payload);
+        }
         this.client.publish(dest_topic, payload, null, (err) => {
             if (callback) {
                 callback(err)
@@ -207,7 +217,9 @@ class Chat21Client {
         // }
 
         // callback - function (err)
-        console.log("creating group:", name, "id", group_id, "members", members)
+        if (this.log) {
+            console.log("creating group:", name, "id", group_id, "members", members)
+        }
         // who creates the group is also group-owner
         // ex.: http://localhost:8004/api/tilechat/04-ANDREASPONZIELLO/groups
         // let data = {
@@ -221,7 +233,9 @@ class Chat21Client {
         // }
 
         const URL = `${this.APIendpoint}/${this.appid}/groups`
-        console.log("creating group...", URL)
+        if (this.log) {
+            console.log("creating group...", URL)
+        }
         let options = {
             url: URL,
             headers: {
@@ -306,9 +320,13 @@ class Chat21Client {
     }
 
     groupLeave(group_id, member_id, callback) {
-        console.log("leaving group:", group_id);
+        if (this.log) {
+            console.log("leaving group:", group_id);
+        }
         const URL = `${this.APIendpoint}/${this.appid}/groups/${group_id}/members/${member_id}`
-        console.log("leaving group:", URL)
+        if (this.log) {
+            console.log("leaving group:", URL)
+        }
         let options = {
             url: URL,
             headers: {
@@ -328,9 +346,13 @@ class Chat21Client {
     }
 
     groupJoin(group_id, member_id, callback) {
-        console.log("leaving group:", group_id);
+        if (this.log) {
+            console.log("leaving group:", group_id);
+        }
         const URL = `${this.APIendpoint}/${this.appid}/groups/${group_id}/members`
-        console.log("joining group:", URL)
+        if (this.log) {
+            console.log("joining group:", URL)
+        }
         let options = {
             url: URL,
             headers: {
@@ -361,9 +383,13 @@ class Chat21Client {
         //         "6067513cb64a9b1ba259839c":1
         //     }
         // }
-        console.log("setting group members of", group_id, "members", members)
+        if (this.log) {
+            console.log("setting group members of", group_id, "members", members)
+        }
         const URL = `${this.APIendpoint}/${this.appid}/groups/${group_id}/members`
-        console.log("setting group members...", URL)
+        if (this.log) {
+            console.log("setting group members...", URL)
+        }
         let options = {
             url: URL,
             headers: {
@@ -385,12 +411,45 @@ class Chat21Client {
         }, this.log);
     }
 
+    saveInstance(instance_id, data, callback) {
+        if (this.log) {
+            console.log("saving instance_id:", instance_id, "data", data);
+        }
+
+        // /:app_id/:user_id/instances/:instance_id
+        const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/instances/${instance_id}`
+        if (this.log) {
+            console.log("saving instance...");
+        }
+        let options = {
+            url: URL,
+            headers: {
+                "Authorization": this.jwt,
+                "Content-Type": "application/json;charset=UTF-8"
+            },
+            data: data,
+            method: 'POST'
+        }
+        Chat21Client.myrequest(options, (err, response, json) => {
+            if (err) {
+                callback(err, null);
+            }
+            else if (json && callback) {
+                callback(null, json);
+            }
+        }, this.log);
+    }
+
     archiveConversation(conversWith, callback) {
         // callback - function (err) 
-        console.log("archiving conversation with:", conversWith)
+        if (this.log) {
+            console.log("archiving conversation with:", conversWith)
+        }
         // 'apps/tilechat/users/USER_ID/conversations/CONVERS_WITH/archive'
         let dest_topic = 'apps/tilechat/users/' + this.user_id + '/conversations/' + conversWith + '/archive'
-        console.log("archive dest_topic:", dest_topic)
+        if (this.log) {
+            console.log("archive dest_topic:", dest_topic)
+        }
         // let patch = {
         //     action: 'archive'
         // }
@@ -440,7 +499,6 @@ class Chat21Client {
     }
 
     onMessageAdded(callback) {
-        console.log("onMessageAdded(callback)")
         this.last_handler++
         this.onMessageAddedCallbacks.set(this.last_handler, callback)
         return this.last_handler;
@@ -485,20 +543,24 @@ class Chat21Client {
     }
 
     onMessageUpdated(callback) {
-        this.last_handler++
+        this.last_handler += 1
         this.onMessageUpdatedCallbacks.set(this.last_handler, callback)
         return this.last_handler;
     }
 
     onGroupUpdated(callback) {
-        this.last_handler++
+        this.last_handler += 1
         this.onGroupUpdatedCallbacks.set(this.last_handler, callback)
         return this.last_handler;
     }
 
-    // removeMessageHandler(handler) {
-    //     this.onMessageCallbacks.delete(handler)
-    // }
+    removeOnMessageAddedHandler(handler) {
+        this.onMessageAddedCallbacks.delete(handler);
+    }
+
+    removeOnGroupUpdatedHandler(handler) {
+        this.onGroupUpdatedCallbacks.delete(handler);
+    }
 
     start() {
         if (this.on_message_handler) {
@@ -511,7 +573,9 @@ class Chat21Client {
             // console.log("topic:" + topic + "\nmessage payload:" + message)
             const _topic = this.parseTopic(topic)
             if (!_topic) {
-                console.log("Invalid message topic:", topic);
+                if (this.log) {
+                    console.log("Invalid message topic:", topic);
+                }
                 return;
             }
             const conversWith = _topic.conversWith
@@ -533,7 +597,9 @@ class Chat21Client {
                 if (this.onConversationUpdatedCallbacks) {
                     // example topic: apps.tilechat.users.ME.conversations.CONVERS-WITH.clientdeleted
                     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTUPDATED)) {
-                        console.log("conversation updated! /conversations/, topic:", topic)
+                        if (this.log) {
+                            console.log("conversation updated! /conversations/, topic:", topic)
+                        }
                         // map.forEach((value, key, map) =>)
                         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
                             callback(JSON.parse(message.toString()), topic)
@@ -544,7 +610,9 @@ class Chat21Client {
                 if (this.onConversationDeletedCallbacks) {
                     if (topic.includes("/conversations/") && topic.endsWith(_CLIENTDELETED)) {
                         // map.forEach((value, key, map) =>)
-                        console.log("conversation deleted! /conversations/, topic:", topic, message.toString() );
+                        if (this.log) {
+                            console.log("conversation deleted! /conversations/, topic:", topic, message.toString() );
+                        }
                         this.onConversationDeletedCallbacks.forEach((callback, handler, map) => {
                             callback(JSON.parse(message.toString()), topic)
                         });
@@ -627,16 +695,16 @@ class Chat21Client {
                     // }
                     const type = callback_obj.type
                     if (topic.includes("/messages/") && topic.endsWith(_CLIENTADDED)) {
-                        console.log("/messages/_CLIENTADDED")
+                        if (this.log) { console.log("/messages/_CLIENTADDED") }
                         if (type === CALLBACK_TYPE_ON_MESSAGE_ADDED_FOR_CONVERSATION) {
                             if (conversWith === callback_obj.conversWith) {
-                                console.log("/messages/_CLIENTADDED on: ", conversWith)
+                                if (this.log) { console.log("/messages/_CLIENTADDED on: ", conversWith)}
                                 callback_obj.callback(JSON.parse(message.toString()), _topic)
                             }
                         }
                     }
                     if (topic.includes("/messages/") && topic.endsWith(_CLIENTUPDATED)) {
-                        console.log("/messages/_CLIENTUPDATED")
+                        if (this.log) {console.log("/messages/_CLIENTUPDATED")}
                         if (type === CALLBACK_TYPE_ON_MESSAGE_UPDATED_FOR_CONVERSATION) {
                             if (conversWith === callback_obj.conversWith) {
                                 console.log("/messages/_CLIENTUPDATED on: ", conversWith)
@@ -657,7 +725,7 @@ class Chat21Client {
 
             }
             catch (err) {
-                console.log("ERROR:", err)
+                console.error("ERROR:", err)
             }
         })
         // console.log("HANDLER_:", this.on_message_handler)
@@ -683,7 +751,7 @@ class Chat21Client {
     lastArchivedConversations(callback) {
         // ex.: http://localhost:8004/tilechat/04-ANDREASPONZIELLO/archived_conversations
         const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/archived_conversations`
-        console.log("getting last archived conversations...", URL)
+        if (this.log) {console.log("getting last archived conversations...", URL)}
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", URL, true);
         xmlhttp.setRequestHeader("authorization", this.jwt);
@@ -695,7 +763,7 @@ class Chat21Client {
                     callback(null, json.result)
                 }
                 catch (err) {
-                    console.log("parsing json ERROR", err)
+                    console.error("parsing json ERROR", err)
                     callback(err, null)
                 }
             }
@@ -707,7 +775,7 @@ class Chat21Client {
         // ex.: http://localhost:8004/tilechat/04-ANDREASPONZIELLO/conversations
         const archived_url_part = archived ? '/archived' : '';
         const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/conversations` + archived_url_part;
-        console.log("getting last convs...", URL);
+        if (this.log) {console.log("getting last convs...", URL);}
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", URL, true);
         xmlhttp.setRequestHeader("authorization", this.jwt);
@@ -719,7 +787,7 @@ class Chat21Client {
                     callback(null, json.result)
                 }
                 catch (err) {
-                    console.log("parsing json ERROR", err)
+                    console.error("parsing json ERROR", err)
                     callback(err, null)
                 }
             }
@@ -731,15 +799,20 @@ class Chat21Client {
         // ex.: http://localhost:8004/tilechat/04-ANDREASPONZIELLO/conversations/CONVERS_WITH
         const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/conversations/${conversWith}`
         console.log("getting conversation detail:", URL)
+        console.log("conversWith:", conversWith)
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", URL, true);
         xmlhttp.setRequestHeader("authorization", this.jwt);
         xmlhttp.onreadystatechange = function() {
-            console.log("onreadystatechange!")
             if (callback && xmlhttp.readyState == 4 && xmlhttp.status == 200 && xmlhttp.responseText) {
                 try {
                     const json = JSON.parse(xmlhttp.responseText);
-                    callback(null, json.result);
+                    if (json && json.result && Array.isArray(json.result) && json.result.length ==1) {
+                        callback(null, json.result[0]);
+                    }
+                    else {
+                        callback({"message": "Incorrect conversation result."}, null);
+                    }
                 }
                 catch (err) {
                     console.error("parsing json ERROR", err);
@@ -821,12 +894,11 @@ class Chat21Client {
               .then(function (response) {
                 if (log) {console.log("response.status:", response.status);}
                 if (callback) {
-                    if (log) { console.log("callback1()"); }
                     callback(null, response.headers, response.data);
                 }
               })
               .catch(function (error) {
-                if (log) { console.log("Axios call error:", error); }
+                console.error("Axios call error:", error);
                 if (callback) {
                     callback(error, null, null);
                 }
@@ -860,8 +932,10 @@ class Chat21Client {
         this.user_id = user_id;
         // console.log("userid:", this.user_id)
         this.jwt = jwt
-        console.log("connecting user_id:", user_id)
-        console.log("using jwt token:", jwt)
+        if (this.log) {
+            console.log("connecting user_id:", user_id)
+            console.log("using jwt token:", jwt)
+        }
         
         if (this.client) {
             this.client.end()
@@ -883,17 +957,17 @@ class Chat21Client {
             clientId: this.client_id,
             username: 'JWT',
             password: jwt,
-            rejectUnauthorized: false
+            rejectUnauthorized: true
         }
-        console.log("starting mqtt connection with LWT on:", presence_topic, this.endpoint)
+        if (this.log) {console.log("starting mqtt connection with LWT on:", presence_topic, this.endpoint)}
         // client = mqtt.connect('mqtt://127.0.0.1:15675/ws',options)
         this.client = mqtt.connect(this.endpoint,options)
         
-        this.client.on('connect',
+        this.client.on('connect', // TODO if token is wrong it must reply with an error!
             () => {
-                console.log("chat client connected...")
+                if (this.log) {console.log("chat client connected...")}
                 if (!this.connected) {
-                    console.log("Chat client first connection.")
+                    if (this.log) {console.log("Chat client first connection.")}
                     this.connected = true
                     this.start()
                     callback()
@@ -902,17 +976,17 @@ class Chat21Client {
         );
         this.client.on('reconnect',
             () => {
-                console.log("Chat client reconnect event");
+                if (this.log) {console.log("Chat client reconnect event");}
             }
         );
         this.client.on('close',
             () => {
-                console.log("Chat client close event");
+                if (this.log) {console.log("Chat client close event");}
             }
         );
         this.client.on('offline',
             () => {
-                console.log("Chat client offline event");
+                if (this.log) {console.log("Chat client offline event");}
             }
         );
         this.client.on('error',
@@ -925,7 +999,7 @@ class Chat21Client {
     close(callback) {
         if (this.topic_inbox) {
             this.client.unsubscribe(this.topic_inbox, (err)  => {
-                console.error("unsubscribed from", this.topic_inbox);
+                if (this.log) {console.log("unsubscribed from", this.topic_inbox);}
                 this.client.end(() => {
                     this.connected = false
                     // reset all subscriptions

@@ -59,15 +59,19 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
         // 1 search local array
         // 2 search remote
         // callback
-
+        console.log("SEARCHING CONV:", conversationWith);
         const conversation = this.conversations.find(conv => conv.conversation_with === conversationWith);
-        this.logger.debug('[MQTTConversationsHandler] getConversationDetail *****:  found locally?', conversation);
+        console.log('[MQTTConversationsHandler] getConversationDetail *****:  found locally?', conversation);
         if (conversation) {
-            this.logger.debug('[MQTTConversationsHandler] getConversationDetail found!');
+            console.log('[MQTTConversationsHandler] getConversationDetail found LOCALLY!', conversationWith);
             callback(conversation);
         } else {
-            this.logger.debug('[MQTTConversationsHandler] getConversationDetail *****: Not found locally ', conversation);
-            this.chat21Service.chatClient.conversationDetail(conversationWith, (conversation) => {
+            console.log('[MQTTConversationsHandler] getConversationDetail *****: Not found locally, SEARCHING REMOTE ', conversation);
+            this.chat21Service.chatClient.conversationDetail(conversationWith, (err, conversation) => {
+                console.log("--REMOTE CONV IS:" + conversation);
+                console.log("--REMOTE CONV IS OBJ:", conversation);
+                console.log("--REMOTE ERR IS:" + err);
+                
                 if (conversation) {
                     if (callback) {
                         callback(this.completeConversation(conversation));
@@ -381,6 +385,7 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     }
 
     private completeConversation(conv): ConversationModel {
+        console.log("COMPLETING CONVERSATION:", conv);
         conv.selected = false;
         if (!conv.sender_fullname || conv.sender_fullname === 'undefined' || conv.sender_fullname.trim() === '') {
             conv.sender_fullname = conv.sender;
@@ -413,6 +418,9 @@ export class MQTTConversationsHandler extends ConversationsHandlerService {
     }
 
     private isGroup(conv: ConversationModel) {
+        console.log("CONVIS: " + JSON.stringify(conv));
+        console.log("CONVIS OBJ:", conv);
+        
         if (conv.recipient.startsWith('group-') || conv.recipient.startsWith('support-group')) {
             return true;
         };
