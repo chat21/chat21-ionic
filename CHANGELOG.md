@@ -1,5 +1,11 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc10
+- Changes in config.xml the site URL of the author 
+- Changes the splash screen images
+- Adds the "browser" platform configuration in config.xml
+- Initialize in app.module.ts firebase to handle push notifications if chatEngine is "mqtt"
+
 ### 3.0.59-rc9
 - Changes in the archived conversations the date format if the browser language is English
 - Displays the button to open the contact list for direct conversations and the entry at the top of the conversation list showing the number of unassigned conversations for a selected project if the "supportMode" configuration property is set to true
