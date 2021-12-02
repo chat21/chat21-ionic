@@ -12,13 +12,8 @@
 
   <div id="scrollbar2">
     <ion-list>
-      <span
-        *ngIf="(conversations.length > 0 && conversationType ==='active') || (archivedConversations.length > 0  && conversationType ==='archived');then contentConversations else contentMessageWelcome">
-        here is ignored
-      </span>
 
-      <ng-template #contentConversations>
-        <!-- -------------------------------------------------------------------------- -->
+                   <!-- -------------------------------------------------------------------------- -->
         <!-- New   <ion-spinner class="spinner-middle" style="margin-left: 19px;"></ion-spinner> -->
         <!-- -------------------------------------------------------------------------- -->
         <ion-item *ngIf="isOnline === false" style="padding-left:0px!important ;padding-right:0px!important" button="true" lines="none" class="ion-no-padding waiting-for-connection">
@@ -42,11 +37,21 @@
           <ion-label part="message-text" class="waiting-for-network-msg"> Waiting for network</ion-label>
         </ion-item>
 
-        <ion-item *ngIf="supportMode" class="ion-no-padding open-iframe-item" style="padding-left:0px!important ;padding-right:0px!important; height:55px" button="true"
+        <ion-item  *ngIf="supportMode" class="ion-no-padding open-iframe-item" style="" 
+        button="true"
           (click)="openUnsevedConversationIframe()">
           <div tabindex="0"></div>
           <app-project-item (projectIdEvent)="getLastProjectId($event)"></app-project-item>
         </ion-item>
+
+      <span
+        *ngIf="(conversations.length > 0 && conversationType ==='active') || (archivedConversations.length > 0  && conversationType ==='archived');then contentConversations else contentMessageWelcome">
+        here is ignored
+      </span>
+
+ 
+
+      <ng-template #contentConversations>
         <!-- ---------------------------------- -->
         <!-- ACTIVE CONVERSATION LIST -->
         <!-- ---------------------------------- -->
