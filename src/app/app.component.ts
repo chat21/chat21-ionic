@@ -577,13 +577,14 @@ export class AppComponent implements OnInit {
    * @param user
    */
   goOnLine = () => {
+   console.log('[APP-COMP] - GO-ONLINE ');
     // this.isOnline = true;
     // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - GO-ONLINE isOnline ', this.isOnline);
 
     // clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
     this.connetWebsocket(tiledeskToken)
-
+    this.events.publish('go:online', true);
     const currentUser = this.tiledeskAuthService.getCurrentUser();
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
     this.logger.log('[APP-COMP] - GO-ONLINE - currentUser ', currentUser);
@@ -619,10 +620,11 @@ export class AppComponent implements OnInit {
   webSocketClose() {
     this.logger.log('[APP-COMP] - GO-OFFLINE - webSocketClose');
     this.webSocketJs.close()
+    this.events.publish('go:offline', true);
   }
 
   goOffLine = () => {
-    this.logger.log('[APP-COMP] - GO-OFFLINE');
+    console.log('[APP-COMP] - GO-OFFLINE');
 
     this.webSocketClose()
     // this.isOnline = false;
