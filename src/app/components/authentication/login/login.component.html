@@ -8,25 +8,25 @@
 
     <div class="signin-title" style="text-align:center">
       <h2 style="font-family: 'Montserrat', sans-serif; font-weight: 400;">
-        {{ translationMap.get('LABEL_SIGNIN_TO') }}
+        {{ translationMap?.get('LABEL_SIGNIN_TO') }}
         {{companyName}}
       </h2>
     </div>
     <div class="login-container">
       <form [formGroup]="userForm" (ngSubmit)="signInWithEmailAndPassword()" novalidate>
 
-        <ion-label stacked for="email">{{ translationMap.get('LABEL_EMAIL') }}</ion-label>
+        <ion-label stacked for="email">{{ translationMap?.get('LABEL_EMAIL') }}</ion-label>
         <ion-input #email formControlName="email" type="email" id="email" required autocapitalize="off" spellcheck="false"
-        placeholder="{{ translationMap.get('LABEL_PLACEHOLDER_EMAIL') }}"
+        placeholder="{{ translationMap?.get('LABEL_PLACEHOLDER_EMAIL') }}"
         [class.invalid]="!userForm.controls.email.valid" ></ion-input>
         <div *ngIf="formErrors.email" class="is-danger">
           {{ formErrors.email }}
         </div>
 
        
-        <ion-label stacked for="password">{{ translationMap.get('LABEL_PASSWORD') }}</ion-label>
+        <ion-label stacked for="password">{{ translationMap?.get('LABEL_PASSWORD') }}</ion-label>
         <ion-input #password formControlName="password" type="password" id="password" required
-        placeholder="{{ translationMap.get('LABEL_PLACEHOLDER_PASSWORD') }}"
+        placeholder="{{ translationMap?.get('LABEL_PLACEHOLDER_PASSWORD') }}"
         [class.invalid]="!userForm.controls.password.valid"></ion-input>
 
         <div *ngIf="formErrors.password" class="is-danger">
@@ -36,7 +36,7 @@
         
         <button type="submit" class="btn signin-button ion-activatable ripple-parent" [ngClass]="{'signin-button-is-disabled': !userForm.valid}" [disabled]="!userForm.valid">
           <span class="signin-button-label" *ngIf="showSpinnerInLoginBtn === false" >
-            {{ translationMap.get('LABEL_SIGNIN') }}
+            {{ translationMap?.get('LABEL_SIGNIN') }}
           </span>
           <ion-ripple-effect type="unbounded"></ion-ripple-effect>
           <ion-spinner *ngIf="showSpinnerInLoginBtn === true" name="bubbles" color="white" duration="2" ></ion-spinner>
@@ -50,9 +50,9 @@
         </p> -->
 
         <p style="color: #666666; font-size: 1.1em; text-align: center; margin-top: 16px;">
-           {{ translationMap.get('LABEL_FORGOT_YOUR_PASSWORD') }}
+           {{ translationMap?.get('LABEL_FORGOT_YOUR_PASSWORD') }}
           <span style="color: #03a5e8; cursor:pointer" (click)="goToResetPsw()">
-             {{ translationMap.get('LABEL_CLICK_HERE') }} 
+             {{ translationMap?.get('LABEL_CLICK_HERE') }} 
           </span>
         </p>
 
