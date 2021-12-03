@@ -234,7 +234,7 @@ export class ConversationListPage implements OnInit {
       takeUntil(that.unsubscribe$)
     )
     .subscribe((data: any) => {
-      console.log('[CONVS-LIST-PAGE] - BSStart SUBSCR DATA - Current user *****', data);
+      this.logger.log('[CONVS-LIST-PAGE] - BSStart SUBSCR DATA - Current user *****', data);
       if (data) {
         that.initialize();
       }
