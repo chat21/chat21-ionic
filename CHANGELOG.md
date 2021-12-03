@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc14
+- Fixes the bug: the sound that warns that a new conversation has been received does not work
+
 ### 3.0.59-rc12
 - Fixes the bug: Cannot read properties of undefined (reading 'get') when "translationMap" in not yet defined
 - Fixes the bug: when the log out is performed, the item with the number of new conversations remains visible in the left side panel of the conversations list
