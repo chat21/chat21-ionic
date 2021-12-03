@@ -391,7 +391,7 @@ export class AppComponent implements OnInit {
       if (this.platform.is('desktop')) {
         // console.log("running on desktop!");
       }
-      
+
 
 
 
@@ -577,7 +577,7 @@ export class AppComponent implements OnInit {
    * @param user
    */
   goOnLine = () => {
-   console.log('[APP-COMP] - GO-ONLINE ');
+    // console.log('[APP-COMP] - GO-ONLINE ');
     // this.isOnline = true;
     // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - GO-ONLINE isOnline ', this.isOnline);
 
@@ -624,7 +624,7 @@ export class AppComponent implements OnInit {
   }
 
   goOffLine = () => {
-    console.log('[APP-COMP] - GO-OFFLINE');
+    // console.log('[APP-COMP] - GO-OFFLINE');
 
     this.webSocketClose()
     // this.isOnline = false;
@@ -733,16 +733,23 @@ export class AppComponent implements OnInit {
   }
 
   private initAudio() {
+    // console.log('HERE IS initAudio ')
     // SET AUDIO
+    const href = window.location.href;
+    const hrefArray = href.split('/#/');
+    const chatBaseUrl = hrefArray[0]
+    // console.log('initAudio href', href)
+    // console.log('initAudio chatBaseUrl', chatBaseUrl)
+
     this.audio = new Audio();
-    this.audio.src = URL_SOUND_LIST_CONVERSATION;
+    this.audio.src = chatBaseUrl + URL_SOUND_LIST_CONVERSATION;
     this.audio.load();
   }
 
   private manageTabNotification() {
     if (!this.isTabVisible) {
       // TAB IS HIDDEN --> manage title and SOUND
-
+      // console.log('HERE IS manageTabNotification ')
       let badgeNewConverstionNumber = this.conversationsHandlerService.countIsNew()
       badgeNewConverstionNumber > 0 ? badgeNewConverstionNumber : badgeNewConverstionNumber = 1
       document.title = "(" + badgeNewConverstionNumber + ") " + this.tabTitle
@@ -761,6 +768,7 @@ export class AppComponent implements OnInit {
   }
 
   soundMessage() {
+    // console.log('HERE IS soundMessage ')
     const that = this;
     // this.audio = new Audio();
     // // this.audio.src = '/assets/sounds/pling.mp3';
@@ -772,7 +780,7 @@ export class AppComponent implements OnInit {
       that.audio.play().then(() => {
         that.logger.debug('[APP-COMP] ****** soundMessage played *****');
       }).catch((error: any) => {
-        that.logger.debug('[APP-COMP] ***soundMessage error*', error);
+        that.logger.error('[APP-COMP] ***soundMessage error*', error);
       });
     }, 1000);
   }
