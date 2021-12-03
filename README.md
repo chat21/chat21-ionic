@@ -60,6 +60,7 @@ In progress git
         pushEngine:"none", // OR YOUR CUSTOM PUSH ENGINE
         fileUploadAccept:"*/*",
         logLevel":"<YOUR-PREFERRED-LOG-LEVEL>",
+        supportMode: false,
         firebaseConfig: {
             tenant:"tilechat",
             apiKey: '123ABC..',
@@ -79,6 +80,7 @@ In progress git
         "apiUrl": "https://<YOUR-TILEDESK-API-URL>",
         "baseImageUrl": "https://<YOUR-BASE-IMAGE-URL>",
         "dashboardUrl": "https://<YOUR-DASHBOARD-URL>"
+        "wsUrl": 'ws://' + window.location.hostname + '/ws/',
     }
   };
   ```
@@ -88,6 +90,9 @@ In progress git
 
 * `fileUploadAccept`: The Chat21-ionic allows you to manage the type of files that can be uploaded. By default, all file types are accepted.
 
+* `wsUrl`: allows you to know in real time the agent's availability status, the agent's busy status and the number of unassigned conversations for a selected project
+
+* `supportMode`: if set to true it allows you to view the list of contacts from which you can make direct conversations and the item at the top of the list of conversations that shows the number of unassigned conversations of a selected project and that the agent can view and take over by clicking on it 
 
 ### Push notification
 * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: with < your messagingSenderId >
