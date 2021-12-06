@@ -79,7 +79,7 @@ export class ConversationListPage implements OnInit {
 
   public displayNewConvsItem: boolean = true
 
-  
+
 
   constructor(
     private router: Router,
@@ -116,7 +116,44 @@ export class ConversationListPage implements OnInit {
   ngOnInit() {
     this.watchToConnectionStatus();
     this.getSupportMode();
+
+    const currentUrl = this.router.url;
+    this.logger.log('[CONVS-LIST-PAGE] current_url ngOnInit ', currentUrl);
+    this.route.queryParams.subscribe(params => {
+      this.logger.log('[CONVS-LIST-PAGE] ngOnInit params', params);
+      if (params && params.convselected) {
+        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params convselected:', params.convselected);
+      
+        const conversationSelected = this.conversations.find(item => item.uid === params.convselected);
+        if (conversationSelected) {
+          this.conversationSelected = conversationSelected;
+          this.logger.log('[CONVS-LIST-PAGE] ngOnInit params convselected - conversationSelected: ', this.conversationSelected);
+          this.navigateByUrl('active', params.convselected)
+        }
+
+      } else {
+        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
+      }
+      if (params && params.contact_id && params.contact_fullname) {
+        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params contact_id:', params.contact_id, 'contact_fullname ', params.contact_fullname);
+        this.router.navigateByUrl('conversation-detail/' + params.contact_id + '/' + params.contact_fullname + '/new');
+        this.uidConvSelected = params.contact_id
+      } else {
+        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
+      }
+
+      if (params && params.conversation_detail) {
+        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params conversation_detail:', params.conversation_detail);
+        this.router.navigateByUrl('conversation-detail/');
+
+      } else {
+        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
+      }
+
+    });
   }
+
+  
 
   getSupportMode() {
     this.supportMode = this.appConfigProvider.getConfig().supportMode;
@@ -230,19 +267,19 @@ export class ConversationListPage implements OnInit {
   private listnerStart() {
     const that = this;
     this.chatManager.BSStart
-    .pipe(
-      takeUntil(that.unsubscribe$)
-    )
-    .subscribe((data: any) => {
-      this.logger.log('[CONVS-LIST-PAGE] - BSStart SUBSCR DATA - Current user *****', data);
-      if (data) {
-        that.initialize();
-      }
-    }, error => {
-      this.logger.error('[CONVS-LIST-PAGE] - BSStart SUBSCR - ERROR: ', error);
-    }, () => {
-      this.logger.log('[CONVS-LIST-PAGE] - BSStart SUBSCR * COMPLETE *')
-    });
+      .pipe(
+        takeUntil(that.unsubscribe$)
+      )
+      .subscribe((data: any) => {
+        this.logger.log('[CONVS-LIST-PAGE] - BSStart SUBSCR DATA - Current user *****', data);
+        if (data) {
+          that.initialize();
+        }
+      }, error => {
+        this.logger.error('[CONVS-LIST-PAGE] - BSStart SUBSCR - ERROR: ', error);
+      }, () => {
+        this.logger.log('[CONVS-LIST-PAGE] - BSStart SUBSCR * COMPLETE *')
+      });
   }
 
 
@@ -298,7 +335,7 @@ export class ConversationListPage implements OnInit {
   }
 
   listenGoOnline() {
-   
+
     this.events.subscribe('go:online', (goonline) => {
       this.logger.info('[CONVS-LIST-PAGE] - listen To go:online - goonline', goonline);
       // this.events.unsubscribe('profileInfoButtonClick:logout')
@@ -308,8 +345,8 @@ export class ConversationListPage implements OnInit {
     });
   }
 
-  listenGoOffline(){
- 
+  listenGoOffline() {
+
     this.events.subscribe('go:offline', (offline) => {
       this.logger.info('[CONVS-LIST-PAGE] - listen To go:offline - offline', offline);
       // this.events.unsubscribe('profileInfoButtonClick:logout')
@@ -322,7 +359,7 @@ export class ConversationListPage implements OnInit {
   listenToLogoutEvent() {
     this.events.subscribe('profileInfoButtonClick:logout', (hasclickedlogout) => {
       this.logger.info('[CONVS-LIST-PAGE] - listenToLogoutEvent - hasclickedlogout', hasclickedlogout);
-    
+
 
       this.conversations = []
       this.conversationsHandlerService.conversations = [];
