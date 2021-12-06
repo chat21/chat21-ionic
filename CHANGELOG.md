@@ -1,7 +1,8 @@
 # chat21-ionic ver 3.0
 
 ### 3.0.59-rc15
-- Implements a method that counts and stores the number of open chat cards in the local memory and if the chat card is already open prevents a new chat tab from being opened when the agent clicks on "Open chat" from the dashboard
+- Implements a method in app.components that counts and stores the number of open Chat tabs
+- Implements a method on the conversation list page that prevents a new chat tab from opening when the agent clicks "Open Chat" from the dashboard
 
 ### 3.0.59-rc14
 - Fixes the bug: the sound that warns that a new conversation has been received does not work
