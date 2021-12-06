@@ -141,33 +141,32 @@ export class AppComponent implements OnInit {
     public webSocketJs: WebSocketJs,
   ) {
 
-    // this.saveInStorageChatOpenedTab();
+    this.saveInStorageNumberOfOpenedChatTab();
+    this.getPageState();
     // FOR TEST
     // const last_project = { "user_available": true, "number_assigned_requests": 59, "last_login_at": "2021-08-09T17:30:55.234Z", "status": "active", "_id": "6112bc8f58c958003495a2cb", "id_project": { "status": 100, "_id": "60ffe291f725db00347661ef", "name": "27-LUGLIO-21-STRIPE-TEST", "activeOperatingHours": false, "createdBy": "608ad02d3a4dc000344ade17", "profile": { "name": "pro", "trialDays": 30, "agents": 5, "type": "payment", "subStart": "2021-11-18T10:42:41.000Z", "subEnd": "2021-11-19T10:42:41.000Z", "subscriptionId": "sub_Jvf4kABe9t8JvX", "last_stripe_event": "invoice.payment_succeeded" }, "versions": 20115, "channels": [{ "name": "chat21" }], "createdAt": "2021-07-27T10:40:17.752Z", "updatedAt": "2021-11-18T11:55:01.346Z", "__v": 0, "widget": { "preChatForm": true, "preChatFormJson": [{ "name": "userFullname", "type": "text", "mandatory": true, "label": { "en": "Your name", "it": "Il tuo nome" } }, { "name": "userEmail", "type": "text", "mandatory": true, "regex": "/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/", "label": { "en": "Your email", "it": "La tua email" }, "errorLabel": { "en": "Invalid email address", "it": "Indirizzo email non valido" } }, { "name": "tel", "mandatory": true, "label": { "en": "Your phone number", "it": "Il tuo numero di telefono" } }], "preChatFormCustomFieldsEnabled": true }, "trialExpired": true, "trialDaysLeft": 84, "isActiveSubscription": true, "id": "60ffe291f725db00347661ef" }, "id_user": "60aa0fef1482fe00346854a7", "role": "admin", "createdBy": "608ad02d3a4dc000344ade17", "createdAt": "2021-08-10T17:51:11.318Z", "updatedAt": "2021-11-19T08:08:21.437Z", "__v": 0, "presence": { "status": "online", "changedAt": "2021-11-19T08:08:21.432Z" }, "isAuthenticated": true, "id": "6112bc8f58c958003495a2cb" }
     // localStorage.setItem('last_project', JSON.stringify(last_project))
   }
-  saveInStorageChatOpenedTab() {
-    // if (+localStorage.tabCount > 0) {
-    //   alert('Already open!');
-    // } else {
-    //   localStorage.tabCount = 0;
-    // }
+  saveInStorageNumberOfOpenedChatTab() {
+    this.logger.log('Calling saveInStorageChatOpenedTab!');
 
-    // window.addEventListener('load', (event) => {
-    //   console.log('[CONVS-LIST-PAGE] page is fully loaded', event);
-    //   // let tab  = + localStorage.getItem('tab')
-    //   // console.log('[CONVS-LIST-PAGE] page is fully loaded getItem tab', + tab);
-    //   // localStorage.setItem('tab', "1" )
-    //   localStorage.tabCount = +localStorage.tabCount + 1;
-    // });
+    // https://jsfiddle.net/jjjs5wd3/3/å
+    if (+localStorage.tabCount > 0) {
+      this.logger.log('Chat IONIC Already open!');
+    } else {
+      localStorage.tabCount = 0;
 
-    // // https://developers.google.com/web/updates/2018/07/page-lifecycle-api#the-beforeunload-event
-    // const terminationEvent = 'onpagehide' in self ? 'pagehide' : 'unload';
-    // window.addEventListener(terminationEvent, (event) => {
-    //   console.log('[CONVS-LIST-PAGE] page is terminationEvent', event);
-    //   localStorage.tabCount = +localStorage.tabCount - 1;
-    // }, { capture: true });
+      localStorage.tabCount = +localStorage.tabCount + 1;
+    }
+    const terminationEvent = 'onpagehide' in self ? 'pagehide' : 'unload';
+    window.addEventListener(terminationEvent, (event) => {
+      localStorage.tabCount = +localStorage.tabCount - 1;
+    }, { capture: true });
+  }
+
+  getPageState() {
     const getState = () => {
+      localStorage.setItem('visibilityState', document.visibilityState)
       if (document.visibilityState === 'hidden') {
         return 'hidden';
       }
@@ -178,16 +177,19 @@ export class AppComponent implements OnInit {
     };
 
     let state = getState();
-    console.log('[CONVS-LIST-PAGE] page state ', state)
-    if (state === 'hidden') {
-      localStorage.setItem('hidden', 'true')
-    }
+    // console.log('[CONVS-LIST-PAGE] page state ', state)
+    // if (state === 'hidden') {
+    //   console.log(`State change: state ${state}`);
+    //   localStorage.setItem('hidden', 'true')
+    // }
 
     const logStateChange = (nextState) => {
       const prevState = state;
       if (nextState !== prevState) {
         console.log(`State change: ${prevState} >>> ${nextState}`);
         state = nextState;
+        localStorage.setItem('state', nextState)
+
       }
     };
 
@@ -207,11 +209,12 @@ export class AppComponent implements OnInit {
         // If the event's persisted property is `true` the page is about
         // to enter the Back-Forward Cache, which is also in the frozen state.
         logStateChange('frozen');
-        localStorage.setItem('terminated', 'true')
+        localStorage.setItem('state', 'frozen')
       } else {
         // If the event's persisted property is not `true` the page is
         // about to be unloaded.
         logStateChange('terminated');
+        localStorage.setItem('state', 'terminated')
         localStorage.setItem('terminated', 'true')
       }
     }, { capture: true });
