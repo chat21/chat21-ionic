@@ -25,5 +25,6 @@
     "baseImageUrl": "${API_BASEIMAGE_URL}",
     "dashboardUrl": "${DASHBOARD_URL}",
     "wsUrl": "${WS_URL}",
+    "wsUrlRel": "${WS_URL_RELATIVE}",
     "supportMode": "${SUPPORT_MODE}"
 }
