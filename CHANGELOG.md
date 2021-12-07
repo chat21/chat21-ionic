@@ -1,5 +1,10 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc16
+- Changes in config.xml the value of the "SplashScreen"
+- Improves the method to avoid page reloading when an agent clicks the "Open Chat" button of the dashboard on the realtime and non-real time conversation list page and on the conversation detail page
+- Modifies the "app-config" service by adding the ability to pass relative URLs to the websocket
+
 ### 3.0.59-rc15
 - Implements a method in app.components that counts and stores the number of open Chat tabs
 - Implements a method on the conversation list page that prevents a new chat tab from opening when the agent clicks "Open Chat" from the dashboard
