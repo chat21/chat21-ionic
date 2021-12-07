@@ -170,11 +170,11 @@ export class WebSocketJs {
     var str = JSON.stringify(message);
     this.logger.log("[WEBSOCKET-JS] - UN-SUBSCRIBE str " + str);
 
-    if (this.ws.readyState == 1) {
+    if (this.ws && this.ws.readyState == 1) {
       this.logger.log("[WEBSOCKET-JS] - UN-SUBSCRIBE TO TOPIC - STRING TO SEND " + str, " FOR UNSUBSCRIBE TO TOPIC: ", topic);
       this.send(str, `UNSUSCRIBE from ${topic}`);
 
-    } else {
+    } else if (this.ws) {
       this.logger.log("[WEBSOCKET-JS] - UN-SUBSCRIBE TRY 'SEND' BUT READY STASTE IS : ", this.ws.readyState);
     }
   }
@@ -194,7 +194,7 @@ export class WebSocketJs {
   // -----------------------------------------------------------------------------------------------------
   close() {
     this.topics = [];
-    this.callbacks = []; 
+    this.callbacks = [];
     this.logger.log("[WEBSOCKET-JS] - CALLED CLOSE - TOPICS ", this.topics, ' - CALLLBACKS ', this.callbacks);
 
     if (this.ws) {
@@ -275,13 +275,13 @@ export class WebSocketJs {
 
       // Qui viene inviato un battito cardiaco Dopo averlo ricevuto, viene restituito un messaggio di battito cardiaco.
       // onmessage Ottieni il battito cardiaco restituito per indicare che la connessione è normale
-      if (this.ws.readyState == 1) {
+      if (this.ws && this.ws.readyState == 1) {
 
         // this.logger.log("[WEBSOCKET-JS] - HEART-START - SEND PING-MSG");
 
         this.send(JSON.stringify(this.pingMsg), 'HEART-START')
 
-      } else {
+      } else if (this.ws) {
 
         this.logger.log("[WEBSOCKET-JS] - HEART-START - TRY TO SEND PING-MSG BUT READY STATE IS ", this.ws.readyState);
 
@@ -440,7 +440,7 @@ export class WebSocketJs {
             // @ send PONG
             // -------------------
             // that.logger.log('[WEBSOCKET-JS] -  RECEIVED PING -> SEND PONG MSG');
-         
+
             that.send(JSON.stringify(that.pongMsg), 'ON-MESSAGE')
 
           } else {
@@ -463,15 +463,15 @@ export class WebSocketJs {
         if (json && json.payload && json.payload.message && that.isArray(json.payload.message)) {
 
           json.payload.message.forEach(element => {
-  
+
             //let insUp = that.insertOrUpdate(element);
             let insUp = json.payload.method;
-          
+
             var object = { event: json.payload, data: element };
 
             var callbackObj = that.callbacks.get(object.event.topic);
 
-         
+
             if (insUp == "CREATE") {
               if (that.onCreate) {
                 that.onCreate(element, object);
@@ -497,10 +497,10 @@ export class WebSocketJs {
         } else {
           //let insUp = that.insertOrUpdate(json.payload.message);
           let insUp = json.payload.method;
-         
+
           var object = { event: json.payload, data: json };
           var callbackObj = that.callbacks.get(object.event.topic);
-        
+
 
           if (insUp == "CREATE") {
             if (that.onCreate) {
