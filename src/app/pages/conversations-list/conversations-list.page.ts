@@ -106,6 +106,22 @@ export class ConversationListPage implements OnInit {
     this.listenGoOnline();
     this.listenGoOffline();
     this.listenToSwPostMessage();
+    this.listenConvIdHasChanged();
+
+  }
+
+  listenConvIdHasChanged() {
+    this.events.subscribe('convid:haschanged', (convId) => {
+      console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - convId', convId);
+      // this.events.unsubscribe('profileInfoButtonClick:logout')
+      //       this.setUidConvSelected(uid , 'active')
+      // const conversation = {}
+      if (convId) {
+        const conversationSelected = this.conversations.find(item => item.uid === convId);
+        console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - conversationSelected', conversationSelected);
+        this.onConversationSelected(conversationSelected)
+      }
+    });
 
   }
 
@@ -121,19 +137,19 @@ export class ConversationListPage implements OnInit {
     this.logger.log('[CONVS-LIST-PAGE] current_url ngOnInit ', currentUrl);
     this.route.queryParams.subscribe(params => {
       this.logger.log('[CONVS-LIST-PAGE] ngOnInit params', params);
-      if (params && params.convselected) {
-        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params convselected:', params.convselected);
-      
-        const conversationSelected = this.conversations.find(item => item.uid === params.convselected);
-        if (conversationSelected) {
-          this.conversationSelected = conversationSelected;
-          this.logger.log('[CONVS-LIST-PAGE] ngOnInit params convselected - conversationSelected: ', this.conversationSelected);
-          this.navigateByUrl('active', params.convselected)
-        }
+      // if (params && params.convselected) {
+      //   console.log('[CONVS-LIST-PAGE] ngOnInit params convselected:', params.convselected);
 
-      } else {
-        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
-      }
+      //   const conversationSelected = this.conversations.find(item => item.uid === params.convselected);
+      //   if (conversationSelected) {
+      //     this.conversationSelected = conversationSelected;
+      //     console.log('[CONVS-LIST-PAGE] ngOnInit params convselected - conversationSelected: ', this.conversationSelected);
+      //     this.navigateByUrl('active', params.convselected)
+      //   }
+
+      // } else {
+      //   console.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
+      // }
       if (params && params.contact_id && params.contact_fullname) {
         this.logger.log('[CONVS-LIST-PAGE] ngOnInit params contact_id:', params.contact_id, 'contact_fullname ', params.contact_fullname);
         this.router.navigateByUrl('conversation-detail/' + params.contact_id + '/' + params.contact_fullname + '/new');
@@ -153,7 +169,7 @@ export class ConversationListPage implements OnInit {
     });
   }
 
-  
+
 
   getSupportMode() {
     this.supportMode = this.appConfigProvider.getConfig().supportMode;
@@ -335,7 +351,6 @@ export class ConversationListPage implements OnInit {
   }
 
   listenGoOnline() {
-
     this.events.subscribe('go:online', (goonline) => {
       this.logger.info('[CONVS-LIST-PAGE] - listen To go:online - goonline', goonline);
       // this.events.unsubscribe('profileInfoButtonClick:logout')
@@ -471,8 +486,11 @@ export class ConversationListPage implements OnInit {
    * evento richiamato quando si seleziona un utente nell'elenco degli user
    * apro dettaglio conversazione
    */
+  // --------------------------------
+  // !!!!!! IS USED? ?????
+  // ------------------------------
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
-    this.logger.log('[CONVS-LIST-PAGE]  ************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
+    console.log('[CONVS-LIST-PAGE]  ************** subscribeUidConvSelectedChanged navigateByUrl', user, type);
     this.uidConvSelected = user.uid;
     this.logger.log('[CONVS-LIST-PAGE]  ************** uidConvSelected ', this.uidConvSelected);
     // this.conversationsHandlerService.uidConvSelected = user.uid;
@@ -561,6 +579,7 @@ export class ConversationListPage implements OnInit {
     this.initConversationsHandler();
     this.initVariables();
     this.initSubscriptions();
+
     // this.initHandlerEventEmitter();
   }
 
@@ -586,7 +605,7 @@ export class ConversationListPage implements OnInit {
 
       if (this.route && this.route.snapshot && this.route.snapshot.firstChild) {
         const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
-        this.logger.log('[CONVS-LIST-PAGE] conversationWith 2: ', IDConv);
+        console.log('[CONVS-LIST-PAGE] conversationWith 2: ', IDConv);
         if (IDConv) {
           this.setUidConvSelected(IDConv);
         } else {
@@ -603,7 +622,7 @@ export class ConversationListPage implements OnInit {
    * ::: setUidConvSelected :::
    */
   setUidConvSelected(uidConvSelected: string, conversationType?: string,) {
-    this.logger.log('[CONVS-LIST-PAGE] setuidCOnvSelected', uidConvSelected)
+    console.log('[CONVS-LIST-PAGE] setuidCOnvSelected', uidConvSelected)
     this.uidConvSelected = uidConvSelected;
     // this.conversationsHandlerService.uidConvSelected = uidConvSelected;
     if (uidConvSelected) {
@@ -615,7 +634,7 @@ export class ConversationListPage implements OnInit {
       }
       if (conversationSelected) {
         this.logger.log('[CONVS-LIST-PAGE] conversationSelected', conversationSelected);
-        this.logger.log('[CONVS-LIST-PAGE] la conv ', this.conversationSelected, ' has already been loaded');
+        this.logger.log('[CONVS-LIST-PAGE] the conversation ', this.conversationSelected, ' has already been loaded');
         this.conversationSelected = conversationSelected;
         this.logger.log('[CONVS-LIST-PAGE] setUidConvSelected: ', this.conversationSelected);
       }
@@ -623,7 +642,7 @@ export class ConversationListPage implements OnInit {
   }
 
   onConversationSelected(conversation: ConversationModel) {
-    //console.log('returnSelectedConversation::', conversation)
+    console.log('onConversationSelected conversation', conversation)
     if (conversation.archived) {
       this.navigateByUrl('archived', conversation.uid)
       this.logger.log('[CONVS-LIST-PAGE] onConversationSelected archived conversation.uid ', conversation.uid)
@@ -720,19 +739,22 @@ export class ConversationListPage implements OnInit {
 
 
   navigateByUrl(converationType: string, uidConvSelected: string) {
-    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl uidConvSelected: ', uidConvSelected);
-    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl run  this.setUidConvSelected');
-    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl this.uidConvSelected ', this.uidConvSelected);
-    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl this.conversationSelected ', this.conversationSelected)
+    console.log('[CONVS-LIST-PAGE] calling navigateByUrl: ');
+    console.log('[CONVS-LIST-PAGE] navigateByUrl uidConvSelected: ', uidConvSelected);
+    console.log('[CONVS-LIST-PAGE] navigateByUrl run  this.setUidConvSelected');
+    console.log('[CONVS-LIST-PAGE] navigateByUrl this.uidConvSelected ', this.uidConvSelected);
+    console.log('[CONVS-LIST-PAGE] navigateByUrl this.conversationSelected ', this.conversationSelected)
 
     this.setUidConvSelected(uidConvSelected, converationType);
     if (checkPlatformIsMobile()) {
-      this.logger.log('[CONVS-LIST-PAGE] PLATFORM_MOBILE 1', this.navService);
+      console.log('[CONVS-LIST-PAGE] checkPlatformIsMobile(): ', checkPlatformIsMobile());
+      console.log('[CONVS-LIST-PAGE] DESKTOP (window >= 768)', this.navService);
       let pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname + '/' + converationType;
       this.logger.log('[CONVS-LIST-PAGE] pageURL', pageUrl)
       this.router.navigateByUrl(pageUrl);
     } else {
-      this.logger.log('[CONVS-LIST-PAGE] PLATFORM_DESKTOP 2', this.navService);
+      console.log('[CONVS-LIST-PAGE] checkPlatformIsMobile(): ', checkPlatformIsMobile());
+      this.logger.log('[CONVS-LIST-PAGE] MOBILE (window < 768) ', this.navService);
       let pageUrl = 'conversation-detail/' + this.uidConvSelected;
       if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
         pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname + '/' + converationType;

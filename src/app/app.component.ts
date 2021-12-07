@@ -2,7 +2,7 @@ import { URL_SOUND_LIST_CONVERSATION } from './../chat21-core/utils/constants';
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 
-import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2, } from '@angular/core';
+import { Component, ViewChild, NgZone, OnInit, HostListener, ElementRef, Renderer2, AfterViewInit, } from '@angular/core';
 import { Config, Platform, IonRouterOutlet, IonSplitPane, NavController, MenuController, AlertController, IonNav, ToastController } from '@ionic/angular';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription, VirtualTimeScheduler } from 'rxjs';
@@ -57,7 +57,7 @@ import { NetworkService } from './services/network-service/network.service';
 import * as PACKAGE from 'package.json';
 import { filter } from 'rxjs/operators'
 import { WebSocketJs } from './services/websocket/websocket-js';
-
+import { Location } from '@angular/common'
 // import { filter } from 'rxjs/operators';
 
 @Component({
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private appConfigProvider: AppConfigProvider,
-    private events: EventsService,
+    public events: EventsService,
     public config: Config,
     public chatManager: ChatManager,
     public translate: TranslateService,
@@ -139,14 +139,67 @@ export class AppComponent implements OnInit {
     // private tiledeskService: TiledeskService,
     private networkService: NetworkService,
     public webSocketJs: WebSocketJs,
+    public location: Location
   ) {
 
     this.saveInStorageNumberOfOpenedChatTab();
     this.getPageState();
+
+    // location.subscribe((val) => {
+
+    //   console.log('location subscribe val', val)
+    //   if (val.type == "hashchange") {
+    //     const convId = getParameterByName('convId')
+    //     console.log('[APP-COMP] ngOnInit convId get with getParameterByName  ', convId)
+    //     const requesterFullaname = getParameterByName('requester_fullaname')
+    //     console.log('[APP-COMP] ngOnInit convId get with getParameterByName  ', requesterFullaname);
+
+    //     this.navigateToDetail(convId, requesterFullaname)
+
+    //     this.events.publish('convid:haschanged', convId);
+    //   }
+    // });
+
+    window.addEventListener('hashchange', function () {
+      console.log('location changed!');
+      const convId = getParameterByName('convId')
+      console.log('[APP-COMP] ngOnInit convId get with getParameterByName  ', convId)
+   
+      if (convId) {
+        setTimeout(() => {
+          events.publish('convid:haschanged', convId);
+        }, 0);
+      }
+    
+
+      // this.navigateToDetail(convId, requesterFullaname)
+
+    
+
+    })
+
+
+    // router.events.subscribe((val) => {
+    //   this.checkCurrentURL();
+    //  });
     // FOR TEST
     // const last_project = { "user_available": true, "number_assigned_requests": 59, "last_login_at": "2021-08-09T17:30:55.234Z", "status": "active", "_id": "6112bc8f58c958003495a2cb", "id_project": { "status": 100, "_id": "60ffe291f725db00347661ef", "name": "27-LUGLIO-21-STRIPE-TEST", "activeOperatingHours": false, "createdBy": "608ad02d3a4dc000344ade17", "profile": { "name": "pro", "trialDays": 30, "agents": 5, "type": "payment", "subStart": "2021-11-18T10:42:41.000Z", "subEnd": "2021-11-19T10:42:41.000Z", "subscriptionId": "sub_Jvf4kABe9t8JvX", "last_stripe_event": "invoice.payment_succeeded" }, "versions": 20115, "channels": [{ "name": "chat21" }], "createdAt": "2021-07-27T10:40:17.752Z", "updatedAt": "2021-11-18T11:55:01.346Z", "__v": 0, "widget": { "preChatForm": true, "preChatFormJson": [{ "name": "userFullname", "type": "text", "mandatory": true, "label": { "en": "Your name", "it": "Il tuo nome" } }, { "name": "userEmail", "type": "text", "mandatory": true, "regex": "/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/", "label": { "en": "Your email", "it": "La tua email" }, "errorLabel": { "en": "Invalid email address", "it": "Indirizzo email non valido" } }, { "name": "tel", "mandatory": true, "label": { "en": "Your phone number", "it": "Il tuo numero di telefono" } }], "preChatFormCustomFieldsEnabled": true }, "trialExpired": true, "trialDaysLeft": 84, "isActiveSubscription": true, "id": "60ffe291f725db00347661ef" }, "id_user": "60aa0fef1482fe00346854a7", "role": "admin", "createdBy": "608ad02d3a4dc000344ade17", "createdAt": "2021-08-10T17:51:11.318Z", "updatedAt": "2021-11-19T08:08:21.437Z", "__v": 0, "presence": { "status": "online", "changedAt": "2021-11-19T08:08:21.432Z" }, "isAuthenticated": true, "id": "6112bc8f58c958003495a2cb" }
     // localStorage.setItem('last_project', JSON.stringify(last_project))
   }
+  navigateToDetail(convId, requesterFullaname) {
+    console.log('[APP-COMP] navigateToDetail  ');
+    let pageUrl = 'conversation-detail/' + convId + '/' + requesterFullaname + '/active';
+    this.router.navigateByUrl(pageUrl);
+    this.location.replaceState('conversation-detail/' + convId + '/' + requesterFullaname + '/active');
+  }
+
+
+  // private checkCurrentURL() {
+  //   console.log("location : " + window.location.pathname)
+  //   const convId = getParameterByName('convId')
+  //   console.log('[APP-COMP] ngOnInit convId get with getParameterByName  ', convId)
+  //   this.events.publish('convid:haschanged', convId);
+  // }
   saveInStorageNumberOfOpenedChatTab() {
     this.logger.log('Calling saveInStorageChatOpenedTab!');
 
@@ -165,6 +218,7 @@ export class AppComponent implements OnInit {
   }
 
   getPageState() {
+
     const getState = () => {
       localStorage.setItem('visibilityState', document.visibilityState)
       if (document.visibilityState === 'hidden') {
@@ -184,6 +238,7 @@ export class AppComponent implements OnInit {
     // }
 
     const logStateChange = (nextState) => {
+
       const prevState = state;
       if (nextState !== prevState) {
         console.log(`State change: ${prevState} >>> ${nextState}`);
@@ -243,7 +298,7 @@ export class AppComponent implements OnInit {
     if (token) {
       // this.isOnline = false;
       // this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN token get with this.isOnline  ', this.isOnline)
-      this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN token get with getParameterByName  ', token)
+      console.log('[APP-COMP] ngOnInit AUTOLOGIN token get with getParameterByName  ', token)
       // save token in local storage then 
 
       const storedToken = this.appStorageService.getItem('tiledeskToken');
@@ -255,10 +310,20 @@ export class AppComponent implements OnInit {
         this.logger.log('[APP-COMP] ngOnInit AUTOLOGIN the current user already exist DON\'T SAVE ')
       }
     }
-    this.initializeApp('oninit');
 
+
+    this.initializeApp('oninit');
     this.listenToPostMsgs();
   }
+
+  // ngAfterViewInit() {
+  //   console.log('[APP-COMP] ngAfterViewInit')
+  // }
+
+  // ngDoCheck(){
+  //   console.log('[APP-COMP] ngDoCheck')
+  // }
+
 
 
 
@@ -846,7 +911,7 @@ export class AppComponent implements OnInit {
 
     this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
 
-      this.logger.log('[APP-COMP] ***** subscribeConversationChanged conversation: ', conversation);
+      console.log('[APP-COMP] ***** subscribeConversationChanged conversation: ', conversation);
       const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
       this.logger.log('[APP-COMP] ***** subscribeConversationChanged current_user: ', currentUser);
 
@@ -865,7 +930,7 @@ export class AppComponent implements OnInit {
    * apro dettaglio conversazione
    */
   subscribeChangedConversationSelected = (user: UserModel, type: string) => {
-    this.logger.log('[APP-COMP] subscribeUidConvSelectedChanged navigateByUrl', user, type);
+    console.log('[APP-COMP] subscribeUidConvSelectedChanged navigateByUrl', user, type);
     // this.router.navigateByUrl('conversation-detail/' + user.uid + '?conversationWithFullname=' + user.fullname);
     this.router.navigateByUrl('conversation-detail/' + user.uid + '/' + user.fullname + '/' + type);
   }
