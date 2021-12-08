@@ -5,6 +5,7 @@
 - Improves the method to avoid page reloading when an agent clicks the "Open Chat" button of the dashboard on the realtime and non-real time conversation list page and on the conversation detail page
 - Modifies the "app-config" service by adding the ability to pass relative URLs to the websocket
 - Adds "wsUrlRel" property to env.sample, chat-config-template.json and chat-config.json
+- Adds a check in the "websocket-js.ts" service on the existence of the "ws" property of the "WebSocketJs" class before accessing the property "readyState"
 
 ### 3.0.59-rc15
 - Implements a method in app.components that counts and stores the number of open Chat tabs
