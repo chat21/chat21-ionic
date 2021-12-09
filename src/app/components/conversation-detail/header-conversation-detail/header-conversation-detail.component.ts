@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 
 // Logger
@@ -43,7 +43,8 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   constructor(
     public imageRepoService: ImageRepoService,
     private route: ActivatedRoute,
-    public platform: Platform
+    public platform: Platform,
+    private router: Router
   ) {
     this.route.paramMap.subscribe(params => {
 
@@ -124,5 +125,9 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
 
   /** */
   pushPage(event) { }
+
+  goBackToConversationList() {
+    this.router.navigateByUrl('/conversations-list');
+  }
 
 }
