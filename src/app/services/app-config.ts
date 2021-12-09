@@ -30,7 +30,7 @@ export class AppConfigProvider {
 
     return this.http.get(this.appConfig.remoteConfigUrl)
       .toPromise().then((data: any ) => {
-        console.log('AppConfigService loadAppConfig data: ', data);
+        // console.log('AppConfigService loadAppConfig data: ', data);
  
         const allconfig = data
         // console.log('[APP-CONFIG-SERVICE] - loadAppConfig allconfig: ', allconfig);
