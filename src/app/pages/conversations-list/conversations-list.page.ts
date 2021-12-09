@@ -106,12 +106,12 @@ export class ConversationListPage implements OnInit {
     this.listenGoOnline();
     this.listenGoOffline();
     this.listenToSwPostMessage();
-    this.listenConvIdHasChanged();
-
+    this.listenSupportConvIdHasChanged();
+    this.listenDirectConvIdHasChanged();
   }
 
-  listenConvIdHasChanged() {
-    this.events.subscribe('convid:haschanged', (convId) => {
+  listenSupportConvIdHasChanged() {
+    this.events.subscribe('supportconvid:haschanged', (convId) => {
       console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - convId', convId);
       // this.events.unsubscribe('profileInfoButtonClick:logout')
       //       this.setUidConvSelected(uid , 'active')
@@ -120,6 +120,17 @@ export class ConversationListPage implements OnInit {
         const conversationSelected = this.conversations.find(item => item.uid === convId);
         console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - conversationSelected', conversationSelected);
         this.onConversationSelected(conversationSelected)
+      }
+    });
+
+  }
+
+  listenDirectConvIdHasChanged() {
+    this.events.subscribe('directconvid:haschanged', (contact_id) => {
+      console.log('[CONVS-LIST-PAGE] - listen To directconvid:haschanged - contact_id', contact_id);
+
+      if (contact_id) {
+        this.uidConvSelected = contact_id
       }
     });
 
@@ -135,8 +146,8 @@ export class ConversationListPage implements OnInit {
 
     const currentUrl = this.router.url;
     this.logger.log('[CONVS-LIST-PAGE] current_url ngOnInit ', currentUrl);
-    this.route.queryParams.subscribe(params => {
-      this.logger.log('[CONVS-LIST-PAGE] ngOnInit params', params);
+    // this.route.queryParams.subscribe(params => {
+    //   this.logger.log('[CONVS-LIST-PAGE] ngOnInit params', params);
       // if (params && params.convselected) {
       //   console.log('[CONVS-LIST-PAGE] ngOnInit params convselected:', params.convselected);
 
@@ -150,23 +161,23 @@ export class ConversationListPage implements OnInit {
       // } else {
       //   console.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
       // }
-      if (params && params.contact_id && params.contact_fullname) {
-        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params contact_id:', params.contact_id, 'contact_fullname ', params.contact_fullname);
-        this.router.navigateByUrl('conversation-detail/' + params.contact_id + '/' + params.contact_fullname + '/new');
-        this.uidConvSelected = params.contact_id
-      } else {
-        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
-      }
+      // if (params && params.contact_id && params.contact_fullname) {
+      //   this.logger.log('[CONVS-LIST-PAGE] ngOnInit params contact_id:', params.contact_id, 'contact_fullname ', params.contact_fullname);
+      //   this.router.navigateByUrl('conversation-detail/' + params.contact_id + '/' + params.contact_fullname + '/new');
+      //   this.uidConvSelected = params.contact_id
+      // } else {
+      //   this.logger.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
+      // }
 
-      if (params && params.conversation_detail) {
-        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params conversation_detail:', params.conversation_detail);
-        this.router.navigateByUrl('conversation-detail/');
+      // if (params && params.conversation_detail) {
+      //   this.logger.log('[CONVS-LIST-PAGE] ngOnInit params conversation_detail:', params.conversation_detail);
+      //   this.router.navigateByUrl('conversation-detail/');
 
-      } else {
-        this.logger.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
-      }
+      // } else {
+      //   this.logger.log('[CONVS-LIST-PAGE] ngOnInit params NoParams ');
+      // }
 
-    });
+    // });
   }
 
 
