@@ -170,22 +170,20 @@ export class AppComponent implements OnInit {
   listenToUrlChanges() {
     const self = this;
     window.addEventListener('hashchange', function () {
-      console.log('location changed!');
+      // console.log('location changed!');
 
       const convId = getParameterByName('convId')
-      console.log('[APP-COMP] getParameterByName convId ', convId)
+      // console.log('[APP-COMP] getParameterByName convId ', convId)
       if (convId) {
         setTimeout(() => {
           self.events.publish('supportconvid:haschanged', convId);
         }, 0);
-      } else {
-        console.log('[APP-COMP] convId is null', convId)
       }
 
       const contact_id = getParameterByName('contact_id')
-      console.log('[APP-COMP] getParameterByName contact_id ', contact_id)
+      // console.log('[APP-COMP] getParameterByName contact_id ', contact_id)
       const contact_fullname = getParameterByName('contact_fullname')
-      console.log('[APP-COMP] getParameterByName contact_fullname ', contact_fullname)
+      // console.log('[APP-COMP] getParameterByName contact_fullname ', contact_fullname)
       if (contact_id && contact_fullname) {
         setTimeout(() => {
           self.router.navigateByUrl('conversation-detail/' + contact_id + '/' + contact_fullname + '/new');
@@ -193,36 +191,19 @@ export class AppComponent implements OnInit {
         }, 0);
         
       } else {
-        console.log('[APP-COMP] contact_id and contact_fullname are null')
+        // console.log('[APP-COMP] contact_id and contact_fullname are null')
       }
 
       const conversation_detail = getParameterByName('conversation_detail')
-      console.log('[APP-COMP] getParameterByName conversation_detail ', conversation_detail)
+      // console.log('[APP-COMP] getParameterByName conversation_detail ', conversation_detail)
       if (conversation_detail) {
         setTimeout(() => {
           self.router.navigate(['conversation-detail/'])
         }, 0);
       } 
-
-
-    })
+    });
   }
 
-
-  // navigateToDetail(convId, requesterFullaname) {
-  //   console.log('[APP-COMP] navigateToDetail  ');
-  //   let pageUrl = 'conversation-detail/' + convId + '/' + requesterFullaname + '/active';
-  //   this.router.navigateByUrl(pageUrl);
-  //   this.location.replaceState('conversation-detail/' + convId + '/' + requesterFullaname + '/active');
-  // }
-
-
-  // private checkCurrentURL() {
-  //   console.log("location : " + window.location.pathname)
-  //   const convId = getParameterByName('convId')
-  //   console.log('[APP-COMP] ngOnInit convId get with getParameterByName  ', convId)
-  //   this.events.publish('convid:haschanged', convId);
-  // }
   saveInStorageNumberOfOpenedChatTab() {
     this.logger.log('Calling saveInStorageChatOpenedTab!');
 
@@ -766,21 +747,21 @@ export class AppComponent implements OnInit {
     // }
 
     if (checkPlatformIsMobile()) {
-      console.log('[APP-COMP] checkPlatformIsMobile',checkPlatformIsMobile());
+      // console.log('[APP-COMP] checkPlatformIsMobile',checkPlatformIsMobile());
       this.platformIs = PLATFORM_MOBILE;
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
-      console.log('[APP-COMP]  platformIs', this.platformIs);
-      console.log('[APP-COMP] PLATFORM', PLATFORM_MOBILE, 'route.snapshot', this.route.snapshot);
+      // console.log('[APP-COMP]  platformIs', this.platformIs);
+      // console.log('[APP-COMP] PLATFORM', PLATFORM_MOBILE, 'route.snapshot', this.route.snapshot);
       if (!IDConv) {
         this.router.navigateByUrl('conversations-list')
       }
       // this.router.navigateByUrl(pageUrl);
       // this.navService.setRoot(ConversationListPage, {});
     } else {
-      console.log('[APP-COMP] checkPlatformIsMobile',checkPlatformIsMobile());
+      // console.log('[APP-COMP] checkPlatformIsMobile',checkPlatformIsMobile());
       this.platformIs = PLATFORM_DESKTOP;
-      console.log('[APP-COMP]  platformIs', this.platformIs);
-      console.log('[APP-COMP] PLATFORM', PLATFORM_DESKTOP, 'route.snapshot',  this.route.snapshot);
+      // console.log('[APP-COMP]  platformIs', this.platformIs);
+      // console.log('[APP-COMP] PLATFORM', PLATFORM_DESKTOP, 'route.snapshot',  this.route.snapshot);
       this.logger.log('[APP-COMP] PLATFORM_DESKTOP ', this.navService);
 
       this.navService.setRoot(ConversationListPage, {});
@@ -930,7 +911,7 @@ export class AppComponent implements OnInit {
 
     this.conversationsHandlerService.conversationChanged.subscribe((conversation: ConversationModel) => {
 
-      console.log('[APP-COMP] ***** subscribeConversationChanged conversation: ', conversation);
+      // console.log('[APP-COMP] ***** subscribeConversationChanged conversation: ', conversation);
       const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
       this.logger.log('[APP-COMP] ***** subscribeConversationChanged current_user: ', currentUser);
 

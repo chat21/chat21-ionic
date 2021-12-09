@@ -112,28 +112,22 @@ export class ConversationListPage implements OnInit {
 
   listenSupportConvIdHasChanged() {
     this.events.subscribe('supportconvid:haschanged', (convId) => {
-      console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - convId', convId);
-      // this.events.unsubscribe('profileInfoButtonClick:logout')
-      //       this.setUidConvSelected(uid , 'active')
-      // const conversation = {}
+      // console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - convId', convId);
       if (convId) {
         const conversationSelected = this.conversations.find(item => item.uid === convId);
-        console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - conversationSelected', conversationSelected);
+        // console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - conversationSelected', conversationSelected);
         this.onConversationSelected(conversationSelected)
       }
     });
-
   }
 
   listenDirectConvIdHasChanged() {
     this.events.subscribe('directconvid:haschanged', (contact_id) => {
-      console.log('[CONVS-LIST-PAGE] - listen To directconvid:haschanged - contact_id', contact_id);
-
+      // console.log('[CONVS-LIST-PAGE] - listen To directconvid:haschanged - contact_id', contact_id);
       if (contact_id) {
         this.uidConvSelected = contact_id
       }
     });
-
   }
 
 
@@ -616,7 +610,7 @@ export class ConversationListPage implements OnInit {
 
       if (this.route && this.route.snapshot && this.route.snapshot.firstChild) {
         const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
-        console.log('[CONVS-LIST-PAGE] conversationWith 2: ', IDConv);
+        this.logger.log.log('[CONVS-LIST-PAGE] conversationWith 2: ', IDConv);
         if (IDConv) {
           this.setUidConvSelected(IDConv);
         } else {
@@ -633,7 +627,7 @@ export class ConversationListPage implements OnInit {
    * ::: setUidConvSelected :::
    */
   setUidConvSelected(uidConvSelected: string, conversationType?: string,) {
-    console.log('[CONVS-LIST-PAGE] setuidCOnvSelected', uidConvSelected)
+    this.logger.log('[CONVS-LIST-PAGE] setuidCOnvSelected', uidConvSelected)
     this.uidConvSelected = uidConvSelected;
     // this.conversationsHandlerService.uidConvSelected = uidConvSelected;
     if (uidConvSelected) {
@@ -653,7 +647,7 @@ export class ConversationListPage implements OnInit {
   }
 
   onConversationSelected(conversation: ConversationModel) {
-    console.log('onConversationSelected conversation', conversation)
+    this.logger.log('onConversationSelected conversation', conversation)
     if (conversation.archived) {
       this.navigateByUrl('archived', conversation.uid)
       this.logger.log('[CONVS-LIST-PAGE] onConversationSelected archived conversation.uid ', conversation.uid)
@@ -750,16 +744,16 @@ export class ConversationListPage implements OnInit {
 
 
   navigateByUrl(converationType: string, uidConvSelected: string) {
-    console.log('[CONVS-LIST-PAGE] calling navigateByUrl: ');
-    console.log('[CONVS-LIST-PAGE] navigateByUrl uidConvSelected: ', uidConvSelected);
-    console.log('[CONVS-LIST-PAGE] navigateByUrl run  this.setUidConvSelected');
-    console.log('[CONVS-LIST-PAGE] navigateByUrl this.uidConvSelected ', this.uidConvSelected);
-    console.log('[CONVS-LIST-PAGE] navigateByUrl this.conversationSelected ', this.conversationSelected)
+    this.logger.log('[CONVS-LIST-PAGE] calling navigateByUrl: ');
+    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl uidConvSelected: ', uidConvSelected);
+    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl run  this.setUidConvSelected');
+    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl this.uidConvSelected ', this.uidConvSelected);
+    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl this.conversationSelected ', this.conversationSelected)
 
     this.setUidConvSelected(uidConvSelected, converationType);
     if (checkPlatformIsMobile()) {
-      console.log('[CONVS-LIST-PAGE] checkPlatformIsMobile(): ', checkPlatformIsMobile());
-      console.log('[CONVS-LIST-PAGE] DESKTOP (window >= 768)', this.navService);
+      this.logger.log('[CONVS-LIST-PAGE] checkPlatformIsMobile(): ', checkPlatformIsMobile());
+      this.logger.log('[CONVS-LIST-PAGE] DESKTOP (window >= 768)', this.navService);
       let pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname + '/' + converationType;
       this.logger.log('[CONVS-LIST-PAGE] pageURL', pageUrl)
       this.router.navigateByUrl(pageUrl);

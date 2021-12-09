@@ -61,7 +61,7 @@ export class AppConfigProvider {
             // } else {
             
             
-              console.log('AppConfigService loadAppConfig allconfig !!!! exist - SERVER_BASE_URL !!! IS RELATIVE - window.location ', window.location);
+              // console.log('AppConfigService loadAppConfig allconfig !!!! exist - SERVER_BASE_URL !!! IS RELATIVE - window.location ', window.location);
 
               // console.log(window.location)
 
@@ -78,12 +78,12 @@ export class AppConfigProvider {
             // }
 
           } else {
-            console.log('[APP-CONFIG-SERVICE] loadAppConfig allconfig !!!! exist wsUrlRel but IS EMPTY');
+            // console.log('[APP-CONFIG-SERVICE] loadAppConfig allconfig !!!! exist wsUrlRel but IS EMPTY');
           }
 
         } else {
 
-          console.log('[APP-CONFIG-SERVICE] loadAppConfig allconfig !!!! does not exist wsUrlRel');
+          // console.log('[APP-CONFIG-SERVICE] loadAppConfig allconfig !!!! does not exist wsUrlRel');
         }
 
         this.appConfig = allconfig;

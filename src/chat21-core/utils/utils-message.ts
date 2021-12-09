@@ -19,7 +19,7 @@ export function isFirstMessage(i: number) {
         }
         return false;
       } catch (err) {
-        console.log('error: ', err);
+        console.error('error: ', err);
       }
     }
 }
@@ -103,7 +103,7 @@ export function getSizeImg(message: any, maxWidthImage?: number): any {
       }
       return sizeImage;
     } catch (err) {
-      console.log('error: ', err);
+      console.error('error: ', err);
       return;
     }
 }
