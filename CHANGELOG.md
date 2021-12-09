@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc19
+- Fixes the bug: when the chat is in "mobile" mode and from the dashboard the agent clicks on "Open chat" for a specific conversation the "back" button of the chat does not return to the list of conversations
+- Fixes the bug: when the chat is in "mobile" mode and from the dashboard the agent clicks on "Open chat" for a specific conversation the chat does not display the details of the conversation
+
 ### 3.0.59-rc18
 - Improves the "app-config" service
 
