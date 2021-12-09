@@ -610,7 +610,7 @@ export class ConversationListPage implements OnInit {
 
       if (this.route && this.route.snapshot && this.route.snapshot.firstChild) {
         const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
-        this.logger.log.log('[CONVS-LIST-PAGE] conversationWith 2: ', IDConv);
+        this.logger.log('[CONVS-LIST-PAGE] conversationWith 2: ', IDConv);
         if (IDConv) {
           this.setUidConvSelected(IDConv);
         } else {
