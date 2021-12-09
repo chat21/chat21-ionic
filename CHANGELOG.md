@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc18
+- Improves the "app-config" service
+
 ### 3.0.59-rc16
 - Changes in config.xml the value of the "SplashScreen"
 - Improves the method to avoid page reloading when an agent clicks the "Open Chat" button of the dashboard on the realtime and non-real time conversation list page and on the conversation detail page
