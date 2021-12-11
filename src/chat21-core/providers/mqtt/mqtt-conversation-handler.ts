@@ -180,13 +180,11 @@ export class MQTTConversationHandler extends ConversationHandlerService {
             channelType,
             // language,
             (err, message) => {
-                this.logger.log('[MQTTConversationHandler] message: ' + JSON.stringify(message) + ' sent with err: ' + err);
                 if (err) {
-                // cambio lo stato in rosso: invio nn riuscito!!!
-                message.status = '-100';
-                this.logger.log('[MQTTConversationHandler] ERROR', err);
+                    message.status = '-100';
+                    this.logger.log('[MQTTConversationHandler] ERROR', err);
                 } else {
-                message.status = '150';
+                    message.status = '150';
                 }
             }
         );

@@ -1,7 +1,7 @@
 /*
     Chat21Client
 
-    v0.1.8
+    v0.1.9
 
     @Author Andrea Sponziello
     (c) Tiledesk 2020
@@ -22,6 +22,7 @@ class Chat21Client {
         this.client = null;
         this.reconnections = 0 // just to check how many reconnections
         this.client_id = this.uuidv4();
+        this.log = options._log ? true : false;
         if (options && options.MQTTendpoint) {
             if (options.MQTTendpoint.startsWith('/')) {
                 if (this.log) {
@@ -48,7 +49,6 @@ class Chat21Client {
         else {
             this.endpoint = "ws://34.253.207.0:15675/ws"
         }
-        this.log = options.log ? true : false;
         this.APIendpoint = options.APIendpoint;
         this.appid = options.appId;
         if (this.log) {
@@ -90,21 +90,9 @@ class Chat21Client {
         });
     }
 
-    // subscribeToMyMessages() {
-    //     // this subscription because in /conversations I receive my messages
-    //     // 'apps/tilechat/users/ME/messages/TO/outgoing'
-    //     // 'apps/tilechat/users/ME/messages/FROM/incoming'
-    //     let messages_inbox = 'apps/tilechat/users/' + this.user_id + '/messages/+'
-    //     console.log("subscribing to inbox of:", this.user_id, "topic", messages_inbox)
-    //     this.client.subscribe(messages_inbox, (err)  => {
-    //         console.log("subscribed to:", messages_inbox, " with err", err)
-    //     })
-    // }
-
     sendMessage(text, type, recipient_id, recipient_fullname, sender_fullname, attributes, metadata, channel_type, callback) {
-        // callback - function (err) 
-        // console.log("recipient_id:", recipient_id)
-        let dest_topic = `apps/${this.appid}/users/${this.user_id}/messages/${recipient_id}/outgoing`
+        // console.log("sendMessage:",text, recipient_id)
+        let dest_topic = `apps/${this.appid}/outgoing/users/${this.user_id}/messages/${recipient_id}/outgoing`
         // console.log("dest_topic:", dest_topic)
         let outgoing_message = {
             text: text,
@@ -138,7 +126,7 @@ class Chat21Client {
     sendMessageRaw(outgoing_message, recipient_id, callback) {
         // callback - function (err) 
         // console.log("recipient_id:", recipient_id)
-        let dest_topic = `apps/${this.appid}/users/${this.user_id}/messages/${recipient_id}/outgoing`
+        let dest_topic = `apps/${this.appid}/outgoing/users/${this.user_id}/messages/${recipient_id}/outgoing`
         // console.log("dest_topic:", dest_topic)
         // let outgoing_message = {
         //     text: text,
@@ -957,7 +945,7 @@ class Chat21Client {
             clientId: this.client_id,
             username: 'JWT',
             password: jwt,
-            rejectUnauthorized: true
+            rejectUnauthorized: false
         }
         if (this.log) {console.log("starting mqtt connection with LWT on:", presence_topic, this.endpoint)}
         // client = mqtt.connect('mqtt://127.0.0.1:15675/ws',options)
