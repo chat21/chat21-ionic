@@ -3,10 +3,8 @@
   <ion-toolbar>
     
     <ion-buttons slot="start">
-      <!-- (click)="pushPage('conversations-list')" -->
-      <ion-back-button text="" *ngIf="isMobile"
-          defaultHref="/conversations-list"
-         >
+      <!-- (click)="pushPage('conversations-list')" defaultHref="/conversations-list" -->
+      <ion-back-button style="display: block;" text="" *ngIf="isMobile" (click)="goBackToConversationList()">
       </ion-back-button> 
     </ion-buttons>
 

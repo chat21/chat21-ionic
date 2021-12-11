@@ -1,10 +1,18 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc19
+- Fixes the bug: when the chat is in "mobile" mode and from the dashboard the agent clicks on "Open chat" for a specific conversation the "back" button of the chat does not return to the list of conversations
+- Fixes the bug: when the chat is in "mobile" mode and from the dashboard the agent clicks on "Open chat" for a specific conversation the chat does not display the details of the conversation
+
+### 3.0.59-rc18
+- Improves the "app-config" service
+
 ### 3.0.59-rc16
 - Changes in config.xml the value of the "SplashScreen"
 - Improves the method to avoid page reloading when an agent clicks the "Open Chat" button of the dashboard on the realtime and non-real time conversation list page and on the conversation detail page
 - Modifies the "app-config" service by adding the ability to pass relative URLs to the websocket
 - Adds "wsUrlRel" property to env.sample, chat-config-template.json and chat-config.json
+- Adds a check in the "websocket-js.ts" service on the existence of the "ws" property of the "WebSocketJs" class before accessing the property "readyState"
 
 ### 3.0.59-rc15
 - Implements a method in app.components that counts and stores the number of open Chat tabs

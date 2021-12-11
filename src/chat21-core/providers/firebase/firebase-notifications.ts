@@ -34,29 +34,37 @@ export class FirebaseNotifications extends NotificationsService {
             this.logger.error("[FIREBASE-NOTIFICATIONS] initialize - Service Worker isn't supported on this browser", navigator)
             return;
         }
-        if (('serviceWorker' in navigator)) {
-            // this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser ", navigator)
-            navigator.serviceWorker.getRegistrations().then((serviceWorkerRegistrations) => {
-                this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser serviceWorkerRegistrations", serviceWorkerRegistrations)
-                if (serviceWorkerRegistrations.length > 0) {
-                    serviceWorkerRegistrations.forEach(registration => {
-                        this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registration ", registration)
-                        // this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registrations scriptURL", registrations.active.scriptURL)
-                        // this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registrations state", registrations.active.state)
+        // if (('serviceWorker' in navigator)) {
+        //     navigator.serviceWorker.register('firebase-messaging-sw.js')
+        //         .then(function (registration) {
+        //             console.log('[FIREBASE-NOTIFICATIONS] initialize serviceWorker Registration successful, scope is:', registration.scope);
 
-                    });
-                } else {
-                    this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser - !not registered",)
-                    // navigator.serviceWorker.register('http://localhost:8101/firebase-messaging-sw.js')
-                    //     .then(function (registration) {
-                    //         console.log('Service worker successfully registered.');
-                    //         return registration;
-                    //     }).catch(function (err) {
-                    //         console.error('Unable to register service worker.', err);
-                    //     });
-                }
-            });
-        }
+
+        //             // this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser ", navigator)
+        //             // navigator.serviceWorker.getRegistrations().then((serviceWorkerRegistrations) => {
+        //             //     this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser serviceWorkerRegistrations", serviceWorkerRegistrations)
+        //             //     if (serviceWorkerRegistrations.length > 0) {
+        //             //         serviceWorkerRegistrations.forEach(registration => {
+        //             //             this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registration ", registration)
+        //             //             // this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registrations scriptURL", registrations.active.scriptURL)
+        //             //             // this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser registrations state", registrations.active.state)
+
+        //             //         });
+        //             //     } else {
+        //             //         this.logger.log("[FIREBASE-NOTIFICATIONS] initialize - Service Worker is supported on this browser - !not registered",)
+        //             //         // navigator.serviceWorker.register('http://localhost:8101/firebase-messaging-sw.js')
+        //             //         //     .then(function (registration) {
+        //             //         //         console.log('Service worker successfully registered.');
+        //             //         //         return registration;
+        //             //         //     }).catch(function (err) {
+        //             //         //         console.error('Unable to register service worker.', err);
+        //             //         //     });
+        //             //     }
+        //             // });
+        //         }).catch(function (err) {
+        //             console.log('Service worker registration failed, error:', err);
+        //         });
+        // }
     }
 
 
