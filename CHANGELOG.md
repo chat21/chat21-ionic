@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59-rc21
+- chat21client.js -> v0.1.9
+
 ### 3.0.59-rc20
 - Improves the transition from "mobile" to "desktop" mode and vice versa by not reloading the app 
 
