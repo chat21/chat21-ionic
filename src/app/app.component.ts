@@ -676,7 +676,7 @@ export class AppComponent implements OnInit {
     } catch (err) {
       this.logger.error('[APP-COMP] -> error:', err);
     }
-    this.chatManager.startApp();
+   // this.chatManager.startApp() // nk moved in chevk platform
   }
 
 
@@ -731,7 +731,7 @@ export class AppComponent implements OnInit {
   }
 
   checkPlatform() {
-   console.log('[APP-COMP] checkPlatform');
+  //  console.log('[APP-COMP] checkPlatform');
     // let pageUrl = '';
     // try {
     //   const pathPage = this.route.snapshot.firstChild.routeConfig.path;
@@ -747,7 +747,8 @@ export class AppComponent implements OnInit {
     // }
 
     if (checkPlatformIsMobile()) {
-      // console.log('[APP-COMP] checkPlatformIsMobile',checkPlatformIsMobile());
+      this.chatManager.startApp()
+      console.log('[APP-COMP] checkPlatformIsMobile',checkPlatformIsMobile());
       this.platformIs = PLATFORM_MOBILE;
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
       // console.log('[APP-COMP]  platformIs', this.platformIs);
@@ -758,7 +759,8 @@ export class AppComponent implements OnInit {
       // this.router.navigateByUrl(pageUrl);
       // this.navService.setRoot(ConversationListPage, {});
     } else {
-      // console.log('[APP-COMP] checkPlatformIsMobile',checkPlatformIsMobile());
+      this.chatManager.startApp()
+      console.log('[APP-COMP] checkPlatformIsMobile',checkPlatformIsMobile());
       this.platformIs = PLATFORM_DESKTOP;
       // console.log('[APP-COMP]  platformIs', this.platformIs);
       // console.log('[APP-COMP] PLATFORM', PLATFORM_DESKTOP, 'route.snapshot',  this.route.snapshot);
@@ -1083,8 +1085,8 @@ export class AppComponent implements OnInit {
   onResize(event: any) {
     const that = this;
     // this.logger.debug('this.doitResize)', this.doitResize)
-    clearTimeout(this.doitResize);
-    this.doitResize = setTimeout(() => {
+    // clearTimeout(this.doitResize);
+    // this.doitResize = setTimeout(() => {
       let platformIsNow = PLATFORM_DESKTOP;
       if (checkPlatformIsMobile()) {
         platformIsNow = PLATFORM_MOBILE;
@@ -1094,11 +1096,14 @@ export class AppComponent implements OnInit {
       }
       this.logger.debug('[APP-COMP] onResize width::::', window.innerWidth);
       this.logger.debug('[APP-COMP] onResize width:::: platformIsNow', platformIsNow);
-      this.logger.debug('[APP-COMP] onResize width:::: platformIsNow this.platformIs', this.platformIs);
+      console.log('[APP-COMP] onResize width:::: this.platformIs', this.platformIs);
+      console.log('[APP-COMP] onResize width:::: platformIsNow', platformIsNow);
       if (platformIsNow !== this.platformIs) {
-        window.location.reload();
+        // window.location.reload();
+        this.checkPlatform()
       }
-    }, 500);
+  
+    // }, 0);
   }
   // END RESIZE FUNCTIONS //
 
