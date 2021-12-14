@@ -179,6 +179,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.conversationWith = params.get('IDConv');
       this.conversationWithFullname = params.get('FullNameConv');
       this.conv_type = params.get('Convtype');
+
+      this.events.publish('supportconvid:haschanged', this.conversationWith);  
     });
 
   }
