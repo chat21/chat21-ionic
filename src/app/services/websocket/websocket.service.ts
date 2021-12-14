@@ -84,7 +84,7 @@ export class WebsocketService {
   }
 
   subscriptionToWsConversations(project_id) {
-    this.logger.log("[WS-SERV] - CALLED SUBSC TO WS CONVS - PROJECT ID ", project_id);
+    // console.log("[WS-SERV] - CALLED SUBSC TO WS CONVS - PROJECT ID ", project_id);
     var self = this;
     this.wsRequestsList = [];
 
@@ -212,6 +212,7 @@ export class WebsocketService {
       // publish all REQUESTS 
       // -----------------------------------------------------------------------------------------------------
         this.wsRequestsList$.next(this.wsRequestsList);
+        // console.log("[WS-SERV] -  ADD REQUESTS CONVS LIST ", this.wsRequestsList);
     }
   }
 
@@ -264,7 +265,7 @@ export class WebsocketService {
 
         if (this.wsRequestsList) {
           this.wsRequestsList$.next(this.wsRequestsList);
-          this.logger.log("[WS-SERV] -  ON-UPATE CONVS LIST ", this.wsRequestsList);
+          // console.log("[WS-SERV] -  ON-UPATE CONVS LIST ", this.wsRequestsList);
         }
       }
     }

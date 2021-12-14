@@ -306,7 +306,7 @@ export class FirebaseArchivedConversationsHandler extends ArchivedConversationsH
                 this.archivedConversationAdded.next(conversationAdded);
             }
         } else {
-            this.logger.error('[FIREBASEArchivedConversationsHandlerSERVICE] ADDED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
+            // this.logger.error('[FIREBASEArchivedConversationsHandlerSERVICE] ADDED::conversations with conversationId: ', childSnapshot.key, 'is not valid')
         }
     }
 
