@@ -8,6 +8,7 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 import { TiledeskService } from 'src/app/services/tiledesk/tiledesk.service';
+import { WebSocketJs } from 'src/app/services/websocket/websocket-js';
 
 @Component({
   selector: 'app-project-item',
@@ -35,7 +36,8 @@ export class ProjectItemComponent implements OnInit {
     public appStorageService: AppStorageService,
     private translateService: CustomTranslateService,
     public tiledeskAuthService: TiledeskAuthService,
-    public tiledeskService: TiledeskService
+    public tiledeskService: TiledeskService,
+    public webSocketJs: WebSocketJs,
   ) { }
 
   ngOnInit() {
@@ -45,6 +47,7 @@ export class ProjectItemComponent implements OnInit {
     this.translations();
     this.listenToPostMsgs();
     this.onInitWindowWidth();
+
   }
 
   listenToPostMsgs() {
@@ -52,9 +55,14 @@ export class ProjectItemComponent implements OnInit {
       // console.log("[PROJECT-ITEM] post message event ", event);
 
       if (event && event.data && event.data) {
-        // console.log("[APP-COMP] message event data  ", event.data);
+        // console.log("[PROJECT-ITEM] message event data  ", event.data);
         if (event.data === 'hasChangedProject') {
+          this.unservedRequestCount = 0;
+          if (this.project) {
+            this.webSocketJs.unsubscribe('/' + this.project.id_project._id + '/requests');  
+          }
           this.getLastProjectStoredAndSubscToWSAvailabilityAndConversations();
+          this.updateUnservedRequestCount();
         }
       }
     })
@@ -72,7 +80,7 @@ export class ProjectItemComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.newInnerWidth = event.target.innerWidth;
-    this.logger.log('[PROJECTS-X-PANEL] - INNER WIDTH ', this.newInnerWidth)
+    this.logger.log('[PROJECT-ITEM] - INNER WIDTH ', this.newInnerWidth)
 
     if (this.newInnerWidth <= 150) {
       this.window_width_is_60 = true;
@@ -83,7 +91,7 @@ export class ProjectItemComponent implements OnInit {
 
   onInitWindowWidth(): any {
     const actualWidth = window.innerWidth;
-    this.logger.log('[PROJECTS-X-PANEL] - ACTUAL Width ', actualWidth);
+    this.logger.log('[PROJECT-ITEM] - ACTUAL Width ', actualWidth);
 
 
     // if (actualWidth <= 60) {
@@ -119,7 +127,7 @@ export class ProjectItemComponent implements OnInit {
       stored_project = localStorage.getItem('last_project')
       this.logger.log('PROJECT-ITEM - THERE IS A STORED PROJECT ', stored_project)
     } catch (err) {
-      this.logger.log('Get local storage LAST PROJECT ', err)
+      this.logger.error('Get local storage LAST PROJECT ', err)
     }
 
 
@@ -129,11 +137,14 @@ export class ProjectItemComponent implements OnInit {
       this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - tiledeskToken', tiledeskToken);
       this.tiledeskService.getProjects(tiledeskToken).subscribe(projects => {
         this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES', projects);
-        this.project = projects[0];
+
         this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES this.project', this.project);
 
         localStorage.setItem('last_project', JSON.stringify(projects[0]))
-        this.doProjectSubscriptions(this.project)
+        if (projects[0]) {
+          this.project = projects[0];
+          this.doProjectSubscriptions(this.project)
+        }
 
       }, (error) => {
         this.logger.error('[INFO-CONTENT-COMP] - GET PROJECTS - ERROR  ', error);
@@ -147,7 +158,9 @@ export class ProjectItemComponent implements OnInit {
 
     if (stored_project) {
       this.logger.log('PROJECT-ITEM - THERE IS STORED LAST PROJECT ', stored_project)
-      this.project = JSON.parse(stored_project)
+      if (stored_project) {
+        this.project = JSON.parse(stored_project)
+      }
       this.doProjectSubscriptions(this.project)
       this.logger.log('[PROJECT-ITEM] - LAST PROJECT PARSED ', this.project)
     }
@@ -156,6 +169,7 @@ export class ProjectItemComponent implements OnInit {
   }
 
   doProjectSubscriptions(project) {
+    this.logger.log('[PROJECT-ITEM] doProjectSubscriptions project ', project)
     if (project) {
       const user_role = this.project.role
       this.logger.log('[PROJECT-ITEM] - user_role ', user_role)
@@ -176,7 +190,7 @@ export class ProjectItemComponent implements OnInit {
 
       this.wsService.subscriptionToWsConversations(project.id_project._id)
       // this.updateCurrentUserRequestCount();
-      this.updateUnservedRequestCount();
+      // this.updateUnservedRequestCount();
 
     }
   }
@@ -230,13 +244,14 @@ export class ProjectItemComponent implements OnInit {
   }
 
   updateUnservedRequestCount() {
+    this.logger.log('[PROJECT-ITEM] updateUnservedRequestCount ')
     // this.requestsService.requestsList_bs.subscribe((requests) => {
     this.wsService.wsRequestsList$
       .pipe(
         takeUntil(this.unsubscribe$)
       )
       .subscribe((requests) => {
-
+        this.logger.log('[PROJECT-ITEM] requests ', requests)
         if (requests) {
           let count = 0;
           requests.forEach(r => {
