@@ -62,7 +62,7 @@ export class ProjectItemComponent implements OnInit {
             this.webSocketJs.unsubscribe('/' + this.project.id_project._id + '/requests');  
           }
           this.getLastProjectStoredAndSubscToWSAvailabilityAndConversations();
-          this.updateUnservedRequestCount();
+          
         }
       }
     })
@@ -190,7 +190,7 @@ export class ProjectItemComponent implements OnInit {
 
       this.wsService.subscriptionToWsConversations(project.id_project._id)
       // this.updateCurrentUserRequestCount();
-      // this.updateUnservedRequestCount();
+      this.updateUnservedRequestCount();
 
     }
   }
@@ -267,7 +267,7 @@ export class ProjectItemComponent implements OnInit {
             }
           });
           this.unservedRequestCount = count;
-          this.logger.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
+          // this.logger.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
         }
       }, error => {
         this.logger.error('[PROJECT-ITEM] UNSERVED REQUEST COUNT * error * ', error)
