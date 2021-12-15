@@ -247,9 +247,6 @@ export class ProjectItemComponent implements OnInit {
     this.logger.log('[PROJECT-ITEM] updateUnservedRequestCount ')
     // this.requestsService.requestsList_bs.subscribe((requests) => {
     this.wsService.wsRequestsList$
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
       .subscribe((requests) => {
         this.logger.log('[PROJECT-ITEM] requests ', requests)
         if (requests) {
@@ -267,7 +264,7 @@ export class ProjectItemComponent implements OnInit {
             }
           });
           this.unservedRequestCount = count;
-          // this.logger.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
+          this.logger.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
         }
       }, error => {
         this.logger.error('[PROJECT-ITEM] UNSERVED REQUEST COUNT * error * ', error)
