@@ -118,6 +118,19 @@ export class ConversationListPage implements OnInit {
         // this.onConversationSelected(conversationSelected)
         this.setUidConvSelected(IDConv, 'active');
       }
+      if (!IDConv) {
+        this.logger.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - is the page without conv select');
+
+        const chatTabCount = +localStorage.getItem('tabCount')
+        this.logger.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - chatTabCount ', chatTabCount);
+        if (chatTabCount && chatTabCount > 0) {
+          this.logger.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - the chat is already open ', chatTabCount);
+          if (checkPlatformIsMobile()) {
+            this.logger.log('[CONVS-LIST-PAGE] - the chat is in mobile mode ', checkPlatformIsMobile());
+            this.events.publish('noparams:mobile', true);
+          }
+        }
+      }
     });
   }
 
@@ -634,7 +647,7 @@ export class ConversationListPage implements OnInit {
   setUidConvSelected(uidConvSelected: string, conversationType?: string,) {
     this.logger.log('[CONVS-LIST-PAGE] setuidCOnvSelected', uidConvSelected)
     this.uidConvSelected = uidConvSelected;
-    this.logger.log('uidConvSelected', uidConvSelected) 
+    this.logger.log('uidConvSelected', uidConvSelected)
     // this.conversationsHandlerService.uidConvSelected = uidConvSelected;
     if (uidConvSelected) {
       let conversationSelected;

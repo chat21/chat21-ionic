@@ -144,6 +144,7 @@ export class AppComponent implements OnInit {
 
 
     this.saveInStorageNumberOfOpenedChatTab();
+    this.listenChatAlreadyOpenWithoutParamsInMobileMode()
 
     // this.listenToUrlChanges();
     // this.getPageState();
@@ -162,6 +163,15 @@ export class AppComponent implements OnInit {
     //     this.events.publish('convid:haschanged', convId);
     //   }
     // });
+  }
+
+  listenChatAlreadyOpenWithoutParamsInMobileMode() {
+    this.events.subscribe('noparams:mobile', (isAlreadyOpenInMobileMode) => {
+      // console.log('[APP-COMP] Chat is Already Open In Mobile Mode ', isAlreadyOpenInMobileMode)
+      if (isAlreadyOpenInMobileMode === true) {
+        this.checkPlatform()
+      }
+    });
   }
 
   // listenToUrlChanges() {
