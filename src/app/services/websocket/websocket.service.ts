@@ -167,9 +167,16 @@ export class WebsocketService {
 
         if (index === -1) {
           self.addWsRequests(data)
-          // self.logger.log("[WS-REQUESTS-SERV] - CREATE - ADD REQUESTS");
+          // console.log("[WS-REQUESTS-SERV] - CREATE - ADD REQUESTS");
         } else {
-          // self.logger.log("[WS-REQUESTS-SERV] - CREATE - REQUEST ALREADY EXIST - NOT ADD");
+          // console.log("[WS-REQUESTS-SERV] - CREATE - REQUEST ALREADY EXIST - NOT ADD AND NOT PUBLISH");
+          // if (data !== null && data !== undefined) {
+          //   self.wsRequestsList.push(data);
+          // }
+          // if (self.wsRequestsList) {
+          //   self.wsRequestsList$.next(self.wsRequestsList);
+          //     console.log("[WS-SERV] -  NOT ADD - BUT PUBLIC ANYWAY ", self.wsRequestsList);
+          // }
         }
 
       }, function (data, notification) {
@@ -212,7 +219,7 @@ export class WebsocketService {
       // publish all REQUESTS 
       // -----------------------------------------------------------------------------------------------------
         this.wsRequestsList$.next(this.wsRequestsList);
-        // console.log("[WS-SERV] -  ADD REQUESTS CONVS LIST ", this.wsRequestsList);
+        this.logger.log("[WS-SERV] -  ADD REQUESTS CONVS LIST ", this.wsRequestsList);
     }
   }
 
@@ -265,7 +272,7 @@ export class WebsocketService {
 
         if (this.wsRequestsList) {
           this.wsRequestsList$.next(this.wsRequestsList);
-          // console.log("[WS-SERV] -  ON-UPATE CONVS LIST ", this.wsRequestsList);
+          this.logger.log("[WS-SERV] -  ON-UPATE CONVS LIST ", this.wsRequestsList);
         }
       }
     }
