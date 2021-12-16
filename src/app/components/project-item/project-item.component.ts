@@ -248,23 +248,24 @@ export class ProjectItemComponent implements OnInit {
     // this.requestsService.requestsList_bs.subscribe((requests) => {
     this.wsService.wsRequestsList$
       .subscribe((requests) => {
-        this.logger.log('[PROJECT-ITEM] requests ', requests)
+        console.log('[PROJECT-ITEM] requests ', requests)
         if (requests) {
           let count = 0;
           requests.forEach(r => {
             // this.logger.log('NAVBAR - UPDATE-UNSERVED-REQUEST-COUNT request agents', r.agents)
             // *bug fix: when the user is an agent also for the unserved we have to consider if he is present in agents
-            if (r['status'] === 100 && this.ROLE_IS_AGENT === true) {
+            // && this.ROLE_IS_AGENT === true
+            if (r['status'] === 100 ) {
               if (this.hasmeInAgents(r['agents']) === true) {
                 count = count + 1;
               }
             }
-            if (r['status'] === 100 && this.ROLE_IS_AGENT === false) {
-              count = count + 1;
-            }
+            // if (r['status'] === 100 && this.ROLE_IS_AGENT === false) {
+            //   count = count + 1;
+            // }
           });
           this.unservedRequestCount = count;
-          this.logger.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
+          console.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
         }
       }, error => {
         this.logger.error('[PROJECT-ITEM] UNSERVED REQUEST COUNT * error * ', error)
