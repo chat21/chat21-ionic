@@ -331,7 +331,7 @@ export class AppComponent implements OnInit {
 
   listenToPostMsgs() {
     window.addEventListener("message", (event) => {
-      // console.log("[APP-COMP] message event ", event);
+      this.logger.log("[APP-COMP] message event ", event);
 
       if (event && event.data && event.data.action && event.data.parameter) {
         if (event.data.action === 'openJoinConversationModal') {
@@ -340,6 +340,18 @@ export class AppComponent implements OnInit {
           this.presentAlertConfirmJoinRequest(event.data.parameter, event.data.calledBy)
         }
       }
+      // if (event && event.data && event.data.action && event.data.parameter) {
+      //   if (event.data.action === 'hasArchived') {
+      //     var iframeWin = <HTMLIFrameElement>document.getElementById("unassigned-convs-iframe")
+      //     const isIFrame = (input: HTMLElement | null): input is HTMLIFrameElement =>
+      //     input !== null && input.tagName === 'IFRAME';
+      //     if (isIFrame(iframeWin) && iframeWin.contentWindow) {
+      //       const msg = { action: "hasArchived", parameter: event.data.parameter, calledBy: event.data.calledBy }
+      //       iframeWin.contentWindow.postMessage(msg, '*');
+      //     }
+          
+      //   }
+      // }
       if (event && event.data && event.data.action && event.data.text) {
         if (event.data.action === "display_toast_join_complete") {
           this.presentToastJoinComplete(event.data.text)
@@ -860,7 +872,12 @@ export class AppComponent implements OnInit {
     // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - GO-ONLINE isOnline ', this.isOnline);
     // clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
-    this.connetWebsocket(tiledeskToken)
+
+    const supportmode = this.appConfigProvider.getConfig().supportMode;
+    this.logger.log('[APP-COMP] - GO-ONLINE - supportmode ', supportmode);
+    if (supportmode === true) {
+      this.connetWebsocket(tiledeskToken)
+    }
     this.events.publish('go:online', true);
     const currentUser = this.tiledeskAuthService.getCurrentUser();
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
@@ -909,7 +926,11 @@ export class AppComponent implements OnInit {
 
   goOffLine = () => {
     // console.log('[APP-COMP] - GO-OFFLINE');
-    this.webSocketClose()
+    const supportmode = this.appConfigProvider.getConfig().supportMode;
+    this.logger.log('[APP-COMP] - GO-OFFINE - supportmode ', supportmode);
+    if (supportmode === true) {
+      this.webSocketClose()
+    }
     // this.isOnline = false;
     // this.conversationsHandlerService.conversations = [];
     this.chatManager.setTiledeskToken(null);
