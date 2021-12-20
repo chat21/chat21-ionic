@@ -91,7 +91,7 @@ export class WebsocketService {
     this.webSocketJs.ref('/' + project_id + '/requests', 'getCurrentProjectAndSubscribeTo_WsRequests',
 
       function (data, notification) {
-        // self.logger.log("[WS-SERV] - CONVS - CREATE DATA ", data);
+        // console.log("[WS-SERV] - CONVS - CREATE DATA ", data);
         if (data) {
           // ------------------------------------------------
           // @ Agents - pass in data agents get from snapshot
@@ -181,7 +181,7 @@ export class WebsocketService {
 
       }, function (data, notification) {
 
-        // self.logger.log("[WS-SERV] - CONVS - UPDATE DATA ", data);
+        // console.log("[WS-SERV] - CONVS - UPDATE DATA ", data);
 
         // -------------------------------------------------------
         // @ Agents (UPDATE) pass in data agents get from snapshot
@@ -198,8 +198,18 @@ export class WebsocketService {
 
 
       }, function (data, notification) {
-        // self.logger.log("[WS-SERV] - CONVS  - ON-DATA - DATA ", data);
+        self.logger.log("[WS-SERV] CHAT - CONVS  - ON-DATA - DATA ", data);
+        self.logger.log("[WS-SERV] CHAT - CONVS  - ON-DATA - notification ", notification);
 
+        // console.log("[WS-SERV] CHAT - CONVS  - ON-DATA - DATA notification > event > method ", notification.event.method);
+        if (notification.event.method === 'CREATE') {
+          self.wsRequestsList = [];
+          self.wsRequestsList.push(data)
+          self.logger.log("[WS-SERV] CHAT - CONVS  - ON-DATA - DATA wsRequestsList ", self.wsRequestsList);
+          if (self.wsRequestsList) {
+            self.wsRequestsList$.next(self.wsRequestsList);
+          }
+        }
       }
     );
   }
@@ -218,8 +228,8 @@ export class WebsocketService {
       // -----------------------------------------------------------------------------------------------------
       // publish all REQUESTS 
       // -----------------------------------------------------------------------------------------------------
-        this.wsRequestsList$.next(this.wsRequestsList);
-        this.logger.log("[WS-SERV] -  ADD REQUESTS CONVS LIST ", this.wsRequestsList);
+      this.wsRequestsList$.next(this.wsRequestsList);
+      // this.logger.log("[WS-SERV] -  ADD REQUESTS CONVS LIST ", this.wsRequestsList);
     }
   }
 
