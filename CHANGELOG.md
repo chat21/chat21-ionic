@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59
+- Deploys in production 
+
 ### 3.0.59-rc23
 - Fixes the bug: the badge indicating the number of unassigned conversations does not update correctly when the project is changed
 - Changes the code that prevent the chat from opening in a new browser tab if the chat tab is already open
