@@ -679,7 +679,8 @@ export class AppComponent implements OnInit {
     // }
 
     if (checkPlatformIsMobile()) {
-      this.chatManager.startApp()
+      // this.chatManager.startApp()
+      
       this.logger.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
       this.platformIs = PLATFORM_MOBILE;
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
@@ -692,7 +693,7 @@ export class AppComponent implements OnInit {
       // this.router.navigateByUrl(pageUrl);
       // this.navService.setRoot(ConversationListPage, {});
     } else {
-      this.chatManager.startApp()
+      // this.chatManager.startApp()
       this.logger.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
       this.platformIs = PLATFORM_DESKTOP;
       // console.log('[APP-COMP]  platformIs', this.platformIs);
@@ -875,16 +876,16 @@ export class AppComponent implements OnInit {
 
     const supportmode = this.appConfigProvider.getConfig().supportMode;
     this.logger.log('[APP-COMP] - GO-ONLINE - supportmode ', supportmode);
-    if (supportmode === true) {
+    // if (supportmode === true) {
       this.connetWebsocket(tiledeskToken)
-    }
+    // }
     this.events.publish('go:online', true);
     const currentUser = this.tiledeskAuthService.getCurrentUser();
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
     this.logger.log('[APP-COMP] - GO-ONLINE - currentUser ', currentUser);
     this.chatManager.setTiledeskToken(tiledeskToken);
     this.chatManager.setCurrentUser(currentUser);
-    // this.chatManager.startApp();
+    this.chatManager.startApp();
 
     // ----------------------------------------------
     // PUSH NOTIFICATIONS
@@ -925,12 +926,12 @@ export class AppComponent implements OnInit {
 
 
   goOffLine = () => {
-    // console.log('[APP-COMP] - GO-OFFLINE');
+    console.log('[APP-COMP] - GO-OFFLINE');
     const supportmode = this.appConfigProvider.getConfig().supportMode;
     this.logger.log('[APP-COMP] - GO-OFFINE - supportmode ', supportmode);
-    if (supportmode === true) {
+    // if (supportmode === true) {
       this.webSocketClose()
-    }
+    // }
     // this.isOnline = false;
     // this.conversationsHandlerService.conversations = [];
     this.chatManager.setTiledeskToken(null);
@@ -978,11 +979,12 @@ export class AppComponent implements OnInit {
     this.logger.debug('[APP-COMP] onResize width:::: this.platformIs', this.platformIs);
     this.logger.debug('[APP-COMP] onResize width:::: platformIsNow', platformIsNow);
     if (platformIsNow !== this.platformIs) {
-      // window.location.reload();
+      window.location.reload();
       // this.checkPlatform();
       // this.initializeApp('onresize')
       this.checkPlatform();
-      // this.initSubscriptions();
+      // this.goOnLine()
+      // // this.initSubscriptions();
 
     }
 
