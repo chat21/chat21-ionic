@@ -7,7 +7,6 @@
 - Fixes the bug: the badge indicating the number of unassigned conversations does not update correctly when the project is changed
 - Changes the code that prevent the chat from opening in a new browser tab if the chat tab is already open
 - Publish conversations returned by subscription to websocket conversations > "on data" callback
-- Conditions the opening of websockets to "supportMode" set to true
 
 ### 3.0.59-rc22
 - Minor improvements
