@@ -36,6 +36,14 @@ export class UnassignedConversationsPage implements OnInit {
     this.translationMap = this.translateService.translateLanguage(keys);
     this.buildIFRAME();
     this.listenToPostMsg();
+    this.hideHotjarFeedbackBtn();
+  }
+
+  hideHotjarFeedbackBtn() {
+    const hotjarFeedbackBtn = <HTMLElement>document.querySelector("#_hj_feedback_container > div > button")
+    if (hotjarFeedbackBtn) {
+      hotjarFeedbackBtn.style.display = "none";
+    }
   }
 
   buildIFRAME() {
@@ -55,7 +63,7 @@ export class UnassignedConversationsPage implements OnInit {
     this.iframe.style.background = "white";
     this.ion_content.appendChild(this.iframe);
 
-  //  this.getIframeHaLoaded()
+    //  this.getIframeHaLoaded()
   }
 
   getIframeHaLoaded() {
@@ -66,7 +74,7 @@ export class UnassignedConversationsPage implements OnInit {
       iframe.addEventListener("load", function () {
         self.logger.log("[APP-STORE-INSTALL] GET - Finish");
         let spinnerElem = <HTMLElement>document.querySelector('.stretchspinner-unassigned-convs')
-        
+
         self.logger.log('[APP-STORE-INSTALL] GET iframeDoc readyState spinnerElem', spinnerElem)
         spinnerElem.classList.add("hide-stretchspinner")
 
