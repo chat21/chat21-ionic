@@ -82,11 +82,11 @@ export class ProjectItemComponent implements OnInit {
     this.newInnerWidth = event.target.innerWidth;
     this.logger.log('[PROJECT-ITEM] - INNER WIDTH ', this.newInnerWidth)
 
-    if (this.newInnerWidth <= 150) {
-      this.window_width_is_60 = true;
-    } else {
-      this.window_width_is_60 = false;
-    }
+    // if (this.newInnerWidth <= 150) {
+    //   this.window_width_is_60 = true;
+    // } else {
+    //   this.window_width_is_60 = false;
+    // }
   }
 
   onInitWindowWidth(): any {
@@ -94,12 +94,12 @@ export class ProjectItemComponent implements OnInit {
     this.logger.log('[PROJECT-ITEM] - ACTUAL Width ', actualWidth);
 
 
-    // if (actualWidth <= 60) {
-    if (actualWidth <= 150) {
-      this.window_width_is_60 = true;
-    } else {
-      this.window_width_is_60 = false;
-    }
+   
+    // if (actualWidth <= 150) {
+    //   this.window_width_is_60 = true;
+    // } else {
+    //   this.window_width_is_60 = false;
+    // }
   }
 
 
@@ -244,7 +244,7 @@ export class ProjectItemComponent implements OnInit {
   }
 
   updateUnservedRequestCount() {
-    this.logger.log('[PROJECT-ITEM] updateUnservedRequestCount ')
+    console.log('[PROJECT-ITEM] updateUnservedRequestCount ')
     // this.requestsService.requestsList_bs.subscribe((requests) => {
     this.wsService.wsRequestsList$
       .subscribe((requests) => {
@@ -265,7 +265,7 @@ export class ProjectItemComponent implements OnInit {
             // }
           });
           this.unservedRequestCount = count;
-          // console.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
+          console.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
         }
       }, error => {
         this.logger.error('[PROJECT-ITEM] UNSERVED REQUEST COUNT * error * ', error)
