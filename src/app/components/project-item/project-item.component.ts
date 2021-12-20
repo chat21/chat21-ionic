@@ -248,7 +248,7 @@ export class ProjectItemComponent implements OnInit {
     // this.requestsService.requestsList_bs.subscribe((requests) => {
     this.wsService.wsRequestsList$
       .subscribe((requests) => {
-        console.log('[PROJECT-ITEM] requests ', requests)
+        // console.log('[PROJECT-ITEM] requests ', requests)
         if (requests) {
           let count = 0;
           requests.forEach(r => {
@@ -265,7 +265,7 @@ export class ProjectItemComponent implements OnInit {
             // }
           });
           this.unservedRequestCount = count;
-          console.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
+          // console.log('[PROJECT-ITEM] UNSERVED REQUEST COUNT - RES ', this.unservedRequestCount)
         }
       }, error => {
         this.logger.error('[PROJECT-ITEM] UNSERVED REQUEST COUNT * error * ', error)
@@ -277,10 +277,10 @@ export class ProjectItemComponent implements OnInit {
   hasmeInAgents(agents) {
     if (agents) {
       for (let j = 0; j < agents.length; j++) {
-        this.logger.log('[PROJECT-ITEM] hasmeInAgents currentUserId  ', this.currentUserId)
-        this.logger.log('[PROJECT-ITEM] hasmeInAgents agent  ', agents[j].id_user)
+        // this.logger.log('[PROJECT-ITEM] hasmeInAgents currentUserId  ', this.currentUserId)
+        // this.logger.log('[PROJECT-ITEM] hasmeInAgents agent  ', agents[j].id_user)
         if (this.currentUserId === agents[j].id_user) {
-          this.logger.log('[PROJECT-ITEM] hasmeInAgents ')
+          // this.logger.log('[PROJECT-ITEM] hasmeInAgents ')
           return true
         }
       }
