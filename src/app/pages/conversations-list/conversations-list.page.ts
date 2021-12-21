@@ -597,7 +597,9 @@ export class ConversationListPage implements OnInit {
     this.tenant = appconfig.firebaseConfig.tenant;
     this.logger.log('[CONVS-LIST-PAGE] - initialize -> firebaseConfig tenant ', this.tenant);
 
-    this.loggedUserUid = this.tiledeskAuthService.getCurrentUser().uid;
+    if (this.tiledeskAuthService.getCurrentUser()) {
+      this.loggedUserUid = this.tiledeskAuthService.getCurrentUser().uid;
+    }
     this.subscriptions = [];
     this.initConversationsHandler();
     this.initVariables();
