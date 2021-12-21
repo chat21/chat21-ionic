@@ -35,7 +35,7 @@ export class WebsocketService {
   subscriptionToWsCurrentProjectUserAvailability(projectid, prjctuserid) {
     var self = this;
     const path = '/' + projectid + '/project_users/' + prjctuserid
-    this.logger.log('[WS-SERV] - SUBSCR (REF) TO WS CURRENT USERS PATH: ', path);
+    // console.log('[WS-SERV] - SUBSCR (REF) TO WS CURRENT USERS PATH: ', path);
 
     return new Promise(function (resolve, reject) {
 
