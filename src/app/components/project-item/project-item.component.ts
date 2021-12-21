@@ -47,7 +47,7 @@ export class ProjectItemComponent implements OnInit {
     this.translations();
     this.listenToPostMsgs();
     this.onInitWindowWidth();
-
+    // console.log('[PROJECT-ITEM] - on INIT')
   }
 
   listenToPostMsgs() {
@@ -134,9 +134,9 @@ export class ProjectItemComponent implements OnInit {
     if (!stored_project) {
       this.logger.log('PROJECT-ITEM - THERE IS NOT STORED LAST PROJECT ', stored_project)
       const tiledeskToken = this.appStorageService.getItem('tiledeskToken');
-      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - tiledeskToken', tiledeskToken);
+      this.logger.log('[PROJECT-ITEM] - GET PROJECTS - tiledeskToken', tiledeskToken);
       this.tiledeskService.getProjects(tiledeskToken).subscribe(projects => {
-        this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES', projects);
+        this.logger.log('[PROJECT-ITEM - GET PROJECTS - RES', projects);
 
         this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS - RES this.project', this.project);
 
@@ -147,7 +147,7 @@ export class ProjectItemComponent implements OnInit {
         }
 
       }, (error) => {
-        this.logger.error('[INFO-CONTENT-COMP] - GET PROJECTS - ERROR  ', error);
+        this.logger.error('[PROJECT-ITEM] - GET PROJECTS - ERROR  ', error);
 
       }, () => {
         this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTS * COMPLETE *');
