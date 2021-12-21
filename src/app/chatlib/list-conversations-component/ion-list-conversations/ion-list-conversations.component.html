@@ -75,7 +75,7 @@
 </ion-item-sliding> -->
 
 
-<ion-item button="true" lines="none" class="ion-no-padding" [class.ion-selected]="conversation.uid === uidConvSelected"
+<ion-item button="true" lines="none" class="ion-no-padding" [class.ion-selected]="conversation?.uid === uidConvSelected"
   *ngFor="let conversation of listConversations" (click)="openConversationByID(conversation)" detail=false>
   <div tabindex="0"></div>
 
