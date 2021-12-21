@@ -93,7 +93,7 @@ export class WebSocketJs {
       var that = this;
       if (this.ws) {
         this.ws.addEventListener("open", function (event) {
-          this.logger.log('[WEBSOCKET-JS] - REF - OPEN EVENT *** ', event);
+          that.logger.log('[WEBSOCKET-JS] - REF - OPEN EVENT *** ', event);
           that.subscribe(topic);
         });
       } else {
