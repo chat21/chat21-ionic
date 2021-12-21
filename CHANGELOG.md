@@ -1,5 +1,10 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59.1
+- Fixes the bug: "Unable to read uid of undefined" error occurs when agent logs out
+- Fixes the bug: When the agent logs into the chat and the chat is in mobile mode, no conversations are displayed
+- Conditions the opening of the websocket to retrieve the number of conversations not assigned to the "supportMode" property set to true
+
 ### 3.0.59
 - Deploys in production 
 
