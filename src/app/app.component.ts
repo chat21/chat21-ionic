@@ -98,7 +98,7 @@ export class AppComponent implements OnInit {
   public missingConnectionToast: any
   public executedInitializeAppByWatchConnection: boolean = false;
   private version: string;
-
+  public browserRefresh: boolean = false;
   // private isOnline: boolean = false;
 
   wsService: WebSocketJs;
@@ -163,6 +163,13 @@ export class AppComponent implements OnInit {
     //     this.events.publish('convid:haschanged', convId);
     //   }
     // });
+
+    router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.browserRefresh = !router.navigated;
+        // console.log('browserRefresh ', this.browserRefresh)
+      }
+    });
   }
 
   listenChatAlreadyOpenWithoutParamsInMobileMode() {
@@ -349,7 +356,7 @@ export class AppComponent implements OnInit {
       //       const msg = { action: "hasArchived", parameter: event.data.parameter, calledBy: event.data.calledBy }
       //       iframeWin.contentWindow.postMessage(msg, '*');
       //     }
-          
+
       //   }
       // }
       if (event && event.data && event.data.action && event.data.text) {
@@ -679,8 +686,8 @@ export class AppComponent implements OnInit {
     // }
 
     if (checkPlatformIsMobile()) {
-      // this.chatManager.startApp()
-      
+      this.chatManager.startApp();
+
       this.logger.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
       this.platformIs = PLATFORM_MOBILE;
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
@@ -693,7 +700,7 @@ export class AppComponent implements OnInit {
       // this.router.navigateByUrl(pageUrl);
       // this.navService.setRoot(ConversationListPage, {});
     } else {
-      // this.chatManager.startApp()
+      this.chatManager.startApp();
       this.logger.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
       this.platformIs = PLATFORM_DESKTOP;
       // console.log('[APP-COMP]  platformIs', this.platformIs);
@@ -815,7 +822,7 @@ export class AppComponent implements OnInit {
       .pipe(filter((state) => state !== null))
       .subscribe((state: any) => {
         this.logger.log('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  state', state);
-        // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  isOnline', this.isOnline);
+     
         if (state && state === AUTH_STATE_ONLINE) {
           // const user = this.tiledeskAuthService.getCurrentUser();
           // if (this.isOnline === false) {
@@ -868,7 +875,7 @@ export class AppComponent implements OnInit {
  * @param user
  */
   goOnLine = () => {
-    // console.log('[APP-COMP] - GO-ONLINE ');
+    this.logger.log('[APP-COMP]- GO-ONLINE ');
     // this.isOnline = true;
     // this.logger.info('initialize FROM [APP-COMP] - [APP-COMP] - GO-ONLINE isOnline ', this.isOnline);
     // clearTimeout(this.timeModalLogin);
@@ -876,16 +883,18 @@ export class AppComponent implements OnInit {
 
     const supportmode = this.appConfigProvider.getConfig().supportMode;
     this.logger.log('[APP-COMP] - GO-ONLINE - supportmode ', supportmode);
-    // if (supportmode === true) {
+    if (supportmode === true) {
+
       this.connetWebsocket(tiledeskToken)
-    // }
+
+    }
     this.events.publish('go:online', true);
     const currentUser = this.tiledeskAuthService.getCurrentUser();
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
     this.logger.log('[APP-COMP] - GO-ONLINE - currentUser ', currentUser);
     this.chatManager.setTiledeskToken(tiledeskToken);
     this.chatManager.setCurrentUser(currentUser);
-    this.chatManager.startApp();
+    // this.chatManager.startApp();
 
     // ----------------------------------------------
     // PUSH NOTIFICATIONS
@@ -926,12 +935,12 @@ export class AppComponent implements OnInit {
 
 
   goOffLine = () => {
-    console.log('[APP-COMP] - GO-OFFLINE');
+    this.logger.log('[APP-COMP] - GO-OFFLINE');
     const supportmode = this.appConfigProvider.getConfig().supportMode;
     this.logger.log('[APP-COMP] - GO-OFFINE - supportmode ', supportmode);
-    // if (supportmode === true) {
-      this.webSocketClose()
-    // }
+    if (supportmode === true) {
+        this.webSocketClose()
+    }
     // this.isOnline = false;
     // this.conversationsHandlerService.conversations = [];
     this.chatManager.setTiledeskToken(null);
