@@ -329,7 +329,7 @@ export class WebSocketJs {
     // this.sendingMessages = [];//new Map();
     // this.data = [];
     // this.init(this.sendMesagesInSendingArray);
-
+    this.logger.log("[WEBSOCKET-JS] - CALLING INIT - url ", this.url);
     this.logger.log("[WEBSOCKET-JS] - CALLING INIT - topics ", this.topics);
     this.logger.log("[WEBSOCKET-JS] - CALLING INIT - url ", this.url);
     this.logger.log("[WEBSOCKET-JS] - CALLING INIT - callbacks ", this.callbacks);
