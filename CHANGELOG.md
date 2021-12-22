@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.59.2
+- Fixes the bug: when the agent refreshes the chat page and the chat is in mobile mode, the badge with the number of unassigned conversations does not work
+
 ### 3.0.59.1
 - Fixes the bug: "Unable to read uid of undefined" error occurs when agent logs out
 - Fixes the bug: When the agent logs into the chat and the chat is in mobile mode, no conversations are displayed
