@@ -98,7 +98,7 @@ export class AppComponent implements OnInit {
   public missingConnectionToast: any
   public executedInitializeAppByWatchConnection: boolean = false;
   private version: string;
-  public browserRefresh: boolean = false;
+ 
   // private isOnline: boolean = false;
 
   wsService: WebSocketJs;
@@ -148,29 +148,9 @@ export class AppComponent implements OnInit {
 
     // this.listenToUrlChanges();
     // this.getPageState();
-
-    // location.subscribe((val) => {
-
-    //   console.log('location subscribe val', val)
-    //   if (val.type == "hashchange") {
-    //     const convId = getParameterByName('convId')
-    //     console.log('[APP-COMP] ngOnInit convId get with getParameterByName  ', convId)
-    //     const requesterFullaname = getParameterByName('requester_fullaname')
-    //     console.log('[APP-COMP] ngOnInit convId get with getParameterByName  ', requesterFullaname);
-
-    //     this.navigateToDetail(convId, requesterFullaname)
-
-    //     this.events.publish('convid:haschanged', convId);
-    //   }
-    // });
-
-    router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        this.browserRefresh = !router.navigated;
-        // console.log('browserRefresh ', this.browserRefresh)
-      }
-    });
   }
+
+
 
   listenChatAlreadyOpenWithoutParamsInMobileMode() {
     this.events.subscribe('noparams:mobile', (isAlreadyOpenInMobileMode) => {
@@ -881,13 +861,11 @@ export class AppComponent implements OnInit {
     // clearTimeout(this.timeModalLogin);
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
 
-    const supportmode = this.appConfigProvider.getConfig().supportMode;
-    this.logger.log('[APP-COMP] - GO-ONLINE - supportmode ', supportmode);
-    if (supportmode === true) {
-
-      this.connetWebsocket(tiledeskToken)
-
-    }
+    // const supportmode = this.appConfigProvider.getConfig().supportMode;
+    // this.logger.log('[APP-COMP] - GO-ONLINE - supportmode ', supportmode);
+    // if (supportmode === true) {
+    //   this.connetWebsocket() // moved in the comp project-item
+    // }
     this.events.publish('go:online', true);
     const currentUser = this.tiledeskAuthService.getCurrentUser();
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
@@ -921,17 +899,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  connetWebsocket(tiledeskToken) {
-    const appconfig = this.appConfigProvider.getConfig();
-    this.logger.log('connetWebsocket appconfig wsUrl ', appconfig.wsUrl)
-    const WS_URL = appconfig.wsUrl + '?token=' + tiledeskToken
-    this.webSocketJs.init(
-      WS_URL,
-      undefined,
-      undefined,
-      undefined
-    );
-  }
+
 
 
   goOffLine = () => {
