@@ -9,6 +9,7 @@ import { CustomTranslateService } from 'src/chat21-core/providers/custom-transla
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 import { TiledeskService } from 'src/app/services/tiledesk/tiledesk.service';
 import { WebSocketJs } from 'src/app/services/websocket/websocket-js';
+import { AppConfigProvider } from 'src/app/services/app-config';
 
 @Component({
   selector: 'app-project-item',
@@ -38,16 +39,39 @@ export class ProjectItemComponent implements OnInit {
     public tiledeskAuthService: TiledeskAuthService,
     public tiledeskService: TiledeskService,
     public webSocketJs: WebSocketJs,
+    private appConfigProvider: AppConfigProvider,
   ) { }
 
   ngOnInit() {
-    this.getLastProjectStoredAndSubscToWSAvailabilityAndConversations();
-    this.getStoredToken();
+    this.getStoredTokenAndConnectWS();
     this.getStoredCurrenUser();
     this.translations();
     this.listenToPostMsgs();
     this.onInitWindowWidth();
     // console.log('[PROJECT-ITEM] - on INIT')
+  }
+
+  getStoredTokenAndConnectWS() {
+    this.tiledeskToken = this.appStorageService.getItem('tiledeskToken');
+    this.logger.log('[PROJECT-ITEM] - STORED TILEDEK TOKEN ', this.tiledeskToken)
+    this.connetWebsocket( this.tiledeskToken) 
+  }
+
+  connetWebsocket(tiledeskToken) {
+   
+    this.logger.log('[WEBSOCKET-JS] connetWebsocket called in [PROJECT-ITEM] tiledeskToken ',tiledeskToken)
+    const appconfig = this.appConfigProvider.getConfig();
+    this.logger.log('[WEBSOCKET-JS] connetWebsocket called in [PROJECT-ITEM] wsUrl ', appconfig.wsUrl)
+    const WS_URL = appconfig.wsUrl + '?token=' + tiledeskToken
+    this.logger.log('[WEBSOCKET-JS] connetWebsocket called in [PROJECT-ITEM] wsUrl ', WS_URL)
+    this.webSocketJs.init(
+      WS_URL,
+      undefined,
+      undefined,
+      undefined
+    );
+
+    this.getLastProjectStoredAndSubscToWSAvailabilityAndConversations();
   }
 
   listenToPostMsgs() {
@@ -104,11 +128,7 @@ export class ProjectItemComponent implements OnInit {
 
 
 
-  getStoredToken() {
-    this.tiledeskToken = this.appStorageService.getItem('tiledeskToken');
-    this.logger.log('[PROJECT-ITEM] - STORED TILEDEK TOKEN ', this.tiledeskToken)
-
-  }
+ 
 
   getStoredCurrenUser() {
     const storedCurrentUser = this.appStorageService.getItem('currentUser');
