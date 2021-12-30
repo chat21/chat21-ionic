@@ -109,6 +109,9 @@
 - Fixes the bug: in the avatar-profile component the properties 'avatarUrl', 'color' and 'avatar' are private and accessible only within the class
 - Fixes the bug: on ios platforms the back button in the conversation details header overlaps the avatar
 
+### 3.0.58.1
+- Fix the bug: if the "chatEngine" property value is set to "mqtt "the login modal window does not disappear even if the agent is logged in
+
 ### 3.0.58
 - Changes the logic with which the 'online' / 'offline' event is published (done before by the onAuthStateChanged() method)
 - Removes the setTimeout set for displaying the login window
