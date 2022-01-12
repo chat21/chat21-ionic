@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.60-rc1
+- Adds the ability to view predefined replies by clicking on the button with the "flash" icon located to the left of the "Enter a message" text area
+
 ### 3.0.59.2
 - Fixes the bug: when the agent refreshes the chat page and the chat is in mobile mode, the badge with the number of unassigned conversations does not work
 
