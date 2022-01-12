@@ -415,7 +415,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'FAILED_TO_UPLOAD_THE_FORMAT_IS NOT_SUPPORTED',
       'NO_INFORMATION_AVAILABLE',
       'CONTACT_ID',
-      'USER_ID'
+      'USER_ID',
+      "UPLOAD",
+      "CANNED_RESPONSES"
     ];
 
     this.translationMap = this.customTranslateService.translateLanguage(keys);
@@ -983,6 +985,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
+
+
   // ----------------------------------------------------------
   // @ CANNED RESPONSES methods
   // ----------------------------------------------------------
@@ -1151,6 +1155,61 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.resizeTextArea();
     }, 200);
   }
+
+
+  hasClickedOpenCannedResponses($event) {
+    this.logger.log('[CONVS-DETAIL] - hasClickedOpenCannedResponses ',  $event) 
+    const elTextArea = this.rowTextArea['el'];
+    const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
+ 
+    this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea ", textArea);
+    this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea value", textArea.value)
+    this.insertAtCursor(textArea, '/')
+   }
+
+   insertAtCursor(myField, myValue) {
+    this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - myValue ', myValue );
+    this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - myField ', myField ); 
+    
+      myValue = ' ' + myValue;
+      this.logger.log('[CANNED-RES-EDIT-CREATE] - GET TEXT AREA - QUI ENTRO myValue ', myValue );
+    
+   
+    //IE support
+    if (myField.selection) {
+      myField.focus();
+      let sel = myField.selection.createRange();
+      sel.text = myValue;
+      // this.cannedResponseMessage = sel.text;
+    }
+    //MOZILLA and others
+    else if (myField.selectionStart || myField.selectionStart == '0') {
+      var startPos = myField.selectionStart;
+      this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - startPos ', startPos);
+      
+      var endPos = myField.selectionEnd;
+      this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - endPos ', endPos);
+      
+      myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+  
+      // place cursor at end of text in text input element
+      myField.focus();
+      var val = myField.value; //store the value of the element
+      myField.value = ''; //clear the value of the element
+      myField.value = val + ' '; //set that value back. 
+  
+      // this.cannedResponseMessage = myField.value;
+
+      // this.texareaIsEmpty = false;
+      // myField.select();
+    } else {
+      myField.value += myValue;
+      // this.cannedResponseMessage = myField.value;
+    }
+  }
+
+
+   
 
 
   @HostListener('document:keydown', ['$event'])

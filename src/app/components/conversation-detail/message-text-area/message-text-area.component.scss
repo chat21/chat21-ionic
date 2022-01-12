@@ -42,8 +42,10 @@
     }
     .text-message {
         position: relative;
-        margin: 0 35px;
-        width: calc(100% - 70px);
+        // margin: 0 35px;
+        // width: calc(100% - 70px);
+        margin: 0 70px;
+        width: calc(100% - 100px);
         ion-textarea {
             // border-radius: 4px;
             border-radius: 20px; // NK edited
@@ -97,9 +99,20 @@
     --border-radius: 50%;
     --padding-end: 1px;
     --padding-start: 1px;
-
     height: 33px !important;
 }
+
+
+.canned-responses-btn {
+    --padding-bottom: 0px;
+    --padding-top: 0px;
+    --border-radius: 50%;
+    --padding-end: 1px;
+    --padding-start: 1px;
+    height: 33px !important;
+    width: 30px;
+} 
+
 
 .upload-image-btn .button-native {
     border-radius: 50%;

@@ -195,5 +195,7 @@
     "Cancel": "Annulla",
     "AreYouSure":"Sei sicuro?",
     "UnassignedConversations":"Conversazioni non assegnate",
-    "NewConversations": "New conversations"
+    "NewConversations": "Nuove Conversazioni",
+    "UPLOAD": "Carica",
+    "CANNED_RESPONSES":"Risposte predefinite"
 }

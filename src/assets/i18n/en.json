@@ -187,5 +187,7 @@
   "Cancel": "Cancel",
   "AreYouSure":"Are you sure?",
   "UnassignedConversations":"Unassigned Conversations",
-  "NewConversations": "Nuove conversazioni"
+  "NewConversations": "New conversations",
+  "UPLOAD": "Upload",
+  "CANNED_RESPONSES":"Canned responses"
 }

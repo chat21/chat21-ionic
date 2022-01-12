@@ -159,6 +159,7 @@
               [conversationWith]="conversationWith" 
               [tagsCannedFilter]="tagsCannedFilter"
               (eventChangeTextArea)="returnChangeTextArea($event)" 
+              (hasClickedOpenCannedResponses)="hasClickedOpenCannedResponses($event)"
               (eventSendMessage)="returnSendMessage($event)"
               [translationMap]="translationMap" 
               [fileUploadAccept]="appConfigProvider.getConfig().fileUploadAccept"

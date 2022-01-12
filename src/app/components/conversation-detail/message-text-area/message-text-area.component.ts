@@ -50,6 +50,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Input() translationMap: Map<string, string>;
   @Input() dropEvent: any;
   @Output() eventChangeTextArea = new EventEmitter<object>();
+  @Output() hasClickedOpenCannedResponses = new EventEmitter<boolean>();
   @Output() eventSendMessage = new EventEmitter<object>();
   @Output() onPresentModalScrollToBottom = new EventEmitter<boolean>();
 
@@ -64,8 +65,20 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   public currentWindowWidth: any;
   private logger: LoggerService = LoggerInstance.getInstance();
   public countClicks: number = 0;
+  public IS_SUPPORT_GROUP_CONVERSATION: boolean;
 
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
+
+  tooltipOptions = {
+    'show-delay': 500,
+    'tooltip-class': 'chat-tooltip',
+    'theme': 'light',
+    'shadow': false,
+    'hide-delay-mobile': 0,
+    'hideDelayAfterClick': 3000,
+    'hide-delay': 200
+  };
+
 
   /**
    * Constructor
@@ -103,11 +116,18 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   ngOnChanges() {
-
     if (this.translationMap) {
-      this.LONG_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG')
-      this.SHORT_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
-      this.SHORTER_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
+      // this.LONG_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG')
+      // this.SHORT_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
+      // this.SHORTER_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
+
+      this.TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
+    }
+
+    if (this.conversationWith.startsWith("support-group")) {
+      this.IS_SUPPORT_GROUP_CONVERSATION = true
+    } else {
+      this.IS_SUPPORT_GROUP_CONVERSATION = false
     }
 
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
@@ -120,21 +140,20 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     }
     // if (this.isOpenInfoConversation === true) {
     // this.getIfTexareaIsEmpty('ngOnChanges')
-    this.getWindowWidth();
+    // this.getWindowWidth();
     // }
   }
 
   // ngAfterViewInit() {
   ngAfterViewInit() {
 
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit message_text_area ", this.message_text_area);
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit messageTextArea ", this.messageTextArea);
+    // console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit message_text_area ", this.message_text_area);
+    // console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit messageTextArea ", this.messageTextArea);
     if (this.messageTextArea) {
       setTimeout(() => {
 
-
         const elTextArea = this.message_text_area['el'];
-        // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextArea ", elTextArea);
+        // console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextArea ", elTextArea);
         // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngAfterViewInit elTextArea children", elTextArea.children);
         if (elTextArea.children.length === 1) {
 
@@ -148,10 +167,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
           }
         }
 
-
         // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] set focus on ", this.messageTextArea);
         // Keyboard.show() // for android
-
         this.messageTextArea.setFocus();
 
       }, 1500); //a least 150ms.
@@ -162,46 +179,19 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   getWindowWidth(): any {
     this.currentWindowWidth = window.innerWidth;
 
-    // if ((this.currentWindowWidth < 1045 && this.currentWindowWidth > 835) && this.isOpenInfoConversation === true) {
-    //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] DISPLAY SHORT_TEXAREA_PLACEHOLDER ");
-    //   // this.TEXAREA_PLACEHOLDER = '';
+
+    // if (this.currentWindowWidth >= 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
+    //   this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
+    //   this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] currentWindowWidth', this.currentWindowWidth, ' - DISPLAY LONG_TEXAREA_PLACEHOLDER ');
+    // } else if (this.currentWindowWidth >= 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
     //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-    // } else if (this.currentWindowWidth < 835 && this.isOpenInfoConversation === true) {
-    //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] DISPLAY SHORTER_TEXAREA_PLACEHOLDER ");
-
-
+    // } else if (this.currentWindowWidth < 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // } else if (this.currentWindowWidth < 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
     //   this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
-    //   // this.TEXAREA_PLACEHOLDER = '';
-
-    // } else 
-    // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] currentWindowWidth ", this.currentWindowWidth);
-    // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] isOpenInfoConversation', this.isOpenInfoConversation);
-    // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] this.conversationWith.startsWith("support-group")', this.conversationWith.startsWith("support-group"));
-
-
-    if (this.currentWindowWidth >= 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
-
-      this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
-
-      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] currentWindowWidth', this.currentWindowWidth, ' - DISPLAY LONG_TEXAREA_PLACEHOLDER ');
-
-
-    } else if (this.currentWindowWidth >= 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
-      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-
-
-    } else if (this.currentWindowWidth < 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
-
-      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-
-    } else if (this.currentWindowWidth < 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
-
-      this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
-
-    } else if (!this.conversationWith.startsWith("support-group")) {
-      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-
-    }
+    // } else if (!this.conversationWith.startsWith("support-group")) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // }
 
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] checkPlatformIsMobile() ", checkPlatformIsMobile());
     if (checkPlatformIsMobile() === true) {
@@ -214,11 +204,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       }
 
     }
-    // if (checkPlatformIsMobile &&  this.currentWindowWidth <= 430) {
-    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-    // } else if (checkPlatformIsMobile &&  this.currentWindowWidth > 430) { 
-    //   this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
-    // }
+
   }
 
   // -------------------------------------------------------------------------------------------
@@ -228,36 +214,20 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   onResize(event) {
     // this.getIfTexareaIsEmpty('onResize')
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA]  event.target.innerWidth; ", event.target.innerWidth);
-    // if ((event.target.innerWidth < 1045 && event.target.innerWidth > 835) && this.isOpenInfoConversation === true) {
-    //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA]  ON RESIZE DISPAY SHORT_TEXAREA_PLACEHOLDER");
-    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-    // } else if (event.target.innerWidth < 835 && this.isOpenInfoConversation === true) {
-    //   this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
-    // } else {
+    
+
+
+    // if (event.target.innerWidth >= 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
     //   this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
-
-
-    if (event.target.innerWidth >= 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
-      this.TEXAREA_PLACEHOLDER = this.LONG_TEXAREA_PLACEHOLDER;
-      // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - else - DISPLAY LONG_TEXAREA_PLACEHOLDER ');
-      // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - else - this.currentWindowWidth ', this.currentWindowWidth);
-
-    } else if (event.target.innerWidth >= 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
-      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-
-
-    } else if (event.target.innerWidth < 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
-
-      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-
-    } else if (event.target.innerWidth < 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
-
-      this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
-
-    } else if (!this.conversationWith.startsWith("support-group")) {
-      this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
-
-    }
+    // } else if (event.target.innerWidth >= 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // } else if (event.target.innerWidth < 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // } else if (event.target.innerWidth < 844 && this.isOpenInfoConversation === true && this.conversationWith.startsWith("support-group")) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
+    // } else if (!this.conversationWith.startsWith("support-group")) {
+    //   this.TEXAREA_PLACEHOLDER = this.SHORT_TEXAREA_PLACEHOLDER;
+    // }
 
     // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] checkPlatformIsMobile() ', checkPlatformIsMobile());
     if (checkPlatformIsMobile() === true) {
@@ -476,7 +446,6 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       this.conversationEnabled = false;
     }
 
-
     this.eventChangeTextArea.emit({ msg: message, offsetHeight: height });
   }
 
@@ -530,7 +499,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
         this.logger.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea SEND MESSAGE 2 message: ", message);
         this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 2 message value: ', message.value);
         this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 2 text: ', text);
-      
+
         this.logger.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea SEND MESSAGE 2 this.tagsCannedFilter.length: ", this.tagsCannedFilter.length);
         this.logger.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea SEND MESSAGE 2 this.countClicks: ", this.countClicks);
         this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown in msg-texarea SEND MESSAGE 2 this.countClicks: ", this.countClicks);
@@ -539,7 +508,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
         this.sendMessage(text);
         this.countClicks = 0
-      } else if (text.includes("/") && pos > 0 && this.countClicks > 1 && this.tagsCannedFilter.length > 0 && text.substr(-1) !== '/' ) {
+      } else if (text.includes("/") && pos > 0 && this.countClicks > 1 && this.tagsCannedFilter.length > 0 && text.substr(-1) !== '/') {
         this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - tagsCannedFilter.length 3: ', this.tagsCannedFilter.length);
         this.logger.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea SEND MESSAGE 3 message: ", message);
         // this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] onKeydown - SEND MESSAGE 3 message value: ', message.value);
@@ -564,6 +533,25 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
       }
     }
+  }
+  openCannedResponses() {
+    // console.log('[MSG-TEXT-AREA] has clicked OPEN-CANNED-RESPONSES messageString ', this.messageString)
+    // if (this.messageString) {
+    //   console.log('[MSG-TEXT-AREA] has clicked OPEN-CANNED-RESPONSES messageString.trim ', this.messageString.trim)
+    // }  
+    // if (this.messageString === undefined) {
+    //   this.messageString = '/'
+    // } else {
+
+    // }
+
+    // const elTextArea = this.message_text_area['el'];
+    // console.log('[MSG-TEXT-AREA]   textArea elTextArea ', elTextArea)
+    // const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
+    // console.log("[MSG-TEXT-AREA]   textArea textArea ", textArea);
+    // this.logger.log("[MSG-TEXT-AREA]   textArea value", textArea.value)
+
+    this.hasClickedOpenCannedResponses.emit(true);
   }
 
 
@@ -625,11 +613,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
     // Note: on mac keyboard "metakey" matches "cmd"
     if (event.key === 'Enter' && event.altKey || event.key === 'Enter' && event.ctrlKey || event.key === 'Enter' && event.metaKey) {
-
-
-
       this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] HAS PRESSED COMBO KEYS this.messageString', this.messageString);
-
       if (this.messageString !== undefined && this.messageString.trim() !== '') {
         this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] HAS PRESSED Enter + ALT this.messageString', this.messageString);
         this.messageString = this.messageString + "\r\n"
