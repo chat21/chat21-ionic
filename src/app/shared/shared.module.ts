@@ -40,9 +40,11 @@ import { OptionHeaderComponent } from '../components/conversation-detail/option-
 import { MessageAttachmentComponent } from '../chatlib/conversation-detail/message/message-attachment/message-attachment.component';
 import { ImageViewerComponent } from '../components/image-viewer/image-viewer.component';
 import { ProjectItemComponent } from '../components/project-item/project-item.component';
+import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component';
 
 @NgModule({
   declarations: [
+    MessageTextAreaComponent,
     AvatarProfileComponent,
     DdpHeaderComponent,
     UserPresenceComponent,
@@ -64,8 +66,7 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     InfoMessageComponent,
     ReturnReceiptComponent,
     TextComponent,
-
-     BubbleDayMessageComponent,
+    BubbleDayMessageComponent,
     BubbleSystemMessageComponent,
     BubbleMyMessageComponent,
     BubbleOthersMessageComponent,
@@ -80,6 +81,7 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     OptionHeaderComponent
   ],
   exports: [
+    MessageTextAreaComponent,
     AutofocusDirective,
     AvatarProfileComponent,
     DdpHeaderComponent,
@@ -89,7 +91,6 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     UserTypingComponent,
     ListConversationsComponent,
     IonListConversationsComponent,
-
     IonConversationDetailComponent,
     ConversationContentComponent,
     AvatarComponent,
@@ -102,7 +103,6 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     InfoMessageComponent,
     ReturnReceiptComponent,
     TextComponent,
-
     BubbleDayMessageComponent,
     BubbleSystemMessageComponent,
     BubbleMyMessageComponent,
@@ -120,7 +120,7 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     IonicModule,
     MomentModule,
     TooltipModule
-  
+
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,
