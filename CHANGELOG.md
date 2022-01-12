@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.60-rc2
+- Fixes the bug: in AppConfigProvider the "wsUrl" is incorrect (window.location.port is missing)
+
 ### 3.0.60-rc1
 - Adds the ability to view canned responses by clicking on the button with the "flash" icon located to the left of the "Enter a message" text area
 
