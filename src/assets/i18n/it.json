@@ -197,5 +197,9 @@
     "UnassignedConversations":"Conversazioni non assegnate",
     "NewConversations": "Nuove Conversazioni",
     "UPLOAD": "Carica",
-    "CANNED_RESPONSES":"Risposte predefinite"
+    "CANNED_RESPONSES":"Risposte predefinite",
+    "VIEW_ALL_CONVERSATIONS":"Visualizza tutte le conversazioni",
+    "CONVERSATIONS_IN_QUEUE":"conversazioni in coda, in attesa",
+    "PIN_A_PROJECT": "Fissa un Progetto",
+    "PINNED_PROJECT":"Progetto fissato"
 }

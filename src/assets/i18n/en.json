@@ -189,5 +189,9 @@
   "UnassignedConversations":"Unassigned Conversations",
   "NewConversations": "New conversations",
   "UPLOAD": "Upload",
-  "CANNED_RESPONSES":"Canned responses"
+  "CANNED_RESPONSES":"Canned responses",
+  "VIEW_ALL_CONVERSATIONS":"View all conversations",
+  "CONVERSATIONS_IN_QUEUE":"conversations in queue, on hold",
+  "PIN_A_PROJECT": "Pin a Project",
+  "PINNED_PROJECT":"Pinned project"
 }
