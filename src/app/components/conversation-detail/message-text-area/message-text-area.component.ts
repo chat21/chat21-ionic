@@ -43,6 +43,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Input() loggedUser: UserModel;
   @Input() conversationWith: string;
   @Input() tagsCannedFilter: any = [];
+  @Input() tagsCannedCount:any
 
   @Input() events: Observable<void>;
   @Input() fileUploadAccept: string
@@ -131,7 +132,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     }
 
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
+    console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
+    console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedCount ", this.tagsCannedCount);
+    
     this.logger.log('[CONVS-DETAIL] - returnChangeTextArea ngOnChanges in [MSG-TEXT-AREA]  this.tagsCannedFilter.length ', this.tagsCannedFilter.length)
 
     // use case drop
