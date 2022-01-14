@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.60-rc3
+- Enhances the item at the top of the conversation list that displays the number of new conversations of a selected project
+
 ### 3.0.60-rc2
 - Fixes the bug: in AppConfigProvider the "wsUrl" is incorrect (window.location.port is missing)
 
