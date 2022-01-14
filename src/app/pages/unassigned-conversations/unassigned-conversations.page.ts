@@ -32,7 +32,11 @@ export class UnassignedConversationsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    const keys = ['UnassignedConversations', 'NewConversations'];
+    const keys = [
+      'UnassignedConversations', 
+      'NewConversations',
+      'PIN_A_PROJECT'
+    ];
     this.translationMap = this.translateService.translateLanguage(keys);
     this.buildIFRAME();
     this.listenToPostMsg();
@@ -63,23 +67,34 @@ export class UnassignedConversationsPage implements OnInit {
     this.iframe.style.background = "white";
     this.ion_content.appendChild(this.iframe);
 
-    //  this.getIframeHaLoaded()
+     this.getIframeHaLoaded()
   }
 
   getIframeHaLoaded() {
     var self = this;
-    var iframe = document.getElementById('unassigned-convs-iframe') as HTMLIFrameElement;;
-    this.logger.log('[APP-STORE-INSTALL] GET iframe ', iframe)
-    if (iframe) {
-      iframe.addEventListener("load", function () {
-        self.logger.log("[APP-STORE-INSTALL] GET - Finish");
-        let spinnerElem = <HTMLElement>document.querySelector('.stretchspinner-unassigned-convs')
+    var iframeWin = document.getElementById('unassigned-convs-iframe') as HTMLIFrameElement;;
+    console.log('[UNASSIGNED-CONVS-PAGE] GET iframe ', iframeWin)
+    if (iframeWin) {
+      iframeWin.addEventListener("load", function () {
+        console.log("[UNASSIGNED-CONVS-PAGE] GET - Finish");
 
-        self.logger.log('[APP-STORE-INSTALL] GET iframeDoc readyState spinnerElem', spinnerElem)
-        spinnerElem.classList.add("hide-stretchspinner")
+        const isIFrame = (input: HTMLElement | null): input is HTMLIFrameElement =>
+        input !== null && input.tagName === 'IFRAME';
+
+        if (isIFrame(iframeWin) && iframeWin.contentWindow) {
+          const msg = { action: "hidewidget", calledBy: 'unassigned-convs' }
+          iframeWin.contentWindow.postMessage(msg, '*');
+        }
+      
+    
+        // let spinnerElem = <HTMLElement>document.querySelector('.stretchspinner-unassigned-convs')
+
+        // self.logger.log('[APP-STORE-INSTALL] GET iframeDoc readyState spinnerElem', spinnerElem)
+        // spinnerElem.classList.add("hide-stretchspinner")
 
       });
     }
+    
   }
 
   listenToPostMsg() {

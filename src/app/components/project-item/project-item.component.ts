@@ -18,6 +18,7 @@ import { AppConfigProvider } from 'src/app/services/app-config';
 })
 export class ProjectItemComponent implements OnInit {
   @Output() projectIdEvent = new EventEmitter<string>()
+  @Output() openUnsevedConvsEvent = new EventEmitter<boolean>()
 
   private unsubscribe$: Subject<any> = new Subject<any>();
   project: any;
@@ -31,6 +32,16 @@ export class ProjectItemComponent implements OnInit {
   private logger: LoggerService = LoggerInstance.getInstance();
   window_width_is_60: boolean;
   newInnerWidth: any;
+
+  tooltipOptions = {
+    'show-delay': 500,
+    'tooltip-class': 'chat-tooltip',
+    'theme': 'light',
+    'shadow': false,
+    'hide-delay-mobile': 0,
+    'hideDelayAfterClick': 3000,
+    'hide-delay': 200
+  };
 
   constructor(
     public wsService: WebsocketService,
@@ -49,6 +60,10 @@ export class ProjectItemComponent implements OnInit {
     this.listenToPostMsgs();
     this.onInitWindowWidth();
     // console.log('[PROJECT-ITEM] - on INIT')
+  }
+  
+  openUnservedConvs() {
+    this.openUnsevedConvsEvent.emit(true)
   }
 
   getStoredTokenAndConnectWS() {
@@ -78,25 +93,30 @@ export class ProjectItemComponent implements OnInit {
     window.addEventListener("message", (event) => {
       // console.log("[PROJECT-ITEM] post message event ", event);
 
-      if (event && event.data && event.data) {
+      if (event && event.data) {
         // console.log("[PROJECT-ITEM] message event data  ", event.data);
         if (event.data === 'hasChangedProject') {
           this.unservedRequestCount = 0;
           if (this.project) {
             this.webSocketJs.unsubscribe('/' + this.project.id_project._id + '/requests');  
           }
-          this.getLastProjectStoredAndSubscToWSAvailabilityAndConversations();
-          
+          this.getLastProjectStoredAndSubscToWSAvailabilityAndConversations(); 
         }
+
+        
       }
     })
   }
+
 
   public translations() {
     const keys = [
       'Available',
       'Unavailable',
-      'Busy'
+      'Busy',
+      'VIEW_ALL_CONVERSATIONS',
+      'CONVERSATIONS_IN_QUEUE',
+      'PINNED_PROJECT'
     ];
     this.translationMap = this.translateService.translateLanguage(keys);
   }
@@ -117,18 +137,7 @@ export class ProjectItemComponent implements OnInit {
     const actualWidth = window.innerWidth;
     this.logger.log('[PROJECT-ITEM] - ACTUAL Width ', actualWidth);
 
-
-   
-    // if (actualWidth <= 150) {
-    //   this.window_width_is_60 = true;
-    // } else {
-    //   this.window_width_is_60 = false;
-    // }
   }
-
-
-
- 
 
   getStoredCurrenUser() {
     const storedCurrentUser = this.appStorageService.getItem('currentUser');
@@ -195,6 +204,7 @@ export class ProjectItemComponent implements OnInit {
       this.logger.log('[PROJECT-ITEM] - user_role ', user_role)
       this.projectIdEvent.emit(project.id_project._id)
 
+      
 
       if (user_role === 'agent') {
         this.ROLE_IS_AGENT = true;

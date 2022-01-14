@@ -36,12 +36,16 @@
           </ion-avatar>
           <ion-label part="message-text" class="waiting-for-network-msg"> Waiting for network</ion-label>
         </ion-item>
-
-        <ion-item  *ngIf="supportMode && displayNewConvsItem" class="ion-no-padding open-iframe-item"
-        button="true"
-          (click)="openUnsevedConversationIframe()">
+        <!-- button="true"  (click)="openUnsevedConversationIframe()" -->
+        <ion-item  *ngIf="supportMode && displayNewConvsItem" class="ion-no-padding open-iframe-item">
           <div tabindex="0"></div>
-          <app-project-item (projectIdEvent)="getLastProjectId($event)"></app-project-item>
+          <ion-note class="pinned-project">
+            {{ 'PINNED_PROJECT' | translate }}
+          </ion-note>
+     
+          <app-project-item style="width: 100%;" 
+          (openUnsevedConvsEvent)="openUnsevedConversationIframe($event)"  
+          (projectIdEvent)="getLastProjectId($event)"></app-project-item>
         </ion-item>
 
       <span
@@ -102,6 +106,8 @@
           <ion-item id="no-convs" class="ion-text-center" lines="none">
             <ion-label class="ion-text-wrap" color="medium">
               {{ 'LABEL_MSG_PUSH_START_CHAT' | translate }}
+              
+              
             </ion-label>
           </ion-item>
         </div>

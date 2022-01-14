@@ -239,7 +239,7 @@ export class ConversationListPage implements OnInit {
     this.lastProjectId = projectid;
   }
 
-  openUnsevedConversationIframe() {
+  openUnsevedConversationIframe(event) {
     this.hasClickedOpenUnservedConvIframe = true
     this.logger.log('[CONVS-LIST-PAGE] - HAS CLIKED OPEN UNSERVED REQUEST IFRAME', this.hasClickedOpenUnservedConvIframe);
     const DASHBOARD_BASE_URL = this.appConfigProvider.getConfig().dashboardUrl;
