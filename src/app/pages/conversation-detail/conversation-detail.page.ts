@@ -92,6 +92,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public conv_type: string;
 
   public tagsCanned: any = [];
+  public tagsCannedCount:number
   public tagsCannedFilter: any = [];
   public HIDE_CANNED_RESPONSES: boolean = false;
 
@@ -327,6 +328,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.subscriptions = [];
     this.setHeightTextArea();
     this.tagsCanned = []; // list of canned
+
     this.messages = []; // list messages of conversation
     this.isFileSelected = false; // indicates if a file has been selected (image to upload)
     this.openInfoMessage = false; // indicates whether the info message panel is open
@@ -1053,9 +1055,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     //if(this.tagsCanned.length <= 0 ){
     this.tagsCanned = [];
     this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId).subscribe(res => {
-      this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses RES', res);
+      console.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses RES', res);
 
       this.tagsCanned = res
+      this.tagsCannedCount = res.length
 
       if (this.HIDE_CANNED_RESPONSES === false) {
         this.showTagsCanned(strSearch);
@@ -1164,7 +1167,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
  
     this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea ", textArea);
     this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea value", textArea.value)
-    this.insertAtCursor(textArea, '/')
+    this.insertAtCursor(textArea, '/');
+    // setTimeout(() => {
+    //   // textArea.focus();
+    //   textArea.setFocus();
+      
+    // }, 1000);
    }
 
    insertAtCursor(myField, myValue) {
@@ -1206,6 +1214,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       myField.value += myValue;
       // this.cannedResponseMessage = myField.value;
     }
+
+  
   }
 
 

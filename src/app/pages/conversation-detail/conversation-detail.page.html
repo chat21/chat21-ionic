@@ -149,6 +149,10 @@
                 </ion-item>
               </ion-list>
             </div>
+
+          
+
+          
             <!-- (eventReplaceMessageWithCanned)="replaceTagInMessage($event)" -->
             <!-- [tagsCannedFilter]="tagsCannedFilter" -->
             <!-- openInfoConversation   {{openInfoConversation}} - isMobile {{isMobile}} -->
@@ -158,6 +162,7 @@
               [loggedUser]="loggedUser" 
               [conversationWith]="conversationWith" 
               [tagsCannedFilter]="tagsCannedFilter"
+              [tagsCannedCount]="tagsCannedCount"
               (eventChangeTextArea)="returnChangeTextArea($event)" 
               (hasClickedOpenCannedResponses)="hasClickedOpenCannedResponses($event)"
               (eventSendMessage)="returnSendMessage($event)"
