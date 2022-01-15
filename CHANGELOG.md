@@ -4,6 +4,7 @@
 - Enhances the item at the top of the conversation list that displays the number of new conversations of a selected project
 - Fixes the bug: the loading spinner is sometimes not displayed when loading the list of unassigned conversations
 - Displays as canned response "Test" when no canned responses are available
+- Adds the cursor to the "Send message" textarea after the "Canned responses" button has been clicked
 
 ### 3.0.60-rc2
 - Fixes the bug: in AppConfigProvider the "wsUrl" is incorrect (window.location.port is missing)
