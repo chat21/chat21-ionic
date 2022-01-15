@@ -39,16 +39,16 @@
     <ion-col col-auto>
 
       <div class="start-buttons" style="position: absolute;display: flex;"> 
-
-        <div class="canned-responses-btn-wpr" style="margin-left: -5px;" tooltip="{{translationMap?.get('CANNED_RESPONSES')}}" [options]="tooltipOptions" placement="top">
+       
+        <div class="canned-responses-btn-wpr" style="margin-left: -5px;" tooltip="{{translationMap?.get('CANNED_RESPONSES')}}" [options]="tooltipOptions"   placement="top">
           
           <ion-button ion-button fill="clear" class="canned-responses-btn" (click)="openCannedResponses()" [disabled]="!IS_SUPPORT_GROUP_CONVERSATION">
             <ion-icon slot="icon-only" lazy="true" name="flash-outline" style="font-size: 24px;"></ion-icon>
           </ion-button>
        
         </div>
-
-        <div class="upload-image-btn-wpr" tooltip="{{translationMap?.get('UPLOAD')}}" [options]="tooltipOptions">
+ 
+        <div class="upload-image-btn-wpr" tooltip="{{translationMap?.get('UPLOAD')}}" [options]="tooltipOptions"  placement="top">
           <ion-button ion-button fill="clear" class="upload-image-btn">
             <ion-icon slot="icon-only" lazy="true" name="attach-outline"
               style="font-size: 30px;transform: rotate(42deg);"></ion-icon>
