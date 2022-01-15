@@ -56,7 +56,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
   declarations: [
     ConversationDetailPage,
     HeaderConversationDetailComponent,
-    // MessageTextAreaComponent,
+    MessageTextAreaComponent,
     // BubbleDayMessageComponent,
     // BubbleSystemMessageComponent,
     // BubbleMyMessageComponent,

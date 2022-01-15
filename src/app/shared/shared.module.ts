@@ -40,11 +40,11 @@ import { OptionHeaderComponent } from '../components/conversation-detail/option-
 import { MessageAttachmentComponent } from '../chatlib/conversation-detail/message/message-attachment/message-attachment.component';
 import { ImageViewerComponent } from '../components/image-viewer/image-viewer.component';
 import { ProjectItemComponent } from '../components/project-item/project-item.component';
-import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component';
+// import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component';
 
 @NgModule({
   declarations: [
-    MessageTextAreaComponent,
+    // MessageTextAreaComponent,
     AvatarProfileComponent,
     DdpHeaderComponent,
     UserPresenceComponent,
@@ -81,7 +81,7 @@ import { MessageTextAreaComponent } from '../components/conversation-detail/mess
     OptionHeaderComponent
   ],
   exports: [
-    MessageTextAreaComponent,
+    // MessageTextAreaComponent,
     AutofocusDirective,
     AvatarProfileComponent,
     DdpHeaderComponent,
