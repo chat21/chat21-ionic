@@ -1059,7 +1059,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
       this.tagsCanned = res
       this.tagsCannedCount = res.length
-
+      console.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses tagsCannedCount', this.tagsCannedCount);
       if (this.HIDE_CANNED_RESPONSES === false) {
         this.showTagsCanned(strSearch);
       }
@@ -1089,10 +1089,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       strReplace = "<b class='highlight-search-string'>" + strSearch + "</b>";
     }
     for (var i = 0; i < this.tagsCannedFilter.length; i++) {
-
       const textCanned = "<div class='cannedText'>" + this.replacePlaceholderInCanned(this.tagsCannedFilter[i].text) + "</div>";
       this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim()) + "</div>" + textCanned + '</div>';
-
+    }
+    if (this.tagsCannedCount === 0) {
+      const nocanned = {'title': "<div class='cannedContent'><div class='cannedTitle'>Test </div><div class='cannedText'>There are no canned responses  </div></div>", "text": "There are no canned responses"}
+      this.tagsCannedFilter.push(nocanned)
     }
   }
 
@@ -1108,10 +1110,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   replacePlaceholderInCanned(str) {
     this.logger.log('[CONVS-DETAIL] - replacePlaceholderInCanned str ', str);
-
-
     str = str.replace('$recipient_name', this.conversationWithFullname);
-
     if (this.loggedUser && this.loggedUser.fullname) {
       str = str.replace('$agent_name', this.loggedUser.fullname);
     }
