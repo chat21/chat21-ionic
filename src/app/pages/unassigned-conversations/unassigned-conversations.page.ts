@@ -87,10 +87,10 @@ export class UnassignedConversationsPage implements OnInit {
         }
       
     
-        // let spinnerElem = <HTMLElement>document.querySelector('.stretchspinner-unassigned-convs')
+        let spinnerElem = <HTMLElement>document.querySelector('.loader-spinner-wpr')
 
-        // self.logger.log('[APP-STORE-INSTALL] GET iframeDoc readyState spinnerElem', spinnerElem)
-        // spinnerElem.classList.add("hide-stretchspinner")
+        self.logger.log('[APP-STORE-INSTALL] GET iframeDoc readyState spinnerElem', spinnerElem)
+        spinnerElem.classList.add("hide-stretchspinner")
 
       });
     }
