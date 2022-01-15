@@ -92,7 +92,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public conv_type: string;
 
   public tagsCanned: any = [];
-  public tagsCannedCount:number
+  public tagsCannedCount: number
   public tagsCannedFilter: any = [];
   public HIDE_CANNED_RESPONSES: boolean = false;
 
@@ -181,7 +181,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.conversationWithFullname = params.get('FullNameConv');
       this.conv_type = params.get('Convtype');
 
-      this.events.publish('supportconvid:haschanged', this.conversationWith);  
+      this.events.publish('supportconvid:haschanged', this.conversationWith);
     });
 
   }
@@ -1093,7 +1093,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim()) + "</div>" + textCanned + '</div>';
     }
     if (this.tagsCannedCount === 0) {
-      const nocanned = {'title': "<div class='cannedContent'><div class='cannedTitle'>Test </div><div class='cannedText'>There are no canned responses  </div></div>", "text": "There are no canned responses"}
+      const nocanned = { 'title': "<div class='cannedContent'><div style='color:#e41e3f' class='cannedTitle'>Test </div><div class='cannedText'>There are no canned responses available. To create them go to the project (you can click on the name of the project in the right sidebar) and under the menu item 'Settings' in the Dashboard sidebar click on 'Canned responses' and then on the 'Create response' button </div></div>", "text": "There are no canned responses available. To create them go to the project (you can click on the name of the project in the right sidebar) and under the menu item 'Settings' in the Dashboard sidebar click on 'Canned responses' and then on the 'Create response' button" }
       this.tagsCannedFilter.push(nocanned)
     }
   }
@@ -1160,28 +1160,30 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
 
   hasClickedOpenCannedResponses($event) {
-    this.logger.log('[CONVS-DETAIL] - hasClickedOpenCannedResponses ',  $event) 
+    this.logger.log('[CONVS-DETAIL] - hasClickedOpenCannedResponses ', $event)
     const elTextArea = this.rowTextArea['el'];
     const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
- 
-    this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea ", textArea);
-    this.logger.log("[CONVS-DETAIL] replaceTagInMessage  textArea value", textArea.value)
-    this.insertAtCursor(textArea, '/');
-    // setTimeout(() => {
-    //   // textArea.focus();
-    //   textArea.setFocus();
-      
-    // }, 1000);
-   }
 
-   insertAtCursor(myField, myValue) {
-    this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - myValue ', myValue );
-    this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - myField ', myField ); 
-    
-      myValue = ' ' + myValue;
-      this.logger.log('[CANNED-RES-EDIT-CREATE] - GET TEXT AREA - QUI ENTRO myValue ', myValue );
-    
-   
+    this.logger.log("[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea ", textArea);
+    this.logger.log("[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea value", textArea.value)
+    this.insertAtCursor(textArea, '/');
+    // console.log('[CONVS-DETAIL] hasClickedOpenCannedResponses textArea.value', textArea.value)
+    setTimeout(() => {
+      // if (textArea.value === '/') {
+        // textArea.focus();
+        textArea.setFocus();
+      // }
+    }, 1500);
+  }
+
+  insertAtCursor(myField, myValue) {
+    this.logger.log('[CONVS-DETAIL] - insertAtCursor - myValue ', myValue);
+    this.logger.log('[CONVS-DETAIL] - insertAtCursor - myField ', myField);
+
+    myValue = ' ' + myValue;
+    this.logger.log('[CONVS-DETAIL] - GET TEXT AREA - QUI ENTRO myValue ', myValue);
+
+
     //IE support
     if (myField.selection) {
       myField.focus();
@@ -1192,19 +1194,19 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     //MOZILLA and others
     else if (myField.selectionStart || myField.selectionStart == '0') {
       var startPos = myField.selectionStart;
-      this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - startPos ', startPos);
-      
+      this.logger.log('[CONVS-DETAIL] - insertAtCursor - startPos ', startPos);
+
       var endPos = myField.selectionEnd;
-      this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - endPos ', endPos);
-      
+      this.logger.log('[CONVS-DETAIL] - insertAtCursor - endPos ', endPos);
+
       myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
-  
+
       // place cursor at end of text in text input element
       myField.focus();
       var val = myField.value; //store the value of the element
       myField.value = ''; //clear the value of the element
       myField.value = val + ' '; //set that value back. 
-  
+
       // this.cannedResponseMessage = myField.value;
 
       // this.texareaIsEmpty = false;
@@ -1214,11 +1216,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // this.cannedResponseMessage = myField.value;
     }
 
-  
+
+
+
   }
 
 
-   
+
 
 
   @HostListener('document:keydown', ['$event'])
