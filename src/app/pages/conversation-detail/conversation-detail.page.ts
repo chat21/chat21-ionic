@@ -1055,11 +1055,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     //if(this.tagsCanned.length <= 0 ){
     this.tagsCanned = [];
     this.cannedResponsesService.getCannedResponses(tiledeskToken, projectId).subscribe(res => {
-      console.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses RES', res);
+      this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses RES', res);
 
       this.tagsCanned = res
       this.tagsCannedCount = res.length
-      console.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses tagsCannedCount', this.tagsCannedCount);
+      this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses tagsCannedCount', this.tagsCannedCount);
       if (this.HIDE_CANNED_RESPONSES === false) {
         this.showTagsCanned(strSearch);
       }

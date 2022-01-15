@@ -132,7 +132,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     }
 
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
-    console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
  
     
     this.logger.log('[CONVS-DETAIL] - returnChangeTextArea ngOnChanges in [MSG-TEXT-AREA]  this.tagsCannedFilter.length ', this.tagsCannedFilter.length)
@@ -426,11 +426,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   ionChange(e: any) {
-    console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange event ", e);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange event ", e);
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange detail.value ", e.detail.value);
 
     const message = e.detail.value
-   console.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange message ", message);
+    this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange message ", message);
     // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange  this.messageString ", this.messageString);
     const height = e.target.offsetHeight + 20; // nk added +20
     // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange text-area height ", height);
@@ -557,7 +557,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   sendMessage(text: string) {
-    console.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage text', text);
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage text', text);
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage conve width', this.conversationWith);
     // text.replace(/\s/g, "")
     this.messageString = '';

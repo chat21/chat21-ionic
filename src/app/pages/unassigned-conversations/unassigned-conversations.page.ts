@@ -73,10 +73,10 @@ export class UnassignedConversationsPage implements OnInit {
   getIframeHaLoaded() {
     var self = this;
     var iframeWin = document.getElementById('unassigned-convs-iframe') as HTMLIFrameElement;;
-    console.log('[UNASSIGNED-CONVS-PAGE] GET iframe ', iframeWin)
+    this.logger.log('[UNASSIGNED-CONVS-PAGE] GET iframe ', iframeWin)
     if (iframeWin) {
       iframeWin.addEventListener("load", function () {
-        console.log("[UNASSIGNED-CONVS-PAGE] GET - Finish");
+        self.logger.log("[UNASSIGNED-CONVS-PAGE] GET - Finish");
 
         const isIFrame = (input: HTMLElement | null): input is HTMLIFrameElement =>
         input !== null && input.tagName === 'IFRAME';
