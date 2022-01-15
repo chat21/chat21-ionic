@@ -43,7 +43,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Input() loggedUser: UserModel;
   @Input() conversationWith: string;
   @Input() tagsCannedFilter: any = [];
-  @Input() tagsCannedCount:any
+
 
   @Input() events: Observable<void>;
   @Input() fileUploadAccept: string
@@ -133,7 +133,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
     console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
-    console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedCount ", this.tagsCannedCount);
+ 
     
     this.logger.log('[CONVS-DETAIL] - returnChangeTextArea ngOnChanges in [MSG-TEXT-AREA]  this.tagsCannedFilter.length ', this.tagsCannedFilter.length)
 
@@ -205,9 +205,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       } else if (this.currentWindowWidth <= 273) {
         this.TEXAREA_PLACEHOLDER = this.SHORTER_TEXAREA_PLACEHOLDER;
       }
-
     }
-
   }
 
   // -------------------------------------------------------------------------------------------
@@ -428,11 +426,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   ionChange(e: any) {
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange event ", e);
+    console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange event ", e);
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ionChange detail.value ", e.detail.value);
 
     const message = e.detail.value
-    // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange message ", message);
+   console.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange message ", message);
     // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange  this.messageString ", this.messageString);
     const height = e.target.offsetHeight + 20; // nk added +20
     // this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] ionChange text-area height ", height);
@@ -458,7 +456,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   // ------------------------------------------------------------------------
   onKeydown(e: any, text: string) {
     this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA event", e)
-    this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA text", text)
+    console.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA text", text)
     e.preventDefault(); // Prevent press enter from creating new line 
     // console.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea * event: ", e);
 
@@ -559,12 +557,12 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
 
   sendMessage(text: string) {
-    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage', text);
+    console.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage text', text);
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage conve width', this.conversationWith);
     // text.replace(/\s/g, "")
     this.messageString = '';
     // text = text.replace(/(\r\n|\n|\r)/gm, '');
-    if (text.trim() !== '') {
+    if (text && text.trim() !== '') {
       this.eventSendMessage.emit({ message: text, type: TYPE_MSG_TEXT });
     }
   }
