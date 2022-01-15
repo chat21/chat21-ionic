@@ -40,6 +40,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     CommonModule,
     FormsModule,
     IonicModule,
+    TooltipModule,
     ConversationDetailPageRoutingModule,
     TranslateModule.forChild({
       loader: {
