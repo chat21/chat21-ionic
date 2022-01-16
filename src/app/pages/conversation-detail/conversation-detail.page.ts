@@ -1192,8 +1192,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     
     // myValue = ' ' + myValue;
   
-    console.log('[CONVS-DETAIL] - GET TEXT AREA - Here yes myValue ', myValue);
-    console.log('[CONVS-DETAIL] - GET TEXT AREA - Here yes textArea value length', myField.value.length);
+    // console.log('[CONVS-DETAIL] - GET TEXT AREA - Here yes myValue ', myValue);
+    // console.log('[CONVS-DETAIL] - GET TEXT AREA - Here yes textArea value length', myField.value.length);
 
     if (myField.value.length > 0) {
       myValue = ' ' + myValue;
