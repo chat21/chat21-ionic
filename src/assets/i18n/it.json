@@ -198,6 +198,8 @@
     "NewConversations": "Nuove Conversazioni",
     "UPLOAD": "Carica",
     "CANNED_RESPONSES":"Risposte predefinite",
+    "NO_CANNED_RESPONSES":"Nessuna risposte predefinite",
+    "YES_CANNED_RESPONSES":"Visualizza le risposte predefinite cliccando sul pulsante ⚡️ o digitando una / nell'area di testo, puoi anche filtrare l'elenco digitando dopo la /",
     "VIEW_ALL_CONVERSATIONS":"Visualizza tutte le conversazioni",
     "CONVERSATIONS_IN_QUEUE":"conversazioni in coda, in attesa",
     "PIN_A_PROJECT": "Fissa un Progetto",

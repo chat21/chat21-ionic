@@ -190,6 +190,8 @@
   "NewConversations": "New conversations",
   "UPLOAD": "Upload",
   "CANNED_RESPONSES":"Canned responses",
+  "NO_CANNED_RESPONSES":"No canned responses",
+  "YES_CANNED_RESPONSES":"View the canned responses by clicking on the ⚡️ button or by typing a / in the text area, you can also filter the list by typing after the /",
   "VIEW_ALL_CONVERSATIONS":"View all conversations",
   "CONVERSATIONS_IN_QUEUE":"conversations in queue, on hold",
   "PIN_A_PROJECT": "Pin a Project",
