@@ -419,7 +419,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'CONTACT_ID',
       'USER_ID',
       "UPLOAD",
-      "CANNED_RESPONSES"
+      "CANNED_RESPONSES",
+      "NO_CANNED_RESPONSES",
+      "YES_CANNED_RESPONSES"
     ];
 
     this.translationMap = this.customTranslateService.translateLanguage(keys);
@@ -1168,21 +1170,34 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.logger.log("[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea value", textArea.value)
     this.insertAtCursor(textArea, '/');
     // console.log('[CONVS-DETAIL] hasClickedOpenCannedResponses textArea.value', textArea.value)
-    setTimeout(() => {
-      // if (textArea.value === '/') {
-        // textArea.focus();
-        textArea.setFocus();
-      // }
-    }, 1500);
+    // setTimeout(() => {
+    //   // if (textArea.value === '/') {
+    //     // textArea.focus();
+    //     textArea.setFocus();
+    //   // }
+    // }, 1500);
+
+    this.setCaretPosition(textArea)
   }
+
+  setCaretPosition(ctrl) {
+    ctrl.value.trim()
+    ctrl.setFocus();
+}
 
   insertAtCursor(myField, myValue) {
     this.logger.log('[CONVS-DETAIL] - insertAtCursor - myValue ', myValue);
     this.logger.log('[CONVS-DETAIL] - insertAtCursor - myField ', myField);
 
-    myValue = ' ' + myValue;
-    this.logger.log('[CONVS-DETAIL] - GET TEXT AREA - QUI ENTRO myValue ', myValue);
+    
+    // myValue = ' ' + myValue;
+  
+    console.log('[CONVS-DETAIL] - GET TEXT AREA - Here yes myValue ', myValue);
+    console.log('[CONVS-DETAIL] - GET TEXT AREA - Here yes textArea value length', myField.value.length);
 
+    if (myField.value.length > 0) {
+      myValue = ' ' + myValue;
+    }
 
     //IE support
     if (myField.selection) {

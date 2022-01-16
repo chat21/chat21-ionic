@@ -158,7 +158,7 @@
             <!-- openInfoConversation   {{openInfoConversation}} - isMobile {{isMobile}} -->
             <app-message-text-area
               *ngIf="(openInfoConversation === false && isMobile === true) || (openInfoConversation === true && isMobile === false) || (openInfoConversation === false && isMobile === false)"
-             
+              [tagsCannedCount]="tagsCannedCount"
               [loggedUser]="loggedUser" 
               [conversationWith]="conversationWith" 
               [tagsCannedFilter]="tagsCannedFilter"

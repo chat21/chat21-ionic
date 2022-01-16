@@ -107,11 +107,42 @@
     --padding-bottom: 0px;
     --padding-top: 0px;
     --border-radius: 50%;
-    --padding-end: 1px;
-    --padding-start: 1px;
+    --padding-end: 2px;
+    --padding-start: 2px;
     height: 33px !important;
-    width: 30px;
+    width: 33px;
 } 
+
+.no-canned-responses-btn-badge {
+    position: absolute;
+    font-size: 12px;
+    background-color: transparent;
+    border-radius: 50%;
+    padding: 1px 2px;
+    top: 4px;
+    color: red;
+    left: -3px;
+    cursor: pointer;
+}
+.no-canned-responses-btn-badge:hover {
+    background-color: rgba(0, 0, 0, 0.05);;
+}
+
+.canned-responses-btn-badge {
+    position: absolute;
+    font-size: 12px;
+    background-color: transparent;
+    border-radius: 50%;
+    padding: 1px 2px;
+    top: 4px;
+    color: #92949c;
+    left: -3px;
+    cursor: pointer;
+}
+
+.canned-responses-btn-badge:hover {
+    background-color: rgba(0, 0, 0, 0.05);;
+}
 
 
 .upload-image-btn .button-native {
