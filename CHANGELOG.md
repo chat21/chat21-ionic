@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.60-rc4
+- Translates the canned response displayed when there are not canned responses
+
 ### 3.0.60-rc3
 - Enhances the item at the top of the conversation list that displays the number of new conversations of a selected project
 - Fixes the bug: the loading spinner is sometimes not displayed when loading the list of unassigned conversations
