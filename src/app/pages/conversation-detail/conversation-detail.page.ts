@@ -421,7 +421,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       "UPLOAD",
       "CANNED_RESPONSES",
       "NO_CANNED_RESPONSES",
-      "YES_CANNED_RESPONSES"
+      "YES_CANNED_RESPONSES",
+      "THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE",
+      "TO_CREATE_THEM_GO_TO_THE_PROJECT"
     ];
 
     this.translationMap = this.customTranslateService.translateLanguage(keys);
@@ -1095,7 +1097,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim()) + "</div>" + textCanned + '</div>';
     }
     if (this.tagsCannedCount === 0) {
-      const nocanned = { 'title': "<div class='cannedContent'><div style='color:#e41e3f' class='cannedTitle'>Test </div><div class='cannedText'>There are no canned responses available. To create them go to the project (you can click on the name of the project in the right sidebar) and under the menu item 'Settings' in the Dashboard sidebar click on 'Canned responses' and then on the 'Create response' button </div></div>", "text": "There are no canned responses available. To create them go to the project (you can click on the name of the project in the right sidebar) and under the menu item 'Settings' in the Dashboard sidebar click on 'Canned responses' and then on the 'Create response' button" }
+      const nocanned = { 'title': "<div class='cannedContent'><div class='cannedTitle nocannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div><div class='cannedText'>"  + this.translationMap.get('TO_CREATE_THEM_GO_TO_THE_PROJECT') +  "</div></div>", "text": "There are no canned responses available" }
       this.tagsCannedFilter.push(nocanned)
     }
   }
@@ -1137,9 +1139,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.arrowkeyLocation = -1
     this.tagsCannedFilter = [];
     this.logger.log("[CONVS-DETAIL] replaceTagInMessage  canned text ", canned.text);
-    // // prendo val input
-
-
+    
 
     // replace text
     var pos = textArea.value.lastIndexOf("/");
@@ -1230,15 +1230,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       myField.value += myValue;
       // this.cannedResponseMessage = myField.value;
     }
-
-
-
-
   }
-
-
-
-
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {

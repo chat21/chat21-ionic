@@ -199,6 +199,8 @@
     "UPLOAD": "Carica",
     "CANNED_RESPONSES":"Risposte predefinite",
     "NO_CANNED_RESPONSES":"Nessuna risposte predefinite",
+    "THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE":"Non ci sono risposte predefinite disponibili",
+    "TO_CREATE_THEM_GO_TO_THE_PROJECT": "Per crearli vai al progetto (puoi cliccare sul nome del progetto disponibile nella barra laterale di destra) e sotto la voce di menu 'Impostazioni' nella barra laterale della Dashboard clicca su 'Risposte predefinite' e poi sul pulsante 'Crea risposta'",
     "YES_CANNED_RESPONSES":"Visualizza le risposte predefinite cliccando sul pulsante ⚡️ o digitando una / nell'area di testo, puoi anche filtrare l'elenco digitando dopo la /",
     "VIEW_ALL_CONVERSATIONS":"Visualizza tutte le conversazioni",
     "CONVERSATIONS_IN_QUEUE":"conversazioni in coda, in attesa",
