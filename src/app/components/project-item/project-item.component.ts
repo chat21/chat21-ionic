@@ -18,7 +18,7 @@ import { AppConfigProvider } from 'src/app/services/app-config';
 })
 export class ProjectItemComponent implements OnInit {
   @Output() projectIdEvent = new EventEmitter<string>()
-  @Output() openUnsevedConvsEvent = new EventEmitter<boolean>()
+  @Output() openUnsevedConvsEvent = new EventEmitter<any>()
 
   private unsubscribe$: Subject<any> = new Subject<any>();
   project: any;
@@ -32,7 +32,7 @@ export class ProjectItemComponent implements OnInit {
   private logger: LoggerService = LoggerInstance.getInstance();
   window_width_is_60: boolean;
   newInnerWidth: any;
-
+  avaialble_status_for_tooltip: string;
   tooltipOptions = {
     'show-delay': 500,
     'tooltip-class': 'chat-tooltip',
@@ -61,20 +61,23 @@ export class ProjectItemComponent implements OnInit {
     this.onInitWindowWidth();
     // console.log('[PROJECT-ITEM] - on INIT')
   }
-  
+
   openUnservedConvs() {
-    this.openUnsevedConvsEvent.emit(true)
+    this.openUnsevedConvsEvent.emit('notificationsorprjctbtn')
+  }
+  openUnservedConvsAndGoToProjectList() {
+    this.openUnsevedConvsEvent.emit('pinbtn')
   }
 
   getStoredTokenAndConnectWS() {
     this.tiledeskToken = this.appStorageService.getItem('tiledeskToken');
     this.logger.log('[PROJECT-ITEM] - STORED TILEDEK TOKEN ', this.tiledeskToken)
-    this.connetWebsocket( this.tiledeskToken) 
+    this.connetWebsocket(this.tiledeskToken)
   }
 
   connetWebsocket(tiledeskToken) {
-   
-    this.logger.log('[WEBSOCKET-JS] connetWebsocket called in [PROJECT-ITEM] tiledeskToken ',tiledeskToken)
+
+    this.logger.log('[WEBSOCKET-JS] connetWebsocket called in [PROJECT-ITEM] tiledeskToken ', tiledeskToken)
     const appconfig = this.appConfigProvider.getConfig();
     this.logger.log('[WEBSOCKET-JS] connetWebsocket called in [PROJECT-ITEM] wsUrl ', appconfig.wsUrl)
     const WS_URL = appconfig.wsUrl + '?token=' + tiledeskToken
@@ -98,12 +101,10 @@ export class ProjectItemComponent implements OnInit {
         if (event.data === 'hasChangedProject') {
           this.unservedRequestCount = 0;
           if (this.project) {
-            this.webSocketJs.unsubscribe('/' + this.project.id_project._id + '/requests');  
+            this.webSocketJs.unsubscribe('/' + this.project.id_project._id + '/requests');
           }
-          this.getLastProjectStoredAndSubscToWSAvailabilityAndConversations(); 
+          this.getLastProjectStoredAndSubscToWSAvailabilityAndConversations();
         }
-
-        
       }
     })
   }
@@ -116,7 +117,10 @@ export class ProjectItemComponent implements OnInit {
       'Busy',
       'VIEW_ALL_CONVERSATIONS',
       'CONVERSATIONS_IN_QUEUE',
-      'PINNED_PROJECT'
+      'PINNED_PROJECT',
+      'CHANGE_PINNED_PROJECT',
+      "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE",
+      "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE"
     ];
     this.translationMap = this.translateService.translateLanguage(keys);
   }
@@ -204,7 +208,7 @@ export class ProjectItemComponent implements OnInit {
       this.logger.log('[PROJECT-ITEM] - user_role ', user_role)
       this.projectIdEvent.emit(project.id_project._id)
 
-      
+
 
       if (user_role === 'agent') {
         this.ROLE_IS_AGENT = true;
@@ -236,6 +240,13 @@ export class ProjectItemComponent implements OnInit {
         if (project.id_project._id === projectUser['id_project']) {
           project['ws_projct_user_available'] = projectUser['user_available'];
           project['ws_projct_user_isBusy'] = projectUser['isBusy']
+          if (this.translationMap) {
+            if (projectUser['user_available'] === true) {
+              this.avaialble_status_for_tooltip = this.translationMap.get('CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE')
+            } else {
+              this.avaialble_status_for_tooltip = this.translationMap.get('CHANGE_TO_YOUR_STATUS_TO_AVAILABLE')
+            }
+          }
         }
 
       }, (error) => {
@@ -285,7 +296,7 @@ export class ProjectItemComponent implements OnInit {
             // this.logger.log('NAVBAR - UPDATE-UNSERVED-REQUEST-COUNT request agents', r.agents)
             // *bug fix: when the user is an agent also for the unserved we have to consider if he is present in agents
             // && this.ROLE_IS_AGENT === true
-            if (r['status'] === 100 ) {
+            if (r['status'] === 100) {
               if (this.hasmeInAgents(r['agents']) === true) {
                 count = count + 1;
               }

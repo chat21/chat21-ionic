@@ -72,6 +72,8 @@ export class ConversationListPage implements OnInit {
   subscription: Subscription;
 
   public UNASSIGNED_CONVS_URL: any;
+  public PROJECTS_FOR_PANEL_URL: any;
+  public IFRAME_URL: any;
   public hasClickedOpenUnservedConvIframe: boolean = false;
   public lastProjectId: string;
   public isOnline: boolean = true;
@@ -240,23 +242,39 @@ export class ConversationListPage implements OnInit {
   }
 
   openUnsevedConversationIframe(event) {
+    console.log('[CONVS-LIST-PAGE] openUnsevedConversationIframe ', event)
     this.hasClickedOpenUnservedConvIframe = true
     this.logger.log('[CONVS-LIST-PAGE] - HAS CLIKED OPEN UNSERVED REQUEST IFRAME', this.hasClickedOpenUnservedConvIframe);
     const DASHBOARD_BASE_URL = this.appConfigProvider.getConfig().dashboardUrl;
+    // http://localhost:4204/#/projects-for-panel
+    this.PROJECTS_FOR_PANEL_URL = DASHBOARD_BASE_URL + '#/projects-for-panel';
     this.UNASSIGNED_CONVS_URL = DASHBOARD_BASE_URL + '#/project/' + this.lastProjectId + '/unserved-request-for-panel';
+
+    if (event === 'pinbtn') {
+      this.IFRAME_URL = this.PROJECTS_FOR_PANEL_URL
+    } else {
+      this.IFRAME_URL = this.UNASSIGNED_CONVS_URL
+    }
+
     this.logger.log('[CONVS-LIST-PAGE] - HAS CLIKED OPEN UNSERVED REQUEST IFRAME > UNASSIGNED CONVS URL', this.UNASSIGNED_CONVS_URL);
-    this.openUnassignedConversations(this.UNASSIGNED_CONVS_URL)
+    this.openUnassignedConversations(this.IFRAME_URL, event)
   }
 
   // ---------------------------------------------------------
   // Opens the Unassigned Conversations iframe
   // ---------------------------------------------------------
-  openUnassignedConversations(UNASSIGNED_CONVS_URL) {
-
+  openUnassignedConversations(IFRAME_URL: string, event) {
     if (checkPlatformIsMobile()) {
-      presentModal(this.modalController, UnassignedConversationsPage, { unassigned_convs_url: UNASSIGNED_CONVS_URL });
+      presentModal(this.modalController, UnassignedConversationsPage, {
+        iframe_URL: IFRAME_URL,
+        callerBtn: event
+      });
     } else {
-      this.navService.push(UnassignedConversationsPage, { unassigned_convs_url: UNASSIGNED_CONVS_URL });
+      this.navService.push(UnassignedConversationsPage, {
+        iframe_URL: IFRAME_URL,
+        callerBtn: event
+
+      });
     }
   }
 

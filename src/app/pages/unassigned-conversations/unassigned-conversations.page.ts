@@ -14,8 +14,12 @@ import { CustomTranslateService } from 'src/chat21-core/providers/custom-transla
 })
 export class UnassignedConversationsPage implements OnInit {
 
-  @Input() unassigned_convs_url: any;
-  unassigned_convs_url_sanitized: any;
+  @Input() iframe_URL: any;
+  @Input() callerBtn: string;
+  // @Input() prjctsxpanel_url: any;
+  // @Input() unassigned_convs_url: any;
+
+  iframe_url_sanitized: any;
   private logger: LoggerService = LoggerInstance.getInstance();
   // has_loaded: boolean;
   ion_content: any;
@@ -33,7 +37,7 @@ export class UnassignedConversationsPage implements OnInit {
 
   ngOnInit() {
     const keys = [
-      'UnassignedConversations', 
+      'UnassignedConversations',
       'NewConversations',
       'PIN_A_PROJECT'
     ];
@@ -51,14 +55,16 @@ export class UnassignedConversationsPage implements OnInit {
   }
 
   buildIFRAME() {
-    this.logger.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL (ngOnInit)', this.unassigned_convs_url);
-    this.unassigned_convs_url_sanitized = this.sanitizer.sanitize(SecurityContext.URL, this.unassigned_convs_url)
-    this.logger.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL SANITIZED (ngOnInit)', this.unassigned_convs_url_sanitized);
+    this.logger.log('[UNASSIGNED-CONVS-PAGE] - iframe_URL (ngOnInit)', this.iframe_URL);
+    this.logger.log('[UNASSIGNED-CONVS-PAGE] - callerBtn (ngOnInit)', this.callerBtn);
+
+    this.iframe_url_sanitized = this.sanitizer.sanitize(SecurityContext.URL, this.iframe_URL)
+    this.logger.log('[UNASSIGNED-CONVS-PAGE] - UNASSIGNED CONVS URL SANITIZED (ngOnInit)', this.iframe_url_sanitized);
     // this.has_loaded = false
 
     this.ion_content = document.getElementById("iframe-ion-content");
     this.iframe = document.createElement("iframe");
-    this.iframe.src = this.unassigned_convs_url_sanitized;
+    this.iframe.src = this.iframe_url_sanitized;
     this.iframe.width = "100%";
     this.iframe.height = "99%";
     this.iframe.id = "unassigned-convs-iframe"
@@ -67,7 +73,8 @@ export class UnassignedConversationsPage implements OnInit {
     this.iframe.style.background = "white";
     this.ion_content.appendChild(this.iframe);
 
-     this.getIframeHaLoaded()
+    this.getIframeHaLoaded()
+
   }
 
   getIframeHaLoaded() {
@@ -79,14 +86,14 @@ export class UnassignedConversationsPage implements OnInit {
         self.logger.log("[UNASSIGNED-CONVS-PAGE] GET - Finish");
 
         const isIFrame = (input: HTMLElement | null): input is HTMLIFrameElement =>
-        input !== null && input.tagName === 'IFRAME';
+          input !== null && input.tagName === 'IFRAME';
 
         if (isIFrame(iframeWin) && iframeWin.contentWindow) {
           const msg = { action: "hidewidget", calledBy: 'unassigned-convs' }
           iframeWin.contentWindow.postMessage(msg, '*');
         }
-      
-    
+
+
         let spinnerElem = <HTMLElement>document.querySelector('.loader-spinner-wpr')
 
         self.logger.log('[APP-STORE-INSTALL] GET iframeDoc readyState spinnerElem', spinnerElem)
@@ -94,7 +101,7 @@ export class UnassignedConversationsPage implements OnInit {
 
       });
     }
-    
+
   }
 
   listenToPostMsg() {
@@ -109,7 +116,21 @@ export class UnassignedConversationsPage implements OnInit {
           this.isProjectsForPanel = false;
         }
       }
+
+      if (event.data === 'hasChangedProject') {
+        this.closemodal()
+      }
     });
+  }
+
+  public async closemodal() {
+    // const modal = await this.modalController.getTop();
+    // modal.dismiss({
+    //   confirmed: true
+    // });
+    // await this.modalController.dismiss({ confirmed: true });
+    this.onClose()
+
   }
 
 
@@ -117,10 +138,9 @@ export class UnassignedConversationsPage implements OnInit {
     this.logger.log('[UNASSIGNED-CONVS-PAGE] - onClose MODAL')
     this.logger.log('[UNASSIGNED-CONVS-PAGE] - onClose MODAL isModalOpened ', await this.modalController.getTop())
     const isModalOpened = await this.modalController.getTop();
-
+    this.logger.log('[UNASSIGNED-CONVS-PAGE] - onClose MODAL isModalOpened ', isModalOpened)
     if (isModalOpened) {
       this.modalController.dismiss({
-
         confirmed: true
       });
     } else {
