@@ -195,7 +195,11 @@
   "TO_CREATE_THEM_GO_TO_THE_PROJECT": "To create them go to the project (you can click on the name of the project available in the right sidebar) and under the menu item 'Settings' in the Dashboard sidebar click on 'Canned responses' and then on the 'Create response' button",
   "YES_CANNED_RESPONSES": "View the canned responses by clicking on the ⚡️ button or by typing a / in the text area, you can also filter the list by typing after the /",
   "VIEW_ALL_CONVERSATIONS": "View all conversations",
-  "CONVERSATIONS_IN_QUEUE": "conversations in queue, on hold",
+  "CONVERSATIONS_IN_QUEUE": "conversations in queue",
   "PIN_A_PROJECT": "Pin a Project",
-  "PINNED_PROJECT": "Pinned project"
+  "PINNED_PROJECT": "Pinned project",
+  "CHANGE_PINNED_PROJECT": "Change pinned project",
+  "CHANGE_TO_AVAILABLE_UNAVAILABLE": "change to available/unavailable",
+  "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "change to your status to available",
+  "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "change to your status to unavailable"
 }
