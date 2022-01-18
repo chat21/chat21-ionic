@@ -1,5 +1,10 @@
 # chat21-ionic ver 3.0
 
+### 3.0.60-rc5
+- Change the icon and link of the "pin button" in the item at the top of the conversation list (now opens the list of projects and not the list of new conversations)
+- Add a tooltip on the switch button to change the available/unavailable status
+- Adds a link to the to the new conversations at the icon that display the number of new conversations
+
 ### 3.0.60-rc4
 - Translates the canned response displayed when there are not canned responses
 
