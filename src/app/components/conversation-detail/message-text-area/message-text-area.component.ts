@@ -457,7 +457,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   // ------------------------------------------------------------------------
   onKeydown(e: any, text: string) {
     this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA event", e)
-    console.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA text", text)
+    this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA text", text)
     e.preventDefault(); // Prevent press enter from creating new line 
     // console.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea * event: ", e);
 
