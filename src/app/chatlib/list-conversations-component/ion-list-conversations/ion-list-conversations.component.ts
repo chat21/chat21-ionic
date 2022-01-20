@@ -55,14 +55,16 @@ export class IonListConversationsComponent extends ListConversationsComponent im
     super(iterableDiffers, kvDiffers)
     this.browserLang = this.translate.getBrowserLang();
     if (this.browserLang) {
-      if (this.browserLang === 'it') {
-        // this.translate.use('it');
-        moment.locale('it')
 
-      } else {
-        // this.translate.use('en');
-        moment.locale('en')
-      }
+      moment.locale(this.browserLang)
+      // if (this.browserLang === 'it') {
+      //   // this.translate.use('it');
+      //   moment.locale('it')
+
+      // } else {
+      //   // this.translate.use('en');
+      //   moment.locale('en')
+      // }
     }
 
     this.currentYear = moment().format('YYYY');
