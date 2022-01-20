@@ -114,7 +114,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
 
     auth.setBaseUrl(appConfig.getConfig().apiUrl);
 
-    if (config.pushEngine = PUSH_ENGINE_MQTT) {
+    if (config.pushEngine === PUSH_ENGINE_MQTT) {
       // FOR PUSH NOTIFICATIONS INIT FIREBASE APP
       FirebaseInitService.initFirebase(config.firebaseConfig);
     }
