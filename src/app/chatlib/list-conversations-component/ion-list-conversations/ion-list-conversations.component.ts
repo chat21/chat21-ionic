@@ -14,6 +14,7 @@ import * as moment from 'moment';
 import { NetworkService } from '../../../services/network-service/network.service';
 import { AppConfigProvider } from 'src/app/services/app-config';
 import { DomSanitizer } from '@angular/platform-browser'
+import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 // import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 // import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
@@ -32,7 +33,7 @@ export class IonListConversationsComponent extends ListConversationsComponent im
   public logger: LoggerService = LoggerInstance.getInstance();
   public currentYear: any;
   public browserLang: string;
- 
+
   public PROJECT_FOR_PANEL: any;
 
   /**
@@ -51,21 +52,24 @@ export class IonListConversationsComponent extends ListConversationsComponent im
     private networkService: NetworkService,
     private appConfigProvider: AppConfigProvider,
     private sanitizer: DomSanitizer,
+    public tiledeskAuthService: TiledeskAuthService
   ) {
     super(iterableDiffers, kvDiffers)
-    this.browserLang = this.translate.getBrowserLang();
-    if (this.browserLang) {
+    this.setMomentLocale();
 
-      moment.locale(this.browserLang)
-      // if (this.browserLang === 'it') {
-      //   // this.translate.use('it');
-      //   moment.locale('it')
 
-      // } else {
-      //   // this.translate.use('en');
-      //   moment.locale('en')
-      // }
-    }
+    // if (this.browserLang) {
+
+    //   moment.locale(this.browserLang)
+    //   // if (this.browserLang === 'it') {
+    //   //   // this.translate.use('it');
+    //   //   moment.locale('it')
+
+    //   // } else {
+    //   //   // this.translate.use('en');
+    //   //   moment.locale('en')
+    //   // }
+    // }
 
     this.currentYear = moment().format('YYYY');
     this.logger.log('[ION-LIST-CONVS-COMP] - currentYear ', this.currentYear)
@@ -76,13 +80,36 @@ export class IonListConversationsComponent extends ListConversationsComponent im
     this.PROJECT_FOR_PANEL = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_BASE_URL + '#/project-for-panel');
   }
 
+  setMomentLocale() {
+    this.browserLang = this.translate.getBrowserLang();
+    const currentUser = this.tiledeskAuthService.getCurrentUser();
+    this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - currentUser ', currentUser)
+    let currentUserId = ''
+    if (currentUser) {
+      currentUserId = currentUser.uid
+      this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - currentUserId ', currentUserId)
+    }
+
+    const stored_preferred_lang = localStorage.getItem(currentUserId + '_lang');
+    this.logger.log('[ION-LIST-CONVS-COMP] stored_preferred_lang: ', stored_preferred_lang);
+
+
+    let chat_lang = ''
+    if (this.browserLang && !stored_preferred_lang) {
+      chat_lang = this.browserLang
+    } else if (this.browserLang && stored_preferred_lang) {
+      chat_lang = stored_preferred_lang
+    }
+    moment.locale(chat_lang)
+  }
+
   ngOnInit() {
     this.isApp = this.platform.is('ios') || this.platform.is('android')
     this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - IS-APP ', this.isApp)
     this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - Platform', this.platform.platforms());
   }
 
- 
+
 
 
 
