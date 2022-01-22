@@ -98,7 +98,7 @@ export class AppComponent implements OnInit {
   public missingConnectionToast: any
   public executedInitializeAppByWatchConnection: boolean = false;
   private version: string;
- 
+
   // private isOnline: boolean = false;
 
   wsService: WebSocketJs;
@@ -443,7 +443,7 @@ export class AppComponent implements OnInit {
       // console.log("Check platform");
       this.getPlatformName();
 
-      this.setLanguage();
+      // this.setLanguage();
 
       // if (this.splashScreen) {
       this.splashScreen.hide();
@@ -521,19 +521,42 @@ export class AppComponent implements OnInit {
   }
 
   /** */
-  setLanguage() {
+  setLanguage(currentUser) {
+    // const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
+    this.logger.log('[APP-COMP] - setLanguage current_user uid: ', currentUser);
+
+    let currentUserId = ''
+    if (currentUser) {
+      currentUserId = currentUser.uid;
+      this.logger.log('[APP-COMP] - setLanguage current_user uid: ', currentUserId);
+    }
     this.translate.setDefaultLang('en');
     this.translate.use('en');
-    this.logger.debug('[APP-COMP] navigator.language: ', navigator.language);
-    let language;
-    if (navigator.language.indexOf('-') !== -1) {
-      language = navigator.language.substring(0, navigator.language.indexOf('-'));
-    } else if (navigator.language.indexOf('_') !== -1) {
-      language = navigator.language.substring(0, navigator.language.indexOf('_'));
-    } else {
-      language = navigator.language;
+
+    const browserLang = this.translate.getBrowserLang();
+    this.logger.log('[APP-COMP] browserLang: ', browserLang);
+    const stored_preferred_lang = localStorage.getItem(currentUserId + '_lang');
+    this.logger.log('[APP-COMP] stored_preferred_lang: ', stored_preferred_lang);
+
+    let chat_lang = ''
+    if (browserLang && !stored_preferred_lang) {
+      chat_lang = browserLang
+    } else if (browserLang && stored_preferred_lang) {
+      chat_lang = stored_preferred_lang
     }
-    this.translate.use(language);
+
+    this.translate.use(chat_lang);
+
+    // this.logger.debug('[APP-COMP] navigator.language: ', navigator.language);
+    // let language;
+    // if (navigator.language.indexOf('-') !== -1) {
+    //   language = navigator.language.substring(0, navigator.language.indexOf('-'));
+    // } else if (navigator.language.indexOf('_') !== -1) {
+    //   language = navigator.language.substring(0, navigator.language.indexOf('_'));
+    // } else {
+    //   language = navigator.language;
+    // }
+    // this.translate.use(language);
   }
 
 
@@ -802,7 +825,7 @@ export class AppComponent implements OnInit {
       .pipe(filter((state) => state !== null))
       .subscribe((state: any) => {
         this.logger.log('initialize FROM [APP-COMP] - [APP-COMP] ***** BSAuthStateChanged  state', state);
-     
+
         if (state && state === AUTH_STATE_ONLINE) {
           // const user = this.tiledeskAuthService.getCurrentUser();
           // if (this.isOnline === false) {
@@ -868,6 +891,7 @@ export class AppComponent implements OnInit {
     // }
     this.events.publish('go:online', true);
     const currentUser = this.tiledeskAuthService.getCurrentUser();
+    this.setLanguage(currentUser);
     // this.logger.printDebug('APP-COMP - goOnLine****', currentUser);
     this.logger.log('[APP-COMP] - GO-ONLINE - currentUser ', currentUser);
     this.chatManager.setTiledeskToken(tiledeskToken);
@@ -907,7 +931,7 @@ export class AppComponent implements OnInit {
     const supportmode = this.appConfigProvider.getConfig().supportMode;
     this.logger.log('[APP-COMP] - GO-OFFINE - supportmode ', supportmode);
     if (supportmode === true) {
-        this.webSocketClose()
+      this.webSocketClose()
     }
     // this.isOnline = false;
     // this.conversationsHandlerService.conversations = [];
