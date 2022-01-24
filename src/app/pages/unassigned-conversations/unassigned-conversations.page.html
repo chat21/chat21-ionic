@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="callerBtn !== 'pinbtn'">
-      {{translationMap?.get('NewConversations') }}
+    <ion-title *ngIf="callerBtn !== 'pinbtn'" style="font-size: 16px;">
+      {{translationMap?.get('UnassignedConversations') }}
     </ion-title>
-    <ion-title *ngIf="callerBtn === 'pinbtn'">
+    <ion-title *ngIf="callerBtn === 'pinbtn'" style="font-size: 16px;">
       {{translationMap?.get('PIN_A_PROJECT') }}
     </ion-title>
     <ion-buttons slot="end">
