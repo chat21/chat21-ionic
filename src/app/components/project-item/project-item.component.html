@@ -32,29 +32,50 @@
             </div>
 
             <ng-template #conversationsInQueue>
-              <span>{{ unservedRequestCount }} {{translationMap?.get('CONVERSATIONS_IN_QUEUE') }}</span>
+              <span *ngIf="unservedRequestCount > 1">
+                {{ unservedRequestCount }}
+                {{translationMap?.get('CONVERSATIONS_IN_QUEUE') }}
+              </span>
+              <span *ngIf="unservedRequestCount === 1">
+                {{ unservedRequestCount }}
+                {{translationMap?.get('CONVERSATION_IN_QUEUE') }}
+              </span>
+              <span *ngIf="unservedRequestCount === 0">
+                {{translationMap?.get('NO_CONVERSATION_IN_QUEUE') }}
+
+              </span>
             </ng-template>
 
 
             <div class="flex-child-right">
-              <div class="project-name-project-for-panel" [tooltip]="conversationsInQueueOnProjectName" [options]="tooltipOptions"
-                placement="top" content-type="template" (click)="openUnservedConvs()">
+              <div class="project-name-project-for-panel" [tooltip]="conversationsInQueueOnProjectName"
+                [options]="tooltipOptions" placement="top" content-type="template" (click)="openUnservedConvs()">
                 <div class="project---name"> {{ project?.id_project?.name }} </div>
               </div>
               <ng-template #conversationsInQueueOnProjectName>
-                <span>{{ unservedRequestCount }} {{translationMap?.get('CONVERSATIONS_IN_QUEUE') }}</span>
+                <span *ngIf="unservedRequestCount > 1">
+                  {{ unservedRequestCount }}
+                  {{translationMap?.get('CONVERSATIONS_IN_QUEUE') }}
+                </span>
+                <span *ngIf="unservedRequestCount === 1">
+                  {{ unservedRequestCount }}
+                  {{translationMap?.get('CONVERSATION_IN_QUEUE') }}
+                </span>
+                <span *ngIf="unservedRequestCount === 0">
+                  {{translationMap?.get('NO_CONVERSATION_IN_QUEUE') }}
+                </span>
               </ng-template>
 
               <div class="availabily-and-busy-wpr">
                 <div class="availabily---wpr" tooltip="{{avaialble_status_for_tooltip}}" [options]="tooltipOptions">
-                  <div class="onoffswitch" 
+                  <div class="onoffswitch"
                     (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)">
-                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="switchavailableunavailablestatus"
-                      tabindex="0" [checked]="project?.ws_projct_user_available">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+                      id="switchavailableunavailablestatus" tabindex="0" [checked]="project?.ws_projct_user_available">
                     <label class="onoffswitch-label" for="switchavailableunavailablestatus"></label>
                   </div>
                 </div>
-              
+
 
                 <!-- (click)="$event.stopPropagation();changeAvailabilityState(project?.id_project?._id, project?.ws_projct_user_available)" -->
                 <span *ngIf="project?.ws_projct_user_available === true" class="availibility-status-text"
@@ -92,7 +113,8 @@
               <div class="view-all-convs-icon-wpr" style="cursor: pointer;" [tooltip]="viewAllConvs"
                 [options]="tooltipOptions" placement="top" content-type="template">
 
-                <ion-button ion-button fill="clear" class="open-unserved-convs-btn" (click)="openUnservedConvsAndGoToProjectList()">
+                <ion-button ion-button fill="clear" class="open-unserved-convs-btn"
+                  (click)="openUnservedConvsAndGoToProjectList()">
 
                   <span class="push-icon-and-list-wpr">
                     <!--   <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg"

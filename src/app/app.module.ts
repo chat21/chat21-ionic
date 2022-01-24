@@ -90,7 +90,7 @@ import { ConversationInfoModule } from 'src/app/components/conversation-info/con
 
 
 // Directives
-import { TooltipModule } from 'ng2-tooltip-directive';
+
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { Network } from '@ionic-native/network/ngx';
 import { ConnectionService } from 'ng-connection-service';

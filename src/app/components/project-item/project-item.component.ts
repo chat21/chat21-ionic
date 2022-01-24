@@ -117,6 +117,8 @@ export class ProjectItemComponent implements OnInit {
       'Busy',
       'VIEW_ALL_CONVERSATIONS',
       'CONVERSATIONS_IN_QUEUE',
+      'CONVERSATION_IN_QUEUE',
+      'NO_CONVERSATION_IN_QUEUE',
       'PINNED_PROJECT',
       'CHANGE_PINNED_PROJECT',
       "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE",
@@ -207,8 +209,6 @@ export class ProjectItemComponent implements OnInit {
       const user_role = this.project.role
       this.logger.log('[PROJECT-ITEM] - user_role ', user_role)
       this.projectIdEvent.emit(project.id_project._id)
-
-
 
       if (user_role === 'agent') {
         this.ROLE_IS_AGENT = true;
