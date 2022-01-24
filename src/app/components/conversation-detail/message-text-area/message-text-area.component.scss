@@ -67,6 +67,10 @@
             font-size: 15px;
         }
     }
+    .text-message-no-cr {
+         margin: 0 35px !important;
+        width: calc(100% - 70px) !important;
+    }
 }
 
 #fileInput {
