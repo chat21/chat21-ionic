@@ -1,5 +1,12 @@
 # chat21-ionic ver 3.0
 
+### 3.0.60-rc7
+- Adds German language
+- Adds a method that translates chat texts based on the language of the browser settings if no preferred language is selected in the dashboard or based on the preferred language (ignoring the browser language)
+- Manages the language used for translations from the "moment" library based on the language of the browser settings if no preferred language has been selected in the dashboard or on the preferred language selected (ignoring the browser language)
+- Adds the ability to manage the visibility of canned responses in env.sample, chat-config-tempalte.json and chat-config.json
+- Fixes the bug: in the 'item' that displays the pinned project and the number of the not assigned conversions  the tooltip is not correctly displayed
+
 ### 3.0.60-rc6
 - Fixes the bug: push notifications are initialized even if the "pushEngine" configuration variable is set to "none"
 - Adds spanish language
