@@ -217,7 +217,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.logger.log('[CONVS-DETAIL] AppConfigService getAppConfig public_Key', this.public_Key);
 
     let keys = this.public_Key.split("-");
-    console.log('[CONVS-DETAIL] PUBLIC-KEY - public_Key keys', keys)
+    this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - public_Key keys', keys)
 
     keys.forEach(key => {
 
@@ -226,10 +226,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
         let car = key.split(":");
         if (car[1] === "F") {
           this.areVisibleCAR = false;
-          console.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+          this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
         } else {
           this.areVisibleCAR = true;
-          console.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+          this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
         }
       }
 
@@ -237,7 +237,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     if (!this.public_Key.includes("CAR")) {
       this.areVisibleCAR = false;
-      console.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+      this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
     }
   }
 
