@@ -22,6 +22,7 @@ import { AppConfigProvider } from 'src/app/services/app-config';
 // utils
 import { avatarPlaceholder, getColorBck } from '../../utils/utils-user';
 import { compareValues, getFromNow, conversationsPathForUserId, searchIndexInArrayForUid, isGroup } from '../../utils/utils';
+import { TOUCHING_OPERATOR } from '../../utils/constants';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 
@@ -476,6 +477,7 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
             conv.sender_fullname = this.translationMap.get('YOU')
+
             // conv.last_message_text = YOU + conv.last_message_text;
             // } else if (conv.channel_type === TYPE_GROUP) {
         } else if (isGroup(conv)) {
@@ -484,6 +486,12 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
             conversation_with = conv.recipient;
             conversation_with_fullname = conv.recipient_fullname;
         }
+        if (conv.attributes && conv.attributes.subtype) {
+            if (conv.attributes.subtype === 'info' || conv.attributes.subtype === 'info/support') {
+                this.translateInfoSupportMessages(conv);
+            }
+        }
+
         conv.conversation_with = conversation_with;
         conv.conversation_with_fullname = conversation_with_fullname;
         conv.status = this.setStatusConversation(conv.sender, conv.uid);
@@ -493,6 +501,21 @@ export class FirebaseConversationsHandler extends ConversationsHandlerService {
         //conv.image = this.imageRepo.getImagePhotoUrl(conversation_with);
         // getImageUrlThumbFromFirebasestorage(conversation_with, this.FIREBASESTORAGE_BASE_URL_IMAGE, this.urlStorageBucket);
         return conv;
+    }
+
+
+    translateInfoSupportMessages(conv) {
+        const INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU = this.translationMap.get('INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU');
+        // console.log('[FIREBASEConversationsHandlerSERVICE] INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU', INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU) 
+        if ((conv.attributes && conv.attributes.messagelabel && conv.attributes.messagelabel.key === TOUCHING_OPERATOR) && conv.sender === "system") {
+            // console.log('FIREBASEConversationsHandlerSERVICE last_message_text', conv.last_message_text)
+            const textAfterColon = conv.last_message_text.split(":")[1]
+            console.log('FIREBASEConversationsHandlerSERVICE last_message_text - textAfterColon', textAfterColon)
+            // message.text = INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU + ' ' + textAfterColon;
+            if (textAfterColon !== undefined) {
+                conv.last_message_text = INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU + ': ' + textAfterColon;
+            }
+        }
     }
 
 
