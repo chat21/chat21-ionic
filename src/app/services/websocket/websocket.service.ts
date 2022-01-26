@@ -35,7 +35,7 @@ export class WebsocketService {
   subscriptionToWsCurrentProjectUserAvailability(projectid, prjctuserid) {
     var self = this;
     const path = '/' + projectid + '/project_users/' + prjctuserid
-    this.logger.log('[WS-SERV] - SUBSCR (REF) TO WS CURRENT USERS PATH: ', path);
+    // console.log('[WS-SERV] - SUBSCR (REF) TO WS CURRENT USERS PATH: ', path);
 
     return new Promise(function (resolve, reject) {
 
@@ -84,14 +84,14 @@ export class WebsocketService {
   }
 
   subscriptionToWsConversations(project_id) {
-    this.logger.log("[WS-SERV] - CALLED SUBSC TO WS CONVS - PROJECT ID ", project_id);
+    // console.log("[WS-SERV] - CALLED SUBSC TO WS CONVS - PROJECT ID ", project_id);
     var self = this;
     this.wsRequestsList = [];
 
     this.webSocketJs.ref('/' + project_id + '/requests', 'getCurrentProjectAndSubscribeTo_WsRequests',
 
       function (data, notification) {
-        // self.logger.log("[WS-SERV] - CONVS - CREATE DATA ", data);
+        // console.log("[WS-SERV] - CONVS - CREATE DATA ", data);
         if (data) {
           // ------------------------------------------------
           // @ Agents - pass in data agents get from snapshot
@@ -167,14 +167,21 @@ export class WebsocketService {
 
         if (index === -1) {
           self.addWsRequests(data)
-          // self.logger.log("[WS-REQUESTS-SERV] - CREATE - ADD REQUESTS");
+          // console.log("[WS-REQUESTS-SERV] - CREATE - ADD REQUESTS");
         } else {
-          // self.logger.log("[WS-REQUESTS-SERV] - CREATE - REQUEST ALREADY EXIST - NOT ADD");
+          // console.log("[WS-REQUESTS-SERV] - CREATE - REQUEST ALREADY EXIST - NOT ADD AND NOT PUBLISH");
+          // if (data !== null && data !== undefined) {
+          //   self.wsRequestsList.push(data);
+          // }
+          // if (self.wsRequestsList) {
+          //   self.wsRequestsList$.next(self.wsRequestsList);
+          //     console.log("[WS-SERV] -  NOT ADD - BUT PUBLIC ANYWAY ", self.wsRequestsList);
+          // }
         }
 
       }, function (data, notification) {
 
-        // self.logger.log("[WS-SERV] - CONVS - UPDATE DATA ", data);
+        // console.log("[WS-SERV] - CONVS - UPDATE DATA ", data);
 
         // -------------------------------------------------------
         // @ Agents (UPDATE) pass in data agents get from snapshot
@@ -191,8 +198,18 @@ export class WebsocketService {
 
 
       }, function (data, notification) {
-        // self.logger.log("[WS-SERV] - CONVS  - ON-DATA - DATA ", data);
+        self.logger.log("[WS-SERV] CHAT - CONVS  - ON-DATA - DATA ", data);
+        self.logger.log("[WS-SERV] CHAT - CONVS  - ON-DATA - notification ", notification);
 
+        // console.log("[WS-SERV] CHAT - CONVS  - ON-DATA - DATA notification > event > method ", notification.event.method);
+        if (notification.event.method === 'CREATE') {
+          self.wsRequestsList = [];
+          self.wsRequestsList.push(data)
+          self.logger.log("[WS-SERV] CHAT - CONVS  - ON-DATA - DATA wsRequestsList ", self.wsRequestsList);
+          if (self.wsRequestsList) {
+            self.wsRequestsList$.next(self.wsRequestsList);
+          }
+        }
       }
     );
   }
@@ -211,7 +228,8 @@ export class WebsocketService {
       // -----------------------------------------------------------------------------------------------------
       // publish all REQUESTS 
       // -----------------------------------------------------------------------------------------------------
-        this.wsRequestsList$.next(this.wsRequestsList);
+      this.wsRequestsList$.next(this.wsRequestsList);
+      // this.logger.log("[WS-SERV] -  ADD REQUESTS CONVS LIST ", this.wsRequestsList);
     }
   }
 

@@ -90,7 +90,7 @@ import { ConversationInfoModule } from 'src/app/components/conversation-info/con
 
 
 // Directives
-import { TooltipModule } from 'ng2-tooltip-directive';
+
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { Network } from '@ionic-native/network/ngx';
 import { ConnectionService } from 'ng-connection-service';
@@ -114,7 +114,7 @@ export function authenticationFactory(http: HttpClient, appConfig: AppConfigProv
 
     auth.setBaseUrl(appConfig.getConfig().apiUrl);
 
-    if (config.pushEngine = PUSH_ENGINE_MQTT) {
+    if (config.pushEngine === PUSH_ENGINE_MQTT) {
       // FOR PUSH NOTIFICATIONS INIT FIREBASE APP
       FirebaseInitService.initFirebase(config.firebaseConfig);
     }

@@ -60,6 +60,8 @@ export const MESSAGE_TYPE_DATE = 'DATE';
 export const CHAT_REOPENED = 'CHAT_REOPENED';
 export const CHAT_CLOSED = 'CHAT_CLOSED';
 export const MEMBER_JOINED_GROUP = 'MEMBER_JOINED_GROUP';
+export const TOUCHING_OPERATOR = "TOUCHING_OPERATOR"
+
 
 // URLS
 // export const URL_SOUND = 'assets/sounds/pling.mp3';

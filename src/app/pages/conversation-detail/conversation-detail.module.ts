@@ -40,6 +40,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     CommonModule,
     FormsModule,
     IonicModule,
+    TooltipModule,
     ConversationDetailPageRoutingModule,
     TranslateModule.forChild({
       loader: {
@@ -51,7 +52,8 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     SharedModule,
     NgxLinkifyjsModule,
   ],
-  entryComponents: [MessageTextAreaComponent],
+  // entryComponents: [MessageTextAreaComponent],
+  entryComponents: [],
   declarations: [
     ConversationDetailPage,
     HeaderConversationDetailComponent,

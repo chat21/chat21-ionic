@@ -1,4 +1,5 @@
 export const environment = {
+    t2y12PruGU9wUtEGzBJfolMIgK:'',
     production: false,
     remoteConfig: true,
     remoteConfigUrl: './chat-config.json',

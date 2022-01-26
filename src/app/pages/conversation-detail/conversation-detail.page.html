@@ -10,8 +10,8 @@
     <ion-grid style="height: 100%;">
       <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%; flex-direction: column">
         <span *ngIf="isOnline === true"
-          style="color: #92949c; font-size: 16px;line-height: 18px;margin-top: -160px;">{{'PleaseSelectChatToStartMessaging'
-          | translate }}</span>
+          style="color: #92949c; font-size: 16px;line-height: 18px;margin-top: -160px;">
+          {{'PleaseSelectChatToStartMessaging' | translate }}</span>
 
           <span *ngIf="isOnline === false"
           style="color: #92949c; font-size: 16px;line-height: 18px;margin-top: -160px;">Internet is slow or not working</span>
@@ -149,16 +149,22 @@
                 </ion-item>
               </ion-list>
             </div>
+
+          
+
+          
             <!-- (eventReplaceMessageWithCanned)="replaceTagInMessage($event)" -->
             <!-- [tagsCannedFilter]="tagsCannedFilter" -->
             <!-- openInfoConversation   {{openInfoConversation}} - isMobile {{isMobile}} -->
             <app-message-text-area
               *ngIf="(openInfoConversation === false && isMobile === true) || (openInfoConversation === true && isMobile === false) || (openInfoConversation === false && isMobile === false)"
-             
+              [tagsCannedCount]="tagsCannedCount"
+              [areVisibleCAR]="areVisibleCAR"
               [loggedUser]="loggedUser" 
               [conversationWith]="conversationWith" 
               [tagsCannedFilter]="tagsCannedFilter"
               (eventChangeTextArea)="returnChangeTextArea($event)" 
+              (hasClickedOpenCannedResponses)="hasClickedOpenCannedResponses($event)"
               (eventSendMessage)="returnSendMessage($event)"
               [translationMap]="translationMap" 
               [fileUploadAccept]="appConfigProvider.getConfig().fileUploadAccept"

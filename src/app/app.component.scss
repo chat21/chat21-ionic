@@ -1,6 +1,11 @@
-@media (min-width: 768px) {
-    .split-pane-md.split-pane-visible > .split-pane-side {
-        min-width: 312px;
-        display: block; // Safari bug fix
-    }
+.split-pane-md.split-pane-visible > .split-pane-side { 
+    min-width: 312px;
+    display: block; // Safari bug fix
 }
+
+// @media (min-width: 768px) {
+//     .split-pane-md.split-pane-visible > .split-pane-side {
+//         min-width: 312px;
+//         display: block; // Safari bug fix
+//     }
+// }

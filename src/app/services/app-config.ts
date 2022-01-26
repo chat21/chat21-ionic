@@ -29,9 +29,9 @@ export class AppConfigProvider {
 
 
     return this.http.get(this.appConfig.remoteConfigUrl)
-      .toPromise().then((data: any ) => {
+      .toPromise().then((data: any) => {
         // console.log('AppConfigService loadAppConfig data: ', data);
- 
+
         const allconfig = data
         // console.log('[APP-CONFIG-SERVICE] - loadAppConfig allconfig: ', allconfig);
 
@@ -59,22 +59,22 @@ export class AppConfigProvider {
 
             //   // console.log('AppConfigService loadAppConfig allconfig !!!! exist - SERVER_BASE_URL protocol is HTTPS - wsUrl', ws_url);
             // } else {
-            
-            
-              // console.log('AppConfigService loadAppConfig allconfig !!!! exist - SERVER_BASE_URL !!! IS RELATIVE - window.location ', window.location);
 
-              // console.log(window.location)
 
-              if (window.location.protocol === 'http:') {
-                allconfig.wsUrl = 'ws://' + window.location.hostname + allconfig.wsUrlRel
+            // console.log('AppConfigService loadAppConfig allconfig !!!! exist - SERVER_BASE_URL !!! IS RELATIVE - window.location ', window.location);
 
-              } else if (window.location.protocol === 'https:') {
+            // console.log(window.location)
 
-                allconfig.wsUrl = 'wss://' + window.location.hostname + allconfig.wsUrlRel
-              } else {
+            if (window.location.protocol === 'http:') {
+              allconfig.wsUrl = 'ws://' + window.location.hostname + ':' + window.location.port + allconfig.wsUrlRel
 
-                allconfig.wsUrl = 'ws://' + window.location.hostname + allconfig.wsUrlRel
-              }
+            } else if (window.location.protocol === 'https:') {
+
+              allconfig.wsUrl = 'wss://' + window.location.hostname + ':' + window.location.port + allconfig.wsUrlRel
+            } else {
+
+              allconfig.wsUrl = 'ws://' + window.location.hostname + ':' + window.location.port + allconfig.wsUrlRel
+            }
             // }
 
           } else {
@@ -87,7 +87,7 @@ export class AppConfigProvider {
         }
 
         this.appConfig = allconfig;
-      
+
 
       }).catch(err => {
         console.error('error loadAppConfig' + err);

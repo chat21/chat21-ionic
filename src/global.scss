@@ -531,6 +531,10 @@ select:-webkit-autofill:focus {
     // border: 0px solid #000000;
 }
 
+#canned > ion-list > ion-item > div > div.nocannedTitle {
+   color: #f44336
+}
+
 .highlight-search-string {
     color: #1877f2 !important;
 }

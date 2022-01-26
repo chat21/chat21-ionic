@@ -6,6 +6,7 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 import { isFile, isFrame, isImage } from 'src/chat21-core/utils/utils-message';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { TranslateService } from '@ngx-translate/core';
+import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 import * as moment from 'moment';
 @Component({
   selector: 'chat-bubble-message',
@@ -36,53 +37,78 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   };
 
   private logger: LoggerService = LoggerInstance.getInstance()
+ 
   constructor(
     public sanitizer: DomSanitizer,
-    private translate: TranslateService) {
+    private translate: TranslateService,
+    public tiledeskAuthService: TiledeskAuthService
+    
+    ) {
     // console.log('BUBBLE-MSG Hello !!!!')
   }
 
   ngOnInit() {
+
+    this.setMomentLocale()
+    // this.browserLang = this.translate.getBrowserLang();
+  
+    // if (this.browserLang) {
+    //   if (this.browserLang === 'it') {
+
+
+    //     moment.locale('it', {
+    //       calendar: {
+    //         lastDay: '[Ieri alle] LT',
+    //         sameDay: '[Oggi alle] LT',
+    //         nextDay: '[Domani alle] LT',
+    //         lastWeek: '[Ultimo] dddd [alle] LT',
+    //         nextWeek: 'dddd [alle] LT',
+    //         sameElse: 'lll'
+    //       }
+    //     });
+
+    //   } else {
+    //     moment.locale('en', {
+    //       calendar: {
+    //         lastDay: '[Yesterday at] LT',
+    //         sameDay: '[Today at] LT',
+    //         nextDay: '[Tomorrow at] LT',
+    //         lastWeek: '[last] dddd [at] LT',
+    //         nextWeek: 'dddd [at] LT',
+    //         sameElse: 'lll'
+    //       }
+    //     });
+    //   }
+    // }
+
+  }
+
+
+  setMomentLocale() {
     this.browserLang = this.translate.getBrowserLang();
-    // console.log('BUBBLE-MSG ngOnInit browserLang ', this.browserLang)
-    if (this.browserLang) {
-      if (this.browserLang === 'it') {
-        // console.log('BUBBLE-MSG browserLang ', this.browserLang)
-        // moment.locale('it')
-
-        moment.locale('it', {
-          calendar: {
-            lastDay: '[Ieri alle] LT',
-            sameDay: '[Oggi alle] LT',
-            nextDay: '[Domani alle] LT',
-            lastWeek: '[Ultimo] dddd [alle] LT',
-            nextWeek: 'dddd [alle] LT',
-            sameElse: 'lll'
-          }
-        });
-
-      } else {
-        // console.log('BUBBLE-MSG browserLang ', this.browserLang)
-        // moment.locale('en')
-
-        moment.locale('en', {
-          calendar: {
-            lastDay: '[Yesterday at] LT',
-            sameDay: '[Today at] LT',
-            nextDay: '[Tomorrow at] LT',
-            lastWeek: '[last] dddd [at] LT',
-            nextWeek: 'dddd [at] LT',
-            sameElse: 'lll'
-          }
-        });
-      }
+    const currentUser = this.tiledeskAuthService.getCurrentUser();
+    this.logger.log('[BUBBLE-MESSAGE] - ngOnInit - currentUser ', currentUser)
+    let currentUserId = ''
+    if (currentUser) {
+      currentUserId = currentUser.uid
+      this.logger.log('[BUBBLE-MESSAGE] - ngOnInit - currentUserId ', currentUserId)
     }
 
+    const stored_preferred_lang = localStorage.getItem(currentUserId + '_lang');
+    this.logger.log('[BUBBLE-MESSAGE] stored_preferred_lang: ', stored_preferred_lang);
 
 
-    // const yesterday = moment().subtract(1, 'day')
-    // console.log('BUBBLE-MSG yesterday ', yesterday)
-
+    let chat_lang = ''
+    if (this.browserLang && !stored_preferred_lang) {
+      chat_lang = this.browserLang
+    } else if (this.browserLang && stored_preferred_lang) {
+      chat_lang = stored_preferred_lang
+    }
+    moment.locale(chat_lang , {
+      calendar: {
+        sameElse: 'LLLL'
+      }
+    });
   }
 
   ngOnChanges() {

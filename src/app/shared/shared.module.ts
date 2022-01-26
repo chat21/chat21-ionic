@@ -35,14 +35,17 @@ import { InfoSupportGroupComponent } from '../components/conversation-info/info-
 import { InfoDirectComponent } from '../components/conversation-info/info-direct/info-direct.component';
 import { AdvancedInfoAccordionComponent } from '../components/conversation-info/advanced-info-accordion/advanced-info-accordion.component';
 import { InfoGroupComponent } from '../components/conversation-info/info-group/info-group.component';
-import { TooltipModule } from 'ng2-tooltip-directive';
+import { TooltipModule, TooltipOptions } from 'ng2-tooltip-directive';
 import { OptionHeaderComponent } from '../components/conversation-detail/option-header/option-header.component';
 import { MessageAttachmentComponent } from '../chatlib/conversation-detail/message/message-attachment/message-attachment.component';
 import { ImageViewerComponent } from '../components/image-viewer/image-viewer.component';
 import { ProjectItemComponent } from '../components/project-item/project-item.component';
+import { DefaultTooltipOptions } from 'src/chat21-core/utils/utils';
+// import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component';
 
 @NgModule({
   declarations: [
+    // MessageTextAreaComponent,
     AvatarProfileComponent,
     DdpHeaderComponent,
     UserPresenceComponent,
@@ -64,8 +67,7 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     InfoMessageComponent,
     ReturnReceiptComponent,
     TextComponent,
-
-     BubbleDayMessageComponent,
+    BubbleDayMessageComponent,
     BubbleSystemMessageComponent,
     BubbleMyMessageComponent,
     BubbleOthersMessageComponent,
@@ -80,6 +82,7 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     OptionHeaderComponent
   ],
   exports: [
+    // MessageTextAreaComponent,
     AutofocusDirective,
     AvatarProfileComponent,
     DdpHeaderComponent,
@@ -89,7 +92,6 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     UserTypingComponent,
     ListConversationsComponent,
     IonListConversationsComponent,
-
     IonConversationDetailComponent,
     ConversationContentComponent,
     AvatarComponent,
@@ -102,7 +104,6 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     InfoMessageComponent,
     ReturnReceiptComponent,
     TextComponent,
-
     BubbleDayMessageComponent,
     BubbleSystemMessageComponent,
     BubbleMyMessageComponent,
@@ -119,8 +120,8 @@ import { ProjectItemComponent } from '../components/project-item/project-item.co
     CommonModule,
     IonicModule,
     MomentModule,
-    TooltipModule
-  
+    TooltipModule.forRoot(DefaultTooltipOptions as TooltipOptions)
+
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

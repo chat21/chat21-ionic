@@ -1,5 +1,62 @@
 # chat21-ionic ver 3.0
 
+### 3.0.60-rc7
+- Adds German language
+- Adds a method that translates chat texts based on the language of the browser settings if no preferred language is selected in the dashboard or based on the preferred language (ignoring the browser language)
+- Manages the language used for translations from the "moment" library based on the language of the browser settings if no preferred language has been selected in the dashboard or on the preferred language selected (ignoring the browser language)
+- Adds the ability to manage the visibility of canned responses in env.sample, chat-config-tempalte.json and chat-config.json
+- Fixes the bug: in the 'item' that displays the pinned project and the number of the not assigned conversions  the tooltip is not correctly displayed
+
+### 3.0.60-rc6
+- Fixes the bug: push notifications are initialized even if the "pushEngine" configuration variable is set to "none"
+- Adds spanish language
+
+### 3.0.60-rc5
+- Change the icon and link of the "pin button" in the item at the top of the conversation list (now opens the list of projects and not the list of new conversations)
+- Add a tooltip on the switch button to change the available/unavailable status
+- Adds a link to the to the new conversations at the icon that display the number of new conversations
+
+### 3.0.60-rc4
+- Translates the canned response displayed when there are not canned responses
+
+### 3.0.60-rc3
+- Enhances the item at the top of the conversation list that displays the number of new conversations of a selected project
+- Fixes the bug: the loading spinner is sometimes not displayed when loading the list of unassigned conversations
+- Displays as canned response "Test" when no canned responses are available
+- Adds the cursor to the "Send message" textarea after the "Canned responses" button has been clicked
+
+### 3.0.60-rc2
+- Fixes the bug: in AppConfigProvider the "wsUrl" is incorrect (window.location.port is missing)
+
+### 3.0.60-rc1
+- Adds the ability to view canned responses by clicking on the button with the "flash" icon located to the left of the "Enter a message" text area
+
+### 3.0.59.2
+- Fixes the bug: when the agent refreshes the chat page and the chat is in mobile mode, the badge with the number of unassigned conversations does not work
+
+### 3.0.59.1
+- Fixes the bug: "Unable to read uid of undefined" error occurs when agent logs out
+- Fixes the bug: When the agent logs into the chat and the chat is in mobile mode, no conversations are displayed
+- Fixes the bug: the websocket is initialized even if the supportMode property is set to false
+- Fixes the bug: when the agent refreshes the chat page and the chat is in mobile mode, the badge with the number of unassigned conversations does not work
+
+### 3.0.59
+- Deploys in production 
+
+### 3.0.59-rc23
+- Fixes the bug: the badge indicating the number of unassigned conversations does not update correctly when the project is changed
+- Changes the code that prevent the chat from opening in a new browser tab if the chat tab is already open
+- Publish conversations returned by subscription to websocket conversations > "on data" callback
+
+### 3.0.59-rc22
+- Minor improvements
+
+### 3.0.59-rc21
+- chat21client.js -> v0.1.9
+
+### 3.0.59-rc20
+- Improves the transition from "mobile" to "desktop" mode and vice versa by not reloading the app 
+
 ### 3.0.59-rc19
 - Fixes the bug: when the chat is in "mobile" mode and from the dashboard the agent clicks on "Open chat" for a specific conversation the "back" button of the chat does not return to the list of conversations
 - Fixes the bug: when the chat is in "mobile" mode and from the dashboard the agent clicks on "Open chat" for a specific conversation the chat does not display the details of the conversation
@@ -82,6 +139,9 @@
 - Fixes the bug: the sender's name is not always displayed in the messages header
 - Fixes the bug: in the avatar-profile component the properties 'avatarUrl', 'color' and 'avatar' are private and accessible only within the class
 - Fixes the bug: on ios platforms the back button in the conversation details header overlaps the avatar
+
+### 3.0.58.1
+- Fix the bug: if the "chatEngine" property value is set to "mqtt "the login modal window does not disappear even if the agent is logged in
 
 ### 3.0.58
 - Changes the logic with which the 'online' / 'offline' event is published (done before by the onAuthStateChanged() method)

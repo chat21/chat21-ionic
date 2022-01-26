@@ -92,6 +92,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   public conv_type: string;
 
   public tagsCanned: any = [];
+  public tagsCannedCount: number
   public tagsCannedFilter: any = [];
   public HIDE_CANNED_RESPONSES: boolean = false;
 
@@ -104,7 +105,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS;
 
   arrowkeyLocation = -1;
-
+  public_Key: any;
+  areVisibleCAR: boolean
   //SOUND
   setTimeoutSound: any;
   audio: any
@@ -179,6 +181,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.conversationWith = params.get('IDConv');
       this.conversationWithFullname = params.get('FullNameConv');
       this.conv_type = params.get('Convtype');
+
+      this.events.publish('supportconvid:haschanged', this.conversationWith);
     });
 
   }
@@ -204,6 +208,37 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     //   }
     // });
     this.watchToConnectionStatus();
+    this.getOSCODE()
+  }
+
+
+  getOSCODE() {
+    this.public_Key = this.appConfigProvider.getConfig().t2y12PruGU9wUtEGzBJfolMIgK;
+    this.logger.log('[CONVS-DETAIL] AppConfigService getAppConfig public_Key', this.public_Key);
+
+    let keys = this.public_Key.split("-");
+    this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - public_Key keys', keys)
+
+    keys.forEach(key => {
+
+
+      if (key.includes("CAR")) {
+        let car = key.split(":");
+        if (car[1] === "F") {
+          this.areVisibleCAR = false;
+          this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+        } else {
+          this.areVisibleCAR = true;
+          this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+        }
+      }
+
+    });
+
+    if (!this.public_Key.includes("CAR")) {
+      this.areVisibleCAR = false;
+      this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+    }
   }
 
   watchToConnectionStatus() {
@@ -325,6 +360,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.subscriptions = [];
     this.setHeightTextArea();
     this.tagsCanned = []; // list of canned
+
     this.messages = []; // list messages of conversation
     this.isFileSelected = false; // indicates if a file has been selected (image to upload)
     this.openInfoMessage = false; // indicates whether the info message panel is open
@@ -413,7 +449,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'FAILED_TO_UPLOAD_THE_FORMAT_IS NOT_SUPPORTED',
       'NO_INFORMATION_AVAILABLE',
       'CONTACT_ID',
-      'USER_ID'
+      'USER_ID',
+      "UPLOAD",
+      "CANNED_RESPONSES",
+      "NO_CANNED_RESPONSES",
+      "YES_CANNED_RESPONSES",
+      "THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE",
+      "TO_CREATE_THEM_GO_TO_THE_PROJECT"
     ];
 
     this.translationMap = this.customTranslateService.translateLanguage(keys);
@@ -431,6 +473,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       'INFO_SUPPORT_USER_ADDED_VERB',
       'INFO_SUPPORT_CHAT_REOPENED',
       'INFO_SUPPORT_CHAT_CLOSED',
+      'INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU',
       'LABEL_TODAY',
       'LABEL_TOMORROW',
       'LABEL_LAST_ACCESS',
@@ -890,96 +933,101 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // ----------------------------------------------------------
       // DISPLAY CANNED RESPONSES if message.lastIndexOf("/")
       // ----------------------------------------------------------
-      setTimeout(() => {
-        if (this.conversationWith.startsWith("support-group")) {
+      if (this.areVisibleCAR) {
+        setTimeout(() => {
+          if (this.conversationWith.startsWith("support-group")) {
 
-          const pos = message.lastIndexOf("/");
-          // console.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ", pos);
+            const pos = message.lastIndexOf("/");
+            // console.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ", pos);
 
-          // test
-          // var rest = message.substring(0, message.lastIndexOf("/") + 1);
-          // var last = message.substring(message.lastIndexOf("/") + 1, message.length);
-          // console.log('[CONVS-DETAIL] - returnChangeTextArea rest', rest);
-          // console.log('[CONVS-DETAIL] - returnChangeTextArea last', last);
-          // console.log('[CONVS-DETAIL] - returnChangeTextArea last', last.length);
-          // if (last.length === 1 && last.trim() === '') {
-          //   console.log('[CONVS-DETAIL] - returnChangeTextArea last is a white space ');
-          // } else if (last.length === 1 && last.trim() !== '') {
-          //   console.log('[CONVS-DETAIL] - returnChangeTextArea last is NOT space ');
-          // }
-
-
-          if (pos >= 0) {
-            var strSearch = message.substr(pos + 1);
-            this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses strSearch ", strSearch);
-
-            // --------------------------------------------
-            // Load canned responses
-            // --------------------------------------------
-            this.loadTagsCanned(strSearch, this.conversationWith);
-
-            // ------------------------------------------------------------------------------------------------------------------------------------------
-            // Hide / display Canned when the SLASH has POSITION POS 0 and checking if there is a space after the SLASH (in this case it will be hidden)
-            // ------------------------------------------------------------------------------------------------------------------------------------------
-
-            var after_slash = message.substring(message.lastIndexOf("/") + 1, message.length);
-            if (pos === 0 && after_slash.length === 1 && after_slash.trim() === '') {
-              this.logger.log('[CONVS-DETAIL] - returnChangeTextArea after_slash --> there is a white space after ');
-              this.HIDE_CANNED_RESPONSES = true
-              this.tagsCannedFilter = []
-            } else if (pos === 0 && after_slash.length === 0) {
-              this.logger.log('[CONVS-DETAIL] - returnChangeTextArea after_slash --> there is NOT a white space after');
-              this.HIDE_CANNED_RESPONSES = false
-            }
+            // test
+            // var rest = message.substring(0, message.lastIndexOf("/") + 1);
+            // var last = message.substring(message.lastIndexOf("/") + 1, message.length);
+            // console.log('[CONVS-DETAIL] - returnChangeTextArea rest', rest);
+            // console.log('[CONVS-DETAIL] - returnChangeTextArea last', last);
+            // console.log('[CONVS-DETAIL] - returnChangeTextArea last', last.length);
+            // if (last.length === 1 && last.trim() === '') {
+            //   console.log('[CONVS-DETAIL] - returnChangeTextArea last is a white space ');
+            // } else if (last.length === 1 && last.trim() !== '') {
+            //   console.log('[CONVS-DETAIL] - returnChangeTextArea last is NOT space ');
+            // }
 
 
-            if (pos > 0) {
+            if (pos >= 0) {
+              var strSearch = message.substr(pos + 1);
+              this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses strSearch ", strSearch);
+
+              // --------------------------------------------
+              // Load canned responses
+              // --------------------------------------------
+              this.loadTagsCanned(strSearch, this.conversationWith);
 
               // ------------------------------------------------------------------------------------------------------------------------------------------
-              // Hide / display Canned when the SLASH has POSITION POS > and checking if there is a space after the SLASH (in this case they it be hidden)
-              // and if there is not a space before the SLASH (in this it will be hidden)
+              // Hide / display Canned when the SLASH has POSITION POS 0 and checking if there is a space after the SLASH (in this case it will be hidden)
               // ------------------------------------------------------------------------------------------------------------------------------------------
 
-              let beforeSlash = message.substr(pos - 1)
-              let afterSlash = message.substr(pos + 1)
-              this.logger.log('[CONVS-DETAIL] - returnChangeTextArea * POS ', pos);
+              var after_slash = message.substring(message.lastIndexOf("/") + 1, message.length);
+              if (pos === 0 && after_slash.length === 1 && after_slash.trim() === '') {
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea after_slash --> there is a white space after ');
+                this.HIDE_CANNED_RESPONSES = true
+                this.tagsCannedFilter = []
+              } else if (pos === 0 && after_slash.length === 0) {
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea after_slash --> there is NOT a white space after');
+                this.HIDE_CANNED_RESPONSES = false
+              }
 
-              this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash', beforeSlash);
-              this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> afterSlash', afterSlash);
-              var afterSlashParts = afterSlash.split("/")
-              var beforeSlashParts = beforeSlash.split("/")
-              this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> afterSlash parts', afterSlashParts);
-              this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash parts', beforeSlashParts);
 
-              if (beforeSlashParts.length === 2) {
-                if (beforeSlashParts[0].indexOf(' ') >= 0 && afterSlashParts[0] === '') {
-                  this.HIDE_CANNED_RESPONSES = false
-                  this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash there is a white space After Not');
-                  // if (beforeSlashParts[0].indexOf(' ') >= 0 && afterSlashParts[0].indexOf(' ') >= 0)
-                } else if (beforeSlashParts[0].indexOf(' ') < 0 && afterSlashParts[0] === '') {
-                  this.HIDE_CANNED_RESPONSES = true;
-                  this.tagsCannedFilter = []
-                  this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash not thete is a white space After Not');
-                } else if (beforeSlashParts[0].indexOf(' ') >= 0 && afterSlashParts[0] === ' ') {
-                  this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash not thete is a white space After YES');
-                  this.HIDE_CANNED_RESPONSES = true;
-                  this.tagsCannedFilter = []
+              if (pos > 0) {
+
+                // ------------------------------------------------------------------------------------------------------------------------------------------
+                // Hide / display Canned when the SLASH has POSITION POS > and checking if there is a space after the SLASH (in this case they it be hidden)
+                // and if there is not a space before the SLASH (in this it will be hidden)
+                // ------------------------------------------------------------------------------------------------------------------------------------------
+
+                let beforeSlash = message.substr(pos - 1)
+                let afterSlash = message.substr(pos + 1)
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea * POS ', pos);
+
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash', beforeSlash);
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> afterSlash', afterSlash);
+                var afterSlashParts = afterSlash.split("/")
+                var beforeSlashParts = beforeSlash.split("/")
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> afterSlash parts', afterSlashParts);
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash parts', beforeSlashParts);
+
+                if (beforeSlashParts.length === 2) {
+                  if (beforeSlashParts[0].indexOf(' ') >= 0 && afterSlashParts[0] === '') {
+                    this.HIDE_CANNED_RESPONSES = false
+                    this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash there is a white space After Not');
+                    // if (beforeSlashParts[0].indexOf(' ') >= 0 && afterSlashParts[0].indexOf(' ') >= 0)
+                  } else if (beforeSlashParts[0].indexOf(' ') < 0 && afterSlashParts[0] === '') {
+                    this.HIDE_CANNED_RESPONSES = true;
+                    this.tagsCannedFilter = []
+                    this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash not thete is a white space After Not');
+                  } else if (beforeSlashParts[0].indexOf(' ') >= 0 && afterSlashParts[0] === ' ') {
+                    this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash not thete is a white space After YES');
+                    this.HIDE_CANNED_RESPONSES = true;
+                    this.tagsCannedFilter = []
+                  }
                 }
               }
+
+
+            } else {
+              this.tagsCannedFilter = [];
             }
-
-
-          } else {
-            this.tagsCannedFilter = [];
           }
-        }
-      }, 300);
+        }, 300);
+
+      }
       // ./ CANNED RESPONSES //
 
     } catch (err) {
       this.logger.error('[CONVS-DETAIL] - returnChangeTextArea - error: ', err);
     }
   }
+
+
 
   // ----------------------------------------------------------
   // @ CANNED RESPONSES methods
@@ -1050,7 +1098,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses RES', res);
 
       this.tagsCanned = res
-
+      this.tagsCannedCount = res.length
+      this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses tagsCannedCount', this.tagsCannedCount);
       if (this.HIDE_CANNED_RESPONSES === false) {
         this.showTagsCanned(strSearch);
       }
@@ -1080,10 +1129,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       strReplace = "<b class='highlight-search-string'>" + strSearch + "</b>";
     }
     for (var i = 0; i < this.tagsCannedFilter.length; i++) {
-
       const textCanned = "<div class='cannedText'>" + this.replacePlaceholderInCanned(this.tagsCannedFilter[i].text) + "</div>";
       this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim()) + "</div>" + textCanned + '</div>';
-
+    }
+    if (this.tagsCannedCount === 0) {
+      const nocanned = { 'title': "<div class='cannedContent'><div class='cannedTitle nocannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div><div class='cannedText'>" + this.translationMap.get('TO_CREATE_THEM_GO_TO_THE_PROJECT') + "</div></div>", "text": "There are no canned responses available" }
+      this.tagsCannedFilter.push(nocanned)
     }
   }
 
@@ -1099,10 +1150,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   replacePlaceholderInCanned(str) {
     this.logger.log('[CONVS-DETAIL] - replacePlaceholderInCanned str ', str);
-
-
     str = str.replace('$recipient_name', this.conversationWithFullname);
-
     if (this.loggedUser && this.loggedUser.fullname) {
       str = str.replace('$agent_name', this.loggedUser.fullname);
     }
@@ -1127,8 +1175,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.arrowkeyLocation = -1
     this.tagsCannedFilter = [];
     this.logger.log("[CONVS-DETAIL] replaceTagInMessage  canned text ", canned.text);
-    // // prendo val input
-
 
 
     // replace text
@@ -1150,6 +1196,77 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     }, 200);
   }
 
+
+  hasClickedOpenCannedResponses($event) {
+    this.logger.log('[CONVS-DETAIL] - hasClickedOpenCannedResponses ', $event)
+    const elTextArea = this.rowTextArea['el'];
+    const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
+
+    this.logger.log("[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea ", textArea);
+    this.logger.log("[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea value", textArea.value)
+    this.insertAtCursor(textArea, '/');
+    // console.log('[CONVS-DETAIL] hasClickedOpenCannedResponses textArea.value', textArea.value)
+    // setTimeout(() => {
+    //   // if (textArea.value === '/') {
+    //     // textArea.focus();
+    //     textArea.setFocus();
+    //   // }
+    // }, 1500);
+
+    this.setCaretPosition(textArea)
+  }
+
+  setCaretPosition(ctrl) {
+    ctrl.value.trim()
+    ctrl.setFocus();
+  }
+
+  insertAtCursor(myField, myValue) {
+    this.logger.log('[CONVS-DETAIL] - insertAtCursor - myValue ', myValue);
+    this.logger.log('[CONVS-DETAIL] - insertAtCursor - myField ', myField);
+
+
+    // myValue = ' ' + myValue;
+
+    // console.log('[CONVS-DETAIL] - GET TEXT AREA - Here yes myValue ', myValue);
+    // console.log('[CONVS-DETAIL] - GET TEXT AREA - Here yes textArea value length', myField.value.length);
+
+    if (myField.value.length > 0) {
+      myValue = ' ' + myValue;
+    }
+
+    //IE support
+    if (myField.selection) {
+      myField.focus();
+      let sel = myField.selection.createRange();
+      sel.text = myValue;
+      // this.cannedResponseMessage = sel.text;
+    }
+    //MOZILLA and others
+    else if (myField.selectionStart || myField.selectionStart == '0') {
+      var startPos = myField.selectionStart;
+      this.logger.log('[CONVS-DETAIL] - insertAtCursor - startPos ', startPos);
+
+      var endPos = myField.selectionEnd;
+      this.logger.log('[CONVS-DETAIL] - insertAtCursor - endPos ', endPos);
+
+      myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+
+      // place cursor at end of text in text input element
+      myField.focus();
+      var val = myField.value; //store the value of the element
+      myField.value = ''; //clear the value of the element
+      myField.value = val + ' '; //set that value back. 
+
+      // this.cannedResponseMessage = myField.value;
+
+      // this.texareaIsEmpty = false;
+      // myField.select();
+    } else {
+      myField.value += myValue;
+      // this.cannedResponseMessage = myField.value;
+    }
+  }
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {

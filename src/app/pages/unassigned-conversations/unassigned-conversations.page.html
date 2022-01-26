@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{translationMap?.get('NewConversations') }}</ion-title>
+    <ion-title *ngIf="callerBtn !== 'pinbtn'" style="font-size: 16px;">
+      {{translationMap?.get('UnassignedConversations') }}
+    </ion-title>
+    <ion-title *ngIf="callerBtn === 'pinbtn'" style="font-size: 16px;">
+      {{translationMap?.get('PIN_A_PROJECT') }}
+    </ion-title>
     <ion-buttons slot="end">
       <ion-button ion-button fill="clear" (click)="onClose()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -9,14 +14,14 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content overflow-scroll="true" id="iframe-ion-content" 
-[ngClass]="{'ion-content-black-background' : isProjectsForPanel === true}">
+<ion-content overflow-scroll="true" id="iframe-ion-content"
+  [ngClass]="{'ion-content-black-background' : isProjectsForPanel === true}">
   <!-- <iframe  id="i_frame"  style="width:100%; height:99%" frameBorder="0" allowfullscreen [src]="unassigned_convs_url_sanitized"></iframe> -->
-  <!-- <div class="stretchspinner-unassigned-convs">
-    <div class="rect1"></div>
-    <div class="rect2"></div>
-    <div class="rect3"></div>
-    <div class="rect4"></div>
-    <div class="rect5"></div>
-  </div> -->
+  <div class="loader-spinner-wpr">
+    <div id="loader" class="loader">
+      <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+      </svg>
+    </div>
+  </div>
 </ion-content>
