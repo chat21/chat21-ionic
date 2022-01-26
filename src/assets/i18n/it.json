@@ -65,7 +65,7 @@
     "INFO_SUPPORT_USER_ADDED_MESSAGE": "{{ subject }} {{ verb }} {{ complement }}",
     "INFO_SUPPORT_CHAT_REOPENED": "Chat riaperta",
     "INFO_SUPPORT_CHAT_CLOSED": "Chat chiusa",
-    "INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU":"Una nuova richiesta di supporto è stata assegnata a te:",
+    "INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU":"Una nuova richiesta di supporto è stata assegnata a te",
     "LABEL_PROFILE": "Profilo",
     "LABEL_CLOSE": "Chiusa",
     "LABEL_DISCONNECT": "Disconnetti",
