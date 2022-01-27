@@ -1,7 +1,7 @@
 # chat21-ionic ver 3.0
 
 ### 3.0.60-rc8
-- Fixes the bug:: "info" messages sent by "SYSTEM" are not translated
+- Fixes the bug: "info" messages sent by "SYSTEM" are not translated
 - Adds the Portuguese language
 - Adds the French language
 - Adds the Russian language
