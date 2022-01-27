@@ -1,7 +1,7 @@
 /*
     Chat21Client
 
-    v0.1.9
+    v0.1.10
 
     @Author Andrea Sponziello
     (c) Tiledesk 2020
@@ -124,7 +124,7 @@ class Chat21Client {
     }
 
     sendMessageRaw(outgoing_message, recipient_id, callback) {
-        // callback - function (err) 
+        // callback - function (err)
         // console.log("recipient_id:", recipient_id)
         let dest_topic = `apps/${this.appid}/outgoing/users/${this.user_id}/messages/${recipient_id}/outgoing`
         // console.log("dest_topic:", dest_topic)
@@ -784,8 +784,21 @@ class Chat21Client {
     }
 
     conversationDetail(conversWith, callback) {
+        this.crossConversationDetail(conversWith, false, callback);
+    }
+
+    archivedConversationDetail(conversWith, callback) {
+        this.crossConversationDetail(conversWith, true, callback);
+    }
+
+    crossConversationDetail(conversWith, archived, callback) {
+        let path = "conversations";
+        if (archived) {
+            path = "archived_conversations"
+        }
         // ex.: http://localhost:8004/tilechat/04-ANDREASPONZIELLO/conversations/CONVERS_WITH
-        const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/conversations/${conversWith}`
+        //const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/conversations/${conversWith}`
+        const URL = `${this.APIendpoint}/${this.appid}/${this.user_id}/${path}/${conversWith}`
         console.log("getting conversation detail:", URL)
         console.log("conversWith:", conversWith)
         var xmlhttp = new XMLHttpRequest();
