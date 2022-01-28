@@ -204,5 +204,6 @@
   "CHANGE_PINNED_PROJECT": "Modifier le projet épinglé",
   "CHANGE_TO_AVAILABLE_UNAVAILABLE": "passer à disponible/indisponible",
   "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "changer votre statut en disponible",
-  "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "changer votre statut en indisponible"
+  "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "changer votre statut en indisponible",
+  "ALL_CONVS_SERVED": "Toutes les conversations ont-elles été servies? Bon travail!"
 }

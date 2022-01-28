@@ -204,5 +204,6 @@
   "CHANGE_PINNED_PROJECT": "Change pinned project",
   "CHANGE_TO_AVAILABLE_UNAVAILABLE": "change to available/unavailable",
   "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "change to your status to available",
-  "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "change to your status to unavailable"
+  "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "change to your status to unavailable",
+  "ALL_CONVS_SERVED": "Were all conversations served? Good job!"
 }
