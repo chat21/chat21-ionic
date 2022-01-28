@@ -113,6 +113,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   isOpenInfoConversation: boolean;
   USER_HAS_OPENED_CLOSE_INFO_CONV: boolean = false
   isHovering: boolean = false;
+  conversation_count: number;
 
   dropEvent: any
   isMine = isMine;
@@ -207,8 +208,37 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     //   }
     // });
+    this.getConversations();
     this.watchToConnectionStatus();
     this.getOSCODE()
+  }
+
+  getConversations() {
+    this.conversationsHandlerService.conversationAdded.subscribe((conv) => {
+      // console.log('[CONVS-DETAIL]  - conv  ', conv)
+      const conversations = this.conversationsHandlerService.conversations;
+      // console.log('[CONVS-DETAIL] conversations', conversations);
+      this.conversation_count = conversations.length;
+      this.logger.log('[CONVS-DETAIL] conversation_count', this.conversation_count);
+    });
+
+    this.conversationsHandlerService.conversationChanged.subscribe((conv) => {
+      // console.log('[CONVS-DETAIL]  - conv  ', conv)
+      const conversations = this.conversationsHandlerService.conversations;
+      // console.log('[CONVS-DETAIL] conversations', conversations);
+      this.conversation_count = conversations.length;
+      this.logger.log('[CONVS-DETAIL] conversation_count', this.conversation_count);
+    });
+
+    this.conversationsHandlerService.conversationRemoved.subscribe((conv) => {
+      // console.log('[CONVS-DETAIL]  - conv  ', conv)
+      const conversations = this.conversationsHandlerService.conversations;
+      // console.log('[CONVS-DETAIL] conversations', conversations);
+      this.conversation_count = conversations.length;
+      this.logger.log('[CONVS-DETAIL] conversation_count', this.conversation_count);
+    });
+
+   
   }
 
 
