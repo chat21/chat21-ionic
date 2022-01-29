@@ -2,7 +2,7 @@
 
 ### 3.0.60-rc9
 - Adds the message "All conversations served" in the conversation details section that appears when there are no active conversations
-- Fix the bug: in the item that displays the number of unassigned conversations the button "fix a project" does not go to the right in mobile mode
+- Fixes the bug: in the item that displays the number of unassigned conversations the button "fix a project" does not go to the right in mobile mode
 
 ### 3.0.60-rc8
 - Fixes the bug: "info" messages sent by "SYSTEM" are not translated
