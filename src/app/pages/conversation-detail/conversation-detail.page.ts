@@ -114,7 +114,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   USER_HAS_OPENED_CLOSE_INFO_CONV: boolean = false
   isHovering: boolean = false;
   conversation_count: number;
-
+  showSpinner: boolean = true
   dropEvent: any
   isMine = isMine;
   isInfo = isInfo;
@@ -238,7 +238,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       this.logger.log('[CONVS-DETAIL] conversation_count', this.conversation_count);
     });
 
-   
+    setTimeout(() => {
+      this.showSpinner = false
+    }, 2000);
+
   }
 
 
