@@ -20,10 +20,7 @@
 // .main-content-project-for-panel:hover {
 //     background-color: rgb(244, 243, 244);
 // }
-.container-project-for-panel {
-    padding: 0px !important;
-    width: 296px;
-}
+
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .main-content-projects-for-panel::-webkit-scrollbar {
@@ -218,23 +215,37 @@
     }
 }
 
+.container-project-for-panel {
+    padding: 0px !important;
+    width: 296px;
+}
+
 .flex-container-project-for-panel {
     display: flex;
     width: 100%;
     justify-content: center;
     align-items: center;
-    position: relative;
+    // position: relative;
     // cursor: pointer;
     -moz-transition: all 0.2s ease-in;
     -o-transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
     transition: all 0.2s ease-in;
-    height: 60px;
+    height: 64px;
 }
 
 .flex-container:hover {
     background-color: rgba(200, 200, 200, 0.2);
 }
+
+.flex-child-right {
+    flex: 1;
+    padding: 18px 0px;
+    // width: 227px;
+    // width: 207px;
+    height: 100%;
+}
+
 
 .flex-child-left {
     // flex: 0 0 20%;
@@ -245,14 +256,6 @@
 }
 // border: 2px solid yellow;
 
-.flex-child-right {
-    flex: 1;
-    padding: 18px 0px;
-    // width: 227px;
-    width: 207px;
-    height: 100%;
-}
-
 .flex-child-view-all-convs {
     width: 40px;
     text-align: center;
@@ -261,6 +264,18 @@
     margin-top: 5px;
     margin-right: 10px;
 }
+
+@media (max-width: 768px) {
+    .container-project-for-panel {
+        width: 100%;
+    }
+    .flex-child-view-all-convs {
+        margin-right: 20px;
+    }
+}
+
+
+
 
 .status--icon-project-for-panel {
     width: 13px;
