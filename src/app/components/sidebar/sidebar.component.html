@@ -1,0 +1,205 @@
+<!-- *ngIf="project"  -->
+<div class="logo" style="background-color:#1e2129!important; padding-bottom: 5px;min-height: 50px;    width: 60px;">
+  <a class="logo-img-wpr" [ngClass]="{'small-sidebar-logo-img-wpr' : SIDEBAR_IS_SMALL === true }">
+    <div class="logo-img" (click)="goToHome()" style="cursor: pointer;">
+      <img class="small-sidebar__logo" src="assets/tiledesk-solo-logo.png" />
+    </div>
+  </a>
+</div>
+
+<div class="sidebar-wrapper">
+  <!-- // NK start NEW: AVATAR ON THE SIDEBAR  -->
+  <div class="user tiledesk-nav-user" [ngClass]="{'small-sidebar-tiledesk-nav-user' : SIDEBAR_IS_SMALL === true }"
+    fxlayout="column" style="flex-direction: column; box-sizing: border-box; display: flex;">
+    <div *ngIf="user" class="h3 username" style="font-size: 16px;font-weight: 400;margin-top: 15px; margin-bottom: 5px;"
+      [ngClass]="{'small-sidebar-userfullname' : SIDEBAR_IS_SMALL === true }">
+
+      {{ user?.firstname }} {{ user?.lastname }}
+    </div>
+    <div *ngIf="user" class="h5 email hint-text mt-8"
+      style="color: rgba(255,255,255,.5)!important;font-size: 13px;margin-top: 0px!important;font-weight: 400;"
+      [ngClass]="{'small-sidebar-email' : SIDEBAR_IS_SMALL === true }">
+      {{ user?.email }}
+    </div>
+
+
+    <div class="avatar-container tiledesk-nav-avatar" [ngClass]="{'small-sidebar-avatar' : SIDEBAR_IS_SMALL === true }">
+      <img class="sidebar-avatar"
+        [src]="photo_profile_URL" onerror="this.src='assets/images/no_image_user.png'" />
+
+
+        <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ tooltip_text_for_availability_status}}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
+      <div (click)="changeAvailabilityState(IS_AVAILABLE = !IS_AVAILABLE)" class="status-icon"
+        [ngClass]="{'is-user-online' : IS_AVAILABLE === true, 'is-user-offline' : IS_AVAILABLE === false, 'small-sidebar-status-icon' : SIDEBAR_IS_SMALL === true  }" >
+      </div>
+
+    </div>
+    <!-- CAMERA ICONS OVER THE AVATAR -->
+    <!--  [ngClass]="{'hover-effect' : isOverAvar}"  -->
+    <i routerLink="project/{{ project?._id }}/user-profile" class="material-icons is-over-camera"
+      [ngClass]="{'small-sidebar-camera-icon' : SIDEBAR_IS_SMALL === true, 'is-over-camera-decrease-top':IS_BUSY === true }">
+      camera_alt
+    </i>
+
+
+    <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Busy' | translate }}" #tooltip="matTooltip"  matTooltipPosition='right' matTooltipHideDelay="100" -->
+    <div class="sidebar--isBusy-icon-wpr" *ngIf="IS_BUSY === true" style="cursor:pointer">
+      <span class="material-icons sidebar-is-busy-icon">
+        access_time
+      </span>
+    </div>
+  </div>
+
+  <div class="nav-container">
+    <!-- [ngClass]="{'is-desktop-menu' : IS_MOBILE_MENU === false, 'is-mobile-menu' : IS_MOBILE_MENU === true  }" -->
+    <ul style="padding-bottom: 65px;" class="nav">
+
+      <!-- ------------------------------------------- -->
+      <!-- CHAT  -->
+      <!-- ------------------------------------------- -->
+      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="Chat" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
+      <li  routerLinkActive="active" >
+        <a #openchatbtn class="customAncor" (click)="openChat()" style="cursor: pointer;">
+          <i class="material-icons sidebar-icons">chat</i>
+        </a>
+      </li>
+
+  <!-- ------------------------------------------- -->
+      <!-- HOME  -->
+        <!-- ------------------------------------------- -->
+      <!-- matTooltip="home"  #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
+      <li routerLinkActive="active" matTooltipClass="custom-mat-tooltip" >
+        <a #homebtn class="customAncor" routerLink="project/{{ project?._id }}/home">
+          <i class="material-icons sidebar-icons">
+            home
+          </i>
+        </a>
+      </li>
+
+      <!-- ------------------------------------------- -->
+      <!-- REQUESTS (VISITORS)  -->
+      <!-- ------------------------------------------- -->
+      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Requests' | translate }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
+      <li routerLinkActive="active">
+        <a class="customAncor" routerLink="project/{{ project?._id }}/wsrequests">
+          <i class="material-icons sidebar-icons">forum</i>
+
+        </a>
+      </li>
+
+      <!-- ------------------------------------------- -->
+      <!-- CONTACTS (LEADS)  -->
+      <!-- ------------------------------------------- -->
+      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Contacts' | translate }}" #tooltip="matTooltip" matTooltipPosition='right'  matTooltipHideDelay="100" -->
+      <li routerLinkActive="active">
+        <a class="customAncor" routerLink="project/{{ project?._id }}/contacts">
+          <i class="material-icons sidebar-icons">contacts</i>
+
+
+        </a>
+      </li>
+
+      <!-- ------------------------------------------- -->
+      <!-- APPS  -->
+      <!-- ------------------------------------------- -->
+      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Apps' | translate }}" #tooltip="matTooltip" matTooltipPosition='right'  matTooltipHideDelay="100" -->
+      <ng-container *ngIf="isVisibleAPP && USER_ROLE !== 'agent'">
+        <li routerLinkActive="active">
+          <a class="customAncor" routerLink="project/{{ project?._id }}/app-store">
+
+            <i class="material-icons sidebar-icons">apps</i>
+
+          </a>
+        </li>
+      </ng-container>
+
+
+      <!-- ------------------------------------------- -->
+      <!-- ANALYTICS -->
+      <!-- ------------------------------------------- -->
+      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Analytics.AnalyticsTITLE' | translate }}"  #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
+      <ng-container *ngIf="isVisibleANA">
+        <li *ngIf="USER_ROLE !== 'agent'" routerLinkActive="active">
+          <a class="customAncor" routerLink="project/{{ project?._id }}/analytics">
+            <i class="material-icons sidebar-icons">trending_up</i>
+
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- ------------------------------------------- -->
+      <!-- ACTIVITIES -->
+      <!-- ------------------------------------------- -->
+      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Activities' | translate }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
+      <ng-container *ngIf="isVisibleACT">
+        <li *ngIf="USER_ROLE !== 'agent'" routerLinkActive="active">
+          <a class="customAncor" routerLink="project/{{ project?._id }}/activities">
+
+            <i class="material-icons sidebar-icons">assignment</i>
+
+          </a>
+        </li>
+      </ng-container>
+
+
+      <!-- ------------------------------------------- -->
+      <!-- REQUESTS HISTORY -->
+      <!-- ------------------------------------------- -->
+      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'History' | translate }}"  #tooltip="matTooltip"   matTooltipPosition='right' matTooltipHideDelay="100" -->
+      <li routerLinkActive="active">
+        <a class="customAncor" routerLink="project/{{ project?._id }}/history">
+          <i class="material-icons sidebar-icons">history</i>
+
+        </a>
+      </li>
+
+      <!-- ------------------------------------------- -->
+      <!-- SETTINGS -->
+      <!-- ------------------------------------------- -->
+      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Settings' | translate }}"  #tooltip="matTooltip"   matTooltipPosition='right' matTooltipHideDelay="100" -->
+      <li *ngIf="USER_ROLE !== 'agent'" (click)="goToCannedResponses()" style="cursor:pointer">
+        <!-- routerLink="/settings" -->
+        <a class="customAncor">
+          <i class="material-icons sidebar-icons">settings</i>
+
+        </a>
+      </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </ul>
+  </div>
+</div>
