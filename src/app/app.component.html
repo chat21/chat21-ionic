@@ -1,7 +1,11 @@
 <ion-app>
   <div>
-    <!-- (click)="hideAlert()" -->
+   
     <app-image-viewer></app-image-viewer>
+
+    <div class="sidebar">
+      <app-sidebar></app-sidebar>
+   </div>
     <ion-split-pane when="md" contentId="main">
 
       <ion-nav #sidebarNav [root]="sidebarPage"></ion-nav>
