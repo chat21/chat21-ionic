@@ -96,7 +96,7 @@ import { Network } from '@ionic-native/network/ngx';
 import { ConnectionService } from 'ng-connection-service';
 import { WebSocketJs } from './services/websocket/websocket-js';
 import { UnassignedConversationsPageModule } from './pages/unassigned-conversations/unassigned-conversations.module';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -251,6 +251,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     IonicModule.forRoot(),
