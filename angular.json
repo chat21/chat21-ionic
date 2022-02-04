@@ -41,6 +41,7 @@
               "src/chat-config-dev.json"
             ],
             "styles": [
+              "node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               {
                 "input": "src/theme/variables.scss"
               },
