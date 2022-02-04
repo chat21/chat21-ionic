@@ -774,6 +774,16 @@ select:-webkit-autofill:focus {
     color: #3c4858;
 }
 
+.sidebar .nav li.item-active > a > i {
+    color: #ffffff;
+}
+
+.item-active{
+    height: 40px;
+    background-color: #3ea9f5;
+    color: #fff !important;
+    pointer-events: none;
+}
 .is-user-online {
     background-color: #4caf50;
 }
@@ -873,11 +883,7 @@ select:-webkit-autofill:focus {
 /* NK end CUSTOM SCROLL BAR */
 
 /* SIDEBAR NAV ITEMS  */
-.active {
-    height: 40px;
-    background-color: #3ea9f5;
-    color: #fff !important;
-}
+
 
 /* SIDEBAR NAV ITEMS  */
 
@@ -970,7 +976,7 @@ select:-webkit-autofill:focus {
 
 /* SIDEBAR NAV ITEMS  */
 
-.active a {
+.item-active a {
     background-color: transparent !important;
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
@@ -981,7 +987,7 @@ select:-webkit-autofill:focus {
 p.hidden-lg.hidden-md {
     color: rgba(255, 255, 255, 0.6);
 }
-li.active p.hidden-lg.hidden-md {
+li.item-active p.hidden-lg.hidden-md {
     color: rgba(25, 25, 25, 1) !important;
 }
 .nav .open > a > p.hidden-lg.hidden-md {
