@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc1
+- Adds a sidebar that allows navigation to the dashboard
+
 ### 3.0.60
 - Deploys in production
 
