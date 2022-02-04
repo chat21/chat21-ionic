@@ -24,13 +24,12 @@
 
 
     <div class="avatar-container tiledesk-nav-avatar" [ngClass]="{'small-sidebar-avatar' : SIDEBAR_IS_SMALL === true }">
-      <img class="sidebar-avatar"
-        [src]="photo_profile_URL" onerror="this.src='assets/images/no_image_user.png'" />
+      <img class="sidebar-avatar" [src]="photo_profile_URL" onerror="this.src='assets/images/no_image_user.png'" />
 
 
-        <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ tooltip_text_for_availability_status}}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
+      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ tooltip_text_for_availability_status}}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
       <div (click)="changeAvailabilityState(IS_AVAILABLE = !IS_AVAILABLE)" class="status-icon"
-        [ngClass]="{'is-user-online' : IS_AVAILABLE === true, 'is-user-offline' : IS_AVAILABLE === false, 'small-sidebar-status-icon' : SIDEBAR_IS_SMALL === true  }" >
+        [ngClass]="{'is-user-online' : IS_AVAILABLE === true, 'is-user-offline' : IS_AVAILABLE === false, 'small-sidebar-status-icon' : SIDEBAR_IS_SMALL === true  }">
       </div>
 
     </div>
@@ -57,19 +56,19 @@
       <!-- ------------------------------------------- -->
       <!-- CHAT  -->
       <!-- ------------------------------------------- -->
-      <!-- matTooltipClass="custom-mat-tooltip" matTooltip="Chat" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
-      <li  routerLinkActive="active" >
-        <a #openchatbtn class="customAncor" (click)="openChat()" style="cursor: pointer;">
+      <!-- -->
+      <li class="item-active" style="cursor: unset;" matTooltipClass="custom-mat-tooltip" matTooltip="Chat" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" >
+        <a class="customAncor">
           <i class="material-icons sidebar-icons">chat</i>
         </a>
       </li>
 
-  <!-- ------------------------------------------- -->
+      <!-- ------------------------------------------- -->
       <!-- HOME  -->
-        <!-- ------------------------------------------- -->
-      <!-- matTooltip="home"  #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
-      <li routerLinkActive="active" matTooltipClass="custom-mat-tooltip" >
-        <a #homebtn class="customAncor" routerLink="project/{{ project?._id }}/home">
+      <!-- ------------------------------------------- -->
+      <!-- -->
+      <li (click)="goToHome()" matTooltip="Home"  #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" matTooltipClass="custom-mat-tooltip">
+        <a class="customAncor">
           <i class="material-icons sidebar-icons">
             home
           </i>
@@ -80,10 +79,9 @@
       <!-- REQUESTS (VISITORS)  -->
       <!-- ------------------------------------------- -->
       <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Requests' | translate }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
-      <li routerLinkActive="active">
-        <a class="customAncor" routerLink="project/{{ project?._id }}/wsrequests">
+      <li (click)="goToConversations()">
+        <a class="customAncor">
           <i class="material-icons sidebar-icons">forum</i>
-
         </a>
       </li>
 
@@ -91,11 +89,9 @@
       <!-- CONTACTS (LEADS)  -->
       <!-- ------------------------------------------- -->
       <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Contacts' | translate }}" #tooltip="matTooltip" matTooltipPosition='right'  matTooltipHideDelay="100" -->
-      <li routerLinkActive="active">
-        <a class="customAncor" routerLink="project/{{ project?._id }}/contacts">
+      <li (click)="goToContacts()">
+        <a class="customAncor">
           <i class="material-icons sidebar-icons">contacts</i>
-
-
         </a>
       </li>
 
@@ -104,11 +100,9 @@
       <!-- ------------------------------------------- -->
       <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Apps' | translate }}" #tooltip="matTooltip" matTooltipPosition='right'  matTooltipHideDelay="100" -->
       <ng-container *ngIf="isVisibleAPP && USER_ROLE !== 'agent'">
-        <li routerLinkActive="active">
-          <a class="customAncor" routerLink="project/{{ project?._id }}/app-store">
-
+        <li (click)="goToAppStore()">
+          <a class="customAncor">
             <i class="material-icons sidebar-icons">apps</i>
-
           </a>
         </li>
       </ng-container>
@@ -118,11 +112,10 @@
       <!-- ANALYTICS -->
       <!-- ------------------------------------------- -->
       <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Analytics.AnalyticsTITLE' | translate }}"  #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
-      <ng-container *ngIf="isVisibleANA">
-        <li *ngIf="USER_ROLE !== 'agent'" routerLinkActive="active">
-          <a class="customAncor" routerLink="project/{{ project?._id }}/analytics">
+      <ng-container *ngIf="isVisibleANA && USER_ROLE !== 'agent'">
+        <li (click)="goToAnalytics()">
+          <a class="customAncor">
             <i class="material-icons sidebar-icons">trending_up</i>
-
           </a>
         </li>
       </ng-container>
@@ -132,11 +125,9 @@
       <!-- ------------------------------------------- -->
       <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Activities' | translate }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
       <ng-container *ngIf="isVisibleACT">
-        <li *ngIf="USER_ROLE !== 'agent'" routerLinkActive="active">
-          <a class="customAncor" routerLink="project/{{ project?._id }}/activities">
-
+        <li *ngIf="USER_ROLE !== 'agent'" (click)="goToActivities()">
+          <a class="customAncor">
             <i class="material-icons sidebar-icons">assignment</i>
-
           </a>
         </li>
       </ng-container>
@@ -146,10 +137,9 @@
       <!-- REQUESTS HISTORY -->
       <!-- ------------------------------------------- -->
       <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'History' | translate }}"  #tooltip="matTooltip"   matTooltipPosition='right' matTooltipHideDelay="100" -->
-      <li routerLinkActive="active">
-        <a class="customAncor" routerLink="project/{{ project?._id }}/history">
+      <li (click)="goToHistory()">
+        <a class="customAncor">
           <i class="material-icons sidebar-icons">history</i>
-
         </a>
       </li>
 
@@ -157,11 +147,9 @@
       <!-- SETTINGS -->
       <!-- ------------------------------------------- -->
       <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Settings' | translate }}"  #tooltip="matTooltip"   matTooltipPosition='right' matTooltipHideDelay="100" -->
-      <li *ngIf="USER_ROLE !== 'agent'" (click)="goToCannedResponses()" style="cursor:pointer">
-        <!-- routerLink="/settings" -->
+      <li *ngIf="USER_ROLE !== 'agent'" (click)="goToSettings_CannedResponses()">
         <a class="customAncor">
           <i class="material-icons sidebar-icons">settings</i>
-
         </a>
       </li>
 
