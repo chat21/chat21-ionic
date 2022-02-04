@@ -11,13 +11,13 @@
   "LABEL_LAST_ACCESS": "letzter Zugriff",
   "LABEL_TO": "beim",
   "ARRAY_DAYS": [
-      "Montag",
-      "Dienstag",
-      "Mittwoch",
-      "Donnerstag",
-      "Freitag",
-      "Samstag",
-      "Sonntag"
+    "Montag",
+    "Dienstag",
+    "Mittwoch",
+    "Donnerstag",
+    "Freitag",
+    "Samstag",
+    "Sonntag"
   ],
   "LABEL_SEND": "Senden",
   "ID_CONVERSATION": "ID-Gespräch",
@@ -65,7 +65,7 @@
   "INFO_SUPPORT_USER_ADDED_MESSAGE": "{{ subject }} {{ verb }} {{ complement }}",
   "INFO_SUPPORT_CHAT_REOPENED": "Chat wieder geöffnet",
   "INFO_SUPPORT_CHAT_CLOSED": "Chat geschlossen",
-  "INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU":"Ihnen wurde eine neue Support-Anfrage zugewiesen",
+  "INFO_A_NEW_SUPPORT_REQUEST_HAS_BEEN_ASSIGNED_TO_YOU": "Ihnen wurde eine neue Support-Anfrage zugewiesen",
   "LABEL_PROFILE": "Profil",
   "LABEL_CLOSE": "Abgeschlossen",
   "LABEL_DISCONNECT": "Trennen",
@@ -205,5 +205,5 @@
   "CHANGE_TO_AVAILABLE_UNAVAILABLE": "auf verfügbar/nicht verfügbar ändern",
   "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "ändern Sie Ihren Status auf verfügbar",
   "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "ändern Sie Ihren Status auf nicht verfügbar",
-  "ALL_CONVS_SERVED":"Wurden alle Gespräche bedient? Gut gemacht!"
+  "ALL_CONVS_SERVED": "Wurden alle Gespräche bedient? Gut gemacht!"
 }
