@@ -43,6 +43,8 @@ import { SidebarComponent } from '../components/sidebar/sidebar.component';
 
 import { ProjectItemComponent } from '../components/project-item/project-item.component';
 import { DefaultTooltipOptions } from 'src/chat21-core/utils/utils';
+import { MatTooltipModule }  from '@angular/material/tooltip';
+
 // import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component';
 
 @NgModule({
@@ -121,6 +123,7 @@ import { DefaultTooltipOptions } from 'src/chat21-core/utils/utils';
 
   ],
   imports: [
+    MatTooltipModule,
     CommonModule,
     IonicModule,
     MomentModule,
