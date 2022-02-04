@@ -240,7 +240,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
     setTimeout(() => {
       this.showSpinner = false
-    }, 2000);
+    }, 3000);
 
   }
 
