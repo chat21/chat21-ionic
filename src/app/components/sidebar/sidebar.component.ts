@@ -13,6 +13,8 @@ export class SidebarComponent implements OnInit {
   USER_ROLE: string;
   SIDEBAR_IS_SMALL = true
   IS_AVAILABLE = true
+  user:any;
+  IS_BUSY:boolean;
 
   isVisibleAPP: boolean = true
   isVisibleANA: boolean = true
@@ -126,6 +128,10 @@ public translationMap: Map<string, string>;
     this.translationMap = this.translateService.translateLanguage(keys);
   }
 
+
+  changeAvailabilityState(IS_AVAILABLE) { 
+    
+  }
   
 
   

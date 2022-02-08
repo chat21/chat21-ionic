@@ -11,12 +11,12 @@
   <!-- // NK start NEW: AVATAR ON THE SIDEBAR  -->
   <div class="user tiledesk-nav-user" [ngClass]="{'small-sidebar-tiledesk-nav-user' : SIDEBAR_IS_SMALL === true }"
     fxlayout="column" style="flex-direction: column; box-sizing: border-box; display: flex;">
-    <div *ngIf="user" class="h3 username" style="font-size: 16px;font-weight: 400;margin-top: 15px; margin-bottom: 5px;"
+    <div  class="h3 username" style="font-size: 16px;font-weight: 400;margin-top: 15px; margin-bottom: 5px;"
       [ngClass]="{'small-sidebar-userfullname' : SIDEBAR_IS_SMALL === true }">
 
       {{ user?.firstname }} {{ user?.lastname }}
     </div>
-    <div *ngIf="user" class="h5 email hint-text mt-8"
+    <div  class="h5 email hint-text mt-8"
       style="color: rgba(255,255,255,.5)!important;font-size: 13px;margin-top: 0px!important;font-weight: 400;"
       [ngClass]="{'small-sidebar-email' : SIDEBAR_IS_SMALL === true }">
       {{ user?.email }}
@@ -35,7 +35,7 @@
     </div>
     <!-- CAMERA ICONS OVER THE AVATAR -->
     <!--  [ngClass]="{'hover-effect' : isOverAvar}"  -->
-    <i routerLink="project/{{ project?._id }}/user-profile" class="material-icons is-over-camera"
+    <i class="material-icons is-over-camera"
       [ngClass]="{'small-sidebar-camera-icon' : SIDEBAR_IS_SMALL === true, 'is-over-camera-decrease-top':IS_BUSY === true }">
       camera_alt
     </i>
