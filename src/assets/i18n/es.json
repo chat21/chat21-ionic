@@ -203,7 +203,7 @@
   "PINNED_PROJECT": "Proyecto anclado",
   "CHANGE_PINNED_PROJECT": "Cambiar proyecto anclado",
   "CHANGE_TO_AVAILABLE_UNAVAILABLE": "cambiar a disponible/no disponible",
-  "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "cambia tu estado a disponible",
-  "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "cambiar su estado a no disponible",
+  "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "Cambia tu estado a disponible",
+  "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "Cambia tu estado a no disponible",
   "ALL_CONVS_SERVED": "Were all conversations served? Good job!"
 }
