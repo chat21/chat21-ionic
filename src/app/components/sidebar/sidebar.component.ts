@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AppConfigProvider } from 'src/app/services/app-config';
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
+import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 @Component({
   selector: 'app-sidebar',
@@ -29,22 +30,37 @@ public translationMap: Map<string, string>;
     public appStorageService: AppStorageService,
    
     public appConfig: AppConfigProvider,
-    private translateService: CustomTranslateService
+    private translateService: CustomTranslateService,
+    private messagingAuthService: MessagingAuthService
   ) { }
 
   ngOnInit() {
     this.DASHBOARD_URL = this.appConfig.getConfig().dashboardUrl + '#/project/';
     console.log('[SIDEBAR] DASHBOARD_URL ', this.DASHBOARD_URL )
   
-    const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
-    console.log('[SIDEBAR] currentUser ', currentUser)
-    if (currentUser) {
-      this.photo_profile_URL = this.imageRepoService.getImagePhotoUrl(currentUser.uid)
-      console.log('[SIDEBAR] photo_profile_URL ', this.photo_profile_URL)
-    }
+ 
 
     this.getSoredProjectAndDashboardBaseUrl()
+
+    this.subcribeToAuthStateChanged()
   }
+  
+  subcribeToAuthStateChanged() {
+    this.messagingAuthService.BSAuthStateChanged.subscribe((state) => { 
+      console.log('[SIDEBAR] BSAuthStateChanged ', state)
+
+      if (state === 'online') {
+        const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
+        console.log('[SIDEBAR] currentUser ', currentUser)
+        if (currentUser) {
+          this.photo_profile_URL = this.imageRepoService.getImagePhotoUrl(currentUser.uid)
+          console.log('[SIDEBAR] photo_profile_URL ', this.photo_profile_URL)
+        }
+
+      }
+    })
+  }
+
 
   getSoredProjectAndDashboardBaseUrl() {
     const stored_project = localStorage.getItem('last_project')
@@ -130,7 +146,7 @@ public translationMap: Map<string, string>;
 
 
   changeAvailabilityState(IS_AVAILABLE) { 
-    
+
   }
   
 
