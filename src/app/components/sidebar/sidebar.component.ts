@@ -1,52 +1,121 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppConfigProvider } from 'src/app/services/app-config';
+import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagingAuth.service';
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit {
+
+  private logger: LoggerService = LoggerInstance.getInstance();
+
   USER_ROLE: string;
   SIDEBAR_IS_SMALL = true
-  IS_AVAILABLE = true
-  user:any;
-  IS_BUSY:boolean;
+  IS_AVAILABLE: boolean;
+  user: any;
+  IS_BUSY: boolean;
 
   isVisibleAPP: boolean = true
   isVisibleANA: boolean = true
   isVisibleACT: boolean = true
   photo_profile_URL: string;
-project_id: string;
-DASHBOARD_URL: string;
-public translationMap: Map<string, string>;
+  project_id: string;
+  DASHBOARD_URL: string;
+  HAS_CLICKED_OPEN_USER_DETAIL: boolean = false
+  public translationMap: Map<string, string>;
 
   constructor(
     public imageRepoService: ImageRepoService,
     public appStorageService: AppStorageService,
-   
+
     public appConfig: AppConfigProvider,
     private translateService: CustomTranslateService,
-    private messagingAuthService: MessagingAuthService
+    private messagingAuthService: MessagingAuthService,
+    public wsService: WebsocketService,
   ) { }
 
   ngOnInit() {
     this.DASHBOARD_URL = this.appConfig.getConfig().dashboardUrl + '#/project/';
-    console.log('[SIDEBAR] DASHBOARD_URL ', this.DASHBOARD_URL )
-  
- 
-
-    this.getSoredProjectAndDashboardBaseUrl()
-
+    console.log('[SIDEBAR] DASHBOARD_URL ', this.DASHBOARD_URL)
+    this.getStoredProjectAndDashboardBaseUrl()
     this.subcribeToAuthStateChanged()
+
+    this.listenTocurrentProjectUserUserAvailability$()
   }
-  
+
+  listenTocurrentProjectUserUserAvailability$() {
+    this.wsService.currentProjectUserAvailability$.subscribe((projectUser) => {
+      console.log('[SIDEBAR] - $UBSC TO WS USER AVAILABILITY & BUSY STATUS RES ', projectUser);
+
+      this.IS_AVAILABLE = projectUser['user_available']
+      this.IS_BUSY = projectUser['isBusy']
+      // if (project.id_project._id === projectUser['id_project']) {
+      //   project['ws_projct_user_available'] = projectUser['user_available'];
+      //   project['ws_projct_user_isBusy'] = projectUser['isBusy']
+      //   if (this.translationMap) {
+      //     if (projectUser['user_available'] === true) {
+      //       this.avaialble_status_for_tooltip = this.translationMap.get('CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE')
+      //     } else {
+      //       this.avaialble_status_for_tooltip = this.translationMap.get('CHANGE_TO_YOUR_STATUS_TO_AVAILABLE')
+      //     }
+      //   }
+      // }
+
+    }, (error) => {
+      this.logger.error('[SIDEBAR] - $UBSC TO WS USER AVAILABILITY & BUSY STATUS error ', error);
+    }, () => {
+      this.logger.log('[SIDEBAR] - $UBSC TO WS USER AVAILABILITY & BUSY STATUS * COMPLETE *');
+    })
+  }
+
+  openUserDetailSidePanel() {
+    console.log('[SIDEBAR] OPEN UESER DTLS SIDE PANEL')
+    this.HAS_CLICKED_OPEN_USER_DETAIL = true
+    console.log('[SIDEBAR] OPEN USER DTLS SIDE PANEL ', this.HAS_CLICKED_OPEN_USER_DETAIL)
+    const elSidebarUserDtls = <HTMLElement>document.querySelector('#user-details');
+    console.log('[SIDEBAR] OPEN USER DTLS SIDE PANEL elSidebarUserDtls ', elSidebarUserDtls)
+    if (elSidebarUserDtls) {
+      elSidebarUserDtls.classList.add("active");
+    }
+    // const elemNavbar = <HTMLElement>document.querySelector('.navbar-absolute');
+    // console.log('[SIDEBAR] elemNavBar ', elemNavbar)
+    // if (elemNavbar) {
+    //     elemNavbar.classList.add("navbar-absolute-custom-class");
+    // }
+    // const elemNavbarBrand = <HTMLElement>document.querySelector('.navbar-brand');
+    // console.log('[SIDEBAR] elemNavbarBrand ', elemNavbarBrand)
+    // if (elemNavbarBrand) {
+    //     elemNavbarBrand.classList.add("navbar-brand-z-index-zero")
+    // }
+  }
+
+  onCloseUserDetailsSidebar($event) {
+    console.log('[SIDEBAR] HAS_CLICKED_CLOSE_USER_DETAIL ', $event)
+    this.HAS_CLICKED_OPEN_USER_DETAIL = $event
+    const elemNavbar = <HTMLElement>document.querySelector('.navbar-absolute');
+    console.log('[SIDEBAR] elemNavBar ', elemNavbar)
+    if (elemNavbar) {
+      elemNavbar.classList.remove("navbar-absolute-custom-class")
+    }
+
+    const elemNavbarBrand = <HTMLElement>document.querySelector('.navbar-brand');
+    console.log('[SIDEBAR] elemNavbarBrand ', elemNavbarBrand)
+    if (elemNavbarBrand) {
+      elemNavbarBrand.classList.remove("navbar-brand-z-index-zero")
+    }
+  }
+
   subcribeToAuthStateChanged() {
-    this.messagingAuthService.BSAuthStateChanged.subscribe((state) => { 
+    this.messagingAuthService.BSAuthStateChanged.subscribe((state) => {
       console.log('[SIDEBAR] BSAuthStateChanged ', state)
 
       if (state === 'online') {
@@ -62,7 +131,7 @@ public translationMap: Map<string, string>;
   }
 
 
-  getSoredProjectAndDashboardBaseUrl() {
+  getStoredProjectAndDashboardBaseUrl() {
     const stored_project = localStorage.getItem('last_project')
     // console.log('[SIDEBAR] stored_project ', stored_project)
     if (stored_project) {
@@ -78,51 +147,51 @@ public translationMap: Map<string, string>;
   }
 
   goToHome() {
-    let url =  this.DASHBOARD_URL + this.project_id  + '/home'
+    let url = this.DASHBOARD_URL + this.project_id + '/home'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
 
-  goToConversations() { 
-    let url =  this.DASHBOARD_URL + this.project_id  + '/wsrequests'
+  goToConversations() {
+    let url = this.DASHBOARD_URL + this.project_id + '/wsrequests'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
 
-  goToContacts() { 
-    let url =  this.DASHBOARD_URL + this.project_id  + '/contacts'
+  goToContacts() {
+    let url = this.DASHBOARD_URL + this.project_id + '/contacts'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
 
-  goToAppStore() { 
-    let url =  this.DASHBOARD_URL + this.project_id  + '/app-store'
-    const myWindow = window.open(url, '_self');
-    myWindow.focus();
-  }
-
-
-  goToAnalytics() { 
-    let url =  this.DASHBOARD_URL + this.project_id  + '/analytics'
+  goToAppStore() {
+    let url = this.DASHBOARD_URL + this.project_id + '/app-store'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
 
 
-  goToActivities() { 
-    let url =  this.DASHBOARD_URL + this.project_id  + '/activities'
+  goToAnalytics() {
+    let url = this.DASHBOARD_URL + this.project_id + '/analytics'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
 
-  goToHistory() { 
-    let url =  this.DASHBOARD_URL + this.project_id  + '/history'
+
+  goToActivities() {
+    let url = this.DASHBOARD_URL + this.project_id + '/activities'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
 
-  goToSettings_CannedResponses() { 
-    let url =  this.DASHBOARD_URL + this.project_id  + '/cannedresponses'
+  goToHistory() {
+    let url = this.DASHBOARD_URL + this.project_id + '/history'
+    const myWindow = window.open(url, '_self');
+    myWindow.focus();
+  }
+
+  goToSettings_CannedResponses() {
+    let url = this.DASHBOARD_URL + this.project_id + '/cannedresponses'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
@@ -145,16 +214,16 @@ public translationMap: Map<string, string>;
   }
 
 
-  changeAvailabilityState(IS_AVAILABLE) { 
+  changeAvailabilityState(IS_AVAILABLE) {
 
   }
-  
-
-  
-  
 
 
-  
+
+
+
+
+
 
 
 

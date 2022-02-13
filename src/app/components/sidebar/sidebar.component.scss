@@ -1,4 +1,11 @@
 ::ng-deep .custom-mat-tooltip {
-    background-color: #2d323e;
-    font-size: 12px;
-  }
+  background-color: #2d323e;
+  font-size: 12px;
+}
+
+.sidebar-is-busy-icon {
+  font-size: 14px;
+  color: #feb92c;
+  background-color: #2d323e;
+  border-radius: 50%;
+}
