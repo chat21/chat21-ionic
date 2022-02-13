@@ -1,5 +1,11 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc2
+- Fixes the bug: Profile picture in the sidebar does not update when logged in with another user after logging out
+- Bug Fix: in the "info-profile" page avoid the "uid of undefined" error
+- Adds the "user details" sidebar
+- Adds the languages flags images
+
 ### 3.0.61-rc1
 - Adds a sidebar that allows navigation to the dashboard
 
