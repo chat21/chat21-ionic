@@ -588,6 +588,15 @@ select:-webkit-autofill:focus {
     align-items: center;
 }
 
+
+.user-details-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index:1;
+}
+
 // Sidebar
 
 .sidebar {
@@ -602,7 +611,7 @@ select:-webkit-autofill:focus {
     top: 0;
     bottom: 0;
     left: 0;
-    z-index: 1;
+    z-index: 2;
 }
 
 .sidebar .logo {
@@ -630,6 +639,7 @@ select:-webkit-autofill:focus {
     top: 12px !important;
     width: 25px !important;
     margin-left: 3px;
+    margin-top: 5px;
 }
 
 .small-sidebar-tiledesk-nav-user {

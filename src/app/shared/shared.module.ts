@@ -40,7 +40,7 @@ import { OptionHeaderComponent } from '../components/conversation-detail/option-
 import { MessageAttachmentComponent } from '../chatlib/conversation-detail/message/message-attachment/message-attachment.component';
 import { ImageViewerComponent } from '../components/image-viewer/image-viewer.component';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
-
+import { SidebarUserDetailsComponent } from '../components/sidebar-user-details/sidebar-user-details.component';
 import { ProjectItemComponent } from '../components/project-item/project-item.component';
 import { DefaultTooltipOptions } from 'src/chat21-core/utils/utils';
 import { MatTooltipModule }  from '@angular/material/tooltip';
@@ -58,6 +58,7 @@ import { MatTooltipModule }  from '@angular/material/tooltip';
     IonListConversationsComponent,
     ImageViewerComponent,
     SidebarComponent,
+    SidebarUserDetailsComponent,
     ProjectItemComponent,
     IonConversationDetailComponent,
     ConversationContentComponent,
@@ -93,6 +94,7 @@ import { MatTooltipModule }  from '@angular/material/tooltip';
     DdpHeaderComponent,
     ImageViewerComponent,
     SidebarComponent,
+    SidebarUserDetailsComponent,
     ProjectItemComponent,
     UserPresenceComponent,
     UserTypingComponent,

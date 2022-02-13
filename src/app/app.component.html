@@ -1,11 +1,17 @@
 <ion-app>
   <div>
-   
+
     <app-image-viewer></app-image-viewer>
 
     <div class="sidebar">
       <app-sidebar></app-sidebar>
-   </div>
+    </div>
+    
+    <div class="user-details-sidebar">
+      <app-sidebar-user-details>
+      </app-sidebar-user-details>
+    </div>
+
     <ion-split-pane when="md" contentId="main">
 
       <ion-nav #sidebarNav [root]="sidebarPage"></ion-nav>
