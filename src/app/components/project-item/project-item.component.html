@@ -87,7 +87,9 @@
                   [ngClass]="{'online-text-color' : project?.ws_projct_user_available === true, 'offline-text-color' : project?.ws_projct_user_available === false}">
                   {{translationMap?.get('Unavailable')}}
                 </span>
-                <div class="project-item--isBusy-icon-wpr" *ngIf="project?.ws_projct_user_isBusy === true">
+
+                <div class="project-item--isBusy-icon-wpr" *ngIf="project?.ws_projct_user_isBusy === true" tooltip="  {{translationMap?.get('Busy')}}"
+                [options]="tooltipOptions" placement="top" >
                   <!-- <span class="material-icons project-item--isBusy-icon">
                       access_time
                     </span> -->
@@ -102,10 +104,10 @@
                     </g>
                   </svg>
                 </div>
-                <span *ngIf="project?.ws_projct_user_isBusy === true"
+                <!-- <span *ngIf="project?.ws_projct_user_isBusy === true"
                   class="project-item--isBusy-busy-text text-pulse-animation">
                   {{translationMap?.get('Busy')}}
-                </span>
+                </span> -->
               </div>
             </div>
 
@@ -153,7 +155,6 @@
               </div>
               <ng-template #viewAllConvs>
                 <span>
-
                   {{translationMap?.get('CHANGE_PINNED_PROJECT') }}</span>
               </ng-template>
             </div>
