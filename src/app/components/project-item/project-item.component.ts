@@ -17,6 +17,8 @@ import { AppConfigProvider } from 'src/app/services/app-config';
   styleUrls: ['./project-item.component.scss'],
 })
 export class ProjectItemComponent implements OnInit {
+  private logger: LoggerService = LoggerInstance.getInstance();
+
   @Output() projectIdEvent = new EventEmitter<string>()
   @Output() openUnsevedConvsEvent = new EventEmitter<any>()
 
@@ -29,7 +31,7 @@ export class ProjectItemComponent implements OnInit {
   ROLE_IS_AGENT: boolean;
   currentUserId: string;
   public translationMap: Map<string, string>;
-  private logger: LoggerService = LoggerInstance.getInstance();
+ 
   window_width_is_60: boolean;
   newInnerWidth: any;
   avaialble_status_for_tooltip: string;
