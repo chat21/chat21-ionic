@@ -43,7 +43,9 @@ import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { SidebarUserDetailsComponent } from '../components/sidebar-user-details/sidebar-user-details.component';
 import { ProjectItemComponent } from '../components/project-item/project-item.component';
 import { DefaultTooltipOptions } from 'src/chat21-core/utils/utils';
-import { MatTooltipModule }  from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component';
 
@@ -126,6 +128,8 @@ import { MatTooltipModule }  from '@angular/material/tooltip';
   ],
   imports: [
     MatTooltipModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
     CommonModule,
     IonicModule,
     MomentModule,

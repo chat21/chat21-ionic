@@ -1,3 +1,4 @@
+// @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
 #user-details {
     background-color: #1e2129;
     color: #fff;
@@ -153,6 +154,8 @@ button.user-details-btn-close {
     text-transform: uppercase;
     color: #a9afbb;
     font-weight: 400;
+    font-family: 'Roboto', sans-serif !important;
+   
 }
 
 .availability-section {

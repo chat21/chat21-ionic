@@ -40,26 +40,24 @@ padding-bottom: 15px;" -->
         
     
     
-        <!-- <div role="button" class="user-details-avatar" (click)="goToUserProfile()">
+        <div role="button" class="user-details-avatar" (click)="goToUserProfile()">
             <img class="user-img-in-sidebar-user-details"
-                *ngIf="userProfileImageExist === true || userImageHasBeenUploaded === true" [src]="getUserProfileImage()"
-                onerror="this.src='assets/img/no_image_user.svg'" />
+            [src]="photo_profile_URL" onerror="this.src='assets/images/no_image_user.png'" />
+   
+        </div>
     
-            <img class="user-img-in-sidebar-user-details"
-                *ngIf="userProfileImageExist !== true && userImageHasBeenUploaded !== true"
-                src="assets/img/no_image_user.png" />
-        </div> -->
-    
-        <!-- <div class="user-details-user-isbusy" *ngIf="IS_BUSY === true" style="cursor:pointer"
-            matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Busy' | translate }}" #tooltip="matTooltip"
+        <div class="user-details-user-isbusy" *ngIf="IS_BUSY === true" style="cursor:pointer"
+            matTooltipClass="custom-mat-tooltip" matTooltip="{{IS_BUSY_msg}}" #tooltip="matTooltip"
             matTooltipPosition='right' matTooltipHideDelay="100">
             <span class="material-icons user-details-user-isbusy-icon">
                 access_time
             </span>
-        </div> -->
+        </div>
+
+
     
     
-        <!-- <div class="user-details-fullname">
+        <div class="user-details-fullname">
             <h3> {{ user?.firstname }} {{ user?.lastname }} </h3>
         </div>
     
@@ -68,26 +66,28 @@ padding-bottom: 15px;" -->
         </div>
     
         <div class="user-details-role">
-            <h3>{{ USER_ROLE }} </h3>
-        </div> -->
+            <h3 style=" font-family: 'Roboto'">{{ USER_ROLE }} </h3>
+        </div>
     
-        <!-- <section class="availability-section">
-            <mat-slide-toggle (change)="changeAvailabilityState(IS_AVAILABLE = !IS_AVAILABLE)"
+        <section class="availability-section">
+            <mat-slide-toggle (change)="changeAvailabilityStateInUserDetailsSidebar(IS_AVAILABLE = !IS_AVAILABLE)"
                 class="custom-mat-slide-toggle" [checked]="IS_AVAILABLE" labelPosition="before">
     
-                <span *ngIf="IS_AVAILABLE" style="font-weight: 300 !important; text-transform: capitalize; font-size:12px;">
-                    {{ 'Available' | translate }}
+                <span *ngIf="IS_AVAILABLE" style="font-weight: 300 !important; text-transform: capitalize; font-size:12px; font-family: 'Roboto', sans-serif !important;">
+                  {{IS_AVAILABLE_msg}}
+                    <!-- {{translationMap?.get('Available') }} -->
                 </span>
-                <span *ngIf="!IS_AVAILABLE" style="font-weight: 300 !important;text-transform: capitalize;font-size:12px;">
-                    {{ 'Unavailable' | translate }}
+                <span *ngIf="!IS_AVAILABLE" style="font-weight: 300 !important;text-transform: capitalize;font-size:12px; font-family: 'Roboto', sans-serif !important;">
+                   {{IS_UNAVAILABLE_msg}}
+                    <!-- {{translationMap?.get('Unavailable') }} -->
                 </span>
             </mat-slide-toggle>
-        </section> -->
+        </section>
     
-        <!-- <hr class="first-divider" style="margin-top: 355px;border: 0;
-        border-top: 1px solid rgba(255, 255,255, 0.2);"> -->
-    
-        <!-- <section class="user-details-plan-info" *ngIf="isVisiblePAY">
+        <hr class="first-divider" style="margin-top: 355px;border: 0;
+        border-top: 1px solid rgba(255, 255,255, 0.2);">
+     <!-- *ngIf="isVisiblePAY" -->
+        <section class="user-details-plan-info">
             <span style="text-transform: capitalize; color: #a9afbb;">
                 <div> {{prjct_name}} </div>
                 <div> {{ _prjct_profile_name }} </div>
@@ -96,19 +96,19 @@ padding-bottom: 15px;" -->
                     style="color:#f44336; position:relative; top: -1px;">
                     <i *ngIf="plan_name !== 'enterprise'" class="material-icons" style="vertical-align: middle; color:#f44336; cursor:pointer;    
                     font-size: 16px;" matTooltipClass="custom-mat-tooltip"
-                        matTooltip="{{ 'Pricing.SubscriptionPaymentProblem' | translate }}" #tooltip="matTooltip"
+                        matTooltip="{{ SUBSCRIPTION_PAYMENT_PROBLEM_msg }}" #tooltip="matTooltip"
                         matTooltipPosition='right' matTooltipHideDelay="100">
                         error_outline
                     </i>
                     <i *ngIf="plan_name === 'enterprise'" class="material-icons" style="vertical-align: middle; color:#f44336; cursor:pointer;    
                     font-size: 16px;" matTooltipClass="custom-mat-tooltip"
-                        matTooltip="{{ 'Pricing.ThePlanHasExpired' | translate }}" #tooltip="matTooltip"
+                        matTooltip="{{ THE_PLAN_HAS_EXPIRED_msg }}" #tooltip="matTooltip"
                         matTooltipPosition='right' matTooltipHideDelay="100">
                         error_outline
                     </i>
                 </span>
             </span>
-        </section> -->
+        </section>
     
         <!-- <hr class="second-divider" style="margin-top: 20px;border: 0;
         border-top: 1px solid rgba(255, 255,255, 0.2);"> -->
