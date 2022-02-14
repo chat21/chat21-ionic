@@ -205,5 +205,9 @@
   "CHANGE_TO_AVAILABLE_UNAVAILABLE": "изменить на доступный/недоступный",
   "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "Измените свой статус на доступный",
   "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "Измените свой статус на недоступный",
-  "ALL_CONVS_SERVED": "Все разговоры были обслужены? Отличная работа!"
+  "ALL_CONVS_SERVED": "Все разговоры были обслужены? Отличная работа!",
+  "PaydPlanName": "{{projectprofile}} План",
+  "ProPlanTrial": "Профессиональный план (пробная версия)",
+  "SubscriptionPaymentProblem": "Проблема с оплатой подписки",
+  "ThePlanHasExpired": "Срок действия плана истек"
 }

@@ -205,5 +205,9 @@
   "CHANGE_TO_AVAILABLE_UNAVAILABLE": "mevcut/kullanılamaz olarak değiştirin",
   "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "Durumunuzu müsait olarak değiştirin",
   "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "Durumunuzu kullanılamaz olarak değiştirin",
-  "ALL_CONVS_SERVED": "Tüm konuşmalar servis edildi mi? İyi iş!"
+  "ALL_CONVS_SERVED": "Tüm konuşmalar servis edildi mi? İyi iş!",
+  "PaydPlanName": "{{projectprofile}} Planı",
+  "ProPlanTrial": "Profesyonel Plan (deneme)",
+  "SubscriptionPaymentProblem": "Abonelik ödeme sorunu",
+  "ThePlanHasExpired": "Planın süresi doldu"
 }

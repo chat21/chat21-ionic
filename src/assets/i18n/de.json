@@ -205,5 +205,9 @@
   "CHANGE_TO_AVAILABLE_UNAVAILABLE": "auf verfügbar/nicht verfügbar ändern",
   "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "Ändern Sie Ihren Status auf verfügbar",
   "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "Ändern Sie Ihren Status auf nicht verfügbar",
-  "ALL_CONVS_SERVED": "Wurden alle Gespräche bedient? Gut gemacht!"
+  "ALL_CONVS_SERVED": "Wurden alle Gespräche bedient? Gut gemacht!",
+  "PaydPlanName": "{{projectprofile}}-Plan",
+  "ProPlanTrial": "Pro-Plan (Testversion)",
+  "SubscriptionPaymentProblem": "Problem mit der Zahlung des Abos",
+  "ThePlanHasExpired": "Der Plan ist abgelaufen"
 }

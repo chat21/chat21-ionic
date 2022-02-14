@@ -205,5 +205,9 @@
   "CHANGE_TO_AVAILABLE_UNAVAILABLE": "alterar para disponível/indisponível",
   "CHANGE_TO_YOUR_STATUS_TO_AVAILABLE": "Altere seu status para disponível",
   "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "Alterar seu status para indisponível",
-  "ALL_CONVS_SERVED": "Todas as conversas foram atendidas? Bom trabalho!"
+  "ALL_CONVS_SERVED": "Todas as conversas foram atendidas? Bom trabalho!",
+  "PaydPlanName": "{{projectprofile}} Plano",
+  "ProPlanTrial": "Plano Pro (teste)",
+  "SubscriptionPaymentProblem": "Problema no pagamento da assinatura",
+  "ThePlanHasExpired": "O plano expirou"
 }
