@@ -108,7 +108,7 @@
   "LABEL_INFO_USER": "Информация о пользователе",
   "LABEL_IS_WRITING": "печатание",
   "LABEL_VERSION": "версия",
-  "LABEL_CONTACTS": "контакты",
+  "LABEL_CONTACTS": "Контакты",
   "LABEL_PLACEHOLDER": "введите ваше сообщение..",
   "LABEL_START_NW_CONV": "Новый разговор",
   "LABEL_FIRST_MSG": "Кратко опишите вашу проблему, с вами свяжется агент.",
@@ -208,6 +208,18 @@
   "ALL_CONVS_SERVED": "Все разговоры были обслужены? Отличная работа!",
   "PaydPlanName": "{{projectprofile}} План",
   "ProPlanTrial": "Профессиональный план (пробная версия)",
+  "PaydPlanNamePro": "Про План",
+  "PaydPlanNameEnterprise": "План Предприятия",
+  "FreePlan":"Бесплатный план",
   "SubscriptionPaymentProblem": "Проблема с оплатой подписки",
-  "ThePlanHasExpired": "Срок действия плана истек"
+  "ThePlanHasExpired": "Срок действия плана истек",
+  "owner": "Владелец",
+  "admin": "Администратор",
+  "agent": "Агент",
+  "Conversations": "Разговоры",
+  "Apps":"Приложения",
+  "Analytics":"Аналитика",
+  "Activities": "Виды деятельности",
+  "History": "История",
+  "Settings": "Настройки"
 }

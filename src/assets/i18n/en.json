@@ -207,7 +207,19 @@
   "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "Change your status to unavailable",
   "ALL_CONVS_SERVED": "Were all conversations served? Good job!",
   "PaydPlanName": "{{projectprofile}} Plan",
+  "PaydPlanNamePro": "Pro Plan",
+  "PaydPlanNameEnterprise": "Enterprise plan",
   "ProPlanTrial": "Pro Plan (trial)",
+  "FreePlan":"Free Plan",
   "SubscriptionPaymentProblem": "Subscription payment problem",
-  "ThePlanHasExpired": "The plan has expired"
+  "ThePlanHasExpired": "The plan has expired",
+  "owner": "Owner",
+  "admin": "Administrator",
+  "agent": "Agent",
+  "Conversations": "Conversations",
+  "Apps":"Apps",
+  "Analytics":"Analytics",
+  "Activities": "Activities",
+  "History": "History",
+  "Settings": "Settings"
 }

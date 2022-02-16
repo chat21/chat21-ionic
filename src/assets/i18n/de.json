@@ -207,7 +207,19 @@
   "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "Ändern Sie Ihren Status auf nicht verfügbar",
   "ALL_CONVS_SERVED": "Wurden alle Gespräche bedient? Gut gemacht!",
   "PaydPlanName": "{{projectprofile}}-Plan",
+  "PaydPlanNamePro": "Pro-Plan",
+  "PaydPlanNameEnterprise": "Enterprise-Plan",
   "ProPlanTrial": "Pro-Plan (Testversion)",
+  "FreePlan":"Kostenloser Plan",
   "SubscriptionPaymentProblem": "Problem mit der Zahlung des Abos",
-  "ThePlanHasExpired": "Der Plan ist abgelaufen"
+  "ThePlanHasExpired": "Der Plan ist abgelaufen",
+  "owner": "Eigentümer",
+	"admin": "Administrator",
+	"agent": "Agent",
+  "Conversations": "Gespräche",
+  "Apps":"Anwendungen",
+  "Analytics":"Analytik",
+  "Activities": "Aktivitäten",
+  "History": "Verlauf",
+  "Settings": "Einstellungen"
 }

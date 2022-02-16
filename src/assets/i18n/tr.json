@@ -108,7 +108,7 @@
   "LABEL_INFO_USER": "Kullanıcısı bilgi",
   "LABEL_IS_WRITING": "yazıyor",
   "LABEL_VERSION": "versiyon",
-  "LABEL_CONTACTS": "kişiler",
+  "LABEL_CONTACTS": "Kişiler",
   "LABEL_PLACEHOLDER": "mesajını yaz..",
   "LABEL_START_NW_CONV": "Yeni görüşme",
   "LABEL_FIRST_MSG": "Sorununuzu kısaca açıklayın, bir temsilci sizinle iletişime geçecektir.",
@@ -207,7 +207,20 @@
   "CHANGE_TO_YOUR_STATUS_TO_UNAVAILABLE": "Durumunuzu kullanılamaz olarak değiştirin",
   "ALL_CONVS_SERVED": "Tüm konuşmalar servis edildi mi? İyi iş!",
   "PaydPlanName": "{{projectprofile}} Planı",
-  "ProPlanTrial": "Profesyonel Plan (deneme)",
+  "PaydPlanNamePro": "Pro Planı",
+  "PaydPlanNameEnterprise": "Enteprise Planı",
+  "ProPlanTrial": "Pro Plan (deneme)",
+  "FreePlan":"Ücretsiz Plan",
   "SubscriptionPaymentProblem": "Abonelik ödeme sorunu",
-  "ThePlanHasExpired": "Planın süresi doldu"
+  "ThePlanHasExpired": "Planın süresi doldu",
+  "owner": "Sahip",
+  "admin": "Yönetici",
+  "agent": "Ajan",
+  "Conversations": "Konuşmalar",
+  "Apps":"Uygulamalar",
+  "Analytics":"Analitik",
+  "Activities": "Faaliyetler",
+  "History": "Tarih",
+  "Settings": "Ayarlar"
 }
+
