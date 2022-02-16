@@ -58,6 +58,7 @@ import * as PACKAGE from 'package.json';
 import { filter } from 'rxjs/operators'
 import { WebSocketJs } from './services/websocket/websocket-js';
 import { Location } from '@angular/common'
+import { createOfflineCompileUrlResolver } from '@angular/compiler';
 // import { filter } from 'rxjs/operators';
 
 @Component({
@@ -98,7 +99,8 @@ export class AppComponent implements OnInit {
   public missingConnectionToast: any
   public executedInitializeAppByWatchConnection: boolean = false;
   private version: string;
-
+  IS_ONLINE: boolean;
+IS_ON_MOBILE_DEVICE: boolean;
   // private isOnline: boolean = false;
 
   wsService: WebSocketJs;
@@ -145,10 +147,19 @@ export class AppComponent implements OnInit {
 
     this.saveInStorageNumberOfOpenedChatTab();
     this.listenChatAlreadyOpenWithoutParamsInMobileMode()
-
+    this.isOnMobileDevice()
     // this.listenToUrlChanges();
     // this.getPageState();
   }
+
+  isOnMobileDevice() {
+    this.IS_ON_MOBILE_DEVICE = false;
+    if (/Android|iPhone/i.test(window.navigator.userAgent)) {
+      this.IS_ON_MOBILE_DEVICE = true;
+    }
+  console.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE ) 
+    return this.IS_ON_MOBILE_DEVICE;
+}
 
 
 
@@ -647,7 +658,7 @@ export class AppComponent implements OnInit {
       })
     } else {
       this.logger.warn('[APP-COMP] >>> I AM NOT LOGGED IN <<<')
-
+      this.IS_ONLINE = false;
       // clearTimeout(this.timeModalLogin);
       // this.timeModalLogin = setTimeout(() => {
       if (!this.hadBeenCalledOpenModal) {
@@ -830,10 +841,14 @@ export class AppComponent implements OnInit {
           // const user = this.tiledeskAuthService.getCurrentUser();
           // if (this.isOnline === false) {
           // if (AUTH_STATE_ONLINE) {
+          this.IS_ONLINE = true;
+          console.log('[APP-COMP] IS_ONLINE', this.IS_ONLINE)
           this.goOnLine();
           // }
         } else if (state === AUTH_STATE_OFFLINE) {
           // this.checkTokenAndGoOffline() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
+          this.IS_ONLINE = false;
+          console.log('[APP-COMP] IS_ONLINE', this.IS_ONLINE)
           this.goOffLine()
         }
       }, error => {

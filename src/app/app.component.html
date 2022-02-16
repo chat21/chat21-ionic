@@ -3,18 +3,17 @@
 
     <app-image-viewer></app-image-viewer>
 
-    <div class="sidebar">
+    <div class="sidebar" [ngClass]="{'hide-sidebar': IS_ONLINE === false || IS_ON_MOBILE_DEVICE === true}">
       <app-sidebar></app-sidebar>
     </div>
     
-    <div class="user-details-sidebar">
-      <app-sidebar-user-details>
-      </app-sidebar-user-details>
+    <div class="user-details-sidebar" [ngClass]="{'hide-sidebar': IS_ONLINE === false || IS_ON_MOBILE_DEVICE === true}">
+      <app-sidebar-user-details> </app-sidebar-user-details>
     </div>
-
+ 
     <ion-split-pane when="md" contentId="main">
 
-      <ion-nav #sidebarNav [root]="sidebarPage"></ion-nav>
+      <ion-nav #sidebarNav [root]="sidebarPage" [ngClass]="{'sidebar-visible': IS_ONLINE === true,  'sidebar-hidden': IS_ON_MOBILE_DEVICE === true}"></ion-nav>
       <!--  our side menu  -->
       <!-- <ion-router-outlet id="sidebar" name='sidebar' animated="false" #masterNav> -->
       <!-- <app-conversations-list></app-conversations-list> -->
