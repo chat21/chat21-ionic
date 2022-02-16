@@ -48,7 +48,7 @@
 
 
             <div class="flex-child-right">
-              <div class="project-name-project-for-panel" [tooltip]="conversationsInQueueOnProjectName"
+              <div class="project-name-project-for-panel" [ngClass]="{'project-name-project-for-panel-on-desktop': IS_ON_MOBILE_DEVICE === false}" [tooltip]="conversationsInQueueOnProjectName"
                 [options]="tooltipOptions" placement="top" content-type="template" (click)="openUnservedConvs()">
                 <div class="project---name"> {{ project?.id_project?.name }} </div>
               </div>
@@ -111,7 +111,7 @@
               </div>
             </div>
 
-            <div class="flex-child-view-all-convs">
+            <div *ngIf="IS_ON_MOBILE_DEVICE === true" class="flex-child-view-all-convs">
               <div class="view-all-convs-icon-wpr" style="cursor: pointer;" [tooltip]="viewAllConvs"
                 [options]="tooltipOptions" placement="top" content-type="template">
 
