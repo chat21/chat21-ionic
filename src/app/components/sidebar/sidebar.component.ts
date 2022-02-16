@@ -8,6 +8,8 @@ import { MessagingAuthService } from 'src/chat21-core/providers/abstract/messagi
 import { CustomTranslateService } from 'src/chat21-core/providers/custom-translate.service';
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+import { TranslateService } from '@ngx-translate/core';
+import { EventsService } from 'src/app/services/events-service';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,23 +26,33 @@ export class SidebarComponent implements OnInit {
   user: any;
   IS_BUSY: boolean;
 
-  isVisibleAPP: boolean = true
-  isVisibleANA: boolean = true
-  isVisibleACT: boolean = true
+  isVisibleAPP: boolean;
+  isVisibleANA: boolean;
+  isVisibleACT: boolean;
   photo_profile_URL: string;
   project_id: string;
   DASHBOARD_URL: string;
   HAS_CLICKED_OPEN_USER_DETAIL: boolean = false
   public translationMap: Map<string, string>;
+  public_Key: any;
+  conversations_lbl: string;
+  contacts_lbl: string;
+  apps_lbl: string;
+  analytics_lbl: string;
+  activities_lbl: string;
+  history_lbl: string;
+  settings_lbl: string;
 
   constructor(
     public imageRepoService: ImageRepoService,
     public appStorageService: AppStorageService,
-
     public appConfig: AppConfigProvider,
     private translateService: CustomTranslateService,
     private messagingAuthService: MessagingAuthService,
     public wsService: WebsocketService,
+    public appConfigProvider: AppConfigProvider,
+    private translate: TranslateService,
+    public events: EventsService
   ) { }
 
   ngOnInit() {
@@ -48,8 +60,167 @@ export class SidebarComponent implements OnInit {
     console.log('[SIDEBAR] DASHBOARD_URL ', this.DASHBOARD_URL)
     this.getStoredProjectAndDashboardBaseUrl()
     this.subcribeToAuthStateChanged()
-
     this.listenTocurrentProjectUserUserAvailability$()
+    this.getOSCODE();
+    this.getCurrentChatLangAndTranslateLabels();
+  }
+
+  getCurrentChatLangAndTranslateLabels() {
+    const browserLang = this.translate.getBrowserLang();
+    const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
+    console.log('[SIDEBAR] - ngOnInit - currentUser ', currentUser)
+    console.log('[SIDEBAR] - ngOnInit - browserLang ', browserLang)
+    let currentUserId = ''
+    if (currentUser) {
+      currentUserId = currentUser.uid
+      console.log('[SIDEBAR] - ngOnInit - currentUserId ', currentUserId)
+    }
+
+    const stored_preferred_lang = localStorage.getItem(currentUserId + '_lang');
+    console.log('[SIDEBAR] stored_preferred_lang: ', stored_preferred_lang);
+
+    let chat_lang = '';
+    if (browserLang && !stored_preferred_lang) {
+      chat_lang = browserLang
+      console.log('[SIDEBAR] chat_lang: ', chat_lang);
+    } else if (browserLang && stored_preferred_lang) {
+      chat_lang = stored_preferred_lang
+
+      console.log('[SIDEBAR] chat_lang: ', chat_lang);
+    }
+
+    this.translate.use(chat_lang);
+    this.translateLabels()
+  }
+
+
+  translateLabels() {
+    this.getConversationsTranslation();
+    this.getContactsTranslation();
+    this.getActivitiesTranslation();
+    this.getAppsTranslation();
+    this.getAnalyticsTranslation();
+    this.getHistoryTranslation();
+    this.getSettingsTranslation()
+  }
+
+  getConversationsTranslation() {
+    this.translate.get('Conversations')
+      .subscribe((text: string) => {
+        console.log('[SIDEBAR] - translate Conversations', text)
+        this.conversations_lbl = text
+      });
+  }
+
+  getContactsTranslation() {
+    this.translate.get('LABEL_CONTACTS')
+      .subscribe((text: string) => {
+        console.log('[SIDEBAR] - translate Contacts', text)
+        this.contacts_lbl = text
+      });
+  }
+
+  getAppsTranslation() {
+    this.translate.get('Apps')
+      .subscribe((text: string) => {
+        console.log('[SIDEBAR] - translate Apps', text)
+        this.apps_lbl = text
+      });
+  }
+
+  getAnalyticsTranslation() {
+    this.translate.get('Analytics')
+      .subscribe((text: string) => {
+        console.log('[SIDEBAR] - translate Analytics', text)
+        this.analytics_lbl = text
+      });
+  }
+
+  getActivitiesTranslation() {
+    this.translate.get('Activities')
+      .subscribe((text: string) => {
+        console.log('[SIDEBAR] - translate Activities', text)
+        this.activities_lbl = text
+      });
+  }
+
+  getHistoryTranslation() {
+    this.translate.get('History')
+      .subscribe((text: string) => {
+        console.log('[SIDEBAR] - translate History', text)
+        this.history_lbl = text
+      });
+  }
+
+  getSettingsTranslation() {
+    this.translate.get('Settings')
+      .subscribe((text: string) => {
+        console.log('[SIDEBAR] - translate Settings', text)
+        this.settings_lbl = text
+      });
+  }
+
+  getOSCODE() {
+    this.public_Key = this.appConfigProvider.getConfig().t2y12PruGU9wUtEGzBJfolMIgK;
+    this.logger.log('[SIDEBAR] AppConfigService getAppConfig public_Key', this.public_Key);
+
+    if (this.public_Key) {
+      let keys = this.public_Key.split("-");
+      this.logger.log('[SIDEBAR] PUBLIC-KEY - public_Key keys', keys)
+
+      keys.forEach(key => {
+
+        if (key.includes("ANA")) {
+
+          let ana = key.split(":");
+
+          if (ana[1] === "F") {
+            this.isVisibleANA = false;
+          } else {
+            this.isVisibleANA = true;
+          }
+        }
+
+        if (key.includes("ACT")) {
+          let act = key.split(":");
+          if (act[1] === "F") {
+            this.isVisibleACT = false;
+          } else {
+            this.isVisibleACT = true;
+          }
+        }
+
+        if (key.includes("APP")) {
+          let lbs = key.split(":");
+          if (lbs[1] === "F") {
+            this.isVisibleAPP = false;
+          } else {
+            this.isVisibleAPP = true;
+          }
+        }
+      });
+
+
+      if (!this.public_Key.includes("ANA")) {
+        this.isVisibleANA = false;
+      }
+
+      if (!this.public_Key.includes("ACT")) {
+        this.isVisibleACT = false;
+      }
+
+
+      if (!this.public_Key.includes("APP")) {
+        this.isVisibleAPP = false;
+      }
+
+    } else {
+      this.isVisibleANA = false;
+      this.isVisibleACT = false;
+      this.isVisibleAPP = false;
+    }
+
+
   }
 
   listenTocurrentProjectUserUserAvailability$() {
@@ -85,17 +256,9 @@ export class SidebarComponent implements OnInit {
     console.log('[SIDEBAR] OPEN USER DTLS SIDE PANEL elSidebarUserDtls ', elSidebarUserDtls)
     if (elSidebarUserDtls) {
       elSidebarUserDtls.classList.add("active");
+      this.events.publish('userdetailsidebar:opened', true);
     }
-    // const elemNavbar = <HTMLElement>document.querySelector('.navbar-absolute');
-    // console.log('[SIDEBAR] elemNavBar ', elemNavbar)
-    // if (elemNavbar) {
-    //     elemNavbar.classList.add("navbar-absolute-custom-class");
-    // }
-    // const elemNavbarBrand = <HTMLElement>document.querySelector('.navbar-brand');
-    // console.log('[SIDEBAR] elemNavbarBrand ', elemNavbarBrand)
-    // if (elemNavbarBrand) {
-    //     elemNavbarBrand.classList.add("navbar-brand-z-index-zero")
-    // }
+
   }
 
   onCloseUserDetailsSidebar($event) {
