@@ -5,6 +5,11 @@
 - Bug Fix: in the "info-profile" page avoid the "uid of undefined" error
 - Adds the "user details" sidebar
 - Adds the languages flags images
+- Allows to close the "user details" sidebar by clicking outside it
+- Adds the tooltips to the links of the sidebar
+- Hides the sidebar when the teammate logs out and if the app is on a mobile device
+- Hides the button to pin a project if the app is not on a mobile device in the item showing unassigned conversations
+- Gets in the sidebar the feature tokens from the environment variables
 
 ### 3.0.61-rc1
 - Adds a sidebar that allows navigation to the dashboard
