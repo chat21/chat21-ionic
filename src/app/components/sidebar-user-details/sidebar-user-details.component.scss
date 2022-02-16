@@ -86,25 +86,40 @@ button.user-details-btn-close {
     text-transform: uppercase;
     color: #647491;
     position: relative;
-    top: -2px;
+    top: -3px;
+}
+
+.user-details-dshbrd-lang-code {
+    text-transform: uppercase;color: #647491;
+    font-family: "Roboto", sans-serif !important;
+    font-size: 14px;
 }
 
 .user-details-avatar {
     text-align: center;
     cursor: pointer;
     position: absolute;
-    top: 85px;
+    top: 82px;
     border-radius: 50%;
-    padding: 4px;
+    padding: 4px 4px 1px 4px;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
     left: 50%;
     background: #2d323e;
 }
 
+// width: 109px;
+// height: 109px;
+// margin: 0;
+// border-radius: 50%;
+// -o-object-fit: cover;
+// object-fit: cover;
+// position: relative;
+// top: 2px;
+
 .user-img-in-sidebar-user-details {
-    width: 102px;
-    height: 102px;
+    width: 103px;
+    height: 103px;
     margin: 0;
     border-radius: 50%;
     -o-object-fit: cover;
@@ -120,9 +135,14 @@ button.user-details-btn-close {
 }
 
 .user-details-fullname > h3 {
-    font-size: 17px;
+    // font-size: 17px;
     text-align: center;
     margin-bottom: 5px;
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-weight: 500;
+    line-height: 24px;
+   
 }
 
 .user-details-email {
@@ -137,6 +157,10 @@ button.user-details-btn-close {
     font-size: 14px;
     text-align: center;
     margin-top: 5px;
+    font-family: 'Poppins';
+    font-weight: 400;
+    line-height: 1px;
+   
 }
 
 .user-details-role {
@@ -148,12 +172,12 @@ button.user-details-btn-close {
 }
 
 .user-details-role > h3 {
-    font-size: 10px;
+    font-size: 11px;
     text-align: center;
     margin-top: 5px;
     text-transform: uppercase;
     color: #a9afbb;
-    font-weight: 400;
+    font-weight: 500;
     font-family: 'Roboto', sans-serif !important;
    
 }
@@ -170,6 +194,13 @@ button.user-details-btn-close {
     left: 50%;
     margin: auto;
     position: absolute;
+}
+
+.first-divider {
+    margin-top: 355px;
+    border: 0;
+    border-top: 1px solid rgba(255, 255,255, 0.2);
+    margin-bottom: 20px;
 }
 
 .camera-on-hover {
@@ -209,7 +240,11 @@ button.user-details-btn-close {
 }
 
 .user-details-plan-info {
-    font-size: 12px;
+    font-size: 13px;
+    text-transform: capitalize;
+    color: #a9afbb;
+    font-weight: 500;
+    line-height: 21px;
 }
 
 .user-details-footer-section {
@@ -221,13 +256,15 @@ button.user-details-btn-close {
     text-align: center;
     cursor: pointer;
     padding-bottom: 15px;
-    padding-top: 100px;
+    padding-top: 200px;
+    font-size: 16px;
+    font-weight: 400;
     // bottom: 50px;
     // top:355px
 }
 
 .footer-margin-top-pricing-no-visible {
-    padding-top: 142px;
+    padding-top: 240px;
 }
 .user-details-logout-icon {
     color: #a9afbb;
