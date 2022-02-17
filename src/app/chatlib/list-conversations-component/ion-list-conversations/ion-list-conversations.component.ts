@@ -35,7 +35,7 @@ export class IonListConversationsComponent extends ListConversationsComponent im
   public browserLang: string;
 
   public PROJECT_FOR_PANEL: any;
-
+  public archive_btn_tooltip: string;
   /**
    * 
    * @param iterableDiffers 
@@ -78,6 +78,19 @@ export class IonListConversationsComponent extends ListConversationsComponent im
 
     // console.log('[ION-LIST-CONVS-COMP] - DASHBOARD_BASE_URL ', DASHBOARD_BASE_URL)
     this.PROJECT_FOR_PANEL = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_BASE_URL + '#/project-for-panel');
+    this.translateLbl();
+  }
+
+  translateLbl() {
+    this.translate.get('Resolve')
+      .subscribe((text: string) => {
+        // this.deleteContact_msg = text;
+        
+
+        this.archive_btn_tooltip = text;
+       console.log('[ION-LIST-CONVS-COMP] getTranslations Resolve : ', text)
+       
+      });
   }
 
   setMomentLocale() {
