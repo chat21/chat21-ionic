@@ -1,5 +1,5 @@
 {
-    "t2y12PruGU9wUtEGzBJfolMIgK": "",
+    "t2y12PruGU9wUtEGzBJfolMIgK":"${FEATURES_TOKEN}",
     "chatEngine": "mqtt",
     "updloaEngine": "native",
     "pushEngine":"none",
