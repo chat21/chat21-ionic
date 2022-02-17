@@ -61,6 +61,8 @@ In progress git
         fileUploadAccept:"*/*",
         logLevel":"<YOUR-PREFERRED-LOG-LEVEL>",
         supportMode: false,
+        teammatesButton: false,
+        archivedButton: false,
         firebaseConfig: {
             tenant:"tilechat",
             apiKey: '123ABC..',
