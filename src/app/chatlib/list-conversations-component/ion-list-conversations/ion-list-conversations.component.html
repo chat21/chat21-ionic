@@ -118,7 +118,7 @@
   <ion-note *ngIf="!conversation.archived" class="conversation_time">{{conversation.timestamp | amTimeAgo}}</ion-note>
 
   <ion-buttons slot="end">
-    <ion-button *ngIf="!conversation.archived"
+    <ion-button *ngIf="!conversation.archived"  tooltip="{{ archive_btn_tooltip }}" [options]="tooltipOptions" placement="bottom"
       [ngClass]="{'hide': !isApp, 'button-on-desktop': !isApp, 'button-on-mobile': isApp  }"
       id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear
       item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
@@ -142,7 +142,7 @@
       {{browserLang === 'en' ? (conversation.timestamp | amDateFormat:'MMM DD YYYY') : (conversation.timestamp| amDateFormat:'DD MMM YYYY') }}
       <!-- {{conversation.timestamp | amDateFormat:'DD MMM YYYY'}} -->
     </span>
-    <i class="material-icons" item-end style="font-size: 15px;font-weight: 400;color: #666666;"> history </i>
+    <!-- <i class="material-icons" item-end style="font-size: 15px;font-weight: 400;color: #666666;"> history </i> -->
   </div>
 
   <!-- && !conversation?.archived -->
