@@ -33,4 +33,6 @@ export const environment = {
     authPersistence: 'LOCAL',
     logLevel: 'Info',
     supportMode: false,
+    teammatesButton: false,
+    archivedButton: false,
 };
