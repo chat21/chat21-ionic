@@ -58,7 +58,7 @@ import * as PACKAGE from 'package.json';
 import { filter } from 'rxjs/operators'
 import { WebSocketJs } from './services/websocket/websocket-js';
 import { Location } from '@angular/common'
-import { createOfflineCompileUrlResolver } from '@angular/compiler';
+
 // import { filter } from 'rxjs/operators';
 
 @Component({
@@ -100,7 +100,8 @@ export class AppComponent implements OnInit {
   public executedInitializeAppByWatchConnection: boolean = false;
   private version: string;
   IS_ONLINE: boolean;
-IS_ON_MOBILE_DEVICE: boolean;
+  IS_ON_MOBILE_DEVICE: boolean;
+  SUPPORT_MODE: boolean;
   // private isOnline: boolean = false;
 
   wsService: WebSocketJs;
@@ -157,9 +158,9 @@ IS_ON_MOBILE_DEVICE: boolean;
     if (/Android|iPhone/i.test(window.navigator.userAgent)) {
       this.IS_ON_MOBILE_DEVICE = true;
     }
-  console.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE ) 
+    console.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
     return this.IS_ON_MOBILE_DEVICE;
-}
+  }
 
 
 
@@ -297,6 +298,13 @@ IS_ON_MOBILE_DEVICE: boolean;
    */
   ngOnInit() {
     const appconfig = this.appConfigProvider.getConfig();
+    console.log('[APP-COMP] appconfig', appconfig)
+    if (appconfig && appconfig.supportMode) {
+      this.SUPPORT_MODE = appconfig.supportMode
+      console.log('[APP-COMP] appconfig > SUPPORT_MODE', this.SUPPORT_MODE)
+    } else {
+      this.SUPPORT_MODE = false;
+    }
     this.persistence = appconfig.authPersistence;
     this.appStorageService.initialize(environment.storage_prefix, this.persistence, '')
     // this.logger.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
