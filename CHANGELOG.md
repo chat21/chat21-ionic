@@ -7,9 +7,18 @@
 - Adds the languages flags images
 - Allows to close the "user details" sidebar by clicking outside it
 - Adds the tooltips to the links of the sidebar
-- Hides the sidebar when the teammate logs out and if the app is on a mobile device
-- Hides the button to pin a project if the app is not on a mobile device in the item showing unassigned conversations
+- Hides the sidebar when the teammate logs out, if the app is on a mobile device and if the environment variable "supportMode" is set to false
+- Hides in the item showing unassigned conversations the button to pin a project if the app is not on a mobile device 
 - Gets in the sidebar the feature tokens from the environment variables
+- Install the "Roboto" font
+- Changes font priority in global.scss: replace "Helvetica Neue" font with "Roboto" font
+- Imports the "Poppins" font family into index.html
+- Adds the "Resolve" tooltip to the "archive" button available in the conversation list
+- Displays the "Resolved Conversations" button and the "Teammates" button in the header of the conversation list  based on how the "teammatesButton" and "archivedButton" environment variables are set
+- Adds "teammatesButton" and "archivedButton" variables to the environments
+- Adds the "TEAMMATES_BUTTON" and the "ARCHIVED_BUTTON" variables to the env.sample file
+- Adds the "teammatesButton" and the "archivedButton" variables to the "chat-config-template.json" file and to "the chat-config.json" file
+- Updates the section "Configuration" of the "README.md" file with the new variables "teammatesButton" and the "archivedButton" 
 
 ### 3.0.61-rc1
 - Adds a sidebar that allows navigation to the dashboard
