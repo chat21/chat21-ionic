@@ -1,6 +1,6 @@
 <ion-toolbar style="height:60px" [ngClass]="{'bottom-border-on-mobile':IS_ON_MOBILE_DEVICE === true }">
 
-  <ion-buttons *ngIf="IS_ON_MOBILE_DEVICE === true" slot="start" style="height:60px">
+  <ion-buttons *ngIf="IS_ON_MOBILE_DEVICE === true || supportMode === false" slot="start" style="height:60px">
     <ion-button ion-button icon-only fill="clear" (click)="onOpenProfileInfo($event)">
       <ion-icon slot="icon-only" name="reorder-three-outline"></ion-icon>
     </ion-button>
@@ -13,13 +13,13 @@
 
   <ion-buttons slot="end">
 
-    <ion-button *ngIf="supportMode" ion-button fill="clear" (click)="onClickArchivedConversation()">
+    <ion-button *ngIf="archived_btn" ion-button fill="clear" (click)="onClickArchivedConversation()">
       <ion-icon slot="icon-only" name="file-tray-full-outline"></ion-icon>
       <!-- <ion-icon name="file-tray-stacked-outline"></ion-icon> -->
       <!-- <ion-icon name="file-tray-full-outline"></ion-icon> -->
     </ion-button>
 
-    <ion-button *ngIf="supportMode" ion-button fill="clear" (click)="onOpenContactsDirectory($event)">
+    <ion-button *ngIf="teammates_btn" ion-button fill="clear" (click)="onOpenContactsDirectory($event)">
       <!-- <ion-icon slot="icon-only" name="create-outline"></ion-icon> -->
       <ion-icon slot="icon-only" name="people-outline"></ion-icon>
 

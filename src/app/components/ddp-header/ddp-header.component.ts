@@ -8,6 +8,8 @@ import { EventsService } from 'src/app/services/events-service';
 export class DdpHeaderComponent implements OnInit {
   @Input() numberOpenConv: number;
   @Input() supportMode: boolean;
+  @Input() archived_btn: boolean;
+  @Input() teammates_btn: boolean;
   @Output() openContactsDirectory = new EventEmitter();
   @Output() openProfileInfo = new EventEmitter();
   IS_ON_MOBILE_DEVICE: boolean;
