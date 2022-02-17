@@ -27,5 +27,7 @@
     "dashboardUrl": "https://support-pre.tiledesk.com/dashboard/",
     "wsUrl": "ws://localhost:3000/",
     "wsUrlRel": "${WS_URL_RELATIVE}",
-    "supportMode": false
+    "supportMode": false,
+    "teammatesButton": false,
+    "archivedButton": false
 }
