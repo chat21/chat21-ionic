@@ -42,6 +42,7 @@
             ],
             "styles": [
               "node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
               {
                 "input": "src/theme/variables.scss"
               },
