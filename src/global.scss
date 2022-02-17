@@ -48,9 +48,17 @@ body {
     user-select: text;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    // font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     overflow: auto;
     text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100% !important;
+    // -webkit-font-smoothing: subpixel-antialiased !important;
+    // text-shadow: 0px 0px 0px !important;
+    // -webkit-text-stroke-width: 0.01px !important;
+  
 }
 
 // Ionic 'Split Pane' styles need to be tweaked to
@@ -407,7 +415,7 @@ select:-webkit-autofill:focus {
 }
 
 .chat-tooltip {
-    font-family: "Roboto", "Google Sans", Helvetica, Arial, sans-serif;
+    font-family: "Roboto", Helvetica, Arial, sans-serif;
     font-size: 12px;
     font-style: normal;
     letter-spacing: normal;
@@ -588,17 +596,16 @@ select:-webkit-autofill:focus {
     align-items: center;
 }
 
-
+// User details Sidebar
 .user-details-sidebar {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
-    z-index:1;
+    z-index: 1;
 }
 
 // Sidebar
-
 .sidebar {
     transition-property: top, bottom, width;
     transition-duration: 0.2s, 0.2s, 0.35s;
@@ -671,8 +678,6 @@ select:-webkit-autofill:focus {
     display: none;
 }
 
-
-
 .tiledesk-nav-avatar {
     background-color: #2d323e !important;
     color: #fff !important;
@@ -689,7 +694,6 @@ select:-webkit-autofill:focus {
     transform: translateX(-50%);
     left: 50%;
 }
-
 
 .avatar-container .sidebar-avatar {
     width: 40px;
@@ -788,7 +792,7 @@ select:-webkit-autofill:focus {
     color: #ffffff;
 }
 
-.item-active{
+.item-active {
     height: 40px;
     background-color: #3ea9f5;
     color: #fff !important;
@@ -824,7 +828,7 @@ select:-webkit-autofill:focus {
 
 .logo-img-wpr {
     text-transform: none;
-   
+
     min-height: 40px;
     padding-left: 0px !important;
 }
@@ -835,8 +839,6 @@ select:-webkit-autofill:focus {
     min-height: 40px;
     max-height: 40px;
 }
-
-
 
 .small-sidebar-email {
     display: none;
@@ -894,7 +896,6 @@ select:-webkit-autofill:focus {
 
 /* SIDEBAR NAV ITEMS  */
 
-
 /* SIDEBAR NAV ITEMS  */
 
 .is-user-online {
@@ -918,7 +919,6 @@ select:-webkit-autofill:focus {
     width: 60px; // for SMALL SIDEBAR
 }
 
-
 /* *** SMALL SIDEBAR STYLE ***  */
 .small-sidebar-tiledesk-nav-user {
     height: 40px;
@@ -928,7 +928,6 @@ select:-webkit-autofill:focus {
 .small-sidebar-avatar {
     top: 12px;
 }
-
 
 .small-sidebar-email {
     display: none;
