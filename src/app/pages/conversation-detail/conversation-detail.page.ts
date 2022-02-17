@@ -249,33 +249,34 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.public_Key = this.appConfigProvider.getConfig().t2y12PruGU9wUtEGzBJfolMIgK;
     this.logger.log('[CONVS-DETAIL] AppConfigService getAppConfig public_Key', this.public_Key);
 
-    let keys = this.public_Key.split("-");
-    this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - public_Key keys', keys)
+    if (this.public_Key) {
+      let keys = this.public_Key.split("-");
+      this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - public_Key keys', keys)
 
-    keys.forEach(key => {
-
-
-      if (key.includes("CAR")) {
-        let car = key.split(":");
-        if (car[1] === "F") {
-          this.areVisibleCAR = false;
-          this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
-        } else {
-          this.areVisibleCAR = true;
-          this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+      keys.forEach(key => {
+        if (key.includes("CAR")) {
+          let car = key.split(":");
+          if (car[1] === "F") {
+            this.areVisibleCAR = false;
+            this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+          } else {
+            this.areVisibleCAR = true;
+            this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+          }
         }
+
+      });
+
+      if (!this.public_Key.includes("CAR")) {
+        this.areVisibleCAR = false;
+        this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
       }
-
-    });
-
-    if (!this.public_Key.includes("CAR")) {
+    } else {
       this.areVisibleCAR = false;
-      this.logger.log('[CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
     }
   }
 
   watchToConnectionStatus() {
-
     this.networkService.checkInternetFunc().subscribe(isOnline => {
       this.checkInternet = isOnline
       // console.log('[CONVS-LIST-PAGE] - watchToConnectionStatus - isOnline', this.checkInternet)
@@ -488,7 +489,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       "NO_CANNED_RESPONSES",
       "YES_CANNED_RESPONSES",
       "THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE",
-      "TO_CREATE_THEM_GO_TO_THE_PROJECT"
+      "TO_CREATE_THEM_GO_TO_THE_PROJECT",
     ];
 
     this.translationMap = this.customTranslateService.translateLanguage(keys);
