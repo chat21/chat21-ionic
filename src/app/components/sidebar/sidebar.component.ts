@@ -57,7 +57,7 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.DASHBOARD_URL = this.appConfig.getConfig().dashboardUrl + '#/project/';
-    console.log('[SIDEBAR] DASHBOARD_URL ', this.DASHBOARD_URL)
+    // console.log('[SIDEBAR] DASHBOARD_URL ', this.DASHBOARD_URL)
     this.getStoredProjectAndDashboardBaseUrl()
     this.subcribeToAuthStateChanged()
     this.listenTocurrentProjectUserUserAvailability$()
@@ -68,25 +68,25 @@ export class SidebarComponent implements OnInit {
   getCurrentChatLangAndTranslateLabels() {
     const browserLang = this.translate.getBrowserLang();
     const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
-    console.log('[SIDEBAR] - ngOnInit - currentUser ', currentUser)
-    console.log('[SIDEBAR] - ngOnInit - browserLang ', browserLang)
+    // console.log('[SIDEBAR] - ngOnInit - currentUser ', currentUser)
+    // console.log('[SIDEBAR] - ngOnInit - browserLang ', browserLang)
     let currentUserId = ''
     if (currentUser) {
       currentUserId = currentUser.uid
-      console.log('[SIDEBAR] - ngOnInit - currentUserId ', currentUserId)
+      // console.log('[SIDEBAR] - ngOnInit - currentUserId ', currentUserId)
     }
 
     const stored_preferred_lang = localStorage.getItem(currentUserId + '_lang');
-    console.log('[SIDEBAR] stored_preferred_lang: ', stored_preferred_lang);
+    // console.log('[SIDEBAR] stored_preferred_lang: ', stored_preferred_lang);
 
     let chat_lang = '';
     if (browserLang && !stored_preferred_lang) {
       chat_lang = browserLang
-      console.log('[SIDEBAR] chat_lang: ', chat_lang);
+      this.logger.log('[SIDEBAR] chat_lang: ', chat_lang);
     } else if (browserLang && stored_preferred_lang) {
       chat_lang = stored_preferred_lang
 
-      console.log('[SIDEBAR] chat_lang: ', chat_lang);
+      this.logger.log('[SIDEBAR] chat_lang: ', chat_lang);
     }
 
     this.translate.use(chat_lang);
@@ -115,7 +115,7 @@ export class SidebarComponent implements OnInit {
   getContactsTranslation() {
     this.translate.get('LABEL_CONTACTS')
       .subscribe((text: string) => {
-        console.log('[SIDEBAR] - translate Contacts', text)
+        // console.log('[SIDEBAR] - translate Contacts', text)
         this.contacts_lbl = text
       });
   }
@@ -123,7 +123,7 @@ export class SidebarComponent implements OnInit {
   getAppsTranslation() {
     this.translate.get('Apps')
       .subscribe((text: string) => {
-        console.log('[SIDEBAR] - translate Apps', text)
+        // console.log('[SIDEBAR] - translate Apps', text)
         this.apps_lbl = text
       });
   }
@@ -131,7 +131,7 @@ export class SidebarComponent implements OnInit {
   getAnalyticsTranslation() {
     this.translate.get('Analytics')
       .subscribe((text: string) => {
-        console.log('[SIDEBAR] - translate Analytics', text)
+        // console.log('[SIDEBAR] - translate Analytics', text)
         this.analytics_lbl = text
       });
   }
@@ -139,7 +139,7 @@ export class SidebarComponent implements OnInit {
   getActivitiesTranslation() {
     this.translate.get('Activities')
       .subscribe((text: string) => {
-        console.log('[SIDEBAR] - translate Activities', text)
+        // console.log('[SIDEBAR] - translate Activities', text)
         this.activities_lbl = text
       });
   }
@@ -147,7 +147,7 @@ export class SidebarComponent implements OnInit {
   getHistoryTranslation() {
     this.translate.get('History')
       .subscribe((text: string) => {
-        console.log('[SIDEBAR] - translate History', text)
+        // console.log('[SIDEBAR] - translate History', text)
         this.history_lbl = text
       });
   }
@@ -155,7 +155,7 @@ export class SidebarComponent implements OnInit {
   getSettingsTranslation() {
     this.translate.get('Settings')
       .subscribe((text: string) => {
-        console.log('[SIDEBAR] - translate Settings', text)
+        // console.log('[SIDEBAR] - translate Settings', text)
         this.settings_lbl = text
       });
   }
@@ -225,7 +225,7 @@ export class SidebarComponent implements OnInit {
 
   listenTocurrentProjectUserUserAvailability$() {
     this.wsService.currentProjectUserAvailability$.subscribe((projectUser) => {
-      console.log('[SIDEBAR] - $UBSC TO WS USER AVAILABILITY & BUSY STATUS RES ', projectUser);
+      this.logger.log('[SIDEBAR] - $UBSC TO WS USER AVAILABILITY & BUSY STATUS RES ', projectUser);
 
       this.IS_AVAILABLE = projectUser['user_available']
       this.IS_BUSY = projectUser['isBusy']
@@ -249,11 +249,11 @@ export class SidebarComponent implements OnInit {
   }
 
   openUserDetailSidePanel() {
-    console.log('[SIDEBAR] OPEN UESER DTLS SIDE PANEL')
+    this.logger.log('[SIDEBAR] OPEN UESER DTLS SIDE PANEL')
     this.HAS_CLICKED_OPEN_USER_DETAIL = true
-    console.log('[SIDEBAR] OPEN USER DTLS SIDE PANEL ', this.HAS_CLICKED_OPEN_USER_DETAIL)
+    this.logger.log('[SIDEBAR] OPEN USER DTLS SIDE PANEL ', this.HAS_CLICKED_OPEN_USER_DETAIL)
     const elSidebarUserDtls = <HTMLElement>document.querySelector('#user-details');
-    console.log('[SIDEBAR] OPEN USER DTLS SIDE PANEL elSidebarUserDtls ', elSidebarUserDtls)
+    this.logger.log('[SIDEBAR] OPEN USER DTLS SIDE PANEL elSidebarUserDtls ', elSidebarUserDtls)
     if (elSidebarUserDtls) {
       elSidebarUserDtls.classList.add("active");
       this.events.publish('userdetailsidebar:opened', true);
@@ -262,16 +262,16 @@ export class SidebarComponent implements OnInit {
   }
 
   onCloseUserDetailsSidebar($event) {
-    console.log('[SIDEBAR] HAS_CLICKED_CLOSE_USER_DETAIL ', $event)
+    this.logger.log('[SIDEBAR] HAS_CLICKED_CLOSE_USER_DETAIL ', $event)
     this.HAS_CLICKED_OPEN_USER_DETAIL = $event
     const elemNavbar = <HTMLElement>document.querySelector('.navbar-absolute');
-    console.log('[SIDEBAR] elemNavBar ', elemNavbar)
+    this.logger.log('[SIDEBAR] elemNavBar ', elemNavbar)
     if (elemNavbar) {
       elemNavbar.classList.remove("navbar-absolute-custom-class")
     }
 
     const elemNavbarBrand = <HTMLElement>document.querySelector('.navbar-brand');
-    console.log('[SIDEBAR] elemNavbarBrand ', elemNavbarBrand)
+    this.logger.log('[SIDEBAR] elemNavbarBrand ', elemNavbarBrand)
     if (elemNavbarBrand) {
       elemNavbarBrand.classList.remove("navbar-brand-z-index-zero")
     }
@@ -279,14 +279,14 @@ export class SidebarComponent implements OnInit {
 
   subcribeToAuthStateChanged() {
     this.messagingAuthService.BSAuthStateChanged.subscribe((state) => {
-      console.log('[SIDEBAR] BSAuthStateChanged ', state)
+      this.logger.log('[SIDEBAR] BSAuthStateChanged ', state)
 
       if (state === 'online') {
         const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
-        console.log('[SIDEBAR] currentUser ', currentUser)
+        this.logger.log('[SIDEBAR] currentUser ', currentUser)
         if (currentUser) {
           this.photo_profile_URL = this.imageRepoService.getImagePhotoUrl(currentUser.uid)
-          console.log('[SIDEBAR] photo_profile_URL ', this.photo_profile_URL)
+          this.logger.log('[SIDEBAR] photo_profile_URL ', this.photo_profile_URL)
         }
 
       }
@@ -299,13 +299,13 @@ export class SidebarComponent implements OnInit {
     // console.log('[SIDEBAR] stored_project ', stored_project)
     if (stored_project) {
       const project = JSON.parse(stored_project)
-      console.log('[SIDEBAR] project ', project)
+      this.logger.log('[SIDEBAR] project ', project)
 
       this.project_id = project.id_project.id
-      console.log('[SIDEBAR] project_id ', this.project_id)
+      this.logger.log('[SIDEBAR] project_id ', this.project_id)
 
       this.USER_ROLE = project.role;
-      console.log('[SIDEBAR] USER_ROLE ', this.USER_ROLE)
+      this.logger.log('[SIDEBAR] USER_ROLE ', this.USER_ROLE)
     }
   }
 

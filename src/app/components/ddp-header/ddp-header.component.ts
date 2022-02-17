@@ -25,7 +25,7 @@ export class DdpHeaderComponent implements OnInit {
     if (/Android|iPhone/i.test(window.navigator.userAgent)) {
       this.IS_ON_MOBILE_DEVICE = true;
     }
-    console.log('[DDP-HEADER] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
+    // console.log('[DDP-HEADER] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
     return this.IS_ON_MOBILE_DEVICE;
   }
 

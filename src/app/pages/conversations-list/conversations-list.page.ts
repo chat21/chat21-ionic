@@ -206,7 +206,7 @@ export class ConversationListPage implements OnInit {
 
   getAppConfigToHideDiplayBtns() {
     const appConfig = this.appConfigProvider.getConfig();
-    console.log('[ION-LIST-CONVS-COMP] - appConfig ', appConfig)
+    // console.log('[ION-LIST-CONVS-COMP] - appConfig ', appConfig)
     if (appConfig && appConfig.supportMode) {
       this.supportMode = appConfig.supportMode;
     } else {

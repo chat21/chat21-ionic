@@ -298,10 +298,10 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     const appconfig = this.appConfigProvider.getConfig();
-    console.log('[APP-COMP] appconfig', appconfig)
+    // console.log('[APP-COMP] appconfig', appconfig)
     if (appconfig && appconfig.supportMode) {
       this.SUPPORT_MODE = appconfig.supportMode
-      console.log('[APP-COMP] appconfig > SUPPORT_MODE', this.SUPPORT_MODE)
+      // console.log('[APP-COMP] appconfig > SUPPORT_MODE', this.SUPPORT_MODE)
     } else {
       this.SUPPORT_MODE = false;
     }
@@ -850,13 +850,13 @@ export class AppComponent implements OnInit {
           // if (this.isOnline === false) {
           // if (AUTH_STATE_ONLINE) {
           this.IS_ONLINE = true;
-          console.log('[APP-COMP] IS_ONLINE', this.IS_ONLINE)
+          // console.log('[APP-COMP] IS_ONLINE', this.IS_ONLINE)
           this.goOnLine();
           // }
         } else if (state === AUTH_STATE_OFFLINE) {
           // this.checkTokenAndGoOffline() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
           this.IS_ONLINE = false;
-          console.log('[APP-COMP] IS_ONLINE', this.IS_ONLINE)
+          // console.log('[APP-COMP] IS_ONLINE', this.IS_ONLINE)
           this.goOffLine()
         }
       }, error => {

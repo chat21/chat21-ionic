@@ -76,25 +76,25 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
 
   listenOpenUserSidebarEvent() {
     this.events.subscribe('userdetailsidebar:opened', (openUserDetailsSidebar) => {
-    console.log('[SIDEBAR-USER-DETAILS] - listenOpenUserSidebarEvent - openUserDetailsSidebar', openUserDetailsSidebar);
+      this.logger.log('[SIDEBAR-USER-DETAILS] - listenOpenUserSidebarEvent - openUserDetailsSidebar', openUserDetailsSidebar);
     this.HAS_CLICKED_OPEN_USER_DETAIL = true;
     });
   }
 
   @HostListener('document:click', ['$event'])
   clickout(event) {
-    console.log('[SIDEBAR-USER-DETAILS] clickout event.target)', event.target)
-    console.log('[SIDEBAR-USER-DETAILS] clickout event.target)', event.target.id)
+    this.logger.log('[SIDEBAR-USER-DETAILS] clickout event.target)', event.target)
+    this.logger.log('[SIDEBAR-USER-DETAILS] clickout event.target)', event.target.id)
     const clicked_element_id = event.target.id
     if (this.eRef.nativeElement.contains(event.target)) {
-      console.log('[SIDEBAR-USER-DETAILS] clicked inside')
+      this.logger.log('[SIDEBAR-USER-DETAILS] clicked inside')
     } else {
-      console.log('[SIDEBAR-USER-DETAILS] HAS_CLICKED_OPEN_USER_DETAIL ', this.HAS_CLICKED_OPEN_USER_DETAIL)
+      this.logger.log('[SIDEBAR-USER-DETAILS] HAS_CLICKED_OPEN_USER_DETAIL ', this.HAS_CLICKED_OPEN_USER_DETAIL)
       if (this.HAS_CLICKED_OPEN_USER_DETAIL === true) {
         if (!clicked_element_id.startsWith("sidebaravatar")) {
           this.closeUserDetailSidePanel();
         }
-        console.log('[SIDEBAR-USER-DETAILS] clicked outside')
+        // this.logger.log('[SIDEBAR-USER-DETAILS] clicked outside')
       }
     }
   }
@@ -102,16 +102,16 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getCurrentChatLangAndTranslateLabels() {
     this.browserLang = this.translate.getBrowserLang();
     const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
-    console.log('[SIDEBAR-USER-DETAILS] - ngOnInit - currentUser ', currentUser)
-    console.log('[SIDEBAR-USER-DETAILS] - ngOnInit - browserLang ', this.browserLang)
+    this.logger.log('[SIDEBAR-USER-DETAILS] - ngOnInit - currentUser ', currentUser)
+    this.logger.log('[SIDEBAR-USER-DETAILS] - ngOnInit - browserLang ', this.browserLang)
     let currentUserId = ''
     if (currentUser) {
       currentUserId = currentUser.uid
-      console.log('[SIDEBAR-USER-DETAILS] - ngOnInit - currentUserId ', currentUserId)
+      this.logger.log('[SIDEBAR-USER-DETAILS] - ngOnInit - currentUserId ', currentUserId)
     }
 
     const stored_preferred_lang = localStorage.getItem(currentUserId + '_lang');
-    console.log('[SIDEBAR-USER-DETAILS] stored_preferred_lang: ', stored_preferred_lang);
+    this.logger.log('[SIDEBAR-USER-DETAILS] stored_preferred_lang: ', stored_preferred_lang);
 
 
     this.chat_lang = ''
@@ -119,13 +119,13 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
       this.chat_lang = this.browserLang
       this.flag_url = "assets/images/language_flag/" + this.chat_lang + ".png"
 
-      console.log('[SIDEBAR-USER-DETAILS] flag_url: ', this.flag_url);
-      console.log('[SIDEBAR-USER-DETAILS] chat_lang: ', this.chat_lang);
+      this.logger.log('[SIDEBAR-USER-DETAILS] flag_url: ', this.flag_url);
+      this.logger.log('[SIDEBAR-USER-DETAILS] chat_lang: ', this.chat_lang);
     } else if (this.browserLang && stored_preferred_lang) {
       this.chat_lang = stored_preferred_lang
       this.flag_url = "assets/images/language_flag/" + this.chat_lang + ".png"
-      console.log('[SIDEBAR-USER-DETAILS] flag_url: ', this.flag_url);
-      console.log('[SIDEBAR-USER-DETAILS] chat_lang: ', this.chat_lang);
+      this.logger.log('[SIDEBAR-USER-DETAILS] flag_url: ', this.flag_url);
+      this.logger.log('[SIDEBAR-USER-DETAILS] chat_lang: ', this.chat_lang);
     }
 
     this.translate.use(this.chat_lang);
@@ -143,8 +143,8 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
 
   getOSCODE() {
     this.public_Key = this.appConfigProvider.getConfig().t2y12PruGU9wUtEGzBJfolMIgK;
-    console.log('[SIDEBAR-USER-DETAILS] AppConfigService getAppConfig public_Key', this.public_Key);
-    console.log('[SIDEBAR-USER-DETAILS] AppConfigService getAppConfig', this.appConfigProvider.getConfig());
+    this.logger.log('[SIDEBAR-USER-DETAILS] AppConfigService getAppConfig public_Key', this.public_Key);
+    this.logger.log('[SIDEBAR-USER-DETAILS] AppConfigService getAppConfig', this.appConfigProvider.getConfig());
     if (this.public_Key) {
       let keys = this.public_Key.split("-");
       this.logger.log('[SIDEBAR-USER-DETAILS] PUBLIC-KEY - public_Key keys', keys)
@@ -173,16 +173,16 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getAvailableTranslation() {
     this.translate.get('Available')
       .subscribe((text: string) => {
-        // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+       
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.IS_AVAILABLE_msg = text
       });
   }
   getUnavailableTranslation() {
     this.translate.get('Unavailable')
       .subscribe((text: string) => {
-        // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+      
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.IS_UNAVAILABLE_msg = text
       });
   }
@@ -190,8 +190,8 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getIsBusyTranslation() {
     this.translate.get('Busy')
       .subscribe((text: string) => {
-        // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+       
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.IS_BUSY_msg = text
       });
   }
@@ -199,8 +199,8 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getSubscriptionPaymentProblemTranslation() {
     this.translate.get('SubscriptionPaymentProblem')
       .subscribe((text: string) => {
-        // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+      
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.SUBSCRIPTION_PAYMENT_PROBLEM_msg = text
       });
   }
@@ -208,8 +208,8 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getThePlanHasExpiredTranslation() {
     this.translate.get('ThePlanHasExpired')
       .subscribe((text: string) => {
-        // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+     
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.THE_PLAN_HAS_EXPIRED_msg = text
       });
   }
@@ -218,30 +218,28 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getCurrentStoredProject() {
     try {
       const project = localStorage.getItem('last_project')
-
-
       if (project) {
         const projectObjct = JSON.parse(localStorage.getItem('last_project'))
-        console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT ', projectObjct)
+        // console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT ', projectObjct)
 
         this.projectID = projectObjct['id_project']['_id']
-        console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > PROJECT ID ', this.projectID);
+        // console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > PROJECT ID ', this.projectID);
 
         this.prjct_name = projectObjct['id_project']['name']
-        console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > PROJECT NAME ', this.prjct_name);
+        // console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > PROJECT NAME ', this.prjct_name);
 
         this.plan_type = projectObjct['id_project']['profile']['type'];
-        console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > PLAN TYPE ', this.plan_type);
+        // console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > PLAN TYPE ', this.plan_type);
 
         const trial_expired = projectObjct['id_project']['trialExpired']
-        console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > TRIAL EXPIRED ', trial_expired);
+        // console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > TRIAL EXPIRED ', trial_expired);
 
         const profile_name = projectObjct['id_project']['profile']['name'];
-        console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > PROFILE NAME ', profile_name);
+        // console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > PROFILE NAME ', profile_name);
 
         this.plan_name = projectObjct['id_project']['profile']['name'];
         this.plan_subscription_is_active = projectObjct['id_project']['isActiveSubscription'];
-        
+
         if (this.plan_type === 'free') {
 
           if (trial_expired === false) {
@@ -258,14 +256,14 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
       }
 
     } catch (err) {
-      console.error('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT ERR ', err)
+      this.logger.error('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT ERR ', err)
     }
 
     try {
       this.tiledeskToken = this.appStorageService.getItem('tiledeskToken');
-      console.log('[SIDEBAR-USER-DETAILS] - GET STORED TOKEN ', this.tiledeskToken)
+      // console.log('[SIDEBAR-USER-DETAILS] - GET STORED TOKEN ', this.tiledeskToken)
     } catch (err) {
-      console.error('[SIDEBAR-USER-DETAILS] - GET STORED TOKEN ', err)
+      this.logger.error('[SIDEBAR-USER-DETAILS] - GET STORED TOKEN ', err)
     }
   }
 
@@ -274,8 +272,8 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     // this.profile_name_translated = this.PRO_PLAN_TRIAL_msg;
     this.translate.get('ProPlanTrial')
       .subscribe((text: string) => {
-        // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+       
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.profile_name_translated = text
       });
   }
@@ -284,8 +282,8 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     // this.profile_name_translated = this.FREE_PLAN_msg;
     this.translate.get('FreePlan')
       .subscribe((text: string) => {
-        // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+        
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.profile_name_translated = text
       });
   }
@@ -295,7 +293,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     this.translate.get('PaydPlanNamePro')
       .subscribe((text: string) => {
         // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.profile_name_translated = text
       });
   }
@@ -305,7 +303,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     this.translate.get('PaydPlanNameEnterprise')
       .subscribe((text: string) => {
         // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.profile_name_translated = text
       });
   }
@@ -316,13 +314,13 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     this.wsService.currentProjectUserAvailability$
       .pipe(skip(1))
       .subscribe((projectUser) => {
-        console.log('[SIDEBAR-USER-DETAILS] - $UBSC TO WS USER AVAILABILITY & BUSY STATUS RES ', projectUser);
+        this.logger.log('[SIDEBAR-USER-DETAILS] - $UBSC TO WS USER AVAILABILITY & BUSY STATUS RES ', projectUser);
 
         if (projectUser) {
           this.IS_AVAILABLE = projectUser['user_available']
           this.IS_BUSY = projectUser['isBusy']
           this.USER_ROLE = projectUser['role']
-          console.log('[SIDEBAR-USER-DETAILS] -translateUserRole  1', this.USER_ROLE)
+          // console.log('[SIDEBAR-USER-DETAILS] -translateUserRole  1', this.USER_ROLE)
           this.translateUserRole(this.USER_ROLE)
         }
 
@@ -336,11 +334,11 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   }
 
   translateUserRole(role) {
-    console.log('[SIDEBAR-USER-DETAILS] -translateUserRole ', role)
+    // console.log('[SIDEBAR-USER-DETAILS] -translateUserRole ', role)
     this.translate.get(role)
       .subscribe((text: string) => {
-        // this.deleteContact_msg = text;
-        console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+    
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.USER_ROLE_LABEL = text
       });
 
@@ -349,9 +347,9 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
 
 
   ngOnChanges() {
-    console.log('[SIDEBAR-USER-DETAILS] HAS_CLICKED_OPEN_USER_DETAIL', this.HAS_CLICKED_OPEN_USER_DETAIL)
+    // console.log('[SIDEBAR-USER-DETAILS] HAS_CLICKED_OPEN_USER_DETAIL', this.HAS_CLICKED_OPEN_USER_DETAIL)
     var element = document.getElementById('user-details');
-    console.log('[SIDEBAR-USER-DETAILS] element', element)
+    // console.log('[SIDEBAR-USER-DETAILS] element', element)
     if (this.HAS_CLICKED_OPEN_USER_DETAIL === true) {
       element.classList.add("active");
     }
@@ -359,15 +357,15 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
 
   subcribeToAuthStateChanged() {
     this.messagingAuthService.BSAuthStateChanged.subscribe((state) => {
-      console.log('[SIDEBAR] BSAuthStateChanged ', state)
+      this.logger.log('[SIDEBAR] BSAuthStateChanged ', state)
 
       if (state === 'online') {
         const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
-        console.log('[SIDEBAR-USER-DETAILS] currentUser ', currentUser)
+        this.logger.log('[SIDEBAR-USER-DETAILS] currentUser ', currentUser)
         if (currentUser) {
           this.user = currentUser;
           this.photo_profile_URL = this.imageRepoService.getImagePhotoUrl(currentUser.uid)
-          console.log('[SIDEBAR-USER-DETAILS] photo_profile_URL ', this.photo_profile_URL)
+          this.logger.log('[SIDEBAR-USER-DETAILS] photo_profile_URL ', this.photo_profile_URL)
         }
 
       }
@@ -377,7 +375,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   closeUserDetailSidePanel() {
     var element = document.getElementById('user-details');
     element.classList.remove("active");
-    console.log('[SIDEBAR-USER-DETAILS] element', element);
+    this.logger.log('[SIDEBAR-USER-DETAILS] element', element);
     this.HAS_CLICKED_OPEN_USER_DETAIL === true
     // this.onCloseUserDetailsSidebar.emit(false);
   }
@@ -385,7 +383,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
 
 
   changeAvailabilityStateInUserDetailsSidebar(available) {
-    console.log('[SIDEBAR-USER-DETAILS] - changeAvailabilityState projectid', this.projectID, ' available 1: ', available);
+    this.logger.log('[SIDEBAR-USER-DETAILS] - changeAvailabilityState projectid', this.projectID, ' available 1: ', available);
 
     //   available = !available
     //   console.log('[SIDEBAR-USER-DETAILS] - changeAvailabilityState projectid', this.projectID, ' available 2 : ', available);
@@ -393,7 +391,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     this.wsService.updateCurrentUserAvailability(this.tiledeskToken, this.projectID, available)
       .subscribe((projectUser: any) => {
 
-        console.log('[SIDEBAR-USER-DETAILS] - PROJECT-USER UPDATED ', projectUser)
+        this.logger.log('[SIDEBAR-USER-DETAILS] - PROJECT-USER UPDATED ', projectUser)
 
         // NOTIFY TO THE USER SERVICE WHEN THE AVAILABLE / UNAVAILABLE BUTTON IS CLICKED
         // this.usersService.availability_btn_clicked(true)
@@ -404,10 +402,10 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
         // }
 
       }, (error) => {
-        console.error('[SIDEBAR-USER-DETAILS] - PROJECT-USER UPDATED - ERROR  ', error);
+        this.logger.error('[SIDEBAR-USER-DETAILS] - PROJECT-USER UPDATED - ERROR  ', error);
 
       }, () => {
-        console.log('[SIDEBAR-USER-DETAILS] - PROJECT-USER UPDATED  * COMPLETE *');
+        this.logger.log('[SIDEBAR-USER-DETAILS] - PROJECT-USER UPDATED  * COMPLETE *');
 
       });
   }

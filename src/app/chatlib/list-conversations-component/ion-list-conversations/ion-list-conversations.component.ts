@@ -95,10 +95,8 @@ export class IonListConversationsComponent extends ListConversationsComponent im
     this.translate.get('Resolve')
       .subscribe((text: string) => {
         // this.deleteContact_msg = text;
-        
-
         this.archive_btn_tooltip = text;
-       console.log('[ION-LIST-CONVS-COMP] getTranslations Resolve : ', text)
+      //  console.log('[ION-LIST-CONVS-COMP] getTranslations Resolve : ', text)
        
       });
   }
