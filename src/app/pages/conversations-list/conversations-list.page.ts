@@ -60,7 +60,8 @@ export class ConversationListPage implements OnInit {
   public numberOpenConv = 0;
   public loadingIsActive = true;
   public supportMode: boolean;
-
+  public teammates_btn: boolean;
+  public archived_btn: boolean;
   public convertMessage = convertMessage;
   private isShowMenuPage = false;
   private logger: LoggerService = LoggerInstance.getInstance();
@@ -81,7 +82,15 @@ export class ConversationListPage implements OnInit {
 
   public displayNewConvsItem: boolean = true
 
-
+  tooltipOptions = {
+    'show-delay': 1500,
+    'tooltip-class': 'chat-tooltip',
+    'theme': 'light',
+    'shadow': false,
+    'hide-delay-mobile': 0,
+    'hideDelayAfterClick': 3000,
+    'hide-delay': 200
+  };
 
   constructor(
     private router: Router,
@@ -151,7 +160,7 @@ export class ConversationListPage implements OnInit {
   // -----------------------------------------------
   ngOnInit() {
     this.watchToConnectionStatus();
-    this.getSupportMode();
+    this.getAppConfigToHideDiplayBtns();
 
     // const currentUrl = this.router.url;
     // this.logger.log('[CONVS-LIST-PAGE] current_url ngOnInit ', currentUrl);
@@ -195,9 +204,24 @@ export class ConversationListPage implements OnInit {
   }
 
 
-
-  getSupportMode() {
-    this.supportMode = this.appConfigProvider.getConfig().supportMode;
+  getAppConfigToHideDiplayBtns() {
+    const appConfig = this.appConfigProvider.getConfig();
+    console.log('[ION-LIST-CONVS-COMP] - appConfig ', appConfig)
+    if (appConfig && appConfig.supportMode) {
+      this.supportMode = appConfig.supportMode;
+    } else {
+      this.supportMode = false;
+    }
+    if (appConfig && appConfig.archivedButton) {
+      this.archived_btn = appConfig.archivedButton;
+    } else {
+      this.archived_btn = false;
+    }
+    if (appConfig && appConfig.teammatesButton) {
+      this.teammates_btn = appConfig.teammatesButton;
+    } else {
+      this.teammates_btn = false;
+    }
     // console.log('[ION-LIST-CONVS-COMP] - supportMode ', this.supportMode)
   }
 
@@ -354,7 +378,7 @@ export class ConversationListPage implements OnInit {
 
 
   initArchivedConversationsHandler() {
-    const keysConversation = ['CLOSED'];
+    const keysConversation = ['CLOSED', 'Resolve'];
     this.translationMapConversation = this.translateService.translateLanguage(keysConversation);
 
     this.archivedConversationsHandlerService.subscribeToConversations(() => {
@@ -402,7 +426,6 @@ export class ConversationListPage implements OnInit {
   }
 
   listenGoOffline() {
-
     this.events.subscribe('go:offline', (offline) => {
       this.logger.info('[CONVS-LIST-PAGE] - listen To go:offline - offline', offline);
       // this.events.unsubscribe('profileInfoButtonClick:logout')
@@ -556,6 +579,8 @@ export class ConversationListPage implements OnInit {
 
       // let storedArchivedConv = localStorage.getItem('activeConversationSelected');
       const keys = ['LABEL_ARCHIVED'];
+      // const keys = ['History'];
+      
       this.headerTitle = this.translateService.translateLanguage(keys).get(keys[0]);
 
     } else if (event === 'displayContact') {
