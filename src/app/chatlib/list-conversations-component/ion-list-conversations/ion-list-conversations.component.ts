@@ -36,6 +36,16 @@ export class IonListConversationsComponent extends ListConversationsComponent im
 
   public PROJECT_FOR_PANEL: any;
   public archive_btn_tooltip: string;
+
+  tooltipOptions = {
+    'show-delay': 1500,
+    'tooltip-class': 'chat-tooltip',
+    'theme': 'light',
+    'shadow': false,
+    'hide-delay-mobile': 0,
+    'hideDelayAfterClick': 3000,
+    'hide-delay': 200
+  };
   /**
    * 
    * @param iterableDiffers 

@@ -51,7 +51,8 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
 
   isVisiblePAY: boolean;
   public_Key: any
-
+  plan_name: string;
+  plan_subscription_is_active: boolean;
   constructor(
     private translate: TranslateService,
     public tiledeskAuthService: TiledeskAuthService,
@@ -237,7 +238,10 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
 
         const profile_name = projectObjct['id_project']['profile']['name'];
         console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT > PROFILE NAME ', profile_name);
-      
+
+        this.plan_name = projectObjct['id_project']['profile']['name'];
+        this.plan_subscription_is_active = projectObjct['id_project']['isActiveSubscription'];
+        
         if (this.plan_type === 'free') {
 
           if (trial_expired === false) {

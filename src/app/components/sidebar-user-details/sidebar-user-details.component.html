@@ -19,11 +19,10 @@
     </button>
 
 
-
-    <div role="button" class="user-details-avatar" (click)="goToUserProfile()">
+    <!-- (click)="goToUserProfile()" -->
+    <div role="button" class="user-details-avatar">
         <img class="user-img-in-sidebar-user-details" [src]="photo_profile_URL"
             onerror="this.src='assets/images/no_image_user.png'" />
-
     </div>
 
     <div class="user-details-user-isbusy" *ngIf="IS_BUSY === true" style="cursor:pointer"
