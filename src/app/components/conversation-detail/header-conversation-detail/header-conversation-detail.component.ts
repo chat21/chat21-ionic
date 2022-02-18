@@ -7,6 +7,10 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { setConversationAvatar, setChannelType } from 'src/chat21-core/utils/utils';
 import { Platform } from '@ionic/angular';
+// import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
+// import { TiledeskService } from 'src/app/services/tiledesk/tiledesk.service';
+import { EventsService } from 'src/app/services/events-service';
+
 @Component({
   selector: 'app-header-conversation-detail',
   templateUrl: './header-conversation-detail.component.html',
@@ -44,7 +48,10 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
     public imageRepoService: ImageRepoService,
     private route: ActivatedRoute,
     public platform: Platform,
-    private router: Router
+    private router: Router,
+    // public tiledeskAuthService: TiledeskAuthService,
+    // public tiledeskService: TiledeskService,
+    public events: EventsService,
   ) {
     this.route.paramMap.subscribe(params => {
 
@@ -57,6 +64,10 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
       this.logger.log('[CONVS-DETAIL][HEADER] -> params > conversation_with: ', this.idConv);
     });
   }
+
+ 
+
+
 
   // ----------------------------------------------------
   // @ Lifehooks
@@ -113,7 +124,10 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
       this.platformName = 'android'
       this.logger.log('getPlatformName platformName', this.platformName) 
     }
+  }
 
+  closeConversation() {
+    this.events.publish('hasclosedconversation', this.idConv);
   }
 
   onOpenCloseInfoConversation() {
