@@ -9,12 +9,11 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 import { TranslateService } from '@ngx-translate/core';
 
 import * as moment from 'moment';
-// import { EventsService } from 'src/app/services/events-service';
-// import { TiledeskService } from '../../../services/tiledesk/tiledesk.service';
 import { NetworkService } from '../../../services/network-service/network.service';
 import { AppConfigProvider } from 'src/app/services/app-config';
 import { DomSanitizer } from '@angular/platform-browser'
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
+
 // import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 // import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
@@ -36,15 +35,16 @@ export class IonListConversationsComponent extends ListConversationsComponent im
 
   public PROJECT_FOR_PANEL: any;
   public archive_btn_tooltip: string;
+  public resolve_btn_tooltip: string;
 
-  tooltipOptions = {
-    'show-delay': 1500,
+  tooltip_options = {
+    'show-delay': 0,
     'tooltip-class': 'chat-tooltip',
     'theme': 'light',
     'shadow': false,
     'hide-delay-mobile': 0,
     'hideDelayAfterClick': 3000,
-    'hide-delay': 200
+    'hide-delay': 100
   };
   /**
    * 
@@ -57,12 +57,11 @@ export class IonListConversationsComponent extends ListConversationsComponent im
     public kvDiffers: KeyValueDiffers,
     public platform: Platform,
     private translate: TranslateService,
-    // private events: EventsService,
-    // private tiledeskService: TiledeskService,
     private networkService: NetworkService,
     private appConfigProvider: AppConfigProvider,
     private sanitizer: DomSanitizer,
-    public tiledeskAuthService: TiledeskAuthService
+    public tiledeskAuthService: TiledeskAuthService,
+  
   ) {
     super(iterableDiffers, kvDiffers)
     this.setMomentLocale();
@@ -88,16 +87,24 @@ export class IonListConversationsComponent extends ListConversationsComponent im
 
     // console.log('[ION-LIST-CONVS-COMP] - DASHBOARD_BASE_URL ', DASHBOARD_BASE_URL)
     this.PROJECT_FOR_PANEL = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_BASE_URL + '#/project-for-panel');
-    this.translateLbl();
+    this.translateLbls();
+    
   }
 
-  translateLbl() {
+
+  translateLbls() {
     this.translate.get('Resolve')
       .subscribe((text: string) => {
         // this.deleteContact_msg = text;
+        this.resolve_btn_tooltip = text;
+        //  console.log('[ION-LIST-CONVS-COMP] getTranslations Resolve : ', text)
+
+      });
+      this.translate.get('Archive')
+      .subscribe((text: string) => {
+        // this.deleteContact_msg = text;
         this.archive_btn_tooltip = text;
-      //  console.log('[ION-LIST-CONVS-COMP] getTranslations Resolve : ', text)
-       
+        //  console.log('[ION-LIST-CONVS-COMP] getTranslations Resolve : ', text)
       });
   }
 
