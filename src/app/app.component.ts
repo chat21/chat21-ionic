@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
   public sidebarPage: any;
   public notificationsEnabled: boolean;
   public zone: NgZone;
-  private platformIs: string;
+  public platformIs: string;
   private doitResize: any;
   private timeModalLogin: any;
   public tenant: string;
