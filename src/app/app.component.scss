@@ -15,6 +15,10 @@
     display: none;
 }
 
+.router-outlet-margin-left {
+    left: 60px
+}
+
 // @media (min-width: 768px) {
 //     .split-pane-md.split-pane-visible > .split-pane-side {
 //         min-width: 312px;
