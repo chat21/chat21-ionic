@@ -28,6 +28,6 @@
     "wsUrl": "${WS_URL}",
     "wsUrlRel": "${WS_URL_RELATIVE}",
     "supportMode": "${SUPPORT_MODE}",
-    "teammatesButton": "${TEAMMATES_BUTTON}",
+    "writeToButton": "${WRITE_TO_BUTTON}",
     "archivedButton": "${ARCHIVED_BUTTON}"
 }

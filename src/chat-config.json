@@ -28,6 +28,6 @@
     "wsUrl": "ws://localhost:3000/",
     "wsUrlRel": "${WS_URL_RELATIVE}",
     "supportMode": false,
-    "teammatesButton": false,
+    "writeToButton": false,
     "archivedButton": false
 }

@@ -9,7 +9,7 @@ export class DdpHeaderComponent implements OnInit {
   @Input() numberOpenConv: number;
   @Input() supportMode: boolean;
   @Input() archived_btn: boolean;
-  @Input() teammates_btn: boolean;
+  @Input() writeto_btn: boolean;
   @Output() openContactsDirectory = new EventEmitter();
   @Output() openProfileInfo = new EventEmitter();
   IS_ON_MOBILE_DEVICE: boolean;

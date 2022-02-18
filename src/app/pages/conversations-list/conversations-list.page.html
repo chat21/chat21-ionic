@@ -3,7 +3,7 @@
     [numberOpenConv]="numberOpenConv" 
     [supportMode]="supportMode"
     [archived_btn]="archived_btn"
-    [teammates_btn]="teammates_btn"
+    [writeto_btn]="writeto_btn"
     (openContactsDirectory)=openContactsDirectory($event) 
     (openProfileInfo)=openProfileInfo($event)>
   </app-ddp-header>
@@ -14,7 +14,7 @@
   </app-option-header>
 </ion-header>
 
-<ion-content #ioncontentconvlist class="list-avatar-page" appScrollbarTheme>
+<ion-content id="convs-list" #ioncontentconvlist class="list-avatar-page" appScrollbarTheme>
 
   <div id="scrollbar2">
     <ion-list>
@@ -43,7 +43,7 @@
           <ion-label part="message-text" class="waiting-for-network-msg"> Waiting for network</ion-label>
         </ion-item>
         <!-- supportMode && -->
-        <ion-item  *ngIf="displayNewConvsItem" class="ion-no-padding open-iframe-item">
+        <ion-item  *ngIf="displayNewConvsItem && conversationType !=='archived'" class="ion-no-padding open-iframe-item">
           <div tabindex="0"></div>
           <!-- <ion-note class="pinned-project">
             {{ 'PINNED_PROJECT' | translate }}
@@ -51,7 +51,8 @@
      
           <app-project-item style="width: 100%;" 
           (openUnsevedConvsEvent)="openUnsevedConversationIframe($event)"  
-          (projectIdEvent)="getLastProjectId($event)"></app-project-item>
+          (projectIdEvent)="getLastProjectId($event)">
+        </app-project-item>
         </ion-item>
 
       <span

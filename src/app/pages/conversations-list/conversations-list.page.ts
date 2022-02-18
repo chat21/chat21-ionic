@@ -60,7 +60,7 @@ export class ConversationListPage implements OnInit {
   public numberOpenConv = 0;
   public loadingIsActive = true;
   public supportMode: boolean;
-  public teammates_btn: boolean;
+  public writeto_btn: boolean;
   public archived_btn: boolean;
   public convertMessage = convertMessage;
   private isShowMenuPage = false;
@@ -119,11 +119,14 @@ export class ConversationListPage implements OnInit {
     this.listenToSwPostMessage();
     this.listenSupportConvIdHasChanged();
     // this.listenDirectConvIdHasChanged();
+    this.listenToCloseConvFromHeaderConversation();
   }
+
+
 
   listenSupportConvIdHasChanged() {
     this.events.subscribe('supportconvid:haschanged', (IDConv) => {
-      this.logger.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - convId', IDConv);
+      console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - convId', IDConv);
       if (IDConv) {
         // const conversationSelected = this.conversations.find(item => item.uid === convId);
         // this.onConversationSelected(conversationSelected)
@@ -217,10 +220,10 @@ export class ConversationListPage implements OnInit {
     } else {
       this.archived_btn = false;
     }
-    if (appConfig && appConfig.teammatesButton) {
-      this.teammates_btn = appConfig.teammatesButton;
+    if (appConfig && appConfig.writeToButton) {
+      this.writeto_btn = appConfig.writeToButton;
     } else {
-      this.teammates_btn = false;
+      this.writeto_btn = false;
     }
     // console.log('[ION-LIST-CONVS-COMP] - supportMode ', this.supportMode)
   }
@@ -580,7 +583,7 @@ export class ConversationListPage implements OnInit {
       // let storedArchivedConv = localStorage.getItem('activeConversationSelected');
       const keys = ['LABEL_ARCHIVED'];
       // const keys = ['History'];
-      
+
       this.headerTitle = this.translateService.translateLanguage(keys).get(keys[0]);
 
     } else if (event === 'displayContact') {
@@ -868,13 +871,22 @@ export class ConversationListPage implements OnInit {
     }
   }
 
+  listenToCloseConvFromHeaderConversation() {
+    this.events.subscribe('hasclosedconversation', (convId) => {
+      console.log('[CONVS-LIST-PAGE] hasclosedconversation  convId', convId)
 
+      const conversation = this.conversations.find(conv => conv.uid === convId)
+      console.log('[CONVS-LIST-PAGE] hasclosedconversation  conversation', conversation)
+      this.onCloseConversation(conversation)
+    });
+  }
 
   // ----------------------------------------------------------------------------------------------
   // onCloseConversation
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
   // ----------------------------------------------------------------------------------------------
   onCloseConversation(conversation: ConversationModel) {
+    console.log('[CONVS-LIST-PAGE] onCloseConversation  conversation', conversation)
     // -------------------------------------------------------------------------------------
     // Fix the display of the message "No conversation yet" when a conversation is archived 
     // but there are others in the list (happens when loadingIsActive is set to false because 
@@ -886,10 +898,10 @@ export class ConversationListPage implements OnInit {
 
     const conversationId = conversation.uid;
 
-    this.logger.log('[CONVS-LIST-PAGE] onCloseConversation conversationId: ', conversationId)
+    console.log('[CONVS-LIST-PAGE] onCloseConversation conversationId: ', conversationId)
 
     const conversationWith_segments = conversationId.split('-');
-    this.logger.log('[CONVS-LIST-PAGE] - conversationId_segments: ', conversationWith_segments);
+    console.log('[CONVS-LIST-PAGE] - conversationId_segments: ', conversationWith_segments);
 
     // Removes the last element of the array if is = to the separator 
     if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
@@ -898,8 +910,8 @@ export class ConversationListPage implements OnInit {
 
     if (conversationWith_segments.length === 4) {
       const lastArrayElement = conversationWith_segments[conversationWith_segments.length - 1]
-      this.logger.log('[CONVS-LIST-PAGE] - lastArrayElement ', lastArrayElement);
-      this.logger.log('[CONVS-LIST-PAGE] - lastArrayElement length', lastArrayElement.length);
+      console.log('[CONVS-LIST-PAGE] - lastArrayElement ', lastArrayElement);
+      console.log('[CONVS-LIST-PAGE] - lastArrayElement length', lastArrayElement.length);
       if (lastArrayElement.length !== 32) {
         conversationWith_segments.pop();
       }
@@ -925,34 +937,34 @@ export class ConversationListPage implements OnInit {
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
 
     this.tiledeskService.getProjectIdByConvRecipient(tiledeskToken, conversationId).subscribe(res => {
-      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT RES', res);
+      console.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT RES', res);
 
       if (res) {
         const project_id = res.id_project
-        this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT  project_id', project_id);
+        console.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT  project_id', project_id);
         this.archiveSupportGroupConv(tiledeskToken, project_id, conversationId);
       }
 
     }, (error) => {
-      this.logger.error('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error);
+      console.error('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error);
 
     }, () => {
-      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT * COMPLETE *');
+      console.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT * COMPLETE *');
 
     });
   }
 
   archiveSupportGroupConv(tiledeskToken, project_id, conversationId) {
-    this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
+    console.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
     this.tiledeskService.closeSupportGroup(tiledeskToken, project_id, conversationId).subscribe(res => {
 
-      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup RES', res);
+      console.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup RES', res);
     }, (error) => {
-      this.logger.error('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup - ERROR  ', error);
+      console.error('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup - ERROR  ', error);
     }, () => {
-      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup * COMPLETE *');
-      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS ', this.conversations)
-      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS LENGHT ', this.conversations.length)
+      console.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup * COMPLETE *');
+      console.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS ', this.conversations)
+      console.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS LENGHT ', this.conversations.length)
     });
 
   }
