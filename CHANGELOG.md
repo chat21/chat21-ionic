@@ -1,5 +1,12 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc4
+- Hides the item showing unassigned conversations in the list of archived conversations
+- Adds in the list of conversations to the "archive" button the tooltip "Resolve" if the conversation is of type "support" and the tooltip "Archive" if the conversation is of type "direct" or "group"
+- Changes all occurrences of the "teammatesButton" environment variable to "writeToButton"
+- Fixes the bug: if the sidebar is visible and the window width is less than 768px, the content of the conversation detail is not completely visible
+- Moves for conversations of type "support" the "Resolve conversation" button from the dropdown menu to the header of the conversation detail
+
 ### 3.0.61-rc3
 - Replaces console.log with custom loggers 
 - Fixes the bug: the info support sidebar is no more displayed
