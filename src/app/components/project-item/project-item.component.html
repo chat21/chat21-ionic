@@ -23,7 +23,7 @@
                   </g>
                 </svg>
               </div>
-              <div class="unassigned-notifications-badge">
+              <div class="unassigned-notifications-badge" *ngIf="unservedRequestCount > 0">
                 <!-- || currentUserRequestCount > 0  -->
                 <!-- <span *ngIf="unservedRequestCount > 0 "> -->
                 <!-- + currentUserRequestCount -->
