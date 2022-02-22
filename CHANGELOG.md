@@ -1,5 +1,12 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc5
+- Fixes the bug: on mobile devices the chat content is shifted to the right
+- Adds the ability to open and close the "user detail sidebar" by clicking on the avatar of the logged teammate present on the sidebar
+- Fixes the bug: canned responses remain visible even if, after making a filter, the backslash is deleted
+- Prevents the "open canned responses" button from inserting a backslash if another one exists before
+- Hides the badge that displays the number of unassigned conversations if there are none
+
 ### 3.0.61-rc4
 - Hides the item showing unassigned conversations in the list of archived conversations
 - Adds in the list of conversations to the "archive" button the tooltip "Resolve" if the conversation is of type "support" and the tooltip "Archive" if the conversation is of type "direct" or "group"
