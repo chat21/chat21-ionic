@@ -972,8 +972,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
           if (this.conversationWith.startsWith("support-group")) {
 
             const pos = message.lastIndexOf("/");
-            // console.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ", pos);
+            console.log("[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ", pos);
 
+            if (pos === -1) {
+              this.tagsCannedFilter = [];
+              this.HIDE_CANNED_RESPONSES = true;
+            }
             // test
             // var rest = message.substring(0, message.lastIndexOf("/") + 1);
             // var last = message.substring(message.lastIndexOf("/") + 1, message.length);
@@ -1237,8 +1241,12 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
 
     this.logger.log("[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea ", textArea);
-    this.logger.log("[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea value", textArea.value)
-    this.insertAtCursor(textArea, '/');
+    // console.log("[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea value", textArea.value)
+    var lastChar = textArea.value[textArea.value.length - 1]
+    // console.log('[CONVS-DETAIL] hasClickedOpenCannedResponses lastChar', lastChar)
+    if (lastChar !== '/' ) {
+      this.insertAtCursor(textArea, '/');
+    }
     // console.log('[CONVS-DETAIL] hasClickedOpenCannedResponses textArea.value', textArea.value)
     // setTimeout(() => {
     //   // if (textArea.value === '/') {
