@@ -20,7 +20,8 @@
       <!-- <app-details></app-details> -->
       <!-- </ion-router-outlet> -->
       <!-- the main content -->
-      <ion-router-outlet id="main" #detailNav animated="false" [ngClass]="{'router-outlet-margin-left': platformIs === 'mobile' &&  SUPPORT_MODE === true}">
+      <!--  -->
+      <ion-router-outlet id="main" #detailNav animated="false" [ngClass]="{'router-outlet-margin-left': platformIs === 'mobile' &&  SUPPORT_MODE === true && IS_ON_MOBILE_DEVICE === false}">
       </ion-router-outlet>
     </ion-split-pane>
   </div>
