@@ -32,7 +32,7 @@ export class SidebarComponent implements OnInit {
   photo_profile_URL: string;
   project_id: string;
   DASHBOARD_URL: string;
-  HAS_CLICKED_OPEN_USER_DETAIL: boolean = false
+  // HAS_CLICKED_OPEN_USER_DETAIL: boolean = false
   public translationMap: Map<string, string>;
   public_Key: any;
   conversations_lbl: string;
@@ -42,7 +42,7 @@ export class SidebarComponent implements OnInit {
   activities_lbl: string;
   history_lbl: string;
   settings_lbl: string;
-
+  countClickOnOpenUserDetailSidebar: number = 0
   constructor(
     public imageRepoService: ImageRepoService,
     public appStorageService: AppStorageService,
@@ -107,7 +107,7 @@ export class SidebarComponent implements OnInit {
   getConversationsTranslation() {
     this.translate.get('Conversations')
       .subscribe((text: string) => {
-        console.log('[SIDEBAR] - translate Conversations', text)
+        // console.log('[SIDEBAR] - translate Conversations', text)
         this.conversations_lbl = text
       });
   }
@@ -249,33 +249,48 @@ export class SidebarComponent implements OnInit {
   }
 
   openUserDetailSidePanel() {
-    this.logger.log('[SIDEBAR] OPEN UESER DTLS SIDE PANEL')
-    this.HAS_CLICKED_OPEN_USER_DETAIL = true
-    this.logger.log('[SIDEBAR] OPEN USER DTLS SIDE PANEL ', this.HAS_CLICKED_OPEN_USER_DETAIL)
+    this.countClickOnOpenUserDetailSidebar++
+    console.log('[SIDEBAR-CHAT] countClickOnOpenUserDetailSidebar', this.countClickOnOpenUserDetailSidebar)
+    this.logger.log('[SIDEBAR-CHAT] OPEN UESER DTLS SIDE PANEL')
+    // this.HAS_CLICKED_OPEN_USER_DETAIL = true
+    // console.log('[SIDEBAR-CHAT] OPEN USER DTLS SIDE PANEL ', this.HAS_CLICKED_OPEN_USER_DETAIL)
     const elSidebarUserDtls = <HTMLElement>document.querySelector('#user-details');
     this.logger.log('[SIDEBAR] OPEN USER DTLS SIDE PANEL elSidebarUserDtls ', elSidebarUserDtls)
-    if (elSidebarUserDtls) {
+
+    // if (elSidebarUserDtls) {
+    //   elSidebarUserDtls.classList.add("active");
+    //   this.events.publish('userdetailsidebar:opened', true);
+    // }
+    if (elSidebarUserDtls && this.countClickOnOpenUserDetailSidebar === 1) {
       elSidebarUserDtls.classList.add("active");
-      this.events.publish('userdetailsidebar:opened', true);
     }
-
-  }
-
-  onCloseUserDetailsSidebar($event) {
-    this.logger.log('[SIDEBAR] HAS_CLICKED_CLOSE_USER_DETAIL ', $event)
-    this.HAS_CLICKED_OPEN_USER_DETAIL = $event
-    const elemNavbar = <HTMLElement>document.querySelector('.navbar-absolute');
-    this.logger.log('[SIDEBAR] elemNavBar ', elemNavbar)
-    if (elemNavbar) {
-      elemNavbar.classList.remove("navbar-absolute-custom-class")
-    }
-
-    const elemNavbarBrand = <HTMLElement>document.querySelector('.navbar-brand');
-    this.logger.log('[SIDEBAR] elemNavbarBrand ', elemNavbarBrand)
-    if (elemNavbarBrand) {
-      elemNavbarBrand.classList.remove("navbar-brand-z-index-zero")
+    if (elSidebarUserDtls && this.countClickOnOpenUserDetailSidebar > 1) {
+      // console.log('[SIDEBAR] this.countClickOnOpenUserDetailSidebar HERE', this.countClickOnOpenUserDetailSidebar)
+      if (elSidebarUserDtls.classList.contains('active')) {
+        this.logger.log('[SIDEBAR-CHAT] elSidebarUserDtls contains class ACTIVE', elSidebarUserDtls)
+        elSidebarUserDtls.classList.remove("active");
+      } else if (!elSidebarUserDtls.classList.contains('active')) {
+        this.logger.log('[SIDEBAR-CHAT] elSidebarUserDtls NOT contains class ACTIVE', elSidebarUserDtls)
+        elSidebarUserDtls.classList.add("active");
+      }
     }
   }
+
+  // onCloseUserDetailsSidebar($event) {
+    // this.logger.log('[SIDEBAR-CHAT] HAS_CLICKED_CLOSE_USER_DETAIL ', $event)
+    // this.HAS_CLICKED_OPEN_USER_DETAIL = $event
+    // const elemNavbar = <HTMLElement>document.querySelector('.navbar-absolute');
+    // this.logger.log('[SIDEBAR] elemNavBar ', elemNavbar)
+    // if (elemNavbar) {
+    //   elemNavbar.classList.remove("navbar-absolute-custom-class")
+    // }
+
+    // const elemNavbarBrand = <HTMLElement>document.querySelector('.navbar-brand');
+    // this.logger.log('[SIDEBAR] elemNavbarBrand ', elemNavbarBrand)
+    // if (elemNavbarBrand) {
+    //   elemNavbarBrand.classList.remove("navbar-brand-z-index-zero")
+    // }
+  // }
 
   subcribeToAuthStateChanged() {
     this.messagingAuthService.BSAuthStateChanged.subscribe((state) => {
