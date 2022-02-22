@@ -68,10 +68,10 @@
     <section *ngIf="isVisiblePAY" class="user-details-plan-info">
         <span>
             <div> {{prjct_name}} </div>
-            <div> {{ profile_name_translated }} </div>
+            <div  style="display: inline-block;"> {{ profile_name_translated }} </div>
 
-            <span *ngIf="plan_type === 'payment' && plan_subscription_is_active === false"
-                style="color:#f44336; position:relative; top: -1px;">
+            <div *ngIf="plan_type === 'payment' && plan_subscription_is_active === false"
+                style="color:#f44336; position:relative; top: -1px;;display: inline-block;">
                 <i *ngIf="plan_name !== 'enterprise'" class="material-icons" style="vertical-align: middle; color:#f44336; cursor:pointer;    
                     font-size: 16px;" matTooltipClass="custom-mat-tooltip"
                     matTooltip="{{ SUBSCRIPTION_PAYMENT_PROBLEM_msg }}" #tooltip="matTooltip" matTooltipPosition='right'
@@ -83,7 +83,7 @@
                     #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100">
                     error_outline
                 </i>
-            </span>
+            </div>
         </span>
     </section>
 

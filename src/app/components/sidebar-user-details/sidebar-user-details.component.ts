@@ -18,7 +18,7 @@ import { EventsService } from 'src/app/services/events-service';
   styleUrls: ['./sidebar-user-details.component.scss'],
 })
 export class SidebarUserDetailsComponent implements OnInit, OnChanges {
-  HAS_CLICKED_OPEN_USER_DETAIL: boolean = false;
+  // HAS_CLICKED_OPEN_USER_DETAIL: boolean = false;
   // @Output() onCloseUserDetailsSidebar = new EventEmitter();
 
 
@@ -71,33 +71,40 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     this.listenTocurrentProjectUserUserAvailability$();
     this.getCurrentStoredProject();
     this.getOSCODE();
-    this.listenOpenUserSidebarEvent();
+    // this.listenOpenUserSidebarEvent();
   }
 
-  listenOpenUserSidebarEvent() {
-    this.events.subscribe('userdetailsidebar:opened', (openUserDetailsSidebar) => {
-      this.logger.log('[SIDEBAR-USER-DETAILS] - listenOpenUserSidebarEvent - openUserDetailsSidebar', openUserDetailsSidebar);
-    this.HAS_CLICKED_OPEN_USER_DETAIL = true;
-    });
-  }
+  // listenOpenUserSidebarEvent() {
+  //   this.events.subscribe('userdetailsidebar:opened', (openUserDetailsSidebar) => {
+  //     this.logger.log('[SIDEBAR-USER-DETAILS] - listenOpenUserSidebarEvent - openUserDetailsSidebar', openUserDetailsSidebar);
+  //   this.HAS_CLICKED_OPEN_USER_DETAIL = true;
+  //   });
+  // }
 
   @HostListener('document:click', ['$event'])
   clickout(event) {
-    this.logger.log('[SIDEBAR-USER-DETAILS] clickout event.target)', event.target)
-    this.logger.log('[SIDEBAR-USER-DETAILS] clickout event.target)', event.target.id)
+    this.logger.log('[SIDEBAR-USER-DETAILSS-CHAT] clickout event.target)', event.target)
+    this.logger.log('[SIDEBAR-USER-DETAILSS-CHAT] clickout event.target)', event.target.id)
     const clicked_element_id = event.target.id
     if (this.eRef.nativeElement.contains(event.target)) {
-      this.logger.log('[SIDEBAR-USER-DETAILS] clicked inside')
+      // this.logger.log('[SIDEBAR-USER-DETAILS] clicked inside')
     } else {
-      this.logger.log('[SIDEBAR-USER-DETAILS] HAS_CLICKED_OPEN_USER_DETAIL ', this.HAS_CLICKED_OPEN_USER_DETAIL)
-      if (this.HAS_CLICKED_OPEN_USER_DETAIL === true) {
         if (!clicked_element_id.startsWith("sidebaravatar")) {
           this.closeUserDetailSidePanel();
         }
         // this.logger.log('[SIDEBAR-USER-DETAILS] clicked outside')
-      }
+     
     }
   }
+
+  closeUserDetailSidePanel() {
+    var element = document.getElementById('user-details');
+    element.classList.remove("active");
+    this.logger.log('[SIDEBAR-USER-DETAILS] element', element);
+    // this.HAS_CLICKED_OPEN_USER_DETAIL === true
+    // this.onCloseUserDetailsSidebar.emit(false);
+  }
+
 
   getCurrentChatLangAndTranslateLabels() {
     this.browserLang = this.translate.getBrowserLang();
@@ -348,11 +355,11 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     // console.log('[SIDEBAR-USER-DETAILS] HAS_CLICKED_OPEN_USER_DETAIL', this.HAS_CLICKED_OPEN_USER_DETAIL)
-    var element = document.getElementById('user-details');
-    // console.log('[SIDEBAR-USER-DETAILS] element', element)
-    if (this.HAS_CLICKED_OPEN_USER_DETAIL === true) {
-      element.classList.add("active");
-    }
+    // var element = document.getElementById('user-details');
+    // // console.log('[SIDEBAR-USER-DETAILS] element', element)
+    // if (this.HAS_CLICKED_OPEN_USER_DETAIL === true) {
+    //   element.classList.add("active");
+    // }
   }
 
   subcribeToAuthStateChanged() {
@@ -372,13 +379,13 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     })
   }
 
-  closeUserDetailSidePanel() {
-    var element = document.getElementById('user-details');
-    element.classList.remove("active");
-    this.logger.log('[SIDEBAR-USER-DETAILS] element', element);
-    this.HAS_CLICKED_OPEN_USER_DETAIL === true
-    // this.onCloseUserDetailsSidebar.emit(false);
-  }
+  // closeUserDetailSidePanel() {
+  //   var element = document.getElementById('user-details');
+  //   element.classList.remove("active");
+  //   this.logger.log('[SIDEBAR-USER-DETAILS] element', element);
+  //   this.HAS_CLICKED_OPEN_USER_DETAIL === true
+  //   // this.onCloseUserDetailsSidebar.emit(false);
+  // }
 
 
 
