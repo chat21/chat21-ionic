@@ -126,7 +126,7 @@ export class ConversationListPage implements OnInit {
 
   listenSupportConvIdHasChanged() {
     this.events.subscribe('supportconvid:haschanged', (IDConv) => {
-      console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - convId', IDConv);
+      // console.log('[CONVS-LIST-PAGE] - listen To convid:haschanged - convId', IDConv);
       if (IDConv) {
         // const conversationSelected = this.conversations.find(item => item.uid === convId);
         // this.onConversationSelected(conversationSelected)
@@ -873,10 +873,10 @@ export class ConversationListPage implements OnInit {
 
   listenToCloseConvFromHeaderConversation() {
     this.events.subscribe('hasclosedconversation', (convId) => {
-      console.log('[CONVS-LIST-PAGE] hasclosedconversation  convId', convId)
+      this.logger.log('[CONVS-LIST-PAGE] hasclosedconversation  convId', convId)
 
       const conversation = this.conversations.find(conv => conv.uid === convId)
-      console.log('[CONVS-LIST-PAGE] hasclosedconversation  conversation', conversation)
+      this.logger.log('[CONVS-LIST-PAGE] hasclosedconversation  conversation', conversation)
       this.onCloseConversation(conversation)
     });
   }
@@ -898,10 +898,10 @@ export class ConversationListPage implements OnInit {
 
     const conversationId = conversation.uid;
 
-    console.log('[CONVS-LIST-PAGE] onCloseConversation conversationId: ', conversationId)
+    this.logger.log('[CONVS-LIST-PAGE] onCloseConversation conversationId: ', conversationId)
 
     const conversationWith_segments = conversationId.split('-');
-    console.log('[CONVS-LIST-PAGE] - conversationId_segments: ', conversationWith_segments);
+    this.logger.log('[CONVS-LIST-PAGE] - conversationId_segments: ', conversationWith_segments);
 
     // Removes the last element of the array if is = to the separator 
     if (conversationWith_segments[conversationWith_segments.length - 1] === '') {
@@ -910,8 +910,8 @@ export class ConversationListPage implements OnInit {
 
     if (conversationWith_segments.length === 4) {
       const lastArrayElement = conversationWith_segments[conversationWith_segments.length - 1]
-      console.log('[CONVS-LIST-PAGE] - lastArrayElement ', lastArrayElement);
-      console.log('[CONVS-LIST-PAGE] - lastArrayElement length', lastArrayElement.length);
+      this.logger.log('[CONVS-LIST-PAGE] - lastArrayElement ', lastArrayElement);
+      this.logger.log('[CONVS-LIST-PAGE] - lastArrayElement length', lastArrayElement.length);
       if (lastArrayElement.length !== 32) {
         conversationWith_segments.pop();
       }
@@ -937,19 +937,19 @@ export class ConversationListPage implements OnInit {
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
 
     this.tiledeskService.getProjectIdByConvRecipient(tiledeskToken, conversationId).subscribe(res => {
-      console.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT RES', res);
+      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT RES', res);
 
       if (res) {
         const project_id = res.id_project
-        console.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT  project_id', project_id);
+        this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT  project_id', project_id);
         this.archiveSupportGroupConv(tiledeskToken, project_id, conversationId);
       }
 
     }, (error) => {
-      console.error('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error);
+      this.logger.error('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error);
 
     }, () => {
-      console.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT * COMPLETE *');
+      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT * COMPLETE *');
 
     });
   }
