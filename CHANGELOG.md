@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc6
+- Enhances the style of the sidebar tooltips
+
 ### 3.0.61-rc5
 - Fixes the bug: on mobile devices the chat content is shifted to the right
 - Adds the ability to open and close the "user detail sidebar" by clicking on the avatar of the logged teammate present on the sidebar
