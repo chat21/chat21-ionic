@@ -120,6 +120,7 @@ export class ConversationListPage implements OnInit {
     this.listenSupportConvIdHasChanged();
     // this.listenDirectConvIdHasChanged();
     this.listenToCloseConvFromHeaderConversation();
+    
   }
 
 
@@ -204,6 +205,15 @@ export class ConversationListPage implements OnInit {
     //   }
 
     // });
+  }
+
+  ngOnChanges() {
+    this.getConversationListHeight()
+  }
+
+  getConversationListHeight() {
+    var scrollbar2element = document.getElementById('scrollbar2');
+    console.log('[CONVS-LIST-PAGE] getConversationListHeight scrollbar2element', scrollbar2element) 
   }
 
 
