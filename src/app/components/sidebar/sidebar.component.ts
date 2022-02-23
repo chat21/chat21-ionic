@@ -250,7 +250,7 @@ export class SidebarComponent implements OnInit {
 
   openUserDetailSidePanel() {
     this.countClickOnOpenUserDetailSidebar++
-    console.log('[SIDEBAR-CHAT] countClickOnOpenUserDetailSidebar', this.countClickOnOpenUserDetailSidebar)
+    this.logger.log('[SIDEBAR-CHAT] countClickOnOpenUserDetailSidebar', this.countClickOnOpenUserDetailSidebar)
     this.logger.log('[SIDEBAR-CHAT] OPEN UESER DTLS SIDE PANEL')
     // this.HAS_CLICKED_OPEN_USER_DETAIL = true
     // console.log('[SIDEBAR-CHAT] OPEN USER DTLS SIDE PANEL ', this.HAS_CLICKED_OPEN_USER_DETAIL)
