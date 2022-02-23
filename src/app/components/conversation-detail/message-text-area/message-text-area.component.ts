@@ -132,7 +132,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     }
 
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
-   console.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges areVisibleCAR; ", this.areVisibleCAR);
     
 
@@ -456,7 +456,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   // if the message is not empty it is passed  to the control method
   // ------------------------------------------------------------------------
   onKeydown(e: any, text: string) {
-    console.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA event", e)
+    this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA event", e)
     this.logger.log("[CONVS-DETAIL] - returnChangeTextArea - onKeydown in MSG-TEXT-AREA text", text)
     e.preventDefault(); // Prevent press enter from creating new line 
     // console.log("[CONVS-DETAIL] replaceTagInMessage onKeydown in msg-texarea * event: ", e);
