@@ -58,7 +58,6 @@ body {
     // -webkit-font-smoothing: subpixel-antialiased !important;
     // text-shadow: 0px 0px 0px !important;
     // -webkit-text-stroke-width: 0.01px !important;
-  
 }
 
 // Ionic 'Split Pane' styles need to be tweaked to
@@ -871,26 +870,16 @@ select:-webkit-autofill:focus {
 /* // NK end NEW: AVATAR ON THE SIDEBAR  */
 
 /* NK start CUSTOM SCROLL BAR */
-/* width */
+
 ::-webkit-scrollbar {
-    width: 3px;
+    width: 6px;
 }
-
-/* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background-color: #1c2b45;
 }
-
-/* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #888;
-    /* border-radius: 6px; */
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-    /* width: 10px !important; */
+    background-color: #3c485b;
+    border-radius: 3px;
 }
 /* NK end CUSTOM SCROLL BAR */
 
@@ -958,30 +947,6 @@ select:-webkit-autofill:focus {
     margin-top: 45px !important;
 }
 /* // NK end NEW: AVATAR ON THE SIDEBAR  */
-
-/* NK start CUSTOM SCROLL BAR */
-/* width */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #888;
-    /* border-radius: 6px; */
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-    /* width: 10px !important; */
-}
-/* NK end CUSTOM SCROLL BAR */
 
 /* SIDEBAR NAV ITEMS  */
 
