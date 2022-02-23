@@ -1,7 +1,7 @@
 <span *ngIf="conversationWith && loggedUser; then showConversation else showPlaceholder"></span>
 <ng-template #showPlaceholder>
   <!-- class="splash-page" -->
-  <ion-content padding>
+  <ion-content  padding >
     <!-- <div padding class="image-splash-page"></div>
     <div padding class="title-splash-page">
       text new conversation + button
@@ -37,7 +37,7 @@
     [isOpenInfoConversation]="isOpenInfoConversation">
   </app-header-conversation-detail>
 
-  <ion-content>
+  <ion-content id="conv-details">
     <ion-grid class="grid_content">
       <ion-row class="row_content">
         <ion-col id="chatArea" [class.mobile]="isMobile" [class.open]="openInfoConversation">
@@ -91,7 +91,7 @@
             </ng-template>
 
             <ng-template #content_messages>
-              <ion-content #ionContentChatArea class="ionContentChatArea" (drop)="drop($event)"
+              <ion-content #ionContentChatArea appScrollbarTheme class="ionContentChatArea" (drop)="drop($event)"
                 (dragover)="allowDrop($event)" (dragleave)="drag($event)" [scrollEvents]="true"
                 (ionScrollStart)="logScrollStart($event)" (ionScroll)="logScrolling($event)"
                 (ionScrollEnd)="logScrollEnd($event)" [class.active]="showIonContent">

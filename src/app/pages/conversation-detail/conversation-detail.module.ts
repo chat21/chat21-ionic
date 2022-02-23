@@ -34,7 +34,7 @@ import { InfoGroupComponent } from 'src/app/components/conversation-info/info-gr
 import { SharedModule } from 'src/app/shared/shared.module';
 // import { SharedConversationInfoModule } from 'src/app/shared/shared-conversation-info.module';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
-
+import { ScrollbarThemeModule } from '../../utils/scrollbar-theme.directive';
 @NgModule({
   imports: [
     CommonModule,
@@ -42,6 +42,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     IonicModule,
     TooltipModule,
     ConversationDetailPageRoutingModule,
+    ScrollbarThemeModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
