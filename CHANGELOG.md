@@ -6,6 +6,8 @@
 - Fixes the bug: canned responses remain visible even if, after making a filter, the backslash is deleted
 - Prevents the "open canned responses" button from inserting a backslash if another one exists before
 - Hides the badge that displays the number of unassigned conversations if there are none
+- Improves custom scrollbar displayed in the sidebar and in user detail sidebar 
+- Adds custom scrollbars to the conversation list and to the conversation detail
 
 ### 3.0.61-rc4
 - Hides the item showing unassigned conversations in the list of archived conversations
