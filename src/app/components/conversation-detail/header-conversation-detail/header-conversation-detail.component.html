@@ -12,7 +12,7 @@
         <!-- [ngStyle] = "{ 'left': platformName === 'ios' ? '55px' : ''  }" -->
         <div *ngIf="conversationAvatar" class="avatar-container"
           [ngClass]="{ 'avatar-container-ios': platformName === 'ios' }">
-          <app-avatar-profile [itemAvatar]=conversationAvatar></app-avatar-profile>
+          <app-avatar-profile [itemAvatar]=conversationAvatar style="cursor:default !important"></app-avatar-profile>
         </div>
         <!-- [ngStyle] = "{ 'left': platformName === 'ios' ? '63px' : ''  }" -->
         <div *ngIf="isDirect" class="user-presence" [ngClass]="{ 'user-presence-ios': platformName === 'ios' }">
@@ -29,7 +29,8 @@
 
       </div>
       <!-- [ngClass] = "{ 'tile-info-with-ios': platformName === 'ios' ? '82px' : ''82px''  }" -->
-      <div *ngIf="conversationAvatar" class="tile-info-with" (click)="onOpenCloseInfoConversation()"
+      <!-- (click)="onOpenCloseInfoConversation()" -->
+      <div *ngIf="conversationAvatar" class="tile-info-with" 
         [ngClass]="{ 'tile-info-with-ios': platformName === 'ios' }">
         <!-- <span class="tile-username">{{ conversationAvatar.conversation_with_fullname }} </span> -->
         <span class="tile-username">{{ conversation_with_fullname }} </span>
