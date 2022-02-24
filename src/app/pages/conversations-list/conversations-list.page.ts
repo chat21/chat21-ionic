@@ -213,7 +213,7 @@ export class ConversationListPage implements OnInit {
 
   getConversationListHeight() {
     var scrollbar2element = document.getElementById('scrollbar2');
-    console.log('[CONVS-LIST-PAGE] getConversationListHeight scrollbar2element', scrollbar2element) 
+    this.logger.log('[CONVS-LIST-PAGE] getConversationListHeight scrollbar2element', scrollbar2element) 
   }
 
 
@@ -896,7 +896,7 @@ export class ConversationListPage implements OnInit {
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
   // ----------------------------------------------------------------------------------------------
   onCloseConversation(conversation: ConversationModel) {
-    console.log('[CONVS-LIST-PAGE] onCloseConversation  conversation', conversation)
+    this.logger.log('[CONVS-LIST-PAGE] onCloseConversation  conversation', conversation)
     // -------------------------------------------------------------------------------------
     // Fix the display of the message "No conversation yet" when a conversation is archived 
     // but there are others in the list (happens when loadingIsActive is set to false because 
@@ -965,16 +965,16 @@ export class ConversationListPage implements OnInit {
   }
 
   archiveSupportGroupConv(tiledeskToken, project_id, conversationId) {
-    console.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
+    this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
     this.tiledeskService.closeSupportGroup(tiledeskToken, project_id, conversationId).subscribe(res => {
 
-      console.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup RES', res);
+      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup RES', res);
     }, (error) => {
-      console.error('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup - ERROR  ', error);
+      this.logger.error('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup - ERROR  ', error);
     }, () => {
-      console.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup * COMPLETE *');
-      console.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS ', this.conversations)
-      console.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS LENGHT ', this.conversations.length)
+      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup * COMPLETE *');
+      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS ', this.conversations)
+      this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS LENGHT ', this.conversations.length)
     });
 
   }
