@@ -1,4 +1,4 @@
-import { URL_SOUND_LIST_CONVERSATION } from './../chat21-core/utils/constants';
+import { tranlatedLanguage, URL_SOUND_LIST_CONVERSATION } from './../chat21-core/utils/constants';
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 
@@ -549,8 +549,8 @@ export class AppComponent implements OnInit {
       currentUserId = currentUser.uid;
       this.logger.log('[APP-COMP] - setLanguage current_user uid: ', currentUserId);
     }
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+    // this.translate.setDefaultLang('en');
+    //   this.translate.use('en');
 
     const browserLang = this.translate.getBrowserLang();
     this.logger.log('[APP-COMP] browserLang: ', browserLang);
@@ -563,8 +563,19 @@ export class AppComponent implements OnInit {
     } else if (browserLang && stored_preferred_lang) {
       chat_lang = stored_preferred_lang
     }
-
-    this.translate.use(chat_lang);
+  
+    this.logger.log('[APP-COMP] - chat_lang', chat_lang)
+  
+    if (tranlatedLanguage.includes(chat_lang)) {
+      this.logger.log('[APP-COMP] tranlatedLanguage includes',chat_lang , ': ', tranlatedLanguage.includes(chat_lang)) 
+      this.translate.setDefaultLang(chat_lang)
+      this.translate.use(chat_lang);
+    }
+    else {
+      this.logger.log('[APP-COMP] tranlatedLanguage includes',chat_lang , ': ', tranlatedLanguage.includes(chat_lang)) 
+      this.translate.setDefaultLang('en');
+      this.translate.use('en');
+    }
 
     // this.logger.debug('[APP-COMP] navigator.language: ', navigator.language);
     // let language;
@@ -894,12 +905,12 @@ export class AppComponent implements OnInit {
   }
 
   /**
- * goOnLine:
- * 1 - nascondo splashscreen
- * 2 - recupero il tiledeskToken e lo salvo in chat manager
- * 3 - carico in d
- * @param user
- */
+  * goOnLine:
+  * 1 - nascondo splashscreen
+  * 2 - recupero il tiledeskToken e lo salvo in chat manager
+  * 3 - carico in d
+  * @param user
+  */
   goOnLine = () => {
     this.logger.log('[APP-COMP]- GO-ONLINE ');
     // this.isOnline = true;

@@ -10,7 +10,7 @@ import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 import { skip } from 'rxjs/operators';
 import { AppConfigProvider } from 'src/app/services/app-config';
 import { EventsService } from 'src/app/services/events-service';
-
+import { tranlatedLanguage } from '../../../chat21-core/utils/constants';
 
 @Component({
   selector: 'app-sidebar-user-details',
@@ -89,11 +89,11 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     if (this.eRef.nativeElement.contains(event.target)) {
       // this.logger.log('[SIDEBAR-USER-DETAILS] clicked inside')
     } else {
-        if (!clicked_element_id.startsWith("sidebaravatar")) {
-          this.closeUserDetailSidePanel();
-        }
-        // this.logger.log('[SIDEBAR-USER-DETAILS] clicked outside')
-     
+      if (!clicked_element_id.startsWith("sidebaravatar")) {
+        this.closeUserDetailSidePanel();
+      }
+      // this.logger.log('[SIDEBAR-USER-DETAILS] clicked outside')
+
     }
   }
 
@@ -124,18 +124,28 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     this.chat_lang = ''
     if (this.browserLang && !stored_preferred_lang) {
       this.chat_lang = this.browserLang
-      this.flag_url = "assets/images/language_flag/" + this.chat_lang + ".png"
+      // this.flag_url = "assets/images/language_flag/" + this.chat_lang + ".png"
 
       this.logger.log('[SIDEBAR-USER-DETAILS] flag_url: ', this.flag_url);
       this.logger.log('[SIDEBAR-USER-DETAILS] chat_lang: ', this.chat_lang);
     } else if (this.browserLang && stored_preferred_lang) {
       this.chat_lang = stored_preferred_lang
-      this.flag_url = "assets/images/language_flag/" + this.chat_lang + ".png"
+      // this.flag_url = "assets/images/language_flag/" + this.chat_lang + ".png"
       this.logger.log('[SIDEBAR-USER-DETAILS] flag_url: ', this.flag_url);
       this.logger.log('[SIDEBAR-USER-DETAILS] chat_lang: ', this.chat_lang);
     }
 
-    this.translate.use(this.chat_lang);
+   
+    if (tranlatedLanguage.includes(this.chat_lang)) {
+      this.logger.log('[SIDEBAR-USER-DETAILS] tranlatedLanguage includes', this.chat_lang, ': ', tranlatedLanguage.includes(this.chat_lang))
+      this.translate.use(this.chat_lang);
+      this.flag_url = "assets/images/language_flag/" + this.chat_lang + ".png"
+    } else {
+      this.logger.log('[SIDEBAR-USER-DETAILS] tranlatedLanguage includes', this.chat_lang, ': ', tranlatedLanguage.includes(this.chat_lang))
+      this.translate.use('en');
+      this.flag_url = "assets/images/language_flag/en.png"
+      this.chat_lang = 'en'
+    }
     this.translateLabels()
   }
 
@@ -180,7 +190,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getAvailableTranslation() {
     this.translate.get('Available')
       .subscribe((text: string) => {
-       
+
         // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.IS_AVAILABLE_msg = text
       });
@@ -188,7 +198,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getUnavailableTranslation() {
     this.translate.get('Unavailable')
       .subscribe((text: string) => {
-      
+
         // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.IS_UNAVAILABLE_msg = text
       });
@@ -197,7 +207,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getIsBusyTranslation() {
     this.translate.get('Busy')
       .subscribe((text: string) => {
-       
+
         // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.IS_BUSY_msg = text
       });
@@ -206,7 +216,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getSubscriptionPaymentProblemTranslation() {
     this.translate.get('SubscriptionPaymentProblem')
       .subscribe((text: string) => {
-      
+
         // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.SUBSCRIPTION_PAYMENT_PROBLEM_msg = text
       });
@@ -215,7 +225,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getThePlanHasExpiredTranslation() {
     this.translate.get('ThePlanHasExpired')
       .subscribe((text: string) => {
-     
+
         // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.THE_PLAN_HAS_EXPIRED_msg = text
       });
@@ -279,7 +289,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     // this.profile_name_translated = this.PRO_PLAN_TRIAL_msg;
     this.translate.get('ProPlanTrial')
       .subscribe((text: string) => {
-       
+
         // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.profile_name_translated = text
       });
@@ -289,7 +299,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     // this.profile_name_translated = this.FREE_PLAN_msg;
     this.translate.get('FreePlan')
       .subscribe((text: string) => {
-        
+
         // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.profile_name_translated = text
       });
@@ -331,7 +341,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
           this.translateUserRole(this.USER_ROLE)
         }
 
-    
+
 
       }, (error) => {
         this.logger.error('[SIDEBAR-USER-DETAILS] - $UBSC TO WS USER AVAILABILITY & BUSY STATUS error ', error);
@@ -344,7 +354,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     // console.log('[SIDEBAR-USER-DETAILS] -translateUserRole ', role)
     this.translate.get(role)
       .subscribe((text: string) => {
-    
+
         // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.USER_ROLE_LABEL = text
       });

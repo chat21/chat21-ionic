@@ -10,6 +10,7 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from 'src/app/services/events-service';
+import { tranlatedLanguage } from '../../../chat21-core/utils/constants';
 
 @Component({
   selector: 'app-sidebar',
@@ -85,11 +86,15 @@ export class SidebarComponent implements OnInit {
       this.logger.log('[SIDEBAR] chat_lang: ', chat_lang);
     } else if (browserLang && stored_preferred_lang) {
       chat_lang = stored_preferred_lang
-
       this.logger.log('[SIDEBAR] chat_lang: ', chat_lang);
     }
-
-    this.translate.use(chat_lang);
+    if (tranlatedLanguage.includes(chat_lang)) {
+      this.logger.log('[SIDEBAR] tranlatedLanguage includes', chat_lang, ': ', tranlatedLanguage.includes(chat_lang))
+      this.translate.use(chat_lang);
+    } else {
+      this.logger.log('[SIDEBAR] tranlatedLanguage includes', chat_lang, ': ', tranlatedLanguage.includes(chat_lang))
+      this.translate.use('en');
+    }
     this.translateLabels()
   }
 
@@ -277,19 +282,19 @@ export class SidebarComponent implements OnInit {
   }
 
   // onCloseUserDetailsSidebar($event) {
-    // this.logger.log('[SIDEBAR-CHAT] HAS_CLICKED_CLOSE_USER_DETAIL ', $event)
-    // this.HAS_CLICKED_OPEN_USER_DETAIL = $event
-    // const elemNavbar = <HTMLElement>document.querySelector('.navbar-absolute');
-    // this.logger.log('[SIDEBAR] elemNavBar ', elemNavbar)
-    // if (elemNavbar) {
-    //   elemNavbar.classList.remove("navbar-absolute-custom-class")
-    // }
+  // this.logger.log('[SIDEBAR-CHAT] HAS_CLICKED_CLOSE_USER_DETAIL ', $event)
+  // this.HAS_CLICKED_OPEN_USER_DETAIL = $event
+  // const elemNavbar = <HTMLElement>document.querySelector('.navbar-absolute');
+  // this.logger.log('[SIDEBAR] elemNavBar ', elemNavbar)
+  // if (elemNavbar) {
+  //   elemNavbar.classList.remove("navbar-absolute-custom-class")
+  // }
 
-    // const elemNavbarBrand = <HTMLElement>document.querySelector('.navbar-brand');
-    // this.logger.log('[SIDEBAR] elemNavbarBrand ', elemNavbarBrand)
-    // if (elemNavbarBrand) {
-    //   elemNavbarBrand.classList.remove("navbar-brand-z-index-zero")
-    // }
+  // const elemNavbarBrand = <HTMLElement>document.querySelector('.navbar-brand');
+  // this.logger.log('[SIDEBAR] elemNavbarBrand ', elemNavbarBrand)
+  // if (elemNavbarBrand) {
+  //   elemNavbarBrand.classList.remove("navbar-brand-z-index-zero")
+  // }
   // }
 
   subcribeToAuthStateChanged() {
