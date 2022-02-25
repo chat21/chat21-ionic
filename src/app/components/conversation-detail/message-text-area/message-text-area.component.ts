@@ -70,6 +70,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   public IS_SUPPORT_GROUP_CONVERSATION: boolean;
 
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
+  msg : string
 
   tooltipOptions = {
     'show-delay': 500,
@@ -271,6 +272,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
         let content = event.clipboardData.getData('text/plain');
         this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste content ", content);
+        this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste this.messageString ", this.messageString);
+        this.msg = this.messageString
         setTimeout(() => {
           this.messageString = "";
         }, 100);
@@ -341,7 +344,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     }
     // this.logger.log('presentModal e.target.files.length', e.target.files.length);
 
-    const attributes = { files: dataFiles, enableBackdropDismiss: false };
+    const attributes = { files: dataFiles, enableBackdropDismiss: false , msg: this.msg};
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] attributes', attributes);
     const modal: HTMLIonModalElement =
       await this.modalController.create({
