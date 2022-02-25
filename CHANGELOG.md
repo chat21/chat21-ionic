@@ -2,6 +2,13 @@
 
 ### 3.0.61-rc6
 - Enhances the style of the sidebar tooltips
+- Fixed bug: for direct conversations opening the "info sidebar" by clicking on the teammate avatar available in the conversation detail header does not work correctly
+- Fixes the bug: not all chat strings are translated into the browser language or into the selected language
+- Fixes the bug: Email is broken on dashes in user details sidebar
+- Displays an alert when a teammate archives a conversation from a project they are no longer a part of
+- Disable the "send message" textarea when a teammate replies to a support conversation of a project he is no longer a part of
+- Adds, when an image is pasted in the "send message" text area, the text of the text area as a caption of the image preview modal window
+- Adds, when an image is uploaded, the text of the "send message" text area as a caption of the image preview modal window
 
 ### 3.0.61-rc5
 - Fixes the bug: on mobile devices the chat content is shifted to the right
