@@ -69,7 +69,9 @@
         <ion-list-conversations *ngIf="conversationType ==='active'" [uidConvSelected]="uidConvSelected"
           [listConversations]="conversations" [stylesMap]="stylesMap" [translationMap]="translationMapConversation"
           (onConversationSelected)=onConversationSelected($event) (onImageLoaded)="onImageLoaded($event)"
-          (onConversationLoaded)="onConversationLoaded($event)" (onCloseConversation)="onCloseConversation($event)">
+          (onConversationLoaded)="onConversationLoaded($event)" (onCloseConversation)="onCloseConversation($event)" 
+          [archiveActionNotAllowed]="archiveActionNotAllowed"
+          (onCloseAlert)="onCloseAlert($event)">
         </ion-list-conversations>
 
         <!-- ---------------------------------- -->

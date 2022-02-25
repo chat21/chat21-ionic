@@ -36,7 +36,8 @@ import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { NetworkService } from 'src/app/services/network-service/network.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators'
+import { takeUntil } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-conversations-list',
@@ -80,7 +81,8 @@ export class ConversationListPage implements OnInit {
   public isOnline: boolean = true;
   public checkInternet: boolean;
 
-  public displayNewConvsItem: boolean = true
+  public displayNewConvsItem: boolean = true;
+  public archiveActionNotAllowed: boolean = false;
 
   tooltipOptions = {
     'show-delay': 1500,
@@ -109,8 +111,7 @@ export class ConversationListPage implements OnInit {
     public tiledeskAuthService: TiledeskAuthService,
     public appConfigProvider: AppConfigProvider,
     public platform: Platform,
-    private networkService: NetworkService,
-
+    private networkService: NetworkService
   ) {
     this.listenToAppCompConvsLengthOnInitConvs();
     this.listenToLogoutEvent();
@@ -120,7 +121,7 @@ export class ConversationListPage implements OnInit {
     this.listenSupportConvIdHasChanged();
     // this.listenDirectConvIdHasChanged();
     this.listenToCloseConvFromHeaderConversation();
-    
+
   }
 
 
@@ -213,7 +214,7 @@ export class ConversationListPage implements OnInit {
 
   getConversationListHeight() {
     var scrollbar2element = document.getElementById('scrollbar2');
-    this.logger.log('[CONVS-LIST-PAGE] getConversationListHeight scrollbar2element', scrollbar2element) 
+    this.logger.log('[CONVS-LIST-PAGE] getConversationListHeight scrollbar2element', scrollbar2element)
   }
 
 
@@ -897,6 +898,7 @@ export class ConversationListPage implements OnInit {
   // ----------------------------------------------------------------------------------------------
   onCloseConversation(conversation: ConversationModel) {
     this.logger.log('[CONVS-LIST-PAGE] onCloseConversation  conversation', conversation)
+  
     // -------------------------------------------------------------------------------------
     // Fix the display of the message "No conversation yet" when a conversation is archived 
     // but there are others in the list (happens when loadingIsActive is set to false because 
@@ -947,7 +949,7 @@ export class ConversationListPage implements OnInit {
     const tiledeskToken = this.tiledeskAuthService.getTiledeskToken();
 
     this.tiledeskService.getProjectIdByConvRecipient(tiledeskToken, conversationId).subscribe(res => {
-      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT RES', res);
+      this.logger.log('[CONVS-LIST-PAGE] - GET PROJECTID BY CONV RECIPIENT RES', res);
 
       if (res) {
         const project_id = res.id_project
@@ -956,29 +958,37 @@ export class ConversationListPage implements OnInit {
       }
 
     }, (error) => {
-      this.logger.error('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error);
+      this.logger.error('[CONVS-LIST-PAGE] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error);
 
     }, () => {
-      this.logger.log('[INFO-CONTENT-COMP] - GET PROJECTID BY CONV RECIPIENT * COMPLETE *');
+      this.logger.log('[CONVS-LIST-PAGE] - GET PROJECTID BY CONV RECIPIENT * COMPLETE *');
 
     });
   }
 
   archiveSupportGroupConv(tiledeskToken, project_id, conversationId) {
-    this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
+    console.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
     this.tiledeskService.closeSupportGroup(tiledeskToken, project_id, conversationId).subscribe(res => {
-
+      this.archiveActionNotAllowed = false;
       this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup RES', res);
     }, (error) => {
       this.logger.error('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup - ERROR  ', error);
+      this.logger.error('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup - ERROR  error.error.msg ', error.error.msg);
+      this.logger.error('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup - ERROR  error.status ', error.status);
+      if (error.error.msg === 'you dont belong to the project.') {
+        this.archiveActionNotAllowed = true;
+      }
     }, () => {
       this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup * COMPLETE *');
       this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS ', this.conversations)
       this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation (closeSupportGroup) CONVS LENGHT ', this.conversations.length)
     });
-
   }
 
+  onCloseAlert($event) {
+    this.logger.log('[CONVS-LIST-PAGE] - onCloseAlert ', $event);
+    this.archiveActionNotAllowed = false;
+  }
 
   public generateFake(count: number): Array<number> {
     const indexes = [];
