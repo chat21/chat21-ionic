@@ -54,6 +54,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Output() hasClickedOpenCannedResponses = new EventEmitter<boolean>();
   @Output() eventSendMessage = new EventEmitter<object>();
   @Output() onPresentModalScrollToBottom = new EventEmitter<boolean>();
+  @Input() disableTextarea: boolean;
 
   public conversationEnabled = false;
   public messageString: string;
@@ -123,6 +124,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       // this.SHORTER_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
 
       this.TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
+   
     }
 
     if (this.conversationWith.startsWith("support-group")) {
@@ -130,7 +132,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     } else {
       this.IS_SUPPORT_GROUP_CONVERSATION = false
     }
-
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges disableTextarea ', this.disableTextarea)
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges areVisibleCAR; ", this.areVisibleCAR);

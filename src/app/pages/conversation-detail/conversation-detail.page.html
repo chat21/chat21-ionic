@@ -162,7 +162,8 @@
               (eventSendMessage)="returnSendMessage($event)" [translationMap]="translationMap"
               [fileUploadAccept]="appConfigProvider.getConfig().fileUploadAccept"
               [isOpenInfoConversation]="isOpenInfoConversation" [dropEvent]="dropEvent"
-              (onPresentModalScrollToBottom)="onPresentModalScrollToBottom($event)">
+              (onPresentModalScrollToBottom)="onPresentModalScrollToBottom($event)"
+              [disableTextarea]="disableTextarea">
             </app-message-text-area>
             <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
           </ion-row>
