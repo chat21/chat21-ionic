@@ -91,6 +91,25 @@ export class TiledeskService {
     }))
   }
 
+
+  public getProjectById( token: string , id: string) {
+    const url = this.apiUrl + 'projects/' + id;
+    this.logger.log('[TILEDESK-SERVICE] - GET PROJECT BY ID URL', url);
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: token
+      })
+    };
+    return this.http
+    .get(url, httpOptions)
+    .pipe(map((res: any) => {
+      this.logger.log('[TILEDESK-SERVICE] GET PROJECT BY ID URL - RES ', res);
+      return res
+    }))
+  }
+
   
 
 
