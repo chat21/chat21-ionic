@@ -306,6 +306,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
   onFileSelected(e: any) {
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - onFileSelected event', e);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] - onFileSelected this.messageString ", this.messageString);
+    this.msg = this.messageString
+    setTimeout(() => {
+      this.messageString = "";
+    }, 100);
     this.presentModal(e);
 
   }
