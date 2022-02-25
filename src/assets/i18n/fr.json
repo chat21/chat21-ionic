@@ -44,11 +44,11 @@
   "LABEL_VIDEO_CHAT": "Appel vidéo",
   "LABEL_LEAVE_GROUP": "Quitter le groupe",
   "LABEL_CLOSE_GROUP": "Fermer",
-  "ALERT_TITLE": "AVERTISSEMENT",
-  "CLOSE_ALERT_CONFIRM_LABEL": "D'ACCORD",
+  "ALERT_TITLE": "Attention!",
+  "CLOSE_ALERT_CONFIRM_LABEL": "d'accord",
   "CLOSE_ALERT_CANCEL_LABEL": "ANNULER",
-  "LEAVE_ALERT_MSG": "Quitter le groupe ?",
-  "CLOSE_ALERT_MSG": "Fermer la conversation ?",
+  "LEAVE_ALERT_MSG": "Quitter le groupe?",
+  "CLOSE_ALERT_MSG": "Fermer la conversation?",
   "VIDEOCHAT_ALERT_MSG": "Service indisponible",
   "CLOSING_CONVERSATION_SPINNER_MSG": "S'il vous plaît, attendez.<br> Nous clôturons la conversation",
   "CONVERSATION_CLOSED_ALERT_MSG": "La conversation a été fermée avec succès.",
@@ -223,5 +223,7 @@
   "History": "Histoire",
   "Settings": "Réglages",
   "Resolve": "Résoudre",
-  "Archive": "Archiver"
+  "Archive": "Archiver",
+  "ActionNotAllowed":"Action non autorisée",
+  "YouAreNoLongerAmongTheTeammatesManagingThisConversation":"Vous n'êtes plus parmi les coéquipiers qui gèrent cette conversation"
 }

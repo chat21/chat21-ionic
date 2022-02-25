@@ -44,7 +44,7 @@
   "LABEL_VIDEO_CHAT": "Videochamada",
   "LABEL_LEAVE_GROUP": "Sair do grupo",
   "LABEL_CLOSE_GROUP": "Fechar",
-  "ALERT_TITLE": "AVISO",
+  "ALERT_TITLE": "Atenção!",
   "CLOSE_ALERT_CONFIRM_LABEL": "OK",
   "CLOSE_ALERT_CANCEL_LABEL": "CANCELAR",
   "LEAVE_ALERT_MSG": "Sair do grupo?",
@@ -223,5 +223,7 @@
   "History": "História",
   "Settings": "Configurações",
   "Resolve": "Resolver",
-  "Archive": "Arquivar"
+  "Archive": "Arquivar",
+  "ActionNotAllowed":"Ação não autorizada",
+  "YouAreNoLongerAmongTheTeammatesManagingThisConversation":"Você não está mais entre os colegas de equipe que estão gerenciando esta conversa"
 }

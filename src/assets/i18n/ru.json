@@ -44,8 +44,8 @@
   "LABEL_VIDEO_CHAT": "Видеозвонок",
   "LABEL_LEAVE_GROUP": "Выйти из группы",
   "LABEL_CLOSE_GROUP": "Закрывать",
-  "ALERT_TITLE": "ПРЕДУПРЕЖДЕНИЕ",
-  "CLOSE_ALERT_CONFIRM_LABEL": "В ПОРЯДКЕ",
+  "ALERT_TITLE": "Внимание!",
+  "CLOSE_ALERT_CONFIRM_LABEL": "Ok",
   "CLOSE_ALERT_CANCEL_LABEL": "ОТМЕНИТЬ",
   "LEAVE_ALERT_MSG": "Покинуть группу?",
   "CLOSE_ALERT_MSG": "Закрыть беседу?",
@@ -223,5 +223,7 @@
   "History": "История",
   "Settings": "Настройки",
   "Resolve": "Pазрешить",
-  "Archive": "Архивировать"
+  "Archive": "Архивировать",
+  "ActionNotAllowed":"Действие не разрешено",
+  "YouAreNoLongerAmongTheTeammatesManagingThisConversation":"Вы больше не входите в число товарищей по команде, ведущих этот разговор"
 }

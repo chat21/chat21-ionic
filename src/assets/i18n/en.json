@@ -44,7 +44,7 @@
   "LABEL_VIDEO_CHAT": "Video call",
   "LABEL_LEAVE_GROUP": "Leave the group",
   "LABEL_CLOSE_GROUP": "Close",
-  "ALERT_TITLE": "WARNING",
+  "ALERT_TITLE": "Attention!",
   "CLOSE_ALERT_CONFIRM_LABEL": "OK",
   "CLOSE_ALERT_CANCEL_LABEL": "CANCEL",
   "LEAVE_ALERT_MSG": "Leave the group?",
@@ -223,5 +223,7 @@
   "History": "History",
   "Settings": "Settings",
   "Resolve": "Resolve",
-  "Archive": "Archive"
+  "Archive": "Archive",
+  "ActionNotAllowed":"Action not allowed",
+  "YouAreNoLongerAmongTheTeammatesManagingThisConversation":"You are no longer among the teammates managing this conversation"
 }

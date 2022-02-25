@@ -44,7 +44,7 @@
   "LABEL_VIDEO_CHAT": "Görüntülü arama",
   "LABEL_LEAVE_GROUP": "Gruptan ayrıl",
   "LABEL_CLOSE_GROUP": "Kapat",
-  "ALERT_TITLE": "UYARI",
+  "ALERT_TITLE": "Dikkat!",
   "CLOSE_ALERT_CONFIRM_LABEL": "Tamam",
   "CLOSE_ALERT_CANCEL_LABEL": "İPTAL ET",
   "LEAVE_ALERT_MSG": "Gruptan ayrılmak mı?",
@@ -223,6 +223,8 @@
   "History": "Tarih",
   "Settings": "Ayarlar",
   "Resolve": "Çözmek",
-  "Archive": "Arşivle"
+  "Archive": "Arşivle",
+  "ActionNotAllowed":"İşleme izin verilmiyor",
+  "YouAreNoLongerAmongTheTeammatesManagingThisConversation":"Artık bu konuşmayı yöneten takım arkadaşları arasında değilsiniz"
 }
 
