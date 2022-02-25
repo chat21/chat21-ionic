@@ -107,9 +107,9 @@ public ok_lbl: string;
   ngOnChanges(changes: { [property: string]: SimpleChange }) {
     // Extract changes to the input property by its name
     let change: SimpleChange = changes['archiveActionNotAllowed'];
-    console.log('[ION-LIST-CONVS-COMP] - ngOnChanges change ', change);
-    console.log('[ION-LIST-CONVS-COMP] - ngOnChanges change currentValue ', change.currentValue)
-    if (change.currentValue === true) {
+    this.logger.log('[ION-LIST-CONVS-COMP] - ngOnChanges change ', change);
+    // console.log('[ION-LIST-CONVS-COMP] - ngOnChanges change currentValue ', change.currentValue)
+    if (change && change.currentValue === true) {
       this.pesentAlertActionNotAllowed()
     }
     // Whenever the data in the parent changes, this method gets triggered. You 
