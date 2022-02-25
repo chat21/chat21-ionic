@@ -8,11 +8,11 @@
 
     <ion-title [class.info-open]="openInfoConversation || openInfoMessage">
 
-      <div *ngIf="conversationAvatar" class="avatar-and-typing-wpr">
+      <div *ngIf="conversationAvatar" class="avatar-and-typing-wpr" >
         <!-- [ngStyle] = "{ 'left': platformName === 'ios' ? '55px' : ''  }" -->
-        <div *ngIf="conversationAvatar" class="avatar-container"
+        <div *ngIf="conversationAvatar" class="avatar-container" (click)="onOpenCloseInfoConversation()" style="cursor: pointer"
           [ngClass]="{ 'avatar-container-ios': platformName === 'ios' }">
-          <app-avatar-profile [itemAvatar]=conversationAvatar style="cursor:default !important"></app-avatar-profile>
+          <app-avatar-profile [itemAvatar]=conversationAvatar></app-avatar-profile>
         </div>
         <!-- [ngStyle] = "{ 'left': platformName === 'ios' ? '63px' : ''  }" -->
         <div *ngIf="isDirect" class="user-presence" [ngClass]="{ 'user-presence-ios': platformName === 'ios' }">
