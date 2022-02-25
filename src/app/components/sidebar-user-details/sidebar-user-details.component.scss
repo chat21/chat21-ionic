@@ -14,7 +14,7 @@
     // transform: translate(60px);
     transition: transform 0.5s;
     width: 305px;
-    left: -245px
+    left: -245px;
     //    z-index: 1029;
     // transform: translateX(-100%);
     // -webkit-transform: translateX(-100%);
@@ -90,7 +90,8 @@ button.user-details-btn-close {
 }
 
 .user-details-dshbrd-lang-code {
-    text-transform: uppercase;color: #647491;
+    text-transform: uppercase;
+    color: #647491;
     font-family: "Roboto", sans-serif !important;
     font-size: 14px;
 }
@@ -139,10 +140,9 @@ button.user-details-btn-close {
     text-align: center;
     margin-bottom: 5px;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: "Poppins";
     font-weight: 500;
     line-height: 24px;
-   
 }
 
 .user-details-email {
@@ -157,10 +157,10 @@ button.user-details-btn-close {
     font-size: 14px;
     text-align: center;
     margin-top: 5px;
-    font-family: 'Poppins';
+    font-family: "Poppins";
     font-weight: 400;
     line-height: 1px;
-   
+    white-space: nowrap;
 }
 
 .user-details-role {
@@ -178,8 +178,7 @@ button.user-details-btn-close {
     text-transform: uppercase;
     color: #a9afbb;
     font-weight: 500;
-    font-family: 'Roboto', sans-serif !important;
-   
+    font-family: "Roboto", sans-serif !important;
 }
 
 .availability-section {
@@ -199,7 +198,7 @@ button.user-details-btn-close {
 .first-divider {
     margin-top: 355px;
     border: 0;
-    border-top: 1px solid rgba(255, 255,255, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
     margin-bottom: 20px;
 }
 
@@ -305,8 +304,8 @@ button.user-details-btn-close {
 }
 
 ::ng-deep .custom-mat-tooltip {
-    background-color: #2d323e  !important;
-    font-size: 12px  !important;
+    background-color: #2d323e !important;
+    font-size: 12px !important;
     border-radius: 2px !important;
-    font-family: 'Poppins' !important;
+    font-family: "Poppins" !important;
 }
