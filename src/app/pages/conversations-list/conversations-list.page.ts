@@ -967,7 +967,7 @@ export class ConversationListPage implements OnInit {
   }
 
   archiveSupportGroupConv(tiledeskToken, project_id, conversationId) {
-    console.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
+    this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation projectId: ', project_id)
     this.tiledeskService.closeSupportGroup(tiledeskToken, project_id, conversationId).subscribe(res => {
       this.archiveActionNotAllowed = false;
       this.logger.log('[CONVS-LIST-PAGE] - onCloseConversation closeSupportGroup RES', res);
