@@ -11,7 +11,7 @@ import { skip } from 'rxjs/operators';
 import { AppConfigProvider } from 'src/app/services/app-config';
 import { EventsService } from 'src/app/services/events-service';
 import { tranlatedLanguage } from '../../../chat21-core/utils/constants';
-
+import { avatarPlaceholder,  getColorBck} from 'src/chat21-core/utils/utils-user';
 @Component({
   selector: 'app-sidebar-user-details',
   templateUrl: './sidebar-user-details.component.html',
@@ -53,6 +53,8 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   public_Key: any
   plan_name: string;
   plan_subscription_is_active: boolean;
+   USER_PHOTO_PROFILE_EXIST: boolean;
+ 
   constructor(
     private translate: TranslateService,
     public tiledeskAuthService: TiledeskAuthService,
@@ -72,6 +74,67 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     this.getCurrentStoredProject();
     this.getOSCODE();
     // this.listenOpenUserSidebarEvent();
+  }
+
+  subcribeToAuthStateChanged() {
+    this.messagingAuthService.BSAuthStateChanged.subscribe((state) => {
+      this.logger.log('[SIDEBAR-USER-DETAILS] BSAuthStateChanged ', state)
+
+      if (state === 'online') {
+        const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
+        this.logger.log('[SIDEBAR-USER-DETAILS] currentUser ', currentUser)
+        if (currentUser) {
+          this.user = currentUser;
+          this.createUserAvatar(this.user)
+          this.photo_profile_URL = this.imageRepoService.getImagePhotoUrl(currentUser.uid)
+          this.logger.log('[SIDEBAR-USER-DETAILS] photo_profile_URL ', this.photo_profile_URL);
+          this.checkIfExistPhotoProfile(this.photo_profile_URL)
+        }
+      }
+    })
+  }
+
+  checkIfExistPhotoProfile(imageUrl) {
+    this.verifyImageURL(imageUrl,  (imageExists) => {
+
+      if (imageExists === true) {
+        this.USER_PHOTO_PROFILE_EXIST = true;
+        this.logger.log('[SIDEBAR-USER-DETAILS] photo_profile_URL IMAGE EXIST ', imageExists)
+      
+      } else {
+        this.USER_PHOTO_PROFILE_EXIST = false;
+        this.logger.log('[SIDEBAR-USER-DETAILS] photo_profile_URL IMAGE EXIST ', imageExists)
+      }
+    })
+  }
+
+
+  createUserAvatar(currentUser) {
+    this.logger.log('[SIDEBAR-USER-DETAILS] - createProjectUserAvatar ', currentUser)
+    let fullname = ''
+    if (currentUser && currentUser.firstname && currentUser.lastname) {
+      fullname = currentUser.firstname + ' ' + currentUser.lastname
+      currentUser['fullname_initial'] = avatarPlaceholder(fullname)
+      currentUser['fillColour'] = getColorBck(fullname)
+    } else if (currentUser && currentUser.firstname) {
+      fullname = currentUser.firstname
+      currentUser['fullname_initial'] = avatarPlaceholder(fullname)
+      currentUser['fillColour'] = getColorBck(fullname)
+    } else {
+      currentUser['fullname_initial'] = 'N/A'
+      currentUser['fillColour'] = 'rgb(98, 100, 167)'
+    }
+}
+
+  verifyImageURL(image_url, callBack) {
+    const img = new Image();
+    img.src = image_url;
+    img.onload = function () {
+      callBack(true);
+    };
+    img.onerror = function () {
+      callBack(false);
+    };
   }
 
   // listenOpenUserSidebarEvent() {
@@ -372,22 +435,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     // }
   }
 
-  subcribeToAuthStateChanged() {
-    this.messagingAuthService.BSAuthStateChanged.subscribe((state) => {
-      this.logger.log('[SIDEBAR] BSAuthStateChanged ', state)
 
-      if (state === 'online') {
-        const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
-        this.logger.log('[SIDEBAR-USER-DETAILS] currentUser ', currentUser)
-        if (currentUser) {
-          this.user = currentUser;
-          this.photo_profile_URL = this.imageRepoService.getImagePhotoUrl(currentUser.uid)
-          this.logger.log('[SIDEBAR-USER-DETAILS] photo_profile_URL ', this.photo_profile_URL)
-        }
-
-      }
-    })
-  }
 
   // closeUserDetailSidePanel() {
   //   var element = document.getElementById('user-details');
