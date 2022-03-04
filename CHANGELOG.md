@@ -1,5 +1,11 @@
 # chat21-ionic ver 3.0
 
+
+### 3.0.61-rc7
+- Fixes the bug: while loading the app, the conversation list changes size and becomes wider
+- Changes the style of the left sidebar
+- Display in the "user data drawer" an avatar constructed with the initials of the logged in teammate if his profile picture is not available
+
 ### 3.0.61-rc6
 - Enhances the style of the sidebar tooltips
 - Fixed bug: for direct conversations opening the "info sidebar" by clicking on the teammate avatar available in the conversation detail header does not work correctly
