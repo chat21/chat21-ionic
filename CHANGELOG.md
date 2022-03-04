@@ -1,6 +1,5 @@
 # chat21-ionic ver 3.0
 
-
 ### 3.0.61-rc7
 - Fixes the bug: while loading the app, the conversation list changes size and becomes wider
 - Changes the style of the left sidebar
