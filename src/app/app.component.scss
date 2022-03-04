@@ -1,6 +1,7 @@
 .split-pane-md.split-pane-visible > .split-pane-side {
     min-width: 312px;
     display: block; // Safari bug fix
+    margin-left: 60px;
 }
 
 .sidebar-visible {
@@ -8,7 +9,7 @@
 }
 
 .sidebar-hidden {
-    margin-left: 0px;
+    margin-left: 0px !important;
 }
 
 .hide-sidebar {

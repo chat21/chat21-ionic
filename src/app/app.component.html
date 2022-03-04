@@ -12,8 +12,8 @@
     </div>
  
     <ion-split-pane when="md" contentId="main">
-
-      <ion-nav #sidebarNav [root]="sidebarPage" [ngClass]="{'sidebar-visible': IS_ONLINE === true && SUPPORT_MODE === true,  'sidebar-hidden': IS_ON_MOBILE_DEVICE === true || SUPPORT_MODE === false}"></ion-nav>
+      <!-- 'sidebar-visible': IS_ONLINE === true && SUPPORT_MODE === true, -->
+      <ion-nav #sidebarNav [root]="sidebarPage" [ngClass]="{'sidebar-hidden': IS_ON_MOBILE_DEVICE === true || SUPPORT_MODE === false}"></ion-nav>
       <!--  our side menu  -->
       <!-- <ion-router-outlet id="sidebar" name='sidebar' animated="false" #masterNav> -->
       <!-- <app-conversations-list></app-conversations-list> -->
