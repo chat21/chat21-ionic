@@ -649,9 +649,9 @@ select:-webkit-autofill:focus {
 }
 
 .small-sidebar-tiledesk-nav-user {
-    height: 40px;
-    min-height: 40px;
-    max-height: 40px;
+    height: 35px;
+    min-height: 35px;
+    max-height: 35px;
 }
 
 .user {
@@ -673,41 +673,41 @@ select:-webkit-autofill:focus {
     display: none;
 }
 
-.small-sidebar-email {
-    display: none;
-}
+
 
 .tiledesk-nav-avatar {
     background-color: #2d323e !important;
     color: #fff !important;
 }
 
-.avatar-container {
+.sidebar-avatar-container {
     text-align: center;
     cursor: pointer;
     position: absolute;
     // top: 80px;
     border-radius: 50%;
-    padding: 4px;
+    // padding: 4px;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
     left: 50%;
+    width: 35px;
+    height: 35px;
 }
 
-.avatar-container .sidebar-avatar {
-    width: 40px;
-    height: 40px;
+.sidebar-avatar-container .sidebar-avatar {
+    width: 35px;
+    height: 35px;
     margin: 0;
     border-radius: 50%;
     -o-object-fit: cover;
     object-fit: cover;
-    min-width: 40px;
-    max-width: 40px;
+    min-width: 35px;
+    max-width: 35px;
 }
 
 .small-sidebar-status-icon {
-    left: 33px !important;
-    bottom: 4px !important;
+    left: 26px !important;
+    bottom: -1px !important;
     width: 12px !important;
     height: 12px !important;
 }
@@ -739,11 +739,11 @@ select:-webkit-autofill:focus {
 }
 
 .sidebar--isBusy-icon-wpr {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     position: absolute;
-    top: 12px;
-    right: 37px;
+    top: -5px;
+    right: 25px;
 }
 
 @media (max-width: 991px) {
@@ -753,7 +753,7 @@ select:-webkit-autofill:focus {
 }
 
 .sidebar .nav {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 .nav {
@@ -776,8 +776,9 @@ select:-webkit-autofill:focus {
     margin-bottom: 5px;
 }
 
-.nav > li:hover {
-    background-color: #eee;
+.nav > li:hover > a > i {
+    // background-color: #eee;
+    color: #a9afbb
 }
 
 .sidebar .nav li > a {
@@ -793,7 +794,7 @@ select:-webkit-autofill:focus {
 
 .item-active {
     height: 40px;
-    background-color: #3ea9f5;
+    // background-color: #3ea9f5;
     color: #fff !important;
     pointer-events: none;
 }
@@ -809,7 +810,7 @@ select:-webkit-autofill:focus {
 }
 
 .logo {
-    background-color: #1e2129 !important;
+    background-color: #2d323e !important;
     padding-bottom: 5px;
     min-height: 60px;
     width: 60px; // for SMALL SIDEBAR
@@ -843,25 +844,9 @@ select:-webkit-autofill:focus {
     display: none;
 }
 
-.small-sidebar-status-icon {
-    left: 33px !important;
-    bottom: 4px !important;
-    width: 12px !important;
-    height: 12px !important;
-}
 
-.small-sidebar-status-text {
-    display: none;
-}
 
-.small-sidebar-userfullname {
-    display: none;
-}
 
-.small-sidebar-camera-icon {
-    // top: 86px !important;
-    top: 19px !important;
-}
 
 /* OVERWRITE THE DEFAULT STYLE */
 .nav-mobile-menu {
@@ -872,7 +857,7 @@ select:-webkit-autofill:focus {
 /* NK start CUSTOM SCROLL BAR */
 
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 3px;
 }
 ::-webkit-scrollbar-track {
     background-color: #1c2b45;
@@ -901,12 +886,7 @@ select:-webkit-autofill:focus {
     margin-top: 0px;
 }
 
-.logo {
-    background-color: #1e2129 !important;
-    padding-bottom: 5px;
-    min-height: 60px;
-    width: 60px; // for SMALL SIDEBAR
-}
+
 
 /* *** SMALL SIDEBAR STYLE ***  */
 .small-sidebar-tiledesk-nav-user {
@@ -915,32 +895,16 @@ select:-webkit-autofill:focus {
     max-height: 40px;
 }
 .small-sidebar-avatar {
-    top: 12px;
+    top: 13px;
 }
-
-.small-sidebar-email {
-    display: none;
-}
-
-.small-sidebar-status-icon {
-    left: 33px !important;
-    bottom: 4px !important;
-    width: 12px !important;
-    height: 12px !important;
+.small-sidebar-avatar-with-avatar {
+    top: 13px;
 }
 
 .small-sidebar-status-text {
     display: none;
 }
 
-.small-sidebar-userfullname {
-    display: none;
-}
-
-.small-sidebar-camera-icon {
-    // top: 86px !important;
-    top: 19px !important;
-}
 
 /* OVERWRITE THE DEFAULT STYLE */
 .nav-mobile-menu {
@@ -997,7 +961,7 @@ ul.dropdown-menu > li > a {
     // line-height: 30px;
     width: 60px;
     text-align: center;
-    color: #a9afbb;
+    // color: #a9afbb;
+    color: #647491;
     padding-top: 10px;
 }
-

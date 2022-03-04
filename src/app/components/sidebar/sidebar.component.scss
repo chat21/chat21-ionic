@@ -6,10 +6,46 @@
 }
 
 .sidebar-is-busy-icon {
-  font-size: 14px;
+  font-size: 12px;
   color: #feb92c;
   background-color: #2d323e;
   border-radius: 50%;
+}
+
+.chat-bot-icon-st0 {
+  // fill: #a9afbb;
+  fill: #647491
+}
+.chat-bot-icon-st1 {
+  fill: none;
+}
+
+.realtime-icon-st0{
+  fill:none;
+}
+
+.realtime-icon-st1{
+  fill:#647491;
+}
+
+#bot-anchor-wpr:hover > #bot-anchor > .bot-icon-wpr > svg > g > g > .chat-bot-icon-st0 {
+  fill: #a9afbb ;
+}
+
+li:hover > a > .realtime-icon-wpr > svg  > path {
+  fill: #a9afbb;
+}
+
+#sidebaravatar-altenative-user-avatar {
+  // line-height: 2.9;
+  font-weight: 400;
+  font-family: "Poppins";
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  position: absolute;
+  font-size:14px
 }
 
 // #sidebar_wrapper::-webkit-scrollbar {

@@ -12,6 +12,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from 'src/app/services/events-service';
 import { tranlatedLanguage } from '../../../chat21-core/utils/constants';
 
+// utils
+import { avatarPlaceholder,  getColorBck} from 'src/chat21-core/utils/utils-user';
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -44,6 +47,8 @@ export class SidebarComponent implements OnInit {
   history_lbl: string;
   settings_lbl: string;
   countClickOnOpenUserDetailSidebar: number = 0
+  USER_PHOTO_PROFILE_EXIST: boolean;
+  currentUser: any;
   constructor(
     public imageRepoService: ImageRepoService,
     public appStorageService: AppStorageService,
@@ -53,7 +58,8 @@ export class SidebarComponent implements OnInit {
     public wsService: WebsocketService,
     public appConfigProvider: AppConfigProvider,
     private translate: TranslateService,
-    public events: EventsService
+    public events: EventsService,
+   
   ) { }
 
   ngOnInit() {
@@ -64,6 +70,81 @@ export class SidebarComponent implements OnInit {
     this.listenTocurrentProjectUserUserAvailability$()
     this.getOSCODE();
     this.getCurrentChatLangAndTranslateLabels();
+
+    // this.loggedUser = this.chatManager.getCurrentUser();
+    // if (this.loggedUser) {
+    //   this.itemAvatar = {
+    //     imageurl: this.imageRepoService.getImagePhotoUrl(this.loggedUser.uid),
+    //     avatar: this.loggedUser.avatar,
+    //     color: this.loggedUser.color,
+    //     online: this.loggedUser.online,
+    //     lastConnection: this.loggedUser.lastConnection,
+    //     status: '',
+    //     width: '35px',
+    //     height: '35px'
+    //   };
+    // }
+  }
+
+
+  subcribeToAuthStateChanged() {
+    this.messagingAuthService.BSAuthStateChanged.subscribe((state) => {
+      this.logger.log('[SIDEBAR] BSAuthStateChanged ', state)
+
+      if (state === 'online') {
+        this.currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
+        this.logger.log('[SIDEBAR] currentUser ', this.currentUser)
+        if (this.currentUser) {
+          this.createUserAvatar(this.currentUser)
+          this.photo_profile_URL = this.imageRepoService.getImagePhotoUrl(this.currentUser.uid)
+          this.logger.log('[SIDEBAR] photo_profile_URL ', this.photo_profile_URL)
+          this.checkIfExistPhotoProfile(this.photo_profile_URL)
+        }
+
+      }
+    })
+  }
+
+  checkIfExistPhotoProfile(imageUrl) {
+    this.verifyImageURL(imageUrl,  (imageExists) => {
+
+      if (imageExists === true) {
+        this.USER_PHOTO_PROFILE_EXIST = true;
+        this.logger.log('[SIDEBAR] photo_profile_URL IMAGE EXIST ', imageExists)
+      
+      } else {
+        this.USER_PHOTO_PROFILE_EXIST = false;
+        this.logger.log('[SIDEBAR] photo_profile_URL IMAGE EXIST ', imageExists)
+      }
+    })
+  }
+
+  createUserAvatar(currentUser) {
+    this.logger.log('[SIDEBAR] - createProjectUserAvatar ', currentUser)
+    let fullname = ''
+    if (currentUser && currentUser.firstname && currentUser.lastname) {
+      fullname = currentUser.firstname + ' ' + currentUser.lastname
+      currentUser['fullname_initial'] = avatarPlaceholder(fullname)
+      currentUser['fillColour'] = getColorBck(fullname)
+    } else if (currentUser && currentUser.firstname) {
+      fullname = currentUser.firstname
+      currentUser['fullname_initial'] = avatarPlaceholder(fullname)
+      currentUser['fillColour'] = getColorBck(fullname)
+    } else {
+      currentUser['fullname_initial'] = 'N/A'
+      currentUser['fillColour'] = 'rgb(98, 100, 167)'
+    }
+}
+
+  verifyImageURL(image_url, callBack) {
+    const img = new Image();
+    img.src = image_url;
+    img.onload = function () {
+      callBack(true);
+    };
+    img.onerror = function () {
+      callBack(false);
+    };
   }
 
   getCurrentChatLangAndTranslateLabels() {
@@ -297,21 +378,7 @@ export class SidebarComponent implements OnInit {
   // }
   // }
 
-  subcribeToAuthStateChanged() {
-    this.messagingAuthService.BSAuthStateChanged.subscribe((state) => {
-      this.logger.log('[SIDEBAR] BSAuthStateChanged ', state)
 
-      if (state === 'online') {
-        const currentUser = JSON.parse(this.appStorageService.getItem('currentUser'));
-        this.logger.log('[SIDEBAR] currentUser ', currentUser)
-        if (currentUser) {
-          this.photo_profile_URL = this.imageRepoService.getImagePhotoUrl(currentUser.uid)
-          this.logger.log('[SIDEBAR] photo_profile_URL ', this.photo_profile_URL)
-        }
-
-      }
-    })
-  }
 
 
   getStoredProjectAndDashboardBaseUrl() {
@@ -337,6 +404,12 @@ export class SidebarComponent implements OnInit {
 
   goToConversations() {
     let url = this.DASHBOARD_URL + this.project_id + '/wsrequests'
+    const myWindow = window.open(url, '_self');
+    myWindow.focus();
+  }
+
+  goToBots() {
+    let url = this.DASHBOARD_URL + this.project_id + '/bots'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
