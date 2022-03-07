@@ -110,5 +110,5 @@ export const LogLevel = {
     'DEBUG': 3
 }
 
-export const tranlatedLanguage = ['it', 'en', 'de', 'es', 'pt', 'fr', 'ru', 'tr']
+export const tranlatedLanguage = ['it', 'en', 'de', 'es', 'pt', 'fr', 'ru', 'tr', 'sr']
 
