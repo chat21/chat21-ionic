@@ -1,5 +1,11 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc10
+- Fixes the bug: the Analytics icon of the left sidebar is not displayed
+
+### 3.0.61-rc9
+- Fixes the bug: the Apps icon of the left sidebar is not displayed
+
 ### 3.0.61-rc8
 - Changes the icon of the "Conversations" menu item to the left sidebar
 - Adds Serbian language
