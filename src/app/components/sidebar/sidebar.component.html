@@ -133,8 +133,6 @@
         </a>
       </li>
 
-
-
       <!-- ------------------------------------------- -->
       <!-- CONTACTS (LEADS)  -->
       <!-- ------------------------------------------- -->
@@ -151,10 +149,16 @@
       <ng-container *ngIf="isVisibleAPP && USER_ROLE !== 'agent'">
         <li (click)="goToAppStore()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ apps_lbl }}"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
-          <a class="customAncor">
+          <a class="customAncor" style="margin-right: 0px !important;">
             <!-- <i class="material-icons sidebar-icons">apps</i> -->
-            <i class="material-icons sidebar-icons">dashboard_customize</i>
-            
+            <!-- <i class="material-icons sidebar-icons">dashboard_customize</i> -->
+            <span class="dashboard-customize-icon-wpr"> 
+              <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+              viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" style="width: 20px;height: 20px;margin-top: 9px;">
+                <path class="dashboard_customize-st0" d="M0,0h24v24H0V0z"/>
+                <path class="dashboard_customize-st1" d="M3,3h8v8H3V3z M13,3h8v8h-8V3z M3,13h8v8H3V13z M18,13h-2v3h-3v2h3v3h2v-3h3v-2h-3V13z"/>
+              </svg>
+            </span>
           </a>
         </li>
       </ng-container>
@@ -165,11 +169,17 @@
       <ng-container *ngIf="isVisibleANA && USER_ROLE !== 'agent'">
         <li (click)="goToAnalytics()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ analytics_lbl }}"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
-          <a class="customAncor">
+          <a class="customAncor" style="margin-right: 0px !important;">
             <!-- <i class="material-icons sidebar-icons">trending_up</i> -->
             <!-- <i class="material-icons sidebar-icons"> analytics </i> -->
-            <i class="material-icons sidebar-icons">  bar_chart </i>
-           
+            <!-- <i class="material-icons sidebar-icons">  bar_chart </i> -->
+            <span class="bar-chart-icon-wpr"> 
+              <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+              viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" style="width: 20px;height: 20px;margin-top: 9px;">
+                <path class="bar-chart-icon-st0" d="M0,0h24v24H0V0z"/>
+                <path class="bar-chart-icon-st1" d="M5,9.2h3V19H5V9.2z M10.6,5h2.8v14h-2.8V5z M16.2,13H19v6h-2.8V13z"/>
+              </svg>
+           </span>
           </a>
         </li>
       </ng-container>

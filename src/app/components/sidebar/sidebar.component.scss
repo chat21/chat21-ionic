@@ -24,11 +24,34 @@
   fill: #647491
 }
 
+.dashboard_customize-st0{
+  fill:none;
+}
+.dashboard_customize-st1{
+  fill:#647491;
+}
+
+.bar-chart-icon-st0{
+  fill:none;
+}
+
+.bar-chart-icon-st1{
+  fill:#647491;
+}
+
 #bot-anchor-wpr:hover > #bot-anchor > .bot-icon-wpr > svg > g > g > .chat-bot-icon-st0 {
   fill: #a9afbb ;
 }
 
 li:hover > a > .realtime-icon-wpr > svg  > path {
+  fill: #a9afbb;
+}
+
+li:hover > a > .dashboard-customize-icon-wpr > svg  > .dashboard_customize-st1 {
+  fill: #a9afbb;
+}
+
+li:hover > a > .bar-chart-icon-wpr > svg  > .bar-chart-icon-st1{
   fill: #a9afbb;
 }
 
