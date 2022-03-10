@@ -149,6 +149,7 @@ export class ConversationDetailPage
   conversation_count: number
   showSpinner: boolean = true
   dropEvent: any
+  conversation: any
   isMine = isMine
   isInfo = isInfo
   isFirstMessage = isFirstMessage
@@ -790,16 +791,10 @@ export class ConversationDetailPage
   // startConversation
   // ---------------------------------
   startConversation() {
-    this.logger.log(
-      '[CONVS-DETAIL] - startConversation conversationWith: ',
-      this.conversationWith,
-    )
+     console.log( '[CONVS-DETAIL] - startConversation conversationWith: ', this.conversationWith )
     if (this.conversationWith) {
       this.channelType = setChannelType(this.conversationWith)
-      this.logger.log(
-        '[CONVS-DETAIL] - startConversation channelType : ',
-        this.channelType,
-      )
+      this.logger.log( '[CONVS-DETAIL] - startConversation channelType : ',  this.channelType)
       // this.selectInfoContentTypeComponent();
       this.setHeaderContent()
     }
@@ -814,18 +809,10 @@ export class ConversationDetailPage
       this.conversationsHandlerService &&
       this.conv_type === 'active'
     ) {
-      this.logger.log(
-        '[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING',
-      )
-      this.conversationsHandlerService.getConversationDetail(
-        this.conversationWith,
-        (conv) => {
+      this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING' )
+      this.conversationsHandlerService.getConversationDetail(this.conversationWith,  (conv) => {
           if (conv) {
-            this.logger.log(
-              '[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)',
-              this.conversationWith,
-              conv,
-            )
+            console.log( '[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv )
             this.conversationAvatar = setConversationAvatar(
               conv.conversation_with,
               conv.conversation_with_fullname,
@@ -844,11 +831,7 @@ export class ConversationDetailPage
         this.conversationWith,
         (conv) => {
           if (conv) {
-            this.logger.log(
-              '[CONVS-DETAIL] - setHeaderContent getConversationDetail (archived)',
-              this.conversationWith,
-              conv,
-            )
+            console.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (archived)', this.conversationWith, 'CONVS', conv)
             this.conversationAvatar = setConversationAvatar(
               conv.conversation_with,
               conv.conversation_with_fullname,
