@@ -34,7 +34,8 @@
   <app-header-conversation-detail [isMobile]="isMobile" [idLoggedUser]="loggedUser.uid"
     [conversationAvatar]="conversationAvatar" [translationMap]="translationMap"
     (eventOpenCloseInfoConversation)="returnOpenCloseInfoConversation($event)"
-    [isOpenInfoConversation]="isOpenInfoConversation">
+    [isOpenInfoConversation]="isOpenInfoConversation"
+    [conv_type]="conv_type">
   </app-header-conversation-detail>
 
   <ion-content id="conv-details">
