@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { EventsService } from 'src/app/services/events-service';
+import { CreateTicketPage } from 'src/app/pages/create-ticket/create-ticket.page';
 @Component({
   selector: 'app-ddp-header',
   templateUrl: './ddp-header.component.html',
@@ -16,8 +18,20 @@ export class DdpHeaderComponent implements OnInit {
 
   constructor(
     public events: EventsService,
+    public modalController: ModalController
   ) { 
-    this.isOnMobileDevice()
+    this.isOnMobileDevice();
+    // this.listenToOpenCreateTicketModal() // published from create ticket page
+  }
+
+  listenToOpenCreateTicketModal() {
+    this.events.subscribe('openModalCreateTicket', (bool) => {
+      console.log('[HEADER-CONV] openModalCreateTicket ', bool)
+        if (bool === true) {
+          this.presentCreateTicketModal()
+          
+        }
+    });
   }
 
   isOnMobileDevice() {
@@ -47,6 +61,23 @@ export class DdpHeaderComponent implements OnInit {
 
   onClickArchivedConversation() {
     this.events.publish('profileInfoButtonClick:changed', 'displayArchived');
+  }
+
+    // PRESENT MODAL CREATE TICKET
+  async presentCreateTicketModal(): Promise<any>{
+
+    // const attributes = {  enableBackdropDismiss: false };
+    const modal: HTMLIonModalElement =
+      await this.modalController.create({
+        component: CreateTicketPage,
+        // componentProps: attributes,
+        swipeToClose: false,
+        backdropDismiss: false
+      });
+    modal.onDidDismiss().then((detail: any) => {
+      console.log('[DDP-HEADER] ', detail.data);
+    });
+    return await modal.present();
   }
 
 }

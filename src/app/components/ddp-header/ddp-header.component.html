@@ -13,6 +13,10 @@
 
   <ion-buttons slot="end">
 
+    <ion-button ion-button fill="clear" (click)="presentCreateTicketModal()">
+      <ion-icon slot="icon-only" name="ticket-outline"></ion-icon>
+    </ion-button>
+
     <ion-button *ngIf="archived_btn" ion-button fill="clear" (click)="onClickArchivedConversation()">
       <ion-icon slot="icon-only" name="file-tray-full-outline"></ion-icon>
       <!-- <ion-icon name="file-tray-stacked-outline"></ion-icon> -->

@@ -1,0 +1,45 @@
+.requester-role-or-type {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.custom-ion-input {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    height: 36px;
+    color: #333;
+    background-color: #fff;
+    margin-top: 5px;
+}
+
+.custom-ion-textarea {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    color: #333;
+    background-color: #fff;
+    margin-top: 5px !important;
+}
+
+.custom-create-ticket-label {
+    font-size: 14px;
+    color: #7695a5;
+    font-weight: 500;
+}
+
+.custom-create-ticket-label-to-left {
+    font-size: 14px;
+    color: #0f62ff;
+    font-weight: 500;
+    float: right;
+    cursor: pointer;
+}
+
+.open-requester-details-disable {
+    // cursor: not-allowed;
+    // opacity: 0.5;
+    display: none;
+}
+.ion-grid-custom-padding {
+    padding: 5px 25px;
+}

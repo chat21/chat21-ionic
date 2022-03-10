@@ -82,6 +82,8 @@ import { ConversationListPageModule } from './pages/conversations-list/conversat
 import { ConversationDetailPageModule } from './pages/conversation-detail/conversation-detail.module';
 import { LoginPageModule } from './pages/authentication/login/login.module';
 import { LoaderPreviewPageModule } from './pages/loader-preview/loader-preview.module';
+import { CreateTicketPageModule } from './pages/create-ticket/create-ticket.module';
+import { CreateRequesterPageModule } from './pages/create-requester/create-requester.module';
 
 // UTILS
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
@@ -97,6 +99,7 @@ import { ConnectionService } from 'ng-connection-service';
 import { WebSocketJs } from './services/websocket/websocket-js';
 import { UnassignedConversationsPageModule } from './pages/unassigned-conversations/unassigned-conversations.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -280,7 +283,9 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     SharedModule,
     ConversationInfoModule,
     NgxLinkifyjsModule.forRoot(),
-    LoaderPreviewPageModule
+    LoaderPreviewPageModule,
+    CreateTicketPageModule,
+    CreateRequesterPageModule
   ],
   bootstrap: [AppComponent],
 

@@ -1,0 +1,30 @@
+ion-content {
+    .validation-errors {
+        height: 20px;
+        margin-bottom: 16px;
+    }
+
+    .error-message {
+        // color: red;
+        // font-size: 14px;
+        // margin-left: 10px;
+        // margin-top: 10px;
+        ion-icon {
+            color: red;
+            font-size: 16px;
+            margin-left: 15px;
+            margin-right: 3px;
+            position: relative;
+            top: 3px;
+        }
+        .validation-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 1px;
+        }
+    }
+
+    .submit-btn {
+        margin: 48px 12px 12px;
+    }
+}
