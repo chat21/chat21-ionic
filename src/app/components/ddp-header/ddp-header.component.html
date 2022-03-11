@@ -13,17 +13,20 @@
 
   <ion-buttons slot="end">
 
-    <ion-button ion-button fill="clear" (click)="presentCreateTicketModal()">
+    <ion-button ion-button fill="clear" (click)="presentCreateTicketModal()"
+      tooltip="{{translationMap?.get('CreateTicket')}}" [options]="tooltipOptions" placement="bottom">
       <ion-icon slot="icon-only" name="ticket-outline"></ion-icon>
     </ion-button>
 
-    <ion-button *ngIf="archived_btn" ion-button fill="clear" (click)="onClickArchivedConversation()">
+    <ion-button *ngIf="archived_btn" ion-button fill="clear" (click)="onClickArchivedConversation()" 
+      tooltip="{{translationMap?.get('ViewArchivedConversations')}}" [options]="tooltipOptions" placement="bottom">
       <ion-icon slot="icon-only" name="file-tray-full-outline"></ion-icon>
       <!-- <ion-icon name="file-tray-stacked-outline"></ion-icon> -->
       <!-- <ion-icon name="file-tray-full-outline"></ion-icon> -->
     </ion-button>
 
-    <ion-button *ngIf="writeto_btn" ion-button fill="clear" (click)="onOpenContactsDirectory($event)">
+    <ion-button *ngIf="writeto_btn" ion-button fill="clear" (click)="onOpenContactsDirectory($event)"
+    tooltip="{{translationMap?.get('ViewContactsList')}}" [options]="tooltipOptions" placement="bottom">
       <ion-icon slot="icon-only" name="create-outline"></ion-icon>
       <!-- <ion-icon slot="icon-only" name="people-outline"></ion-icon> -->
 
