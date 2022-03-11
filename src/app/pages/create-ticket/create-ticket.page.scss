@@ -42,4 +42,11 @@
 }
 .ion-grid-custom-padding {
     padding: 5px 25px;
+    height: 100%;
+}
+
+.center-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

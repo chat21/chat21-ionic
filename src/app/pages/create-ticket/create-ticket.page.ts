@@ -7,6 +7,9 @@ import { AppConfigProvider } from 'src/app/services/app-config'
 import { CreateRequesterPage } from 'src/app/pages/create-requester/create-requester.page'
 import * as uuid from 'uuid';
 import { EventsService } from 'src/app/services/events-service'
+import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
+import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+
 @Component({
   selector: 'app-create-ticket',
   templateUrl: './create-ticket.page.html',
@@ -59,6 +62,7 @@ export class CreateTicketPage implements OnInit {
       },
     ];
 
+  logger: LoggerService = LoggerInstance.getInstance();
   constructor(
     public modalController: ModalController,
     public tiledeskService: TiledeskService,
@@ -71,18 +75,17 @@ export class CreateTicketPage implements OnInit {
     this.getUploadEngine()
     this.dashboard_base_url = this.appConfigProvider.getConfig().dashboardUrl
     this.selectedPriority = this.priority[2].name
-    console.log('[CREATE-TICKET]', this.selectedPriority)
+    this.logger.log('[CREATE-TICKET]', this.selectedPriority)
 
     const stored_project = localStorage.getItem('last_project')
-    // console.log('[CREATE-TICKET] stored_project ', stored_project);
     const storedPrjctObjct = JSON.parse(stored_project)
-    console.log('[CREATE-TICKET] storedPrjctObjct ', storedPrjctObjct)
+    this.logger.log('[CREATE-TICKET] storedPrjctObjct ', storedPrjctObjct)
     if (storedPrjctObjct) {
       this.prjctID = storedPrjctObjct.id_project.id
-      console.log('[CREATE-TICKET] this.prjctID ', this.prjctID)
+      this.logger.log('[CREATE-TICKET] this.prjctID ', this.prjctID)
     }
     this.tiledeskToken = this.tiledeskAuthService.getTiledeskToken()
-    console.log('[CREATE-TICKET] tiledeskToken ', this.tiledeskToken)
+    this.logger.log('[CREATE-TICKET] tiledeskToken ', this.tiledeskToken)
 
     this.getProjectUsersAndContacts(this.prjctID, this.tiledeskToken)
     this.getProjectUserBotsAndDepts(this.prjctID, this.tiledeskToken)
@@ -93,21 +96,11 @@ export class CreateTicketPage implements OnInit {
       this.UPLOAD_ENGINE_IS_FIREBASE = true
       const firebase_conf = this.appConfigProvider.getConfig().firebaseConfig
       this.storageBucket = firebase_conf['storageBucket']
-      console.log(
-        '[CREATE-TICKET] - IMAGE STORAGE',
-        this.storageBucket,
-        '- usecase firebase: ',
-        this.UPLOAD_ENGINE_IS_FIREBASE,
-      )
+      this.logger.log('[CREATE-TICKET] - IMAGE STORAGE',  this.storageBucket, '- usecase firebase: ', this.UPLOAD_ENGINE_IS_FIREBASE)
     } else {
       this.UPLOAD_ENGINE_IS_FIREBASE = false
       this.baseUrl = this.appConfigProvider.getConfig().apiUrl
-      console.log(
-        '[WS-REQUESTS-LIST] - IMAGE STORAGE ',
-        this.baseUrl,
-        '- usecase firebase: ',
-        this.UPLOAD_ENGINE_IS_FIREBASE,
-      )
+      this.logger.log('[WS-REQUESTS-LIST] - IMAGE STORAGE ',this.baseUrl,'- usecase firebase: ', this.UPLOAD_ENGINE_IS_FIREBASE)
     }
   }
 
@@ -127,11 +120,8 @@ export class CreateTicketPage implements OnInit {
 
     zip(projectUsers, leads).subscribe(
       ([_prjctUsers, _leads]) => {
-        console.log('[CREATE-TICKET] GET PROJECT-USER RES ', _prjctUsers)
-        console.log(
-          '[CREATE-TICKET] GET ALL ACTIVE LEADS (LIMIT 10000) RES ',
-          _leads.leads,
-        )
+        this.logger.log('[CREATE-TICKET] GET PROJECT-USER RES ', _prjctUsers)
+        this.logger.log('[CREATE-TICKET] GET ALL ACTIVE LEADS (LIMIT 10000) RES ', _leads.leads)
 
         if (_prjctUsers) {
           _prjctUsers.forEach((p_user) => {
@@ -164,7 +154,7 @@ export class CreateTicketPage implements OnInit {
           })
         }
 
-        console.log( '[CREATE-TICKET] - GET P-USERS-&-LEADS - PROJECT-USER-&-LEAD-ARRAY: ', this.projectUserAndLeadsArray)
+        this.logger.log( '[CREATE-TICKET] - GET P-USERS-&-LEADS - PROJECT-USER-&-LEAD-ARRAY: ', this.projectUserAndLeadsArray)
 
         // component will not detect a change. Instead you need to do: this.items = [...this.items, {id: 1, name: 'New item'}]; // https://www.npmjs.com/package/@ng-select/ng-select/v/3.7.3
         // Resolves the "NO ITEMS FOUND" bug displayed in the template select
@@ -173,44 +163,33 @@ export class CreateTicketPage implements OnInit {
       },
       (error) => {
         this.loadingRequesters = false
-        console.error('[CREATE-TICKET] - GET P-USERS-&-LEADS - ERROR: ', error)
+        this.logger.error('[CREATE-TICKET] - GET P-USERS-&-LEADS - ERROR: ', error)
       },
       () => {
         this.loadingRequesters = false
-        console.log('[CREATE-TICKET] - GET P-USERS-&-LEADS * COMPLETE *')
+        this.logger.log('[CREATE-TICKET] - GET P-USERS-&-LEADS * COMPLETE *')
       },
     )
   }
 
   customSearchFn(term: string, item: any) {
-    console.log(
-      '[CREATE-TICKET] - GET P-USERS-&-LEADS - customSearchFn term : ',
-      term,
-    )
+    // console.log( '[CREATE-TICKET] - GET P-USERS-&-LEADS - customSearchFn term : ',  term)
 
     term = term.toLocaleLowerCase()
-    console.log(
-      '[CREATE-TICKET] - GET P-USERS-&-LEADS - customSearchFn item : ',
-      item,
-    )
-
-    console.log(
-      '[CREATE-TICKET] - GET P-USERS-&-LEADS - customSearchFn item.name.toLocaleLowerCase().indexOf(term) : ',
-      item.name.toLocaleLowerCase().indexOf(term) > -1,
-    )
+    // console.log('[CREATE-TICKET] - GET P-USERS-&-LEADS - customSearchFn item : ',item)
+    // console.log('[CREATE-TICKET] - GET P-USERS-&-LEADS - customSearchFn item.name.toLocaleLowerCase().indexOf(term) : ',item.name.toLocaleLowerCase().indexOf(term) > -1)
 
     return (
-      item.name.toLocaleLowerCase().indexOf(term) > -1 ||
-      item.email.toLocaleLowerCase().indexOf(term) > -1
+      item.name.toLocaleLowerCase().indexOf(term) > -1 || item.email.toLocaleLowerCase().indexOf(term) > -1
     )
   }
 
   // used nella select requester OF CREATE TICKET
   selectRequester($event) {
-    console.log('[CREATE-TICKET] - SELECT REQUESTER event', $event)
-    console.log('[CREATE-TICKET] - SELECT REQUESTER ID', this.selectedRequester)
-    console.log('[CREATE-TICKET] - SELECT REQUESTER $event requester_id ', $event.requester_id)
-    console.log('[CREATE-TICKET] - SELECT REQUESTER $event requestertype ', $event.requestertype)
+    this.logger.log('[CREATE-TICKET] - SELECT REQUESTER event', $event)
+    this.logger.log('[CREATE-TICKET] - SELECT REQUESTER ID', this.selectedRequester)
+    this.logger.log('[CREATE-TICKET] - SELECT REQUESTER $event requester_id ', $event.requester_id)
+    this.logger.log('[CREATE-TICKET] - SELECT REQUESTER $event requestertype ', $event.requestertype)
     this.id_for_view_requeter_dtls =  $event.requester_id
     this.requester_type = $event.requestertype
     
@@ -245,27 +224,17 @@ export class CreateTicketPage implements OnInit {
   openRequesterDetails() {
     if (this.selectedRequester) {
       if (this.requester_type === "agent") {
-        // this.router.navigate(['project/' + this.projectId + '/user/edit/' + this.id_for_view_requeter_dtls]);
-        console.log('[CREATE-TICKET] - openRequesterDetails ', this.requester_type, ' details')
-
-        // const url = this.router.createUrlTree(['project/' + this.projectId + '/user/edit', this.id_for_view_requeter_dtls])
-        // console.log('[WS-REQUESTS-LIST] - hasFound go to url', url);
-        // console.log('[WS-REQUESTS-LIST] - hasFound go to url.toString()', url.toString());
-        // window.open('#' + url.toString(), '_blank');
-
+        
+        this.logger.log('[CREATE-TICKET] - openRequesterDetails ', this.requester_type, ' details')
         const url = this.dashboard_base_url + '#/project/'  + this.prjctID +  '/user/edit/' + this.id_for_view_requeter_dtls
-        console.log('[CREATE-TICKET] - openRequesterDetails URL', url)
+        this.logger.log('[CREATE-TICKET] - openRequesterDetails URL', url)
         window.open(url, '_blank');
 
       } else if (this.requester_type === "lead") {
-        // this.router.navigate(['project/' + this.projectId + '/contact', this.id_for_view_requeter_dtls]);
-        console.log('[CREATE-TICKET] - openRequesterDetails ', this.requester_type, ' details')
 
-        // const url = this.router.createUrlTree(['project/' + this.projectId + '/contact', this.id_for_view_requeter_dtls])
-        // console.log('[WS-REQUESTS-LIST] - hasFound go to url.toString()', url.toString());
-        // window.open('#' + url.toString(), '_blank');
+        this.logger.log('[CREATE-TICKET] - openRequesterDetails ', this.requester_type, ' details')
         const url = this.dashboard_base_url + '#/project/'  + this.prjctID +  '/contact/' + this.id_for_view_requeter_dtls
-        console.log('[CREATE-TICKET] - openRequesterDetails URL', url)
+        this.logger.log('[CREATE-TICKET] - openRequesterDetails URL', url)
         window.open(url, '_blank');
       }
     }
@@ -282,11 +251,11 @@ export class CreateTicketPage implements OnInit {
 
     zip(projectUsers, bots, depts).subscribe(
       ([_prjctUsers, _bots, _depts]) => {
-        console.log( '[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - PROJECT USERS : ',   _prjctUsers )
-        console.log( '[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - BOTS : ',  _bots)
-        console.log( '[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - DEPTS: ',_depts)
+        this.logger.log( '[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - PROJECT USERS : ',   _prjctUsers )
+        this.logger.log( '[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - BOTS : ',  _bots)
+        this.logger.log( '[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - DEPTS: ',_depts)
         this.departments = _depts
-        console.log( '[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - this.departments: ',this.departments)
+        this.logger.log( '[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - this.departments: ',this.departments)
         // projectUserAndLeadsArray
 
         if (_prjctUsers) {
@@ -315,30 +284,30 @@ export class CreateTicketPage implements OnInit {
           })
         }
 
-        console.log('[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS ARRAY: ',this.projectUserBotsAndDeptsArray )
+        this.logger.log('[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS ARRAY: ',this.projectUserBotsAndDeptsArray )
 
         this.projectUserBotsAndDeptsArray = this.projectUserBotsAndDeptsArray.slice(0)
       },
       (error) => {
         this.loadingAssignee = false
-        console.error('[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - ERROR: ', error)
+        this.logger.error('[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS - ERROR: ', error)
       },
       () => {
         this.loadingAssignee = false
-        console.log('[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS * COMPLETE *')
+        this.logger.log('[CREATE-TICKET] - GET P-USERS-&-BOTS-&-DEPTS * COMPLETE *')
       },
     )
   }
 
   selectedAssignee() {
-    console.log('[CREATE-TICKET] - SELECT ASSIGNEE: ', this.assignee_id);
-    console.log('[CREATE-TICKET] - DEPTS: ', this.departments);
+    this.logger.log('[CREATE-TICKET] - SELECT ASSIGNEE: ', this.assignee_id);
+    this.logger.log('[CREATE-TICKET] - DEPTS: ', this.departments);
 
     const hasFound = this.departments.filter((obj: any) => {
       return obj.id === this.assignee_id;
     });
 
-    console.log("[CREATE-TICKET] - SELECT ASSIGNEE HAS FOUND IN DEPTS: ", hasFound);
+    this.logger.log("[CREATE-TICKET] - SELECT ASSIGNEE HAS FOUND IN DEPTS: ", hasFound);
 
     if (hasFound.length === 0) {
 
@@ -352,28 +321,28 @@ export class CreateTicketPage implements OnInit {
   }
 
   onChangeSelectedPriority(selectedPriority) {
-    console.log('[CREATE-TICKET] onChangeSelectedPriority selectedPriority ', selectedPriority)
+    this.logger.log('[CREATE-TICKET] onChangeSelectedPriority selectedPriority ', selectedPriority)
     this.selectedPriority = selectedPriority;
   }
 
   createTicket() {
-    if (this.ticketCreationCompleted === false) {
+    // if (this.ticketCreationCompleted === false) {
       // this.hasClickedCreateNewInternalRequest = true
       this.showSpinnerCreateTicket = true
-      console.log('[WS-REQUESTS-LIST] create internalRequest - ticket_message ', this.ticket_message);
-      console.log('[WS-REQUESTS-LIST] create internalRequest - assignee_dept_id ', this.assignee_dept_id);
-      console.log('[WS-REQUESTS-LIST] create internalRequest - assignee_participants_id ', this.assignee_participants_id);
-      console.log('[WS-REQUESTS-LIST] create internalRequest - ticket_subject', this.ticket_subject);
+      this.logger.log('[WS-REQUESTS-LIST] create internalRequest - ticket_message ', this.ticket_message);
+      this.logger.log('[WS-REQUESTS-LIST] create internalRequest - assignee_dept_id ', this.assignee_dept_id);
+      this.logger.log('[WS-REQUESTS-LIST] create internalRequest - assignee_participants_id ', this.assignee_participants_id);
+      this.logger.log('[WS-REQUESTS-LIST] create internalRequest - ticket_subject', this.ticket_subject);
 
       const uiid = uuid.v4();
-      console.log('[WS-REQUESTS-LIST] create internalRequest - uiid', uiid);
-      console.log('[WS-REQUESTS-LIST] create internalRequest - uiid typeof', typeof uiid);
+      this.logger.log('[WS-REQUESTS-LIST] create internalRequest - uiid', uiid);
+      this.logger.log('[WS-REQUESTS-LIST] create internalRequest - uiid typeof', typeof uiid);
       const uiid_no_dashes = uiid.replace(/-/g, "");;
-      console.log('[WS-REQUESTS-LIST] create internalRequest - uiid_no_dash', uiid_no_dashes);
+      this.logger.log('[WS-REQUESTS-LIST] create internalRequest - uiid_no_dash', uiid_no_dashes);
       // Note: the request id must be in the form "support-group-" + "-" + "project_id" + "uid" <- uid without dash
       // this.logger.log('% WsRequestsList createTicket - UUID', uiid);
       this.internal_request_id = 'support-group-' + this.prjctID + '-' + uiid_no_dashes
-      console.log('[WS-REQUESTS-LIST] create internalRequest - internal_request_id', this.internal_request_id);
+      this.logger.log('[WS-REQUESTS-LIST] create internalRequest - internal_request_id', this.internal_request_id);
       // (request_id:string, subject: string, message:string, departmentid: string)
       this.tiledeskService.createInternalRequest(this.selectedRequester,
         this.internal_request_id,
@@ -385,25 +354,28 @@ export class CreateTicketPage implements OnInit {
         this.prjctID,
         this.tiledeskToken
       ).subscribe((newticket: any) => {
-        console.log('[WS-REQUESTS-LIST] create internalRequest - RES ', newticket);
+        this.logger.log('[WS-REQUESTS-LIST] create internalRequest - RES ', newticket);
 
       }, error => {
         this.showSpinnerCreateTicket = false
-        console.error('[WS-REQUESTS-LIST] create internalRequest  - ERROR: ', error);
+        this.logger.error('[WS-REQUESTS-LIST] create internalRequest  - ERROR: ', error);
       }, () => {
-        console.log('[WS-REQUESTS-LIST] create internalRequest * COMPLETE *')
+        this.logger.log('[WS-REQUESTS-LIST] create internalRequest * COMPLETE *')
         this.showSpinnerCreateTicket = false;
         this.ticketCreationCompleted = true
         // this.closeModalCreateTicketModal()
+
+        // this.events.publish('closeModalCreateTicket', true)
       });
-    } else {
-      this.closeModalCreateTicketModal() 
-    }
+    // } 
+    // else {
+    //   this.closeModalCreateTicketModal() 
+    // }
   }
 
   async closeModalCreateTicketModal() {
-    console.log('[CREATE-TICKET] modalController', this.modalController)
-    console.log('[CREATE-TICKET] .getTop()', this.modalController.getTop())
+    this.logger.log('[CREATE-TICKET] modalController', this.modalController)
+    this.logger.log('[CREATE-TICKET] .getTop()', this.modalController.getTop())
     await this.modalController.getTop()
     this.modalController.dismiss({ confirmed: true })
   }
@@ -420,10 +392,10 @@ export class CreateTicketPage implements OnInit {
       backdropDismiss: false,
     })
     modal.onDidDismiss().then((dataReturned: any) => {
-      // this.events.publish('openModalCreateTicket', true)
-      console.log('[CREATE-TICKET] ', dataReturned.data)
-      console.log('[CREATE-TICKET] PRJCT-USERS-&-LEADS-ARRAY RETURNED FROM CREATE REQUESTER',dataReturned.data.updatedProjectUserAndLeadsArray)
-      console.log('[CREATE-TICKET] CREATED LEAD ID RETURNED FROM CREATE REQUESTER', dataReturned.data.selectedRequester)
+      // 
+      this.logger.log('[CREATE-TICKET] ', dataReturned.data)
+      this.logger.log('[CREATE-TICKET] PRJCT-USERS-&-LEADS-ARRAY RETURNED FROM CREATE REQUESTER',dataReturned.data.updatedProjectUserAndLeadsArray)
+      this.logger.log('[CREATE-TICKET] CREATED LEAD ID RETURNED FROM CREATE REQUESTER', dataReturned.data.selectedRequester)
 
       if (dataReturned.data && dataReturned.data.selectedRequester) {
         this.selectedRequester = dataReturned.data.selectedRequester
@@ -435,7 +407,7 @@ export class CreateTicketPage implements OnInit {
 
       if (dataReturned.data && dataReturned.data.requester_id) {
        const requester_id = dataReturned.data.requester_id;
-       console.log('[CREATE-TICKET] REQUESTER ID RERETURNED FROM CREATE REQUESTER', requester_id)
+       this.logger.log('[CREATE-TICKET] REQUESTER ID RERETURNED FROM CREATE REQUESTER', requester_id)
        this.id_for_view_requeter_dtls = requester_id
 
       }
