@@ -119,7 +119,7 @@ export class DdpHeaderComponent implements OnInit {
       backdropDismiss: false,
     })
     modal.onDidDismiss().then((detail: any) => {
-      console.log('[DDP-HEADER] ', detail.data)
+      // console.log('[DDP-HEADER] ', detail.data)
     })
     modal.present()
     this.createTicketModal = modal
