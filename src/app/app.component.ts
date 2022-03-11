@@ -158,7 +158,7 @@ export class AppComponent implements OnInit {
     if (/Android|iPhone/i.test(window.navigator.userAgent)) {
       this.IS_ON_MOBILE_DEVICE = true;
     }
-    this.logger.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
+    // this.logger.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
     return this.IS_ON_MOBILE_DEVICE;
   }
 
@@ -268,7 +268,7 @@ export class AppComponent implements OnInit {
 
 
   saveInStorageNumberOfOpenedChatTab() {
-    this.logger.log('Calling saveInStorageChatOpenedTab!');
+    // this.logger.log('Calling saveInStorageChatOpenedTab!');
 
     // https://jsfiddle.net/jjjs5wd3/3/å
     if (+localStorage.tabCount > 0) {

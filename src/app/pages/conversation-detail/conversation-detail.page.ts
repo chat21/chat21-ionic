@@ -791,7 +791,7 @@ export class ConversationDetailPage
   // startConversation
   // ---------------------------------
   startConversation() {
-     console.log( '[CONVS-DETAIL] - startConversation conversationWith: ', this.conversationWith )
+    //  console.log( '[CONVS-DETAIL] - startConversation conversationWith: ', this.conversationWith )
     if (this.conversationWith) {
       this.channelType = setChannelType(this.conversationWith)
       this.logger.log( '[CONVS-DETAIL] - startConversation channelType : ',  this.channelType)
@@ -812,17 +812,14 @@ export class ConversationDetailPage
       this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING' )
       this.conversationsHandlerService.getConversationDetail(this.conversationWith,  (conv) => {
           if (conv) {
-            console.log( '[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv )
+            // console.log( '[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv )
             this.conversationAvatar = setConversationAvatar(
               conv.conversation_with,
               conv.conversation_with_fullname,
               conv.channel_type,
             )
           }
-          this.logger.log(
-            '[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ',
-            this.conversationAvatar,
-          )
+          this.logger.log('[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ', this.conversationAvatar)
         },
       )
     } else {
@@ -831,7 +828,7 @@ export class ConversationDetailPage
         this.conversationWith,
         (conv) => {
           if (conv) {
-            console.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (archived)', this.conversationWith, 'CONVS', conv)
+            // console.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail (archived)', this.conversationWith, 'CONVS', conv)
             this.conversationAvatar = setConversationAvatar(
               conv.conversation_with,
               conv.conversation_with_fullname,
