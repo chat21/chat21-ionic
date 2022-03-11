@@ -380,7 +380,7 @@ export class CreateTicketPage implements OnInit {
     this.modalController.dismiss({ confirmed: true })
   }
 
-  async presentModalAddNewRequester(e: any): Promise<any> {
+  async presentModalAddNewRequester(): Promise<any> {
     // this.closeModalCreateTicketModal()
     const attributes = {
       projectUserAndLeadsArray: this.projectUserAndLeadsArray,

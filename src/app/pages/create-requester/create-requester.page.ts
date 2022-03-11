@@ -127,7 +127,7 @@ export class CreateRequesterPage implements OnInit {
     });
   }
 
-  async closeModalAddNewRequester( projectUserAndLeadsArray, lead_id, requester_id) {
+  async closeModalAddNewRequester( projectUserAndLeadsArray?: any, lead_id?: string, requester_id?: string) {
     this.logger.log('[CREATE-REQUESTER]', this.modalController)
     this.logger.log( '[CREATE-REQUESTER] .getTop()',this.modalController.getTop())
     await this.modalController.getTop()
