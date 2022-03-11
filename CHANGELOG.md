@@ -1,5 +1,12 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc11
+- Fixed the bug: the "Resolve" button is displayed in the header of the details of the archived conversations
+- Fixed the bug: in the header of the conversation detail the "Resolve" button remains active even after resolving the conversation
+- Adds the ability to create a ticket
+- Adds tooltips to the buttons available in the header of the conversation list
+- Change the text of the "Conversations" menu item in the left sidebar to "Monitor"
+
 ### 3.0.61-rc10
 - Fixes the bug: the Analytics icon of the left sidebar is not displayed
 
