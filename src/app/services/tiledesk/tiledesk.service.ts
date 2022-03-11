@@ -113,7 +113,7 @@ export class TiledeskService {
 
   public getProjectUsersByProjectId(project_id: string, token: string) {
     const url = this.apiUrl + project_id + '/project_users/';
-    console.log('[TILEDESK-SERVICE] - GET PROJECT-USER URL', url);
+    this.logger.log('[TILEDESK-SERVICE] - GET PROJECT-USER URL', url);
     
     const httpOptions = {
       headers: new HttpHeaders({
@@ -124,14 +124,14 @@ export class TiledeskService {
     return this.http
     .get(url, httpOptions)
     .pipe(map((res: any) => {
-      console.log('[TILEDESK-SERVICE] - GET PROJECT-USER RES ', res);
+      this.logger.log('[TILEDESK-SERVICE] - GET PROJECT-USER RES ', res);
       return res
     }))
   }
 
   public getAllLeadsActiveWithLimit(project_id: string, token: string, limit: number) {
     const url = this.apiUrl + project_id + '/leads?limit=' + limit + '&with_fullname=true';
-    console.log('[TILEDESK-SERVICE] - GET ALL ACTIVE LEADS (LIMIT 10000) -  URL', url);
+    this.logger.log('[TILEDESK-SERVICE] - GET ALL ACTIVE LEADS (LIMIT 10000) -  URL', url);
     
     const httpOptions = {
       headers: new HttpHeaders({
@@ -142,7 +142,7 @@ export class TiledeskService {
     return this.http
     .get(url, httpOptions)
     .pipe(map((res: any) => {
-      console.log('[TILEDESK-SERVICE] - GET ALL ACTIVE LEADS (LIMIT 10000) ', res);
+      this.logger.log('[TILEDESK-SERVICE] - GET ALL ACTIVE LEADS (LIMIT 10000) ', res);
       return res
     }))
   }
@@ -164,7 +164,7 @@ export class TiledeskService {
     return this.http
       .post(url, body, httpOptions)
       .pipe(map((res: any) => {
-        console.log('[TILEDESK-SERVICE] - CREATE NEW PROJECT USER TO GET NEW LEAD ID url ', res);
+        this.logger.log('[TILEDESK-SERVICE] - CREATE NEW PROJECT USER TO GET NEW LEAD ID url ', res);
         return res
       }))
   }
@@ -174,7 +174,7 @@ export class TiledeskService {
   // ---------------------------------------------
   public createNewLead(leadid: string, fullname: string, leademail: string, project_id: string, token: string) {
     const url = this.apiUrl + project_id + '/leads/'
-    console.log('[TILEDESK-SERVICE] - CREATE NEW LEAD url ', url);
+    this.logger.log('[TILEDESK-SERVICE] - CREATE NEW LEAD url ', url);
    
     const httpOptions = {
       headers: new HttpHeaders({
@@ -184,12 +184,12 @@ export class TiledeskService {
     };
 
     const body = { 'lead_id': leadid, 'fullname': fullname, 'email': leademail };
-    console.log('[TILEDESK-SERVICE] - CREATE NEW LEAD ', body);
+    this.logger.log('[TILEDESK-SERVICE] - CREATE NEW LEAD ', body);
 
     return this.http
     .post(url, body, httpOptions)
     .pipe(map((res: any) => {
-      console.log('[TILEDESK-SERVICE] - CREATE NEW LEAD RES ', res);
+      this.logger.log('[TILEDESK-SERVICE] - CREATE NEW LEAD RES ', res);
       return res
     }))
   }
@@ -200,7 +200,7 @@ export class TiledeskService {
   public getAllBotByProjectId(project_id: string, token: string) {
    
     const url = this.apiUrl + project_id + '/faq_kb?all=true'
-    console.log('[TILEDESK-SERVICE] - GET ALL BOTS BY PROJECT ID - URL', url);
+    this.logger.log('[TILEDESK-SERVICE] - GET ALL BOTS BY PROJECT ID - URL', url);
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -212,7 +212,7 @@ export class TiledeskService {
     return this.http
     .get(url, httpOptions)
     .pipe(map((res: any) => {
-      console.log('[TILEDESK-SERVICE] - GET ALL BOTS BY PROJECT ID - RES ', res);
+      this.logger.log('[TILEDESK-SERVICE] - GET ALL BOTS BY PROJECT ID - RES ', res);
       return res
     }))
   }
@@ -223,7 +223,7 @@ export class TiledeskService {
   public getDeptsByProjectId(project_id: string, token: string) {
    
     const url = this.apiUrl + project_id + '/departments/allstatus';
-    console.log('[TILEDESK-SERVICE] - GET DEPTS (ALL STATUS) - URL', url);
+    this.logger.log('[TILEDESK-SERVICE] - GET DEPTS (ALL STATUS) - URL', url);
    
     const httpOptions = {
       headers: new HttpHeaders({
@@ -235,7 +235,7 @@ export class TiledeskService {
     return this.http
     .get(url, httpOptions)
     .pipe(map((res: any) => {
-      console.log('[TILEDESK-SERVICE] - GET DEPTS (ALL STATUS) - RES ', res);
+      this.logger.log('[TILEDESK-SERVICE] - GET DEPTS (ALL STATUS) - RES ', res);
       return res
     }))
   }
@@ -264,12 +264,11 @@ export class TiledeskService {
     }
     // , 'participants': [participantid]
 
-
-    console.log('[WS-REQUESTS-SERV] - CREATE INTERNAL REQUEST body ', body);
+    this.logger.log('[WS-REQUESTS-SERV] - CREATE INTERNAL REQUEST body ', body);
     return this.http
     .post(url, body, httpOptions)
     .pipe(map((res: any) => {
-      console.log('[TILEDESK-SERVICE] - CREATE NEW LEAD RES ', res);
+      this.logger.log('[TILEDESK-SERVICE] - CREATE NEW LEAD RES ', res);
       return res
     }))
   }
