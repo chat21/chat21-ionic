@@ -188,10 +188,19 @@ export class CreateTicketPage implements OnInit {
   selectRequester($event) {
     this.logger.log('[CREATE-TICKET] - SELECT REQUESTER event', $event)
     this.logger.log('[CREATE-TICKET] - SELECT REQUESTER ID', this.selectedRequester)
-    this.logger.log('[CREATE-TICKET] - SELECT REQUESTER $event requester_id ', $event.requester_id)
-    this.logger.log('[CREATE-TICKET] - SELECT REQUESTER $event requestertype ', $event.requestertype)
-    this.id_for_view_requeter_dtls =  $event.requester_id
-    this.requester_type = $event.requestertype
+    if($event && $event.requester_id ) {
+      this.id_for_view_requeter_dtls =  $event.requester_id
+      this.logger.log('[CREATE-TICKET] - SELECT REQUESTER $event requester_id ', $event.requester_id)
+    }
+
+    if($event && $event.requestertype ) {
+      this.requester_type = $event.requestertype
+      this.logger.log('[CREATE-TICKET] - SELECT REQUESTER $event requestertype ', $event.requestertype)
+    }
+   
+    
+   
+    
     
     // const hasFound = this.projectUserAndLeadsArray.filter((obj: any) => {
     //   return obj.id === this.selectedRequester
