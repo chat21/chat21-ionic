@@ -230,6 +230,10 @@
   "Continue":"Continuez",
   "ViewArchivedConversations":"Consulter les conversations archivées",
   "ViewContactsList":"Voir la liste de contacts",
+  "AddAsCannedResponse":"Ajouter comme réponse par défaut",
+  "AddNewCannedResponse":"Ajouter une nouvelle réponse par défaut",
+  "TitleIsRequired":"Le titre est requis",
+  "MessageIsRequired":"Un message est requis",
   "Already_present_in_the_dashboard_json":"........",
   "CreateTicket": "Créer un ticket",
   "Requester": "Demandeur",
@@ -247,5 +251,7 @@
   "CreateNewRequester": "Créer un nouveau demandeur",
   "Name": "Nom",
   "NameIsRequired": "Le nom est requis",
-  "EnterValidEmail": "Entrez une adresse mail valide"
+  "EnterValidEmail": "Entrez une adresse mail valide",
+  "Title": "Titre",
+  "Add": "Ajouter"
 }

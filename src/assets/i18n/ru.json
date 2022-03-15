@@ -230,6 +230,10 @@
   "Continue":"Продолжать",
   "ViewArchivedConversations":"Просмотр архивных разговоров",
   "ViewContactsList":"Посмотреть список контактов",
+  "AddAsCannedResponse":"Добавить как ответ по умолчанию",
+  "AddNewCannedResponse":"Добавить новый ответ по умолчанию",
+  "TitleIsRequired":"Требуется заголовок",
+  "MessageIsRequired":"Требуется сообщение",
   "Already_present_in_the_dashboard_json":"........",
   "CreateTicket": "Создать тикет",
   "Requester": "Заявитель",
@@ -247,5 +251,7 @@
   "CreateNewRequester": "Создать нового запросчика",
   "Name": "Имя",
   "NameIsRequired": "Укажите имя",
-  "EnterValidEmail": "Введите действительный адрес электронной почты"
+  "EnterValidEmail": "Введите действительный адрес электронной почты",
+  "Title": "Заголовок",
+  "Add": "Добавлять"
 }

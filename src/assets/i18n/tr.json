@@ -230,6 +230,10 @@
   "Continue":"Devam",
   "ViewArchivedConversations":"Arşivlenmiş konuşmaları görüntüle",
   "ViewContactsList":"Kişi listesini görüntüle",
+  "AddAsCannedResponse":"Varsayılan yanıt olarak ekle",
+  "AddNewCannedResponse":"Yeni bir hazır yanıt ekle",
+  "TitleIsRequired":"Başlık zorunludur",
+  "MessageIsRequired":"Mesaj gerekli",
   "Already_present_in_the_dashboard_json":"........",
   "CreateTicket": "Bilet oluştur",
   "Requester": "istekte bulunan",
@@ -247,5 +251,7 @@
   "CreateNewRequester": "Yeni istek sahibi oluştur",
   "Name": "İsim",
   "NameIsRequired": "İsim gerekli",
-  "EnterValidEmail": "Geçerli bir e-posta adresi girin"
+  "EnterValidEmail": "Geçerli bir e-posta adresi girin",
+  "Title": "Başlık",
+  "Add": "Eklemek"
 }

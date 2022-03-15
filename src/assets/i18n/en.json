@@ -230,6 +230,10 @@
   "Continue":"Continue",
   "ViewArchivedConversations":"View archived conversations",
   "ViewContactsList":"View contacts list",
+  "AddAsCannedResponse":"Add as canned response",
+  "AddNewCannedResponse":"Add a new canned response",
+  "TitleIsRequired":"Title is required",
+  "MessageIsRequired":"Message is required",
   "Already_present_in_the_dashboard_json":"........",
   "CreateTicket": "Create ticket",
   "Requester": "Requester",
@@ -247,5 +251,7 @@
   "CreateNewRequester": "Create new requester",
   "Name": "Name",
   "NameIsRequired": "Name is required",
-  "EnterValidEmail": "Enter a valid email address"
+  "EnterValidEmail": "Enter a valid email address",
+  "Title": "Title",
+  "Add": "Add"
 }

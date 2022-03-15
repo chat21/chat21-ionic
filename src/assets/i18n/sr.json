@@ -230,6 +230,10 @@
         "Continue":"Наставити",
         "ViewArchivedConversations":"Погледајте архивиране разговоре",
         "ViewContactsList":"Погледајте листу контаката",
+        "AddAsCannedResponse":"Додај као задани одговор",
+        "AddNewCannedResponse":"Додајте нови подразумевани одговор",
+        "TitleIsRequired":"Наслов је обавезан",
+        "MessageIsRequired":"Порука је обавезна",
         "Already_present_in_the_dashboard_json":"........",
         "CreateTicket": "Креирајте карту",
         "Requester": "Подносилац захтева",
@@ -247,5 +251,7 @@
         "CreateNewRequester": "Креирајте нови захтев",
         "Name": "Име",
         "NameIsRequired": "Име је обавезно",
-        "EnterValidEmail": "Унесите исправну е-маил адресу"
+        "EnterValidEmail": "Унесите исправну е-маил адресу",
+        "Title": "Наслов",
+        "Add": "Додати"
 }
