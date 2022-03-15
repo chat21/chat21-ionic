@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{'AddNewCannedResponse' | translate}}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button ion-button fill="clear" (click)="closeModalCreateCannedResponseModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="validations_form" (ngSubmit)="onSubmit(validations_form.value)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+
+          <ion-item>
+            <ion-label for="title" position="floating" color="primary">{{'Title' | translate}} *</ion-label>
+            <ion-input id="title" type="text" formControlName="title"></ion-input>
+          </ion-item>
+          <div class="validation-errors">
+            <ng-container *ngFor="let validation of validation_messages.title">
+              <div class="error-message"
+                *ngIf="validations_form.get('title').hasError(validation.type) && (validations_form.get('title').dirty || validations_form.get('title').touched)">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <span class="validation-message"> {{ validation.message }} </span>
+              </div>
+            </ng-container>
+          </div>
+        </ion-col>
+
+
+        <ion-col size="12">
+          <ion-item>
+            <ion-label for="message" position="floating" color="primary">{{'Message' | translate}} *</ion-label>
+            <!-- <ion-input id="message" type="text" formControlName="message"></ion-input> -->
+            <ion-textarea rows="6" id="message" type="text" formControlName="message"></ion-textarea>
+          </ion-item>
+          <div class="validation-errors">
+            <ng-container *ngFor="let validation of validation_messages.message">
+              <div class="error-message"
+                *ngIf="validations_form.get('message').hasError(validation.type) && (validations_form.get('message').dirty || validations_form.get('message').touched)">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <span class="validation-message"> {{ validation.message }} </span>
+
+              </div>
+            </ng-container>
+          </div>
+        </ion-col>
+        <!-- expand="block" -->
+        <ion-col size="12" style="text-align: center;">
+          <!-- style="width:252.45px" -->
+          <ion-button color="primary" class="submit-btn" type="submit" [disabled]="!validations_form.valid">
+            <ion-icon *ngIf="showSpinnerCreateCannedResponse === false" style="font-size: 1.9em;" slot="start"
+              name="add-circle-outline"></ion-icon>
+            <ion-spinner *ngIf="showSpinnerCreateCannedResponse === true"
+              style="color: #fff; margin: 0px 0.3em 0px -0.3em;" name="bubbles" duration="2"></ion-spinner>
+            {{'Add' | translate}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+</ion-content>

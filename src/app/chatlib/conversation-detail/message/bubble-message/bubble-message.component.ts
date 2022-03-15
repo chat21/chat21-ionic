@@ -8,6 +8,8 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 import { TranslateService } from '@ngx-translate/core';
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 import * as moment from 'moment';
+import { CreateCannedResponsePage } from 'src/app/pages/create-canned-response/create-canned-response.page'
+import { ModalController } from '@ionic/angular';
 @Component({
   selector: 'chat-bubble-message',
   templateUrl: './bubble-message.component.html',
@@ -17,13 +19,15 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
 
   @Input() message: MessageModel;
   @Input() textColor: string;
+  @Input() areVisibleCAR: boolean;
+  @Input() support_mode: boolean;
   @Output() onBeforeMessageRender = new EventEmitter();
   @Output() onAfterMessageRender = new EventEmitter();
   @Output() onImageRendered = new EventEmitter<boolean>()
   isImage = isImage;
   isFile = isFile;
   isFrame = isFrame;
-
+  @Input() addAsCannedResponseTooltipText : string;
   public browserLang: string;
 
   tooltipOptions = {
@@ -41,8 +45,8 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   constructor(
     public sanitizer: DomSanitizer,
     private translate: TranslateService,
-    public tiledeskAuthService: TiledeskAuthService
-    
+    public tiledeskAuthService: TiledeskAuthService,
+    public modalController: ModalController,
     ) {
     // console.log('BUBBLE-MSG Hello !!!!')
   }
@@ -109,13 +113,19 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
         sameElse: 'LLLL'
       }
     });
+    // this.translate.getTranslation(chat_lang).subscribe((labels: string) => {
+    //   console.log('[BUBBLE-MESSAGE] translations: ', labels);
+    // });
   }
 
   ngOnChanges() {
-    // console.log('BUBBLE-MSG Hello !!!! this.message ',  this.message)
+    console.log('BUBBLE-MSG Hello !!!! this.message ',  this.message)
+    console.log('BUBBLE-MSG ngOnChanges areVisibleCAR', this.areVisibleCAR)
+      console.log('BUBBLE-MSG ngOnChanges support_mode', this.support_mode)
     if (this.message && this.message.metadata && typeof this.message.metadata === 'object') {
       this.getMetadataSize(this.message.metadata)
       // console.log('BUBBLE-MSG ngOnChanges message > metadata', this.message.metadata)
+      
     }
 
   }
@@ -184,11 +194,11 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
         const domRepresentation = document.getElementsByClassName('chat-tooltip');
         if (domRepresentation) {
           const item = domRepresentation[0] as HTMLInputElement;
-          if (!item.classList.contains('tooltip-show')) {
+          if (item && !item.classList.contains('tooltip-show')) {
             item.classList.add('tooltip-show');
           }
           setTimeout(function () {
-            if (item.classList.contains('tooltip-show')) {
+            if (item && item.classList.contains('tooltip-show')) {
               item.classList.remove('tooltip-show');
             }
           }, that.tooltipOptions['hideDelayAfterClick']);
@@ -223,6 +233,46 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   onImageRenderedFN(event) {
     this.onImageRendered.emit(event)
   }
+
+  async presentCreateCannedResponseModal(): Promise<any> {
+    console.log('[BUBBLE-MESSAGE] PRESENT CREATE CANNED RESPONSE MODAL ')
+    const attributes = {
+       message: this.message,
+    }
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: CreateCannedResponsePage,
+      componentProps: attributes,
+      swipeToClose: false,
+      backdropDismiss: false,
+    })
+    modal.onDidDismiss().then((dataReturned: any) => {
+      // 
+      this.logger.log('[BUBBLE-MESSAGE] ', dataReturned.data)
+     
+      // if (dataReturned.data && dataReturned.data.selectedRequester) {
+      //   this.selectedRequester = dataReturned.data.selectedRequester
+      // }
+
+      // if (dataReturned.data && dataReturned.data.requester_type) {
+      //   this.requester_type = dataReturned.data.requester_type
+      // }
+
+      // if (dataReturned.data && dataReturned.data.requester_id) {
+      //  const requester_id = dataReturned.data.requester_id;
+      //  this.logger.log('[CREATE-TICKET] REQUESTER ID RERETURNED FROM CREATE REQUESTER', requester_id)
+      //  this.id_for_view_requeter_dtls = requester_id
+
+      // }
+
+      // if ( dataReturned.data && dataReturned.data.updatedProjectUserAndLeadsArray) {
+      //   this.projectUserAndLeadsArray = dataReturned.data.updatedProjectUserAndLeadsArray
+      //   this.projectUserAndLeadsArray = this.projectUserAndLeadsArray.slice(0)
+      // }
+    })
+
+    return await modal.present()
+  }
+
 
   // printMessage(message, messageEl, component) {
   //   const messageOBJ = { message: message, sanitizer: this.sanitizer, messageEl: messageEl, component: component}

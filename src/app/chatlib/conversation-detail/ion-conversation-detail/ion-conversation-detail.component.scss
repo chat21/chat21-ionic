@@ -2,29 +2,30 @@
     color: lightblue;
 }
 
-:host .base_sent .msg_sent ::ng-deep div > div > div > chat-text > p > p  {
-    margin-top:12px !important;
+:host .base_sent .msg_sent ::ng-deep div > div > div > chat-text > p > p {
+    margin-top: 12px !important;
     // white-space: nowrap;
     // overflow: hidden;
     // text-overflow: ellipsis;
 }
 
-:host .base_sent .msg_sent ::ng-deep > div > div > chat-image > div  {
+:host .base_sent .msg_sent ::ng-deep > div > div > chat-image > div {
     // display: none !important;
     // border-radius: unset !important;
-    img, .loader { 
+    img,
+    .loader {
         border-top-right-radius: 6px !important;
         border-top-left-radius: 16px !important;
         border-bottom-left-radius: 16px !important;
         border-bottom-right-radius: 0px;
     }
-    
 }
 
 :host .base_receive .msg_receive ::ng-deep > div > div > chat-image > div > img {
     // display: none !important;
     // border-radius: unset !important;
-    img, .loader { 
+    img,
+    .loader {
         border-top-left-radius: 6px !important;
         border-top-right-radius: 16px !important;
         border-bottom-right-radius: 16px !important;
@@ -38,9 +39,8 @@ ion-item {
     --min-height: 20px;
     --border-style: none;
 
-    .input-wrapper{
-
-        .align-center{
+    .input-wrapper {
+        .align-center {
             display: block;
         }
     }
@@ -53,12 +53,12 @@ ion-item {
     //opacity: 0px;
 }
 
-.msg_info_container{
+.msg_info_container {
     text-align: center;
     padding: 2px 0px 2px 0px;
 }
 
-.message_sender_fullname{
+.message_sender_fullname {
     font-size: 0.7em;
     margin: 0 0 1px 10px;
     color: var(--gray);
@@ -72,15 +72,15 @@ ion-item {
     // padding: 6px 6px 6px 6px;
     // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     // -webkit-animation: heartbeat 1.5s ease-in-out both;
-    // animation: heartbeat 1.5s ease-in-out both;                    
+    // animation: heartbeat 1.5s ease-in-out both;
 }
-                
+
 /* send message */
 .base_sent {
     align-items: flex-end;
     justify-content: flex-end;
-    padding: 2px 0px 4px 40px;
-
+    // padding: 2px 0px 4px 40px;
+    padding: 2px 0px 14px 40px; // edited to display the date at the bottom of the "message bubble"
     .msg_sent {
         background-color: var(--bobble-blue);
         color: var(--col-msg-sent);
@@ -89,18 +89,21 @@ ion-item {
         max-width: calc(100% - 70px);
         min-width: 14px;
         border-top-right-radius: 8px;
-        border-bottom-right-radius: 0px; 
-     
+        border-bottom-right-radius: 0px;
     }
+    // .msg_sent:hover {
+    //     background-color: rgba(0, 153, 255, 0.6);
+    // }
 
     .has-metadata {
         max-width: 100% !important;
     }
 }
-    
+
 /** recive message **/
 .base_receive {
-    padding: 0px 0px 6px 0px;
+    // padding: 0px 0px 6px 0px;
+    padding: 0px 0px 15px 0px; // edited to display the date at the bottom of the "message bubble"
     /* avatar */
     .content-avatar {
         position: relative;
@@ -109,7 +112,7 @@ ion-item {
         height: 28px;
         margin-right: 6px;
 
-        .profile_image{
+        .profile_image {
             position: relative;
             width: 25px;
             height: 25px;
@@ -118,7 +121,7 @@ ion-item {
             background-color: #ffffff;
             border: 1px solid #e2e2e2;
         }
-        .profile_image img{
+        .profile_image img {
             max-width: 100%;
             width: 100%;
             height: 100%;
@@ -139,15 +142,18 @@ ion-item {
         width: auto;
         border-top-left-radius: 8px;
         border-bottom-left-radius: 0px;
+    }
 
-    }          
-    
+    // .msg_receive:hover {
+    //     background-color: rgba(247, 247, 247, 0.6);
+    // }
+
     .has-metadata {
         max-width: 100% !important;
     }
 }
 
-.time{
+.time {
     margin-bottom: 20px;
 }
 
@@ -158,42 +164,129 @@ ion-item {
     min-height: 20px;
     padding: 7px;
     text-align: center;
-  }
-  
-  .spinner > div {
+}
+
+.spinner > div {
     width: 10px;
     height: 10px;
     background-color: rgb(255, 255, 255);
-  
+
     border-radius: 100%;
     display: inline-block;
     -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
     animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-  }
-  
-  .spinner .bounce1 {
+}
+
+.spinner .bounce1 {
     -webkit-animation-delay: -0.32s;
     animation-delay: -0.32s;
-  }
-  
-  .spinner .bounce2 {
+}
+
+.spinner .bounce2 {
     -webkit-animation-delay: -0.16s;
     animation-delay: -0.16s;
-  }
-  
-  @-webkit-keyframes sk-bouncedelay {
-    0%, 80%, 100% { -webkit-transform: scale(0) }
-    40% { -webkit-transform: scale(1.0) }
-  }
-  
-  @keyframes sk-bouncedelay {
-    0%, 80%, 100% { 
-      -webkit-transform: scale(0);
-      transform: scale(0);
-    } 40% { 
-      -webkit-transform: scale(1.0);
-      transform: scale(1.0);
+}
+
+@-webkit-keyframes sk-bouncedelay {
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0);
     }
-  }
+    40% {
+        -webkit-transform: scale(1);
+    }
+}
 
+@keyframes sk-bouncedelay {
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+    40% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
 
+// ---------------------------------------------------------
+// Button add canned on the fly
+// ---------------------------------------------------------
+:host .base_sent .msg_sent ::ng-deep div > div > div > ion-button {
+    display: none;
+    position: absolute;
+    top: -3px;
+    left: -31px;
+}
+
+// :host .base_sent .msg_sent:hover ::ng-deep div > div > div > ion-button {
+:host .base_sent:hover .msg_sent ::ng-deep div > div > div > ion-button {
+    display: block;
+    // position: absolute;
+    // top: -11px;
+    // left: -26px;
+}
+
+:host .base_receive .msg_receive ::ng-deep div > div > ion-button {
+    display: none;
+    position: absolute;
+    top: -3px;
+    right: -31px;
+}
+
+// :host .base_receive .msg_receive:hover ::ng-deep div > div > ion-button {
+:host .base_receive:hover .msg_receive ::ng-deep div > div > ion-button {
+    display: block;
+    // position: absolute;
+    // top: -11px;
+    // left: 91px;
+}
+
+// ---------------------------------------------------------
+// Long date divider
+// ---------------------------------------------------------
+.long-date-divider-wpr {
+    justify-content: center !important;
+    align-items: center !important;
+    display: flex !important;
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.long-date-divider-border-b {
+    border-bottom: 1px solid #dee5ee !important;
+    flex: 1 1 auto !important;
+    margin-left: 1.1rem !important;
+    margin-right: 1.1rem !important;
+}
+
+.long-date-divider {
+    flex: 0 0 auto !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    line-height: 1.25rem !important;
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+    color: #64748b;
+}
+
+// ---------------------------------------------------------
+// message date
+// ---------------------------------------------------------
+:host .base_sent .msg_sent ::ng-deep div > div > div > .message-date {
+    position: absolute;
+    bottom: -11px;
+    color: #64748b;
+    font-size: 10px;
+    right: 0px;
+}
+
+:host .base_receive .msg_receive ::ng-deep div > div > .message-date {
+    position: absolute;
+    bottom: -11px;
+    color: #64748b;
+    font-size: 10px;
+    left: 0px;
+}

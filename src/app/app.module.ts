@@ -84,7 +84,7 @@ import { LoginPageModule } from './pages/authentication/login/login.module';
 import { LoaderPreviewPageModule } from './pages/loader-preview/loader-preview.module';
 import { CreateTicketPageModule } from './pages/create-ticket/create-ticket.module';
 import { CreateRequesterPageModule } from './pages/create-requester/create-requester.module';
-
+import { CreateCannedResponsePageModule } from './pages/create-canned-response/create-canned-response.module';
 // UTILS
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -92,6 +92,8 @@ import { ConversationInfoModule } from 'src/app/components/conversation-info/con
 
 
 // Directives
+// import { HtmlEntitiesEncodePipe } from './directives/html-entities-encode.pipe';
+// import { MarkedPipe } from './directives/marked.pipe';
 
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { Network } from '@ionic-native/network/ngx';
@@ -248,7 +250,7 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   entryComponents: [
   ],
@@ -285,7 +287,8 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     NgxLinkifyjsModule.forRoot(),
     LoaderPreviewPageModule,
     CreateTicketPageModule,
-    CreateRequesterPageModule
+    CreateRequesterPageModule,
+    CreateCannedResponsePageModule
   ],
   bootstrap: [AppComponent],
 

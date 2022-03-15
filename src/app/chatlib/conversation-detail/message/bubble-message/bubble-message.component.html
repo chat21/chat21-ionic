@@ -1,9 +1,9 @@
 <!-- [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" -->
 <!-- [ngStyle]="{'padding': (isImage(message) || isFrame(message))?'0px':'0 8px'}" -->
 <!-- isImage >{{isImage(message) }}    message.metadata.width {{message?.metadata?.width }}  -->
-<div id="bubble-message" [ngStyle]="{'padding': (isImage(message) || isFrame(message))?'0px':'0 8px', 'width': (isImage(message) || isFrame(message))? message?.metadata?.width + 'px' : null }"
-   class="messages primary-color"
-  [class.emoticon]="message?.emoticon">
+<div id="bubble-message"
+  [ngStyle]="{'padding': (isImage(message) || isFrame(message))?'0px':'0 8px', 'width': (isImage(message) || isFrame(message))? message?.metadata?.width + 'px' : null }"
+  class="messages primary-color" [class.emoticon]="message?.emoticon">
 
 
   <div>
@@ -18,19 +18,13 @@
 
     <!-- [width]="getMetadataSize(message.metadata).width" 
     [height]="getMetadataSize(message.metadata).height" -->
-    <chat-image *ngIf="isImage(message)" 
-      [metadata]="message.metadata"
-     
-      [width]="message.metadata.width" 
-      [height]="message.metadata.height"
-      (onImageRendered)="onImageRenderedFN($event)">
+    <chat-image *ngIf="isImage(message)" [metadata]="message.metadata" [width]="message.metadata.width"
+      [height]="message.metadata.height" (onImageRendered)="onImageRenderedFN($event)">
     </chat-image>
 
     <!-- [width]="getMetadataSize(message.metadata).width"  -->
     <!-- [height]="getMetadataSize(message.metadata).height"> -->
-    <chat-frame *ngIf="isFrame(message)" 
-      [metadata]="message.metadata"
-      [width]="message.metadata.width" 
+    <chat-frame *ngIf="isFrame(message)" [metadata]="message.metadata" [width]="message.metadata.width"
       [height]="message.metadata.height">
     </chat-frame>
 
@@ -40,36 +34,26 @@
       [height]="message.metadata.height">
     </chat-frame> -->
 
-    <!-- message type:: text -->
-    <!-- <div *ngIf="message.type == 'text'">  -->
-      
-    <div *ngIf="message?.text" [tooltip]="timeTooltipLeft" [options]="tooltipOptions" placement="left"
-      content-type="template" (click)="handleTooltipEvents($event)">
-      <ng-template #timeTooltipLeft>
-        <!-- <span>{{message.timestamp | amTimeAgo}}</span> -->
-        <!-- <span> {{browserLang === 'it' ? (message.timestamp| amDateFormat:'DD MMM') : (message.timestamp |
-        amDateFormat:'MMM DD')}} </span> amCalendar -->
 
+    <!-- [tooltip]="timeTooltipLeft" [options]="tooltipOptions" placement="left" content-type="template" (click)="handleTooltipEvents($event)" -->
+    <div *ngIf="message?.text">
+      <span class="message-date"> {{message.timestamp | date:'HH:mm' }} </span>
+      <!-- <ng-template #timeTooltipLeft>
         <span> {{message.timestamp | amCalendar }} </span>
-      </ng-template>
+      </ng-template> -->
 
-      <chat-text 
-        [text]="message?.text" 
-        [color]="textColor" 
-        [message]="message"
+      <chat-text [text]="message?.text" [color]="textColor" [message]="message"
         (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
         (onAfterMessageRender)="returnOnAfterMessageRender($event)">
       </chat-text>
-      <!-- <p #messageEl class="message_innerhtml marked" [innerHTML]="printMessage(message, messageEl, this) | marked"></p> -->
-      <!-- <div *ngIf="isPopupUrl(message.text); then contentPopup else contentNewTab">here
-            is ignored</div>
-        <ng-template #contentPopup>
-            <p style="text-decoration: underline; padding:8px; cursor: pointer;"
-                (click)="popupUrl(g.windowContext, message.text,'windowName')">{{strip_tags(message.text)}}</p>
-        </ng-template>
-        <ng-template #contentNewTab>
-            <p #messageEl [innerHTML]="printMessage(message, messageEl, this) | linky"></p>
-        </ng-template> -->
+
+      <ng-container *ngIf="areVisibleCAR && support_mode === true">
+        <ion-button shape="round" size="small" class="btn-add-msg-as-canned-response" ion-button fill="clear"
+          (click)="presentCreateCannedResponseModal()" tooltip="{{addAsCannedResponseTooltipText}}"
+          [options]="tooltipOptions" placement="bottom">
+          <ion-icon slot="icon-only" name="flash-outline" style="font-size: 1em;"> </ion-icon>
+        </ion-button>
+      </ng-container>
     </div>
   </div>
 

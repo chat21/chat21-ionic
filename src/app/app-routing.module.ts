@@ -56,7 +56,12 @@ const routes: Routes = [
   {
     path: 'create-requester',
     loadChildren: () => import('./pages/create-requester/create-requester.module').then( m => m.CreateRequesterPageModule)
+  },
+  {
+    path: 'create-canned-response',
+    loadChildren: () => import('./pages/create-canned-response/create-canned-response.module').then( m => m.CreateCannedResponsePageModule)
   }
+
 
 
 
