@@ -58,7 +58,7 @@ import { ScrollbarThemeModule } from '../../utils/scrollbar-theme.directive';
   declarations: [
     ConversationDetailPage,
     HeaderConversationDetailComponent,
-    MessageTextAreaComponent,
+    MessageTextAreaComponent
     // BubbleDayMessageComponent,
     // BubbleSystemMessageComponent,
     // BubbleMyMessageComponent,

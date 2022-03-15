@@ -45,6 +45,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Input() tagsCannedFilter: any = [];
   @Input() tagsCannedCount: number;
   @Input() areVisibleCAR: boolean;
+  @Input() support_mode: boolean;
   @Input() events: Observable<void>;
   @Input() fileUploadAccept: string
   @Input() isOpenInfoConversation: boolean;
@@ -133,6 +134,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     } else {
       this.IS_SUPPORT_GROUP_CONVERSATION = false
     }
+    console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges support_mode ', this.support_mode)
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges disableTextarea ', this.disableTextarea)
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
@@ -557,11 +559,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
     // }
 
-    // const elTextArea = this.message_text_area['el'];
-    // console.log('[MSG-TEXT-AREA]   textArea elTextArea ', elTextArea)
-    // const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
-    // console.log("[MSG-TEXT-AREA]   textArea textArea ", textArea);
-    // this.logger.log("[MSG-TEXT-AREA]   textArea value", textArea.value)
+    const elTextArea = this.message_text_area['el'];
+    console.log('[MSG-TEXT-AREA]   textArea elTextArea ', elTextArea)
+    const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
+    console.log("[MSG-TEXT-AREA]   textArea textArea ", textArea);
+    
 
     this.hasClickedOpenCannedResponses.emit(true);
   }

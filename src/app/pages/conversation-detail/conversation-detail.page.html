@@ -137,7 +137,6 @@
             <!-- ----------------------------------------------------------- -->
             <!-- Canned responses -->
             <!-- ----------------------------------------------------------- -->
-
             <div id="canned" *ngIf="tagsCannedFilter.length > 0 && HIDE_CANNED_RESPONSES === false">
               <ion-list class="canned-list">
                 <ion-item button="true" [ngClass]="{'is_active_item': i == arrowkeyLocation}" lines="none"
@@ -156,13 +155,19 @@
             <!-- openInfoConversation   {{openInfoConversation}} - isMobile {{isMobile}} -->
             <app-message-text-area
               *ngIf="(openInfoConversation === false && isMobile === true) || (openInfoConversation === true && isMobile === false) || (openInfoConversation === false && isMobile === false)"
-              [tagsCannedCount]="tagsCannedCount" [areVisibleCAR]="areVisibleCAR" [loggedUser]="loggedUser"
-              [conversationWith]="conversationWith" [tagsCannedFilter]="tagsCannedFilter"
+              [tagsCannedCount]="tagsCannedCount" 
+              [areVisibleCAR]="areVisibleCAR" 
+              [support_mode]="support_mode"
+              [loggedUser]="loggedUser"
+              [conversationWith]="conversationWith" 
+              [tagsCannedFilter]="tagsCannedFilter"
               (eventChangeTextArea)="returnChangeTextArea($event)"
               (hasClickedOpenCannedResponses)="hasClickedOpenCannedResponses($event)"
-              (eventSendMessage)="returnSendMessage($event)" [translationMap]="translationMap"
+              (eventSendMessage)="returnSendMessage($event)" 
+              [translationMap]="translationMap"
               [fileUploadAccept]="appConfigProvider.getConfig().fileUploadAccept"
-              [isOpenInfoConversation]="isOpenInfoConversation" [dropEvent]="dropEvent"
+              [isOpenInfoConversation]="isOpenInfoConversation" 
+              [dropEvent]="dropEvent"
               (onPresentModalScrollToBottom)="onPresentModalScrollToBottom($event)"
               [disableTextarea]="disableTextarea">
             </app-message-text-area>
