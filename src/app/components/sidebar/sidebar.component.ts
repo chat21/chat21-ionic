@@ -13,7 +13,7 @@ import { EventsService } from 'src/app/services/events-service';
 import { tranlatedLanguage } from '../../../chat21-core/utils/constants';
 
 // utils
-import { avatarPlaceholder,  getColorBck} from 'src/chat21-core/utils/utils-user';
+import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user';
 
 @Component({
   selector: 'app-sidebar',
@@ -59,7 +59,7 @@ export class SidebarComponent implements OnInit {
     public appConfigProvider: AppConfigProvider,
     private translate: TranslateService,
     public events: EventsService,
-   
+
   ) { }
 
   ngOnInit() {
@@ -106,12 +106,12 @@ export class SidebarComponent implements OnInit {
   }
 
   checkIfExistPhotoProfile(imageUrl) {
-    this.verifyImageURL(imageUrl,  (imageExists) => {
+    this.verifyImageURL(imageUrl, (imageExists) => {
 
       if (imageExists === true) {
         this.USER_PHOTO_PROFILE_EXIST = true;
         this.logger.log('[SIDEBAR] photo_profile_URL IMAGE EXIST ', imageExists)
-      
+
       } else {
         this.USER_PHOTO_PROFILE_EXIST = false;
         this.logger.log('[SIDEBAR] photo_profile_URL IMAGE EXIST ', imageExists)
@@ -134,7 +134,7 @@ export class SidebarComponent implements OnInit {
       currentUser['fullname_initial'] = 'N/A'
       currentUser['fillColour'] = 'rgb(98, 100, 167)'
     }
-}
+  }
 
   verifyImageURL(image_url, callBack) {
     const img = new Image();
@@ -448,6 +448,12 @@ export class SidebarComponent implements OnInit {
 
   goToSettings_CannedResponses() {
     let url = this.DASHBOARD_URL + this.project_id + '/cannedresponses'
+    const myWindow = window.open(url, '_self');
+    myWindow.focus();
+  }
+
+  goToWidgetSetUp() {
+    let url = this.DASHBOARD_URL + this.project_id + '/widget-set-up'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
