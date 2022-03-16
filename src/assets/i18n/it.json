@@ -253,5 +253,13 @@
     "NameIsRequired": "Il nome è obbligatorio",
     "EnterValidEmail": "Inserire un indirizzo email valido",
     "Title": "Titolo",
-    "Add": "Aggiungi"
+    "Add": "Aggiungi",
+    "AddCustomization": "Aggiungi personalizzazione",
+    "SelectACustomizationToAddToYourMessage": "Seleziona una valore personalizzato da aggiungere al messaggio",
+    "recipient_name_desc": "Il nome della persona a cui l'agente sta rispondendo verrà aggiunto al messaggio.",
+    "agent_name_desc": "Il nome dell'agente che sta rispondendo verrà aggiunto al messaggio.",
+    "First_name_of_recipient": "Nome del destinatario",
+    "First_name_of_agent": "Nome dell'agente",
+    "EnterCannedResponseTitle": "Inserisci il titolo della risposta predefinita",
+    "WriteMsgToSendToYourVisitors": "Scrivi un messaggio di risposta predefinito da inviare ai tuoi visitatori"
 }

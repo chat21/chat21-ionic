@@ -253,5 +253,13 @@
   "NameIsRequired": "Name is required",
   "EnterValidEmail": "Enter a valid email address",
   "Title": "Title",
-  "Add": "Add"
+  "Add": "Add",
+  "AddCustomization": "Add personalisation",
+  "SelectACustomizationToAddToYourMessage": "Select a personalisation value to add to message",
+  "recipient_name_desc": "The first name of the person the agent replying to will be added to message.",
+  "agent_name_desc": "The name of the agent who is replying will be added to the message.",
+  "First_name_of_recipient": "First name of recipient",
+  "First_name_of_agent": "First name of agent",
+  "EnterCannedResponseTitle": "Enter canned response title",
+  "WriteMsgToSendToYourVisitors": "Write a canned response message to send to your visitors"
 }

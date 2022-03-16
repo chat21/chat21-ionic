@@ -253,5 +253,13 @@
         "NameIsRequired": "Име је обавезно",
         "EnterValidEmail": "Унесите исправну е-маил адресу",
         "Title": "Наслов",
-        "Add": "Додати"
+        "Add": "Додати",
+        "AddCustomization": "Додајте персонализацију",
+        "SelectACustomizationToAddToYourMessage": "Изаберите вредност персонализације коју желите да додате у поруку",
+        "recipient_name_desc": "Име особе којој агент одговара биће додато у поруку.",
+        "agent_name_desc": "Име агента који одговара биће додато у поруку.",
+        "First_name_of_recipient": "Име примаоца",
+        "First_name_of_agent": "Име агента",
+        "EnterCannedResponseTitle": "Унесите назив унапред припремљеног одговора",
+        "WriteMsgToSendToYourVisitors": "Напишите унапред припремљену одговор поруку коју ћете послати посетиоцима"
 }

@@ -253,5 +253,13 @@
   "NameIsRequired": "İsim gerekli",
   "EnterValidEmail": "Geçerli bir e-posta adresi girin",
   "Title": "Başlık",
-  "Add": "Eklemek"
+  "Add": "Eklemek",
+  "AddCustomization": "Kişiselleştirme ekle",
+  "SelectACustomizationToAddToYourMessage": "Mesaja eklemek için bir kişiselleştirme değeri seçin",
+  "recipient_name_desc": "Temsilcinin cevap verdiği kişinin adı mesaja eklenecektir.",
+  "agent_name_desc": "Cevap veren temsilcinin adı mesaja eklenecektir.",
+  "First_name_of_recipient": "Alıcının adı",
+  "First_name_of_agent": "Ajanın adı",
+  "EnterCannedResponseTitle": "Hazır yanıt başlığını girin",
+  "WriteMsgToSendToYourVisitors": "Ziyaretçilerinize göndermek için hazır bir yanıt mesajı yazın"
 }

@@ -253,5 +253,13 @@
   "NameIsRequired": "Name ist erforderlich",
   "EnterValidEmail": "Geben Sie eine gültige Email Adresse ein",
   "Title": "Titel",
-  "Add": "Hinzufügen"
+  "Add": "Hinzufügen",
+  "AddCustomization": "Personalisierung hinzufügen",
+  "SelectACustomizationToAddToYourMessage": "Personalisierungs-Feld auswählen",
+  "recipient_name_desc": "Der Vorname eines Besuchers wird zur Nachricht hinzugefügt.",
+  "agent_name_desc": "Der Name des Betreuers wird zur Nachricht hinzugefügt.",
+  "First_name_of_recipient": "Vorname des Empfängers",
+  "First_name_of_agent": "Vorname des Betreuers",
+  "EnterCannedResponseTitle": "Titel der Vordefinierten Anfrage eingeben",
+  "WriteMsgToSendToYourVisitors": "Verfassen Sie eine vordefinierte Antwort für Ihre Besucher"
 }

@@ -253,5 +253,13 @@
   "NameIsRequired": "Укажите имя",
   "EnterValidEmail": "Введите действительный адрес электронной почты",
   "Title": "Заголовок",
-  "Add": "Добавлять"
+  "Add": "Добавлять",
+  "AddCustomization": "Добавить персонализацию",
+  "SelectACustomizationToAddToYourMessage": "Выберите значение персонализации для добавления к сообщению",
+  "recipient_name_desc": "Имя человека, которому отвечает агент, будет добавлено к сообщению.",
+  "agent_name_desc": "К сообщению будет добавлено имя отвечающего агента.",
+  "First_name_of_recipient": "Имя получателя",
+  "First_name_of_agent": "Имя агента",
+  "EnterCannedResponseTitle": "Введите готовый заголовок ответа",
+  "WriteMsgToSendToYourVisitors": "Напишите готовое ответное сообщение для отправки своим посетителям"
 }
