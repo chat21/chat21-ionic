@@ -542,6 +542,14 @@ select:-webkit-autofill:focus {
     color: #f44336;
 }
 
+#canned > ion-list > ion-item > div > div.no-canned-available-text {
+    color: #1877f2 !important;
+}
+
+#canned > ion-list > ion-item > div > div.no-canned-available-text:hover {
+    text-decoration: underline;
+}
+
 .highlight-search-string {
     color: #1877f2 !important;
 }
