@@ -65,7 +65,7 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.DASHBOARD_URL = this.appConfig.getConfig().dashboardUrl + '#/project/';
     // console.log('[SIDEBAR] DASHBOARD_URL ', this.DASHBOARD_URL)
-    this.getStoredProjectAndDashboardBaseUrl()
+    this.getStoredProjectAndUserRole()
     this.subcribeToAuthStateChanged()
     this.listenTocurrentProjectUserUserAvailability$()
     this.getOSCODE();
@@ -378,10 +378,7 @@ export class SidebarComponent implements OnInit {
   // }
   // }
 
-
-
-
-  getStoredProjectAndDashboardBaseUrl() {
+  getStoredProjectAndUserRole() {
     const stored_project = localStorage.getItem('last_project')
     // console.log('[SIDEBAR] stored_project ', stored_project)
     if (stored_project) {
