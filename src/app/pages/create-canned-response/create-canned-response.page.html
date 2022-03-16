@@ -10,15 +10,76 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-menu side="start" menuId="custom" contentId="main" class="my-custom-menu">
+  <!-- <ion-header>
+    <ion-toolbar color="tertiary">
+      <ion-title>Custom Menu</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+  <ion-content>
+    <ion-list>
+      <ion-item button (click)="addRecipientNamePlaceholderToTheMsg()"
+        (mouseover)="onOverBtnAddRecipientNamePlaceholder($event)"
+        (mouseout)="onOutBtnAddRecipientNamePlaceholder($event)">
+        <ion-label>
+          {{'First_name_of_recipient' | translate}}
+        </ion-label>
+      </ion-item>
+      <ion-item button (click)="addAgentNamePlaceholderToTheMsg()"
+        (mouseover)="onOverBtnAddAgentNamePlaceholder($event)" (mouseout)="onOutBtnAddAgentNamePlaceholder($event)">
+        <ion-label>
+          {{'First_name_of_agent' | translate}}
+        </ion-label>
+      </ion-item>
+
+    </ion-list>
+    <!-- <ion-note> </ion-note> -->
+    <ion-grid>
+      <ion-row>
+        <ion-col class="ion-padding">
+          <div class="ion-text-center">
+            <h6
+              *ngIf="mouseOverBtnAddRecipientNamePlaceholder === false && mouseOverBtnAddAgentNamePlaceholder === false"
+              ion-text class="note-text">
+              <!-- Seleziona una valore personalizzato da aggiungere al messaggio. -->
+              {{'SelectACustomizationToAddToYourMessage' | translate}}
+            </h6>
+            <h6
+              *ngIf="mouseOverBtnAddRecipientNamePlaceholder === true && mouseOverBtnAddAgentNamePlaceholder === false"
+              ion-text class="note-text">
+              <!-- Il nome della persona a cui l'agente sta rispondendo verrà aggiunto al messaggio. -->
+              {{'recipient_name_desc' | translate}}
+            </h6>
+
+            <h6
+              *ngIf="mouseOverBtnAddRecipientNamePlaceholder === false && mouseOverBtnAddAgentNamePlaceholder === true"
+              ion-text class="note-text">
+              <!-- Il nome dell'agente che sta rispondendo verrà aggiunto al messaggio. -->
+              {{'agent_name_desc' | translate }}
+            </h6>
+
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ion-content>
+</ion-menu>
+
+<ion-content id="create-canned-response-content">
   <form [formGroup]="validations_form" (ngSubmit)="onSubmit(validations_form.value)">
     <ion-grid>
       <ion-row>
         <ion-col size="12">
-
+          <!-- ---------------------------------------------- -->
+          <!-- Canned response title -->
+          <!-- ---------------------------------------------- -->
           <ion-item>
-            <ion-label for="title" position="floating" color="primary">{{'Title' | translate}} *</ion-label>
-            <ion-input id="title" type="text" formControlName="title"></ion-input>
+            <ion-label class="custom-label-size" for="title" position="stacked" color="primary">
+              {{'Title' | translate}} *
+            </ion-label>
+            <ion-input placeholder="{{'EnterCannedResponseTitle' | translate}}" id="title" type="text" formControlName="title">
+            </ion-input>
           </ion-item>
           <div class="validation-errors">
             <ng-container *ngFor="let validation of validation_messages.title">
@@ -31,12 +92,17 @@
           </div>
         </ion-col>
 
-
+        <!-- ---------------------------------------------- -->
+        <!-- Canned response Message -->
+        <!-- ---------------------------------------------- -->
         <ion-col size="12">
           <ion-item>
-            <ion-label for="message" position="floating" color="primary">{{'Message' | translate}} *</ion-label>
-            <!-- <ion-input id="message" type="text" formControlName="message"></ion-input> -->
-            <ion-textarea rows="6" id="message" type="text" formControlName="message"></ion-textarea>
+            <ion-label class="custom-label-size" for="message" position="stacked" color="primary">
+              {{'Message' | translate}} *
+            </ion-label>
+            <ion-textarea  placeholder="{{'WriteMsgToSendToYourVisitors' | translate}}"
+              (ngModelChange)="cannedResponseMessageChanged($event)" class="canned-response-texarea" rows="4"
+              id="message" type="text" formControlName="message"></ion-textarea>
           </ion-item>
           <div class="validation-errors">
             <ng-container *ngFor="let validation of validation_messages.message">
@@ -49,9 +115,23 @@
             </ng-container>
           </div>
         </ion-col>
-        <!-- expand="block" -->
+
+        <!-- ---------------------------------------------- -->
+        <!-- Button Add personalisation -->
+        <!-- ---------------------------------------------- -->
+        <ion-col size="12" style="text-align: right;">
+          <ion-button ion-button fill="clear" size="small" (click)="openAddPersonalisationMenu()">
+            <span style="color:#999999"> 
+              <!-- Aggiungi personalizzazione  -->
+              {{'AddCustomization' | translate}}
+            </span>
+          </ion-button>
+        </ion-col>
+
+          <!-- ---------------------------------------------- -->
+        <!-- Button Subbmit -->
+        <!-- ---------------------------------------------- -->
         <ion-col size="12" style="text-align: center;">
-          <!-- style="width:252.45px" -->
           <ion-button color="primary" class="submit-btn" type="submit" [disabled]="!validations_form.valid">
             <ion-icon *ngIf="showSpinnerCreateCannedResponse === false" style="font-size: 1.9em;" slot="start"
               name="add-circle-outline"></ion-icon>
@@ -63,5 +143,6 @@
       </ion-row>
     </ion-grid>
   </form>
+
 
 </ion-content>
