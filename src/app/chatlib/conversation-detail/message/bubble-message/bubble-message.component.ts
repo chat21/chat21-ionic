@@ -52,39 +52,7 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-
     this.setMomentLocale()
-    // this.browserLang = this.translate.getBrowserLang();
-  
-    // if (this.browserLang) {
-    //   if (this.browserLang === 'it') {
-
-
-    //     moment.locale('it', {
-    //       calendar: {
-    //         lastDay: '[Ieri alle] LT',
-    //         sameDay: '[Oggi alle] LT',
-    //         nextDay: '[Domani alle] LT',
-    //         lastWeek: '[Ultimo] dddd [alle] LT',
-    //         nextWeek: 'dddd [alle] LT',
-    //         sameElse: 'lll'
-    //       }
-    //     });
-
-    //   } else {
-    //     moment.locale('en', {
-    //       calendar: {
-    //         lastDay: '[Yesterday at] LT',
-    //         sameDay: '[Today at] LT',
-    //         nextDay: '[Tomorrow at] LT',
-    //         lastWeek: '[last] dddd [at] LT',
-    //         nextWeek: 'dddd [at] LT',
-    //         sameElse: 'lll'
-    //       }
-    //     });
-    //   }
-    // }
-
   }
 
 
@@ -119,15 +87,12 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    console.log('BUBBLE-MSG Hello !!!! this.message ',  this.message)
-    console.log('BUBBLE-MSG ngOnChanges areVisibleCAR', this.areVisibleCAR)
-      console.log('BUBBLE-MSG ngOnChanges support_mode', this.support_mode)
+    this.logger.log('BUBBLE-MSG Hello !!!! this.message ',  this.message)
+    this.logger.log('BUBBLE-MSG ngOnChanges areVisibleCAR', this.areVisibleCAR)
+    this.logger.log('BUBBLE-MSG ngOnChanges support_mode', this.support_mode)
     if (this.message && this.message.metadata && typeof this.message.metadata === 'object') {
       this.getMetadataSize(this.message.metadata)
-      // console.log('BUBBLE-MSG ngOnChanges message > metadata', this.message.metadata)
-      
     }
-
   }
 
 
@@ -235,7 +200,7 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   }
 
   async presentCreateCannedResponseModal(): Promise<any> {
-    console.log('[BUBBLE-MESSAGE] PRESENT CREATE CANNED RESPONSE MODAL ')
+    this.logger.log('[BUBBLE-MESSAGE] PRESENT CREATE CANNED RESPONSE MODAL ')
     const attributes = {
        message: this.message,
     }
@@ -248,26 +213,6 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
     modal.onDidDismiss().then((dataReturned: any) => {
       // 
       this.logger.log('[BUBBLE-MESSAGE] ', dataReturned.data)
-     
-      // if (dataReturned.data && dataReturned.data.selectedRequester) {
-      //   this.selectedRequester = dataReturned.data.selectedRequester
-      // }
-
-      // if (dataReturned.data && dataReturned.data.requester_type) {
-      //   this.requester_type = dataReturned.data.requester_type
-      // }
-
-      // if (dataReturned.data && dataReturned.data.requester_id) {
-      //  const requester_id = dataReturned.data.requester_id;
-      //  this.logger.log('[CREATE-TICKET] REQUESTER ID RERETURNED FROM CREATE REQUESTER', requester_id)
-      //  this.id_for_view_requeter_dtls = requester_id
-
-      // }
-
-      // if ( dataReturned.data && dataReturned.data.updatedProjectUserAndLeadsArray) {
-      //   this.projectUserAndLeadsArray = dataReturned.data.updatedProjectUserAndLeadsArray
-      //   this.projectUserAndLeadsArray = this.projectUserAndLeadsArray.slice(0)
-      // }
     })
 
     return await modal.present()
