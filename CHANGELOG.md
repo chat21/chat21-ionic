@@ -1,5 +1,13 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc12
+- Fixes the bug: it is not possible to read the requester's id which occurs when in the modal window "Create ticket" after selecting the requester the same is deleted
+- Improves the alignment of left sidebar menu item icons
+- Adds the ability teammates to add a message as a canned response
+- Hides the "Open canned responses" button if the "supportMode" environment variable is set to false
+- Fixes the bug: "Settings" menu item in the left sidebar redirects to the "Canned responses" page instead of the "Widget" page
+- Adds the ability for non-agent teammates to add a canned response when none are available
+
 ### 3.0.61-rc11
 - Fixed the bug: the "Resolve" button is displayed in the header of the details of the archived conversations
 - Fixed the bug: in the header of the conversation detail the "Resolve" button remains active even after resolving the conversation
