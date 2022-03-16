@@ -18,6 +18,7 @@ import { checkPlatformIsMobile } from 'src/chat21-core/utils/utils';
 // Logger
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+import { EventsService } from 'src/app/services/events-service';
 
 
 @Component({
@@ -97,6 +98,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     public uploadService: UploadService,
     public toastController: ToastController,
     private renderer: Renderer2,
+    public eventsService: EventsService
   ) { }
 
   // ---------------------------------------------------------
@@ -113,7 +115,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] LONG_TEXAREA_PLACEHOLDER ", this.LONG_TEXAREA_PLACEHOLDER);
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] SHORT_TEXAREA_PLACEHOLDER ", this.SHORT_TEXAREA_PLACEHOLDER);
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] SHORTER_TEXAREA_PLACEHOLDER ", this.SHORTER_TEXAREA_PLACEHOLDER);
-
+    this.listenToNewCannedResponseCreated()
     this.getWindowWidth();
   }
 
@@ -134,7 +136,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     } else {
       this.IS_SUPPORT_GROUP_CONVERSATION = false
     }
-    console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges support_mode ', this.support_mode)
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges support_mode ', this.support_mode)
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges disableTextarea ', this.disableTextarea)
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
@@ -548,23 +550,15 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       }
     }
   }
+
+ listenToNewCannedResponseCreated() {
+    this.eventsService.subscribe('newcannedresponse:created', (openCannedResponses) => {
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - listenToNewCannedResponseCreated - openUserDetailsSidebar', openCannedResponses);
+      this.openCannedResponses()
+    });
+  }
+
   openCannedResponses() {
-    // console.log('[MSG-TEXT-AREA] has clicked OPEN-CANNED-RESPONSES messageString ', this.messageString)
-    // if (this.messageString) {
-    //   console.log('[MSG-TEXT-AREA] has clicked OPEN-CANNED-RESPONSES messageString.trim ', this.messageString.trim)
-    // }  
-    // if (this.messageString === undefined) {
-    //   this.messageString = '/'
-    // } else {
-
-    // }
-
-    const elTextArea = this.message_text_area['el'];
-    console.log('[MSG-TEXT-AREA]   textArea elTextArea ', elTextArea)
-    const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
-    console.log("[MSG-TEXT-AREA]   textArea textArea ", textArea);
-    
-
     this.hasClickedOpenCannedResponses.emit(true);
   }
 
