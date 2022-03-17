@@ -10,7 +10,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-menu side="start" menuId="custom" contentId="main" class="my-custom-menu">
+<ion-menu side="start" menu-id="custom" content-id="main" class="my-custom-menu">
   <!-- <ion-header>
     <ion-toolbar color="tertiary">
       <ion-title>Custom Menu</ion-title>
@@ -65,6 +65,7 @@
 
   </ion-content>
 </ion-menu>
+<!-- <ion-router-outlet id="menuContent"></ion-router-outlet> -->
 
 <ion-content id="create-canned-response-content">
   <form [formGroup]="validations_form" (ngSubmit)="onSubmit(validations_form.value)">
