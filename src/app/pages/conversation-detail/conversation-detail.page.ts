@@ -9,6 +9,7 @@ import {
   Directive,
   HostListener,
   ChangeDetectorRef,
+  Renderer2,
 } from '@angular/core'
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'
 import {
@@ -20,6 +21,7 @@ import {
   NavController,
   IonContent,
   IonTextarea,
+  IonButton,
 } from '@ionic/angular'
 
 // models
@@ -42,10 +44,10 @@ import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/a
 import { ConversationHandlerService } from 'src/chat21-core/providers/abstract/conversation-handler.service'
 import { ContactsService } from 'src/app/services/contacts/contacts.service'
 import { CannedResponsesService } from '../../services/canned-responses/canned-responses.service'
-import { compareValues } from '../../../chat21-core/utils/utils'
+import { compareValues, htmlEntities } from '../../../chat21-core/utils/utils'
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service'
 import { PresenceService } from 'src/chat21-core/providers/abstract/presence.service'
-
+import { CreateCannedResponsePage } from 'src/app/pages/create-canned-response/create-canned-response.page'
 // utils
 import {
   TYPE_MSG_TEXT,
@@ -82,11 +84,12 @@ import { ScrollbarThemeDirective } from 'src/app/utils/scrollbar-theme.directive
   templateUrl: './conversation-detail.page.html',
   styleUrls: ['./conversation-detail.page.scss'],
 })
-export class ConversationDetailPage
-  implements OnInit, OnDestroy, AfterViewInit {
+export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('ionContentChatArea', { static: false })
   ionContentChatArea: IonContent
   @ViewChild('rowMessageTextArea', { static: false }) rowTextArea: ElementRef
+  @ViewChild('noCannedTitle', { static: false }) noCannedTitle: ElementRef
+
 
   // @ViewChild('info_content', { static: false }) info_content_child : InfoContentComponent;
 
@@ -138,29 +141,31 @@ export class ConversationDetailPage
   MESSAGE_TYPE_OTHERS = MESSAGE_TYPE_OTHERS
 
   arrowkeyLocation = -1
-  public_Key: any
-  areVisibleCAR: boolean
+  public_Key: any;
+  areVisibleCAR: boolean;
+  support_mode: boolean;
   //SOUND
-  setTimeoutSound: any
-  audio: any
-  isOpenInfoConversation: boolean
-  USER_HAS_OPENED_CLOSE_INFO_CONV: boolean = false
-  isHovering: boolean = false
-  conversation_count: number
-  showSpinner: boolean = true
-  dropEvent: any
-  conversation: any
+  setTimeoutSound: any;
+  audio: any;
+  isOpenInfoConversation: boolean;
+  USER_HAS_OPENED_CLOSE_INFO_CONV: boolean = false;
+  isHovering: boolean = false;
+  conversation_count: number;
+  showSpinner: boolean = true;
+  dropEvent: any;
+  conversation: any;
+  USER_ROLE: string;
   isMine = isMine
   isInfo = isInfo
   isFirstMessage = isFirstMessage
   messageType = messageType
   // info_content_child_enabled: boolean = false
-  private logger: LoggerService = LoggerInstance.getInstance()
+  private logger: LoggerService = LoggerInstance.getInstance();
 
-  public isOnline: boolean = true
-  public checkInternet: boolean
-  public msgCount: number
-  public disableTextarea: boolean
+  public isOnline: boolean = true;
+  public checkInternet: boolean;
+  public msgCount: number;
+  public disableTextarea: boolean;
 
   /**
    * Constructor
@@ -209,6 +214,8 @@ export class ConversationDetailPage
     public tiledeskService: TiledeskService,
     private networkService: NetworkService,
     private events: EventsService,
+    private renderer: Renderer2,
+    private el: ElementRef
   ) {
     // Change list on date change
     this.route.paramMap.subscribe((params) => {
@@ -241,9 +248,26 @@ export class ConversationDetailPage
 
     //   }
     // });
-    this.getConversations()
-    this.watchToConnectionStatus()
-    this.getOSCODE()
+    this.getConversations();
+    this.watchToConnectionStatus();
+    this.getOSCODE();
+    this.getStoredProjectAndUserRole();
+  }
+
+  getStoredProjectAndUserRole() {
+    const stored_project = localStorage.getItem('last_project')
+    // console.log('[SIDEBAR] stored_project ', stored_project)
+    if (stored_project) {
+      const project = JSON.parse(stored_project)
+      // this.logger.log('[CONVS-DETAIL]  project ', project)
+
+      // this.project_id = project.id_project.id
+      // this.logger.log('[CONVS-DETAIL] project_id ', this.project_id)
+
+      this.USER_ROLE = project.role;
+      // this.USER_ROLE = 'agent';
+      console.log('[CONVS-DETAIL]  USER_ROLE ', this.USER_ROLE)
+    }
   }
 
   getConversations() {
@@ -252,10 +276,7 @@ export class ConversationDetailPage
       const conversations = this.conversationsHandlerService.conversations
       // console.log('[CONVS-DETAIL] conversations', conversations);
       this.conversation_count = conversations.length
-      this.logger.log(
-        '[CONVS-DETAIL] conversation_count',
-        this.conversation_count,
-      )
+      this.logger.log('[CONVS-DETAIL] conversation_count', this.conversation_count)
     })
 
     this.conversationsHandlerService.conversationChanged.subscribe((conv) => {
@@ -286,11 +307,10 @@ export class ConversationDetailPage
   }
 
   getOSCODE() {
+    this.support_mode = this.appConfigProvider.getConfig().supportMode
+    console.log('[CONVS-DETAIL] AppConfigService getAppConfig support_mode', this.support_mode)
     this.public_Key = this.appConfigProvider.getConfig().t2y12PruGU9wUtEGzBJfolMIgK
-    this.logger.log(
-      '[CONVS-DETAIL] AppConfigService getAppConfig public_Key',
-      this.public_Key,
-    )
+    this.logger.log('[CONVS-DETAIL] AppConfigService getAppConfig public_Key', this.public_Key)
 
     if (this.public_Key) {
       let keys = this.public_Key.split('-')
@@ -355,15 +375,9 @@ export class ConversationDetailPage
 
   ionViewWillEnter() {
     // this.info_content_child_enabled = true;
-    this.logger.log(
-      '[CONVS-DETAIL] TEST > ionViewWillEnter - convId ',
-      this.conversationWith,
-    )
+    this.logger.log('[CONVS-DETAIL] TEST > ionViewWillEnter - convId ', this.conversationWith)
     this.loggedUser = this.tiledeskAuthService.getCurrentUser()
-    this.logger.log(
-      '[CONVS-DETAIL] ionViewWillEnter loggedUser: ',
-      this.loggedUser,
-    )
+    this.logger.log('[CONVS-DETAIL] ionViewWillEnter loggedUser: ', this.loggedUser)
     this.listnerStart()
   }
 
@@ -426,10 +440,7 @@ export class ConversationDetailPage
     // }
 
     this.loggedUser = this.tiledeskAuthService.getCurrentUser()
-    this.logger.log(
-      '[CONVS-DETAIL] - initialize -> loggedUser: ',
-      this.loggedUser,
-    )
+    this.logger.log('[CONVS-DETAIL] - initialize -> loggedUser: ', this.loggedUser)
     this.translations()
     // this.conversationSelected = localStorage.getItem('conversationSelected');
     this.showButtonToBottom = false
@@ -438,17 +449,9 @@ export class ConversationDetailPage
     const appconfig = this.appConfigProvider.getConfig()
     // this.tenant = appconfig.tenant;
     this.tenant = appconfig.firebaseConfig.tenant
-    this.logger.log(
-      '[CONVS-DETAIL] - initialize -> firebaseConfig tenant ',
-      this.tenant,
-    )
+    this.logger.log('[CONVS-DETAIL] - initialize -> firebaseConfig tenant ', this.tenant)
 
-    this.logger.log(
-      '[CONVS-DETAIL] - initialize -> conversationWith: ',
-      this.conversationWith,
-      ' -> conversationWithFullname: ',
-      this.conversationWithFullname,
-    )
+    this.logger.log('[CONVS-DETAIL] - initialize -> conversationWith: ', this.conversationWith, ' -> conversationWithFullname: ', this.conversationWithFullname)
     this.subscriptions = []
     this.setHeightTextArea()
     this.tagsCanned = [] // list of canned
@@ -460,10 +463,7 @@ export class ConversationDetailPage
     if (checkPlatformIsMobile()) {
       this.isMobile = true
       // this.openInfoConversation = false; // indica se è aperto il box info conversazione
-      this.logger.log(
-        '[CONVS-DETAIL] - initialize -> checkPlatformIsMobile isMobile? ',
-        this.isMobile,
-      )
+      this.logger.log('[CONVS-DETAIL] - initialize -> checkPlatformIsMobile isMobile? ', this.isMobile)
     } else {
       this.isMobile = false
       this.logger.log(
@@ -527,24 +527,15 @@ export class ConversationDetailPage
       .getProjectIdByConvRecipient(tiledeskToken, conversationWith)
       .subscribe(
         (res) => {
-          this.logger.log(
-            '[CONVS-DETAIL] - GET PROJECTID BY CONV RECIPIENT RES',
-            res,
-          )
+          this.logger.log('[CONVS-DETAIL] - GET PROJECTID BY CONV RECIPIENT RES', res)
           if (res) {
             const projectId = res.id_project
-            this.logger.log(
-              '[CONVS-DETAIL] - GET PROJECTID BY CONV RECIPIENT projectId ',
-              projectId,
-            )
+            this.logger.log('[CONVS-DETAIL] - GET PROJECTID BY CONV RECIPIENT projectId ', projectId)
             this.getProjectById(tiledeskToken, projectId)
           }
         },
         (error) => {
-          this.logger.error(
-            '[CONVS-DETAIL] - GET PROJECTID BY CONV RECIPIENT - ERROR  ',
-            error,
-          )
+          this.logger.error('[CONVS-DETAIL] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error)
         },
         () => {
           this.logger.log(
@@ -638,6 +629,7 @@ export class ConversationDetailPage
       'YES_CANNED_RESPONSES',
       'THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE',
       'TO_CREATE_THEM_GO_TO_THE_PROJECT',
+      "AddNewCannedResponse"
     ]
 
     this.translationMap = this.customTranslateService.translateLanguage(keys)
@@ -710,49 +702,24 @@ export class ConversationDetailPage
 
       // // wait 8 second and then display the message if there are no messages
       const that = this
-      this.logger.log(
-        '[CONVS-DETAIL] - initConversationHandler that.messages  ',
-        that.messages,
-      )
-      this.logger.log(
-        '[CONVS-DETAIL] - initConversationHandler that.messages.length  ',
-        that.messages.length,
-      )
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages  ', that.messages)
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler that.messages.length  ', that.messages.length)
       this.msgCount = that.messages.length
       setTimeout(() => {
         if (!that.messages || that.messages.length === 0) {
           this.showIonContent = true
           that.showMessageWelcome = true
-          this.logger.log(
-            '[CONVS-DETAIL] - initConversationHandler - showMessageWelcome: ',
-            that.showMessageWelcome,
-          )
+          this.logger.log('[CONVS-DETAIL] - initConversationHandler - showMessageWelcome: ', that.showMessageWelcome)
         }
       }, 8000)
     } else {
-      this.logger.log(
-        '[CONVS-DETAIL] - initConversationHandler (else) - conversationHandlerService ',
-        this.conversationHandlerService,
-        ' handler',
-        handler,
-      )
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler (else) - conversationHandlerService ', this.conversationHandlerService, ' handler', handler)
       this.conversationHandlerService = handler
       this.messages = this.conversationHandlerService.messages
-      this.logger.log(
-        '[CONVS-DETAIL] - initConversationHandler (else) - this.messages: ',
-        this.messages,
-      )
-      this.logger.log(
-        '[CONVS-DETAIL] - initConversationHandler (else) - this.showMessageWelcome: ',
-        this.showMessageWelcome,
-      )
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler (else) - this.messages: ', this.messages)
+      this.logger.log('[CONVS-DETAIL] - initConversationHandler (else) - this.showMessageWelcome: ', this.showMessageWelcome)
     }
-    this.logger.log(
-      '[CONVS-DETAIL] - initConversationHandler (else) - message ',
-      this.messages,
-      ' showIonContent',
-      this.showIonContent,
-    )
+    this.logger.log('[CONVS-DETAIL] - initConversationHandler (else) - message ', this.messages, ' showIonContent', this.showIonContent)
   }
 
   initGroupsHandler() {
@@ -761,12 +728,7 @@ export class ConversationDetailPage
       this.conversationWith.startsWith('group-')
     ) {
       this.groupService.initialize(this.tenant, this.loggedUser.uid)
-      this.logger.log(
-        '[CONVS-DETAIL] - initGroupsHandler - tenant',
-        this.tenant,
-        ' loggedUser UID',
-        this.loggedUser.uid,
-      )
+      this.logger.log('[CONVS-DETAIL] - initGroupsHandler - tenant', this.tenant, ' loggedUser UID', this.loggedUser.uid)
     }
   }
 
@@ -794,7 +756,7 @@ export class ConversationDetailPage
     //  console.log( '[CONVS-DETAIL] - startConversation conversationWith: ', this.conversationWith )
     if (this.conversationWith) {
       this.channelType = setChannelType(this.conversationWith)
-      this.logger.log( '[CONVS-DETAIL] - startConversation channelType : ',  this.channelType)
+      this.logger.log('[CONVS-DETAIL] - startConversation channelType : ', this.channelType)
       // this.selectInfoContentTypeComponent();
       this.setHeaderContent()
     }
@@ -809,18 +771,18 @@ export class ConversationDetailPage
       this.conversationsHandlerService &&
       this.conv_type === 'active'
     ) {
-      this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING' )
-      this.conversationsHandlerService.getConversationDetail(this.conversationWith,  (conv) => {
-          if (conv) {
-            // console.log( '[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv )
-            this.conversationAvatar = setConversationAvatar(
-              conv.conversation_with,
-              conv.conversation_with_fullname,
-              conv.channel_type,
-            )
-          }
-          this.logger.log('[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ', this.conversationAvatar)
-        },
+      this.logger.log('[CONVS-DETAIL] - setHeaderContent getConversationDetail CALLING')
+      this.conversationsHandlerService.getConversationDetail(this.conversationWith, (conv) => {
+        if (conv) {
+          // console.log( '[CONVS-DETAIL] - setHeaderContent getConversationDetail (active)', this.conversationWith, conv )
+          this.conversationAvatar = setConversationAvatar(
+            conv.conversation_with,
+            conv.conversation_with_fullname,
+            conv.channel_type,
+          )
+        }
+        this.logger.log('[CONVS-DETAIL] - setHeaderContent > conversationAvatar: ', this.conversationAvatar)
+      },
       )
     } else {
       //get conversation from 'conversations' firebase node
@@ -848,17 +810,9 @@ export class ConversationDetailPage
   }
 
   returnSendMessage(e: any) {
-    this.logger.log(
-      '[CONVS-DETAIL] - returnSendMessage event',
-      e,
-      ' - conversationWith',
-      this.conversationWith,
-    )
+    this.logger.log('[CONVS-DETAIL] - returnSendMessage event', e, ' - conversationWith', this.conversationWith)
 
-    this.logger.log(
-      '[CONVS-DETAIL] - returnSendMessage event message',
-      e.message,
-    )
+    this.logger.log('[CONVS-DETAIL] - returnSendMessage event message', e.message)
     try {
       let message = ''
       if (e.message) {
@@ -1065,10 +1019,7 @@ export class ConversationDetailPage
       this.logger.log('[CONVS-DETAIL] subscribe to messageRemoved')
       subscription = this.conversationHandlerService.messageRemoved.subscribe(
         (messageId: any) => {
-          this.logger.log(
-            '[CONVS-DETAIL] subscribe to messageRemoved - messageId ',
-            messageId,
-          )
+          this.logger.log('[CONVS-DETAIL] subscribe to messageRemoved - messageId ', messageId)
         },
       )
       const subscribe = { key: subscriptionKey, value: subscription }
@@ -1086,21 +1037,13 @@ export class ConversationDetailPage
         .subscribe(
           (groupDetail: any) => {
             this.groupDetail = groupDetail
-            this.logger.log(
-              '[CONVS-DETAIL] subscribe to onGroupChange - groupDetail ',
-              this.groupDetail,
-            )
+            this.logger.log('[CONVS-DETAIL] subscribe to onGroupChange - groupDetail ', this.groupDetail)
           },
           (error) => {
-            this.logger.error(
-              'I[CONVS-DETAIL] subscribe to onGroupChange  - ERROR  ',
-              error,
-            )
+            this.logger.error('[CONVS-DETAIL] subscribe to onGroupChange  - ERROR  ', error)
           },
           () => {
-            this.logger.log(
-              '[CONVS-DETAIL] subscribe to onGroupChange  /* COMPLETE */',
-            )
+            this.logger.log('[CONVS-DETAIL] subscribe to onGroupChange  /* COMPLETE */')
             this.groupDetail = null
           },
         )
@@ -1221,31 +1164,13 @@ export class ConversationDetailPage
 
       this.heightMessageTextArea = height.toString() //e.target.scrollHeight + 20;
       const message = e.msg
-      this.logger.log(
-        '[CONVS-DETAIL] returnChangeTextArea heightMessageTextArea ',
-        this.heightMessageTextArea,
-      )
+      this.logger.log('[CONVS-DETAIL] returnChangeTextArea heightMessageTextArea ', this.heightMessageTextArea)
 
-      this.logger.log(
-        '[CONVS-DETAIL] returnChangeTextArea e.detail.value',
-        e.msg,
-      )
-      this.logger.log(
-        '[CONVS-DETAIL] returnChangeTextArea loggedUser uid:',
-        this.loggedUser.uid,
-      )
-      this.logger.log(
-        '[CONVS-DETAIL] returnChangeTextArea loggedUser firstname:',
-        this.loggedUser.firstname,
-      )
-      this.logger.log(
-        '[CONVS-DETAIL] returnChangeTextArea conversationSelected uid:',
-        this.conversationWith,
-      )
-      this.logger.log(
-        '[CONVS-DETAIL] returnChangeTextArea channelType:',
-        this.channelType,
-      )
+      this.logger.log('[CONVS-DETAIL] returnChangeTextArea e.detail.value', e.msg)
+      this.logger.log('[CONVS-DETAIL] returnChangeTextArea loggedUser uid:', this.loggedUser.uid)
+      this.logger.log('[CONVS-DETAIL] returnChangeTextArea loggedUser firstname:', this.loggedUser.firstname)
+      this.logger.log('[CONVS-DETAIL] returnChangeTextArea conversationSelected uid:', this.conversationWith)
+      this.logger.log('[CONVS-DETAIL] returnChangeTextArea channelType:', this.channelType)
       let idCurrentUser = ''
       let userFullname = ''
 
@@ -1271,14 +1196,11 @@ export class ConversationDetailPage
       // ----------------------------------------------------------
       // DISPLAY CANNED RESPONSES if message.lastIndexOf("/")
       // ----------------------------------------------------------
-      if (this.areVisibleCAR) {
+      if (this.areVisibleCAR && this.support_mode === true) {
         setTimeout(() => {
           if (this.conversationWith.startsWith('support-group')) {
             const pos = message.lastIndexOf('/')
-            this.logger.log(
-              '[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ',
-              pos,
-            )
+            this.logger.log('[CONVS-DETAIL] - returnChangeTextArea - canned responses pos of / (using lastIndexOf) ', pos)
 
             if (pos === -1) {
               this.tagsCannedFilter = []
@@ -1298,10 +1220,7 @@ export class ConversationDetailPage
 
             if (pos >= 0) {
               var strSearch = message.substr(pos + 1)
-              this.logger.log(
-                '[CONVS-DETAIL] - returnChangeTextArea - canned responses strSearch ',
-                strSearch,
-              )
+              this.logger.log('[CONVS-DETAIL] - returnChangeTextArea - canned responses strSearch ', strSearch)
 
               // --------------------------------------------
               // Load canned responses
@@ -1321,15 +1240,11 @@ export class ConversationDetailPage
                 after_slash.length === 1 &&
                 after_slash.trim() === ''
               ) {
-                this.logger.log(
-                  '[CONVS-DETAIL] - returnChangeTextArea after_slash --> there is a white space after ',
-                )
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea after_slash --> there is a white space after ')
                 this.HIDE_CANNED_RESPONSES = true
                 this.tagsCannedFilter = []
               } else if (pos === 0 && after_slash.length === 0) {
-                this.logger.log(
-                  '[CONVS-DETAIL] - returnChangeTextArea after_slash --> there is NOT a white space after',
-                )
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea after_slash --> there is NOT a white space after')
                 this.HIDE_CANNED_RESPONSES = false
               }
 
@@ -1341,29 +1256,14 @@ export class ConversationDetailPage
 
                 let beforeSlash = message.substr(pos - 1)
                 let afterSlash = message.substr(pos + 1)
-                this.logger.log(
-                  '[CONVS-DETAIL] - returnChangeTextArea * POS ',
-                  pos,
-                )
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea * POS ', pos)
 
-                this.logger.log(
-                  '[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash',
-                  beforeSlash,
-                )
-                this.logger.log(
-                  '[CONVS-DETAIL] - returnChangeTextArea  --> afterSlash',
-                  afterSlash,
-                )
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash', beforeSlash)
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> afterSlash', afterSlash)
                 var afterSlashParts = afterSlash.split('/')
                 var beforeSlashParts = beforeSlash.split('/')
-                this.logger.log(
-                  '[CONVS-DETAIL] - returnChangeTextArea  --> afterSlash parts',
-                  afterSlashParts,
-                )
-                this.logger.log(
-                  '[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash parts',
-                  beforeSlashParts,
-                )
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> afterSlash parts', afterSlashParts)
+                this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash parts', beforeSlashParts)
 
                 if (beforeSlashParts.length === 2) {
                   if (
@@ -1381,16 +1281,12 @@ export class ConversationDetailPage
                   ) {
                     this.HIDE_CANNED_RESPONSES = true
                     this.tagsCannedFilter = []
-                    this.logger.log(
-                      '[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash not thete is a white space After Not',
-                    )
+                    this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash not thete is a white space After Not')
                   } else if (
                     beforeSlashParts[0].indexOf(' ') >= 0 &&
                     afterSlashParts[0] === ' '
                   ) {
-                    this.logger.log(
-                      '[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash not thete is a white space After YES',
-                    )
+                    this.logger.log('[CONVS-DETAIL] - returnChangeTextArea  --> beforeSlash not thete is a white space After YES')
                     this.HIDE_CANNED_RESPONSES = true
                     this.tagsCannedFilter = []
                   }
@@ -1413,14 +1309,8 @@ export class ConversationDetailPage
   // ----------------------------------------------------------
   loadTagsCanned(strSearch, conversationWith) {
     this.logger.log('[CONVS-DETAIL] - loadTagsCanned strSearch ', strSearch)
-    this.logger.log(
-      '[CONVS-DETAIL] - loadTagsCanned groupDetail ',
-      this.groupDetail,
-    )
-    this.logger.log(
-      '[CONVS-DETAIL] - loadTagsCanned conversationWith ',
-      conversationWith,
-    )
+    this.logger.log('[CONVS-DETAIL] - loadTagsCanned groupDetail ', this.groupDetail)
+    this.logger.log('[CONVS-DETAIL] - loadTagsCanned conversationWith ', conversationWith)
 
     const conversationWith_segments = conversationWith.split('-')
     // Removes the last element of the array if is = to the separator
@@ -1434,19 +1324,13 @@ export class ConversationDetailPage
       const lastArrayElement =
         conversationWith_segments[conversationWith_segments.length - 1]
       this.logger.log('[CONVS-DETAIL] - lastArrayElement ', lastArrayElement)
-      this.logger.log(
-        '[CONVS-DETAIL] - lastArrayElement length',
-        lastArrayElement.length,
-      )
+      this.logger.log('[CONVS-DETAIL] - lastArrayElement length', lastArrayElement.length)
       if (lastArrayElement.length !== 32) {
         conversationWith_segments.pop()
       }
     }
 
-    this.logger.log(
-      '[CONVS-DETAIL] - loadTagsCanned conversationWith_segments ',
-      conversationWith_segments,
-    )
+    this.logger.log('[CONVS-DETAIL] - loadTagsCanned conversationWith_segments ', conversationWith_segments)
     let projectId = ''
 
     if (conversationWith_segments.length === 4) {
@@ -1466,31 +1350,20 @@ export class ConversationDetailPage
       .getProjectIdByConvRecipient(tiledeskToken, conversationWith)
       .subscribe(
         (res) => {
-          this.logger.log(
-            '[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT RES',
-            res,
-          )
+          this.logger.log('[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT RES', res)
           if (res) {
             const projectId = res.id_project
-            this.logger.log(
-              '[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT projectId ',
-              projectId,
-            )
+            this.logger.log('[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT projectId ', projectId)
             if (projectId) {
               this.getAndShowCannedResponses(strSearch, projectId)
             }
           }
         },
         (error) => {
-          this.logger.error(
-            '[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT - ERROR  ',
-            error,
-          )
+          this.logger.error('[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error)
         },
         () => {
-          this.logger.log(
-            '[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT * COMPLETE *',
-          )
+          this.logger.log('[CONVS-DETAIL] - loadTagsCanned - GET PROJECTID BY CONV RECIPIENT * COMPLETE *')
         },
       )
   }
@@ -1507,31 +1380,20 @@ export class ConversationDetailPage
       .getCannedResponses(tiledeskToken, projectId)
       .subscribe(
         (res) => {
-          this.logger.log(
-            '[CONVS-DETAIL] - loadTagsCanned  getCannedResponses RES',
-            res,
-          )
+          this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses RES', res)
 
           this.tagsCanned = res
           this.tagsCannedCount = res.length
-          this.logger.log(
-            '[CONVS-DETAIL] - loadTagsCanned  getCannedResponses tagsCannedCount',
-            this.tagsCannedCount,
-          )
+          this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses tagsCannedCount', this.tagsCannedCount)
           if (this.HIDE_CANNED_RESPONSES === false) {
             this.showTagsCanned(strSearch)
           }
         },
         (error) => {
-          this.logger.error(
-            '[CONVS-DETAIL] - loadTagsCanned  getCannedResponses - ERROR  ',
-            error,
-          )
+          this.logger.error('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses - ERROR  ', error)
         },
         () => {
-          this.logger.log(
-            '[CONVS-DETAIL] - loadTagsCanned  getCannedResponses * COMPLETE *',
-          )
+          this.logger.log('[CONVS-DETAIL] - loadTagsCanned  getCannedResponses * COMPLETE *')
         },
       )
   }
@@ -1540,16 +1402,10 @@ export class ConversationDetailPage
     this.logger.log('[CONVS-DETAIL] - showTagsCanned strSearch ', strSearch)
     this.tagsCannedFilter = []
     var tagsCannedClone = JSON.parse(JSON.stringify(this.tagsCanned))
-    this.logger.log(
-      '[CONVS-DETAIL] - showTagsCanned tagsCannedClone ',
-      tagsCannedClone,
-    )
+    console.log('[CONVS-DETAIL] - showTagsCanned tagsCannedClone ', tagsCannedClone)
     //this.logger.log("that.contacts lenght:: ", strSearch);
     this.tagsCannedFilter = this.filterItems(tagsCannedClone, strSearch)
-    this.logger.log(
-      '[CONVS-DETAIL] - showTagsCanned tagsCannedFilter ',
-      this.tagsCannedFilter,
-    )
+    this.logger.log('[CONVS-DETAIL] - showTagsCanned tagsCannedFilter ', this.tagsCannedFilter)
 
     this.tagsCannedFilter.sort(compareValues('title', 'asc'))
     var strReplace = strSearch
@@ -1557,40 +1413,48 @@ export class ConversationDetailPage
       strReplace = "<b class='highlight-search-string'>" + strSearch + '</b>'
     }
     for (var i = 0; i < this.tagsCannedFilter.length; i++) {
-      const textCanned =
-        "<div class='cannedText'>" +
-        this.replacePlaceholderInCanned(this.tagsCannedFilter[i].text) +
-        '</div>'
-      this.tagsCannedFilter[i].title =
-        "<div class='cannedContent'><div class='cannedTitle'>" +
-        this.tagsCannedFilter[i].title
-          .toString()
-          .replace(strSearch, strReplace.trim()) +
-        '</div>' +
-        textCanned +
-        '</div>'
+      let text = htmlEntities(this.tagsCannedFilter[i].text);
+      // const textCanned = "<div class='cannedText'>" + this.replacePlaceholderInCanned(this.tagsCannedFilter[i].text) + '</div>'
+      const textCanned = "<div class='cannedText'>" + this.replacePlaceholderInCanned(text) + '</div>'
+      let title = htmlEntities(this.tagsCannedFilter[i].title)
+      // this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim()) + '</div>' + textCanned + '</div>'
+      this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + title.toString().replace(strSearch, strReplace.trim()) + '</div>' + textCanned + '</div>'
+      console.log('[CONVS-DETAIL]')
     }
     if (this.tagsCannedCount === 0) {
-      const nocanned = {
-        title:
-          "<div class='cannedContent'><div class='cannedTitle nocannedTitle'>" +
-          this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') +
-          ".</div><div class='cannedText'>" +
-          this.translationMap.get('TO_CREATE_THEM_GO_TO_THE_PROJECT') +
-          '</div></div>',
-        text: 'There are no canned responses available',
-      }
+      const button = this.renderer.createElement('button');
+      const buttonText = this.renderer.createText('Click me');
+      this.renderer.appendChild(button, buttonText);
+      console.log('[CONVS-DETAIL] - this.el.nativeElement ', this.el.nativeElement)
+      // this.renderer.appendChild(this.el.nativeElement, button);
+      this.renderer.listen(button, 'click', () => { alert('hi'); });
+      let nocanned = {}
+      // if (this.USER_ROLE !== 'agent') {
+        nocanned = {
+          // "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div><div class='cannedText'>" + this.translationMap.get('TO_CREATE_THEM_GO_TO_THE_PROJECT') + '</div></div>'
+          // <div class='cannedText no-canned-available-text'>" + this.translationMap.get('AddNewCannedResponse') + '</div>
+          title:
+            "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div></div>",
+          text: 'There are no canned responses available',
+        }
+      // } else if (this.USER_ROLE === 'agent') {
+      //   nocanned = {
+      //     // "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div><div class='cannedText'>" + this.translationMap.get('TO_CREATE_THEM_GO_TO_THE_PROJECT') + '</div></div>'
+      //     title:
+      //       "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div></div>",
+      //     text: 'There are no canned responses available',
+      //   }
+      // }
       this.tagsCannedFilter.push(nocanned)
     }
   }
 
+  toggleSidebar() {
+    console.log('[CONVS-DETAIL] has clicked test')
+  }
+
   filterItems(items, searchTerm) {
-    this.logger.log(
-      '[CONVS-DETAIL] filterItems tagsCannedClone ',
-      items,
-      ' searchTerm: ',
-      searchTerm,
-    )
+    this.logger.log('[CONVS-DETAIL] filterItems tagsCannedClone ', items, ' searchTerm: ', searchTerm)
     //this.logger.log("filterItems::: ",searchTerm);
     return items.filter((item) => {
       //this.logger.log("filterItems::: ", item.title.toString().toLowerCase());
@@ -1614,46 +1478,76 @@ export class ConversationDetailPage
   }
 
   replaceTagInMessage(canned, event) {
-    this.logger.log('[CONVS-DETAIL] replaceTagInMessage  event ', event)
+    if (this.tagsCannedCount > 0) {
+    console.log('[CONVS-DETAIL] replaceTagInMessage  event ', event)
+    console.log('[CONVS-DETAIL] replaceTagInMessage  canned ', canned)
+    console.log('[CONVS-DETAIL] replaceTagInMessage  canned title', canned.title)
+    console.log('[CONVS-DETAIL] replaceTagInMessage  canned contains nocannedTitle', canned.title.includes('nocannedTitle'))
+    // if (!canned.title.includes('nocannedTitle')) {
+      const elTextArea = this.rowTextArea['el']
+      const textArea = elTextArea.getElementsByTagName('ion-textarea')[0]
+
+      console.log('[CONVS-DETAIL] replaceTagInMessage  textArea ', textArea)
+      console.log('[CONVS-DETAIL] replaceTagInMessage  textArea value', textArea.value,)
+
+      // var lastChar =  textArea.value.substr(-1); // Selects the last character
+      // if (lastChar === '/') {
+      //   textArea.value = textArea.value.substring(0, textArea.value.length() - 1);
+      // }
+      // this.insertAtCursor(this.textArea, textArea.value)
+
+      this.arrowkeyLocation = -1
+      this.tagsCannedFilter = []
+      this.logger.log('[CONVS-DETAIL] replaceTagInMessage  canned text ', canned.text)
+
+      // replace text
+      var pos = textArea.value.lastIndexOf('/')
+      var strSearch = textArea.value.substr(pos)
+      this.logger.log('[CONVS-DETAIL] replaceTagInMessage strSearch ', strSearch)
+
+      var strTEMP = textArea.value.replace(strSearch, canned.text)
+      strTEMP = this.replacePlaceholderInCanned(strTEMP)
+      this.logger.log('[CONVS-DETAIL] replaceTagInMessage strSearch ', strTEMP)
+      // strTEMP = this.replacePlaceholderInCanned(strTEMP);
+      // textArea.value = '';
+      // that.messageString = strTEMP;
+      textArea.value = strTEMP
+      setTimeout(() => {
+        // textArea.focus();
+        textArea.setFocus()
+        this.resizeTextArea()
+      }, 200)
+    }
+    else {
+      console.log('[CONVS-DETAIL] THERE IS NOT CANNED ', canned.text)
+      // if (this.USER_ROLE !== 'agent') {
+        // this.presentCreateCannedResponseModal()
+        // const elTextArea = this.rowTextArea['el']
+        // const textArea = elTextArea.getElementsByTagName('ion-textarea')[0]
+        // textArea.value = ''
+      
+    }
+  }
+
+  async presentCreateCannedResponseModal(): Promise<any> {
     const elTextArea = this.rowTextArea['el']
     const textArea = elTextArea.getElementsByTagName('ion-textarea')[0]
+    textArea.value = ''
 
-    this.logger.log('[CONVS-DETAIL] replaceTagInMessage  textArea ', textArea)
-    this.logger.log(
-      '[CONVS-DETAIL] replaceTagInMessage  textArea value',
-      textArea.value,
-    )
+    console.log('[CONVS-DETAIL] PRESENT CREATE CANNED RESPONSE MODAL ')
+    const attributes = {}
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: CreateCannedResponsePage,
+      componentProps: attributes,
+      swipeToClose: false,
+      backdropDismiss: false,
+    })
+    modal.onDidDismiss().then((dataReturned: any) => {
+      // 
+      this.logger.log('[CONVS-DETAIL] ', dataReturned.data)
+    })
 
-    // var lastChar =  textArea.value.substr(-1); // Selects the last character
-    // if (lastChar === '/') {
-    //   textArea.value = textArea.value.substring(0, textArea.value.length() - 1);
-    // }
-    // this.insertAtCursor(this.textArea, textArea.value)
-
-    this.arrowkeyLocation = -1
-    this.tagsCannedFilter = []
-    this.logger.log(
-      '[CONVS-DETAIL] replaceTagInMessage  canned text ',
-      canned.text,
-    )
-
-    // replace text
-    var pos = textArea.value.lastIndexOf('/')
-    var strSearch = textArea.value.substr(pos)
-    this.logger.log('[CONVS-DETAIL] replaceTagInMessage strSearch ', strSearch)
-
-    var strTEMP = textArea.value.replace(strSearch, canned.text)
-    strTEMP = this.replacePlaceholderInCanned(strTEMP)
-    this.logger.log('[CONVS-DETAIL] replaceTagInMessage strSearch ', strTEMP)
-    // strTEMP = this.replacePlaceholderInCanned(strTEMP);
-    // textArea.value = '';
-    // that.messageString = strTEMP;
-    textArea.value = strTEMP
-    setTimeout(() => {
-      // textArea.focus();
-      textArea.setFocus()
-      this.resizeTextArea()
-    }, 200)
+    return await modal.present()
   }
 
   hasClickedOpenCannedResponses($event) {
@@ -1820,7 +1714,7 @@ export class ConversationDetailPage
     // this.isMenuShow = event;
   }
 
-  returnOnScrollContent(event: boolean) {}
+  returnOnScrollContent(event: boolean) { }
 
   returnOnAttachmentButtonClicked(event: any) {
     this.logger.debug('[CONV-COMP] eventbutton', event)
