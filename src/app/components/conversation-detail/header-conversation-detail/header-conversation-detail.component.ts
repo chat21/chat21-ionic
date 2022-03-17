@@ -51,7 +51,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   conversation_with_fullname: string
   platformName: string
   conv_closed: boolean = false;
-
+  IS_ON_IOS_MOBILE_DEVICE: boolean
   private logger: LoggerService = LoggerInstance.getInstance()
 
   /**
@@ -88,30 +88,35 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   // @ Lifehooks
   // ----------------------------------------------------
   ngOnInit() {
-   
-    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - idLoggedUser', this.idLoggedUser, )
-    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - conversationAvatar', this.conversationAvatar, )
-    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) -  conv_type', this.conv_type, )
+
+    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - idLoggedUser', this.idLoggedUser,)
+    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) - conversationAvatar', this.conversationAvatar,)
+    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnInit) -  conv_type', this.conv_type,)
     this.conversation_with_fullname = this.conversationAvatar.conversation_with_fullname
     this.listenToConversationHasBeenClosed()
-    this.initialize()
+    this.initialize();
+    this.isOniOSMobileDevice()
+  }
+
+  isOniOSMobileDevice() {
+    this.IS_ON_IOS_MOBILE_DEVICE = false;
+    if (/iPad|iPhone|iPod/i.test(window.navigator.userAgent)) {
+      this.IS_ON_IOS_MOBILE_DEVICE = true;
+
+    }
+    console.log('[CONVS-DETAIL][HEADER] IS_ON_IOS_MOBILE_DEVICE ', this.IS_ON_IOS_MOBILE_DEVICE)
+    return this.IS_ON_IOS_MOBILE_DEVICE;
   }
 
   ngOnChanges() {
-    this.logger.log(
-      '[CONVS-DETAIL][HEADER] - (ngOnChanges) -  conversationAvatar',
-      this.conversationAvatar,
-    )
+    this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnChanges) -  conversationAvatar', this.conversationAvatar)
     if (this.conversationAvatar) {
       this.conversationAvatar.imageurl = this.imageRepoService.getImagePhotoUrl(
         this.conversationAvatar.uid,
       )
     } else {
       const channelType = setChannelType(this.idConv)
-      this.logger.log(
-        '[CONVS-DETAIL][HEADER] - (ngOnChanges) - conversationAvatar usecase UNDEFINED channelType ',
-        channelType,
-      )
+      this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnChanges) - conversationAvatar usecase UNDEFINED channelType ', channelType)
       this.conversationAvatar = setConversationAvatar(
         this.idConv,
         this.fullNameConv,
@@ -122,10 +127,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
           this.conversationAvatar.uid,
         )
       }
-      this.logger.log(
-        '[CONVS-DETAIL][HEADER] - (ngOnChanges) - conversationAvatar usecase UNDEFINED conversationAvatar',
-        this.conversationAvatar,
-      )
+      this.logger.log('[CONVS-DETAIL][HEADER] - (ngOnChanges) - conversationAvatar usecase UNDEFINED conversationAvatar', this.conversationAvatar)
     }
 
     this.logger.log(
@@ -162,20 +164,21 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   }
 
   closeConversation() {
-    this.events.publish('hasclosedconversation', this.idConv)
+    console.log('[CONVS-DETAIL][HEADER] click on RESOLVE this.events', this.events) 
+    this.events.publish('conversation:closed', this.idConv)
   }
 
   listenToConversationHasBeenClosed() {
     this.events.subscribe('conversationhasbeenclosed', (convId) => {
       // console.log('[CONVS-DETAIL][HEADER] conversationhasbeenclosed  convId', convId)
-        if (convId === this.idConv) {
-          this.logger.log('[CONVS-DETAIL][HEADER] the conversation was closed',)
-          this.conv_closed = true;
-        }
+      if (convId === this.idConv) {
+        this.logger.log('[CONVS-DETAIL][HEADER] the conversation was closed',)
+        this.conv_closed = true;
+      }
     });
   }
 
-  
+
 
   onOpenCloseInfoConversation() {
     this.openInfoMessage = false
@@ -188,7 +191,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   }
 
   /** */
-  pushPage(event) {}
+  pushPage(event) { }
 
   goBackToConversationList() {
     this.router.navigateByUrl('/conversations-list')

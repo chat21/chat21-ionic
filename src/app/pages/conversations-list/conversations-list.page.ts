@@ -291,7 +291,7 @@ export class ConversationListPage implements OnInit {
     this.subscription.unsubscribe()
   }
 
-  ionViewDidEnter() {}
+  ionViewDidEnter() { }
 
   getLastProjectId(projectid: string) {
     this.logger.log('[CONVS-LIST-PAGE] - GET LAST PROJECT ID', projectid)
@@ -1080,16 +1080,13 @@ export class ConversationListPage implements OnInit {
   }
 
   listenToCloseConvFromHeaderConversation() {
-    this.events.subscribe('hasclosedconversation', (convId) => {
-      this.logger.log('[CONVS-LIST-PAGE] hasclosedconversation  convId', convId)
+    this.events.subscribe('conversation:closed', (convId) => {
+      console.log('[CONVS-LIST-PAGE] hasclosedconversation  convId', convId)
 
       const conversation = this.conversations.find(
         (conv) => conv.uid === convId,
       )
-      this.logger.log(
-        '[CONVS-LIST-PAGE] hasclosedconversation  conversation',
-        conversation,
-      )
+      this.logger.log('[CONVS-LIST-PAGE] hasclosedconversation  conversation', conversation)
       this.onCloseConversation(conversation)
     })
   }
@@ -1099,10 +1096,7 @@ export class ConversationListPage implements OnInit {
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
   // ----------------------------------------------------------------------------------------------
   onCloseConversation(conversation: ConversationModel) {
-    this.logger.log(
-      '[CONVS-LIST-PAGE] onCloseConversation  conversation',
-      conversation,
-    )
+    console.log('[CONVS-LIST-PAGE] onCloseConversation  conversation', conversation)
 
     // -------------------------------------------------------------------------------------
     // Fix the display of the message "No conversation yet" when a conversation is archived
@@ -1111,17 +1105,11 @@ export class ConversationListPage implements OnInit {
     // -------------------------------------------------------------------------------------
     this.loadingIsActive = false
     // console.log('CONVS - CONV-LIST-PAGE onCloseConversation CONVS: ', conversation)
-    this.logger.log(
-      '[CONVS-LIST-PAGE] onCloseConversation loadingIsActive: ',
-      this.loadingIsActive,
-    )
+    this.logger.log('[CONVS-LIST-PAGE] onCloseConversation loadingIsActive: ', this.loadingIsActive)
     if (conversation) {
       const conversationId = conversation.uid
 
-      this.logger.log(
-        '[CONVS-LIST-PAGE] onCloseConversation conversationId: ',
-        conversationId,
-      )
+      this.logger.log( '[CONVS-LIST-PAGE] onCloseConversation conversationId: ', conversationId )
 
       const conversationWith_segments = conversationId.split('-')
       this.logger.log(
