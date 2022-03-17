@@ -23,6 +23,7 @@
         "@angular/platform-browser": "~8.2.14",
         "@angular/platform-browser-dynamic": "~8.2.14",
         "@angular/router": "~8.2.14",
+        "@ctrl/ngx-emoji-mart": "^1.0.6",
         "@ionic-native/chooser": "^5.29.0",
         "@ionic-native/core": "^5.0.7",
         "@ionic-native/globalization": "^5.28.0",

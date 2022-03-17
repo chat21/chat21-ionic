@@ -38,7 +38,7 @@
 
     <ion-col col-auto>
 
-      <div class="start-buttons" style="position: absolute;display: flex;">
+      <div class="start-buttons" style="position: absolute;display: flex; top: 2px;">
 
         <ng-container *ngIf="areVisibleCAR && support_mode === true">
           <div class="canned-responses-btn-wpr" style="margin-left: -5px;"
@@ -72,7 +72,37 @@
           </ion-button>
 
         </div>
+
+        <!-- <ion-icon (click)="showEmojiPicker = !showEmojiPicker" color="secondary" name="happy" style="zoom:2;"></ion-icon> -->
+        <!-- --------------------------------------------- -->
+        <!-- Emoji Picker Button  tooltip="{{translationMap?.get('CANNED_RESPONSES')}}" [options]="tooltipOptions" placement="top" -->
+        <!-- --------------------------------------------- -->
+        <div class="emoji-picker-btn-wpr">
+          <ion-button ion-button fill="clear" class="emoji-picker-btn" (click)="showEmojiPicker = !showEmojiPicker"
+            [disabled]="disableTextarea">
+            <!-- <ion-icon slot="icon-only" lazy="true" name="flash-outline" style="font-size: 24px;"></ion-icon> -->
+            <ion-icon slot="icon-only" lazy="true" name="happy-outline" style="font-size: 24px;"></ion-icon>
+          </ion-button>
+
+          <!-- <div class="emojiContainer" [style.height]="showEmojiPicker?'300px':'0px'"> -->
+          <!--Show/Hide emoji picker. Don't use *ngIf because the component will be created again and again and cause performance issue-->
+          <!-- <emoji-picker (onEmojiSelect)="addEmoji($event)"></emoji-picker> -->
+          <!-- { position: 'absolute', bottom: '20px', right: '20px' }" -->
+          <!-- --------------------------------------------------------------------- -->
+          <!-- https://www.npmjs.com/package/@ctrl/ngx-emoji-mart/v/1.0.6 -->
+          <!-- --------------------------------------------------------------------- -->
+          <!-- [style]="{ position: 'absolute', bottom: '53px', right: '-246px' }" -->
+          <emoji-mart [showPreview]="false" [perLine]="emojiPerLine" [style.visibility]="showEmojiPicker?'visible':'hidden'"
+            (emojiSelect)="addEmoji($event)"  [ngClass]="{'emoji-mart-desktop': !IS_ON_MOBILE_DEVICE, 'emoji-mart-mobile': IS_ON_MOBILE_DEVICE }">
+          </emoji-mart>
+          <!-- </div> -->
+
+        </div>
       </div>
+
+
+
+
 
       <div class="text-message" [ngClass]="{'text-message-no-cr': areVisibleCAR === false || support_mode === false}">
         <ion-textarea id="ion-textarea" #messageTextArea #message_text_area #textArea rows="1"

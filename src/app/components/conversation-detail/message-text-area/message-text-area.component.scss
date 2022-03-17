@@ -44,8 +44,12 @@
         position: relative;
         // margin: 0 35px;
         // width: calc(100% - 70px);
-        margin: 0 70px;
-        width: calc(100% - 100px);
+        // ----- new after adding canned open /close canned responses
+        // margin: 0 70px;
+        // width: calc(100% - 100px);
+        // ----- new after adding emoji picker
+        margin: 0 108px;
+        width: calc(100% - 140px);
         ion-textarea {
             // border-radius: 4px;
             border-radius: 20px; // NK edited
@@ -68,8 +72,8 @@
         }
     }
     .text-message-no-cr {
-         margin: 0 35px !important;
-        width: calc(100% - 70px) !important;
+        margin: 0 72px !important;
+        width: calc(100% - 101px) !important;
     }
 }
 
@@ -106,7 +110,6 @@
     height: 33px !important;
 }
 
-
 .canned-responses-btn {
     --padding-bottom: 0px;
     --padding-top: 0px;
@@ -115,7 +118,17 @@
     --padding-start: 2px;
     height: 33px !important;
     width: 33px;
-} 
+}
+
+.emoji-picker-btn {
+    --padding-bottom: 0px;
+    --padding-top: 0px;
+    --border-radius: 50%;
+    --padding-end: 2px;
+    --padding-start: 2px;
+    height: 33px !important;
+    width: 33px;
+}
 
 .no-canned-responses-btn-badge {
     position: absolute;
@@ -129,7 +142,7 @@
     cursor: pointer;
 }
 .no-canned-responses-btn-badge:hover {
-    background-color: rgba(0, 0, 0, 0.05);;
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .canned-responses-btn-badge {
@@ -145,9 +158,8 @@
 }
 
 .canned-responses-btn-badge:hover {
-    background-color: rgba(0, 0, 0, 0.05);;
+    background-color: rgba(0, 0, 0, 0.05);
 }
-
 
 .upload-image-btn .button-native {
     border-radius: 50%;
@@ -163,6 +175,17 @@
     pointer-events: none;
 }
 
+.emoji-mart-desktop {
+    position: absolute;
+    bottom: 53px;
+    right: -246px;
+}
+.emoji-mart-mobile {
+    position: absolute;
+    bottom: 50px;
+    right: -123px;
+    width: 230px;
+}
 //   input[placeholder] { text-overflow: ellipsis; }
 // ::-moz-placeholder { text-overflow: ellipsis; } /* firefox 19+ */
 // input:-moz-placeholder { text-overflow: ellipsis; }

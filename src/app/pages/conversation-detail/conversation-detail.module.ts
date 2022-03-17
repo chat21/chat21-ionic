@@ -35,6 +35,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
 // import { SharedConversationInfoModule } from 'src/app/shared/shared-conversation-info.module';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { ScrollbarThemeModule } from '../../utils/scrollbar-theme.directive';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -43,6 +46,7 @@ import { ScrollbarThemeModule } from '../../utils/scrollbar-theme.directive';
     TooltipModule,
     ConversationDetailPageRoutingModule,
     ScrollbarThemeModule,
+    PickerModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
