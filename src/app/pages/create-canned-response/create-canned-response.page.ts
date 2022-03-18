@@ -8,6 +8,7 @@ import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk
 import { TiledeskService } from 'src/app/services/tiledesk/tiledesk.service';
 import { MenuController } from '@ionic/angular';
 import { EventsService } from 'src/app/services/events-service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-canned-response',
@@ -20,6 +21,7 @@ export class CreateCannedResponsePage implements OnInit {
   public canned_response_message: string;
   validations_form: FormGroup;
   @Input() message: any
+  @Input() conversationWith: string;
   logger: LoggerService = LoggerInstance.getInstance();
 
   prjctID: string;
@@ -28,6 +30,8 @@ export class CreateCannedResponsePage implements OnInit {
   addWhiteSpaceBefore: boolean;
   mouseOverBtnAddRecipientNamePlaceholder: boolean = false;
   mouseOverBtnAddAgentNamePlaceholder: boolean = false;
+  conversation_id: string
+  // public conversationWith: string;
   constructor(
     public modalController: ModalController,
     private formBuilder: FormBuilder,
@@ -35,8 +39,169 @@ export class CreateCannedResponsePage implements OnInit {
     public tiledeskAuthService: TiledeskAuthService,
     public tiledeskService: TiledeskService,
     private menu: MenuController,
-    public events: EventsService
-  ) { }
+    public events: EventsService,
+    private route: ActivatedRoute,
+  ) {
+    //   this.route.paramMap.subscribe((params) => {
+    //  console.log('[CONVS-DETAIL] - constructor -> params: ', params)
+    //   this.conversationWith = params.get('IDConv')
+
+
+    // })
+  }
+
+
+
+  ngOnInit() {
+    // this.getCurrentProjectId();
+    // console.log('[CREATE-CANNED-RES] - conversationWith ', this.conversationWith)
+    //  console.log('[CREATE-CANNED-RES] - message ', this.message)
+    if (this.message) {
+      this.conversation_id = this.message.recipient
+      this.logger.log('[CREATE-CANNED-RES] - conversationWith get from @input message (passed by bubble-message)', this.conversation_id)
+    } else {
+      this.logger.log('[CREATE-CANNED-RES] - @input message is UNDEFINED')
+    }
+    if (this.conversationWith) {
+      this.conversation_id = this.conversationWith;
+      this.logger.log('[CREATE-CANNED-RES] - conversationWith get from @input conversationWith (passed by conversation detail) ', this.conversation_id)
+    } else {
+      this.logger.log('[CREATE-CANNED-RES] - @input conversationWith is UNDEFINED')
+    }
+
+    this.tiledeskToken = this.tiledeskAuthService.getTiledeskToken()
+    this.logger.log('[CREATE-CANNED-RES] tiledeskToken ', this.tiledeskToken)
+    this.getCurrentProjectId(this.conversation_id, this.tiledeskToken);
+
+    // const stored_project = localStorage.getItem('last_project')
+    // const storedPrjctObjct = JSON.parse(stored_project)
+    // this.logger.log('[CREATE-CANNED-RES] storedPrjctObjct ', storedPrjctObjct)
+    // if (storedPrjctObjct) {
+    //   this.prjctID = storedPrjctObjct.id_project.id
+    //   this.logger.log('[CREATE-CANNED-RES] this.prjctID ', this.prjctID)
+    // }
+   
+
+
+    this.buildForm()
+  }
+
+  getCurrentProjectId(conversation_id, tiledeskToken) {
+    const conversationWith_segments = conversation_id.split('-')
+    // Removes the last element of the array if is = to the separator
+    if (
+      conversationWith_segments[conversationWith_segments.length - 1] === ''
+    ) {
+      conversationWith_segments.pop()
+    }
+
+    if (conversationWith_segments.length === 4) {
+      const lastArrayElement = conversationWith_segments[conversationWith_segments.length - 1]
+      this.logger.log('[CREATE-CANNED-RES] - lastArrayElement ', lastArrayElement)
+      this.logger.log('[CREATE-CANNED-RES]- lastArrayElement length', lastArrayElement.length)
+      if (lastArrayElement.length !== 32) {
+        conversationWith_segments.pop()
+      }
+    }
+
+    this.logger.log('[CREATE-CANNED-RES] - loadTagsCanned conversationWith_segments ', conversationWith_segments)
+    // let projectId = ''
+
+    if (conversationWith_segments.length === 4) {
+      this.prjctID = conversationWith_segments[2]
+      this.logger.log('[CREATE-CANNED-RES] - loadTagsCanned projectId ', this.prjctID)
+    } else {
+      this.getProjectIdByConversationWith(conversation_id, tiledeskToken)
+    }
+  }
+
+  getProjectIdByConversationWith(conversationWith: string, tiledeskToken: string) {
+    // const tiledeskToken = this.tiledeskAuthService.getTiledeskToken()
+
+    this.tiledeskService
+      .getProjectIdByConvRecipient(tiledeskToken, conversationWith)
+      .subscribe(
+        (res) => {
+          this.logger.log('[CREATE-CANNED-RES] - GET PROJECTID BY CONV RECIPIENT RES', res)
+          if (res) {
+            this.prjctID = res.id_project
+            this.logger.log('[CREATE-CANNED-RES] - GET PROJECTID BY CONV RECIPIENT projectId ', this.prjctID)
+
+          }
+        },
+        (error) => {
+          this.logger.error('[CREATE-CANNED-RES] - GET PROJECTID BY CONV RECIPIENT - ERROR  ', error)
+        },
+        () => {
+          this.logger.log('[CREATE-CANNED-RES] - GET PROJECTID BY CONV RECIPIENT * COMPLETE *',)
+        },
+      )
+  }
+
+
+  buildForm() {
+    this.validations_form = this.formBuilder.group({
+      title: new FormControl('', Validators.required),
+      message: new FormControl('', Validators.required),
+    });
+
+    this.setValues()
+  }
+
+  setValues() {
+    if (this.message && this.message.text) {
+      let cannedTitle = ''
+      const titleMaxCharacters = 37
+      if (this.message.text.length > titleMaxCharacters) {
+        cannedTitle = this.message.text.substring(0, titleMaxCharacters) + '...'
+      } else {
+        cannedTitle = this.message.text
+      }
+      this.logger.log('[CREATE-CANNED-RES] - cannedTitle  ', cannedTitle.trim())
+      this.logger.log('[CREATE-CANNED-RES] - cannedMsg  ', this.message.text.trim())
+      this.validations_form.controls['title'].setValue(cannedTitle);
+      this.validations_form.controls['message'].setValue(this.message.text);
+    }
+  }
+
+
+  validation_messages = {
+    'title': [
+      { type: 'required', message: this.translate.instant('TitleIsRequired') }
+    ],
+    'message': [
+      { type: 'required', message: this.translate.instant('MessageIsRequired') }
+    ],
+  };
+
+  onSubmit(values) {
+    this.logger.log('[CREATE-CANNED-RES] ON SUBMIT VALUES', values);
+    this.canned_response_title = values.title
+    this.canned_response_message = values.message
+    this.logger.log('[CREATE-CANNED-RES] ON SUBMIT canned_response_title', this.canned_response_title);
+    this.logger.log('[CREATE-CANNED-RES] ON SUBMIT canned_response_title', this.canned_response_message);
+    this.createResponse(this.canned_response_message, this.canned_response_title)
+  }
+
+  createResponse(canned_response_message, canned_response_title) {
+    this.showSpinnerCreateCannedResponse = true;
+    this.logger.log('[CREATE-CANNED-RES] - CREATE CANNED RESP - MSG ', canned_response_message);
+    this.logger.log('[CREATE-CANNED-RES] - CREATE CANNED RESP - TITLE ', canned_response_title);
+
+    this.tiledeskService.createCannedResponse(canned_response_message.trim(), canned_response_title.trim(), this.prjctID, this.tiledeskToken)
+      .subscribe((responses: any) => {
+        this.logger.log('[CREATE-CANNED-RES] - CREATE CANNED RESP - RES ', responses);
+
+      }, (error) => {
+        this.logger.error('[CREATE-CANNED-RES]- CREATE CANNED RESP - ERROR  ', error);
+        this.showSpinnerCreateCannedResponse = false;
+      }, () => {
+        this.logger.log('[CREATE-CANNED-RES] - CREATE CANNED RESP * COMPLETE *');
+        this.showSpinnerCreateCannedResponse = false;
+        this.closeModalCreateCannedResponseModal()
+        this.events.publish('newcannedresponse:created', true);
+      });
+  }
 
   openAddPersonalisationMenu() {
     this.menu.enable(true, 'custom');
@@ -45,6 +210,7 @@ export class CreateCannedResponsePage implements OnInit {
 
   addRecipientNamePlaceholderToTheMsg() {
     this.menu.close('custom')
+    this.menu.enable(false, 'custom');
     this.insertCustomField('$recipient_name')
   }
 
@@ -55,11 +221,12 @@ export class CreateCannedResponsePage implements OnInit {
 
   onOutBtnAddRecipientNamePlaceholder() {
     this.mouseOverBtnAddRecipientNamePlaceholder = false;
-    this.logger.log('[CREATE-CANNED-RES] - isOutRecipientName ',  this.mouseOverBtnAddRecipientNamePlaceholder);
+    this.logger.log('[CREATE-CANNED-RES] - isOutRecipientName ', this.mouseOverBtnAddRecipientNamePlaceholder);
   }
 
   addAgentNamePlaceholderToTheMsg() {
     this.menu.close('custom')
+    this.menu.enable(false, 'custom');
     this.insertCustomField('$agent_name')
   }
 
@@ -139,91 +306,12 @@ export class CreateCannedResponsePage implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.logger.log('[CREATE-CANNED-RES] - message ', this.message)
-
-    const stored_project = localStorage.getItem('last_project')
-    const storedPrjctObjct = JSON.parse(stored_project)
-    this.logger.log('[CREATE-CANNED-RES] storedPrjctObjct ', storedPrjctObjct)
-    if (storedPrjctObjct) {
-      this.prjctID = storedPrjctObjct.id_project.id
-      this.logger.log('[CREATE-CANNED-RES] this.prjctID ', this.prjctID)
-    }
-    this.tiledeskToken = this.tiledeskAuthService.getTiledeskToken()
-    this.logger.log('[CREATE-CANNED-RES] tiledeskToken ', this.tiledeskToken)
-
-
-    this.buildForm()
-  }
-  buildForm() {
-    this.validations_form = this.formBuilder.group({
-      title: new FormControl('', Validators.required),
-      message: new FormControl('', Validators.required),
-    });
-
-    this.setValues()
-  }
-
-  setValues() {
-    if (this.message && this.message.text) {
-      let cannedTitle = ''
-      const titleMaxCharacters = 37
-      if (this.message.text.length > titleMaxCharacters) {
-        cannedTitle = this.message.text.substring(0, titleMaxCharacters) + '...'
-      } else {
-        cannedTitle = this.message.text
-      }
-      this.logger.log('[CREATE-CANNED-RES] - cannedTitle  ', cannedTitle.trim())
-      this.logger.log('[CREATE-CANNED-RES] - cannedMsg  ', this.message.text.trim())
-      this.validations_form.controls['title'].setValue(cannedTitle);
-      this.validations_form.controls['message'].setValue(this.message.text);
-    }
-  }
-
-
-  validation_messages = {
-    'title': [
-      { type: 'required', message: this.translate.instant('TitleIsRequired') }
-    ],
-    'message': [
-      { type: 'required', message: this.translate.instant('MessageIsRequired') }
-    ],
-  };
-
-  onSubmit(values) {
-    this.logger.log('[CREATE-CANNED-RES] ON SUBMIT VALUES', values);
-    this.canned_response_title = values.title
-    this.canned_response_message = values.message
-    this.logger.log('[CREATE-CANNED-RES] ON SUBMIT canned_response_title', this.canned_response_title);
-    this.logger.log('[CREATE-CANNED-RES] ON SUBMIT canned_response_title', this.canned_response_message);
-    this.createResponse(this.canned_response_message, this.canned_response_title)
-  }
-
-  createResponse(canned_response_message, canned_response_title) {
-    this.showSpinnerCreateCannedResponse = true;
-    this.logger.log('[CREATE-CANNED-RES] - CREATE CANNED RESP - MSG ', canned_response_message);
-    this.logger.log('[CREATE-CANNED-RES] - CREATE CANNED RESP - TITLE ', canned_response_title);
-
-    this.tiledeskService.createCannedResponse(canned_response_message.trim(), canned_response_title.trim(), this.prjctID, this.tiledeskToken)
-      .subscribe((responses: any) => {
-        this.logger.log('[CREATE-CANNED-RES] - CREATE CANNED RESP - RES ', responses);
-
-      }, (error) => {
-        this.logger.error('[CREATE-CANNED-RES]- CREATE CANNED RESP - ERROR  ', error);
-        this.showSpinnerCreateCannedResponse = false;
-      }, () => {
-        this.logger.log('[CREATE-CANNED-RES] - CREATE CANNED RESP * COMPLETE *');
-        this.showSpinnerCreateCannedResponse = false;
-        this.closeModalCreateCannedResponseModal()
-        this.events.publish('newcannedresponse:created', true);
-      });
-  }
- 
-
-
 
   async closeModalCreateCannedResponseModal() {
-
+    if (this.menu) {
+      this.menu.close('custom')
+      this.menu.enable(false, 'custom');
+    }
     await this.modalController.getTop()
     this.modalController.dismiss({ confirmed: true })
   }
