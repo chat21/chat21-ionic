@@ -1,12 +1,11 @@
 # chat21-ionic ver 3.0
 
 ### 3.0.61-rc12
-- Fixes the bug: it is not possible to read the requester's id which occurs when in the modal window "Create ticket" after selecting the requester the same is deleted
 - Improves the alignment of left sidebar menu item icons
-- Adds the ability teammates to add a message as a canned response
+- Adds the ability to add a message as a canned response
 - Hides the "Open canned responses" button if the "supportMode" environment variable is set to false
 - Fixes the bug: "Settings" menu item in the left sidebar redirects to the "Canned responses" page instead of the "Widget" page
-- Adds the ability to add a canned response
+- Adds the ability to add a new canned response
 - Fixes the bug: "Resolve conversation" from conversation detail header doesn't work on mobile
 - Adds the ability to insert emoji in the message text
 - Fixes the bug: on iOS mobile devices in the conversation detail the requester's avatar is not vertically aligned
