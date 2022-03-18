@@ -19,14 +19,15 @@
   <ion-content>
     <ion-list>
       <ion-item button (click)="addRecipientNamePlaceholderToTheMsg()"
-        (mouseover)="onOverBtnAddRecipientNamePlaceholder($event)"
-        (mouseout)="onOutBtnAddRecipientNamePlaceholder($event)">
+        (mouseover)="onOverBtnAddRecipientNamePlaceholder()"
+        (mouseout)="onOutBtnAddRecipientNamePlaceholder()">
         <ion-label>
           {{'First_name_of_recipient' | translate}}
         </ion-label>
       </ion-item>
       <ion-item button (click)="addAgentNamePlaceholderToTheMsg()"
-        (mouseover)="onOverBtnAddAgentNamePlaceholder($event)" (mouseout)="onOutBtnAddAgentNamePlaceholder($event)">
+        (mouseover)="onOverBtnAddAgentNamePlaceholder()"
+        (mouseout)="onOutBtnAddAgentNamePlaceholder()">
         <ion-label>
           {{'First_name_of_agent' | translate}}
         </ion-label>
