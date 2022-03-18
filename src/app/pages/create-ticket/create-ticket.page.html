@@ -141,7 +141,7 @@
       <ion-col size="12" style="text-align: center;">
         
         <!-- <ion-icon *ngIf="showSpinnerCreateTicket === false" style="font-size: 1.9em;" slot="start" name="checkmark-outline"></ion-icon> -->
-        <ion-button style="width: 153px;" color="primary" class="submit-btn" type="submit" (click)="createTicket()" [disabled]="ticket_subject === undefined || ticket_message  === undefined || ticket_subject?.length === 0 || ticket_message?.length === 0">
+        <ion-button style="min-width: 153px;" color="primary" class="submit-btn" type="submit" (click)="createTicket()" [disabled]="ticket_subject === undefined || ticket_message  === undefined || ticket_subject?.length === 0 || ticket_message?.length === 0">
           <ion-icon *ngIf="showSpinnerCreateTicket === false" style="font-size: 1.9em;" slot="start" name="add-circle-outline"></ion-icon>
           <ion-spinner *ngIf="showSpinnerCreateTicket === true" style="color: #fff; margin: 0px 0.3em 0px -0.3em;" name="bubbles" duration="2" ></ion-spinner>
           {{'CreateTicket' | translate}}

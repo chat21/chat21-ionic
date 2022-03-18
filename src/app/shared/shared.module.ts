@@ -47,7 +47,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-// import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component';
+// import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component'; // MessageTextAreaComponent is part of the declarations ConversationDetailPageModule
 
 @NgModule({
   declarations: [

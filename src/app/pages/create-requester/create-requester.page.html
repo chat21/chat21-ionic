@@ -52,7 +52,7 @@
         </ion-col>
         <!-- expand="block" -->
         <ion-col size="12" style="text-align: center;">
-          <ion-button color="primary" class="submit-btn" type="submit" [disabled]="!validations_form.valid" style="width:252.45px">
+          <ion-button color="primary" class="submit-btn" type="submit" [disabled]="!validations_form.valid" style="min-width:253px">
             <ion-icon *ngIf="showSpinnerCreateRequester === false" style="font-size: 1.9em;" slot="start" name="add-circle-outline"></ion-icon>
             <ion-spinner *ngIf="showSpinnerCreateRequester === true" style="color: #fff; margin: 0px 0.3em 0px -0.3em;" name="bubbles" duration="2" ></ion-spinner>
             {{'CreateNewRequester' | translate}}</ion-button>

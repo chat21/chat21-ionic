@@ -23,6 +23,7 @@ export class CreateRequesterPage implements OnInit {
   showSpinnerCreateRequester: boolean = false; 
   requester_id: string;
   logger: LoggerService = LoggerInstance.getInstance();
+  
   constructor(
     public modalController: ModalController,
     private formBuilder: FormBuilder,
