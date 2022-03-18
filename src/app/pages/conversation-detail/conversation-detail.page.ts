@@ -266,7 +266,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
       this.USER_ROLE = project.role;
       // this.USER_ROLE = 'agent';
-      console.log('[CONVS-DETAIL]  USER_ROLE ', this.USER_ROLE)
+      this.logger.log('[CONVS-DETAIL]  USER_ROLE ', this.USER_ROLE)
     }
   }
 
@@ -308,7 +308,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   getOSCODE() {
     this.support_mode = this.appConfigProvider.getConfig().supportMode
-    console.log('[CONVS-DETAIL] AppConfigService getAppConfig support_mode', this.support_mode)
+    this.logger.log('[CONVS-DETAIL] AppConfigService getAppConfig support_mode', this.support_mode)
     this.public_Key = this.appConfigProvider.getConfig().t2y12PruGU9wUtEGzBJfolMIgK
     this.logger.log('[CONVS-DETAIL] AppConfigService getAppConfig public_Key', this.public_Key)
 
@@ -891,14 +891,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     // }
 
     metadata ? (metadata = metadata) : (metadata = '')
-    this.logger.log(
-      '[CONVS-DETAIL] - SEND MESSAGE msg: ',
-      msg,
-      ' - messages: ',
-      this.messages,
-      ' - loggedUser: ',
-      this.loggedUser,
-    )
+    this.logger.log('[CONVS-DETAIL] - SEND MESSAGE msg: ', msg, ' - messages: ', this.messages, ' - loggedUser: ', this.loggedUser)
 
     if ((msg && msg.trim() !== '') || type !== TYPE_MSG_TEXT) {
       this.conversationHandlerService.sendMessage(
@@ -931,30 +924,13 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     if (!subscription) {
       subscription = this.conversationsHandlerService.conversationChanged.subscribe(
         (data: ConversationModel) => {
-          this.logger.log(
-            '[CONVS-DETAIL] subscribe BSConversationsChanged data ',
-            data,
-            ' this.loggedUser.uid:',
-            this.loggedUser.uid,
-          )
+          this.logger.log('[CONVS-DETAIL] subscribe BSConversationsChanged data ', data, ' this.loggedUser.uid:', this.loggedUser.uid)
 
           if (data && data.sender !== this.loggedUser.uid) {
-            this.logger.log(
-              '[CONVS-DETAIL] subscribe to BSConversationsChange data sender ',
-              data.sender,
-            )
-            this.logger.log(
-              '[CONVS-DETAIL] subscribe to BSConversationsChange this.loggedUser.uid ',
-              this.loggedUser.uid,
-            )
-            this.logger.log(
-              '[CONVS-DETAIL] subscribe to BSConversationsChange is_new ',
-              data.is_new,
-            )
-            this.logger.log(
-              '[CONVS-DETAIL] subscribe to  BSConversationsChange showButtonToBottom ',
-              this.showButtonToBottom,
-            )
+            this.logger.log('[CONVS-DETAIL] subscribe to BSConversationsChange data sender ', data.sender)
+            this.logger.log('[CONVS-DETAIL] subscribe to BSConversationsChange this.loggedUser.uid ', this.loggedUser.uid)
+            this.logger.log('[CONVS-DETAIL] subscribe to BSConversationsChange is_new ', data.is_new)
+            this.logger.log('[CONVS-DETAIL] subscribe to  BSConversationsChange showButtonToBottom ', this.showButtonToBottom)
             // UPDATE THE CONVERSATION TO 'READ' IF IT IS ME WHO WRITES THE LAST MESSAGE OF THE CONVERSATION
             // AND IF THE POSITION OF THE SCROLL IS AT THE END
             if (!this.showButtonToBottom && data.is_new) {
@@ -973,16 +949,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       (item) => item.key === subscriptionKey,
     )
     if (!subscription) {
-      this.logger.log(
-        '[CONVS-DETAIL] subscribe to messageAdded - conversationHandlerService',
-        this.conversationHandlerService,
-      )
+      this.logger.log('[CONVS-DETAIL] subscribe to messageAdded - conversationHandlerService', this.conversationHandlerService)
       subscription = this.conversationHandlerService.messageAdded.subscribe(
         (msg: any) => {
-          this.logger.log(
-            '[CONVS-DETAIL] subscribe to messageAdded - msg ',
-            msg,
-          )
+          this.logger.log('[CONVS-DETAIL] subscribe to messageAdded - msg ', msg)
           if (msg) {
             that.newMessageAdded(msg)
           }
@@ -1402,7 +1372,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     this.logger.log('[CONVS-DETAIL] - showTagsCanned strSearch ', strSearch)
     this.tagsCannedFilter = []
     var tagsCannedClone = JSON.parse(JSON.stringify(this.tagsCanned))
-    console.log('[CONVS-DETAIL] - showTagsCanned tagsCannedClone ', tagsCannedClone)
+    this.logger.log('[CONVS-DETAIL] - showTagsCanned tagsCannedClone ', tagsCannedClone)
     //this.logger.log("that.contacts lenght:: ", strSearch);
     this.tagsCannedFilter = this.filterItems(tagsCannedClone, strSearch)
     this.logger.log('[CONVS-DETAIL] - showTagsCanned tagsCannedFilter ', this.tagsCannedFilter)
@@ -1419,24 +1389,23 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       let title = htmlEntities(this.tagsCannedFilter[i].title)
       // this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim()) + '</div>' + textCanned + '</div>'
       this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + title.toString().replace(strSearch, strReplace.trim()) + '</div>' + textCanned + '</div>'
-      console.log('[CONVS-DETAIL]')
+      
     }
     if (this.tagsCannedCount === 0) {
-      const button = this.renderer.createElement('button');
-      const buttonText = this.renderer.createText('Click me');
-      this.renderer.appendChild(button, buttonText);
-      console.log('[CONVS-DETAIL] - this.el.nativeElement ', this.el.nativeElement)
-      // this.renderer.appendChild(this.el.nativeElement, button);
-      this.renderer.listen(button, 'click', () => { alert('hi'); });
-      let nocanned = {}
+      // const button = this.renderer.createElement('button');
+      // const buttonText = this.renderer.createText('Click me');
+      // this.renderer.appendChild(button, buttonText);
+      // console.log('[CONVS-DETAIL] - this.el.nativeElement ', this.el.nativeElement)
+      // this.renderer.listen(button, 'click', () => { alert('hi'); });
+      // let nocanned = {}
       // if (this.USER_ROLE !== 'agent') {
-        nocanned = {
-          // "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div><div class='cannedText'>" + this.translationMap.get('TO_CREATE_THEM_GO_TO_THE_PROJECT') + '</div></div>'
-          // <div class='cannedText no-canned-available-text'>" + this.translationMap.get('AddNewCannedResponse') + '</div>
-          title:
-            "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div></div>",
-          text: 'There are no canned responses available',
-        }
+     const nocanned = {
+        // "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div><div class='cannedText'>" + this.translationMap.get('TO_CREATE_THEM_GO_TO_THE_PROJECT') + '</div></div>'
+        // <div class='cannedText no-canned-available-text'>" + this.translationMap.get('AddNewCannedResponse') + '</div>
+        title:
+          "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div></div>",
+        text: 'There are no canned responses available',
+      }
       // } else if (this.USER_ROLE === 'agent') {
       //   nocanned = {
       //     // "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div><div class='cannedText'>" + this.translationMap.get('TO_CREATE_THEM_GO_TO_THE_PROJECT') + '</div></div>'
@@ -1450,7 +1419,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   toggleSidebar() {
-    console.log('[CONVS-DETAIL] has clicked test')
+    // console.log('[CONVS-DETAIL] has clicked test')
   }
 
   filterItems(items, searchTerm) {
@@ -1479,16 +1448,16 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   replaceTagInMessage(canned, event) {
     if (this.tagsCannedCount > 0) {
-    console.log('[CONVS-DETAIL] replaceTagInMessage  event ', event)
-    console.log('[CONVS-DETAIL] replaceTagInMessage  canned ', canned)
-    console.log('[CONVS-DETAIL] replaceTagInMessage  canned title', canned.title)
-    console.log('[CONVS-DETAIL] replaceTagInMessage  canned contains nocannedTitle', canned.title.includes('nocannedTitle'))
-    // if (!canned.title.includes('nocannedTitle')) {
+      // console.log('[CONVS-DETAIL] replaceTagInMessage  event ', event)
+      // console.log('[CONVS-DETAIL] replaceTagInMessage  canned ', canned)
+      // console.log('[CONVS-DETAIL] replaceTagInMessage  canned title', canned.title)
+      // console.log('[CONVS-DETAIL] replaceTagInMessage  canned contains nocannedTitle', canned.title.includes('nocannedTitle'))
+ 
       const elTextArea = this.rowTextArea['el']
       const textArea = elTextArea.getElementsByTagName('ion-textarea')[0]
 
-      console.log('[CONVS-DETAIL] replaceTagInMessage  textArea ', textArea)
-      console.log('[CONVS-DETAIL] replaceTagInMessage  textArea value', textArea.value,)
+      // console.log('[CONVS-DETAIL] replaceTagInMessage  textArea ', textArea)
+      // console.log('[CONVS-DETAIL] replaceTagInMessage  textArea value', textArea.value,)
 
       // var lastChar =  textArea.value.substr(-1); // Selects the last character
       // if (lastChar === '/') {
@@ -1519,13 +1488,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       }, 200)
     }
     else {
-      console.log('[CONVS-DETAIL] THERE IS NOT CANNED ', canned.text)
-      // if (this.USER_ROLE !== 'agent') {
-        // this.presentCreateCannedResponseModal()
-        // const elTextArea = this.rowTextArea['el']
-        // const textArea = elTextArea.getElementsByTagName('ion-textarea')[0]
-        // textArea.value = ''
-      
+      this.logger.log('[CONVS-DETAIL] THERE IS NOT CANNED ', canned.text)
     }
   }
 
@@ -1534,8 +1497,8 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     const textArea = elTextArea.getElementsByTagName('ion-textarea')[0]
     textArea.value = ''
 
-    console.log('[CONVS-DETAIL] PRESENT CREATE CANNED RESPONSE MODAL ')
-    const attributes = {}
+    // console.log('[CONVS-DETAIL] PRESENT CREATE CANNED RESPONSE MODAL ')
+    const attributes = { conversationWith: this.conversationWith }
     const modal: HTMLIonModalElement = await this.modalController.create({
       component: CreateCannedResponsePage,
       componentProps: attributes,
@@ -1543,7 +1506,6 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       backdropDismiss: false,
     })
     modal.onDidDismiss().then((dataReturned: any) => {
-      // 
       this.logger.log('[CONVS-DETAIL] ', dataReturned.data)
     })
 
@@ -1555,10 +1517,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
     const elTextArea = this.rowTextArea['el']
     const textArea = elTextArea.getElementsByTagName('ion-textarea')[0]
 
-    this.logger.log(
-      '[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea ',
-      textArea,
-    )
+    this.logger.log('[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea ', textArea)
     // console.log("[CONVS-DETAIL] hasClickedOpenCannedResponses  textArea value", textArea.value)
     var lastChar = textArea.value[textArea.value.length - 1]
     // console.log('[CONVS-DETAIL] hasClickedOpenCannedResponses lastChar', lastChar)

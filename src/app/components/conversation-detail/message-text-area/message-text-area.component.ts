@@ -236,7 +236,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     // this.getIfTexareaIsEmpty('onResize')
-   console.log("[CONVS-DETAIL][MSG-TEXT-AREA]  event.target.innerWidth; ", event.target.innerWidth);
+  //  console.log("[CONVS-DETAIL][MSG-TEXT-AREA]  event.target.innerWidth; ", event.target.innerWidth);
 
 
 
@@ -590,21 +590,19 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   }
 
   addEmoji($event) {
-    // this.newmessage=this.newmessage+event.data; 
-    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI emoji', emoji )
-    console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI $event', $event)
-    console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI $event > emoji', $event.emoji)
-    console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI $event > emoji  > native', $event.emoji.native)
-    console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI messageString', this.messageString)
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI $event', $event)
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI $event > emoji', $event.emoji)
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI $event > emoji  > native', $event.emoji.native)
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI messageString', this.messageString)
     if (this.messageString === undefined) {
       this.addWhiteSpaceBefore = false;
-      console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI addWhiteSpaceBefore ',  this.addWhiteSpaceBefore)
+      // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI addWhiteSpaceBefore ',  this.addWhiteSpaceBefore)
     } else {
       this.addWhiteSpaceBefore = true 
-      console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI addWhiteSpaceBefore ',  this.addWhiteSpaceBefore)
+      // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI addWhiteSpaceBefore ',  this.addWhiteSpaceBefore)
     }
     const elTextArea = this.message_text_area['el'];
-    console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI elTextArea ',  elTextArea)
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI elTextArea ',  elTextArea)
     this.insertAtCursor(elTextArea, $event.emoji.native)
   }
 

@@ -95,7 +95,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
     this.conversation_with_fullname = this.conversationAvatar.conversation_with_fullname
     this.listenToConversationHasBeenClosed()
     this.initialize();
-    this.isOniOSMobileDevice()
+    // this.isOniOSMobileDevice()
   }
 
   isOniOSMobileDevice() {
@@ -104,7 +104,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
       this.IS_ON_IOS_MOBILE_DEVICE = true;
 
     }
-    console.log('[CONVS-DETAIL][HEADER] IS_ON_IOS_MOBILE_DEVICE ', this.IS_ON_IOS_MOBILE_DEVICE)
+    // console.log('[CONVS-DETAIL][HEADER] IS_ON_IOS_MOBILE_DEVICE ', this.IS_ON_IOS_MOBILE_DEVICE)
     return this.IS_ON_IOS_MOBILE_DEVICE;
   }
 
@@ -164,7 +164,7 @@ export class HeaderConversationDetailComponent implements OnInit, OnChanges {
   }
 
   closeConversation() {
-    console.log('[CONVS-DETAIL][HEADER] click on RESOLVE this.events', this.events) 
+    this.logger.log('[CONVS-DETAIL][HEADER] click on RESOLVE this.events', this.events) 
     this.events.publish('conversation:closed', this.idConv)
   }
 

@@ -71,21 +71,21 @@ export class IonConversationDetailComponent extends ConversationContentComponent
   getOSCODE() {
     this.support_mode = this.appConfigProvider.getConfig().supportMode
     this.public_Key = this.appConfigProvider.getConfig().t2y12PruGU9wUtEGzBJfolMIgK
-    console.log('[CONVS-DETAIL][ION-CONVS-DETAIL] AppConfigService getAppConfig public_Key', this.public_Key)
+    this.logger.log('[CONVS-DETAIL][ION-CONVS-DETAIL] AppConfigService getAppConfig public_Key', this.public_Key)
 
     if (this.public_Key) {
       let keys = this.public_Key.split('-')
-      console.log('[CONVS-DETAIL][ION-CONVS-DETAIL] PUBLIC-KEY - public_Key keys', keys)
+      this.logger.log('[CONVS-DETAIL][ION-CONVS-DETAIL] PUBLIC-KEY - public_Key keys', keys)
 
       keys.forEach((key) => {
         if (key.includes('CAR')) {
           let car = key.split(':')
           if (car[1] === 'F') {
             this.areVisibleCAR = false
-            console.log('[CONVS-DETAIL][ION-CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+            this.logger.log('[CONVS-DETAIL][ION-CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
           } else {
             this.areVisibleCAR = true
-            console.log('[CONVS-DETAIL][ION-CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+            this.logger.log('[CONVS-DETAIL][ION-CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
           }
         }
       })

@@ -278,8 +278,9 @@ export class TiledeskService {
   // @ Create - Save (POST) new canned response
   // -------------------------------------------------------------------------------------
   public createCannedResponse(message: string, title: string, project_id: string, token: string) {
+    this.logger.log('[TILEDESK-SERVICE] - CREATE CANNED-RES - token', token); 
     const url =  this.apiUrl  + project_id + '/canned/'
-   console.log('[TILEDESK-SERVICE] - CREATE CANNED-RES - URL', url); 
+    this.logger.log('[TILEDESK-SERVICE] - CREATE CANNED-RES - URL', url); 
     
     const httpOptions = {
       headers: new HttpHeaders({
@@ -290,12 +291,12 @@ export class TiledeskService {
 
     const body = { 'text': message, 'title': title };
 
-    console.log('[TILEDESK-SERVICE] CREATE CANNED-RES - BODY ', body);
+    this.logger.log('[TILEDESK-SERVICE] CREATE CANNED-RES - BODY ', body);
 
     return this.http
     .post(url, JSON.stringify(body), httpOptions)
     .pipe(map((res: any) => {
-      console.log('[TILEDESK-SERVICE] - CREATE CANNED-RES - RES ', res);
+      this.logger.log('[TILEDESK-SERVICE] - CREATE CANNED-RES - RES ', res);
       return res
     }))
       

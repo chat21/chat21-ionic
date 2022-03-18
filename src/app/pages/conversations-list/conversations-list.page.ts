@@ -1081,7 +1081,7 @@ export class ConversationListPage implements OnInit {
 
   listenToCloseConvFromHeaderConversation() {
     this.events.subscribe('conversation:closed', (convId) => {
-      console.log('[CONVS-LIST-PAGE] hasclosedconversation  convId', convId)
+      this.logger.log('[CONVS-LIST-PAGE] hasclosedconversation  convId', convId)
 
       const conversation = this.conversations.find(
         (conv) => conv.uid === convId,
@@ -1096,7 +1096,7 @@ export class ConversationListPage implements OnInit {
   // https://github.com/chat21/chat21-cloud-functions/blob/master/docs/api.md#delete-a-conversation
   // ----------------------------------------------------------------------------------------------
   onCloseConversation(conversation: ConversationModel) {
-    console.log('[CONVS-LIST-PAGE] onCloseConversation  conversation', conversation)
+    this.logger.log('[CONVS-LIST-PAGE] onCloseConversation  conversation', conversation)
 
     // -------------------------------------------------------------------------------------
     // Fix the display of the message "No conversation yet" when a conversation is archived
