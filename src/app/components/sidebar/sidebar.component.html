@@ -209,10 +209,10 @@
         </a>
       </li>
 
-      <!-- ------------------------------------------------- -->
-      <!-- SETTINGS // old: goToSettings_CannedResponses()  -->
-      <!-- ------------------------------------------------- -->
-      <li *ngIf="USER_ROLE !== 'agent'" (click)="goToWidgetSetUp()" matTooltipClass="custom-mat-tooltip"
+      <!-- ----------------------------------------------------------------------------------- -->
+      <!-- SETTINGS // old: goToSettings_CannedResponses()  *ngIf="USER_ROLE !== 'agent'" -->
+      <!-- ----------------------------------------------------------------------------------- -->
+      <li (click)="goToWidgetSetUp()" matTooltipClass="custom-mat-tooltip"
         matTooltip="{{ settings_lbl }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
         <a class="customAncor">
           <i class="material-icons sidebar-icons">settings</i>
