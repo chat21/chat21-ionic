@@ -275,6 +275,18 @@ button.user-details-btn-close {
     color: #fff;
 }
 
+.user-details-footer-chat-version {
+    position: absolute;
+    bottom: 11px;
+    text-align: center;
+    margin: auto;
+    transform: translateX(-50%);
+    left: 50%;
+    margin: auto;
+    font-size: 12px;
+    font-weight: 400;
+}
+
 :host ::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
     background-color: #a9afbb;
     margin-left: 30px;

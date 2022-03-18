@@ -11,7 +11,8 @@ import { skip } from 'rxjs/operators';
 import { AppConfigProvider } from 'src/app/services/app-config';
 import { EventsService } from 'src/app/services/events-service';
 import { tranlatedLanguage } from '../../../chat21-core/utils/constants';
-import { avatarPlaceholder,  getColorBck} from 'src/chat21-core/utils/utils-user';
+import { avatarPlaceholder, getColorBck } from 'src/chat21-core/utils/utils-user';
+import * as PACKAGE from 'package.json';
 @Component({
   selector: 'app-sidebar-user-details',
   templateUrl: './sidebar-user-details.component.html',
@@ -53,8 +54,10 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   public_Key: any
   plan_name: string;
   plan_subscription_is_active: boolean;
-   USER_PHOTO_PROFILE_EXIST: boolean;
- 
+  USER_PHOTO_PROFILE_EXIST: boolean;
+  version: string
+  test: Date = new Date();
+  company_name: string = 'Tiledesk'
   constructor(
     private translate: TranslateService,
     public tiledeskAuthService: TiledeskAuthService,
@@ -68,6 +71,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
+    this.version = PACKAGE.version;
     this.getCurrentChatLangAndTranslateLabels();
     this.subcribeToAuthStateChanged();
     this.listenTocurrentProjectUserUserAvailability$();
@@ -95,12 +99,12 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   }
 
   checkIfExistPhotoProfile(imageUrl) {
-    this.verifyImageURL(imageUrl,  (imageExists) => {
+    this.verifyImageURL(imageUrl, (imageExists) => {
 
       if (imageExists === true) {
         this.USER_PHOTO_PROFILE_EXIST = true;
         this.logger.log('[SIDEBAR-USER-DETAILS] photo_profile_URL IMAGE EXIST ', imageExists)
-      
+
       } else {
         this.USER_PHOTO_PROFILE_EXIST = false;
         this.logger.log('[SIDEBAR-USER-DETAILS] photo_profile_URL IMAGE EXIST ', imageExists)
@@ -124,7 +128,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
       currentUser['fullname_initial'] = 'N/A'
       currentUser['fillColour'] = 'rgb(98, 100, 167)'
     }
-}
+  }
 
   verifyImageURL(image_url, callBack) {
     const img = new Image();
@@ -198,7 +202,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
       this.logger.log('[SIDEBAR-USER-DETAILS] chat_lang: ', this.chat_lang);
     }
 
-   
+
     if (tranlatedLanguage.includes(this.chat_lang)) {
       this.logger.log('[SIDEBAR-USER-DETAILS] tranlatedLanguage includes', this.chat_lang, ': ', tranlatedLanguage.includes(this.chat_lang))
       this.translate.use(this.chat_lang);
