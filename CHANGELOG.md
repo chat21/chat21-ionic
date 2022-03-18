@@ -6,7 +6,14 @@
 - Adds the ability teammates to add a message as a canned response
 - Hides the "Open canned responses" button if the "supportMode" environment variable is set to false
 - Fixes the bug: "Settings" menu item in the left sidebar redirects to the "Canned responses" page instead of the "Widget" page
-- Adds the ability for non-agent teammates to add a canned response when none are available
+- Adds the ability to add a canned response
+- Fixes the bug: "Resolve conversation" from conversation detail header doesn't work on mobile
+- Adds the ability to insert emoji in the message text
+- Fixes the bug: on iOS mobile devices in the conversation detail the requester's avatar is not vertically aligned
+- Fixes the bug: on mobile devices in  the "info profile" modal window the version number is not visible because it is on a white background
+- Fixes the bug: in the "Create canned response" modal window the "Add personalisation" menu does not always work
+- Adds the chat version number to the teammate details drawer
+- Makes the right sidebar "Settings" menu item visible to teammates with agent role
 
 ### 3.0.61-rc11
 - Fixed the bug: the "Resolve" button is displayed in the header of the details of the archived conversations
