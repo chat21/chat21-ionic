@@ -71,11 +71,12 @@
       </li>
 
       <!-- ------------------------------------------- -->
-      <!-- HOME  -->
+      <!-- HOME   target="_self" href="{{ dashboard_home_url }}" -->
       <!-- ------------------------------------------- -->
+
       <li (click)="goToHome()" matTooltip="Home" #tooltip="matTooltip" matTooltipPosition='right'
         matTooltipHideDelay="100" matTooltipClass="custom-mat-tooltip">
-        <a class="customAncor">
+        <a target="_self" href="{{ dashboard_home_url }}" class="customAncor">
           <i class="material-icons sidebar-icons">
             home
           </i>
@@ -89,7 +90,7 @@
       <ng-container *ngIf="USER_ROLE !== 'agent'">
         <li (click)="goToBots()" id="bot-anchor-wpr" matTooltipClass="custom-mat-tooltip" matTooltip="Bots"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
-          <a id="bot-anchor" #botbtn class="customAncor" style="height: 40px;margin-right: 0px !important;">
+          <a target="_self" href="{{ dashboard_bots_url }}" id="bot-anchor" #botbtn class="customAncor" style="height: 40px;margin-right: 0px !important;">
             <span class="bot-icon-wpr">
               <svg version="1.1" id="Objects" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30"
@@ -119,7 +120,7 @@
       <ng-container *ngIf="USER_ROLE !== 'agent'">
         <li (click)="goToConversations()" matTooltipClass="custom-mat-tooltip" matTooltip="Monitor"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100"  style="text-align: center;">
-          <a class="customAncor" style="height: 40px;margin-right: 0px !important;">
+          <a target="_self" href="{{ dashboard_convs_url }}" class="customAncor" style="height: 40px;margin-right: 0px !important;">
             <!-- <i class="material-icons sidebar-icons">forum</i> -->
             <span  class="realtime-icon-wpr" >
 
@@ -140,7 +141,7 @@
       <!-- ------------------------------------------- -->
       <li (click)="goToContacts()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ contacts_lbl }}"
         #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
-        <a class="customAncor">
+        <a target="_self" href="{{ dashboard_contacts_url }}" class="customAncor">
           <i class="material-icons sidebar-icons">contacts</i>
         </a>
       </li>
@@ -151,7 +152,7 @@
       <ng-container *ngIf="isVisibleAPP && USER_ROLE !== 'agent'">
         <li (click)="goToAppStore()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ apps_lbl }}"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
-          <a class="customAncor" style="margin-right: 0px !important;">
+          <a target="_self" href="{{ dashboard_app_url }}" class="customAncor" style="margin-right: 0px !important;">
             <!-- <i class="material-icons sidebar-icons">apps</i> -->
             <!-- <i class="material-icons sidebar-icons">dashboard_customize</i> -->
             <span class="dashboard-customize-icon-wpr"> 
@@ -171,7 +172,7 @@
       <ng-container *ngIf="isVisibleANA && USER_ROLE !== 'agent'">
         <li (click)="goToAnalytics()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ analytics_lbl }}"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
-          <a class="customAncor" style="margin-right: 0px !important;">
+          <a target="_self" href="{{ dashboard_analytics_url }}" class="customAncor" style="margin-right: 0px !important;">
             <!-- <i class="material-icons sidebar-icons">trending_up</i> -->
             <!-- <i class="material-icons sidebar-icons"> analytics </i> -->
             <!-- <i class="material-icons sidebar-icons">  bar_chart </i> -->
@@ -192,7 +193,7 @@
       <ng-container *ngIf="isVisibleACT">
         <li *ngIf="USER_ROLE !== 'agent'" (click)="goToActivities()" matTooltipClass="custom-mat-tooltip"
           matTooltip="{{ activities_lbl }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
-          <a class="customAncor">
+          <a target="_self" href="{{ dashboard_activities_url }}" class="customAncor">
             <i class="material-icons sidebar-icons">assignment</i>
           </a>
         </li>
@@ -204,7 +205,7 @@
       <!-- ------------------------------------------- -->
       <li (click)="goToHistory()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ history_lbl }}"
         #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
-        <a class="customAncor">
+        <a target="_self" href="{{ dashboard_history_url }}" class="customAncor">
           <i class="material-icons sidebar-icons">history</i>
         </a>
       </li>
@@ -212,9 +213,9 @@
       <!-- ----------------------------------------------------------------------------------- -->
       <!-- SETTINGS // old: goToSettings_CannedResponses()  *ngIf="USER_ROLE !== 'agent'" -->
       <!-- ----------------------------------------------------------------------------------- -->
-      <li (click)="goToWidgetSetUp()" matTooltipClass="custom-mat-tooltip"
+      <li (click)="goToWidgetSetUpOrToCannedResponses()" matTooltipClass="custom-mat-tooltip"
         matTooltip="{{ settings_lbl }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
-        <a class="customAncor">
+        <a target="_self" href="{{ dashboard_settings_url }}" class="customAncor">
           <i class="material-icons sidebar-icons">settings</i>
         </a>
       </li>

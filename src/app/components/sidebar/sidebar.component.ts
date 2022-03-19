@@ -49,6 +49,15 @@ export class SidebarComponent implements OnInit {
   countClickOnOpenUserDetailSidebar: number = 0
   USER_PHOTO_PROFILE_EXIST: boolean;
   currentUser: any;
+  dashboard_home_url: string;
+  dashboard_bots_url: string;
+  dashboard_convs_url: string;
+  dashboard_contacts_url: string;
+  dashboard_app_url: string;
+  dashboard_analytics_url: string;
+  dashboard_activities_url: string;
+  dashboard_history_url: string;
+  dashboard_settings_url: string;
   constructor(
     public imageRepoService: ImageRepoService,
     public appStorageService: AppStorageService,
@@ -84,8 +93,44 @@ export class SidebarComponent implements OnInit {
     //     height: '35px'
     //   };
     // }
+
+
   }
 
+
+  getStoredProjectAndUserRole() {
+    const stored_project = localStorage.getItem('last_project')
+    // console.log('[SIDEBAR] stored_project ', stored_project)
+    if (stored_project) {
+      const project = JSON.parse(stored_project)
+      this.logger.log('[SIDEBAR] project ', project)
+
+      this.project_id = project.id_project.id
+      this.logger.log('[SIDEBAR] project_id ', this.project_id)
+
+      this.USER_ROLE = project.role;
+      this.logger.log('[SIDEBAR] USER_ROLE ', this.USER_ROLE)
+      this.buildURLs(this.USER_ROLE)
+    }
+  }
+
+  buildURLs(USER_ROLE) {
+    this.dashboard_home_url = this.DASHBOARD_URL + this.project_id + '/home'
+    this.dashboard_bots_url = this.DASHBOARD_URL + this.project_id + '/bots'
+    this.dashboard_convs_url = this.DASHBOARD_URL + this.project_id + '/wsrequests'
+    this.dashboard_contacts_url = this.DASHBOARD_URL + this.project_id + '/contacts'
+    this.dashboard_app_url = this.DASHBOARD_URL + this.project_id + '/app-store'
+    this.dashboard_analytics_url = this.DASHBOARD_URL + this.project_id + '/analytics'
+    this.dashboard_activities_url = this.DASHBOARD_URL + this.project_id + '/activities'
+    this.dashboard_history_url = this.DASHBOARD_URL + this.project_id + '/history'
+    this.dashboard_settings_url = ''
+    if (USER_ROLE !== 'agent') {
+      this.dashboard_settings_url = this.DASHBOARD_URL + this.project_id + '/widget-set-up'
+    } else if (USER_ROLE === 'agent') {
+      this.dashboard_settings_url = this.DASHBOARD_URL + this.project_id + '/cannedresponses'
+    }
+
+  }
 
   subcribeToAuthStateChanged() {
     this.messagingAuthService.BSAuthStateChanged.subscribe((state) => {
@@ -378,35 +423,23 @@ export class SidebarComponent implements OnInit {
   // }
   // }
 
-  getStoredProjectAndUserRole() {
-    const stored_project = localStorage.getItem('last_project')
-    // console.log('[SIDEBAR] stored_project ', stored_project)
-    if (stored_project) {
-      const project = JSON.parse(stored_project)
-      this.logger.log('[SIDEBAR] project ', project)
 
-      this.project_id = project.id_project.id
-      this.logger.log('[SIDEBAR] project_id ', this.project_id)
-
-      this.USER_ROLE = project.role;
-      this.logger.log('[SIDEBAR] USER_ROLE ', this.USER_ROLE)
-    }
-  }
 
   goToHome() {
     let url = this.DASHBOARD_URL + this.project_id + '/home'
-    const myWindow = window.open(url, '_self');
-    myWindow.focus();
-  }
-
-  goToConversations() {
-    let url = this.DASHBOARD_URL + this.project_id + '/wsrequests'
+    this.dashboard_home_url = url;
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
 
   goToBots() {
     let url = this.DASHBOARD_URL + this.project_id + '/bots'
+    const myWindow = window.open(url, '_self');
+    myWindow.focus();
+  }
+
+  goToConversations() {
+    let url = this.DASHBOARD_URL + this.project_id + '/wsrequests'
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
@@ -443,10 +476,12 @@ export class SidebarComponent implements OnInit {
     myWindow.focus();
   }
 
-  goToSettings_CannedResponses() {
-    let url = this.DASHBOARD_URL + this.project_id + '/cannedresponses'
-    const myWindow = window.open(url, '_self');
-    myWindow.focus();
+  goToWidgetSetUpOrToCannedResponses() {
+    if (this.USER_ROLE !== 'agent') {
+      this.goToWidgetSetUp()
+    } else if (this.USER_ROLE === 'agent') {
+      this.goToSettings_CannedResponses()
+    }
   }
 
   goToWidgetSetUp() {
@@ -454,6 +489,14 @@ export class SidebarComponent implements OnInit {
     const myWindow = window.open(url, '_self');
     myWindow.focus();
   }
+
+  goToSettings_CannedResponses() {
+    let url = this.DASHBOARD_URL + this.project_id + '/cannedresponses'
+    const myWindow = window.open(url, '_self');
+    myWindow.focus();
+  }
+
+
 
   public translations() {
     const keys = [
