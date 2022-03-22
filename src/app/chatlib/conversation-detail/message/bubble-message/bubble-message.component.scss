@@ -21,7 +21,6 @@
         font-variant: normal;
         font-weight: 300;
         overflow: hidden;
-        
     }
     img {
         border-radius: 8px;
@@ -32,30 +31,33 @@
         height: auto;
         object-fit: cover;
     }
+
     .message_innerhtml {
         margin: 0px;
         // padding: 0px 14px;
-        &.marked{
-            padding:8px;
-            margin-block-start: -1em!important;
-            margin-block-end: -1em!important;
+        &.marked {
+            padding: 8px;
+            margin-block-start: -1em !important;
+            margin-block-end: -1em !important;
         }
-        
+
         .text-message {
             padding-top: 14px;
         }
     }
-    
 }
 // > .button-native
-.btn-add-msg-as-canned-response  {
+.btn-add-msg-as-canned-response {
     // padding-left: 5px ;
     // padding-right: 5px ;
     border-radius: 50%;
-    --padding-end: 7px ;
-    --padding-start: 7px ;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 6%)
-
+    --padding-end: 7px;
+    --padding-start: 7px;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 6%);
 }
+
+// .emoticon {
+//     padding: 35px 0px !important;
+// }
 
 

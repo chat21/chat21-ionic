@@ -43,6 +43,7 @@
       </ng-template> -->
 
       <chat-text [text]="message?.text" [color]="textColor" [message]="message"
+      [class.chat-text-emoticon]="message?.emoticon"
         (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
         (onAfterMessageRender)="returnOnAfterMessageRender($event)">
       </chat-text>

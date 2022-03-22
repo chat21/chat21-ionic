@@ -91,10 +91,12 @@ ion-item {
         border-top-right-radius: 8px;
         border-bottom-right-radius: 0px;
     }
-    // .msg_sent:hover {
-    //     background-color: rgba(0, 153, 255, 0.6);
-    // }
-
+    .emoticon {
+        background: unset !important;
+        font-size: 4em;
+        padding-bottom: 21px;
+        padding-top: 30px;
+    }
     .has-metadata {
         max-width: 100% !important;
     }
@@ -144,9 +146,10 @@ ion-item {
         border-bottom-left-radius: 0px;
     }
 
-    // .msg_receive:hover {
-    //     background-color: rgba(247, 247, 247, 0.6);
-    // }
+    .emoticon {
+        background: unset !important;
+        font-size: 4em;
+    }
 
     .has-metadata {
         max-width: 100% !important;
@@ -289,4 +292,18 @@ ion-item {
     color: #64748b;
     font-size: 10px;
     left: 0px;
+}
+// ---------------------------------------------------------
+// emoticon
+// ---------------------------------------------------------
+
+:host .base_sent .msg_sent ::ng-deep div > div > div > .chat-text-emoticon > p > p {
+    margin-bottom: 6px !important;
+    margin-right: -7px !important;
+}
+
+:host .base_receive .msg_receive ::ng-deep div > div > div > .chat-text-emoticon > p > p {
+    margin-bottom: 41px !important;
+    margin-left: -8px !important;
+    margin-top: 49px !important;
 }
