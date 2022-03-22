@@ -71,10 +71,10 @@
       </li>
 
       <!-- ------------------------------------------- -->
-      <!-- HOME   target="_self" href="{{ dashboard_home_url }}" -->
+      <!-- HOME   (click)="goToHome()"" -->
       <!-- ------------------------------------------- -->
-
-      <li (click)="goToHome()" matTooltip="Home" #tooltip="matTooltip" matTooltipPosition='right'
+   
+      <li  matTooltip="Home" #tooltip="matTooltip" matTooltipPosition='right'
         matTooltipHideDelay="100" matTooltipClass="custom-mat-tooltip">
         <a target="_self" href="{{ dashboard_home_url }}" class="customAncor">
           <i class="material-icons sidebar-icons">
@@ -85,10 +85,10 @@
 
 
       <!-- ---------------------------------- -->
-      <!-- Bot    -->
+      <!-- Bot  (click)="goToBots()"  -->
       <!-- ---------------------------------- -->
       <ng-container *ngIf="USER_ROLE !== 'agent'">
-        <li (click)="goToBots()" id="bot-anchor-wpr" matTooltipClass="custom-mat-tooltip" matTooltip="Bots"
+        <li  id="bot-anchor-wpr" matTooltipClass="custom-mat-tooltip" matTooltip="Bots"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
           <a target="_self" href="{{ dashboard_bots_url }}" id="bot-anchor" #botbtn class="customAncor" style="height: 40px;margin-right: 0px !important;">
             <span class="bot-icon-wpr">
@@ -115,10 +115,10 @@
       </ng-container>
 
       <!-- ------------------------------------------- -->
-      <!-- Conversations (VISITORS) {{ conversations_lbl }} -->
+      <!-- Conversations (MONITOR) (click)="goToConversations()" -->
       <!-- ------------------------------------------- -->
       <ng-container *ngIf="USER_ROLE !== 'agent'">
-        <li (click)="goToConversations()" matTooltipClass="custom-mat-tooltip" matTooltip="Monitor"
+        <li  matTooltipClass="custom-mat-tooltip" matTooltip="Monitor"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100"  style="text-align: center;">
           <a target="_self" href="{{ dashboard_convs_url }}" class="customAncor" style="height: 40px;margin-right: 0px !important;">
             <!-- <i class="material-icons sidebar-icons">forum</i> -->
@@ -137,9 +137,9 @@
       </ng-container>
 
       <!-- ------------------------------------------- -->
-      <!-- CONTACTS (LEADS)  -->
+      <!-- CONTACTS (LEADS)  (click)="goToContacts()" -->
       <!-- ------------------------------------------- -->
-      <li (click)="goToContacts()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ contacts_lbl }}"
+      <li  matTooltipClass="custom-mat-tooltip" matTooltip="{{ contacts_lbl }}"
         #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
         <a target="_self" href="{{ dashboard_contacts_url }}" class="customAncor">
           <i class="material-icons sidebar-icons">contacts</i>
@@ -147,10 +147,10 @@
       </li>
 
       <!-- ------------------------------------------- -->
-      <!-- APPS  -->
+      <!-- APPS  (click)="goToAppStore()" -->
       <!-- ------------------------------------------- -->
       <ng-container *ngIf="isVisibleAPP && USER_ROLE !== 'agent'">
-        <li (click)="goToAppStore()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ apps_lbl }}"
+        <li  matTooltipClass="custom-mat-tooltip" matTooltip="{{ apps_lbl }}"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
           <a target="_self" href="{{ dashboard_app_url }}" class="customAncor" style="margin-right: 0px !important;">
             <!-- <i class="material-icons sidebar-icons">apps</i> -->
@@ -167,11 +167,11 @@
       </ng-container>
 
       <!-- ------------------------------------------- -->
-      <!-- ANALYTICS -->
+      <!-- ANALYTICS (click)="goToAnalytics()" -->
       <!-- ------------------------------------------- -->
       <ng-container *ngIf="isVisibleANA && USER_ROLE !== 'agent'">
-        <li (click)="goToAnalytics()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ analytics_lbl }}"
-          #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
+        <li  matTooltipClass="custom-mat-tooltip" matTooltip="{{ analytics_lbl }}"
+          #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;" >
           <a target="_self" href="{{ dashboard_analytics_url }}" class="customAncor" style="margin-right: 0px !important;">
             <!-- <i class="material-icons sidebar-icons">trending_up</i> -->
             <!-- <i class="material-icons sidebar-icons"> analytics </i> -->
@@ -188,10 +188,10 @@
       </ng-container>
 
       <!-- ------------------------------------------- -->
-      <!-- ACTIVITIES -->
+      <!-- ACTIVITIES (click)="goToActivities()" -->
       <!-- ------------------------------------------- -->
       <ng-container *ngIf="isVisibleACT">
-        <li *ngIf="USER_ROLE !== 'agent'" (click)="goToActivities()" matTooltipClass="custom-mat-tooltip"
+        <li *ngIf="USER_ROLE !== 'agent'"  matTooltipClass="custom-mat-tooltip"
           matTooltip="{{ activities_lbl }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
           <a target="_self" href="{{ dashboard_activities_url }}" class="customAncor">
             <i class="material-icons sidebar-icons">assignment</i>
@@ -201,9 +201,9 @@
 
 
       <!-- ------------------------------------------- -->
-      <!-- REQUESTS HISTORY -->
+      <!-- REQUESTS HISTORY (click)="goToHistory()" -->
       <!-- ------------------------------------------- -->
-      <li (click)="goToHistory()" matTooltipClass="custom-mat-tooltip" matTooltip="{{ history_lbl }}"
+      <li  matTooltipClass="custom-mat-tooltip" matTooltip="{{ history_lbl }}"
         #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
         <a target="_self" href="{{ dashboard_history_url }}" class="customAncor">
           <i class="material-icons sidebar-icons">history</i>
@@ -211,9 +211,9 @@
       </li>
 
       <!-- ----------------------------------------------------------------------------------- -->
-      <!-- SETTINGS // old: goToSettings_CannedResponses()  *ngIf="USER_ROLE !== 'agent'" -->
+      <!-- SETTINGS // old: goToSettings_CannedResponses()  *ngIf="USER_ROLE !== 'agent'" (click)="goToWidgetSetUpOrToCannedResponses()" -->
       <!-- ----------------------------------------------------------------------------------- -->
-      <li (click)="goToWidgetSetUpOrToCannedResponses()" matTooltipClass="custom-mat-tooltip"
+      <li  matTooltipClass="custom-mat-tooltip"
         matTooltip="{{ settings_lbl }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
         <a target="_self" href="{{ dashboard_settings_url }}" class="customAncor">
           <i class="material-icons sidebar-icons">settings</i>
