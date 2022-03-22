@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc15
+- Increase the size of the emoji and remove the background color when it is sent or received without text
+- Adds the ability to open sidebar menu items in a new tab by combining left mouse button + CMD keyboard key
+
 ### 3.0.61-rc14
 - Fixes the bug: the page to which the sidebar Settings menu item redirects is not correct for team members with agent role
 - Fixes the bug: right clicking on the sidebar menu items doesn't show the context menu
