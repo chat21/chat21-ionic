@@ -2,7 +2,7 @@
 
 ### 3.0.61-rc18
 - Fix bugs: in the teammate settings drawer the logout button area is too large
-- Fixes the bug: in the detail of the conversion the messages of type button are not aligned with the other messages
+- Fixed the bug: in the detail of the conversation the button messages are not aligned with the other messages
 
 ### 3.0.61-rc16
 - Does not allow teammates with agent role to access the "settings sidebar"
