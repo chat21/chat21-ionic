@@ -78,7 +78,7 @@
   "LABEL_ERROR_EMAIL": "Введите действительный адрес электронной почты.",
   "LABEL_ERROR_PASSWORD": "Пароль должен быть не менее 6 символов.",
   "LABEL_LOGIN": "Авторизоваться",
-  "LABEL_LOGOUT": "Выйти",
+  "LABEL_LOGOUT": "Выйти из системы",
   "LABEL_WELCOME_TO": "Добро пожаловать в",
   "LABEL_SIGNUP": "Зарегистрироваться",
   "LABEL_ALREDY_HAVE_AN_ACCOUNT": "У вас уже есть аккаунт?",

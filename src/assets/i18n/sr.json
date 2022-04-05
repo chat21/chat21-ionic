@@ -78,7 +78,7 @@
         "LABEL_ERROR_EMAIL": "Унесите исправну е-маил адресу.",
         "LABEL_ERROR_PASSWORD": "Лозинка мора имати најмање 6 знакова.",
         "LABEL_LOGIN": "Пријавите се",
-        "LABEL_LOGOUT": "Одјавити се",
+        "LABEL_LOGOUT": "Одјава",
         "LABEL_WELCOME_TO": "Добродошли у",
         "LABEL_SIGNUP": "Пријави се",
         "LABEL_ALREDY_HAVE_AN_ACCOUNT": "Већ имате налог?",

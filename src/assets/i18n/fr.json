@@ -78,7 +78,7 @@
   "LABEL_ERROR_EMAIL": "Entrez une adresse mail valide.",
   "LABEL_ERROR_PASSWORD": "Le mot de passe doit comporter au moins 6 caractères.",
   "LABEL_LOGIN": "Connexion",
-  "LABEL_LOGOUT": "Se déconnecter",
+  "LABEL_LOGOUT": "Déconnexion",
   "LABEL_WELCOME_TO": "Bienvenue à",
   "LABEL_SIGNUP": "S'inscrire",
   "LABEL_ALREDY_HAVE_AN_ACCOUNT": "Vous avez déjà un compte?",

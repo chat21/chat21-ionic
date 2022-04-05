@@ -78,7 +78,7 @@
   "LABEL_ERROR_EMAIL": "Introduzca una dirección de correo electrónico válida.",
   "LABEL_ERROR_PASSWORD": "La contraseña debe tener al menos 6 caracteres.",
   "LABEL_LOGIN": "Ingresar",
-  "LABEL_LOGOUT": "Cerrar sesión",
+  "LABEL_LOGOUT": "Finalizar la sesión",
   "LABEL_WELCOME_TO": "Bienvenido a",
   "LABEL_SIGNUP": "Regístrate",
   "LABEL_ALREDY_HAVE_AN_ACCOUNT": "¿Ya tienes una cuenta?",
