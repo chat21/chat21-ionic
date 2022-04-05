@@ -21,11 +21,11 @@
 
     <!-- (click)="goToUserProfile()" -->
     <div role="button" class="user-details-avatar">
-        <img  *ngIf="USER_PHOTO_PROFILE_EXIST" class="user-img-in-sidebar-user-details" [src]="photo_profile_URL"
+        <img *ngIf="USER_PHOTO_PROFILE_EXIST" class="user-img-in-sidebar-user-details" [src]="photo_profile_URL"
             onerror="this.src='assets/images/no_image_user.png'" />
 
-        <div *ngIf="!USER_PHOTO_PROFILE_EXIST"  class="user-img-in-sidebar-user-details"
-        [ngStyle]="{'background':  'linear-gradient(rgb(255,255,255) -125%,' + user?.fillColour + ')'}">
+        <div *ngIf="!USER_PHOTO_PROFILE_EXIST" class="user-img-in-sidebar-user-details"
+            [ngStyle]="{'background':  'linear-gradient(rgb(255,255,255) -125%,' + user?.fillColour + ')'}">
             <span id="sidebaravatar-altenative-user-avatar" class="sidebar-user-details-altenative-user-avatar">
                 {{ user?.fullname_initial }}
             </span>
@@ -76,7 +76,7 @@
     <section *ngIf="isVisiblePAY" class="user-details-plan-info">
         <span>
             <div> {{prjct_name}} </div>
-            <div  style="display: inline-block;"> {{ profile_name_translated }} </div>
+            <div style="display: inline-block;"> {{ profile_name_translated }} </div>
 
             <div *ngIf="plan_type === 'payment' && plan_subscription_is_active === false"
                 style="color:#f44336; position:relative; top: -1px;;display: inline-block;">
@@ -99,18 +99,22 @@
         border-top: 1px solid rgba(255, 255,255, 0.2);"> -->
 
 
-    <section class="user-details-footer-section" (click)=onLogout()
+    <section class="user-details-footer-section"
         [ngClass]="{'footer-margin-top-pricing-no-visible': isVisiblePAY === false }">
-        <i class="material-icons user-details-logout-icon">
-            logout
-        </i>
-        <div> Logout</div>
+        <div role="button" class="logout-btn-wpr" (click)=onLogout()>
+            <i class="material-icons user-details-logout-icon" >
+                logout
+            </i>
+            <div class="user-details-logout-text"> 
+                 {{LOGOUT_msg}} 
+            </div>
+        </div>
     </section>
 
     <section class="user-details-footer-chat-version">
-        <div class="chat-version"> 
-        <!-- &copy; {{test | date: 'yyyy'}} {{company_name}} ver {{version}} -->
-        ver {{version}}
+        <div class="chat-version">
+            <!-- &copy; {{test | date: 'yyyy'}} {{company_name}} ver {{version}} -->
+            ver {{version}}
         </div>
     </section>
 

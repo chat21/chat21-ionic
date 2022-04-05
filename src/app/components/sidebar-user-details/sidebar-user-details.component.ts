@@ -41,6 +41,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   PAYD_PLAN_NAME_ENTERPRISE_msg: string;
   PRO_PLAN_TRIAL_msg: string;
   FREE_PLAN_msg: string;
+  LOGOUT_msg: string;
   profile_name_translated: string;
   SubscriptionPaymentProblem: string;
   user: any
@@ -222,6 +223,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     this.getIsBusyTranslation();
     this.getSubscriptionPaymentProblemTranslation();
     this.getThePlanHasExpiredTranslation();
+    this.getLogoutTranslation();
   }
 
 
@@ -277,6 +279,15 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
 
         // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
         this.IS_BUSY_msg = text
+      });
+  }
+
+  getLogoutTranslation() {
+    this.translate.get('LABEL_LOGOUT')
+      .subscribe((text: string) => {
+        // this.deleteContact_msg = text;
+        // console.log('[SIDEBAR-USER-DETAILS] - GET Logout label ', text)
+        this.LOGOUT_msg = text
       });
   }
 
@@ -392,6 +403,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
       });
   }
 
+ 
 
 
   listenTocurrentProjectUserUserAvailability$() {

@@ -253,7 +253,7 @@ button.user-details-btn-close {
     margin: auto;
     position: absolute;
     text-align: center;
-    cursor: pointer;
+
     padding-bottom: 15px;
     padding-top: 200px;
     font-size: 16px;
@@ -262,13 +262,17 @@ button.user-details-btn-close {
     // top:355px
 }
 
+.logout-btn-wpr {
+    cursor: pointer;
+}
+
 .footer-margin-top-pricing-no-visible {
     padding-top: 240px;
 }
 .user-details-logout-icon {
     color: #a9afbb;
     font-size: 30px;
-    margin-top: 30px;
+    // margin-top: 30px;
 }
 
 .user-details-logout-icon:hover {
