@@ -58,7 +58,7 @@ ion-header {
         top: 0;
         left: 50px;
         vertical-align: middle;
-        cursor: pointer;
+        // cursor: pointer;
     }
     .tile-point {
         width: 10px;
@@ -150,6 +150,7 @@ ion-header {
 
 .tile-info-with-ios {
     left: 82px !important;
+    top: 10px!important;
 }
 
 .user-presence-ios {
@@ -158,4 +159,9 @@ ion-header {
 
 .avatar-container-ios {
     left: 55px;
+    top: 10px;
+}
+
+.resolve-conv-margin-right {
+    margin-right: 52px;
 }

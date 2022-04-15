@@ -118,12 +118,17 @@
   <ion-note *ngIf="!conversation.archived" class="conversation_time">{{conversation.timestamp | amTimeAgo}}</ion-note>
 
   <ion-buttons slot="end">
-    <ion-button *ngIf="!conversation.archived"
+    <ion-button *ngIf="!conversation.archived" [tooltip]="archiveTooltip"  [options]="tooltip_options" placement="bottom"  content-type="template"
       [ngClass]="{'hide': !isApp, 'button-on-desktop': !isApp, 'button-on-mobile': isApp  }"
       id="{{ 'close_conversation_button' + conversation.uid }}" class="close-conversation-button" ion-button clear
       item-end (click)="closeConversation(conversation);$event.stopPropagation();" padding>
       <ion-icon slot="icon-only" style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}"
         color="close-conversation" name="archive-outline" item-end></ion-icon>
+
+        <ng-template #archiveTooltip>
+          <span *ngIf="conversation?.recipient.startsWith('support-group')"> {{ resolve_btn_tooltip}} </span>
+          <span *ngIf="!conversation?.recipient.startsWith('support-group')"> {{ archive_btn_tooltip }} </span>
+        </ng-template>
     </ion-button>
     <!-- <ion-button *ngIf="conversation.archived" class="close-conversation-button" ion-button clear item-end disabled padding>
       <!- - <ion-icon  style="display:block;" id="{{ 'close_button_icon' + conversation.uid }}" color="close-conversation" name="archive-outline" item-end></ion-icon> - ->
@@ -142,7 +147,7 @@
       {{browserLang === 'en' ? (conversation.timestamp | amDateFormat:'MMM DD YYYY') : (conversation.timestamp| amDateFormat:'DD MMM YYYY') }}
       <!-- {{conversation.timestamp | amDateFormat:'DD MMM YYYY'}} -->
     </span>
-    <i class="material-icons" item-end style="font-size: 15px;font-weight: 400;color: #666666;"> history </i>
+    <!-- <i class="material-icons" item-end style="font-size: 15px;font-weight: 400;color: #666666;"> history </i> -->
   </div>
 
   <!-- && !conversation?.archived -->

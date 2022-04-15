@@ -1,0 +1,275 @@
+<!-- *ngIf="project"  -->
+<div class="logo">
+  <!-- <a class="logo-img-wpr" [ngClass]="{'small-sidebar-logo-img-wpr' : SIDEBAR_IS_SMALL === true }">
+    <div class="logo-img" (click)="goToHome()" style="cursor: pointer;">
+      <img class="small-sidebar__logo" src="assets/tiledesk-solo-logo.png" />
+    </div>
+  </a> -->
+
+
+
+  <div id="sidebaravatar-img-wpr" class="sidebar-avatar-container tiledesk-nav-avatar" (click)="openUserDetailSidePanel()"
+    style="cursor: pointer;" [ngClass]="{'small-sidebar-avatar' : SIDEBAR_IS_SMALL === true,  'small-sidebar-avatar-with-avatar': SIDEBAR_IS_SMALL === true && !USER_PHOTO_PROFILE_EXIST}">
+
+    <img *ngIf="USER_PHOTO_PROFILE_EXIST" id="sidebaravatar-img" class="sidebar-avatar" [src]="photo_profile_URL"
+      onerror="this.src='assets/images/no_image_user.png'" />
+
+    <div *ngIf="!USER_PHOTO_PROFILE_EXIST" id="sidebaravatar-no-img" class="sidebar-avatar"
+      [ngStyle]="{'background':  'linear-gradient(rgb(255,255,255) -125%,' + currentUser?.fillColour + ')'}">
+      <span id="sidebaravatar-altenative-user-avatar" class="sidebar-altenative-user-avatar">
+        {{ currentUser?.fullname_initial }}
+      </span>
+    </div>
+
+    <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ tooltip_text_for_availability_status}}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" -->
+    <!-- (click)="changeAvailabilityState(IS_AVAILABLE = !IS_AVAILABLE)"  -->
+    <div id="sidebaravatar-status-icon" class="status-icon"
+      [ngClass]="{'is-user-online' : IS_AVAILABLE === true, 'is-user-offline' : IS_AVAILABLE === false, 'small-sidebar-status-icon' : SIDEBAR_IS_SMALL === true  }">
+    </div>
+
+        <!-- matTooltipClass="custom-mat-tooltip" matTooltip="{{ 'Busy' | translate }}" #tooltip="matTooltip"  matTooltipPosition='right' matTooltipHideDelay="100" -->
+        <div id="sidebaravatar-isbusy-icon-wpr" class="sidebar--isBusy-icon-wpr" [ngClass]="{'sidebar--isBusy-icon-wpr-with-image': USER_PHOTO_PROFILE_EXIST}" *ngIf="IS_BUSY === true"
+        style="cursor:pointer">
+        <span id="sidebaravatar-isbusy-icon" class="material-icons sidebar-is-busy-icon">
+          access_time
+        </span>
+      </div>
+
+  </div>
+</div>
+
+<div class="sidebar-wrapper">
+
+  <div class="nav-container">
+    <!-- [ngClass]="{'is-desktop-menu' : IS_MOBILE_MENU === false, 'is-mobile-menu' : IS_MOBILE_MENU === true  }" -->
+    <!-- padding-bottom: 65px; -->
+    <ul style="margin-top: 0px;" class="nav">
+
+      <!-- ------------------------------------------- -->
+      <!-- CHAT  -->
+      <!-- ------------------------------------------- -->
+      <li class="item-active" style="cursor: unset;" matTooltipClass="custom-mat-tooltip" matTooltip="Chat"
+        #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center; ">
+        <a class="customAncor" style="margin-right: 0px !important">
+          <!-- <i class="material-icons sidebar-icons">chat</i> -->
+          <span id="openchat-span" style="position: relative;top: 9px;vertical-align: middle;">
+            <svg id="openchat-svg" version="1.1" xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 23 21"
+              style="enable-background:new 0 0 23 21;" xml:space="preserve"
+              style="width:20px;height:20px; vertical-align: middle;">
+              <style type="text/css">
+                .chat21-icon {
+                  fill: #fff;
+                }
+              </style>
+              <path id="openchat-path" class="chat21-icon" d="M11.5,0.5C5.8,0.5,1.3,5,1.3,10.5c0,1.8,0.5,3.5,1.4,5l-0.8,4.3l4.4-0.8c1.5,0.9,3.3,1.4,5.3,1.4
+              c5.7,0,10.2-4.5,10.2-10S17.2,0.5,11.5,0.5z M11.5,17.2c-2.5,0-4.6-1.3-5.7-2.6c0.6-0.2,0.8-0.8,1.4-1c0.7,0.9,2.5,2.1,4.4,2.1
+              c1.9,0,3.6-1.2,4.2-2.1c0.5,0.2,0.9,0.6,1.4,0.9C16.1,15.8,14,17.2,11.5,17.2z" />
+            </svg>
+          </span>
+        </a>
+      </li>
+
+      <!-- ------------------------------------------- -->
+      <!-- HOME   (click)="goToHome()"" -->
+      <!-- ------------------------------------------- -->
+   
+      <li  matTooltip="Home" #tooltip="matTooltip" matTooltipPosition='right'
+        matTooltipHideDelay="100" matTooltipClass="custom-mat-tooltip">
+        <a target="_self" href="{{ dashboard_home_url }}" class="customAncor">
+          <i class="material-icons sidebar-icons">
+            home
+          </i>
+        </a>
+      </li>
+
+
+      <!-- ---------------------------------- -->
+      <!-- Bot  (click)="goToBots()"  -->
+      <!-- ---------------------------------- -->
+      <ng-container *ngIf="USER_ROLE !== 'agent'">
+        <li  id="bot-anchor-wpr" matTooltipClass="custom-mat-tooltip" matTooltip="Bots"
+          #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
+          <a target="_self" href="{{ dashboard_bots_url }}" id="bot-anchor" #botbtn class="customAncor" style="height: 40px;margin-right: 0px !important;">
+            <span class="bot-icon-wpr">
+              <svg version="1.1" id="Objects" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30"
+                style="enable-background:new 0 0 30 30;" xml:space="preserve" style="width: 25px;height: 25px;margin-top: 7px;">
+                <g>
+                  <g>
+                    <path class="chat-bot-icon-st0" d="M24.6,12.6c-0.1,0-0.2,0-0.3,0c-1.6-2.9-4.5-5.8-9.2-5.8c-4.7,0-7.6,2.9-9.2,5.8c-0.2,0-0.4-0.1-0.6-0.1
+                      c-2,0-3.5,2.3-3.5,5c0,2.8,1.6,5,3.5,5c0.1,0,0.3,0,0.4,0c2.3,3.6,7,3.9,9.4,3.9c2.3,0,6.9-0.5,9.2-3.9c0.1,0,0.1,0,0.2,0
+                      c2,0,3.5-2.3,3.5-5C28.1,14.8,26.6,12.6,24.6,12.6z M22,21.1c0,0-7.8,2.3-14.3-0.1c0,0-0.8-4.1-0.5-7.2c0,0,8.1-3.2,15.6,0.3
+                      C22.8,14.1,23.3,19.1,22,21.1z" />
+                    <ellipse class="chat-bot-icon-st0" cx="11.9" cy="17.4" rx="0.7" ry="1.4" />
+                    <ellipse class="chat-bot-icon-st0" cx="18.1" cy="17.4" rx="0.7" ry="1.4" />
+                    <path class="chat-bot-icon-st0" d="M14.5,5.3v1.1h1V5.3c0.3-0.2,0.5-0.5,0.5-0.8c0-0.5-0.4-0.9-1-0.9c-0.5,0-0.9,0.4-0.9,0.9
+                      C14.1,4.8,14.2,5.1,14.5,5.3z" />
+                  </g>
+                  <rect class="chat-bot-icon-st1" width="30" height="30" />
+                </g>
+              </svg>
+            </span>
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- ------------------------------------------- -->
+      <!-- Conversations (MONITOR) (click)="goToConversations()" -->
+      <!-- ------------------------------------------- -->
+      <ng-container *ngIf="USER_ROLE !== 'agent'">
+        <li  matTooltipClass="custom-mat-tooltip" matTooltip="Monitor"
+          #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100"  style="text-align: center;">
+          <a target="_self" href="{{ dashboard_convs_url }}" class="customAncor" style="height: 40px;margin-right: 0px !important;">
+            <!-- <i class="material-icons sidebar-icons">forum</i> -->
+            <span  class="realtime-icon-wpr" >
+
+              <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" style="width: 30px;height: 30px;margin-top: 5px;">
+            
+              <path class="realtime-icon-st3" d="M17.9,11.6l-1.4,1.9l-3.2-5.6l-1-2l-0.2,0.2l-3.7,6.4l-3-4.8L2.7,9.9v2.4l2.4-1.8L9,16.2l3.3-6.2l4,6.7l2.7-3.3
+                l0.9,0c0.5-0.7,1-1.4,1.4-2L17.9,11.6z"/>
+              </svg>
+            </span>
+        
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- ------------------------------------------- -->
+      <!-- CONTACTS (LEADS)  (click)="goToContacts()" -->
+      <!-- ------------------------------------------- -->
+      <li  matTooltipClass="custom-mat-tooltip" matTooltip="{{ contacts_lbl }}"
+        #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
+        <a target="_self" href="{{ dashboard_contacts_url }}" class="customAncor">
+          <i class="material-icons sidebar-icons">contacts</i>
+        </a>
+      </li>
+
+      <!-- ------------------------------------------- -->
+      <!-- APPS  (click)="goToAppStore()" -->
+      <!-- ------------------------------------------- -->
+      <ng-container *ngIf="isVisibleAPP && USER_ROLE !== 'agent'">
+        <li  matTooltipClass="custom-mat-tooltip" matTooltip="{{ apps_lbl }}"
+          #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
+          <a target="_self" href="{{ dashboard_app_url }}" class="customAncor" style="margin-right: 0px !important;">
+            <!-- <i class="material-icons sidebar-icons">apps</i> -->
+            <!-- <i class="material-icons sidebar-icons">dashboard_customize</i> -->
+            <span class="dashboard-customize-icon-wpr"> 
+              <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+              viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" style="width: 20px;height: 20px;margin-top: 10px;">
+                <path class="dashboard_customize-st0" d="M0,0h24v24H0V0z"/>
+                <path class="dashboard_customize-st1" d="M3,3h8v8H3V3z M13,3h8v8h-8V3z M3,13h8v8H3V13z M18,13h-2v3h-3v2h3v3h2v-3h3v-2h-3V13z"/>
+              </svg>
+            </span>
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- ------------------------------------------- -->
+      <!-- ANALYTICS (click)="goToAnalytics()" -->
+      <!-- ------------------------------------------- -->
+      <ng-container *ngIf="isVisibleANA && USER_ROLE !== 'agent'">
+        <li  matTooltipClass="custom-mat-tooltip" matTooltip="{{ analytics_lbl }}"
+          #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;" >
+          <a target="_self" href="{{ dashboard_analytics_url }}" class="customAncor" style="margin-right: 0px !important;">
+            <!-- <i class="material-icons sidebar-icons">trending_up</i> -->
+            <!-- <i class="material-icons sidebar-icons"> analytics </i> -->
+            <!-- <i class="material-icons sidebar-icons">  bar_chart </i> -->
+            <span class="bar-chart-icon-wpr"> 
+              <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+              viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" style="width: 20px;height: 20px;margin-top: 10px;">
+                <path class="bar-chart-icon-st0" d="M0,0h24v24H0V0z"/>
+                <path class="bar-chart-icon-st1" d="M5,9.2h3V19H5V9.2z M10.6,5h2.8v14h-2.8V5z M16.2,13H19v6h-2.8V13z"/>
+              </svg>
+           </span>
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- ------------------------------------------- -->
+      <!-- ACTIVITIES (click)="goToActivities()" -->
+      <!-- ------------------------------------------- -->
+      <ng-container *ngIf="isVisibleACT">
+        <li *ngIf="USER_ROLE !== 'agent'"  matTooltipClass="custom-mat-tooltip"
+          matTooltip="{{ activities_lbl }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
+          <a target="_self" href="{{ dashboard_activities_url }}" class="customAncor">
+            <i class="material-icons sidebar-icons">assignment</i>
+          </a>
+        </li>
+      </ng-container>
+
+
+      <!-- ------------------------------------------- -->
+      <!-- REQUESTS HISTORY (click)="goToHistory()" -->
+      <!-- ------------------------------------------- -->
+      <li  matTooltipClass="custom-mat-tooltip" matTooltip="{{ history_lbl }}"
+        #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
+        <a target="_self" href="{{ dashboard_history_url }}" class="customAncor">
+          <i class="material-icons sidebar-icons">history</i>
+        </a>
+      </li>
+
+      <!-- ----------------------------------------------------------------------------------- -->
+      <!-- SETTINGS // old: goToSettings_CannedResponses()  *ngIf="USER_ROLE !== 'agent'" (click)="goToWidgetSetUpOrToCannedResponses()" -->
+      <!-- ----------------------------------------------------------------------------------- -->
+      <li *ngIf="USER_ROLE !== 'agent'"  matTooltipClass="custom-mat-tooltip"
+        matTooltip="{{ settings_lbl }}" #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100" style="text-align: center;">
+        <a target="_self" href="{{ dashboard_settings_url }}" class="customAncor">
+          <i class="material-icons sidebar-icons">settings</i>
+        </a>
+      </li>
+
+
+      <!-- [_prjct_profile_name]="_prjct_profile_name" [plan_subscription_is_active]="plan_subscription_is_active"
+  [plan_name]="plan_name"
+  [plan_type]="plan_type"
+  [isVisiblePAY]="isVisiblePAY"
+  [prjct_name]="prjct_name" -->
+      <!-- HAS_CLICKED_OPEN_USER_DETAIL {{ HAS_CLICKED_OPEN_USER_DETAIL }} -->
+      <!-- [HAS_CLICKED_OPEN_USER_DETAIL]='HAS_CLICKED_OPEN_USER_DETAIL' -->
+      <!-- tabindex="-1"  style="z-index: 20001;"  -->
+
+
+      <!-- <app-sidebar-user-details    
+  (onCloseUserDetailsSidebar)='onCloseUserDetailsSidebar($event)'>
+</app-sidebar-user-details> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </ul>
+  </div>
+</div>

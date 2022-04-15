@@ -48,7 +48,22 @@ const routes: Routes = [
   {
     path: 'unassigned-conversations',
     loadChildren: () => import('./pages/unassigned-conversations/unassigned-conversations.module').then( m => m.UnassignedConversationsPageModule)
+  },
+  {
+    path: 'create-ticket',
+    loadChildren: () => import('./pages/create-ticket/create-ticket.module').then( m => m.CreateTicketPageModule)
+  },
+  {
+    path: 'create-requester',
+    loadChildren: () => import('./pages/create-requester/create-requester.module').then( m => m.CreateRequesterPageModule)
+  },
+  {
+    path: 'create-canned-response',
+    loadChildren: () => import('./pages/create-canned-response/create-canned-response.module').then( m => m.CreateCannedResponsePageModule)
   }
+
+
+
 
 
   // {

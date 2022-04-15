@@ -1,6 +1,23 @@
-.split-pane-md.split-pane-visible > .split-pane-side { 
+.split-pane-md.split-pane-visible > .split-pane-side {
     min-width: 312px;
     display: block; // Safari bug fix
+    margin-left: 60px;
+}
+
+.sidebar-visible {
+    margin-left: 60px;
+}
+
+.sidebar-hidden {
+    margin-left: 0px !important;
+}
+
+.hide-sidebar {
+    display: none;
+}
+
+.router-outlet-margin-left {
+    left: 60px
 }
 
 // @media (min-width: 768px) {

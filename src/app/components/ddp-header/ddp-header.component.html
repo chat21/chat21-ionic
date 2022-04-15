@@ -1,24 +1,38 @@
+<ion-toolbar style="height:60px" [ngClass]="{'bottom-border-on-mobile':IS_ON_MOBILE_DEVICE === true }">
 
-<ion-toolbar>
-  
-  <ion-buttons slot="start">
+  <ion-buttons *ngIf="IS_ON_MOBILE_DEVICE === true || supportMode === false" slot="start" style="height:60px">
     <ion-button ion-button icon-only fill="clear" (click)="onOpenProfileInfo($event)">
       <ion-icon slot="icon-only" name="reorder-three-outline"></ion-icon>
     </ion-button>
   </ion-buttons>
 
   <ion-title>
-    <img src="assets/chat21-logo.svg" class="header-logo" alt="header-logo">
+    <!-- <img src="assets/chat21-logo.svg" class="header-logo" alt="header-logo"> -->
     <div *ngIf="numberOpenConv > 0" class="number-open-conv">({{numberOpenConv}})</div>
   </ion-title>
 
   <ion-buttons slot="end">
 
-    <ion-button *ngIf="supportMode" ion-button fill="clear" (click)="onOpenContactsDirectory($event)">
-      <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+    <ion-button ion-button fill="clear" (click)="presentCreateTicketModal()"
+      tooltip="{{translationMap?.get('CreateTicket')}}" [options]="tooltipOptions" placement="bottom">
+      <ion-icon slot="icon-only" name="ticket-outline"></ion-icon>
     </ion-button>
 
-    <!-- <button ion-button icon-only (click)="onOpenArchivedConversationsPage()">
+    <ion-button *ngIf="archived_btn" ion-button fill="clear" (click)="onClickArchivedConversation()" 
+      tooltip="{{translationMap?.get('ViewArchivedConversations')}}" [options]="tooltipOptions" placement="bottom">
+      <ion-icon slot="icon-only" name="file-tray-full-outline"></ion-icon>
+      <!-- <ion-icon name="file-tray-stacked-outline"></ion-icon> -->
+      <!-- <ion-icon name="file-tray-full-outline"></ion-icon> -->
+    </ion-button>
+
+    <ion-button *ngIf="writeto_btn" ion-button fill="clear" (click)="onOpenContactsDirectory($event)"
+    tooltip="{{translationMap?.get('ViewContactsList')}}" [options]="tooltipOptions" placement="bottom">
+      <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      <!-- <ion-icon slot="icon-only" name="people-outline"></ion-icon> -->
+
+    </ion-button>
+
+    <!--   <button ion-button icon-only (click)="onOpenArchivedConversationsPage()">
       <span class="material-icons">history</span>
     </button>
 

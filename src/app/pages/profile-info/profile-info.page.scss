@@ -74,7 +74,7 @@
 .current-user-profile {
     width: 100%;
     height: 100%;
-    font-family: "Google Sans",sans-serif;
+    font-family: "Poppins";
     --ion-background-color:#2d323e;
     
     .buttons-header{
@@ -114,6 +114,15 @@
             margin-top: 15px;
             margin-bottom: 5px;
         }
+
+        // ion-toolbar {
+        //     --padding-bottom: 0px;
+        //     --background: #1e2129 !important;	
+        //     div.toolbar-container {
+        //         padding: 0px !important;
+        //         background: #1e2129 !important;
+        //     }
+        // }
     }
 
     .avatar-container {
@@ -250,6 +259,7 @@ ion-footer{
     .content-chat-version {
         color: white;
         padding: 20px;
+        background-color: #1e2129;
     }
     .chat-title{
         font-size: 14px;
@@ -262,3 +272,4 @@ ion-footer{
         margin: 0;
     }
 }
+

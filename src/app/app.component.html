@@ -1,17 +1,27 @@
 <ion-app>
   <div>
-    <!-- (click)="hideAlert()" -->
-    <app-image-viewer></app-image-viewer>
-    <ion-split-pane when="md" contentId="main">
 
-      <ion-nav #sidebarNav [root]="sidebarPage"></ion-nav>
+    <app-image-viewer></app-image-viewer>
+
+    <div class="sidebar" [ngClass]="{'hide-sidebar': IS_ONLINE === false || IS_ON_MOBILE_DEVICE === true || SUPPORT_MODE === false}">
+      <app-sidebar></app-sidebar>
+    </div>
+    
+    <div class="user-details-sidebar" [ngClass]="{'hide-sidebar': IS_ONLINE === false || IS_ON_MOBILE_DEVICE === true || SUPPORT_MODE === false}">
+      <app-sidebar-user-details> </app-sidebar-user-details>
+    </div>
+ 
+    <ion-split-pane when="md" contentId="main">
+      <!-- 'sidebar-visible': IS_ONLINE === true && SUPPORT_MODE === true, -->
+      <ion-nav #sidebarNav [root]="sidebarPage" [ngClass]="{'sidebar-hidden': IS_ON_MOBILE_DEVICE === true || SUPPORT_MODE === false}"></ion-nav>
       <!--  our side menu  -->
       <!-- <ion-router-outlet id="sidebar" name='sidebar' animated="false" #masterNav> -->
       <!-- <app-conversations-list></app-conversations-list> -->
       <!-- <app-details></app-details> -->
       <!-- </ion-router-outlet> -->
       <!-- the main content -->
-      <ion-router-outlet id="main" #detailNav animated="false">
+      <!--  -->
+      <ion-router-outlet id="main" #detailNav animated="false" [ngClass]="{'router-outlet-margin-left': platformIs === 'mobile' &&  SUPPORT_MODE === true && IS_ON_MOBILE_DEVICE === false}">
       </ion-router-outlet>
     </ion-split-pane>
   </div>

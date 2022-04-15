@@ -86,16 +86,18 @@ export class ProfileInfoPage implements OnInit {
   private setUser() {
     // width and height NON sono obbligatori
     this.loggedUser = this.chatManager.getCurrentUser();
-    this.itemAvatar = {
-      imageurl: this.imageRepo.getImagePhotoUrl(this.loggedUser.uid),
-      avatar: this.loggedUser.avatar,
-      color: this.loggedUser.color,
-      online: this.loggedUser.online,
-      lastConnection: this.loggedUser.lastConnection,
-      status: '',
-      width: '100px',
-      height: '100px'
-    };
+    if (this.loggedUser) {
+      this.itemAvatar = {
+        imageurl: this.imageRepo.getImagePhotoUrl(this.loggedUser.uid),
+        avatar: this.loggedUser.avatar,
+        color: this.loggedUser.color,
+        online: this.loggedUser.online,
+        lastConnection: this.loggedUser.lastConnection,
+        status: '',
+        width: '100px',
+        height: '100px'
+      };
+    }
   }
 
 
@@ -121,10 +123,10 @@ export class ProfileInfoPage implements OnInit {
   private setSubscriptions() {
     this.presenceService.userIsOnline(this.loggedUser.uid);
     this.presenceService.lastOnlineForUser(this.loggedUser.uid);
-   
-  
+
+
     const subscribeBSIsOnline = this.presenceService.BSIsOnline.subscribe((data: any) => {
-     this.logger.log('[PROFILE-INFO-PAGE] setSubscriptions $ubscribe to BSIsOnline - data' , data);
+      this.logger.log('[PROFILE-INFO-PAGE] setSubscriptions $ubscribe to BSIsOnline - data', data);
       if (data) {
         const userId = data.uid;
         const isOnline = data.isOnline;
@@ -135,7 +137,7 @@ export class ProfileInfoPage implements OnInit {
     });
 
     const subscribeBSLastOnline = this.presenceService.BSLastOnline.subscribe((data: any) => {
-     this.logger.log('[PROFILE-INFO-PAGE] setSubscriptions $ubscribe to BSLastOnline - data' , data);
+      this.logger.log('[PROFILE-INFO-PAGE] setSubscriptions $ubscribe to BSLastOnline - data', data);
       if (data) {
         const userId = data.uid;
         const timestamp = data.lastOnline;
@@ -150,7 +152,7 @@ export class ProfileInfoPage implements OnInit {
 
 
   userIsOnLine = (userId: string, isOnline: boolean) => {
-   this.logger.log('[PROFILE-INFO-PAGE] userIsOnLine - userId ', userId, ' - isOnline ', isOnline);
+    this.logger.log('[PROFILE-INFO-PAGE] userIsOnLine - userId ', userId, ' - isOnline ', isOnline);
     this.itemAvatar.online = isOnline;
     if (isOnline) {
       this.itemAvatar.status = this.translationMap.get('LABEL_AVAILABLE');
@@ -180,9 +182,9 @@ export class ProfileInfoPage implements OnInit {
 
   /** */
   private unsubescribeAll() {
-   this.logger.log('unsubescribeAll: ', this.subscriptions);
+    this.logger.log('unsubescribeAll: ', this.subscriptions);
     this.subscriptions.forEach((subscription: any) => {
-     this.logger.log('unsubescribe: ', subscription);
+      this.logger.log('unsubescribe: ', subscription);
       // this.events.unsubscribe(subscription, null);
     });
     this.subscriptions = [];
@@ -207,15 +209,15 @@ export class ProfileInfoPage implements OnInit {
   }
 
   copyLoggedUserUID() {
-    var copyText = document.createElement("input");                  
+    var copyText = document.createElement("input");
     copyText.setAttribute("type", "text");
     copyText.setAttribute("value", this.loggedUser.uid);
-     
-    document.body.appendChild(copyText); 
+
+    document.body.appendChild(copyText);
     copyText.select();
     copyText.setSelectionRange(0, 99999); /*For mobile devices*/
     document.execCommand("copy");
-   this.logger.log("Copied the text: " + copyText.value);
+    this.logger.log("Copied the text: " + copyText.value);
     const tootipElem = <HTMLElement>document.querySelector('.chat-tooltip');
     this.renderer.appendChild(tootipElem, this.renderer.createText('Copied!'))
 

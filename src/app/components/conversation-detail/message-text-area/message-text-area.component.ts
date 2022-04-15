@@ -18,6 +18,7 @@ import { checkPlatformIsMobile } from 'src/chat21-core/utils/utils';
 // Logger
 import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
+import { EventsService } from 'src/app/services/events-service';
 
 
 @Component({
@@ -45,6 +46,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Input() tagsCannedFilter: any = [];
   @Input() tagsCannedCount: number;
   @Input() areVisibleCAR: boolean;
+  @Input() support_mode: boolean;
   @Input() events: Observable<void>;
   @Input() fileUploadAccept: string
   @Input() isOpenInfoConversation: boolean;
@@ -54,6 +56,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @Output() hasClickedOpenCannedResponses = new EventEmitter<boolean>();
   @Output() eventSendMessage = new EventEmitter<object>();
   @Output() onPresentModalScrollToBottom = new EventEmitter<boolean>();
+  @Input() disableTextarea: boolean;
 
   public conversationEnabled = false;
   public messageString: string;
@@ -67,8 +70,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   private logger: LoggerService = LoggerInstance.getInstance();
   public countClicks: number = 0;
   public IS_SUPPORT_GROUP_CONVERSATION: boolean;
-
+  public IS_ON_MOBILE_DEVICE: boolean;
   TYPE_MSG_TEXT = TYPE_MSG_TEXT;
+  msg: string
 
   tooltipOptions = {
     'show-delay': 500,
@@ -80,7 +84,9 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     'hide-delay': 200
   };
 
-
+  showEmojiPicker: boolean = false; //To show/hide emoji picker
+  addWhiteSpaceBefore: boolean;
+  emojiPerLine: number = 9
   /**
    * Constructor
    * @param chooser 
@@ -94,6 +100,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     public uploadService: UploadService,
     public toastController: ToastController,
     private renderer: Renderer2,
+    public eventsService: EventsService
   ) { }
 
   // ---------------------------------------------------------
@@ -110,9 +117,21 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] LONG_TEXAREA_PLACEHOLDER ", this.LONG_TEXAREA_PLACEHOLDER);
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] SHORT_TEXAREA_PLACEHOLDER ", this.SHORT_TEXAREA_PLACEHOLDER);
     // this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] SHORTER_TEXAREA_PLACEHOLDER ", this.SHORTER_TEXAREA_PLACEHOLDER);
-
+    this.listenToNewCannedResponseCreated()
     this.getWindowWidth();
+    this.isOnMobileDevice()
   }
+
+  isOnMobileDevice() {
+    this.IS_ON_MOBILE_DEVICE = false;
+    if (/Android|iPhone/i.test(window.navigator.userAgent)) {
+      this.IS_ON_MOBILE_DEVICE = true;
+      this.emojiPerLine = 7
+    }
+    // this.logger.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
+    return this.IS_ON_MOBILE_DEVICE;
+  }
+
 
 
 
@@ -123,6 +142,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       // this.SHORTER_TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORTER')
 
       this.TEXAREA_PLACEHOLDER = this.translationMap.get('LABEL_ENTER_MSG_SHORT')
+
     }
 
     if (this.conversationWith.startsWith("support-group")) {
@@ -130,11 +150,12 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     } else {
       this.IS_SUPPORT_GROUP_CONVERSATION = false
     }
-
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges support_mode ', this.support_mode)
+    this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges disableTextarea ', this.disableTextarea)
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges DROP EVENT ", this.dropEvent);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges tagsCannedFilter ", this.tagsCannedFilter);
     this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] ngOnChanges areVisibleCAR; ", this.areVisibleCAR);
-    
+
 
     this.logger.log('[CONVS-DETAIL] - returnChangeTextArea ngOnChanges in [MSG-TEXT-AREA]  this.tagsCannedFilter.length ', this.tagsCannedFilter.length)
 
@@ -215,8 +236,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     // this.getIfTexareaIsEmpty('onResize')
-    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA]  event.target.innerWidth; ", event.target.innerWidth);
-    
+  //  console.log("[CONVS-DETAIL][MSG-TEXT-AREA]  event.target.innerWidth; ", event.target.innerWidth);
+
 
 
     // if (event.target.innerWidth >= 844 && this.isOpenInfoConversation === false && this.conversationWith.startsWith("support-group")) {
@@ -269,6 +290,8 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
         let content = event.clipboardData.getData('text/plain');
         this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste content ", content);
+        this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] onPaste this.messageString ", this.messageString);
+        this.msg = this.messageString
         setTimeout(() => {
           this.messageString = "";
         }, 100);
@@ -301,6 +324,11 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
   onFileSelected(e: any) {
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - onFileSelected event', e);
+    this.logger.log("[CONVS-DETAIL][MSG-TEXT-AREA] - onFileSelected this.messageString ", this.messageString);
+    this.msg = this.messageString
+    setTimeout(() => {
+      this.messageString = "";
+    }, 100);
     this.presentModal(e);
 
   }
@@ -339,7 +367,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     }
     // this.logger.log('presentModal e.target.files.length', e.target.files.length);
 
-    const attributes = { files: dataFiles, enableBackdropDismiss: false };
+    const attributes = { files: dataFiles, enableBackdropDismiss: false, msg: this.msg };
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] attributes', attributes);
     const modal: HTMLIonModalElement =
       await this.modalController.create({
@@ -536,28 +564,21 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       }
     }
   }
+
+  listenToNewCannedResponseCreated() {
+    this.eventsService.subscribe('newcannedresponse:created', (openCannedResponses) => {
+      this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] - listenToNewCannedResponseCreated - openUserDetailsSidebar', openCannedResponses);
+      this.openCannedResponses()
+    });
+  }
+
   openCannedResponses() {
-    // console.log('[MSG-TEXT-AREA] has clicked OPEN-CANNED-RESPONSES messageString ', this.messageString)
-    // if (this.messageString) {
-    //   console.log('[MSG-TEXT-AREA] has clicked OPEN-CANNED-RESPONSES messageString.trim ', this.messageString.trim)
-    // }  
-    // if (this.messageString === undefined) {
-    //   this.messageString = '/'
-    // } else {
-
-    // }
-
-    // const elTextArea = this.message_text_area['el'];
-    // console.log('[MSG-TEXT-AREA]   textArea elTextArea ', elTextArea)
-    // const textArea = elTextArea.getElementsByTagName('ion-textarea')[0];
-    // console.log("[MSG-TEXT-AREA]   textArea textArea ", textArea);
-    // this.logger.log("[MSG-TEXT-AREA]   textArea value", textArea.value)
-
     this.hasClickedOpenCannedResponses.emit(true);
   }
 
 
   sendMessage(text: string) {
+    this.showEmojiPicker = false;
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage text', text);
     this.logger.log('[CONVS-DETAIL][MSG-TEXT-AREA] sendMessage conve width', this.conversationWith);
     // text.replace(/\s/g, "")
@@ -567,6 +588,64 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       this.eventSendMessage.emit({ message: text, type: TYPE_MSG_TEXT });
     }
   }
+
+  addEmoji($event) {
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI $event', $event)
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI $event > emoji', $event.emoji)
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI $event > emoji  > native', $event.emoji.native)
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI messageString', this.messageString)
+    if (this.messageString === undefined) {
+      this.addWhiteSpaceBefore = false;
+      // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI addWhiteSpaceBefore ',  this.addWhiteSpaceBefore)
+    } else {
+      this.addWhiteSpaceBefore = true 
+      // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI addWhiteSpaceBefore ',  this.addWhiteSpaceBefore)
+    }
+    const elTextArea = this.message_text_area['el'];
+    // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI elTextArea ',  elTextArea)
+    this.insertAtCursor(elTextArea, $event.emoji.native)
+  }
+
+  insertAtCursor(myField, myValue) {
+    this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - myValue ', myValue );
+     
+    if (this.addWhiteSpaceBefore === true) {
+      myValue = ' ' + myValue;
+      this.logger.log('[CANNED-RES-EDIT-CREATE] - GET TEXT AREA - QUI ENTRO myValue ', myValue );
+    }
+   
+    //IE support
+    if (myField.selection) {
+      myField.focus();
+      let sel = myField.selection.createRange();
+      sel.text = myValue;
+      // this.cannedResponseMessage = sel.text;
+    }
+    //MOZILLA and others
+    else if (myField.selectionStart || myField.selectionStart == '0') {
+      var startPos = myField.selectionStart;
+      this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - startPos ', startPos);
+      
+      var endPos = myField.selectionEnd;
+      this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - endPos ', endPos);
+      
+      myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+  
+      // place cursor at end of text in text input element
+      myField.focus();
+      var val = myField.value; //store the value of the element
+      myField.value = ''; //clear the value of the element
+      myField.value = val + ' '; //set that value back. 
+  
+  
+      // myField.select();
+    } else {
+      myField.value += myValue;
+      
+    }
+  }
+
+
 
   // --------------------------------
   // on mobile !

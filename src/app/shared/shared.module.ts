@@ -39,9 +39,15 @@ import { TooltipModule, TooltipOptions } from 'ng2-tooltip-directive';
 import { OptionHeaderComponent } from '../components/conversation-detail/option-header/option-header.component';
 import { MessageAttachmentComponent } from '../chatlib/conversation-detail/message/message-attachment/message-attachment.component';
 import { ImageViewerComponent } from '../components/image-viewer/image-viewer.component';
+import { SidebarComponent } from '../components/sidebar/sidebar.component';
+import { SidebarUserDetailsComponent } from '../components/sidebar-user-details/sidebar-user-details.component';
 import { ProjectItemComponent } from '../components/project-item/project-item.component';
 import { DefaultTooltipOptions } from 'src/chat21-core/utils/utils';
-// import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+
+// import { MessageTextAreaComponent } from '../components/conversation-detail/message-text-area/message-text-area.component'; // MessageTextAreaComponent is part of the declarations ConversationDetailPageModule
 
 @NgModule({
   declarations: [
@@ -53,6 +59,8 @@ import { DefaultTooltipOptions } from 'src/chat21-core/utils/utils';
     ListConversationsComponent,
     IonListConversationsComponent,
     ImageViewerComponent,
+    SidebarComponent,
+    SidebarUserDetailsComponent,
     ProjectItemComponent,
     IonConversationDetailComponent,
     ConversationContentComponent,
@@ -87,6 +95,8 @@ import { DefaultTooltipOptions } from 'src/chat21-core/utils/utils';
     AvatarProfileComponent,
     DdpHeaderComponent,
     ImageViewerComponent,
+    SidebarComponent,
+    SidebarUserDetailsComponent,
     ProjectItemComponent,
     UserPresenceComponent,
     UserTypingComponent,
@@ -117,6 +127,9 @@ import { DefaultTooltipOptions } from 'src/chat21-core/utils/utils';
 
   ],
   imports: [
+    MatTooltipModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
     CommonModule,
     IonicModule,
     MomentModule,

@@ -1,0 +1,121 @@
+<div id="user-details">
+
+    <div class="user-details-dshbrd-lang">
+
+        <span class="user-details-dshbrd-lang-code" style="text-transform: uppercase;color: #647491;">
+            {{chat_lang}}
+        </span>
+        <img [src]="flag_url" style="width: auto;height: 19px; position: relative;top: 1px;">
+
+    </div>
+
+    <button class="user-details-btn-close" type="button" (click)="closeUserDetailSidePanel()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
+            </path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </button>
+
+
+    <!-- (click)="goToUserProfile()" -->
+    <div role="button" class="user-details-avatar">
+        <img *ngIf="USER_PHOTO_PROFILE_EXIST" class="user-img-in-sidebar-user-details" [src]="photo_profile_URL"
+            onerror="this.src='assets/images/no_image_user.png'" />
+
+        <div *ngIf="!USER_PHOTO_PROFILE_EXIST" class="user-img-in-sidebar-user-details"
+            [ngStyle]="{'background':  'linear-gradient(rgb(255,255,255) -125%,' + user?.fillColour + ')'}">
+            <span id="sidebaravatar-altenative-user-avatar" class="sidebar-user-details-altenative-user-avatar">
+                {{ user?.fullname_initial }}
+            </span>
+        </div>
+
+    </div>
+
+    <div class="user-details-user-isbusy" *ngIf="IS_BUSY === true" style="cursor:pointer"
+        matTooltipClass="custom-mat-tooltip" matTooltip="{{IS_BUSY_msg}}" #tooltip="matTooltip"
+        matTooltipPosition='right' matTooltipHideDelay="100">
+        <span class="material-icons user-details-user-isbusy-icon">
+            access_time
+        </span>
+    </div>
+
+
+    <div class="user-details-fullname">
+        <h3> {{ user?.firstname }} {{ user?.lastname }} </h3>
+    </div>
+
+    <div class="user-details-email">
+        <h3>{{ user?.email }} </h3>
+    </div>
+
+    <div class="user-details-role">
+        <h3>{{ USER_ROLE_LABEL }} </h3>
+    </div>
+
+    <section class="availability-section">
+        <mat-slide-toggle (change)="changeAvailabilityStateInUserDetailsSidebar(IS_AVAILABLE = !IS_AVAILABLE)"
+            class="custom-mat-slide-toggle" [checked]="IS_AVAILABLE" labelPosition="before">
+
+            <span *ngIf="IS_AVAILABLE"
+                style="font-weight: 400 !important; text-transform: capitalize; font-size:14px; color:#a9afbb">
+                {{IS_AVAILABLE_msg}}
+                <!-- {{translationMap?.get('Available') }} -->
+            </span>
+            <span *ngIf="!IS_AVAILABLE"
+                style="font-weight: 400 !important;text-transform: capitalize;font-size:14px; color:#a9afbb">
+                {{IS_UNAVAILABLE_msg}}
+                <!-- {{translationMap?.get('Unavailable') }} -->
+            </span>
+        </mat-slide-toggle>
+    </section>
+
+    <hr class="first-divider">
+
+    <section *ngIf="isVisiblePAY" class="user-details-plan-info">
+        <span>
+            <div> {{prjct_name}} </div>
+            <div style="display: inline-block;"> {{ profile_name_translated }} </div>
+
+            <div *ngIf="plan_type === 'payment' && plan_subscription_is_active === false"
+                style="color:#f44336; position:relative; top: -1px;;display: inline-block;">
+                <i *ngIf="plan_name !== 'enterprise'" class="material-icons" style="vertical-align: middle; color:#f44336; cursor:pointer;    
+                    font-size: 16px;" matTooltipClass="custom-mat-tooltip"
+                    matTooltip="{{ SUBSCRIPTION_PAYMENT_PROBLEM_msg }}" #tooltip="matTooltip" matTooltipPosition='right'
+                    matTooltipHideDelay="100">
+                    error_outline
+                </i>
+                <i *ngIf="plan_name === 'enterprise'" class="material-icons" style="vertical-align: middle; color:#f44336; cursor:pointer;    
+                    font-size: 16px;" matTooltipClass="custom-mat-tooltip" matTooltip="{{ THE_PLAN_HAS_EXPIRED_msg }}"
+                    #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100">
+                    error_outline
+                </i>
+            </div>
+        </span>
+    </section>
+
+    <!-- <hr class="second-divider" style="margin-top: 20px;border: 0;
+        border-top: 1px solid rgba(255, 255,255, 0.2);"> -->
+
+
+    <section class="user-details-footer-section"
+        [ngClass]="{'footer-margin-top-pricing-no-visible': isVisiblePAY === false }">
+        <div role="button" class="logout-btn-wpr" (click)=onLogout()>
+            <i class="material-icons user-details-logout-icon" >
+                logout
+            </i>
+            <div class="user-details-logout-text"> 
+                 {{LOGOUT_msg}} 
+            </div>
+        </div>
+    </section>
+
+    <section class="user-details-footer-chat-version">
+        <div class="chat-version">
+            <!-- &copy; {{test | date: 'yyyy'}} {{company_name}} ver {{version}} -->
+            ver {{version}}
+        </div>
+    </section>
+
+</div>

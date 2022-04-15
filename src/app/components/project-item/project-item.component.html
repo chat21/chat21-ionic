@@ -23,7 +23,7 @@
                   </g>
                 </svg>
               </div>
-              <div class="unassigned-notifications-badge">
+              <div class="unassigned-notifications-badge" *ngIf="unservedRequestCount > 0">
                 <!-- || currentUserRequestCount > 0  -->
                 <!-- <span *ngIf="unservedRequestCount > 0 "> -->
                 <!-- + currentUserRequestCount -->
@@ -48,7 +48,7 @@
 
 
             <div class="flex-child-right">
-              <div class="project-name-project-for-panel" [tooltip]="conversationsInQueueOnProjectName"
+              <div class="project-name-project-for-panel" [ngClass]="{'project-name-project-for-panel-on-desktop': IS_ON_MOBILE_DEVICE === false}" [tooltip]="conversationsInQueueOnProjectName"
                 [options]="tooltipOptions" placement="top" content-type="template" (click)="openUnservedConvs()">
                 <div class="project---name"> {{ project?.id_project?.name }} </div>
               </div>
@@ -87,7 +87,9 @@
                   [ngClass]="{'online-text-color' : project?.ws_projct_user_available === true, 'offline-text-color' : project?.ws_projct_user_available === false}">
                   {{translationMap?.get('Unavailable')}}
                 </span>
-                <div class="project-item--isBusy-icon-wpr" *ngIf="project?.ws_projct_user_isBusy === true">
+
+                <div class="project-item--isBusy-icon-wpr" *ngIf="project?.ws_projct_user_isBusy === true" tooltip="{{translationMap?.get('Busy')}}"
+                [options]="tooltipOptions" placement="top" >
                   <!-- <span class="material-icons project-item--isBusy-icon">
                       access_time
                     </span> -->
@@ -102,14 +104,14 @@
                     </g>
                   </svg>
                 </div>
-                <span *ngIf="project?.ws_projct_user_isBusy === true"
+                <!-- <span *ngIf="project?.ws_projct_user_isBusy === true"
                   class="project-item--isBusy-busy-text text-pulse-animation">
                   {{translationMap?.get('Busy')}}
-                </span>
+                </span> -->
               </div>
             </div>
 
-            <div class="flex-child-view-all-convs">
+            <div *ngIf="IS_ON_MOBILE_DEVICE === true" class="flex-child-view-all-convs">
               <div class="view-all-convs-icon-wpr" style="cursor: pointer;" [tooltip]="viewAllConvs"
                 [options]="tooltipOptions" placement="top" content-type="template">
 
@@ -153,7 +155,6 @@
               </div>
               <ng-template #viewAllConvs>
                 <span>
-
                   {{translationMap?.get('CHANGE_PINNED_PROJECT') }}</span>
               </ng-template>
             </div>

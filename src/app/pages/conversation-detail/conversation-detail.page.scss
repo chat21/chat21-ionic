@@ -25,6 +25,34 @@
     font-size: 24px;
 }
 
+.add-canned-response-icon {
+    color: #b3bfd0;
+    cursor: pointer;
+    font-size: 18px;
+}
+.add-canned-response-label {
+    color: #b3bfd0;
+    cursor: pointer;
+}
+.add-canned-response-add-icon {
+    color: #b3bfd0;
+    cursor: pointer;
+    position: relative;
+    top: 4px;
+    left: -6px;
+}
+
+#canned > ion-list > ion-item.canned-item.add-canned-response-wpr:hover > span {
+    color: #1877f2;
+}
+
+#canned > ion-list > ion-item.canned-item.add-canned-response-wpr:hover > ion-icon {
+    color: #1877f2;
+}
+#canned > ion-list > ion-item.canned-item.add-canned-response-wpr:hover > label {
+    color: #1877f2;
+}
+
 // ion-back-button{
 //     display: none!important;
 // }

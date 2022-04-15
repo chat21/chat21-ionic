@@ -9,7 +9,8 @@
 
     <ion-grid style="height: 100%;">
       <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%; flex-direction: column">
-        <span *ngIf="isOnline === true  && !showSpinner" style="color: #92949c; font-size: 16px;line-height: 18px;margin-top: -160px;">
+        <span *ngIf="isOnline === true  && !showSpinner"
+          style="color: #92949c; font-size: 16px;line-height: 18px;margin-top: -160px;">
           <span *ngIf="conversation_count > 0 ">
             {{'PleaseSelectChatToStartMessaging' | translate }}
           </span>
@@ -34,10 +35,10 @@
   <app-header-conversation-detail [isMobile]="isMobile" [idLoggedUser]="loggedUser.uid"
     [conversationAvatar]="conversationAvatar" [translationMap]="translationMap"
     (eventOpenCloseInfoConversation)="returnOpenCloseInfoConversation($event)"
-    [isOpenInfoConversation]="isOpenInfoConversation">
+    [isOpenInfoConversation]="isOpenInfoConversation" [conv_type]="conv_type">
   </app-header-conversation-detail>
 
-  <ion-content>
+  <ion-content id="conv-details">
     <ion-grid class="grid_content">
       <ion-row class="row_content">
         <ion-col id="chatArea" [class.mobile]="isMobile" [class.open]="openInfoConversation">
@@ -91,7 +92,7 @@
             </ng-template>
 
             <ng-template #content_messages>
-              <ion-content #ionContentChatArea class="ionContentChatArea" (drop)="drop($event)"
+              <ion-content #ionContentChatArea appScrollbarTheme class="ionContentChatArea" (drop)="drop($event)"
                 (dragover)="allowDrop($event)" (dragleave)="drag($event)" [scrollEvents]="true"
                 (ionScrollStart)="logScrollStart($event)" (ionScroll)="logScrolling($event)"
                 (ionScrollEnd)="logScrollEnd($event)" [class.active]="showIonContent">
@@ -136,15 +137,24 @@
             <!-- ----------------------------------------------------------- -->
             <!-- Canned responses -->
             <!-- ----------------------------------------------------------- -->
-
-            <div id="canned" *ngIf="tagsCannedFilter.length > 0 && HIDE_CANNED_RESPONSES === false">
-              <ion-list class="canned-list">
+            <div id="canned">
+              <ion-list class="canned-list" *ngIf="tagsCannedFilter.length > 0 && HIDE_CANNED_RESPONSES === false">
                 <ion-item button="true" [ngClass]="{'is_active_item': i == arrowkeyLocation}" lines="none"
                   class="canned-item" id="{{'canned-item_'+ i }}"
                   *ngFor="let canned of tagsCannedFilter; let i = index;" [innerHtml]="canned.title"
                   (click)="replaceTagInMessage(canned, $event)">
                 </ion-item>
+                <ion-item  class="canned-item add-canned-response-wpr" button="true" lines="none" (click)="presentCreateCannedResponseModal()">
+                  <ion-icon class="add-canned-response-icon"  name="flash-outline"></ion-icon>
+                  <span class="add-canned-response-add-icon">+</span>
+                 <label class="add-canned-response-label" >{{translationMap?.get('AddNewCannedResponse')}}</label> 
+                </ion-item>
               </ion-list>
+              <!-- <ion-list class="canned-list" *ngIf="tagsCannedFilter.length === 0 && HIDE_CANNED_RESPONSES === false">
+                <ion-item button="true" >
+                  There are no canned responses available
+                </ion-item>
+              </ion-list> -->
             </div>
 
 
@@ -155,14 +165,14 @@
             <!-- openInfoConversation   {{openInfoConversation}} - isMobile {{isMobile}} -->
             <app-message-text-area
               *ngIf="(openInfoConversation === false && isMobile === true) || (openInfoConversation === true && isMobile === false) || (openInfoConversation === false && isMobile === false)"
-              [tagsCannedCount]="tagsCannedCount" [areVisibleCAR]="areVisibleCAR" [loggedUser]="loggedUser"
-              [conversationWith]="conversationWith" [tagsCannedFilter]="tagsCannedFilter"
+              [tagsCannedCount]="tagsCannedCount" [areVisibleCAR]="areVisibleCAR" [support_mode]="support_mode"
+              [loggedUser]="loggedUser" [conversationWith]="conversationWith" [tagsCannedFilter]="tagsCannedFilter"
               (eventChangeTextArea)="returnChangeTextArea($event)"
               (hasClickedOpenCannedResponses)="hasClickedOpenCannedResponses($event)"
               (eventSendMessage)="returnSendMessage($event)" [translationMap]="translationMap"
               [fileUploadAccept]="appConfigProvider.getConfig().fileUploadAccept"
               [isOpenInfoConversation]="isOpenInfoConversation" [dropEvent]="dropEvent"
-              (onPresentModalScrollToBottom)="onPresentModalScrollToBottom($event)">
+              (onPresentModalScrollToBottom)="onPresentModalScrollToBottom($event)" [disableTextarea]="disableTextarea">
             </app-message-text-area>
             <!-- [events]="eventsReplaceTexareaText.asObservable()" -->
           </ion-row>

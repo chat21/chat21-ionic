@@ -1,4 +1,4 @@
-import { URL_SOUND_LIST_CONVERSATION } from './../chat21-core/utils/constants';
+import { tranlatedLanguage, URL_SOUND_LIST_CONVERSATION } from './../chat21-core/utils/constants';
 import { ArchivedConversationsHandlerService } from 'src/chat21-core/providers/abstract/archivedconversations-handler.service';
 import { AppStorageService } from 'src/chat21-core/providers/abstract/app-storage.service';
 
@@ -58,6 +58,7 @@ import * as PACKAGE from 'package.json';
 import { filter } from 'rxjs/operators'
 import { WebSocketJs } from './services/websocket/websocket-js';
 import { Location } from '@angular/common'
+
 // import { filter } from 'rxjs/operators';
 
 @Component({
@@ -77,7 +78,7 @@ export class AppComponent implements OnInit {
   public sidebarPage: any;
   public notificationsEnabled: boolean;
   public zone: NgZone;
-  private platformIs: string;
+  public platformIs: string;
   private doitResize: any;
   private timeModalLogin: any;
   public tenant: string;
@@ -98,7 +99,9 @@ export class AppComponent implements OnInit {
   public missingConnectionToast: any
   public executedInitializeAppByWatchConnection: boolean = false;
   private version: string;
-
+  IS_ONLINE: boolean;
+  IS_ON_MOBILE_DEVICE: boolean;
+  SUPPORT_MODE: boolean;
   // private isOnline: boolean = false;
 
   wsService: WebSocketJs;
@@ -145,9 +148,18 @@ export class AppComponent implements OnInit {
 
     this.saveInStorageNumberOfOpenedChatTab();
     this.listenChatAlreadyOpenWithoutParamsInMobileMode()
-
+    this.isOnMobileDevice()
     // this.listenToUrlChanges();
     // this.getPageState();
+  }
+
+  isOnMobileDevice() {
+    this.IS_ON_MOBILE_DEVICE = false;
+    if (/Android|iPhone/i.test(window.navigator.userAgent)) {
+      this.IS_ON_MOBILE_DEVICE = true;
+    }
+    // this.logger.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
+    return this.IS_ON_MOBILE_DEVICE;
   }
 
 
@@ -256,7 +268,7 @@ export class AppComponent implements OnInit {
 
 
   saveInStorageNumberOfOpenedChatTab() {
-    this.logger.log('Calling saveInStorageChatOpenedTab!');
+    // this.logger.log('Calling saveInStorageChatOpenedTab!');
 
     // https://jsfiddle.net/jjjs5wd3/3/å
     if (+localStorage.tabCount > 0) {
@@ -286,6 +298,13 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     const appconfig = this.appConfigProvider.getConfig();
+    // console.log('[APP-COMP] appconfig', appconfig)
+    if (appconfig && appconfig.supportMode) {
+      this.SUPPORT_MODE = appconfig.supportMode
+      // console.log('[APP-COMP] appconfig > SUPPORT_MODE', this.SUPPORT_MODE)
+    } else {
+      this.SUPPORT_MODE = false;
+    }
     this.persistence = appconfig.authPersistence;
     this.appStorageService.initialize(environment.storage_prefix, this.persistence, '')
     // this.logger.log('[APP-COMP] HELLO ngOnInit !!!!!!!')
@@ -530,8 +549,8 @@ export class AppComponent implements OnInit {
       currentUserId = currentUser.uid;
       this.logger.log('[APP-COMP] - setLanguage current_user uid: ', currentUserId);
     }
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+    // this.translate.setDefaultLang('en');
+    //   this.translate.use('en');
 
     const browserLang = this.translate.getBrowserLang();
     this.logger.log('[APP-COMP] browserLang: ', browserLang);
@@ -544,8 +563,19 @@ export class AppComponent implements OnInit {
     } else if (browserLang && stored_preferred_lang) {
       chat_lang = stored_preferred_lang
     }
-
-    this.translate.use(chat_lang);
+  
+    this.logger.log('[APP-COMP] - chat_lang', chat_lang)
+  
+    if (tranlatedLanguage.includes(chat_lang)) {
+      this.logger.log('[APP-COMP] tranlatedLanguage includes',chat_lang , ': ', tranlatedLanguage.includes(chat_lang)) 
+      this.translate.setDefaultLang(chat_lang)
+      this.translate.use(chat_lang);
+    }
+    else {
+      this.logger.log('[APP-COMP] tranlatedLanguage includes',chat_lang , ': ', tranlatedLanguage.includes(chat_lang)) 
+      this.translate.setDefaultLang('en');
+      this.translate.use('en');
+    }
 
     // this.logger.debug('[APP-COMP] navigator.language: ', navigator.language);
     // let language;
@@ -647,7 +677,7 @@ export class AppComponent implements OnInit {
       })
     } else {
       this.logger.warn('[APP-COMP] >>> I AM NOT LOGGED IN <<<')
-
+      this.IS_ONLINE = false;
       // clearTimeout(this.timeModalLogin);
       // this.timeModalLogin = setTimeout(() => {
       if (!this.hadBeenCalledOpenModal) {
@@ -830,10 +860,14 @@ export class AppComponent implements OnInit {
           // const user = this.tiledeskAuthService.getCurrentUser();
           // if (this.isOnline === false) {
           // if (AUTH_STATE_ONLINE) {
+          this.IS_ONLINE = true;
+          // console.log('[APP-COMP] IS_ONLINE', this.IS_ONLINE)
           this.goOnLine();
           // }
         } else if (state === AUTH_STATE_OFFLINE) {
           // this.checkTokenAndGoOffline() //se c'è un tiledeskToken salvato, allora aspetta, altrimenti vai offline
+          this.IS_ONLINE = false;
+          // console.log('[APP-COMP] IS_ONLINE', this.IS_ONLINE)
           this.goOffLine()
         }
       }, error => {
@@ -871,12 +905,12 @@ export class AppComponent implements OnInit {
   }
 
   /**
- * goOnLine:
- * 1 - nascondo splashscreen
- * 2 - recupero il tiledeskToken e lo salvo in chat manager
- * 3 - carico in d
- * @param user
- */
+  * goOnLine:
+  * 1 - nascondo splashscreen
+  * 2 - recupero il tiledeskToken e lo salvo in chat manager
+  * 3 - carico in d
+  * @param user
+  */
   goOnLine = () => {
     this.logger.log('[APP-COMP]- GO-ONLINE ');
     // this.isOnline = true;

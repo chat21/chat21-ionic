@@ -1,0 +1,171 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{'CreateTicket' | translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button ion-button fill="clear" (click)="closeModalCreateTicketModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+
+  <ion-grid class="ion-grid-custom-padding" [ngClass]="{'center-content': ticketCreationCompleted === true }">
+    <ion-row *ngIf="ticketCreationCompleted === false">
+      <ion-col size="12">
+        <!-- // with custom search {{'SelectRequester' | translate}}-->
+        <!-- {{ projectUserAndLeadsArray | json}} -->
+        <ion-label class="custom-create-ticket-label">{{'Requester' | translate }}</ion-label>
+        <ion-label [ngClass]="{'open-requester-details-disable': !selectedRequester}" class="custom-create-ticket-label-to-left"
+        (click)="openRequesterDetails()"> 
+          {{'ViewRequesterDetails' | translate }}
+          <span class="material-icons" style="color: #0f62ff; vertical-align: middle;font-size: 16px;"> 
+            open_in_new 
+          </span>
+        </ion-label>
+        <ng-select class="create-ticket-custom-select" name="users_and_leads" [items]="projectUserAndLeadsArray"
+          bindLabel="name" bindValue="id" [(ngModel)]="selectedRequester" [virtualScroll]="true"
+          [searchFn]="customSearchFn" (change)="selectRequester($event)" placeholder="{{'SelectRequester' | translate}}"
+          [loading]=loadingRequesters loadingText='Loading...'>
+
+          <ng-template ng-label-tmp let-item="item">
+            <!-- ---------------------------------------- -->
+            <!-- Usecase Firebase -->
+            <!-- ---------------------------------------- -->
+            <img *ngIf="item.requestertype === 'agent' && UPLOAD_ENGINE_IS_FIREBASE" height="24" width="24"
+              style="border-radius:50%; object-fit: cover; vertical-align: middle;"
+              src="https://firebasestorage.googleapis.com/v0/b/{{storageBucket}}/o/profiles%2F{{item.id}}%2Fphoto.jpg?alt=media"
+              alt="" onerror="this.src='assets/images/default-avatar-x-select.png'">
+
+            <!-- ---------------------------------------- -->
+            <!-- Usecase Native -->
+            <!-- ---------------------------------------- -->
+            <img *ngIf="item.requestertype === 'agent' && !UPLOAD_ENGINE_IS_FIREBASE" height="24" width="24"
+              style="border-radius:50%;object-fit: cover;vertical-align: middle;"
+              src="{{baseUrl}}images?path=uploads%2Fusers%2F{{item.id}}%2Fimages%2Fthumbnails_200_200-photo.jpg" alt=""
+              onerror="this.src='assets/images/default-avatar-x-select.png'">
+
+            <img *ngIf="item.requestertype === 'lead'" height="24" width="24"
+              style="border-radius:50%;object-fit: cover;vertical-align: middle;"
+              src="assets/images/default-avatar-x-select.png" alt="">
+            <span style="font-weight: 400;">
+              {{ item.name }}
+            </span>
+            <span class="requester-role-or-type">
+              ({{item.role}})
+            </span>
+
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+            <!-- ---------------------------------------- -->
+            <!-- Usecase Firebase -->
+            <!-- ---------------------------------------- -->
+            <img *ngIf="item.requestertype === 'agent' && UPLOAD_ENGINE_IS_FIREBASE" height="24" width="24"
+              style="border-radius:50%;object-fit: cover;vertical-align: middle;"
+              src="https://firebasestorage.googleapis.com/v0/b/{{storageBucket}}/o/profiles%2F{{item.id}}%2Fphoto.jpg?alt=media"
+              alt="" onerror="this.src='assets/images/default-avatar-x-select.png'">
+
+            <!-- ---------------------------------------- -->
+            <!-- Usecase Native -->
+            <!-- ---------------------------------------- -->
+            <img *ngIf="item.requestertype === 'agent' && !UPLOAD_ENGINE_IS_FIREBASE" height="24" width="24"
+              style="border-radius:50%;object-fit: cover;vertical-align: middle;"
+              src="{{baseUrl}}images?path=uploads%2Fusers%2F{{item.id}}%2Fimages%2Fthumbnails_200_200-photo.jpg" alt=""
+              onerror="this.src='assets/images/default-avatar-x-select.png'">
+
+            <img *ngIf="item.requestertype === 'lead'" height="24" width="24"
+              style="border-radius:50%; object-fit: cover;vertical-align: middle;"
+              src="assets/images/default-avatar-x-select.png" alt="">
+            <span style="font-weight: 400;">
+              {{ item.name }}
+            </span>
+            <span class="requester-role-or-type">
+              ({{item.role}})
+            </span>
+            <br />
+            <small style="font-weight:400;font-size: 13px; margin-left: 28px; position: relative;top: -3px;">
+              {{ item.email }}
+            </small>
+          </ng-template>
+
+          <ng-template ng-footer-tmp>
+            <div style="cursor:pointer" (click)="presentModalAddNewRequester()">
+              <span class="material-icons" style="vertical-align: middle; color:#0f62ff"> add </span>
+              <span style="color:#0f62ff">
+                {{'AddRequester' | translate}}
+              </span>
+            </div>
+          </ng-template>
+
+        </ng-select>
+      </ion-col>
+
+      <ion-col size="12">
+          <ion-label class="custom-create-ticket-label" position="stacked">{{ 'Subject' | translate }} *</ion-label>
+          <ion-input [(ngModel)]="ticket_subject" type="text" class="custom-ion-input"></ion-input>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-label class="custom-create-ticket-label">{{ 'SelectAssignee' | translate }}</ion-label>
+        <ng-select class="create-ticket-custom-select" name="assignee" [(ngModel)]="assignee_id" [searchable]="true" [clearable]="false"
+        placeholder="{{ 'SelectAssignee' | translate }}" (change)="selectedAssignee()" [loading]=loadingAssignee
+        loadingText='Loading...'>
+          <ng-option *ngFor="let assignee of projectUserBotsAndDeptsArray" [value]="assignee.id">
+            {{assignee.name}}
+          </ng-option>
+        </ng-select>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-label class="custom-create-ticket-label">{{ 'Priority' | translate }}</ion-label>
+        <ng-select class="create-ticket-custom-select" [items]="priority" bindLabel="name" bindValue="name" [clearable]="false" [hideSelected]="true"
+          [(ngModel)]="selectedPriority" (change)="onChangeSelectedPriority(selectedPriority)">
+          <ng-template ng-label-tmp let-item="item">
+            <img style="width: 15px;height: 15px; vertical-align: middle;" height="15" width="15" [src]="item.avatar" />
+            {{item.name | translate}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-index="index">
+            <img style="width: 15px;height: 15px;vertical-align: middle;" height="15" width="15" [src]="item.avatar" />
+            {{item.name | translate }}
+          </ng-template>
+        </ng-select>
+
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-label class="custom-create-ticket-label">{{ 'Message' | translate }} *</ion-label>
+        <ion-textarea [(ngModel)]="ticket_message" type="text" class="custom-ion-textarea" rows="2"  placeholder=""></ion-textarea>
+      </ion-col>
+      <!-- expand="block"  -->
+      <ion-col size="12" style="text-align: center;">
+        
+        <!-- <ion-icon *ngIf="showSpinnerCreateTicket === false" style="font-size: 1.9em;" slot="start" name="checkmark-outline"></ion-icon> -->
+        <ion-button style="min-width: 153px;" color="primary" class="submit-btn" type="submit" (click)="createTicket()" [disabled]="ticket_subject === undefined || ticket_message  === undefined || ticket_subject?.length === 0 || ticket_message?.length === 0">
+          <ion-icon *ngIf="showSpinnerCreateTicket === false" style="font-size: 1.9em;" slot="start" name="add-circle-outline"></ion-icon>
+          <ion-spinner *ngIf="showSpinnerCreateTicket === true" style="color: #fff; margin: 0px 0.3em 0px -0.3em;" name="bubbles" duration="2" ></ion-spinner>
+          {{'CreateTicket' | translate}}
+        </ion-button>
+      </ion-col>
+
+    </ion-row>
+    <!-- class="ion-align-items-center"  -->
+    <ion-row  style="text-align: center;" *ngIf="ticketCreationCompleted === true">
+      <ion-col size="12">
+        <ion-icon style="font-size: 3em;"  color="success" name="checkmark-outline"></ion-icon>
+      </ion-col>
+      <ion-col size="12">
+        <label> {{'TicketSuccessfullyCreated' | translate }}</label>
+      </ion-col>
+      <ion-col size="12" class="ion-padding-vertical">
+        <ion-button  color="success" class="submit-btn" type="submit" (click)="closeModalCreateTicketModal()">
+          {{'Continue' | translate }}
+        </ion-button>
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>
+

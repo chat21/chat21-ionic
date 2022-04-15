@@ -18,11 +18,11 @@ import { ConversationHandlerService } from '../abstract/conversation-handler.ser
 import { LoggerService } from '../abstract/logger.service';
 import { LoggerInstance } from '../logger/loggerInstance';
 // utils
-import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT, MESSAGE_TYPE_INFO , TOUCHING_OPERATOR} from '../../utils/constants';
+import { MSG_STATUS_RECEIVED, CHAT_REOPENED, CHAT_CLOSED, MEMBER_JOINED_GROUP, TYPE_DIRECT, MESSAGE_TYPE_INFO, TOUCHING_OPERATOR } from '../../utils/constants';
 import { compareValues, searchIndexInArrayForUid, conversationMessagesRef } from '../../utils/utils';
 
 
-import { messageType } from 'src/chat21-core/utils/utils-message';
+import { messageType, isEmojii } from 'src/chat21-core/utils/utils-message';
 
 
 
@@ -156,7 +156,8 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
             typeMsg,
             attributes,
             channelType,
-            false
+            false,
+            isEmojii(msg)
         );
         const messageRef = firebaseMessagesCustomUid.push({
             language: lang,
@@ -288,6 +289,10 @@ export class FirebaseConversationHandler extends ConversationHandlerService {
 
         // verifico che il sender è il logged user
         msg.isSender = this.isSender(msg.sender, this.loggedUser.uid);
+
+        //check if message contains only an emojii
+        msg.emoticon = isEmojii(msg.text)
+
         // traduco messaggi se sono del server
         if (msg.attributes && msg.attributes.subtype) {
             if (msg.attributes.subtype === 'info' || msg.attributes.subtype === 'info/support') {

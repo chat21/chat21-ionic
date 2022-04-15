@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> {{'CreateNewRequester' | translate}} </ion-title>
+    <ion-buttons slot="end">
+      <ion-button ion-button fill="clear" (click)="closeModalAddNewRequester()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+
+
+  <form [formGroup]="validations_form" (ngSubmit)="onSubmit(validations_form.value)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+
+          <ion-item>
+            <ion-label position="floating" color="primary">{{'Name' | translate}} *</ion-label>
+            <ion-input type="text" formControlName="name"></ion-input>
+          </ion-item>
+          <div class="validation-errors">
+            <ng-container *ngFor="let validation of validation_messages.name">
+              <div class="error-message"
+                *ngIf="validations_form.get('name').hasError(validation.type) && (validations_form.get('name').dirty || validations_form.get('name').touched)">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <span class="validation-message"> {{ validation.message }} </span>
+              </div>
+            </ng-container>
+          </div>
+        </ion-col>
+
+
+        <ion-col size="12">
+          <ion-item>
+            <ion-label position="floating" color="primary">Email</ion-label>
+            <ion-input type="text" formControlName="email"></ion-input>
+          </ion-item>
+          <div class="validation-errors">
+            <ng-container *ngFor="let validation of validation_messages.email">
+              <div class="error-message"
+                *ngIf="validations_form.get('email').hasError(validation.type) && (validations_form.get('email').dirty || validations_form.get('email').touched)">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <span class="validation-message"> {{ validation.message }} </span>
+
+              </div>
+            </ng-container>
+          </div>
+        </ion-col>
+        <!-- expand="block" -->
+        <ion-col size="12" style="text-align: center;">
+          <ion-button color="primary" class="submit-btn" type="submit" [disabled]="!validations_form.valid" style="min-width:253px">
+            <ion-icon *ngIf="showSpinnerCreateRequester === false" style="font-size: 1.9em;" slot="start" name="add-circle-outline"></ion-icon>
+            <ion-spinner *ngIf="showSpinnerCreateRequester === true" style="color: #fff; margin: 0px 0.3em 0px -0.3em;" name="bubbles" duration="2" ></ion-spinner>
+            {{'CreateNewRequester' | translate}}</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+
+
+
+</ion-content>

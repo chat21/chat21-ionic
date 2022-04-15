@@ -18,7 +18,7 @@ import { ContactsDirectoryPageModule } from '../contacts-directory/contacts-dire
 import { ProfileInfoPageModule } from '../profile-info/profile-info.module';
 // import { ConversationDetailPageModule } from '../conversation-detail/conversation-detail.module';
 import { SharedModule } from 'src/app/shared/shared.module';
-
+import { ScrollbarThemeModule } from '../../utils/scrollbar-theme.directive';
 @NgModule({
   imports: [
     CommonModule,
@@ -28,6 +28,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     // ConversationDetailPageModule,
     ContactsDirectoryPageModule,
     ProfileInfoPageModule,
+    ScrollbarThemeModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

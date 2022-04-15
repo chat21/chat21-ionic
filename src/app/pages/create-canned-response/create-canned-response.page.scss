@@ -1,0 +1,55 @@
+#create-canned-response-content {
+    .validation-errors {
+        height: 20px;
+        // margin-bottom: 16px;
+    }
+
+    .error-message {
+        // color: red;
+        // font-size: 14px;
+        // margin-left: 10px;
+        // margin-top: 10px;
+        ion-icon {
+            color: red;
+            font-size: 16px;
+            margin-left: 15px;
+            margin-right: 3px;
+            position: relative;
+            top: 3px;
+        }
+        .validation-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 1px;
+        }
+    }
+
+    .submit-btn {
+        margin: 48px 12px 12px;
+        min-width: 150px;
+    }
+
+    ion-textarea {
+        --placeholder-color: #d3d3d3;
+        --placeholder-opacity: 1;
+    }
+    ion-input {
+        --placeholder-color: #d3d3d3;
+        --placeholder-opacity: 1;
+    }
+}
+
+.my-custom-menu {
+    --width: 500px;
+    margin-top: 57px;
+}
+
+.note-text {
+    color: #a6a6a6;
+}
+
+.custom-label-size {
+    font-size: 1.2em;
+}
+
+

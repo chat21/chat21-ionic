@@ -38,39 +38,76 @@
 
     <ion-col col-auto>
 
-      <div class="start-buttons" style="position: absolute;display: flex;"> 
-      
-        <ng-container *ngIf="areVisibleCAR">
-        <div class="canned-responses-btn-wpr" style="margin-left: -5px;" tooltip="{{translationMap?.get('CANNED_RESPONSES')}}" [options]="tooltipOptions"   placement="top">
-          <ion-button ion-button fill="clear" class="canned-responses-btn" (click)="openCannedResponses()" [disabled]="!IS_SUPPORT_GROUP_CONVERSATION">
-            <ion-icon slot="icon-only" lazy="true" name="flash-outline" style="font-size: 24px;"></ion-icon>
-          </ion-button>
-        </div>
-        <div *ngIf="IS_SUPPORT_GROUP_CONVERSATION  && tagsCannedCount === 0" tooltip="{{translationMap?.get('NO_CANNED_RESPONSES')}}" [options]="tooltipOptions"   placement="top" class="no-canned-responses-btn-badge">
-          <ion-icon name="alert-sharp" style="vertical-align: middle;"></ion-icon>
-        </div>
-        <div *ngIf="IS_SUPPORT_GROUP_CONVERSATION  && tagsCannedCount > 0" tooltip="{{translationMap?.get('YES_CANNED_RESPONSES')}}" [options]="tooltipOptions"   placement="top" class="canned-responses-btn-badge">
-          <ion-icon name="information-sharp" style="vertical-align: middle;"></ion-icon>
-        </div>
-      </ng-container>
+      <div class="start-buttons" style="position: absolute;display: flex; top: 2px;">
 
- 
-        <div class="upload-image-btn-wpr" tooltip="{{translationMap?.get('UPLOAD')}}" [options]="tooltipOptions"  placement="top">
-          <ion-button ion-button fill="clear" class="upload-image-btn">
+        <ng-container *ngIf="areVisibleCAR && support_mode === true">
+          <div class="canned-responses-btn-wpr" style="margin-left: -5px;"
+            tooltip="{{translationMap?.get('CANNED_RESPONSES')}}" [options]="tooltipOptions" placement="top">
+            <ion-button ion-button fill="clear" class="canned-responses-btn" (click)="openCannedResponses()"
+              [disabled]="!IS_SUPPORT_GROUP_CONVERSATION || disableTextarea">
+              <ion-icon slot="icon-only" lazy="true" name="flash-outline" style="font-size: 24px;"></ion-icon>
+            </ion-button>
+          </div>
+          <div *ngIf="IS_SUPPORT_GROUP_CONVERSATION  && tagsCannedCount === 0"
+            tooltip="{{translationMap?.get('NO_CANNED_RESPONSES')}}" [options]="tooltipOptions" placement="top"
+            class="no-canned-responses-btn-badge">
+            <ion-icon name="alert-sharp" style="vertical-align: middle;"></ion-icon>
+          </div>
+          <div *ngIf="IS_SUPPORT_GROUP_CONVERSATION  && tagsCannedCount > 0"
+            tooltip="{{translationMap?.get('YES_CANNED_RESPONSES')}}" [options]="tooltipOptions" placement="top"
+            class="canned-responses-btn-badge">
+            <ion-icon name="information-sharp" style="vertical-align: middle;"></ion-icon>
+          </div>
+        </ng-container>
+
+
+        <div class="upload-image-btn-wpr" tooltip="{{translationMap?.get('UPLOAD')}}" [options]="tooltipOptions"
+          placement="top">
+          <ion-button ion-button fill="clear" class="upload-image-btn" [disabled]="disableTextarea">
             <ion-icon slot="icon-only" lazy="true" name="attach-outline"
               style="font-size: 30px;transform: rotate(42deg);"></ion-icon>
             <input #fileInput type="file" (change)="onFileSelected($event)" capture="camera" id="file-input"
               [accept]="fileUploadAccept">
-             
+
           </ion-button>
-         
+
+        </div>
+
+        <!-- <ion-icon (click)="showEmojiPicker = !showEmojiPicker" color="secondary" name="happy" style="zoom:2;"></ion-icon> -->
+        <!-- --------------------------------------------- -->
+        <!-- Emoji Picker Button  tooltip="{{translationMap?.get('CANNED_RESPONSES')}}" [options]="tooltipOptions" placement="top" -->
+        <!-- --------------------------------------------- -->
+        <div class="emoji-picker-btn-wpr">
+          <ion-button ion-button fill="clear" class="emoji-picker-btn" (click)="showEmojiPicker = !showEmojiPicker"
+            [disabled]="disableTextarea">
+            <!-- <ion-icon slot="icon-only" lazy="true" name="flash-outline" style="font-size: 24px;"></ion-icon> -->
+            <ion-icon slot="icon-only" lazy="true" name="happy-outline" style="font-size: 24px;"></ion-icon>
+          </ion-button>
+
+          <!-- <div class="emojiContainer" [style.height]="showEmojiPicker?'300px':'0px'"> -->
+          <!--Show/Hide emoji picker. Don't use *ngIf because the component will be created again and again and cause performance issue-->
+          <!-- <emoji-picker (onEmojiSelect)="addEmoji($event)"></emoji-picker> -->
+          <!-- { position: 'absolute', bottom: '20px', right: '20px' }" -->
+          <!-- --------------------------------------------------------------------- -->
+          <!-- https://www.npmjs.com/package/@ctrl/ngx-emoji-mart/v/1.0.6 -->
+          <!-- --------------------------------------------------------------------- -->
+          <!-- [style]="{ position: 'absolute', bottom: '53px', right: '-246px' }" -->
+          <emoji-mart [showPreview]="false" [perLine]="emojiPerLine" [style.visibility]="showEmojiPicker?'visible':'hidden'"
+            (emojiSelect)="addEmoji($event)"  [ngClass]="{'emoji-mart-desktop': !IS_ON_MOBILE_DEVICE, 'emoji-mart-mobile': IS_ON_MOBILE_DEVICE }">
+          </emoji-mart>
+          <!-- </div> -->
+
         </div>
       </div>
 
-      <div class="text-message" [ngClass]="{'text-message-no-cr': areVisibleCAR === false}">
+
+
+
+
+      <div class="text-message" [ngClass]="{'text-message-no-cr': areVisibleCAR === false || support_mode === false}">
         <ion-textarea id="ion-textarea" #messageTextArea #message_text_area #textArea rows="1"
           [placeholder]="TEXAREA_PLACEHOLDER" autosize="false" auto-grow="true" autofocus="true" [value]=""
-          [(ngModel)]="messageString" (ionChange)="ionChange($event);"
+          [(ngModel)]="messageString" (ionChange)="ionChange($event);" [disabled]="disableTextarea"
           (keydown.enter)="onKeydown($event, messageString)" (paste)="onPaste($event)">
         </ion-textarea>
       </div>

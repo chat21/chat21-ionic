@@ -17,6 +17,8 @@ import { AppConfigProvider } from 'src/app/services/app-config';
   styleUrls: ['./project-item.component.scss'],
 })
 export class ProjectItemComponent implements OnInit {
+  private logger: LoggerService = LoggerInstance.getInstance();
+
   @Output() projectIdEvent = new EventEmitter<string>()
   @Output() openUnsevedConvsEvent = new EventEmitter<any>()
 
@@ -29,7 +31,7 @@ export class ProjectItemComponent implements OnInit {
   ROLE_IS_AGENT: boolean;
   currentUserId: string;
   public translationMap: Map<string, string>;
-  private logger: LoggerService = LoggerInstance.getInstance();
+ 
   window_width_is_60: boolean;
   newInnerWidth: any;
   avaialble_status_for_tooltip: string;
@@ -42,7 +44,7 @@ export class ProjectItemComponent implements OnInit {
     'hideDelayAfterClick': 3000,
     'hide-delay': 200
   };
-
+  IS_ON_MOBILE_DEVICE: boolean;
   constructor(
     public wsService: WebsocketService,
     public appStorageService: AppStorageService,
@@ -59,7 +61,18 @@ export class ProjectItemComponent implements OnInit {
     this.translations();
     this.listenToPostMsgs();
     this.onInitWindowWidth();
+
+    this.isOnMobileDevice()
     // console.log('[PROJECT-ITEM] - on INIT')
+  }
+
+  isOnMobileDevice() {
+    this.IS_ON_MOBILE_DEVICE = false;
+    if (/Android|iPhone/i.test(window.navigator.userAgent)) {
+      this.IS_ON_MOBILE_DEVICE = true;
+    }
+    // console.log('[PROJECT-ITEM] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
+    return this.IS_ON_MOBILE_DEVICE;
   }
 
   openUnservedConvs() {

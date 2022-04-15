@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, IterableDiffers, KeyValueDiffers, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, IterableDiffers, KeyValueDiffers, OnInit, Output, SimpleChange } from '@angular/core';
 import { ConversationModel } from 'src/chat21-core/models/conversation';
 import { ImageRepoService } from 'src/chat21-core/providers/abstract/image-repo.service';
 import { convertMessage } from 'src/chat21-core/utils/utils';
@@ -9,12 +9,11 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 import { TranslateService } from '@ngx-translate/core';
 
 import * as moment from 'moment';
-// import { EventsService } from 'src/app/services/events-service';
-// import { TiledeskService } from '../../../services/tiledesk/tiledesk.service';
 import { NetworkService } from '../../../services/network-service/network.service';
 import { AppConfigProvider } from 'src/app/services/app-config';
 import { DomSanitizer } from '@angular/platform-browser'
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
+import { AlertController } from '@ionic/angular';
 // import { LoggerService } from 'src/chat21-core/providers/abstract/logger.service';
 // import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 
@@ -25,8 +24,10 @@ import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk
 })
 export class IonListConversationsComponent extends ListConversationsComponent implements OnInit {
 
+  @Input() archiveActionNotAllowed: boolean;
   @Input() uidConvSelected: string;
   @Output() onCloseConversation = new EventEmitter<ConversationModel>();
+  @Output() onCloseAlert = new EventEmitter();
 
   convertMessage = convertMessage;
   isApp: boolean = false;
@@ -35,7 +36,22 @@ export class IonListConversationsComponent extends ListConversationsComponent im
   public browserLang: string;
 
   public PROJECT_FOR_PANEL: any;
+  public archive_btn_tooltip: string;
+  public resolve_btn_tooltip: string;
+  public alert_lbl: string;
+  public actionNotAllowed_lbl: string;
+  public youAreNoLongerAmongTheTeammatesManagingThisConversation_lbl: string;
+public ok_lbl: string;
 
+  tooltip_options = {
+    'show-delay': 0,
+    'tooltip-class': 'chat-tooltip',
+    'theme': 'light',
+    'shadow': false,
+    'hide-delay-mobile': 0,
+    'hideDelayAfterClick': 3000,
+    'hide-delay': 100
+  };
   /**
    * 
    * @param iterableDiffers 
@@ -47,12 +63,12 @@ export class IonListConversationsComponent extends ListConversationsComponent im
     public kvDiffers: KeyValueDiffers,
     public platform: Platform,
     private translate: TranslateService,
-    // private events: EventsService,
-    // private tiledeskService: TiledeskService,
     private networkService: NetworkService,
     private appConfigProvider: AppConfigProvider,
     private sanitizer: DomSanitizer,
-    public tiledeskAuthService: TiledeskAuthService
+    public tiledeskAuthService: TiledeskAuthService,
+    public alertController: AlertController
+
   ) {
     super(iterableDiffers, kvDiffers)
     this.setMomentLocale();
@@ -78,6 +94,60 @@ export class IonListConversationsComponent extends ListConversationsComponent im
 
     // console.log('[ION-LIST-CONVS-COMP] - DASHBOARD_BASE_URL ', DASHBOARD_BASE_URL)
     this.PROJECT_FOR_PANEL = this.sanitizer.bypassSecurityTrustResourceUrl(DASHBOARD_BASE_URL + '#/project-for-panel');
+    this.translateLbls();
+
+  }
+  ngOnInit() {
+    this.isApp = this.platform.is('ios') || this.platform.is('android')
+    this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - IS-APP ', this.isApp)
+    this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - Platform', this.platform.platforms());
+
+  }
+
+  ngOnChanges(changes: { [property: string]: SimpleChange }) {
+    // Extract changes to the input property by its name
+    let change: SimpleChange = changes['archiveActionNotAllowed'];
+    this.logger.log('[ION-LIST-CONVS-COMP] - ngOnChanges change ', change);
+    // console.log('[ION-LIST-CONVS-COMP] - ngOnChanges change currentValue ', change.currentValue)
+    if (change && change.currentValue === true) {
+      this.pesentAlertActionNotAllowed()
+    }
+    // Whenever the data in the parent changes, this method gets triggered. You 
+    // can act on the changes here. You will have both the previous value and the 
+    // current value here.
+  }
+
+
+  translateLbls() {
+    this.translate.get('Resolve')
+      .subscribe((text: string) => {
+        this.resolve_btn_tooltip = text;
+      });
+
+    this.translate.get('Archive')
+      .subscribe((text: string) => {
+        this.archive_btn_tooltip = text;
+      });
+
+    this.translate.get('ALERT_TITLE')
+      .subscribe((text: string) => {
+        this.alert_lbl = text;
+      });
+
+      this.translate.get('ActionNotAllowed')
+      .subscribe((text: string) => {
+        this.actionNotAllowed_lbl = text;
+      });
+
+      this.translate.get('YouAreNoLongerAmongTheTeammatesManagingThisConversation')
+      .subscribe((text: string) => {
+        this.youAreNoLongerAmongTheTeammatesManagingThisConversation_lbl = text;
+      });
+
+      this.translate.get('CLOSE_ALERT_CONFIRM_LABEL')
+      .subscribe((text: string) => {
+        this.ok_lbl = text;
+      });
   }
 
   setMomentLocale() {
@@ -103,10 +173,29 @@ export class IonListConversationsComponent extends ListConversationsComponent im
     moment.locale(chat_lang)
   }
 
-  ngOnInit() {
-    this.isApp = this.platform.is('ios') || this.platform.is('android')
-    this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - IS-APP ', this.isApp)
-    this.logger.log('[ION-LIST-CONVS-COMP] - ngOnInit - Platform', this.platform.platforms());
+
+
+  async pesentAlertActionNotAllowed() {
+
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: this.alert_lbl,
+      subHeader: this.actionNotAllowed_lbl,
+      message: this.youAreNoLongerAmongTheTeammatesManagingThisConversation_lbl,
+      buttons: [
+        {
+          text: this.ok_lbl,
+          handler: () => {
+            this.alertClosed();
+            // console.log('Confirm Okay');
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+
+
   }
 
 
@@ -130,7 +219,9 @@ export class IonListConversationsComponent extends ListConversationsComponent im
   //   });
   // }
 
-
+  alertClosed() {
+    this.onCloseAlert.emit(true)
+  }
 
   closeConversation(conversation: ConversationModel) {
     var conversationId = conversation.uid;

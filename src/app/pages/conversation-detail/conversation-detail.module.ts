@@ -34,6 +34,9 @@ import { InfoGroupComponent } from 'src/app/components/conversation-info/info-gr
 import { SharedModule } from 'src/app/shared/shared.module';
 // import { SharedConversationInfoModule } from 'src/app/shared/shared-conversation-info.module';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
+import { ScrollbarThemeModule } from '../../utils/scrollbar-theme.directive';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+
 
 @NgModule({
   imports: [
@@ -42,6 +45,8 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     IonicModule,
     TooltipModule,
     ConversationDetailPageRoutingModule,
+    ScrollbarThemeModule,
+    PickerModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
@@ -57,7 +62,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
   declarations: [
     ConversationDetailPage,
     HeaderConversationDetailComponent,
-    MessageTextAreaComponent,
+    MessageTextAreaComponent
     // BubbleDayMessageComponent,
     // BubbleSystemMessageComponent,
     // BubbleMyMessageComponent,

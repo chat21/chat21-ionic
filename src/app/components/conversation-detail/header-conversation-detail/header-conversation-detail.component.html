@@ -1,50 +1,40 @@
-
 <ion-header no-border class="ion-no-border">
-  <ion-toolbar>
-    
-    <ion-buttons slot="start">
+  <ion-toolbar style="height:60px">
+    <ion-buttons slot="start" style="height:60px">
       <!-- (click)="pushPage('conversations-list')" defaultHref="/conversations-list" -->
       <ion-back-button style="display: block;" text="" *ngIf="isMobile" (click)="goBackToConversationList()">
-      </ion-back-button> 
+      </ion-back-button>
     </ion-buttons>
 
     <ion-title [class.info-open]="openInfoConversation || openInfoMessage">
 
-      <div *ngIf="conversationAvatar" class="avatar-and-typing-wpr">
+      <div *ngIf="conversationAvatar" class="avatar-and-typing-wpr" >
         <!-- [ngStyle] = "{ 'left': platformName === 'ios' ? '55px' : ''  }" -->
-        <div *ngIf="conversationAvatar" class="avatar-container" [ngClass] = "{ 'avatar-container-ios': platformName === 'ios' }">
-          <app-avatar-profile
-            [itemAvatar] = conversationAvatar
-          ></app-avatar-profile>
+        <div *ngIf="conversationAvatar" class="avatar-container" (click)="onOpenCloseInfoConversation()" style="cursor: pointer"
+          [ngClass]="{ 'avatar-container-ios': platformName === 'ios' }">
+          <app-avatar-profile [itemAvatar]=conversationAvatar></app-avatar-profile>
         </div>
         <!-- [ngStyle] = "{ 'left': platformName === 'ios' ? '63px' : ''  }" -->
-        <div *ngIf="isDirect" class="user-presence" [ngClass] = "{ 'user-presence-ios': platformName === 'ios' }">
-          <app-user-presence 
-            [idUser] = conversationAvatar.conversation_with
-            [translationMap] = translationMap
-            [borderColor] = borderColor
-            [fontColor] = fontColor>
+        <div *ngIf="isDirect" class="user-presence" [ngClass]="{ 'user-presence-ios': platformName === 'ios' }">
+          <app-user-presence [idUser]=conversationAvatar.conversation_with [translationMap]=translationMap
+            [borderColor]=borderColor [fontColor]=fontColor>
           </app-user-presence>
         </div>
 
         <div *ngIf="conversationAvatar" class="user-typing">
-          <app-user-typing 
-            [idConversation] = conversationAvatar.uid
-            [idCurrentUser] = idLoggedUser
-            [isDirect] = isDirect
-            [translationMap] = translationMap
-            [color] = fontColor
-            [membersConversation] = membersConversation
-          ></app-user-typing>
+          <app-user-typing [idConversation]=conversationAvatar.uid [idCurrentUser]=idLoggedUser [isDirect]=isDirect
+            [translationMap]=translationMap [color]=fontColor [membersConversation]=membersConversation>
+          </app-user-typing>
         </div>
 
       </div>
       <!-- [ngClass] = "{ 'tile-info-with-ios': platformName === 'ios' ? '82px' : ''82px''  }" -->
-      <div *ngIf="conversationAvatar" class="tile-info-with" (click)="onOpenCloseInfoConversation()" 
-      [ngClass] = "{ 'tile-info-with-ios': platformName === 'ios' }">        
+      <!-- (click)="onOpenCloseInfoConversation()" -->
+      <div *ngIf="conversationAvatar" class="tile-info-with" 
+        [ngClass]="{ 'tile-info-with-ios': platformName === 'ios' }">
         <!-- <span class="tile-username">{{ conversationAvatar.conversation_with_fullname }} </span> -->
         <span class="tile-username">{{ conversation_with_fullname }} </span>
-        
+
       </div>
 
       <!-- <div *ngIf="conversationWithFullname" class="tile-info-with" (click)="onOpenCloseInfoConversation()">        
@@ -55,15 +45,28 @@
     <!-- openInfoConversation  {{openInfoConversation}} -->
     <ion-buttons slot="end">
 
-          <ion-button  *ngIf="!openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
-            <!-- <ion-icon slot="icon-only" name="alert-circle-outline"></ion-icon> -->
-            <ion-icon slot="icon-only"  name="information-circle-outline"></ion-icon>
-            <!-- <ion-icon slot="icon-only"  name="information-outline"></ion-icon> -->
-          
-          </ion-button>
-          <ion-button  *ngIf="openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
-            <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
-          </ion-button>
+      <!-- <ion-button ion-button fill="clear" color="primary" size="small" (click)="presentCreateTicketModal()" [ngClass]="{'resolve-conv-margin-right': !isMobile}">
+        <ion-icon name="ticket-outline"></ion-icon>
+        <span style="text-transform: capitalize; margin-left: 5px;"> {{ 'Crea ticket' | translate}} </span>
+      </ion-button> -->
+
+      <ion-button *ngIf="idConv.startsWith('support-group') && conv_type !== 'archived'" ion-button fill="clear" color="primary" size="small" 
+      (click)="closeConversation()" [ngClass]="{'resolve-conv-margin-right': !isMobile}" [disabled]="conv_closed === true">
+        <!-- <ion-icon slot="icon-only" name="alert-circle-outline"></ion-icon> -->
+        <ion-icon name="archive-outline"></ion-icon>
+        <!-- <ion-icon slot="icon-only"  name="information-outline"></ion-icon> -->
+        <span style="text-transform: capitalize; margin-left: 5px;"> {{ 'Resolve' | translate}} </span>
+      </ion-button>
+
+      <ion-button *ngIf="!openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
+        <!-- <ion-icon slot="icon-only" name="alert-circle-outline"></ion-icon> -->
+        <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
+        <!-- <ion-icon slot="icon-only"  name="information-outline"></ion-icon> -->
+
+      </ion-button>
+      <ion-button *ngIf="openInfoConversation" ion-button fill="clear" (click)="onOpenCloseInfoConversation()">
+        <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+      </ion-button>
 
     </ion-buttons>
 

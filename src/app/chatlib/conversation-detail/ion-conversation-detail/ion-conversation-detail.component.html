@@ -54,12 +54,23 @@
 <!-- ----------------------------------------------------------- -->
 
 <div class="conversation-wpr" style="height: 100%;">
-  <div *ngFor="let message of messages; let i = index">
+  <div *ngFor="let message of messages; let i = index; let first = first; trackBy: trackByFn">
+
+    <ng-container *ngIf="first || (messages[i - 1].timestamp | date:'d') !== (message.timestamp | date:'d')">
+      <div class="long-date-divider-wpr">
+        <div class="long-date-divider-border-b"></div>
+        <div class="long-date-divider">
+          <!-- {{message.timestamp | date: 'longDate' : 'it'}} -->
+          {{message.timestamp | amDateFormat:'LL'}}
+
+        </div>
+        <div class="long-date-divider-border-b"></div>
+      </div>
+    </ng-container>
 
     <div class="align-center" class="ion-text-center" *ngIf="messageType(MESSAGE_TYPE_INFO, message)"
       class="msg_info_container">
-      <chat-info-message class="messages" 
-        [message]="message">
+      <chat-info-message class="messages" [message]="message">
       </chat-info-message>
     </div>
 
@@ -67,13 +78,15 @@
     <div role="messaggio" *ngIf="messageType(MESSAGE_TYPE_MINE, message)" class="msg_container base_sent">
 
       <!--backgroundColor non viene ancora usato -->
-      <chat-bubble-message  [ngClass]="{'has-metadata': (isImage(message) || isFrame(message))}"
-        class="messages msg_sent" id="message_msg_sent"
-        [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}" [message]="message"
-        [textColor]="'col-msg-sent'" 
-        (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-        (onAfterMessageRender)="returnOnAfterMessageRender($event)" 
-        (onImageRendered)="onImageRenderedFN($event)">
+      
+      <chat-bubble-message style="position: relative;"
+        [ngClass]="{'has-metadata': (isImage(message) || isFrame(message))}" class="messages msg_sent"
+        id="message_msg_sent" [ngClass]="{'button-in-msg' : message.metadata && message.metadata.button}"
+        [message]="message" [textColor]="'col-msg-sent'" (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
+        (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)"
+        [addAsCannedResponseTooltipText]="addAsCannedResponseTooltipText" [areVisibleCAR]="areVisibleCAR"
+        [support_mode]="support_mode"
+        [class.emoticon]="message?.emoticon">
       </chat-bubble-message>
 
       <!-- icon status message -->
@@ -98,32 +111,30 @@
       </chat-avatar-image> -->
 
       <!--backgroundColor non viene ancora usato -->
-      
-      <chat-bubble-message [ngClass]="{'has-metadata': (isImage(message) || isFrame(message))}" class="messages msg_receive" id="message_msg_receive"
-        [message]="message" 
-        [textColor]="'black'"
+
+      <chat-bubble-message style="position: relative;"
+        [ngClass]="{'has-metadata': (isImage(message) || isFrame(message))}" class="messages msg_receive"
+        id="message_msg_receive" [message]="message" [textColor]="'black'"
         (onBeforeMessageRender)="returnOnBeforeMessageRender($event)"
-        (onAfterMessageRender)="returnOnAfterMessageRender($event)" 
-        (onImageRendered)="onImageRenderedFN($event)">
+        (onAfterMessageRender)="returnOnAfterMessageRender($event)" (onImageRendered)="onImageRenderedFN($event)"
+        [addAsCannedResponseTooltipText]="addAsCannedResponseTooltipText" [areVisibleCAR]="areVisibleCAR"
+        [support_mode]="support_mode"
+        [class.emoticon]="message?.emoticon">
       </chat-bubble-message>
     </div>
 
     <!-- message type:: button &&  -->
-    <div *ngIf="message?.attributes && message?.attributes?.attachment " class="slide-in-left" > 
-      <chat-message-attachment 
-          style="height: 100%; display: block;"
-          [message]="message"
-          [isLastMessage] = "isLastMessage(message?.uid)"
-          [stylesMap]="stylesMap"
-          (onAttachmentButtonClicked)="returnOnAttachmentButtonClicked($event)">
+    <div *ngIf="message?.attributes && message?.attributes?.attachment " class="slide-in-left">
+      <chat-message-attachment style="height: 100%; display: block;" [message]="message"
+        [isLastMessage]="isLastMessage(message?.uid)" [stylesMap]="stylesMap"
+        (onAttachmentButtonClicked)="returnOnAttachmentButtonClicked($event)">
       </chat-message-attachment>
     </div>
   </div>
   <!-- (fileType === 'file' && uploadProgress !== 100)  -->
 
   <!-- uploadProgress -> {{ uploadProgress }} -->
-  <div *ngIf="uploadProgress !== 100" class="msg_container base_sent"
-    style="margin-right: 20px;">
+  <div *ngIf="uploadProgress !== 100" class="msg_container base_sent" style="margin-right: 20px;">
     <div class="messages msg_sent">
       <div class="spinner">
         <div class="bounce1"></div>

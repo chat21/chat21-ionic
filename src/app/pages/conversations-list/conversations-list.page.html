@@ -1,15 +1,21 @@
 <ion-header no-border class="ion-no-border">
-  <app-ddp-header *ngIf="conversationType ==='active'" [numberOpenConv]="numberOpenConv" [supportMode]="supportMode"
-    (openContactsDirectory)=openContactsDirectory($event) (openProfileInfo)=openProfileInfo($event)>
+  <app-ddp-header *ngIf="conversationType ==='active'" 
+    [numberOpenConv]="numberOpenConv" 
+    [supportMode]="supportMode"
+    [archived_btn]="archived_btn"
+    [writeto_btn]="writeto_btn"
+    (openContactsDirectory)=openContactsDirectory($event) 
+    (openProfileInfo)=openProfileInfo($event)>
   </app-ddp-header>
 
-  <app-option-header *ngIf="conversationType !=='active'" [headerTitle]=headerTitle
+  <app-option-header *ngIf="conversationType !=='active'" 
+  [headerTitle]=headerTitle
     (onBackButton)=onBackButtonFN($event)>
   </app-option-header>
 </ion-header>
 
-<ion-content #ioncontentconvlist class="list-avatar-page" appScrollbarTheme>
-
+<ion-content id="convs-list" #ioncontentconvlist class="list-avatar-page" appScrollbarTheme>
+  <!-- class="ps" style="position: relative; max-width: 600px; max-height: 100%;" [perfectScrollbar]="config" -->
   <div id="scrollbar2">
     <ion-list>
 
@@ -36,8 +42,8 @@
           </ion-avatar>
           <ion-label part="message-text" class="waiting-for-network-msg"> Waiting for network</ion-label>
         </ion-item>
-        <!-- button="true"  (click)="openUnsevedConversationIframe()" -->
-        <ion-item  *ngIf="supportMode && displayNewConvsItem" class="ion-no-padding open-iframe-item">
+        <!-- supportMode && -->
+        <ion-item  *ngIf="displayNewConvsItem && conversationType !=='archived'" class="ion-no-padding open-iframe-item">
           <div tabindex="0"></div>
           <!-- <ion-note class="pinned-project">
             {{ 'PINNED_PROJECT' | translate }}
@@ -45,7 +51,8 @@
      
           <app-project-item style="width: 100%;" 
           (openUnsevedConvsEvent)="openUnsevedConversationIframe($event)"  
-          (projectIdEvent)="getLastProjectId($event)"></app-project-item>
+          (projectIdEvent)="getLastProjectId($event)">
+        </app-project-item>
         </ion-item>
 
       <span
@@ -62,7 +69,9 @@
         <ion-list-conversations *ngIf="conversationType ==='active'" [uidConvSelected]="uidConvSelected"
           [listConversations]="conversations" [stylesMap]="stylesMap" [translationMap]="translationMapConversation"
           (onConversationSelected)=onConversationSelected($event) (onImageLoaded)="onImageLoaded($event)"
-          (onConversationLoaded)="onConversationLoaded($event)" (onCloseConversation)="onCloseConversation($event)">
+          (onConversationLoaded)="onConversationLoaded($event)" (onCloseConversation)="onCloseConversation($event)" 
+          [archiveActionNotAllowed]="archiveActionNotAllowed"
+          (onCloseAlert)="onCloseAlert($event)">
         </ion-list-conversations>
 
         <!-- ---------------------------------- -->

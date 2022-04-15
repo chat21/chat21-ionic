@@ -82,7 +82,9 @@ import { ConversationListPageModule } from './pages/conversations-list/conversat
 import { ConversationDetailPageModule } from './pages/conversation-detail/conversation-detail.module';
 import { LoginPageModule } from './pages/authentication/login/login.module';
 import { LoaderPreviewPageModule } from './pages/loader-preview/loader-preview.module';
-
+import { CreateTicketPageModule } from './pages/create-ticket/create-ticket.module';
+import { CreateRequesterPageModule } from './pages/create-requester/create-requester.module';
+import { CreateCannedResponsePageModule } from './pages/create-canned-response/create-canned-response.module';
 // UTILS
 import { ScrollbarThemeModule } from './utils/scrollbar-theme.directive';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -90,12 +92,15 @@ import { ConversationInfoModule } from 'src/app/components/conversation-info/con
 
 
 // Directives
+// import { HtmlEntitiesEncodePipe } from './directives/html-entities-encode.pipe';
+// import { MarkedPipe } from './directives/marked.pipe';
 
 import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance';
 import { Network } from '@ionic-native/network/ngx';
 import { ConnectionService } from 'ng-connection-service';
 import { WebSocketJs } from './services/websocket/websocket-js';
 import { UnassignedConversationsPageModule } from './pages/unassigned-conversations/unassigned-conversations.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // FACTORIES
 export function createTranslateLoader(http: HttpClient) {
@@ -245,12 +250,13 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   entryComponents: [
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     IonicModule.forRoot(),
@@ -279,7 +285,10 @@ const appInitializerFn = (appConfig: AppConfigProvider, logger: NGXLogger) => {
     SharedModule,
     ConversationInfoModule,
     NgxLinkifyjsModule.forRoot(),
-    LoaderPreviewPageModule
+    LoaderPreviewPageModule,
+    CreateTicketPageModule,
+    CreateRequesterPageModule,
+    CreateCannedResponsePageModule
   ],
   bootstrap: [AppComponent],
 

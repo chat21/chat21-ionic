@@ -48,9 +48,16 @@ body {
     user-select: text;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    // font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     overflow: auto;
     text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100% !important;
+    // -webkit-font-smoothing: subpixel-antialiased !important;
+    // text-shadow: 0px 0px 0px !important;
+    // -webkit-text-stroke-width: 0.01px !important;
 }
 
 // Ionic 'Split Pane' styles need to be tweaked to
@@ -407,7 +414,7 @@ select:-webkit-autofill:focus {
 }
 
 .chat-tooltip {
-    font-family: "Roboto", "Google Sans", Helvetica, Arial, sans-serif;
+    font-family: "Roboto", Helvetica, Arial, sans-serif;
     font-size: 12px;
     font-style: normal;
     letter-spacing: normal;
@@ -532,7 +539,15 @@ select:-webkit-autofill:focus {
 }
 
 #canned > ion-list > ion-item > div > div.nocannedTitle {
-   color: #f44336
+    color: #f44336;
+}
+
+#canned > ion-list > ion-item > div > div.no-canned-available-text {
+    color: #1877f2 !important;
+}
+
+#canned > ion-list > ion-item > div > div.no-canned-available-text:hover {
+    text-decoration: underline;
 }
 
 .highlight-search-string {
@@ -587,3 +602,390 @@ select:-webkit-autofill:focus {
     display: flex;
     align-items: center;
 }
+
+// User details Sidebar
+.user-details-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+// Sidebar
+.sidebar {
+    transition-property: top, bottom, width;
+    transition-duration: 0.2s, 0.2s, 0.35s;
+    transition-timing-function: linear, linear, ease;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.sidebar .logo {
+    position: relative;
+    padding: 13px 15px;
+    z-index: 4;
+}
+
+.sidebar .sidebar-wrapper {
+    position: relative;
+    height: calc(100vh - 35px);
+    overflow: auto;
+    width: 60px;
+    z-index: 4;
+}
+.sidebar-wrapper {
+    transition-property: top, bottom, width;
+    transition-duration: 0.2s, 0.2s, 0.35s;
+    transition-timing-function: linear, linear, ease;
+    background-color: #2d323e !important;
+}
+
+.small-sidebar__logo {
+    left: 19px;
+    top: 12px !important;
+    width: 25px !important;
+    margin-left: 3px;
+    margin-top: 5px;
+}
+
+.small-sidebar-tiledesk-nav-user {
+    height: 35px;
+    min-height: 35px;
+    max-height: 35px;
+}
+
+.user {
+    position: relative;
+    // display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    // height: 130px;
+    // min-height: 130px;
+    // max-height: 130px;
+}
+.tiledesk-nav-user {
+    background-color: #1e2129 !important;
+    color: #fff !important;
+}
+
+.small-sidebar-userfullname {
+    display: none;
+}
+
+
+
+.tiledesk-nav-avatar {
+    background-color: #2d323e !important;
+    color: #fff !important;
+}
+
+.sidebar-avatar-container {
+    text-align: center;
+    cursor: pointer;
+    position: absolute;
+    // top: 80px;
+    border-radius: 50%;
+    // padding: 4px;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    left: 50%;
+    width: 35px;
+    height: 35px;
+}
+
+.sidebar-avatar-container .sidebar-avatar {
+    width: 35px;
+    height: 35px;
+    margin: 0;
+    border-radius: 50%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    min-width: 35px;
+    max-width: 35px;
+}
+
+.small-sidebar-status-icon {
+    left: 26px !important;
+    bottom: -1px !important;
+    width: 12px !important;
+    height: 12px !important;
+}
+
+.status-icon {
+    position: absolute;
+    // width: 14px;
+    // height: 14px;
+    // bottom: 8px;
+    // left: 61px;
+    border: 2px solid #2d323e;
+    border-radius: 50%;
+    // background-color: #4caf50;
+}
+
+.small-sidebar-camera-icon {
+    top: 19px !important;
+}
+
+.is-over-camera {
+    z-index: 5;
+    position: relative;
+    // top: 20px;
+    background-color: rgba(45, 50, 62, 0.7);
+    // padding: 15px;
+    padding: 6px;
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.sidebar--isBusy-icon-wpr {
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    top: -5px;
+    right: 25px;
+}
+
+@media (max-width: 991px) {
+    .nav-container {
+        position: relative;
+    }
+}
+
+.sidebar .nav {
+    margin-top: 0px;
+}
+
+.nav {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.nav:before {
+    display: table;
+    content: " ";
+}
+
+.nav > li {
+    position: relative;
+    display: block;
+    height: 40px;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.nav > li:hover > a > i {
+    // background-color: #eee;
+    color: #a9afbb
+}
+
+.sidebar .nav li > a {
+    // margin: 10px 15px;
+    // border-radius: 3px;
+    transition: all 300ms linear;
+    color: #3c4858;
+}
+
+.sidebar .nav li.item-active > a > i {
+    color: #ffffff;
+}
+
+.item-active {
+    height: 40px;
+    // background-color: #3ea9f5;
+    color: #fff !important;
+    pointer-events: none;
+}
+.is-user-online {
+    background-color: #4caf50;
+}
+
+.is-desktop-menu {
+    margin-top: 40px;
+}
+.is-mobile-menu {
+    margin-top: 0px;
+}
+
+.logo {
+    background-color: #2d323e !important;
+    padding-bottom: 5px;
+    min-height: 60px;
+    width: 60px; // for SMALL SIDEBAR
+}
+
+.sidebar .logo:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 10%;
+    height: 1px;
+    width: 80%;
+    background-color: rgba(180, 180, 180, 0.3);
+}
+
+.logo-img-wpr {
+    text-transform: none;
+
+    min-height: 40px;
+    padding-left: 0px !important;
+}
+
+/* *** SMALL SIDEBAR STYLE ***  */
+.small-sidebar-tiledesk-nav-user {
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+}
+
+.small-sidebar-email {
+    display: none;
+}
+
+
+/* OVERWRITE THE DEFAULT STYLE */
+.nav-mobile-menu {
+    margin-top: 45px !important;
+}
+
+
+/* CUSTOM SCROLL BAR FOR LEFT SIDEBAR */
+.sidebar-wrapper::-webkit-scrollbar {
+    width: 3px;
+}
+.sidebar-wrapper::-webkit-scrollbar-track {
+    background-color: #1c2b45;
+}
+.sidebar-wrapper::-webkit-scrollbar-thumb {
+    background-color: #3c485b;
+    border-radius: 3px;
+}
+
+/* CUSTOM SCROLL BAR FOR USER DETAILS DRAWER */
+#user-details::-webkit-scrollbar {
+    width: 3px;
+}
+
+#user-details::-webkit-scrollbar-track {
+    background-color: #1c2b45;
+}
+#user-details::-webkit-scrollbar-thumb {
+    background-color: #3c485b;
+    border-radius: 3px;
+}
+
+/* end CUSTOM SCROLL BAR */
+
+/* SIDEBAR NAV ITEMS  */
+
+/* SIDEBAR NAV ITEMS  */
+
+.is-user-online {
+    background-color: #4caf50;
+}
+.is-user-offline {
+    background-color: #f44336;
+}
+
+.is-desktop-menu {
+    margin-top: 40px;
+}
+.is-mobile-menu {
+    margin-top: 0px;
+}
+
+
+
+/* *** SMALL SIDEBAR STYLE ***  */
+.small-sidebar-tiledesk-nav-user {
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+}
+.small-sidebar-avatar {
+    top: 13px;
+}
+.small-sidebar-avatar-with-avatar {
+    top: 13px;
+}
+
+.small-sidebar-status-text {
+    display: none;
+}
+
+
+/* OVERWRITE THE DEFAULT STYLE */
+.nav-mobile-menu {
+    margin-top: 45px !important;
+}
+/* // NK end NEW: AVATAR ON THE SIDEBAR  */
+
+/* SIDEBAR NAV ITEMS  */
+
+.item-active a {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
+
+/* SIDEBAR NAV ITEMS  */
+
+p.hidden-lg.hidden-md {
+    color: rgba(255, 255, 255, 0.6);
+}
+li.item-active p.hidden-lg.hidden-md {
+    color: rgba(25, 25, 25, 1) !important;
+}
+.nav .open > a > p.hidden-lg.hidden-md {
+    color: rgba(25, 25, 25, 1) !important;
+}
+ul.dropdown-menu > li > a {
+    color: rgba(255, 255, 255, 0.6);
+}
+/* end - mobile sidebar USED WITH SIDWBAR WITH BLACK BACKGROUND */
+/* END - USED WITH SIDWBAR WITH BLACK BACKGROUND */
+
+/* CUSTOM MARGIN BETWEEN THE MENU ITEM*/
+.nav li > a.customAncor {
+    /* margin: 5px 15px !important; */
+
+    margin-top: 5px !important;
+    margin-right: 15px !important;
+    margin-bottom: 5px !important;
+    margin-left: 0px !important;
+    width: 60px;
+    border-radius: 0px;
+}
+
+.sidebar-icons {
+    font-size: 20px !important;
+    // color: #a9afbb !important;
+}
+
+.sidebar .nav i {
+    // font-size: 20px;
+    float: left;
+    // margin-right: 15px;
+    // line-height: 30px;
+    width: 60px;
+    text-align: center;
+    // color: #a9afbb;
+    color: #647491;
+    padding-top: 10px;
+}
+
+// ng-select custom class in Create ticket modal
+.ng-select.create-ticket-custom-select {
+    margin-top: 5px !important;
+}
+

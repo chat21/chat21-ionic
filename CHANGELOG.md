@@ -1,5 +1,109 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc18
+- Fix bugs: in the teammate settings drawer the logout button area is too large
+- Fixed the bug: in the detail of the conversation the button messages are not aligned with the other messages
+
+### 3.0.61-rc16
+- Does not allow teammates with agent role to access the "settings sidebar"
+
+### 3.0.61-rc15
+- Increase the size of the emoji and remove the background color when it is sent or received without text
+- Adds the ability to open sidebar menu items in a new tab by combining left mouse button + CMD keyboard key
+
+### 3.0.61-rc14
+- Fixes the bug: the page to which the sidebar Settings menu item redirects is not correct for team members with agent role
+- Fixes the bug: right clicking on the sidebar menu items doesn't show the context menu
+
+### 3.0.61-rc12
+- Improves the alignment of left sidebar menu item icons
+- Adds the ability to add a message as a canned response
+- Hides the "Open canned responses" button if the "supportMode" environment variable is set to false
+- Fixes the bug: "Settings" menu item in the left sidebar redirects to the "Canned responses" page instead of the "Widget" page
+- Adds the ability to add a new canned response
+- Fixes the bug: "Resolve conversation" from conversation detail header doesn't work on mobile
+- Adds the ability to insert emoji in the message text
+- Fixes the bug: on iOS mobile devices in the conversation detail the requester's avatar is not vertically aligned
+- Fixes the bug: on mobile devices in  the "info profile" modal window the version number is not visible because it is on a white background
+- Fixes the bug: in the "Create canned response" modal window the "Add personalisation" menu does not always work
+- Adds the chat version number to the teammate details drawer
+- Makes the right sidebar "Settings" menu item visible to teammates with agent role
+
+### 3.0.61-rc11
+- Fixed the bug: the "Resolve" button is displayed in the header of the details of the archived conversations
+- Fixed the bug: in the header of the conversation detail the "Resolve" button remains active even after resolving the conversation
+- Adds the ability to create a ticket
+- Adds tooltips to the buttons available in the header of the conversation list
+- Change the text of the "Conversations" menu item in the left sidebar to "Monitor"
+
+### 3.0.61-rc10
+- Fixes the bug: the Analytics icon of the left sidebar is not displayed
+
+### 3.0.61-rc9
+- Fixes the bug: the Apps icon of the left sidebar is not displayed
+
+### 3.0.61-rc8
+- Changes the icon of the "Conversations" menu item to the left sidebar
+- Adds Serbian language
+
+### 3.0.61-rc7
+- Fixes the bug: while loading the app, the conversation list changes size and becomes wider
+- Changes the style of the left sidebar
+- Display in the "user data drawer" an avatar constructed with the initials of the logged in teammate if his profile picture is not available
+
+### 3.0.61-rc6
+- Enhances the style of the sidebar tooltips
+- Fixed bug: for direct conversations opening the "info sidebar" by clicking on the teammate avatar available in the conversation detail header does not work correctly
+- Fixes the bug: not all chat strings are translated into the browser language or into the selected language
+- Fixes the bug: Email is broken on dashes in user details sidebar
+- Displays an alert when a teammate archives a conversation from a project they are no longer a part of
+- Disable the "send message" textarea when a teammate replies to a support conversation of a project he is no longer a part of
+- Adds, when an image is pasted in the "send message" text area, the text of the text area as a caption of the image preview modal window
+- Adds, when an image is uploaded, the text of the "send message" text area as a caption of the image preview modal window
+
+### 3.0.61-rc5
+- Fixes the bug: on mobile devices the chat content is shifted to the right
+- Adds the ability to open and close the "user detail sidebar" by clicking on the avatar of the logged teammate present on the sidebar
+- Fixes the bug: canned responses remain visible even if, after making a filter, the backslash is deleted
+- Prevents the "open canned responses" button from inserting a backslash if another one exists before
+- Hides the badge that displays the number of unassigned conversations if there are none
+- Improves custom scrollbar displayed in the sidebar and in user detail sidebar 
+- Adds custom scrollbars to the conversation list and to the conversation detail
+
+### 3.0.61-rc4
+- Hides the item showing unassigned conversations in the list of archived conversations
+- Adds in the list of conversations to the "archive" button the tooltip "Resolve" if the conversation is of type "support" and the tooltip "Archive" if the conversation is of type "direct" or "group"
+- Changes all occurrences of the "teammatesButton" environment variable to "writeToButton"
+- Fixes the bug: if the sidebar is visible and the window width is less than 768px, the content of the conversation detail is not completely visible
+- Moves for conversations of type "support" the "Resolve conversation" button from the dropdown menu to the header of the conversation detail
+
+### 3.0.61-rc3
+- Replaces console.log with custom loggers 
+- Fixes the bug: the info support sidebar is no more displayed
+
+### 3.0.61-rc2
+- Fixes the bug: Profile picture in the sidebar does not update when logged in with another user after logging out
+- Bug Fix: in the "info-profile" page avoid the "uid of undefined" error
+- Adds the "user details" sidebar
+- Adds the languages flags images
+- Allows to close the "user details" sidebar by clicking outside it
+- Adds the tooltips to the links of the sidebar
+- Hides the sidebar when the teammate logs out, if the app is on a mobile device and if the environment variable "supportMode" is set to false
+- Hides in the item showing unassigned conversations the button to pin a project if the app is not on a mobile device 
+- Gets in the sidebar the feature tokens from the environment variables
+- Install the "Roboto" font
+- Changes font priority in global.scss: replace "Helvetica Neue" font with "Roboto" font
+- Imports the "Poppins" font family into index.html
+- Adds the "Resolve" tooltip to the "archive" button available in the conversation list
+- Displays the "Resolved Conversations" button and the "Teammates" button in the header of the conversation list  based on how the "teammatesButton" and "archivedButton" environment variables are set
+- Adds "teammatesButton" and "archivedButton" variables to the environments
+- Adds the "TEAMMATES_BUTTON" and the "ARCHIVED_BUTTON" variables to the env.sample file
+- Adds the "teammatesButton" and the "archivedButton" variables to the "chat-config-template.json" file and to "the chat-config.json" file
+- Updates the section "Configuration" of the "README.md" file with the new variables "teammatesButton" and the "archivedButton" 
+
+### 3.0.61-rc1
+- Adds a sidebar that allows navigation to the dashboard
+
 ### 3.0.60
 - Deploys in production
 

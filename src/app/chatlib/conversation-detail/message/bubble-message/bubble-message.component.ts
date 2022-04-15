@@ -8,6 +8,8 @@ import { LoggerInstance } from 'src/chat21-core/providers/logger/loggerInstance'
 import { TranslateService } from '@ngx-translate/core';
 import { TiledeskAuthService } from 'src/chat21-core/providers/tiledesk/tiledesk-auth.service';
 import * as moment from 'moment';
+import { CreateCannedResponsePage } from 'src/app/pages/create-canned-response/create-canned-response.page'
+import { ModalController } from '@ionic/angular';
 @Component({
   selector: 'chat-bubble-message',
   templateUrl: './bubble-message.component.html',
@@ -17,13 +19,15 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
 
   @Input() message: MessageModel;
   @Input() textColor: string;
+  @Input() areVisibleCAR: boolean;
+  @Input() support_mode: boolean;
   @Output() onBeforeMessageRender = new EventEmitter();
   @Output() onAfterMessageRender = new EventEmitter();
   @Output() onImageRendered = new EventEmitter<boolean>()
   isImage = isImage;
   isFile = isFile;
   isFrame = isFrame;
-
+  @Input() addAsCannedResponseTooltipText : string;
   public browserLang: string;
 
   tooltipOptions = {
@@ -41,46 +45,14 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   constructor(
     public sanitizer: DomSanitizer,
     private translate: TranslateService,
-    public tiledeskAuthService: TiledeskAuthService
-    
+    public tiledeskAuthService: TiledeskAuthService,
+    public modalController: ModalController,
     ) {
     // console.log('BUBBLE-MSG Hello !!!!')
   }
 
   ngOnInit() {
-
     this.setMomentLocale()
-    // this.browserLang = this.translate.getBrowserLang();
-  
-    // if (this.browserLang) {
-    //   if (this.browserLang === 'it') {
-
-
-    //     moment.locale('it', {
-    //       calendar: {
-    //         lastDay: '[Ieri alle] LT',
-    //         sameDay: '[Oggi alle] LT',
-    //         nextDay: '[Domani alle] LT',
-    //         lastWeek: '[Ultimo] dddd [alle] LT',
-    //         nextWeek: 'dddd [alle] LT',
-    //         sameElse: 'lll'
-    //       }
-    //     });
-
-    //   } else {
-    //     moment.locale('en', {
-    //       calendar: {
-    //         lastDay: '[Yesterday at] LT',
-    //         sameDay: '[Today at] LT',
-    //         nextDay: '[Tomorrow at] LT',
-    //         lastWeek: '[last] dddd [at] LT',
-    //         nextWeek: 'dddd [at] LT',
-    //         sameElse: 'lll'
-    //       }
-    //     });
-    //   }
-    // }
-
   }
 
 
@@ -109,15 +81,18 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
         sameElse: 'LLLL'
       }
     });
+    // this.translate.getTranslation(chat_lang).subscribe((labels: string) => {
+    //   console.log('[BUBBLE-MESSAGE] translations: ', labels);
+    // });
   }
 
   ngOnChanges() {
-    // console.log('BUBBLE-MSG Hello !!!! this.message ',  this.message)
+    this.logger.log('BUBBLE-MSG Hello !!!! this.message ',  this.message)
+    this.logger.log('BUBBLE-MSG ngOnChanges areVisibleCAR', this.areVisibleCAR)
+    this.logger.log('BUBBLE-MSG ngOnChanges support_mode', this.support_mode)
     if (this.message && this.message.metadata && typeof this.message.metadata === 'object') {
       this.getMetadataSize(this.message.metadata)
-      // console.log('BUBBLE-MSG ngOnChanges message > metadata', this.message.metadata)
     }
-
   }
 
 
@@ -184,11 +159,11 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
         const domRepresentation = document.getElementsByClassName('chat-tooltip');
         if (domRepresentation) {
           const item = domRepresentation[0] as HTMLInputElement;
-          if (!item.classList.contains('tooltip-show')) {
+          if (item && !item.classList.contains('tooltip-show')) {
             item.classList.add('tooltip-show');
           }
           setTimeout(function () {
-            if (item.classList.contains('tooltip-show')) {
+            if (item && item.classList.contains('tooltip-show')) {
               item.classList.remove('tooltip-show');
             }
           }, that.tooltipOptions['hideDelayAfterClick']);
@@ -223,6 +198,26 @@ export class BubbleMessageComponent implements OnInit, OnChanges {
   onImageRenderedFN(event) {
     this.onImageRendered.emit(event)
   }
+
+  async presentCreateCannedResponseModal(): Promise<any> {
+    this.logger.log('[BUBBLE-MESSAGE] PRESENT CREATE CANNED RESPONSE MODAL ')
+    const attributes = {
+       message: this.message,
+    }
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: CreateCannedResponsePage,
+      componentProps: attributes,
+      swipeToClose: false,
+      backdropDismiss: false,
+    })
+    modal.onDidDismiss().then((dataReturned: any) => {
+      // 
+      this.logger.log('[BUBBLE-MESSAGE] ', dataReturned.data)
+    })
+
+    return await modal.present()
+  }
+
 
   // printMessage(message, messageEl, component) {
   //   const messageOBJ = { message: message, sanitizer: this.sanitizer, messageEl: messageEl, component: component}

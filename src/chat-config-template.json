@@ -27,5 +27,7 @@
     "dashboardUrl": "${DASHBOARD_URL}",
     "wsUrl": "${WS_URL}",
     "wsUrlRel": "${WS_URL_RELATIVE}",
-    "supportMode": "${SUPPORT_MODE}"
+    "supportMode": "${SUPPORT_MODE}",
+    "writeToButton": "${WRITE_TO_BUTTON}",
+    "archivedButton": "${ARCHIVED_BUTTON}"
 }
