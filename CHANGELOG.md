@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc19
+- Merge branch 'features/new-sidebar'
+
 ### 3.0.61-rc18
 - Fix bugs: in the teammate settings drawer the logout button area is too large
 - Fixed the bug: in the detail of the conversation the button messages are not aligned with the other messages
