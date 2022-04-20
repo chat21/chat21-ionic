@@ -109,7 +109,12 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
 
   ngOnInit() {
     // this.setSubscriptions();
+
     this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] HELLO !!!!! ");
+    this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] areVisibleCAR ", this.areVisibleCAR);
+    if (this.areVisibleCAR === false) {
+      this.emojiPerLine = 7
+    }
     // this.events.subscribe((cannedmessage) => {
     //   this.logger.log("[CONVS-DETAIL] [MSG-TEXT-AREA] events.subscribe cannedmessage ", cannedmessage);
     // })
@@ -236,7 +241,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     // this.getIfTexareaIsEmpty('onResize')
-  //  console.log("[CONVS-DETAIL][MSG-TEXT-AREA]  event.target.innerWidth; ", event.target.innerWidth);
+    //  console.log("[CONVS-DETAIL][MSG-TEXT-AREA]  event.target.innerWidth; ", event.target.innerWidth);
 
 
 
@@ -598,7 +603,7 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
       this.addWhiteSpaceBefore = false;
       // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI addWhiteSpaceBefore ',  this.addWhiteSpaceBefore)
     } else {
-      this.addWhiteSpaceBefore = true 
+      this.addWhiteSpaceBefore = true
       // console.log('[CONVS-DETAIL][MSG-TEXT-AREA] ADD EMOJI addWhiteSpaceBefore ',  this.addWhiteSpaceBefore)
     }
     const elTextArea = this.message_text_area['el'];
@@ -607,13 +612,13 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
   }
 
   insertAtCursor(myField, myValue) {
-    this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - myValue ', myValue );
-     
+    this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - myValue ', myValue);
+
     if (this.addWhiteSpaceBefore === true) {
       myValue = ' ' + myValue;
-      this.logger.log('[CANNED-RES-EDIT-CREATE] - GET TEXT AREA - QUI ENTRO myValue ', myValue );
+      this.logger.log('[CANNED-RES-EDIT-CREATE] - GET TEXT AREA - QUI ENTRO myValue ', myValue);
     }
-   
+
     //IE support
     if (myField.selection) {
       myField.focus();
@@ -625,23 +630,23 @@ export class MessageTextAreaComponent implements OnInit, AfterViewInit, OnChange
     else if (myField.selectionStart || myField.selectionStart == '0') {
       var startPos = myField.selectionStart;
       this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - startPos ', startPos);
-      
+
       var endPos = myField.selectionEnd;
       this.logger.log('[CANNED-RES-EDIT-CREATE] - insertAtCursor - endPos ', endPos);
-      
+
       myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
-  
+
       // place cursor at end of text in text input element
       myField.focus();
       var val = myField.value; //store the value of the element
       myField.value = ''; //clear the value of the element
       myField.value = val + ' '; //set that value back. 
-  
-  
+
+
       // myField.select();
     } else {
       myField.value += myValue;
-      
+
     }
   }
 
