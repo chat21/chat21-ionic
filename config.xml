@@ -100,7 +100,7 @@
         <splash height="828" src="resources/ios/splash/Default-Landscape-1792h~iphone.png" width="1792" />
     </platform>
     <engine name="android" spec="^6.2.3" />
-    <engine name="browser" spec="^5.0.4" />
+    <engine name="browser" spec="^6.0.0" />
     <engine name="ios" spec="6.1.1" />
     <plugin name="cordova-android-support-gradle-release" spec="^3.0.1">
         <variable name="ANDROID_SUPPORT_VERSION" value="27.+" />

@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc20
+- Updates dependencies
+
 ### 3.0.61-rc19
 - Merge branch 'features/new-sidebar'
 
