@@ -298,7 +298,7 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     const appconfig = this.appConfigProvider.getConfig();
-    // console.log('[APP-COMP] appconfig', appconfig)
+    console.log('[APP-COMP] ngOnInit  appconfig', appconfig)
     if (appconfig && appconfig.supportMode) {
       this.SUPPORT_MODE = appconfig.supportMode
       // console.log('[APP-COMP] appconfig > SUPPORT_MODE', this.SUPPORT_MODE)
