@@ -158,7 +158,7 @@ export class AppComponent implements OnInit {
     if (/Android|iPhone/i.test(window.navigator.userAgent)) {
       this.IS_ON_MOBILE_DEVICE = true;
     }
-    // this.logger.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
+    console.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
     return this.IS_ON_MOBILE_DEVICE;
   }
 
@@ -736,7 +736,7 @@ export class AppComponent implements OnInit {
       this.chatManager.startApp();
       this.logger.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
       this.platformIs = PLATFORM_DESKTOP;
-      // console.log('[APP-COMP]  platformIs', this.platformIs);
+      console.log('[APP-COMP]  platformIs', this.platformIs);
       // console.log('[APP-COMP] PLATFORM', PLATFORM_DESKTOP, 'route.snapshot',  this.route.snapshot);
       this.logger.log('[APP-COMP] PLATFORM_DESKTOP ', this.navService);
 
