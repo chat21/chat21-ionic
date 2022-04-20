@@ -721,8 +721,9 @@ export class AppComponent implements OnInit {
     if (checkPlatformIsMobile()) {
       this.chatManager.startApp();
 
-      this.logger.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
+     console.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
       this.platformIs = PLATFORM_MOBILE;
+      console.log('[APP-COMP] this.platformIs', this.platformIs);
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
 
       // console.log('[APP-COMP]  platformIs', this.platformIs);
@@ -1005,6 +1006,7 @@ export class AppComponent implements OnInit {
     let platformIsNow = PLATFORM_DESKTOP;
     if (checkPlatformIsMobile()) {
       platformIsNow = PLATFORM_MOBILE;
+      console.log('onResize platformIsNow ', platformIsNow) 
     }
     if (!this.platformIs || this.platformIs === '') {
       this.platformIs = platformIsNow;
