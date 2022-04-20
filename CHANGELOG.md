@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc22
+- Minor improvements 
+
 ### 3.0.61-rc21
 - Removes cordova-plugin-device
 

@@ -435,7 +435,7 @@ export class AppComponent implements OnInit {
     // this.logger.log('[APP-COMP] - X - initializeApp !!! CALLED-BY: ', calledby);
     // console.log('[APP-COMP] appconfig platform is cordova: ', this.platform.is('cordova'))
 
-    if (!this.platform.is('cordova')) {
+    if (!this.platform.is('desktop')) {
       this.splashScreen.show();
     }
     this.tabTitle = document.title;
