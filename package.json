@@ -1,6 +1,6 @@
 {
     "name": "@chat21/chat21-ionic",
-    "version": "3.0.61-rc20",
+    "version": "3.0.61-rc21",
     "author": "Tiledesk SRL",
     "homepage": "https://tiledesk.com/",
     "scripts": {
@@ -44,7 +44,6 @@
         "cordova-browser": "^5.0.4",
         "cordova-ios": "6.1.1",
         "cordova-plugin-chooser": "^1.3.2",
-        "cordova-plugin-device": "^2.0.2",
         "cordova-plugin-ionic-keyboard": "^2.2.0",
         "cordova-plugin-ionic-webview": "^4.2.1",
         "cordova-plugin-network-information": "^2.0.2",
@@ -97,7 +96,6 @@
         "plugins": {
             "cordova-plugin-whitelist": {},
             "cordova-plugin-statusbar": {},
-            "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
             "cordova-plugin-ionic-webview": {
                 "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
