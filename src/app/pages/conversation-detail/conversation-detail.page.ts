@@ -307,7 +307,14 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   }
 
   getOSCODE() {
-    this.support_mode = this.appConfigProvider.getConfig().supportMode
+    this.support_mode = null
+    if( this.appConfigProvider.getConfig().supportMode === true ||  this.appConfigProvider.getConfig().supportMode === 'true') {
+      this.support_mode = true
+    } else if ( this.appConfigProvider.getConfig().supportMode === false  ||  this.appConfigProvider.getConfig().supportMode === 'false') {
+      this.support_mode = false
+    } else if ( !this.appConfigProvider.getConfig().supportMode ) {
+      this.support_mode = false
+    }
     this.logger.log('[CONVS-DETAIL] AppConfigService getAppConfig support_mode', this.support_mode)
     this.public_Key = this.appConfigProvider.getConfig().t2y12PruGU9wUtEGzBJfolMIgK
     this.logger.log('[CONVS-DETAIL] AppConfigService getAppConfig public_Key', this.public_Key)

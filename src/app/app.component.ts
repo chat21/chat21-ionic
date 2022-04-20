@@ -158,7 +158,7 @@ export class AppComponent implements OnInit {
     if (/Android|iPhone/i.test(window.navigator.userAgent)) {
       this.IS_ON_MOBILE_DEVICE = true;
     }
-    console.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
+    this.logger.log('[APP-COMP] IS_ON_MOBILE_DEVICE', this.IS_ON_MOBILE_DEVICE)
     return this.IS_ON_MOBILE_DEVICE;
   }
 
@@ -298,12 +298,13 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     const appconfig = this.appConfigProvider.getConfig();
-    console.log('[APP-COMP] ngOnInit  appconfig', appconfig)
-    if (appconfig && appconfig.supportMode) {
-      this.SUPPORT_MODE = appconfig.supportMode
-      // console.log('[APP-COMP] appconfig > SUPPORT_MODE', this.SUPPORT_MODE)
+    this.logger.log('[APP-COMP] ngOnInit  appconfig', appconfig)
+    if (appconfig && appconfig.supportMode &&  (appconfig.supportMode === true || appconfig.supportMode === 'true' )) {
+      this.SUPPORT_MODE = true;
+      this.logger.log('[APP-COMP] appconfig > SUPPORT_MODE', this.SUPPORT_MODE)
     } else {
       this.SUPPORT_MODE = false;
+      this.logger.log('[APP-COMP] appconfig > SUPPORT_MODE', this.SUPPORT_MODE)
     }
     this.persistence = appconfig.authPersistence;
     this.appStorageService.initialize(environment.storage_prefix, this.persistence, '')
@@ -721,9 +722,9 @@ export class AppComponent implements OnInit {
     if (checkPlatformIsMobile()) {
       this.chatManager.startApp();
 
-     console.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
+      this.logger.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
       this.platformIs = PLATFORM_MOBILE;
-      console.log('[APP-COMP] this.platformIs', this.platformIs);
+      this.logger.log('[APP-COMP] this.platformIs', this.platformIs);
       const IDConv = this.route.snapshot.firstChild.paramMap.get('IDConv');
 
       // console.log('[APP-COMP]  platformIs', this.platformIs);
@@ -737,7 +738,7 @@ export class AppComponent implements OnInit {
       this.chatManager.startApp();
       this.logger.log('[APP-COMP] checkPlatformIsMobile', checkPlatformIsMobile());
       this.platformIs = PLATFORM_DESKTOP;
-      console.log('[APP-COMP]  platformIs', this.platformIs);
+      this.logger.log('[APP-COMP]  platformIs', this.platformIs);
       // console.log('[APP-COMP] PLATFORM', PLATFORM_DESKTOP, 'route.snapshot',  this.route.snapshot);
       this.logger.log('[APP-COMP] PLATFORM_DESKTOP ', this.navService);
 
@@ -1006,7 +1007,7 @@ export class AppComponent implements OnInit {
     let platformIsNow = PLATFORM_DESKTOP;
     if (checkPlatformIsMobile()) {
       platformIsNow = PLATFORM_MOBILE;
-      console.log('onResize platformIsNow ', platformIsNow) 
+      this.logger.log('onResize platformIsNow ', platformIsNow) 
     }
     if (!this.platformIs || this.platformIs === '') {
       this.platformIs = platformIsNow;
