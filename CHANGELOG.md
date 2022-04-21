@@ -1,8 +1,11 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc24
+- Handles the "writeToButton" and the 'archivedButton' environment variables if are returned as a string
+- Adds the "authPersistence" key in the chat-config-template.json, chat-config.json and env.sample files
 
 ### 3.0.61-rc23
-- Handles the "SupptMode" environment variable if returned as a string (fixes the Docker image bugs: part of the conversation details go under the sidebar in mobile mode, the "add message as canned response" button is not displayed)
+- Handles the "supportMode" environment variable if returned as a string (fixes the Docker image bugs: part of the conversation details go under the sidebar in mobile mode, the "add message as canned response" button is not displayed)
 - Fixes the position of the emoji selection window pop up when the canned responses button is not visible
 
 ### 3.0.61-rc22
