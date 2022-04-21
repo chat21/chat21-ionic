@@ -313,7 +313,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   getCurrentStoredProject() {
     try {
       const project = localStorage.getItem('last_project')
-      if (project) {
+      if (project && project !== 'undefined') {
         const projectObjct = JSON.parse(localStorage.getItem('last_project'))
         // console.log('[SIDEBAR-USER-DETAILS] - GET STORED PROJECT ', projectObjct)
 

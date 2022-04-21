@@ -257,7 +257,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
   getStoredProjectAndUserRole() {
     const stored_project = localStorage.getItem('last_project')
     // console.log('[SIDEBAR] stored_project ', stored_project)
-    if (stored_project) {
+    if (stored_project && stored_project !== undefined) {
       const project = JSON.parse(stored_project)
       // this.logger.log('[CONVS-DETAIL]  project ', project)
 

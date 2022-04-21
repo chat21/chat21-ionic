@@ -100,8 +100,8 @@ export class SidebarComponent implements OnInit {
 
   getStoredProjectAndUserRole() {
     const stored_project = localStorage.getItem('last_project')
-    // console.log('[SIDEBAR] stored_project ', stored_project)
-    if (stored_project) {
+    this.logger.log('[SIDEBAR] stored_project ', stored_project)
+    if (stored_project && stored_project !== 'undefined') {
       const project = JSON.parse(stored_project)
       this.logger.log('[SIDEBAR] project ', project)
 
@@ -111,6 +111,8 @@ export class SidebarComponent implements OnInit {
       this.USER_ROLE = project.role;
       this.logger.log('[SIDEBAR] USER_ROLE ', this.USER_ROLE)
       this.buildURLs(this.USER_ROLE)
+    } else {
+      this.logger.log('[SIDEBAR] stored_project ', stored_project)
     }
   }
 

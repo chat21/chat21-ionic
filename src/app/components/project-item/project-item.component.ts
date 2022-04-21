@@ -179,8 +179,8 @@ export class ProjectItemComponent implements OnInit {
     }
 
 
-    if (!stored_project) {
-      this.logger.log('PROJECT-ITEM - THERE IS NOT STORED LAST PROJECT ', stored_project)
+    if (!stored_project || stored_project === 'undefined') {
+      this.logger.log('PROJECT-ITEM - THERE IS NOT STORED LAST PROJECT OR IS UNDEFINED ', stored_project)
       const tiledeskToken = this.appStorageService.getItem('tiledeskToken');
       this.logger.log('[PROJECT-ITEM] - GET PROJECTS - tiledeskToken', tiledeskToken);
       this.tiledeskService.getProjects(tiledeskToken).subscribe(projects => {
@@ -204,7 +204,7 @@ export class ProjectItemComponent implements OnInit {
     }
 
 
-    if (stored_project) {
+    if (stored_project && stored_project !== 'undefined') {
       this.logger.log('PROJECT-ITEM - THERE IS STORED LAST PROJECT ', stored_project)
       if (stored_project) {
         this.project = JSON.parse(stored_project)
