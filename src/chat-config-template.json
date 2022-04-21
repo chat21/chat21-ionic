@@ -5,6 +5,10 @@
     "pushEngine":"${PUSH_ENGINE}",
     "fileUploadAccept":"${FILE_UPLOAD_ACCEPT}",
     "logLevel":"${LOG_LEVEL}",
+    "authPersistence": "${AUTH_PERSISTENCE}",
+    "supportMode": "${SUPPORT_MODE}",
+    "writeToButton": "${WRITE_TO_BUTTON}",
+    "archivedButton": "${ARCHIVED_BUTTON}",
     "firebaseConfig": {
         "tenant":"${FIREBASE_TENANT}",
         "apiKey": "${FIREBASE_APIKEY}",
@@ -26,8 +30,5 @@
     "baseImageUrl": "${API_BASEIMAGE_URL}",
     "dashboardUrl": "${DASHBOARD_URL}",
     "wsUrl": "${WS_URL}",
-    "wsUrlRel": "${WS_URL_RELATIVE}",
-    "supportMode": "${SUPPORT_MODE}",
-    "writeToButton": "${WRITE_TO_BUTTON}",
-    "archivedButton": "${ARCHIVED_BUTTON}"
+    "wsUrlRel": "${WS_URL_RELATIVE}"
 }

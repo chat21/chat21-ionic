@@ -5,6 +5,7 @@
     "pushEngine":"none",
     "fileUploadAccept":"*/*",
     "logLevel": "Info",
+    "authPersistence": "LOCAL",
     "firebaseConfig": {
         "tenant":"tilechat",
         "apiKey": "CHANGEIT",
