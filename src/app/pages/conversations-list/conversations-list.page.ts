@@ -227,29 +227,44 @@ export class ConversationListPage implements OnInit {
 
   getConversationListHeight() {
     var scrollbar2element = document.getElementById('scrollbar2')
-    this.logger.log(
-      '[CONVS-LIST-PAGE] getConversationListHeight scrollbar2element',
-      scrollbar2element,
-    )
+    this.logger.log('[CONVS-LIST-PAGE] getConversationListHeight scrollbar2element',scrollbar2element)
   }
+
+  // this.support_mode = null
+  // if( this.appConfigProvider.getConfig().supportMode === true ||  this.appConfigProvider.getConfig().supportMode === 'true') {
+  //   this.support_mode = true
+  // } else if ( this.appConfigProvider.getConfig().supportMode === false  ||  this.appConfigProvider.getConfig().supportMode === 'false') {
+  //   this.support_mode = false
+  // } else if ( !this.appConfigProvider.getConfig().supportMode ) {
+  //   this.support_mode = false
+  // }
 
   getAppConfigToHideDiplayBtns() {
     const appConfig = this.appConfigProvider.getConfig()
-    // console.log('[ION-LIST-CONVS-COMP] - appConfig ', appConfig)
-    if (appConfig && appConfig.supportMode) {
-      this.supportMode = appConfig.supportMode
-    } else {
+    console.log('[CONVS-LIST-PAGE] - appConfig ', appConfig)
+    this.supportMode = null
+    if (appConfig && appConfig.supportMode === true || appConfig.supportMode === 'true') {
+      this.supportMode = true;
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns supportMode ',  this.supportMode) 
+    } else  if (appConfig && appConfig.supportMode === false || appConfig.supportMode === 'false') {
       this.supportMode = false
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns supportMode ',  this.supportMode)
     }
-    if (appConfig && appConfig.archivedButton) {
-      this.archived_btn = appConfig.archivedButton
-    } else {
-      this.archived_btn = false
+    this.archived_btn = null
+    if (appConfig && appConfig.archivedButton  === true || appConfig.archivedButton === 'true') {
+      this.archived_btn = true;
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns archived_btn ',  this.archived_btn)
+    } else  if (appConfig && appConfig.archivedButton  === false || appConfig.archivedButton === 'false') {
+      this.archived_btn = false;
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns archived_btn ',  this.archived_btn)
     }
-    if (appConfig && appConfig.writeToButton) {
-      this.writeto_btn = appConfig.writeToButton
-    } else {
-      this.writeto_btn = false
+    this.writeto_btn = null
+    if (appConfig && appConfig.writeToButton === true || appConfig.writeToButton === 'true') {
+      this.writeto_btn = true;
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns writeto_btn ',  this.writeto_btn)
+    } else  if (appConfig && appConfig.writeToButton === false || appConfig.writeToButton === 'false') {
+      this.writeto_btn = false;
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns writeto_btn ',  this.writeto_btn)
     }
     // console.log('[ION-LIST-CONVS-COMP] - supportMode ', this.supportMode)
   }
@@ -257,10 +272,7 @@ export class ConversationListPage implements OnInit {
   watchToConnectionStatus() {
     this.networkService.checkInternetFunc().subscribe((isOnline) => {
       this.checkInternet = isOnline
-      this.logger.log(
-        '[ION-LIST-CONVS-COMP] - watchToConnectionStatus - isOnline',
-        this.checkInternet,
-      )
+      this.logger.log('[ION-LIST-CONVS-COMP] - watchToConnectionStatus - isOnline',  this.checkInternet)
 
       // checking internet connection
       if (this.checkInternet == true) {
