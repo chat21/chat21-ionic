@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc25
+- Handles the case that in the storage the value of the "last_project" key is undefined
+
 ### 3.0.61-rc24
 - Handles the "writeToButton" and the 'archivedButton' environment variables if are returned as a string
 - Adds the "authPersistence" key in the chat-config-template.json, chat-config.json and env.sample files
