@@ -99,7 +99,7 @@ export class IonConversationDetailComponent extends ConversationContentComponent
 
       if (!this.public_Key.includes('CAR')) {
         this.areVisibleCAR = false
-        console.log('[CONVS-DETAIL][ION-CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
+        // console.log('[CONVS-DETAIL][ION-CONVS-DETAIL] PUBLIC-KEY - areVisibleCAR', this.areVisibleCAR)
       }
     } else {
       this.areVisibleCAR = false

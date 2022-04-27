@@ -15,7 +15,7 @@ export class ListConversationsComponent implements OnInit {
   @Input() listConversations: ConversationModel[];
   @Input() limit?: number
   @Input() stylesMap: Map<string, string>;
-  @Input() translationMap: Map< string, string>;
+  @Input() translationMap: Map<string, string>;
   @Output() onConversationSelected = new EventEmitter<ConversationModel>();
   @Output() onImageLoaded = new EventEmitter<ConversationModel>();
   @Output() onConversationLoaded = new EventEmitter<ConversationModel>();
@@ -29,9 +29,11 @@ export class ListConversationsComponent implements OnInit {
   arrayDiffer: any;
 
   uidConvSelected: string;
-  constructor(public iterableDiffers: IterableDiffers,
-              public kvDiffers: KeyValueDiffers) {
-          this.iterableDifferListConv = this.iterableDiffers.find([]).create(null);   
+  constructor(
+    public iterableDiffers: IterableDiffers,
+    public kvDiffers: KeyValueDiffers
+  ) {
+    this.iterableDifferListConv = this.iterableDiffers.find([]).create(null);
   }
 
   ngOnInit() {
@@ -44,7 +46,7 @@ export class ListConversationsComponent implements OnInit {
     // })
   }
 
-  ngOnChanges(changes: SimpleChanges){
+  ngOnChanges(changes: SimpleChanges) {
     // console.log('empDifferMap:: 1111' + JSON.stringify(this.listConversations[1]))
     // console.log('empDifferMap:: 1111', this.listConversations)
     // this.listConversations.forEach(emp => {
@@ -56,7 +58,8 @@ export class ListConversationsComponent implements OnInit {
 
   public openConversationByID(conversation) {
     this.logger.log('[LISTCONVERSATIONS-W] openConversationByID: ', conversation);
-    if ( conversation ) {
+    if (conversation) {
+      this.logger.log(conversation.recipient_fullname)
       // this.conversationsService.updateIsNew(conversation);
       // this.conversationsService.updateConversationBadge();
       this.uidConvSelected = conversation.uid
@@ -67,10 +70,10 @@ export class ListConversationsComponent implements OnInit {
   ngAfterViewInit() {
     this.logger.log('[LISTCONVERSATIONS-W] ---ngAfterViewInit---: listConversations ', this.listConversations);
   }
-  
+
   ngDoCheck() {
     let changesListConversation = this.iterableDifferListConv.diff(this.listConversations);
-    if(changesListConversation){
+    if (changesListConversation) {
       // changesListConversation.forEachAddedItem(element => {
       //   console.log('itemmmm 1111 added ', element)
       //   let conv = element.item
@@ -104,7 +107,7 @@ export class ListConversationsComponent implements OnInit {
       //   console.log('... Array changes ...', empArrayChanges);
       //   empArrayChanges.forEachAddedItem((record) => {
       //     console.log('1111 Added ', record.currentValue);
-  
+
       //   });
       //   empArrayChanges.forEachRemovedItem((record) => {
       //     console.log('1111 Removed ' + record.previousValue);
@@ -128,7 +131,7 @@ export class ListConversationsComponent implements OnInit {
     //     });
     //   }
     // }
-    
+
   }
 
 
