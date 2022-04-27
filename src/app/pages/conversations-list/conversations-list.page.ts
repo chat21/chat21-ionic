@@ -227,7 +227,7 @@ export class ConversationListPage implements OnInit {
 
   getConversationListHeight() {
     var scrollbar2element = document.getElementById('scrollbar2')
-    this.logger.log('[CONVS-LIST-PAGE] getConversationListHeight scrollbar2element',scrollbar2element)
+    this.logger.log('[CONVS-LIST-PAGE] getConversationListHeight scrollbar2element', scrollbar2element)
   }
 
   // this.support_mode = null
@@ -245,26 +245,26 @@ export class ConversationListPage implements OnInit {
     this.supportMode = null
     if (appConfig && appConfig.supportMode === true || appConfig.supportMode === 'true') {
       this.supportMode = true;
-      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns supportMode ',  this.supportMode) 
-    } else  if (appConfig && appConfig.supportMode === false || appConfig.supportMode === 'false') {
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns supportMode ', this.supportMode)
+    } else if (appConfig && appConfig.supportMode === false || appConfig.supportMode === 'false') {
       this.supportMode = false
-      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns supportMode ',  this.supportMode)
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns supportMode ', this.supportMode)
     }
     this.archived_btn = null
-    if (appConfig && appConfig.archivedButton  === true || appConfig.archivedButton === 'true') {
+    if (appConfig && appConfig.archivedButton === true || appConfig.archivedButton === 'true') {
       this.archived_btn = true;
-      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns archived_btn ',  this.archived_btn)
-    } else  if (appConfig && appConfig.archivedButton  === false || appConfig.archivedButton === 'false') {
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns archived_btn ', this.archived_btn)
+    } else if (appConfig && appConfig.archivedButton === false || appConfig.archivedButton === 'false') {
       this.archived_btn = false;
-      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns archived_btn ',  this.archived_btn)
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns archived_btn ', this.archived_btn)
     }
     this.writeto_btn = null
     if (appConfig && appConfig.writeToButton === true || appConfig.writeToButton === 'true') {
       this.writeto_btn = true;
-      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns writeto_btn ',  this.writeto_btn)
-    } else  if (appConfig && appConfig.writeToButton === false || appConfig.writeToButton === 'false') {
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns writeto_btn ', this.writeto_btn)
+    } else if (appConfig && appConfig.writeToButton === false || appConfig.writeToButton === 'false') {
       this.writeto_btn = false;
-      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns writeto_btn ',  this.writeto_btn)
+      this.logger.log('[CONVS-LIST-PAGE] getAppConfigToHideDiplayBtns writeto_btn ', this.writeto_btn)
     }
     // console.log('[ION-LIST-CONVS-COMP] - supportMode ', this.supportMode)
   }
@@ -272,7 +272,7 @@ export class ConversationListPage implements OnInit {
   watchToConnectionStatus() {
     this.networkService.checkInternetFunc().subscribe((isOnline) => {
       this.checkInternet = isOnline
-      this.logger.log('[ION-LIST-CONVS-COMP] - watchToConnectionStatus - isOnline',  this.checkInternet)
+      this.logger.log('[ION-LIST-CONVS-COMP] - watchToConnectionStatus - isOnline', this.checkInternet)
 
       // checking internet connection
       if (this.checkInternet == true) {
@@ -845,29 +845,13 @@ export class ConversationListPage implements OnInit {
     if (uidConvSelected) {
       let conversationSelected
       if (conversationType === 'active') {
-        conversationSelected = this.conversations.find(
-          (item) => item.uid === this.uidConvSelected,
-        )
-      } else if (conversationType === 'archived') {
-        conversationSelected = this.archivedConversations.find(
-          (item) => item.uid === this.uidConvSelected,
-        )
-      }
+        conversationSelected = this.conversations.find((item) => item.uid === this.uidConvSelected)
+      } else if (conversationType === 'archived') { conversationSelected = this.archivedConversations.find((item) => item.uid === this.uidConvSelected) }
       if (conversationSelected) {
-        this.logger.log(
-          '[CONVS-LIST-PAGE] conversationSelected',
-          conversationSelected,
-        )
-        this.logger.log(
-          '[CONVS-LIST-PAGE] the conversation ',
-          this.conversationSelected,
-          ' has already been loaded',
-        )
+        this.logger.log('[CONVS-LIST-PAGE] conversationSelected', conversationSelected,)
+        this.logger.log('[CONVS-LIST-PAGE] the conversation ', this.conversationSelected, ' has already been loaded')
         this.conversationSelected = conversationSelected
-        this.logger.log(
-          '[CONVS-LIST-PAGE] setUidConvSelected: ',
-          this.conversationSelected,
-        )
+        this.logger.log('[CONVS-LIST-PAGE] setUidConvSelected: ', this.conversationSelected)
       }
     }
   }
@@ -876,16 +860,11 @@ export class ConversationListPage implements OnInit {
     this.logger.log('onConversationSelected conversation', conversation)
     if (conversation.archived) {
       this.navigateByUrl('archived', conversation.uid)
-      this.logger.log(
-        '[CONVS-LIST-PAGE] onConversationSelected archived conversation.uid ',
-        conversation.uid,
+      this.logger.log('[CONVS-LIST-PAGE] onConversationSelected archived conversation.uid ', conversation.uid,
       )
     } else {
       this.navigateByUrl('active', conversation.uid)
-      this.logger.log(
-        '[CONVS-LIST-PAGE] onConversationSelected active conversation.uid ',
-        conversation.uid,
-      )
+      this.logger.log('[CONVS-LIST-PAGE] onConversationSelected active conversation.uid ', conversation.uid)
     }
   }
 
@@ -922,52 +901,35 @@ export class ConversationListPage implements OnInit {
 
     var regex = /<br\s*[\/]?>/gi
     if (conversation && conversation.last_message_text) {
-      conversation.last_message_text = conversation.last_message_text.replace(
-        regex,
-        '',
-      )
+      conversation.last_message_text = conversation.last_message_text.replace(regex, '',)
 
       //FIX-BUG: 'YOU: YOU: YOU: text' on last-message-text in conversation-list
-      if (
-        conversation.sender === this.loggedUserUid &&
-        !conversation.last_message_text.includes(': ')
-      ) {
+      if (conversation.sender === this.loggedUserUid && !conversation.last_message_text.includes(': ')) {
         // this.logger.log('[CONVS-LIST-PAGE] onConversationLoaded', conversation)
 
         if (conversation.type !== 'image' && conversation.type !== 'file') {
-          conversation.last_message_text =
-            translationMap.get('YOU') + ': ' + conversation.last_message_text
+          conversation.last_message_text = translationMap.get('YOU') + ': ' + conversation.last_message_text
         } else if (conversation.type === 'image') {
           // this.logger.log('[CONVS-LIST-PAGE] HAS SENT AN IMAGE');
           // this.logger.log("[CONVS-LIST-PAGE] translationMap.get('YOU')")
-          const SENT_AN_IMAGE = (conversation[
-            'last_message_text'
-          ] = translationMap.get('SENT_AN_IMAGE'))
+          const SENT_AN_IMAGE = (conversation['last_message_text'] = translationMap.get('SENT_AN_IMAGE'))
 
-          conversation.last_message_text =
-            translationMap.get('YOU') + ': ' + SENT_AN_IMAGE
+          conversation.last_message_text = translationMap.get('YOU') + ': ' + SENT_AN_IMAGE
         } else if (conversation.type === 'file') {
           // this.logger.log('[CONVS-LIST-PAGE] HAS SENT FILE')
-          const SENT_AN_ATTACHMENT = (conversation[
-            'last_message_text'
-          ] = translationMap.get('SENT_AN_ATTACHMENT'))
-          conversation.last_message_text =
-            translationMap.get('YOU') + ': ' + SENT_AN_ATTACHMENT
+          const SENT_AN_ATTACHMENT = (conversation['last_message_text'] = translationMap.get('SENT_AN_ATTACHMENT'))
+          conversation.last_message_text = translationMap.get('YOU') + ': ' + SENT_AN_ATTACHMENT
         }
       } else {
         if (conversation.type === 'image') {
           // this.logger.log('[CONVS-LIST-PAGE] HAS SENT AN IMAGE');
           // this.logger.log("[CONVS-LIST-PAGE] translationMap.get('YOU')")
-          const SENT_AN_IMAGE = (conversation[
-            'last_message_text'
-          ] = translationMap.get('SENT_AN_IMAGE'))
+          const SENT_AN_IMAGE = (conversation['last_message_text'] = translationMap.get('SENT_AN_IMAGE'))
 
           conversation.last_message_text = SENT_AN_IMAGE
         } else if (conversation.type === 'file') {
           // this.logger.log('[CONVS-LIST-PAGE] HAS SENT FILE')
-          const SENT_AN_ATTACHMENT = (conversation[
-            'last_message_text'
-          ] = translationMap.get('SENT_AN_ATTACHMENT'))
+          const SENT_AN_ATTACHMENT = (conversation['last_message_text'] = translationMap.get('SENT_AN_ATTACHMENT'))
           conversation.last_message_text = SENT_AN_ATTACHMENT
         }
       }
@@ -986,69 +948,31 @@ export class ConversationListPage implements OnInit {
   // }
 
   navigateByUrl(converationType: string, uidConvSelected: string) {
-    this.logger.log('[CONVS-LIST-PAGE] calling navigateByUrl: ')
-    this.logger.log(
-      '[CONVS-LIST-PAGE] navigateByUrl uidConvSelected: ',
-      uidConvSelected,
-    )
-    this.logger.log(
-      '[CONVS-LIST-PAGE] navigateByUrl run  this.setUidConvSelected',
-    )
-    this.logger.log(
-      '[CONVS-LIST-PAGE] navigateByUrl this.uidConvSelected ',
-      this.uidConvSelected,
-    )
-    this.logger.log(
-      '[CONVS-LIST-PAGE] navigateByUrl this.conversationSelected ',
-      this.conversationSelected,
-    )
+
+    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl uidConvSelected: ', uidConvSelected)
+
+    this.logger.log('[CONVS-LIST-PAGE] navigateByUrl this.uidConvSelected ', this.uidConvSelected)
 
     this.setUidConvSelected(uidConvSelected, converationType)
     if (checkPlatformIsMobile()) {
-      this.logger.log(
-        '[CONVS-LIST-PAGE] checkPlatformIsMobile(): ',
-        checkPlatformIsMobile(),
-      )
-      this.logger.log(
-        '[CONVS-LIST-PAGE] DESKTOP (window >= 768)',
-        this.navService,
-      )
-      let pageUrl =
-        'conversation-detail/' +
-        this.uidConvSelected +
-        '/' +
-        this.conversationSelected.conversation_with_fullname +
-        '/' +
-        converationType
+      this.logger.log('[CONVS-LIST-PAGE] checkPlatformIsMobile(): ', checkPlatformIsMobile())
+      this.logger.log('[CONVS-LIST-PAGE] DESKTOP (window < 768)', this.navService)
+      this.logger.log('[CONVS-LIST-PAGE] navigateByUrl this.conversationSelected conversation_with_fullname ', this.conversationSelected.conversation_with_fullname)
+      let pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname + '/' + converationType
       this.logger.log('[CONVS-LIST-PAGE] pageURL', pageUrl)
-      this.router.navigateByUrl(pageUrl)
+        // replace(/\(/g, '%28').replace(/\)/g, '%29') -> used for the encoder of any round brackets
+      this.router.navigateByUrl(pageUrl.replace(/\(/g, '%28').replace(/\)/g, '%29'))
     } else {
-      this.logger.log(
-        '[CONVS-LIST-PAGE] checkPlatformIsMobile(): ',
-        checkPlatformIsMobile(),
-      )
-      this.logger.log(
-        '[CONVS-LIST-PAGE] MOBILE (window < 768) ',
-        this.navService,
-      )
+      this.logger.log('[CONVS-LIST-PAGE] navigateByUrl this.conversationSelected conversation_with_fullname ', this.conversationSelected.conversation_with_fullname)
+      this.logger.log('[CONVS-LIST-PAGE] checkPlatformIsMobile(): ', checkPlatformIsMobile())
+      this.logger.log('[CONVS-LIST-PAGE] MOBILE (window >= 768) ', this.navService)
       let pageUrl = 'conversation-detail/' + this.uidConvSelected
-      if (
-        this.conversationSelected &&
-        this.conversationSelected.conversation_with_fullname
-      ) {
-        pageUrl =
-          'conversation-detail/' +
-          this.uidConvSelected +
-          '/' +
-          this.conversationSelected.conversation_with_fullname +
-          '/' +
-          converationType
+      if (this.conversationSelected && this.conversationSelected.conversation_with_fullname) {
+        pageUrl = 'conversation-detail/' + this.uidConvSelected + '/' + this.conversationSelected.conversation_with_fullname + '/' + converationType
       }
-      this.logger.log(
-        '[CONVS-LIST-PAGE] setUidConvSelected navigateByUrl--->: ',
-        pageUrl,
-      )
-      this.router.navigateByUrl(pageUrl)
+      this.logger.log('[CONVS-LIST-PAGE] setUidConvSelected navigateByUrl--->: ', pageUrl)
+      // replace(/\(/g, '%28').replace(/\)/g, '%29') -> used for the encoder of any round brackets
+      this.router.navigateByUrl(pageUrl.replace(/\(/g, '%28').replace(/\)/g, '%29'))
     }
   }
 
@@ -1121,7 +1045,7 @@ export class ConversationListPage implements OnInit {
     if (conversation) {
       const conversationId = conversation.uid
 
-      this.logger.log( '[CONVS-LIST-PAGE] onCloseConversation conversationId: ', conversationId )
+      this.logger.log('[CONVS-LIST-PAGE] onCloseConversation conversationId: ', conversationId)
 
       const conversationWith_segments = conversationId.split('-')
       this.logger.log(
