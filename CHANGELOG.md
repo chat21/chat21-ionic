@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61-rc26
+- Fixes the bug: the conversation detail is not opened if the url contains round brackets
+
 ### 3.0.61-rc25
 - Handles the case that in the storage the value of the "last_project" key is undefined
 
