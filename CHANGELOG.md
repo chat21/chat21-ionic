@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.61
+- Deploys in production
+
 ### 3.0.61-rc26
 - Fixes the bug: the conversation detail is not opened if the URL contains round brackets
 
