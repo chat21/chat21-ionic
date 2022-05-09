@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.62-rc1
+- Change the URL of the environment variable "dashboardUrl" from absolute to relative
+
 ### 3.0.61
 - Deploys in production
 
