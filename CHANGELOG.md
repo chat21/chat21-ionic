@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.62-rc2
+- Fixed bug: in the teammate drawer if the full name is too long it overlaps the email
+- Fixed bug: in the teammate drawer if the email is too long it exceeds the width of the drawer
+
 ### 3.0.62-rc1
 - Change the URL of the environment variable "dashboardUrl" from absolute to relative
 
