@@ -67,7 +67,7 @@ Use [Docker Compose Tiledesk installation guide](https://github.com/Tiledesk/til
         fileUploadAccept:"*/*",
         logLevel":"<YOUR-PREFERRED-LOG-LEVEL>",
         supportMode: false,
-        teammatesButton: false,
+        writeToButton: false,
         archivedButton: false,
         firebaseConfig: {
             tenant:"tilechat",
@@ -100,7 +100,11 @@ Use [Docker Compose Tiledesk installation guide](https://github.com/Tiledesk/til
 
 * `wsUrl`: allows you to know in real time the agent's availability status, the agent's busy status and the number of unassigned conversations for a selected project
 
-* `supportMode`: if set to true it allows you to view the list of contacts from which you can make direct conversations and the item at the top of the list of conversations that shows the number of unassigned conversations of a selected project and that the agent can view and take over by clicking on it 
+* `supportMode`: if it is set to true it shows the left sidebar which makes dashboard and chat management smarter
+
+* `writeToButton`: if set to true, it makes the button for viewing the contact list visible and makes direct conversations with them possible
+
+* `archivedButton`: if set to true, it makes the button for viewing archived conversations visible
 
 ### Push notification
 * open `/src/firebase-messaging-sw.js` and replace messagingSenderId: with < your messagingSenderId >
