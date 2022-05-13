@@ -117,7 +117,7 @@
       <!-- ------------------------------------------- -->
       <!-- Conversations (MONITOR) (click)="goToConversations()" -->
       <!-- ------------------------------------------- -->
-      <ng-container *ngIf="USER_ROLE !== 'agent'">
+      <!-- <ng-container *ngIf="USER_ROLE !== 'agent'"> -->
         <li  matTooltipClass="custom-mat-tooltip" matTooltip="Monitor"
           #tooltip="matTooltip" matTooltipPosition='right' matTooltipHideDelay="100"  style="text-align: center;">
           <a target="_self" href="{{ dashboard_convs_url }}" class="customAncor" style="height: 40px;margin-right: 0px !important;">
@@ -134,7 +134,7 @@
         
           </a>
         </li>
-      </ng-container>
+      <!-- </ng-container> -->
 
       <!-- ------------------------------------------- -->
       <!-- CONTACTS (LEADS)  (click)="goToContacts()" -->
