@@ -1,5 +1,8 @@
 # chat21-ionic ver 3.0
 
+### 3.0.62.1
+- Allows agents to use the "Monitor" page
+
 ### 3.0.62
 - Deploys in production
 
