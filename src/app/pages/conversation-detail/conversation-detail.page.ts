@@ -308,11 +308,11 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
 
   getOSCODE() {
     this.support_mode = null
-    if( this.appConfigProvider.getConfig().supportMode === true ||  this.appConfigProvider.getConfig().supportMode === 'true') {
+    if (this.appConfigProvider.getConfig().supportMode === true || this.appConfigProvider.getConfig().supportMode === 'true') {
       this.support_mode = true
-    } else if ( this.appConfigProvider.getConfig().supportMode === false  ||  this.appConfigProvider.getConfig().supportMode === 'false') {
+    } else if (this.appConfigProvider.getConfig().supportMode === false || this.appConfigProvider.getConfig().supportMode === 'false') {
       this.support_mode = false
-    } else if ( !this.appConfigProvider.getConfig().supportMode ) {
+    } else if (!this.appConfigProvider.getConfig().supportMode) {
       this.support_mode = false
     }
     this.logger.log('[CONVS-DETAIL] AppConfigService getAppConfig support_mode', this.support_mode)
@@ -1163,12 +1163,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       ) {
         userFullname = this.loggedUser.firstname
       }
-      this.typingService.setTyping(
-        this.conversationWith,
-        message,
-        idCurrentUser,
-        userFullname,
-      )
+
+      if (message !== '') {
+        this.typingService.setTyping(this.conversationWith, message, idCurrentUser, userFullname)
+      }
 
       // ----------------------------------------------------------
       // DISPLAY CANNED RESPONSES if message.lastIndexOf("/")
@@ -1396,7 +1394,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       let title = htmlEntities(this.tagsCannedFilter[i].title)
       // this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + this.tagsCannedFilter[i].title.toString().replace(strSearch, strReplace.trim()) + '</div>' + textCanned + '</div>'
       this.tagsCannedFilter[i].title = "<div class='cannedContent'><div class='cannedTitle'>" + title.toString().replace(strSearch, strReplace.trim()) + '</div>' + textCanned + '</div>'
-      
+
     }
     if (this.tagsCannedCount === 0) {
       // const button = this.renderer.createElement('button');
@@ -1406,7 +1404,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // this.renderer.listen(button, 'click', () => { alert('hi'); });
       // let nocanned = {}
       // if (this.USER_ROLE !== 'agent') {
-     const nocanned = {
+      const nocanned = {
         // "<div class='cannedContent'><div class='cannedTitle nocannedTitle #noCannedTitle'>" + this.translationMap.get('THERE_ARE_NO_CANNED_RESPONSES_AVAILABLE') + ".</div><div class='cannedText'>" + this.translationMap.get('TO_CREATE_THEM_GO_TO_THE_PROJECT') + '</div></div>'
         // <div class='cannedText no-canned-available-text'>" + this.translationMap.get('AddNewCannedResponse') + '</div>
         title:
@@ -1459,7 +1457,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy, AfterViewInit 
       // console.log('[CONVS-DETAIL] replaceTagInMessage  canned ', canned)
       // console.log('[CONVS-DETAIL] replaceTagInMessage  canned title', canned.title)
       // console.log('[CONVS-DETAIL] replaceTagInMessage  canned contains nocannedTitle', canned.title.includes('nocannedTitle'))
- 
+
       const elTextArea = this.rowTextArea['el']
       const textArea = elTextArea.getElementsByTagName('ion-textarea')[0]
 
