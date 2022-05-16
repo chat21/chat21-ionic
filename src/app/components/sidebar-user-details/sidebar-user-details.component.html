@@ -52,6 +52,10 @@
 
     <div class="user-details-role">
         <h3>{{ USER_ROLE_LABEL }} </h3>
+
+        <div class="user-details-view-profile" (click)="goToUserProfile()"> 
+            {{EditProfileLabel}}
+        </div>
     </div>
 
     <section class="availability-section">
@@ -74,9 +78,12 @@
     <hr class="first-divider">
 
     <section *ngIf="isVisiblePAY" class="user-details-plan-info">
+        <span class="material-icons user-details-plan-icon">
+            apps
+            </span>
         <span>
             <div> {{prjct_name}} </div>
-            <div style="display: inline-block;"> {{ profile_name_translated }} </div>
+            <div style="display: inline-block;    margin-left: 26px;"> {{ profile_name_translated }} </div>
 
             <div *ngIf="plan_type === 'payment' && plan_subscription_is_active === false"
                 style="color:#f44336; position:relative; top: -1px;;display: inline-block;">
@@ -93,6 +100,15 @@
                 </i>
             </div>
         </span>
+    </section>
+
+    <section class="user-details-help-center">
+        <span class="material-icons user-details-help-center-icon">
+            support
+            </span>
+            <span class="user-details-help-center" (click)="goToHelpCenter()"> 
+                Help center
+            </span>
     </section>
 
     <!-- <hr class="second-divider" style="margin-top: 20px;border: 0;

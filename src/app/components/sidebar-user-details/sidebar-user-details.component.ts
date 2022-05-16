@@ -32,6 +32,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   IS_AVAILABLE: boolean;
   USER_ROLE: boolean;
   USER_ROLE_LABEL: string;
+  EditProfileLabel: string;
   IS_BUSY_msg: string;
   IS_AVAILABLE_msg: string;
   IS_UNAVAILABLE_msg: string;
@@ -59,6 +60,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   version: string
   test: Date = new Date();
   company_name: string = 'Tiledesk'
+  DASHBOARD_URL: string;
   constructor(
     private translate: TranslateService,
     public tiledeskAuthService: TiledeskAuthService,
@@ -69,9 +71,11 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
     public appConfigProvider: AppConfigProvider,
     public events: EventsService,
     private eRef: ElementRef,
+  
   ) { }
 
   ngOnInit() {
+    this.DASHBOARD_URL = this.appConfigProvider.getConfig().dashboardUrl + '#/project/';
     this.version = PACKAGE.version;
     this.getCurrentChatLangAndTranslateLabels();
     this.subcribeToAuthStateChanged();
@@ -218,6 +222,7 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
   }
 
   translateLabels() {
+    this.getEditProfileTranslation();
     this.getAvailableTranslation();
     this.getUnavailableTranslation();
     this.getIsBusyTranslation();
@@ -255,6 +260,17 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
       this.isVisiblePAY = false;
     }
   }
+
+  getEditProfileTranslation() {
+    this.translate.get('EditProfile')
+      .subscribe((text: string) => {
+
+        // console.log('[SIDEBAR-USER-DETAILS] - GET GTTTTTN ', text)
+        this.EditProfileLabel = text
+      });
+  }
+
+  
 
   getAvailableTranslation() {
     this.translate.get('Available')
@@ -489,6 +505,18 @@ export class SidebarUserDetailsComponent implements OnInit, OnChanges {
         this.logger.log('[SIDEBAR-USER-DETAILS] - PROJECT-USER UPDATED  * COMPLETE *');
 
       });
+  }
+
+  goToUserProfile() {
+    let url = this.DASHBOARD_URL + this.projectID + '/user-profile'
+   
+    const myWindow = window.open(url, '_self');
+    myWindow.focus();
+  }
+
+  goToHelpCenter() {
+    const url = "https://gethelp.tiledesk.com/"
+    window.open(url, '_blank');
   }
 
   public onLogout() {
