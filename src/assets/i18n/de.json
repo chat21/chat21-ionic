@@ -261,5 +261,6 @@
   "First_name_of_recipient": "Vorname des Empfängers",
   "First_name_of_agent": "Vorname des Betreuers",
   "EnterCannedResponseTitle": "Titel der Vordefinierten Anfrage eingeben",
-  "WriteMsgToSendToYourVisitors": "Verfassen Sie eine vordefinierte Antwort für Ihre Besucher"
+  "WriteMsgToSendToYourVisitors": "Verfassen Sie eine vordefinierte Antwort für Ihre Besucher",
+  "EditProfile": "Profil bearbeiten"
 }

@@ -261,5 +261,6 @@
   "First_name_of_recipient": "Имя получателя",
   "First_name_of_agent": "Имя агента",
   "EnterCannedResponseTitle": "Введите готовый заголовок ответа",
-  "WriteMsgToSendToYourVisitors": "Напишите готовое ответное сообщение для отправки своим посетителям"
+  "WriteMsgToSendToYourVisitors": "Напишите готовое ответное сообщение для отправки своим посетителям",
+  "EditProfile": "Редактировать профиль"
 }

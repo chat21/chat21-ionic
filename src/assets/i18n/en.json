@@ -261,5 +261,6 @@
   "First_name_of_recipient": "First name of recipient",
   "First_name_of_agent": "First name of agent",
   "EnterCannedResponseTitle": "Enter canned response title",
-  "WriteMsgToSendToYourVisitors": "Write a canned response message to send to your visitors"
+  "WriteMsgToSendToYourVisitors": "Write a canned response message to send to your visitors",
+  "EditProfile": "Edit profile"
 }

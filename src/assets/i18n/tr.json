@@ -261,5 +261,6 @@
   "First_name_of_recipient": "Alıcının adı",
   "First_name_of_agent": "Ajanın adı",
   "EnterCannedResponseTitle": "Hazır yanıt başlığını girin",
-  "WriteMsgToSendToYourVisitors": "Ziyaretçilerinize göndermek için hazır bir yanıt mesajı yazın"
+  "WriteMsgToSendToYourVisitors": "Ziyaretçilerinize göndermek için hazır bir yanıt mesajı yazın",
+  "EditProfile": "Profili Düzenle"
 }

@@ -261,5 +261,6 @@
     "First_name_of_recipient": "Nome del destinatario",
     "First_name_of_agent": "Nome dell'agente",
     "EnterCannedResponseTitle": "Inserisci il titolo della risposta predefinita",
-    "WriteMsgToSendToYourVisitors": "Scrivi un messaggio di risposta predefinito da inviare ai tuoi visitatori"
+    "WriteMsgToSendToYourVisitors": "Scrivi un messaggio di risposta predefinito da inviare ai tuoi visitatori",
+    "EditProfile": "Cambia profilo"
 }

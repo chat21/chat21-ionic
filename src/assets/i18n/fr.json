@@ -261,5 +261,6 @@
   "First_name_of_recipient": "Prénom du destinataire",
   "First_name_of_agent": "Prénom du mandataire",
   "EnterCannedResponseTitle": "Saisissez le titre de la réponse standardisée",
-  "WriteMsgToSendToYourVisitors": "Rédigez un message de réponse standardisé à envoyer à vos visiteurs"
+  "WriteMsgToSendToYourVisitors": "Rédigez un message de réponse standardisé à envoyer à vos visiteurs",
+  "EditProfile": "Editer le profil"
 }

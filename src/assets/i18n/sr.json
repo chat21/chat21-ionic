@@ -261,5 +261,6 @@
         "First_name_of_recipient": "Име примаоца",
         "First_name_of_agent": "Име агента",
         "EnterCannedResponseTitle": "Унесите назив унапред припремљеног одговора",
-        "WriteMsgToSendToYourVisitors": "Напишите унапред припремљену одговор поруку коју ћете послати посетиоцима"
+        "WriteMsgToSendToYourVisitors": "Напишите унапред припремљену одговор поруку коју ћете послати посетиоцима",
+        "EditProfile": "Уреди профил"
 }
