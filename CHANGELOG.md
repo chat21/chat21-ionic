@@ -1,5 +1,9 @@
 # chat21-ionic ver 3.0
 
+### 3.0.62.2
+- Fixed bug: if the teammate has the role of agent when switching from the dashboard to the chat and vice versa, the icons that only owners and admins have access to are displayed briefly in the left sidebar
+- Adds the "Edit Profile" button and a link to the help center in the teammate details drawer
+
 ### 3.0.62.1
 - Allows agents to use the "Monitor" page
 
