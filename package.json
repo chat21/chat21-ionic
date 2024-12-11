@@ -41,7 +41,7 @@
         "autolinker": "^3.14.2",
         "cordova-android": "^6.2.3",
         "cordova-android-support-gradle-release": "^3.0.1",
-        "cordova-browser": "^5.0.4",
+        "cordova-browser": "^6.0.0",
         "cordova-ios": "6.1.1",
         "cordova-plugin-chooser": "^1.3.2",
         "cordova-plugin-ionic-keyboard": "^2.2.0",
